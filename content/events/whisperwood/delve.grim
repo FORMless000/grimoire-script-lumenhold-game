@@ -1142,7 +1142,7 @@ title: The Other Sky
 thread: ww_delve
 class: routine
 tone: eerie
-when: ww_depth >= 5 and ww_depth <= 6 and spell_level(reflect) < 1
+when: ww_depth >= 5 and ww_depth <= 6
 art: star
 tags: ww nature magic
 scene: A still forest pool reflecting a completely different sky from the one above, autumn constellations in a summer noon.
@@ -1153,10 +1153,11 @@ text: A pool so still it's a mirror, except that it reflects the wrong sky: anot
 > right: Work out how it does that
   challenge research adept+:
     win:
-      learn_spell reflect
+      lore +small
+      ww_haul += 1
       ww_depth += 1
       next
-      say: {~It's throwing back what's cast at it, all of it, from wherever it comes. You learn the trick of it with a pebble, then with a spark. Reflect.|You watch until your reflection catches up. Then you understand: it gives everything back. You take the lesson with you.}
+      say: {~It's throwing back what's cast at it, all of it, from wherever it comes. You can't do it yourself, but you understand it, and you fill a jar with the water for Pell.|You watch until your reflection catches up. Then you understand: it gives everything back. You take a jar of the pool with you, carefully.}
     lose:
       if ww_grace > 0:
         queue ww_stumble now
@@ -1166,10 +1167,11 @@ text: A pool so still it's a mirror, except that it reflects the wrong sky: anot
 > up[starlight]: Answer it with starlight
   challenge spell adept:
     win:
-      learn_spell reflect
+      arcana +small
+      ww_haul += 1
       ww_depth += 1
       next
-      say: {~You cast starlight at the pool and it throws it back, all of it, and you catch it. You understand Reflect now, in your hands.|The pool returns your starlight with interest. You learn its trick by being on the wrong end of it.}
+      say: {~You cast starlight at the pool and it throws it back, all of it, and you catch it, and a little of the other sky with it, in a jar.|The pool returns your starlight with interest. You learn something about your own light by being on the wrong end of it, and bottle a little of the pool.}
     lose:
       if ww_grace > 0:
         queue ww_stumble now

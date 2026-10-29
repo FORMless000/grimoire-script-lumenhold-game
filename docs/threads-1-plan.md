@@ -5,7 +5,7 @@ step. Status lives here, not in AGENTS.md.
 
 ## Next up
 
-T4 (the Restricted Stacks heist and the shared heist cards): draft in tmp, being reworked after retrieval. Engine and T1–T3 are pushed.
+Commit T4–T6 together (they share `heist_slip`'s branch), then the balance step and the records. Engine and T1–T3 are pushed. The Hollow Star funnel (40 games each, balanced/hollow/plot) reaches every act in 100% of games, as before.
 
 ## Budget ledger
 
@@ -14,15 +14,30 @@ T4 (the Restricted Stacks heist and the shared heist cards): draft in tmp, being
 | T1 detention | 12 | 8 new + 2 moved | accepted (round 2) | 100% |
 | T2 elixirs | 26 | 17 | accepted (round 2; 4 polish fixes applied) | 100% |
 | T3 cartographers | 14 | 12 | accepted (round 3) | 100% |
-| T4 Restricted Stacks + shared heist | 20 | | | |
-| T5 seventh tower | 16 | | | |
-| T6 spell moves, Eclipse, retirements | edits | | | |
+| T4 Restricted Stacks + shared heist | 20 | 16 | accepted (round 2; 3 polish fixes applied) | 100% |
+| T5 seventh tower | 16 | 14 | accepted (round 2; 2 polish fixes applied, the familiarity one to the stacks too) | 100% |
+| T6 spell moves, Eclipse, retirements | edits | 5 cards edited | with T5 | 100% |
 
 ## Batch log
 
 - **Engine** (6cd4273): a state's day in term, a pool as a recipe source, a sized boost; `test/threads1.test.js`.
 - **T1 detention:** 8 new cards in `content/events/detention.grim`, plus `detention_cauldrons` and `detention_lines` moved into `@pool detention`; `night_suspicion`'s second catch gives one month and keeps the lockout. Detention months a game: cautious 1.1, balanced 2.0, nightlife 4.4. Critic: rejected in round 1 (9 issues), accepted in round 2 with 2 polish fixes, both applied. Notes: `build/batches/T1-detention.notes.md`.
 - **T2 elixirs:** 17 cards in `content/events/contraband.grim` and 6 states in `content/states/contraband.grim`, plus the Brightwater and Owl's Ink lore, `@cond before_finals`, `boost_sizes` and the clue `lead_grisk_bottles`. Critic: round 1 rejected (12 issues), round 2 accepted with 4 polish fixes, all applied. Reach over 30 games a style: a craving in 12 of 30 nightlife games and 9 of 30 balanced. `amaranth_quit` and `elixir_finals_buyers` stay rare with bots; look again in the balance step. Notes: `build/batches/T2-elixirs.notes.md`.
+- **T4 Restricted Stacks:** `content/events/heists/shared.grim` (the way out, the slip, the catch) and `heists/stacks.grim`.
+  - The entry, a teaser, 10 steps, a dead-end fallback and the confiscation vault (crates, your own bottle back, Corvin's deck).
+  - It teaches Torment (a book that charges its reader) and Reflect (the mirror desk).
+  - It retires `midnight_restricted_stacks` and `restricted_page_buyer`.
+  - The shelf is pinned to the east stacks, away from the founders' drafts.
+  - Critic: round 1 rejected (11 continuity issues), round 2 accepted with 3 polish fixes.
+  - Notes: `build/batches/T4-stacks.notes.md`.
+- **T5 seventh tower, with T6:** `heists/tower.grim`, ending at the duelling master's study (Extraction), never past the desks. The tower opens at midnight.
+  - T6:
+    - the Outcast teaches Heartprice only;
+    - `ww3_other_sky` no longer teaches Reflect;
+    - the man in grey teaches Eclipse (`hs_grey_return` and `hs_grey_invitation`, left options);
+    - `hs_seventh_tower`'s text puts the wards on the hollow.
+  - Critic: round 1 rejected; the blocker was the study dating a forbidden notebook to the closing, which hinted at why the tower was locked.
+  - Notes: `build/batches/T5-tower-spells.notes.md`.
 - **T3 cartographers:** `content/events/cartographers.grim`.
   - The Master Map quest: Corvin inherited the map this summer. It has two great blanks (the stacks stair and the tower's wall stair, which open the heists), plus a gated shortcut inside each, and a final where you keep the map with him.
   - 4 society cards and 2 midnight cards at the third gargoyle.
@@ -36,6 +51,8 @@ T4 (the Restricted Stacks heist and the shared heist cards): draft in tmp, being
 - T2 dropped three planned sources (a dare at the Newt, a night-market pedlar, Bram smelling it). The trunk, the search and the friend carry those beats, and fewer cards keep the thread rare.
 - Detention has 8 new cards, not about 10: the retrieval pass dropped 16 ideas as too close to existing cards (see the T1 notes).
 - **Seventh tower (found while planning T3):** the day card `seventh_tower_dust_room` already enters the top room and sees the star-shaped hollow. So the wards are on the hollow, not on the tower or room door. T6 rewords `hs_seventh_tower` to say so ("the moment you reach for it"). The T5 heist may reach the top room but never touches the hollow.
+- **Heist cover:** the plan's "+1 as a cartographer" is redundant, because every heist player is one. Cover is +1 with `prefect_rota`, plus +1 with `forbidden_rounds` (stacks) or with knowing the tower by day (tower).
+- **Bots and the new content:** nightlife and balanced bots never visit the third gargoyle, so they never get the map. Social bots chart the stacks in 20 of 30 games but enter about twice. The forbidden spells (Torment, Reflect, Extraction) are now behind the map, so bots seldom learn them; Eclipse comes from the man in grey in 13–16 of 30 Hollow-leaning games.
 - Owl's Ink's `exam:large` is 12 (`boost_sizes: small 4 medium 8 large 12`). On balanced bots at turn 10 it moves A grades from 81% to 96%. Re-check it on weaker styles in the balance step.
 
 ---

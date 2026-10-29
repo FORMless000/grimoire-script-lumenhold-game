@@ -299,6 +299,10 @@ text: {flag(hollow_tempted): The man in grey is on a bench in the winter garden,
   gold +medium
   gain star_taste
   say: You do it at midnight, with the lake breathing under the planks. In the morning there's a purse on your pillow and the cold dreams are back, sweeter than before.
+  # Threads 1: the main plot teaches Eclipse (the forest's Outcast no longer does).
+  if spell_level(eclipse) < 1:
+    learn_spell eclipse
+    say: In the purse, under the coins, a slip of black paper with a few lines on it. You read them once, and a bruise on your wrist stops hurting and starts to hum. Pain taken, power held: Eclipse.
 > right: Drop it in the fountain unread
   hint: Lumen. He won't thank you.
   alignment +small
@@ -325,6 +329,9 @@ text: There is a letter on your pillow, sealed with a black star. The handwritin
   guile +small
   health -small
   say: The man in grey is waiting with two cups of something hot. He talks to you as an equal for an hour. You come back with frost in your hair and the feeling of having been measured, and found to fit.
+  if spell_level(eclipse) < 1:
+    learn_spell eclipse
+    say: Before you go he takes your cold hand in his and shows you how to keep what hurts: pain taken, power held. Eclipse. Your fingers ache all the way back, and hum.
 > right: Burn it
   alignment +medium
   mood -small
@@ -389,7 +396,7 @@ art: tower
 tags: mystery hollowstar
 thread: hs_escalation
 scene: The top of a narrow, abandoned tower, cobwebbed and moonlit, with a wall bearing a star-shaped recess.
-text: The seventh tower has been locked for a century, and its wards start shrieking the moment you touch the door. You go up anyway, two steps at a time, while lights come on all over the academy. At the very top, a single room: dust, moonlight, and a star-shaped hollow in the wall, holding something that does not reflect any light.
+text: The seventh tower has been locked for a century, and tonight you mean to see what it keeps. You go up two steps at a time to the very top: a single room of dust and moonlight, and a star-shaped hollow in the wall, holding something that does not reflect any light. The wards are woven round the hollow itself. They hum as you come near, and they will shriek the moment it's touched.
 > left: Take it quietly
   challenge deceive journeyman:
     win:

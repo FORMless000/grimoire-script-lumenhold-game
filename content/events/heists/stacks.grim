@@ -1,0 +1,451 @@
+# ============================================================
+#  The Restricted Stacks heist (threads 1; the shape is in heists/shared.grim). Down the stair under the east stacks'
+#  last chained shelf, by the book-return hatch (lore deep_stacks): band 1 the chained shelves (depth 1–2, apprentice), band 2 the breathing stacks (3–4,
+#  journeyman), band 3 the deep stacks (5–6, adept), and at depth 7 the confiscation vault. Teaches Torment (a book
+#  that charges its reader) and Reflect (the mirror desk). Cover: +1 with `prefect_rota`, +1 with `forbidden_rounds`
+#  (Odile's notes on the library's rounds). The bindery's book-lift (`carto_book_lift`) starts you at depth 3, and
+#  `vault_catalogued` (a detention card) makes the vault's lock easier.
+#  Plot safety: the heist goes down from the east stacks, never to the very back where the plot's books are (the Codex,
+#  the founders' drafts); it reveals nothing of the main mystery. It replaces the section's old midnight cards
+#  (midnight_restricted_stacks, restricted_page_buyer, retired; the collector is now the heist's fence).
+# ============================================================
+
+@pool restricted_heist_entry
+place: restricted_section
+slot: midnight
+class: routine
+repeat: 1
+order: last
+
+@event heist_stacks_enter
+title: The Stair Under the Chains
+pool: restricted_heist_entry
+tone: tense
+when: flag(heist_stacks_known)
+art: book
+tags: danger mystery
+scene: A dark library aisle at midnight, the last shelf's kickboard swung open on a narrow stair going down, a student with a shaded candle at the top.
+text: {heist_stacks_deepest == 0: Midnight in the Restricted Section. By the book-return hatch, the kickboard under the east stacks' last chained shelf swings open where your map says it will, on the stair going down. Below, the deep stacks: books nobody has signed out in a century, and the confiscation vault at the bottom.|{~The kickboard, the stair, the chains above you pulled taut by something below.|The stair under the chained shelf, and the cold breath coming up it.|Midnight, the chained shelf, and the dark going down.}} {flag(carto_book_lift): Or there's the bindery's book-lift, a floor below, which goes down as far as the breathing shelves.|}
+> left: Not tonight
+  say: {~You put the kickboard back and go to bed with the stair in your head.|Not tonight. The chains settle as you leave, as if disappointed.|You listen at the top of the stair for a while, and go no further.}
+> right: Go down
+  hint: A heist: press on card by card, slip away with what you carry any time.
+  flag heist_stacks_tried
+  heist_where = 1
+  heist_loot = 0
+  heist_cover = 1
+  if flag(prefect_rota):
+    heist_cover += 1
+  if flag(forbidden_rounds):
+    heist_cover += 1
+  if flag(carto_book_lift):
+    heist_depth = 3
+  else:
+    heist_depth = 1
+  queue any in heist_stacks now
+  say: {flag(carto_book_lift): You go down to the bindery, climb into the book-lift's box and let the rope down hand over hand, until its knots stop you where the shelves start breathing.|{~You pull the kickboard shut behind you and go down by your map.|You shade your candle and go down, counting steps.|You go down quietly, one hand on the cold wall, the chains creaking overhead.}}
+
+@event heist_stacks_unmapped
+title: Chains Below
+pool: restricted_heist_entry
+tone: eerie
+when: not flag(heist_stacks_known)
+repeat: 4
+art: book
+tags: mystery
+scene: A student in a dark library aisle at midnight with an ear to the bottom shelf, iron chains running down through holes in the floor and pulled taut.
+text: {Midnight in the Restricted Section. The chains on the east stacks' last shelf run down through the floor, and something below pulls them taut, then lets them go, like breathing.|The chains on the last shelf again, taut, then slack. There's a stair down there somewhere. You've no map for it.} {seen(carto_map_blanks) > 0: The Cartographers have a blank on their map just here.|Someone in the castle must have a map of what's below.}
+> left: Listen at the shelf
+  lore +tiny
+  mood -tiny
+  say: {You lie on the cold floor with an ear to the boards. Far down, pages turn, a great many of them, all at once.|You listen until your ear is numb. Something down there is very large and very quiet, and it's a library.}
+> right: Go back to bed
+  say: {You leave the chains to whatever is pulling them.|Not without a map. You go back up to bed.}
+
+@thread heist_stacks
+from: scene
+clues: lead_deep_stacks
+name: The Restricted Stacks
+premise: Below the last chained shelf, a stair goes down to the deep stacks and the confiscation vault. The Cartographers go at midnight.
+journal:
+  flag(heist_stacks_tried): You went down the stair under the chained shelf at midnight.
+  flag(heist_stacks_torment): Down in the stacks you read a book that charged you a drop for every page, and learned Torment from it.
+  flag(heist_stacks_reflect): At the mirror desk your reflection read the book back to you, and you learned Reflect.
+  flag(heist_vault_opened): You picked the prefects' padlock on the confiscation vault.
+status:
+  resolved: flag(heist_vault_opened)
+
+# The way shut: a step for any depth, drawn rarely (weight 1), and always when nothing else is left at this depth
+# (a slip at the vault, or a band's cards used up), so a night never ends without the way out.
+@event st_dead_end
+title: The Way Shut
+thread: heist_stacks
+class: routine
+tone: eerie
+when: heist_depth >= 1 and (heist_depth <= 6 or (seen(st_vault) > 0 and since(st_vault) == 0))
+repeat: 1
+weight: 1
+art: book
+tags: heist
+scene: A narrow library aisle in near darkness, two tall bookcases leaned together overhead to close it like a door, a student's candle at the bottom.
+text: {heist_depth >= 7: The goblin over the vault door is still muttering, and the padlock won't take another pick tonight. The only way left is up.|{~The shelves ahead have breathed in and not breathed out. The aisle is shut, and the only way that's still a way is back.|Ahead, the stacks have closed ranks, spine to spine, like a door. Whatever's further down is not for tonight.|A shelf has come down across the way, gently, as if it meant to. Behind it, the dark goes on without you.}}
+> left: Go back up with what you carry
+  queue heist_way_out now
+  say: {heist_depth >= 7: You leave the goblin to its muttering and climb, all forty-four steps, with what you have.|{~You turn round and go up by the way you know.|You take the hint, and the stair.|You go, and the shelves let out their breath behind you.}}
+> right: Search where you stand
+  challenge research apprentice:
+    win:
+      heist_loot += 1
+      say: {heist_depth >= 7: Among the crates stacked outside the vault door, one lid is loose. Something small and old comes with you.|{~The shelf that closed the aisle has a gap in it, and in the gap a small book nobody's missed. You take it up with you.|You run your hand along the closed shelf and find one spine that's loose. It comes with you.|Behind the fallen shelf, a sheaf of loose pages, very old. You roll them into your sleeve.}}
+    lose:
+      health -tiny
+      say: {heist_depth >= 7: The goblin catches you at the crates and says so. You leave them be.|{~The shelf leans on you, very gently, until you stop.|You find nothing but dust, and a splinter.|The shelf breathes in, and you jump back, and leave it be.}}
+  queue heist_way_out now
+
+# ---------------- Band 1: the chained shelves (depth 1–2, apprentice) ----------------
+
+@event st1_taut_chains
+title: The Chains Pull Taut
+thread: heist_stacks
+class: routine
+tone: tense
+when: heist_depth >= 1 and heist_depth <= 2
+repeat: 1
+art: book
+tags: heist danger
+scene: A narrow dark aisle between library shelves strung with iron chains, the chains drawn tight across the aisle at different heights, a student ducking between them.
+text: {seen(st1_taut_chains) > 1: The chains know you now. They draw taut across the aisle at knee and throat as you come, slower than they used to, as if to see whether you've got careless.|{heist_depth == 1: At the foot of the stair the chains from the shelf above come down through the ceiling and run off between the shelves, and as you step off the last stair they draw taut across the aisle, one at the knee, one at the throat.|Round the next bookcase the chains from the shelf above run between the shelves, and as you come they draw taut across the aisle, one at the knee, one at the throat.} Something is pulling them, slowly, to see what you'll do.}
+> left: Slip back the way you came
+  queue heist_way_out now
+  say: {~You go back the way you came, and the chains go slack behind you, satisfied.|You decide the chains have made their point.}
+> right: Thread between them
+  challenge feat using guile apprentice:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~Under, over, sideways, holding your breath. On the far side a page has fallen from a chained book, gold-leafed. You take it.|You go through the chains like a cat through railings. One of them twangs, very softly, as you pass, and a loose illuminated page drifts down. You catch it.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~A chain catches your ankle and rings like a bell all the way up to the shelf.|You misjudge one and it takes you across the shoulder, hard, and every chain in the aisle shivers.}
+
+@event st1_library_rounds
+title: The Night Lamp
+thread: heist_stacks
+class: routine
+tone: tense
+when: heist_depth >= 1 and heist_depth <= 2
+repeat: 1
+art: lantern
+tags: heist danger
+scene: A lamp's glow moving along the top of a library bookcase, seen from below in a dark aisle, a student pressed flat against the books.
+text: {seen(st1_library_rounds) > 1: The night lamp again, along the gallery overhead, on the same slow round, looking everywhere.|A lamp comes along the gallery overhead: a prefect walking the library's night round, who has no reason to look down the stair and every reason to look everywhere.} {flag(forbidden_rounds): By Odile's green ink, this is the late round, and it turns back at the reading room.|The glow moves slowly. You have no idea where it goes next.}
+> left: Back up the stair while you can
+  queue heist_way_out now
+  say: {~You go back up behind the lamp, step for step, and out.|You let the round have the library tonight.}
+> right: Stand still in the shelves
+  challenge deceive apprentice +1 if flag(forbidden_rounds):
+    win:
+      heist_depth += 1
+      next
+      say: {~The lamp passes over you, over the stair, over the dark, and goes on. You breathe out for what feels like a minute.|You stand so still among the books you could be one. The lamp moves on to the reading room.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The lamp stops. "Hello?" says the prefect, to the dark. You run.|You shift your weight, and a board answers. The lamp swings down the stair.}
+
+@event st1_catalogue
+title: The Catalogue Below
+thread: heist_stacks
+class: routine
+tone: eerie
+when: heist_depth >= 1 and heist_depth <= 2
+repeat: 1
+art: paper
+tags: heist study
+scene: An old wooden card catalogue in a dark library basement, one long drawer pulled out, cards written in faded brown ink, a candle on top.
+text: {seen(st1_catalogue) > 1: The catalogue at the bend again. WHAT IS WHERE has a new card in it since last time, in fresher ink.|An old card catalogue stands at the bend of the aisle, for the books down here that the library upstairs pretends not to own. One drawer is labelled in a dead librarian's hand: WHAT IS WHERE, AND WHAT MUST NOT BE MOVED.}
+> left: Leave it, and slip away
+  queue heist_way_out now
+  say: {~You leave the drawer shut and the dead librarian's secrets with it.|You go, and take nothing, not even a look.}
+> right: Read the drawer
+  challenge research apprentice:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~WHAT IS WHERE turns out to be a map in cards. You pocket the three that matter and go on knowing where you're going.|You read fast by candle and pocket the card for the deep stacks. Half of it is a warning. You take the other half.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The drawer jams, then comes out all at once, and four hundred cards go across the floor.|You read too long. The candle gutters, and in the dark you knock the whole catalogue a foot sideways, loudly.}
+
+# ---------------- Band 2: the breathing stacks (depth 3–4, journeyman) ----------------
+
+@event st2_breathing
+title: Between Breaths
+thread: heist_stacks
+class: routine
+tone: eerie
+when: heist_depth >= 3 and heist_depth <= 4
+repeat: 1
+art: book
+tags: heist danger
+scene: Tall black bookcases in deep darkness, leaning very slightly inward and outward as if breathing, a narrow gap closing between them, a student waiting to slip through.
+text: {seen(st2_breathing) > 1: The breathing shelves again. You know their rhythm now, mostly, and they seem to know yours: tonight they breathe a little faster.|Down here the shelves breathe, and they're close enough together that when they breathe in, the aisle closes. You'd have to go through on the out-breath, all the way, before the next in.}
+> left: Leave the breathing to them
+  queue heist_way_out now
+  say: {~You go back the way you came, and the shelves breathe easier behind you.|You decide you don't want to be between them on an in-breath.}
+> right: Go on the out-breath
+  challenge feat using guile journeyman:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~You go on the out-breath, fast and flat, and the shelves sigh shut behind your heels. A book has fallen in the gap. It's yours now.|You time it, and go, and come out the far side with a black-bound book that fell into your arms on the way.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~You're late by a breath. The shelves hold you, gently, all over, for a long minute, and let go.|The aisle closes on your satchel and keeps it a while. Its idea of a while.}
+
+@event st2_charging_book
+title: The Book That Charges
+thread: heist_stacks
+class: routine
+tone: grim
+when: heist_depth >= 3 and heist_depth <= 4 and spell_level(torment) < 1
+repeat: 1
+art: book
+tags: heist magic danger
+scene: An open black book on a lectern in a dark library stack, a single drop of blood on the corner of its page, a student's pricked finger held above it.
+text: {seen(st2_charging_book) > 1: The book that charges is open on its lectern again, at the page where you stopped, and it hasn't forgotten what you owe.|On a lectern in the dark is a book with a duellist's hand on the cover, a forbidden manual from some war nobody teaches. When you turn its page, the corner pricks your finger and takes a drop. The next page will cost another. It charges its reader for everything it teaches.}
+> left: Close it, and slip away
+  queue heist_way_out now
+  say: {~You close it. It lets you, this time. You suck your finger all the way back up the stair.|You leave the book on its lectern, owed nothing.}
+> right: Read it to the end, and pay
+  hint: Torment, at a price.
+  challenge research journeyman:
+    win:
+      learn_spell torment
+      flag heist_stacks_torment
+      health -small
+      alignment -small
+      heist_depth += 1
+      next
+      say: {~Page by page, drop by drop. By the end your fingertips are sore and you understand the trick of it: make every spell the other side casts cost them, and hurt. Torment. You feel the shape of it in your hands, and wish you didn't.|You pay to the last page. The book closes itself, satisfied. You know Torment now, and how it feels to be charged for every step.}
+    lose:
+      health -small
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~You read too fast, and it charges too much. You come to on the floor with the book shut and the room very loud.|It takes more than a drop. You stumble back from the lectern into a shelf, which tells everyone.}
+
+@event st2_other_lamp
+title: Someone Else's Lamp
+thread: heist_stacks
+class: routine
+tone: tense
+when: heist_depth >= 3 and heist_depth <= 4
+repeat: 1
+art: lantern
+tags: heist danger
+scene: A hooded student at a desk deep in dark library stacks, copying from a black book by a small shaded lamp, not yet aware of a second student watching from the aisle.
+text: {seen(st2_other_lamp) > 1: Another lamp ahead, shaded low. Someone else is copying down here again, a different hood, the same hurry. They haven't seen you.|There's a lamp ahead, shaded low. Someone else is down here: a hooded student copying out of a black book, very fast, with a satchel of copied pages at their feet. They haven't seen you. They will in a minute.}
+> left: Back away before they look up
+  queue heist_way_out now
+  say: {~You back away into the dark, and leave them to their copying and their luck.|You go. One thief in the stacks is plenty.}
+> right: Slip past them
+  challenge deceive journeyman:
+    win:
+      heist_depth += 1
+      next
+      say: {~You go past behind their back, close enough to read their page. They never look up. You never ask who.|You wait till they bend to the book, and go by like a draught.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~They look up, and you both freeze, and then you both run, in opposite directions, loudly.|They see you and blow out their lamp, and in the dark you go straight into a shelf.}
+> take: Take a sheaf of their pages
+  challenge deceive journeyman+:
+    win:
+      heist_loot += 2
+      alignment -tiny
+      heist_depth += 1
+      next
+      say: {~You lift a sheaf from the top of their satchel while they turn a page, and are three aisles away before they reach for it.|You take their copied pages, which is stealing from a thief, which still counts.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~They catch your wrist, and shout. Somewhere above, a lamp comes on.|The satchel's buckle rings on the floor, and they're up and shouting before you've got a page.}
+
+# ---------------- Band 3: the deep stacks (depth 5–6, adept) ----------------
+
+@event st3_mirror_desk
+title: The Mirror Desk
+thread: heist_stacks
+class: routine
+tone: eerie
+when: heist_depth >= 5 and heist_depth <= 6 and spell_level(reflect) < 1
+repeat: 1
+art: star
+tags: heist magic
+scene: A reading desk of black mirrored glass deep in a dark library, a book open on it, the student's reflection in the glass reading the book with its lips moving.
+text: {seen(st3_mirror_desk) > 1: The mirror desk again. Your reflection is already there, a line further on than where you stopped.|Deep in the stacks there's a reading desk of black mirror-glass with a book open on it. When you lean over, your reflection is already reading, a line ahead of you, and its lips are moving. Whatever you read, it reads back.}
+> left: Look away, and slip off
+  queue heist_way_out now
+  say: {~You look away first. For a week your reflection in windows is a line ahead.|You leave the desk to its reader.}
+> right: Read along with it
+  hint: Reflect, if you can keep up.
+  challenge research adept:
+    win:
+      learn_spell reflect
+      flag heist_stacks_reflect
+      heist_depth += 1
+      next
+      say: {~You read with your reflection until you're reading together, and then it reads you, and gives it all back. That's the trick: give it all back. Reflect.|By the last line you understand the desk. Everything put to it comes back, every word. You take the lesson up the stairs with you.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~Your reflection gets ahead, then a page ahead, then shuts the book on you. The glass rings like a struck glass.|You read too slowly, and the desk reads your face back at you, all of it, very loud.}
+
+@event st3_no_lamp
+title: Where No Lamp Reaches
+thread: heist_stacks
+class: routine
+tone: tense
+when: heist_depth == 6
+repeat: 1
+art: book
+tags: heist danger
+scene: Pitch darkness in a vast library, a single hand on the spine of a book, the faintest outline of endless shelves.
+text: {seen(st3_no_lamp) > 1: The dark at the bottom again, where your candle gives up. You know the first twenty spines by touch now; it's the rest that worry you.|Down here no lamp reaches, and your candle won't stay lit; it leans over and gives up. The last stretch to the vault is by touch: spines under your fingers, and the floor going down by inches.} ⚠ Lose your way here, and there's no near thing.
+> left: Turn back while you know the way
+  queue heist_way_out now
+  say: {~You turn round in the dark and walk back by the spines you know.|You decide that the dark here is someone's, and not yours.}
+> right: Go on by touch
+  challenge feat using guile adept-:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~Spine by spine, in a dark like deep water. Your hand closes on a small book lying loose on a shelf, and you take it, and keep going.|You count the shelves by touch, and at the end of the count, a door.}
+    lose:
+      queue heist_caught now
+      say: {~You lose the spines, then the floor, then the way. When the lantern finds you, you're sitting in the dark holding a book you can't see, nowhere near anywhere.|Something in the dark takes your hand and leads you, kindly, all the way to the prefects' door.}
+
+@event st3_glass_case
+title: The Glass Case
+thread: heist_stacks
+class: routine
+tone: tense
+when: heist_depth >= 5 and heist_depth <= 6
+repeat: 1
+art: book
+tags: heist magic money
+scene: A small glass display case in a dark library, full of tiny leather-bound books no bigger than a thumb, a faint shimmer of a charm over its lock.
+text: {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): The glass case again, a few books fewer, and the charm on its lock rewoven tighter than before. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}|In an alcove stands a glass case of grimoires no bigger than your thumb, each with a clasp of gold, a hundred spells to a book. The lock has no keyhole, only a charm laid over it that hums when your breath fogs the glass. Any collector would sell their mother for one of them.}
+> left: Leave them under glass
+  queue heist_way_out now
+  say: {~You leave the little books to their glass and go back up the way you came.|You fog the glass once more, for the pleasure of it, and go.}
+> right: Unpick the charm
+  challenge spell adept-:
+    win:
+      flag heist_glass_robbed
+      heist_loot += 2
+      heist_depth += 1
+      next
+      say: {~The charm comes apart under your fingers like wet paper. You take two of the little books, and the case closes itself behind you as if offended.|You unpick the charm thread by thread and lift out the smallest book. Then, because you're here, a second.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The charm bites back, a white flash, and the glass rings like a struck bell all through the stacks.|You pull the wrong thread, and the whole charm goes off in your face with a noise like a slammed book.}
+
+# ---------------- Depth 7: the confiscation vault ----------------
+
+@event st_vault
+title: The Confiscation Vault
+thread: heist_stacks
+type: menu
+class: routine
+tone: tense
+when: heist_depth >= 7
+repeat: 1
+art: door
+tags: heist money danger
+scene: An iron-banded oak door in a dark library basement, a heavy prefects' padlock on it, crates labelled for confiscation stacked outside, a student kneeling at the lock with picks.
+text: At the bottom of the deep stacks, a door with a prefects' padlock and crates outside labelled for the confiscation vault. Behind it, three hundred years of everything the faculty ever took off a student. {flag(vault_catalogued): You catalogued half of it yourself, in detention. You know which shelf is which.|You've no idea what's where.} {flag(elixir_confiscated): Somewhere in there is the bottle the prefects took from your trunk.|}
+> leave: Leave it locked, and go
+  queue heist_way_out now
+  say: {~You leave the vault to its padlock. Getting here was the heist.|You touch the padlock once, for luck, and go back up.}
+> crates: Pick the lock for the crates
+  challenge feat using guile adept- +2 if flag(vault_catalogued):
+    win:
+      flag heist_vault_opened
+      heist_loot += 3
+      heist_depth += 1
+      queue heist_way_out now
+      say: {~The padlock gives with a click like a knuckle. Inside, a century of contraband on shelves: charmed dice, love letters, a stuffed owl that blinks. You fill your shirt with the small valuable things and lock it again behind you.|You go straight to the shelf you catalogued in detention and take the three best things on it. The padlock clicks shut after you as if nothing happened.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
+> bottle: Pick the lock for your own bottle back
+  when: flag(elixir_confiscated)
+  challenge feat using guile adept- +2 if flag(vault_catalogued):
+    win:
+      flag heist_vault_opened
+      unflag elixir_confiscated
+      if flag(confiscated_owls_ink):
+        unflag confiscated_owls_ink
+        gain owls_ink_bottle
+      if flag(confiscated_brightwater):
+        unflag confiscated_brightwater
+        gain brightwater_bottle
+      if not has(owls_ink_bottle) and not has(brightwater_bottle):
+        gain brightwater_bottle
+      heist_loot += 1
+      heist_depth += 1
+      queue heist_way_out now
+      say: {~The padlock gives. Your things are on a shelf with a label in a prefect's neat hand, your name spelled right. You take them back, and one small thing more for the trouble.|Inside, a shelf of confiscated elixirs, gold and black, each labelled with a name. You find what's yours, and leave the rest to their owners' consciences.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
+> deck: Fetch Corvin's grandfather's deck
+  when: seen(corvin_confiscation_vault) > 0 and not flag(corvin_deck_back)
+  challenge feat using guile adept- +2 if flag(vault_catalogued):
+    win:
+      flag heist_vault_opened corvin_deck_back
+      heist_deck_tonight = 1
+      meet corvin
+      rel corvin +medium
+      heist_depth += 1
+      queue heist_way_out now
+      say: {~The deck is in a tin on the third shelf, labelled in faded ink with a date and a very rude word. You give it to Corvin at breakfast. He doesn't say anything for a whole minute, which is a record.|You find the deck, and the faculty's note on it: "Marked. Obviously." Corvin, when you give it to him, laughs until he has to sit down, and then holds it very carefully.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}

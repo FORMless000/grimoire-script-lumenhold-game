@@ -1,0 +1,199 @@
+{
+  "name": "T5-tower-spells",
+  "at": 1793295095806,
+  "files": [
+    "content/events/heists/tower.grim",
+    "content/events/whisperwood/hush.grim",
+    "content/events/whisperwood/delve.grim",
+    "content/events/chain_hollowstar.grim"
+  ],
+  "events": [
+    "hs_dreams_begin",
+    "hs_grey_stranger",
+    "hs_founders_records",
+    "hs_restricted_founders",
+    "hs_boathouse_bell",
+    "hs_seraphine_shadow",
+    "hs_kael_truth",
+    "hs_star_mark",
+    "hs_grey_offer",
+    "hs_grey_return",
+    "hs_grey_invitation",
+    "hs_grey_tests",
+    "hs_wardens_notice",
+    "hs_seventh_tower",
+    "hs_key_breakfast",
+    "hs_isolde_summons",
+    "hs_the_night",
+    "hs_tunnel",
+    "hs_threshold",
+    "hs_beneath",
+    "hs_aftermath",
+    "hs_aftermath_lost",
+    "hs_kael_sister",
+    "heist_tower_enter",
+    "heist_tower_unmapped",
+    "tw_dead_end",
+    "tw1_one_shoulder",
+    "tw1_someone_else",
+    "tw1_spyhole",
+    "tw2_exam_cupboard",
+    "tw2_telling_floor",
+    "tw2_class_register",
+    "tw3_no_wind",
+    "tw3_orrery",
+    "tw3_portrait_eyes",
+    "tw_masters_study",
+    "ww_edge",
+    "ww_edge_night",
+    "ww_night_first",
+    "ww_way_home",
+    "ww_stumble",
+    "ww_lost",
+    "ww1_forage",
+    "ww1_bramble_ferret",
+    "ww1_bristleback",
+    "ww1_bog",
+    "ww1_pixie_toll",
+    "ww1_lost_firstyear",
+    "ww1_hollow_whisper",
+    "ww1_quiet_path",
+    "ww1_maud_blaze",
+    "ww1_owl_feather",
+    "ww1_brask_bows",
+    "ww2_grumpy_oak",
+    "ww2_grumpy_oak_fight",
+    "ww2_briar_maze",
+    "ww2_stag_beetle",
+    "ww2_fog_wall",
+    "ww2_waystone",
+    "ww2_lodestone",
+    "ww2_stone_words",
+    "ww2_thornwitch",
+    "ww2_thornwitch_fight",
+    "ww2_thornwitch_offer",
+    "ww2_embers_kin",
+    "ww2_stag_tine",
+    "ww2_deer_path",
+    "ww3_shadow_stag",
+    "ww3_shadow_stag_fight",
+    "ww3_elder_oak",
+    "ww3_elder_oak_fight",
+    "ww3_masked_circle",
+    "ww3_masked_offer",
+    "ww3_always_midnight",
+    "ww3_other_sky",
+    "ww3_spiderlings",
+    "ww3_wisps",
+    "ww3_sinkhole",
+    "ww3_heartwood_hush",
+    "ww_dusk",
+    "ww_hush_gate",
+    "ww4_silence",
+    "ww4_rime_hollow",
+    "ww4_web_halls",
+    "ww4_last_witch",
+    "ww4_moonpetal_bloom",
+    "ww4_spinner_court",
+    "ww_hush_heart",
+    "ww_spinner_meet",
+    "ww_spinner_fight",
+    "ww_spinner_fight_weak",
+    "ww_spinner_hoard",
+    "ww_cocooned",
+    "ww_outcast_meet",
+    "ww_outcast_table",
+    "ww_outcast_fight",
+    "ww_outcast_victory",
+    "ww_outcast_loss"
+  ],
+  "contentHash": "30d5df",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 842,
+      "total": 842
+    }
+  },
+  "critic": {
+    "batch": "T5-tower-spells",
+    "accept": false,
+    "round": 1,
+    "summary": "A well-made heist that follows the stacks model closely. The steps are concrete and funny, the wiring and soft-lock guards are sound, and the spell moves and Eclipse says are clean and in the right translation order. One plot-safety problem blocks it: the master's study dates a forbidden-magic notebook to the day the tower closed and talks of 'the reasons', which gives a cause for the century-old locking that canon says nobody knows. The other issues are small continuity and check-kind fixes.",
+    "issues": [
+      {
+        "event": "tw_masters_study",
+        "problem": "Plot safety and canon. The text says the study 'was locked the same day as the tower… and the key went wherever the reasons went', and the Extraction say dates the notebook's 'last page… the day the tower closed'. Read together, they suggest the tower was shut because the duelling master was writing forbidden magic. Canon (timeline seventh_tower_locked) says nobody living remembers why, and the user ruled that the heist must not explain the locking. 'The key' and 'the reasons', written in the star key's tower, also invite the reader to link them to the main mystery.",
+        "fix": "Break the link in time: don't date the notebook to the closing (e.g. 'its pages yellow, the ink faded brown', or make it something the master confiscated from a student duellist years before). Replace 'the key went wherever the reasons went' with something neutral such as 'nobody has had its key since'. Keep 'The study was locked with the tower' if you like, but give no cause and no shared date."
+      },
+      {
+        "event": "tw_masters_study",
+        "problem": "The lock check's '+1 if visits_to(seventh_tower) >= 3' has no reason in the scene. The day cards never come near the study or its lock. The same fact already gives +1 cover, and since the place is now open at midnight, heist visits count toward it as well.",
+        "fix": "Drop the circumstance step, or tie it to something that prepares you for this lock, such as a flag set by a card that saw the study, or the portrait or register cards' flags, with a say line that pays it off."
+      },
+      {
+        "event": "tw1_someone_else",
+        "problem": "Two continuity problems. (1) Lose variant 1 ends 'You both run', but with no cover left it queues heist_caught, whose text has a tired prefect catching you with a lantern in your face: the prefect has just run away from you. (2) Win variant 2 hands you 'a small brass key' from a hooded stranger with a sack, coming down from above, in the tower that holds the star key. The key opens nothing and is never paid off, and the hooded figure reads as someone working on the plot.",
+        "fix": "(1) Make the lose line work for both a slip and a capture: 'The lantern swings round into your face, and you bolt before the prefect behind it finds your name.' (2) Swap the key for loot that promises nothing (a silver thimble, a glove with a crest), and make the climber plainly another student out of bounds: a house scarf, or Cartographer chalk on the sleeve."
+      },
+      {
+        "event": "tw2_class_register",
+        "problem": "The check is 'deceive journeyman', but nobody in the scene is misled. You lift a register off an empty desk, and both lose lines are about noise (the clasp's click, the desk shifting). The kind doesn't fit the action (checks.md).",
+        "fix": "Use 'feat using guile journeyman' (lifting it silently), or put someone in the scene to deceive: the round's lantern looks in as you pick the register up, and you play the empty classroom. Write the lose lines to match."
+      },
+      {
+        "event": "hs_seventh_tower",
+        "problem": "In the reworded text, 'tonight you know what it keeps' claims more than the gate gives. lead_seventh_tower says only that 'something is kept at the top', and two sentences later the card still calls it 'something that does not reflect any light'.",
+        "fix": "'…and tonight you know something is kept at the top of it.' Or: 'tonight you mean to see what it keeps.'"
+      },
+      {
+        "event": "heist_tower_unmapped",
+        "problem": "'Listen to the tower' costs mood -tiny, but random variant 1 is cosy ('like an old house going to sleep'), so that showing never shows the cost. Variant 2, the banging door, does show it.",
+        "fix": "Rewrite variant 1 so the listening unsettles you (the settling stops on one floor, as if something up there is listening back), or swap the cost to health -tiny and keep 'the cold bottom step' as its cause in both variants."
+      },
+      {
+        "event": "tw_dead_end",
+        "problem": "Win variant 1, 'a love letter from 1820', repeats life.grim's punchline: in a dusty forgotten classroom, 'eight old crowns and a love letter from 1802'.",
+        "fix": "Pick a different find for variant 1, e.g. 'a tin of old marbles and a note that just says \"Sorry about the frog\"'."
+      },
+      {
+        "event": "heist_tower (file header, tower.grim)",
+        "problem": "The header comment says the heist 'never reaches the desks two turns below the top', but tw_masters_study is set beside those desks ('the stair is choked with stacked desks, and beside them is a locked study'). The next author will trust the comment.",
+        "fix": "Change the comment to: 'It ends at the study beside the desks two turns below the top, and never goes past them to the top room or the hollow.'"
+      }
+    ]
+  },
+  "spotCheck": [
+    "ww3_spiderlings",
+    "hs_aftermath",
+    "ww_way_home",
+    "hs_aftermath_lost",
+    "hs_restricted_founders",
+    "ww3_other_sky",
+    "ww_stumble",
+    "hs_tunnel",
+    "ww2_grumpy_oak",
+    "tw2_exam_cupboard"
+  ],
+  "accepted": false
+}

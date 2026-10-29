@@ -179,13 +179,9 @@ text: "I taught the thornwitch," he says. "And those children in masks, after a 
   challenge negotiate grandmaster-:
     win:
       alignment -small
-      if spell_level(torment) < 1:
-        learn_spell torment
-      elif spell_level(extraction) < 1:
-        learn_spell extraction
-      elif spell_level(eclipse) < 1:
-        learn_spell eclipse
-      elif spell_level(heartprice) < 1:
+      # Threads 1: Torment and Reflect are the Restricted Stacks', Extraction the seventh tower's, Eclipse the man in
+      # grey's; the Outcast keeps Heartprice.
+      if spell_level(heartprice) < 1:
         learn_spell heartprice
       else:
         lore +medium

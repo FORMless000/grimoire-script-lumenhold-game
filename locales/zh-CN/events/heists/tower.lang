@@ -1,0 +1,251 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/heists/tower.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event heist_tower_enter
+# en: The Stair in the Wall
+title [c613e5] = 墙里的楼梯
+# en: {heist_tower_highest == 0: Midnight in the seventh tower's cellar. Behind the rack of empty bottles, your stair curls up inside the wall, one shoulder wide. Above the landing of candles are the old classrooms, shut for a century, with everything their teachers left behind.|{~The bottle rack, the hollow stone, the stair in the wall.|The cellar at midnight, and the cold coming down the wall stair.|Your stair, curling up into the dark inside the stone.}} {flag(carto_tower_chimney): The chimney's soot-black mouth gapes beside it.|}
+text [c4535a] = {heist_tower_highest == 0: 午夜，第七塔的地窖。空酒瓶架后面，你的楼梯在墙里盘旋而上，只容一肩。蜡烛平台上面是旧教室，关了一百年，里面是老师们留下的一切。|{~酒瓶架，空心的石头，墙里的楼梯。|午夜的地窖，冷气顺着墙中楼梯往下流。|你的楼梯，盘旋着钻进石头里的黑暗。}} {flag(carto_tower_chimney): 旁边，烟囱乌黑的口子张着。|}
+# en: A dark vaulted cellar at midnight, a rack of empty bottles swung aside from a curved stone wall, a narrow stair curling up inside it, a student with a shaded candle.
+scene [5885b1] = 午夜昏暗的拱顶地窖里，一个空酒瓶架从弧形石墙边挪开，一道窄楼梯在墙里盘旋而上，一个学生举着遮了光的蜡烛。
+# en: Not tonight
+opt.left.label [4bf72b] = 今晚不去
+# en: {~You put the rack back and go to bed with the stair in your head.|Not tonight. The tower can keep its classrooms a while longer.|You stand at the foot of the stair and listen to the tower settle, and go no further.}
+opt.left.say.1 [ad84df] = {~你把酒瓶架挪回去，带着脑子里的楼梯去睡觉。|今晚不去。塔可以把它的教室再留一阵子。|你站在楼梯脚下，听着塔慢慢安静下来，没再往上走。}
+# en: Go up
+opt.right.label [4c7014] = 上去
+# en: A heist: press on card by card, slip away with what you carry any time.
+opt.right.hint [f5be0b] = 一次偷盗：一张牌一张牌地往前，随时可以带着手里的东西溜走。
+# en: {flag(carto_tower_chimney): You go up the chimney, back to one side and feet to the other, and come out in a classroom grate, sooty and grinning.|{~You turn sideways and go up into the wall.|You shade your candle and climb, counting the turns.|You go up quietly, one shoulder to the stone, the tower breathing round you.}}
+opt.right.say.1 [14772e] = {flag(carto_tower_chimney): 你背抵一边、脚撑一边爬上烟囱，从一间教室的炉栅里钻出来，满身煤灰，咧着嘴笑。|{~你侧过身，钻进墙里往上走。|你遮住烛光往上爬，数着拐了几个弯。|你悄悄往上走，一侧肩膀贴着石头，塔在你四周呼吸。}}
+
+@event heist_tower_unmapped
+# en: The Tower at Midnight
+title [421c96] = 午夜的塔
+# en: {~Midnight at the foot of the seventh tower. The stair is locked, as it has been for a century, and the arrow-slits above are full of moon.|The seventh tower at midnight, locked, and very quiet. Somewhere up in it, the wind finds a slit and plays one note.} {member(cartographers): The Cartographers swear the tower is fatter outside than in.|Somebody in the castle must know another way up.}
+text [f47c20] = {~午夜，第七塔脚下。楼梯锁着，一百年来一直锁着，上面的箭孔里满是月光。|午夜的第七塔，锁着，非常安静。塔上某处，风找到一个箭孔，吹出一个音。} {member(cartographers): 制图社的人发誓，这座塔外面比里面胖。|城堡里一定有人知道另一条上去的路。}
+# en: The foot of a dark tower stair at midnight, the door locked, a student with a candle looking up at arrow-slits full of moonlight.
+scene [1aa783] = 午夜，黑暗的塔楼楼梯脚下，门锁着，一个学生举着蜡烛，仰望着洒满月光的箭孔。
+# en: Listen to the tower
+opt.left.label [c23269] = 听这座塔
+# en: {~You sit on the cold bottom step and listen. The tower creaks and settles, floor by floor, and then on one floor it stops, as if something up there is listening back.|You listen until the candle gutters. High up, a door that nobody opens bangs once in the wind.}
+opt.left.say.1 [06fcc0] = {~你坐在冰冷的最底一级台阶上听着。塔一层一层地吱嘎作响、慢慢安顿，然后在某一层停住了，好像上面有什么东西也在听你。|你一直听到蜡烛快灭了。高处，一扇从没人开过的门被风吹得砰地响了一下。}
+# en: Go back to bed
+opt.right.label [ef6924] = 回去睡觉
+# en: {~You leave the tower to its century.|Not without a way up. You go back to bed.}
+opt.right.say.1 [2a15b2] = {~你把这座塔留给它的一百年。|没有上去的路不行。你回去睡觉了。}
+
+@thread heist_tower
+# en: The Seventh Tower by Night
+name [4bf97b] = 夜里的第七塔
+# en: A servants' stair climbs inside the seventh tower's wall to the old classrooms, shut for a century. The Cartographers go at midnight.
+premise [79a26f] = 一道仆人楼梯在第七塔的墙里往上，通到关了一百年的旧教室。制图社的人午夜去。
+# en: You climbed the stair inside the seventh tower's wall at midnight.
+journal.1 [3c1340] = 你在午夜爬上了第七塔墙里的楼梯。
+# en: In the old duelling master's study you read how to take another's magic, and learned Extraction.
+journal.2 [9ffc0f] = 在老决斗师的书房里，你读到了怎样夺取别人的魔力，学会了汲取。
+# en: You reached the old duelling master's study, at the top of the classrooms.
+journal.3 [179c86] = 你到了老决斗师的书房，就在那些教室的最上面。
+
+@event tw_dead_end
+# en: A Door That Won't
+title [28bdda] = 打不开的门
+# en: {heist_depth >= 7: The study's lock won't take another try tonight, and every board on the landing has heard you. The only way left is down.|{~The door to the next floor has swollen shut in a century of damp, and it isn't going to open quietly tonight.|The stair turns, and turns, and comes back to the same landing. The tower has decided you've climbed enough.|A whole flight of the old stair has rotted away above you. The rest of the tower is out of reach tonight.}}
+text [d3637b] = {heist_depth >= 7: 书房的锁今晚受不了再试一次了，平台上的每一块木板都听见了你。唯一剩下的路是往下。|{~通往上一层的门在一百年的潮气里胀死在门框里，今晚它不会安安静静地开。|楼梯转啊转，又回到同一个平台。塔已经认定你爬得够高了。|你头顶一整段旧楼梯都烂掉了。今晚塔的其余部分够不着了。}}
+# en: A narrow tower landing in darkness, an old classroom door swollen shut in its frame, a student's candle at its foot.
+scene [4048a0] = 黑暗中狭窄的塔楼平台，一扇旧教室的门胀死在门框里，门脚下是一个学生的蜡烛。
+# en: Go back down with what you carry
+opt.left.label [324650] = 带着手里的东西下去
+# en: {heist_depth >= 7: You leave the master's door to its century and go down, all the way, with what you have.|{~You go back down by the way you know.|You take the hint, and the stair.|You go down, and the tower settles behind you.}}
+opt.left.say.1 [1f2d1e] = {heist_depth >= 7: 你把决斗师的门留给它的一百年，带着手里的东西一路下去了。|{~你沿着认得的路下去。|你领会了这个暗示，也领会了楼梯。|你下去了，塔在你身后安顿下来。}}
+# en: Search where you stand
+opt.right.label [f7f345] = 就地搜一搜
+# en: {heist_depth >= 7: Behind the stacked desks by the study door, a drawer has come loose. Something small and old comes with you.|{~Under a loose board on the landing, a tin of old marbles and a note that just says "Sorry about the frog". You take the tin.|In a niche in the wall, a brass bell-pull handle, very fine. It comes down with you.|On the window ledge, a pair of spectacles with gold rims, left a century ago. You take them.}}
+opt.right.say.1 [a3d5ab] = {heist_depth >= 7: 书房门边摞着的课桌里，有一个抽屉松了。一样又小又旧的东西跟你走了。|{~平台上一块松动的木板底下，有一铁盒旧弹珠和一张纸条，上面只写着“青蛙的事，对不起”。你拿了那个铁盒。|墙上一个壁龛里，有一个黄铜拉铃把手，非常精致。它跟你下来了。|窗台上，一副金边眼镜，一百年前落下的。你拿走了。}}
+# en: {heist_depth >= 7: The desks shift as you reach in, and the whole heap groans. You leave them be.|{~You find a splinter, and dust, and nothing.|A board gives under your knee, and you leave the landing alone.|The ledge is crumbling, and so, briefly, are you.}}
+opt.right.say.2 [0dbb42] = {heist_depth >= 7: 你一伸手，课桌就挪了，整堆都在呻吟。你不再碰它们。|{~你找到一根木刺，一些灰尘，别的什么也没有。|一块木板在你膝盖下塌了，你不再碰这个平台。|窗台在碎，有那么一会儿，你也是。}}
+
+@event tw1_one_shoulder
+# en: One Shoulder Wide
+title [99f680] = 只容一肩
+# en: {seen(tw1_one_shoulder) > 1: The pinch in the wall stair again. You know exactly how far to breathe out now, and the stone still takes a button for its trouble.|Halfway up the wall stair narrows from one shoulder to less. The servants who built it must have been very thin, or very determined. Somewhere above the pinch, a draught; somewhere below it, everything you've climbed.}
+text [28eaf3] = {seen(tw1_one_shoulder) > 1: 又是墙中楼梯的那道窄处。你现在清楚该呼出多少气了，石头照样要收走一颗纽扣当过路费。|爬到一半，墙里的楼梯从只容一肩变得更窄。造它的仆人们一定很瘦，或者很执着。窄处上方有一阵穿堂风；下方是你爬过的一切。}
+# en: A student squeezing sideways up an impossibly narrow spiral stair inside a stone wall, candle held up, cobwebs in their hair.
+scene [92509a] = 一个学生侧着身子挤上石墙里一道窄得不可思议的螺旋楼梯，举着蜡烛，头发上沾着蛛网。
+# en: Back down while you can turn round
+opt.left.label [bd5f61] = 趁还转得过身，退下去
+# en: {~You back down into the cellar and the stair lets you go.|You decide the pinch is the tower's way of saying no.}
+opt.left.say.1 [9fa44d] = {~你退回地窖，楼梯放你走了。|你认定这道窄处是塔在说不。}
+# en: Breathe out and squeeze
+opt.right.label [c65b53] = 呼出一口气，挤过去
+# en: {~You breathe out, turn sideways and go up the pinch an inch at a time. On the far side, the stair widens like a sigh.|You squeeze through with your candle held over your head and a button left behind on the stone.}
+opt.right.say.1 [46aca9] = {~你呼出一口气，侧过身，一寸一寸地挤过窄处。到了另一边，楼梯像松了一口气似的宽了。|你把蜡烛举过头顶挤了过去，在石头上留下了一颗纽扣。}
+# en: {~You stick, halfway, for a very long minute, and come loose with a scrape that the whole tower hears.|Your candle catches the cobwebs, and for a moment the stair is full of light and smoke and you.}
+opt.right.say.2 [2960c1] = {~你卡在了半中间，卡了长长的一分钟，脱身时刮出的声音整座塔都听见了。|你的蜡烛点着了蛛网，有那么一瞬间，楼梯里满是光、烟，还有你。}
+
+@event tw1_someone_else
+# en: Someone Else's Climb
+title [26225b] = 别人也在爬
+# en: {seen(tw1_someone_else) > 1: A light coming down the wall stair again, and footsteps. You're not the only one who uses it, and never were.|A light is coming down the wall stair towards you, and footsteps. Someone else knows this stair.} The only place to go is a niche in the stone, barely deep enough for a candle, let alone you.
+text [7c1539] = {seen(tw1_someone_else) > 1: 又有一盏灯顺着墙里的楼梯下来，还有脚步声。用这道楼梯的不止你一个，从来都不止。|一盏灯顺着墙里的楼梯朝你下来，还有脚步声。还有别人知道这道楼梯。}唯一能躲的地方是石头上的一个壁龛，放一支蜡烛都勉强，更别说你了。
+# en: A narrow stone stair in darkness, a lantern's glow coming down it from above, a student pressed into a tiny niche in the wall.
+scene [e4f0e0] = 黑暗中狭窄的石楼梯，一盏提灯的光从上面照下来，一个学生紧紧缩在墙上一个小壁龛里。
+# en: Go back down before they reach you
+opt.left.label [c6843d] = 趁他们还没下来，退回去
+# en: {~You go back down faster than you came up, and out through the cellar, and never see who it was.|You retreat. The light stops at the top of the pinch, as if listening, and goes back up.}
+opt.left.say.1 [b81c77] = {~你下得比上来时还快，从地窖出去了，始终没看见是谁。|你退了下去。那盏灯在窄处上方停住，像在听，然后又回上去了。}
+# en: Press into the niche
+opt.right.label [21605c] = 缩进壁龛
+# en: {~They pass so close their sleeve brushes yours: a student in a house scarf, out of bounds with a lantern and a sack, who never looks sideways. On the step where they paused, a dropped coin. You take it and climb on.|A student with Cartographer chalk on their sleeve goes down past you, humming. On the step above, they've dropped a silver thimble. It's yours now.}
+opt.right.say.1 [86ffc5] = {~那人经过时袖子擦到了你的袖子：一个围着学院围巾的学生，越界出来，提着灯和一只麻袋，始终没往旁边看。在那人停过的台阶上，有一枚掉落的硬币。你拿上它，接着往上爬。|一个袖子上沾着制图社粉笔灰的学生哼着歌从你身边下去了。上一级台阶上，那人掉了一枚银顶针。现在它是你的了。}
+# en: {~The lantern swings round into your face, and you bolt before the prefect behind it can find your name.|You sneeze. It's the dust. The lantern stops.}
+opt.right.say.2 [31fa92] = {~提灯一转，照在你脸上，你趁提灯后面的级长还没想起你的名字，拔腿就跑。|你打了个喷嚏。是灰。提灯停住了。}
+
+@event tw1_spyhole
+# en: The Spyhole
+title [26c948] = 窥孔
+# en: {seen(tw1_spyhole) > 1: The spyhole again, and through it the round's lantern on the main stair, on time to the minute.|The wall stair has a spyhole onto the tower's main stair, so the servants could see who was coming. Through it, a lantern: a prefect on the tower's round, slow, thorough, and heading up the way you're going.}
+text [8f5fe2] = {seen(tw1_spyhole) > 1: 又是那个窥孔，透过它，巡逻的提灯在主楼梯上，分秒不差。|墙里的楼梯上有个窥孔，正对着塔的主楼梯，好让仆人们看见谁来了。透过它，一盏提灯：一位级长在巡塔，慢，仔细，正朝你要去的方向往上走。}
+# en: A tiny spyhole in a stone wall, a student's eye at it, beyond it a broad tower staircase with a prefect's lantern moving down it.
+scene [51bbb2] = 石墙上一个小小的窥孔，一个学生把眼睛贴在上面，外面是宽阔的塔楼主楼梯，一位级长的提灯正往下移动。
+# en: Wait for the round to pass, then go down
+opt.left.label [0999df] = 等巡逻过去，然后下去
+# en: {~You watch the prefect all the way up and all the way down, and then you go back to bed.|You take the round as the tower's answer, and go.}
+opt.left.say.1 [c8ac03] = {~你看着级长一路上去、一路下来，然后回去睡觉。|你把这次巡逻当作塔的回答，走了。}
+# en: Time your climb to the round
+opt.right.label [767d30] = 跟着巡逻的节奏往上爬
+# en: {~You count the prefect's steps through the spyhole, and climb when they climb, so their footsteps cover yours.|You learn the round in one pass, and go up behind it, a floor behind, like a shadow it hasn't noticed.}
+opt.right.say.1 [c7fe5b] = {~你透过窥孔数着级长的步子，他迈步时你也迈步，让他的脚步声盖住你的。|你看一遍就摸清了巡逻的路线，跟在后面往上走，隔着一层楼，像一个它没察觉的影子。}
+# en: {~You climb a beat too late. Your step lands in a silence, and the prefect's lantern stops.|You lose count, and come out on the landing face to face with the round.}
+opt.right.say.2 [2a565f] = {~你晚了一拍。你的脚步落在一片寂静里，级长的提灯停住了。|你数乱了，一出平台就和巡逻撞了个正着。}
+
+@event tw2_exam_cupboard
+# en: The Examiner's Cupboard
+title [c8fdd7] = 考官的柜子
+# en: {seen(tw2_exam_cupboard) > 1: {flag(heist_papers_taken): The examiner's cupboard again, its lock scratched now, a bundle or two lighter than it was.|The examiner's cupboard again, locked as ever, the ribbons still tied.}|The first classroom off the landing still has its examiner's cupboard, locked, and through the crack in the doors, bundles of exam papers tied with faded ribbon, a century of them, answers and all. Collectors pay for old papers. Historians pay more.}
+text [07642f] = {seen(tw2_exam_cupboard) > 1: {flag(heist_papers_taken): 又是考官的柜子，锁上如今有了划痕，考卷少了一两捆。|又是考官的柜子，照旧锁着，缎带照旧系着。}|平台边第一间教室里，考官的柜子还在，锁着，从柜门缝里能看到一捆捆用褪色缎带扎着的考卷，一百年的量，连答案都在。收藏家会为旧考卷付钱。历史学家付得更多。}
+# en: A dusty old classroom at night, a tall locked cupboard with its doors open a crack, bundles of yellowed exam papers tied with ribbon inside.
+scene [8baa9f] = 夜里一间落满灰的旧教室，一个高高的上锁柜子开着一条缝，里面是用缎带扎着的发黄考卷。
+# en: Leave the papers, and go
+opt.left.label [22a7fb] = 别管考卷，走吧
+# en: {~You leave the past's exams to the past.|You go back down the wall stair with clean hands and nothing in them.}
+opt.left.say.1 [828ad0] = {~你把过去的考试留给过去。|你空着干净的手，顺着墙里的楼梯下去了。}
+# en: Pick the cupboard's lock
+opt.right.label [546d5e] = 撬开柜子的锁
+# en: {~The old lock gives in a puff of dust. You take the two bundles with the best seals, a century of sweat in faded ink.|Inside, the papers, and on top, a marked script with a teacher's note: "See me." You take that one, and two bundles more.}
+opt.right.say.1 [2411b3] = {~老锁在一团灰尘里开了。你拿走封印最好的两捆，一百年的汗水，墨迹都褪了。|里面是考卷，最上面是一份批改过的答卷，老师写着：“来见我。”你拿了那一份，又拿了两捆。}
+# en: {~The lock gives, and so does the cupboard, slowly, forward, onto the floor.|The pick snaps, and the cupboard door swings out and bangs like a shot.}
+opt.right.say.2 [1e834a] = {~锁开了，柜子也跟着慢慢往前倒，倒在了地上。|撬锁针断了，柜门甩出来，砰的一声像枪响。}
+
+@event tw2_telling_floor
+# en: The Telling Floor
+title [714647] = 会告密的地板
+# en: {seen(tw2_telling_floor) > 1: The telling floor again. You know half the chalked crosses by heart now, and the other half by bruises.|The old classrooms are a run of rooms, one into the next, and their floorboards have had a century to learn to talk. Every one creaks a different note. Someone, a hundred years ago, chalked a few of them with a cross.}
+text [107f18] = {seen(tw2_telling_floor) > 1: 又是那块会告密的地板。画叉的木板你如今记住了一半，另一半靠的是淤青。|旧教室是一间连着一间的，地板有一百年的时间学说话。每一块吱嘎的音都不一样。一百年前，有人用粉笔在其中几块上画了叉。}
+# en: A long dark classroom with old desks in rows, moonlight in stripes across worn floorboards, a student stepping carefully from board to board.
+scene [86b688] = 一间长长的昏暗教室，旧课桌一排排摆着，月光一道道落在磨旧的地板上，一个学生小心地一块一块踩过去。
+# en: Go back the way you know
+opt.left.label [091e28] = 沿认得的路回去
+# en: {~You go back over the boards you've already crossed, and down.|You leave the floor to its talking.}
+opt.left.say.1 [cf232e] = {~你踩着已经走过的木板回去，下楼了。|你让地板自己说话去。}
+# en: Cross on the chalked boards
+opt.right.label [768b56] = 踩着画叉的木板过去
+# en: {~You go from cross to cross like stepping stones, and the floor keeps its mouth shut all the way across.|You cross in a silence so careful the floor seems to hold its breath with you.}
+opt.right.say.1 [8f6a86] = {~你一个叉一个叉地踩过去，像踩着垫脚石，地板一路都闭着嘴。|你走得那么小心，那么安静，地板好像也跟你一起屏住了呼吸。}
+# en: {~One cross was a joke. The board under it shrieks like a gull.|You miss a chalk mark by an inch, and the floor tells the whole tower.}
+opt.right.say.2 [5b122e] = {~有一个叉是开玩笑的。它底下的木板像海鸥一样尖叫。|你差了一寸没踩上粉笔记号，地板告诉了整座塔。}
+
+@event tw2_class_register
+# en: The Last Register
+title [75a4f5] = 最后的点名册
+# en: {seen(tw2_class_register) > 1: The register still lies open at its last day, everyone present, its silver clasp catching the moon.|On the teacher's desk, a class register lies open at its last day, a century ago. Every name is ticked present. After the last name, in the same hand: "Tower closed. Lessons moved." Nothing about why. The register is bound in good leather, with a silver clasp.}
+text [973cb1] = {seen(tw2_class_register) > 1: 点名册还摊在它的最后一天，人人到勤，银扣映着月光。|讲台上，一本点名册摊在它的最后一天，一百年前。每个名字都打了到勤的勾。最后一个名字后面，同一个笔迹写着：“塔楼关闭。课程迁走。”没说为什么。点名册是上好的皮面，带一个银扣。}
+# en: A teacher's desk in an abandoned classroom, an old leather register open on it, the last page of names with a date a century old, moonlight on it.
+scene [66e119] = 废弃教室里的讲台，上面摊着一本旧皮面点名册，最后一页的名字上写着一百年前的日期，月光照在上面。
+# en: Leave it open at its last day
+opt.left.label [6e9e58] = 让它摊在最后一天
+# en: {~You leave the register as it was, everyone present.|You don't take it. It seems rude to the class.}
+opt.left.say.1 [143b88] = {~你让点名册保持原样，人人到勤。|你没拿它。对这个班来说，拿走好像很失礼。}
+# en: Take the register
+opt.right.label [030806] = 拿走点名册
+# en: {~You slip it into your shirt, silver clasp cold against your ribs, and go on as quietly as a class that has been told to.|You take it. Somewhere a door bangs in the wind, and nobody comes.}
+opt.right.say.1 [6c3c26] = {~你把它塞进衬衫，银扣凉凉地贴着肋骨，然后像一个被叮嘱过要安静的班级那样安静地往前走。|你拿走了它。某处一扇门被风吹得砰地一响，没有人来。}
+# en: {~The silver clasp snaps shut on your finger with a click that carries.|As you lift it, the whole desk shifts on the boards, and the tower answers.}
+opt.right.say.2 [3104c5] = {~银扣咔哒一声夹住了你的手指，声音传得很远。|你一拿起它，整张讲台在地板上挪了一下，塔回应了。}
+
+@event tw3_no_wind
+# en: When the Wind Stops
+title [ec09e9] = 风停的时候
+# en: {seen(tw3_no_wind) > 1: The corridor of slits again, and again the wind drops as you reach it, as if it knows your step.|Up here the arrow-slits have been playing the wind all night, covering your steps. Now, between one note and the next, the wind stops, and the tower is so quiet you can hear your candle burn.} ⚠ One wrong sound here, and there's no near thing.
+text [5567f4] = {seen(tw3_no_wind) > 1: 又是那条满是箭孔的走廊，你一走到，风又停了，好像它认得你的脚步。|到了上面，箭孔整夜都在吹奏风声，盖住你的脚步。此刻，在两个音之间，风停了，塔里静得你能听见蜡烛在燃烧。}⚠ 在这里出一点错的声音，就没有险些这回事了。
+# en: A dark tower corridor lined with arrow-slits, moonlight falling through them in bars, utterly still air, a student frozen mid-step.
+scene [5ce270] = 黑暗的塔楼走廊两侧排着箭孔，月光一道道落进来，空气完全静止，一个学生停在半步之中。
+# en: Wait for the wind, then go back down
+opt.left.label [931e08] = 等风回来，然后下去
+# en: {~You wait, not breathing, until the wind comes back, and go down under its cover.|You stand like a statue until the slits start singing again, and take the hint.}
+opt.left.say.1 [710dc9] = {~你一动不动地等着，屏住呼吸，直到风回来，借着它的掩护下去了。|你像雕像一样站着，直到箭孔重新唱起来，然后领会了暗示。}
+# en: Cross in the silence
+opt.right.label [4f78a6] = 在寂静中穿过去
+# en: {~You cross the whole corridor in the silence, step by soundless step. At the end, on a sill, a silver pencil someone left in a hurry. You take it.|You go through the quiet like a cat through a sleeping house, and find on the far side a dropped purse, very old.}
+opt.right.say.1 [cf2639] = {~你在寂静中一步一步无声地走完了整条走廊。尽头的窗台上，有一支别人匆忙间落下的银铅笔。你拿走了。|你像猫穿过一座熟睡的房子一样穿过寂静，在另一头捡到一个掉落的钱包，非常旧。}
+# en: {~Your shoe squeaks. In that silence, it's a shout.|You drop the candle. It rolls, very loudly, all the way down the corridor and the stair, to a prefect's feet.}
+opt.right.say.2 [03922a] = {~你的鞋吱了一声。在那样的寂静里，那就是一声大喊。|你的蜡烛掉了。它滚着，非常响，一路滚下走廊，滚下楼梯，滚到一位级长脚边。}
+
+@event tw3_orrery
+# en: The Orrery
+title [e04159] = 太阳系仪
+# en: {seen(tw3_orrery) > 1: {flag(heist_pearl_taken): The orrery is still turning, one planet short where you took the pearl.|The orrery is still turning, the pearl still riding its little arm.}|The astronomy classroom's brass orrery is still turning, a century after anyone wound it, its planets on long arms going round and round in the dark. The smallest planet is a pearl. It would come off its arm, if you were quick, and the orrery wouldn't stop.}
+text [7d7740] = {seen(tw3_orrery) > 1: {flag(heist_pearl_taken): 太阳系仪还在转，在你取走珍珠的地方少了一颗行星。|太阳系仪还在转，珍珠还骑在它的小臂上。}|天文教室里的黄铜太阳系仪还在转，一百年没人上过发条了，行星在长臂上一圈又一圈地在黑暗中转着。最小的那颗行星是一颗珍珠。手快的话，它能从臂上取下来，而仪器不会停。}
+# en: An abandoned astronomy classroom at night, a large brass orrery of planets on arms still slowly turning in the dark, a student reaching carefully toward one small planet.
+scene [cf692b] = 夜里一间废弃的天文教室，一台大型黄铜太阳系仪的行星在臂上于黑暗中缓缓转动，一个学生小心地伸手去够一颗小行星。
+# en: Leave it turning
+opt.left.label [661034] = 让它继续转
+# en: {~You watch it go round once more and leave it to its century.|You leave the planets where they are. Somebody should.}
+opt.left.say.1 [ca9692] = {~你看着它又转了一圈，把它留给它的一百年。|你让行星待在原地。总得有人这么做。}
+# en: Take the pearl as it passes
+opt.right.label [08d00d] = 趁它经过取下珍珠
+# en: {~You time the arm, and the pearl is in your palm before it's gone round. The orrery doesn't notice. It goes on turning, one planet short.|Quick as a pickpocket, you lift the pearl as it passes. The little arm swings on, empty, keeping time.}
+opt.right.say.1 [ff75fa] = {~你算准长臂的时机，珍珠在它转走之前就到了你掌心。仪器毫无察觉，少了一颗行星，照样转着。|你像扒手一样快，在珍珠经过时取了下来。那根小臂空着荡过去，照样计时。}
+# en: {~You catch the arm instead of the pearl, and the whole orrery stops with a groan of brass that wakes the tower.|You're too slow, and the arm takes your knuckles going round, and you yelp.}
+opt.right.say.2 [4af1e6] = {~你抓住的是长臂而不是珍珠，整台仪器嘎吱一声停了，把塔吵醒了。|你太慢了，长臂转过来打在你指节上，你叫出了声。}
+
+@event tw3_portrait_eyes
+# en: The Portrait on the Landing
+title [03be50] = 平台上的画像
+# en: {seen(tw3_portrait_eyes) > 1: The portrait at the top of the classrooms opens its painted eyes before you've reached it. "You again," it says.|At the top of the classrooms hangs a portrait of a professor a century dead, in a frame worth more than your trunk. The painted eyes follow you, and the painted mouth is opening, as portraits here do, to ask what you think you're doing.}
+text [126207] = {seen(tw3_portrait_eyes) > 1: 你还没走到，教室最上头的那幅画像就睁开了画中的眼睛。“又是你，”它说。|教室的最上头挂着一幅一百年前去世的教授的画像，画框比你的箱子还值钱。画中的眼睛跟着你，画中的嘴正张开，像这里的画像都会做的那样，要问你以为自己在干什么。}
+# en: A dim tower corridor with a large stern painted portrait of a robed professor, a student creeping past beneath it, the painted eyes turned toward them.
+scene [e5336c] = 昏暗的塔楼走廊里挂着一幅严厉的穿长袍教授的大画像，一个学生从下面悄悄走过，画中的眼睛转向了他们。
+# en: Apologise to him, and go
+opt.left.label [f38032] = 向他道歉，然后走
+# en: {~You bow, and say you were just leaving, and he says "Quite," and you were.|You tell the portrait you're lost. "Down," he says, and you go down.}
+opt.left.say.1 [fd6f21] = {~你鞠了一躬，说你正要走，他说“正是”，于是你走了。|你告诉画像你迷路了。“往下，”他说，你就往下走了。}
+# en: Talk your way past him
+opt.right.label [93fd71] = 说服他放你过去
+# en: {~You tell him you're the new caretaker, sent to check the damp. He's been bored for a century, and believes you because he wants to.|You tell him the lessons are moving back up. He's so pleased he forgets to ask your name.}
+opt.right.say.1 [d480f2] = {~你告诉他你是新来的看门人，来检查潮气。他无聊了一百年，因为想信，所以信了你。|你告诉他课程要搬回楼上了。他高兴得忘了问你的名字。}
+# en: {~"Intruder," says the portrait, in a voice built for a full hall, and doesn't stop saying it.|He doesn't believe a word, and he has a century of saved-up shouting.}
+opt.right.say.2 [500d47] = {~“有人闯入，”画像用一副为满堂听众准备的嗓子说，而且不停地说。|他一个字都不信，而且攒了一百年的吼叫。}
+
+@event tw_masters_study
+# en: The Duelling Master's Study
+title [78a98f] = 决斗师的书房
+# en: At the top of the old classrooms, the stair is choked with stacked desks, and beside them is a locked study with a brass plate: MASTER OF DUELLING. It was locked with the rest of the tower, and nobody has had its key since. {flag(star_key) or flag(gave_star_key) or flag(key_taken): Up past the desks, the tower is quiet.|Up past the desks, something in the tower hums at midnight, and every hair on your arms stands up. You won't be going higher.}
+text [ba76c4] = 旧教室的最上头，楼梯被摞起来的课桌堵住了，旁边是一间锁着的书房，铜牌上写着：决斗师。它和塔的其余部分一起锁上了，从那以后谁也没有过它的钥匙。{flag(star_key) or flag(gave_star_key) or flag(key_taken): 课桌再往上，塔里很安静。|课桌再往上，塔里有什么东西在午夜嗡嗡作响，让你胳膊上的每根汗毛都竖了起来。你不会再往上了。}
+# en: A small locked study at the top of an old tower's classrooms, a desk under a dust sheet, a leather notebook in a glass case, a student kneeling at the lock with picks.
+scene [7bbcc0] = 一座旧塔楼教室最上头一间锁着的小书房，书桌上蒙着防尘布，玻璃盒里放着一本皮面笔记本，一个学生拿着撬锁针跪在锁前。
+# en: Leave the master to his study
+opt.left.label [3030c9] = 把书房留给决斗师
+# en: {~You touch the brass plate once and go back down. You got this far.|You don't try the door. Some rooms are closed for a reason.}
+opt.left.say.1 [5ea37b] = {~你摸了一下铜牌就下去了。能走到这儿就够了。|你没碰那扇门。有些房间是有理由关着的。}
+# en: Pick the lock and search the study
+opt.right.label [d89aeb] = 撬开锁，搜一搜书房
+# en: In a glass case lies a notebook the master confiscated from a student duellist long ago, its ink faded brown. In a neat and terrible hand it tells how to reach into someone and take their magic for yours. You read it through, and close it with a strength in your hands that isn't yours. Extraction.
+opt.right.say.1 [d58513] = 玻璃盒里放着一本笔记本，是决斗师很久以前从一个学生决斗者那里没收来的，墨迹已经褪成褐色。它用工整而可怕的笔迹写着，怎样伸进别人体内，把他们的魔力据为己有。你把它读完，合上时，手里有了一股不属于你的力量。汲取。
+# en: The confiscated notebook is in its glass case, and you know already what it says. You leave it, and take the master's silver inkstand and a box of old duelling medals instead.
+opt.right.say.2 [3999db] = 那本没收来的笔记本在玻璃盒里，你已经知道里面写的是什么。你没碰它，拿走了决斗师的银墨水台和一盒旧决斗奖章。
+# en: {~The old lock is warded, and it rings like a struck sword.|The door gives, and so does its top hinge, and it comes down on the desks with a crash that wakes everything.}
+opt.right.say.3 [bbf712] = {~老锁上有结界，像被敲响的剑一样鸣响。|门开了，上面的合页也开了，门砸在课桌上，轰隆一声把一切都吵醒了。}

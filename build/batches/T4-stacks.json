@@ -1,0 +1,82 @@
+{
+  "name": "T4-stacks",
+  "at": 1793295098034,
+  "files": [
+    "content/events/heists/shared.grim",
+    "content/events/heists/stacks.grim"
+  ],
+  "events": [
+    "heist_way_out",
+    "heist_slip",
+    "heist_caught",
+    "heist_stacks_enter",
+    "heist_stacks_unmapped",
+    "st_dead_end",
+    "st1_taut_chains",
+    "st1_library_rounds",
+    "st1_catalogue",
+    "st2_breathing",
+    "st2_charging_book",
+    "st2_other_lamp",
+    "st3_mirror_desk",
+    "st3_no_lamp",
+    "st3_glass_case",
+    "st_vault"
+  ],
+  "contentHash": "30d5df",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 145,
+      "total": 145
+    }
+  },
+  "critic": {
+    "batch": "T4-stacks",
+    "accept": true,
+    "round": 2,
+    "summary": "All eleven round-1 issues are fixed, and fixed well. The slip and the catch now read the state they are shown in (heist_dropped, per-option loot reset, heist_warned for the escalation say). The catch escalates directly and keeps the morning word for an escape. The way out no longer invents items. The book-lift agrees with T3. The shelf is pinned to the east stacks everywhere it is named, step texts fit every depth they can be drawn at, and every step has a familiarity branch. What remains are three one-line polish items where a branch didn't reach a say.",
+    "issues": [
+      {
+        "event": "st_dead_end",
+        "problem": "The text and left say now have a vault-door branch for depth 7, but the right option's win and lose says still describe 'the shelf that closed the aisle', 'the fallen shelf' and 'the shelf breathes in'. At the vault door there is no such shelf.",
+        "fix": "Give the right option's says a `{heist_depth >= 7: …}` branch, e.g. win 'Among the crates stacked outside the door, one lid is loose. Something small and old comes with you.', lose 'The goblin catches you at the crates and says so. You leave them be.'"
+      },
+      {
+        "event": "heist_caught",
+        "problem": "The run-away win says 'You leave the sack to the prefect' even when the text has just said you were empty-handed, so there is no sack.",
+        "fix": "Branch it like the text: `{heist_loot == 0: You run, and know every turn better than they do.|You leave the sack to the prefect and run, and know every turn better than they do.}`. The say must stay before the `heist_loot = 0` line so it can read the loot."
+      },
+      {
+        "event": "st3_glass_case",
+        "problem": "On a second showing the text reads 'a few books fewer … rewoven tighter than before. Someone has noticed', which assumes you took books last time. You may have left them under glass, or failed the charm.",
+        "fix": "Key it on whether you robbed it (a flag on the win, e.g. `flag heist_glass_robbed`): `{flag(heist_glass_robbed): …a few books fewer, the charm rewoven tighter. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}`."
+      }
+    ]
+  },
+  "spotCheck": [
+    "st3_glass_case",
+    "st3_no_lamp"
+  ],
+  "accepted": true
+}

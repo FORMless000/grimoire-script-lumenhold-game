@@ -1,0 +1,18 @@
+{
+  "batch": "T5-tower-spells",
+  "accept": true,
+  "round": 2,
+  "summary": "All eight round-1 issues are fixed. The plot-safety blocker is gone: the study shares no date and no 'reasons' with the tower's locking, and the Extraction notebook is a long-ago confiscation. The climber, the register, the plot card's line, the teaser, the dead end and the header comment are all right now. What remains is polish: five of the new familiarity branches gate on the highest depth reached, not on having seen that card, so a player can read 'again' about a step they never met; and one say still calls the confiscated notebook 'the master's'.",
+  "issues": [
+    {
+      "event": "tw1_one_shoulder, tw1_someone_else, tw1_spyhole, tw2_exam_cupboard, tw2_telling_floor, tw3_no_wind",
+      "problem": "These familiarity branches read `heist_tower_highest >= 3`, `>= 5` or `>= 7`, which means you have passed the band before, not that you met this card. Each band has three steps and you take two, so a player who passed band 1 by the spyhole and the niche is told 'The pinch in the wall stair again' the first time they reach it. The cupboard's branch also says 'its lock scratched now, a bundle or two lighter', which assumes you picked it and took papers. A player who left it, or failed the lock, did neither. The register, the orrery and the portrait already gate correctly, with `seen(<own id>) > 1`. (The stacks has the same depth-gated pattern, accepted in T4. The same one-line fix applies there.)",
+      "fix": "Gate each on `seen(<own id>) > 1`, as the register, orrery and portrait do. For the cupboard, key the lighter-bundle line on a flag set by its win, like `heist_pearl_taken`: `{flag(heist_papers_taken): …its lock scratched, a bundle or two lighter.|The examiner's cupboard again, locked as ever, the ribbons still tied.}`."
+    },
+    {
+      "event": "tw_masters_study",
+      "problem": "The else-branch say (Extraction already known) begins 'The master's notebook is in its glass case', but the Extraction say now establishes it as a student duellist's notebook that the master confiscated.",
+      "fix": "'The confiscated notebook is in its glass case, and you know already what it says. You leave it, and take the master's silver inkstand and a box of old duelling medals instead.' (Re-run i18n for that line.)"
+    }
+  ]
+}

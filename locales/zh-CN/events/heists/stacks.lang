@@ -1,0 +1,273 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/heists/stacks.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event heist_stacks_enter
+# en: The Stair Under the Chains
+title [06a836] = 锁链下的楼梯
+# en: {heist_stacks_deepest == 0: Midnight in the Restricted Section. By the book-return hatch, the kickboard under the east stacks' last chained shelf swings open where your map says it will, on the stair going down. Below, the deep stacks: books nobody has signed out in a century, and the confiscation vault at the bottom.|{~The kickboard, the stair, the chains above you pulled taut by something below.|The stair under the chained shelf, and the cold breath coming up it.|Midnight, the chained shelf, and the dark going down.}} {flag(carto_book_lift): Or there's the bindery's book-lift, a floor below, which goes down as far as the breathing shelves.|}
+text [9cc5e6] = {heist_stacks_deepest == 0: 午夜的禁书区。还书口旁边，东区书库最后一排锁链书架下的踢脚板，正如你的地图所说，一推就开，露出往下的楼梯。下面是深层书库：一百年没人借过的书，最底下是没收库。|{~踢脚板，楼梯，头顶那些被下面的东西拉紧的锁链。|锁链书架下的楼梯，还有顺着它往上冒的冷气。|午夜，锁链书架，往下延伸的黑暗。}} {flag(carto_book_lift): 或者还有装订室的书梯，在下面一层，能一直下到会呼吸的书架那里。|}
+# en: A dark library aisle at midnight, the last shelf's kickboard swung open on a narrow stair going down, a student with a shaded candle at the top.
+scene [13823b] = 午夜昏暗的图书馆过道，最后一排书架的踢脚板敞开着，露出一道往下的窄楼梯，一个学生举着遮了光的蜡烛站在楼梯顶上。
+# en: Not tonight
+opt.left.label [4bf72b] = 今晚不去
+# en: {~You put the kickboard back and go to bed with the stair in your head.|Not tonight. The chains settle as you leave, as if disappointed.|You listen at the top of the stair for a while, and go no further.}
+opt.left.say.1 [d22360] = {~你把踢脚板放回去，带着脑子里的楼梯去睡觉。|今晚不去。你离开时锁链松了下来，像是有点失望。|你在楼梯顶上听了一会儿，没再往下走。}
+# en: Go down
+opt.right.label [2ff2a1] = 下去
+# en: A heist: press on card by card, slip away with what you carry any time.
+opt.right.hint [f5be0b] = 一次偷盗：一张牌一张牌地往前，随时可以带着手里的东西溜走。
+# en: {flag(carto_book_lift): You go down to the bindery, climb into the book-lift's box and let the rope down hand over hand, until its knots stop you where the shelves start breathing.|{~You pull the kickboard shut behind you and go down by your map.|You shade your candle and go down, counting steps.|You go down quietly, one hand on the cold wall, the chains creaking overhead.}}
+opt.right.say.1 [084368] = {flag(carto_book_lift): 你下到装订室，爬进书梯的木箱，一把一把地放下绳子，直到绳上的结让你停在书架开始呼吸的地方。|{~你在身后关上踢脚板，照着地图往下走。|你遮住烛光往下走，一级一级地数。|你一只手扶着冰冷的墙，悄悄往下走，锁链在头顶吱吱作响。}}
+
+@event heist_stacks_unmapped
+# en: Chains Below
+title [c9588a] = 下面的锁链
+# en: {Midnight in the Restricted Section. The chains on the east stacks' last shelf run down through the floor, and something below pulls them taut, then lets them go, like breathing.|The chains on the last shelf again, taut, then slack. There's a stair down there somewhere. You've no map for it.} {seen(carto_map_blanks) > 0: The Cartographers have a blank on their map just here.|Someone in the castle must have a map of what's below.}
+text [2b1809] = {午夜的禁书区。东区书库最后一排书架上的锁链穿过地板往下延伸，下面有什么东西把它们拉紧，又放松，像在呼吸。|又是最后一排书架上的锁链，拉紧，又放松。下面某处有一道楼梯。你没有它的地图。} {seen(carto_map_blanks) > 0: 制图社的地图上，正好这儿有一块空白。|城堡里一定有人有下面的地图。}
+# en: A student in a dark library aisle at midnight with an ear to the bottom shelf, iron chains running down through holes in the floor and pulled taut.
+scene [9a4e65] = 午夜昏暗的图书馆过道，一个学生把耳朵贴在最底层的书架上，铁链穿过地板上的孔洞，被拉得紧紧的。
+# en: Listen at the shelf
+opt.left.label [228e78] = 贴着书架听
+# en: {You lie on the cold floor with an ear to the boards. Far down, pages turn, a great many of them, all at once.|You listen until your ear is numb. Something down there is very large and very quiet, and it's a library.}
+opt.left.say.1 [dfdcec] = {你趴在冰冷的地板上，耳朵贴着木板。在很深的下面，有书页在翻，很多很多，同时在翻。|你一直听到耳朵发麻。下面有个东西，非常大，非常安静，而且是一座图书馆。}
+# en: Go back to bed
+opt.right.label [ef6924] = 回去睡觉
+# en: {You leave the chains to whatever is pulling them.|Not without a map. You go back up to bed.}
+opt.right.say.1 [172c47] = {你把锁链留给拉着它们的那个东西。|没有地图不行。你回楼上睡觉去了。}
+
+@thread heist_stacks
+# en: The Restricted Stacks
+name [700d36] = 禁书区书库
+# en: Below the last chained shelf, a stair goes down to the deep stacks and the confiscation vault. The Cartographers go at midnight.
+premise [ada2ab] = 最后一排锁链书架的下方，一道楼梯通往深层书库和没收库。制图社的人午夜去。
+# en: You went down the stair under the chained shelf at midnight.
+journal.1 [f35138] = 你在午夜走下了锁链书架下的楼梯。
+# en: Down in the stacks you read a book that charged you a drop for every page, and learned Torment from it.
+journal.2 [8d8b30] = 在书库深处，你读了一本每翻一页就要你一滴血的书，从中学会了折磨。
+# en: At the mirror desk your reflection read the book back to you, and you learned Reflect.
+journal.3 [c08f96] = 在镜面书桌前，你的倒影把书反读给你听，你学会了反照。
+# en: You picked the prefects' padlock on the confiscation vault.
+journal.4 [2173c4] = 你撬开了没收库门上级长的挂锁。
+
+@event st_dead_end
+# en: The Way Shut
+title [0989f3] = 路断了
+# en: {heist_depth >= 7: The goblin over the vault door is still muttering, and the padlock won't take another pick tonight. The only way left is up.|{~The shelves ahead have breathed in and not breathed out. The aisle is shut, and the only way that's still a way is back.|Ahead, the stacks have closed ranks, spine to spine, like a door. Whatever's further down is not for tonight.|A shelf has come down across the way, gently, as if it meant to. Behind it, the dark goes on without you.}}
+text [920303] = {heist_depth >= 7: 没收库门上的地精还在嘟囔，今晚这把挂锁再也受不了一根撬锁针了。唯一剩下的路是往上。|{~前面的书架吸了一口气，就没再呼出来。过道合上了，唯一还算路的路是回头。|前面的书库肩并肩排成一列，书脊贴着书脊，像一扇门。再往下的东西，今晚不属于你。|一排书架轻轻倒下，横在路上，像是有意的。它后面，黑暗没有你也照样延续。}}
+# en: A narrow library aisle in near darkness, two tall bookcases leaned together overhead to close it like a door, a student's candle at the bottom.
+scene [b2dc72] = 近乎全黑的狭窄图书馆过道，两排高书架在头顶倾斜相抵，像一扇门一样把路封住，底下是一个学生的蜡烛。
+# en: Go back up with what you carry
+opt.left.label [b0f3b5] = 带着手里的东西回上去
+# en: {heist_depth >= 7: You leave the goblin to its muttering and climb, all forty-four steps, with what you have.|{~You turn round and go up by the way you know.|You take the hint, and the stair.|You go, and the shelves let out their breath behind you.}}
+opt.left.say.1 [90b637] = {heist_depth >= 7: 你让地精自己嘟囔去，带着手里的东西往上爬，四十四级全爬完。|{~你转身，沿着认得的路上去。|你领会了这个暗示，也领会了楼梯。|你走了，书架在你身后呼出了那口气。}}
+# en: Search where you stand
+opt.right.label [f7f345] = 就地搜一搜
+# en: {heist_depth >= 7: Among the crates stacked outside the vault door, one lid is loose. Something small and old comes with you.|{~The shelf that closed the aisle has a gap in it, and in the gap a small book nobody's missed. You take it up with you.|You run your hand along the closed shelf and find one spine that's loose. It comes with you.|Behind the fallen shelf, a sheaf of loose pages, very old. You roll them into your sleeve.}}
+opt.right.say.1 [2854f4] = {heist_depth >= 7: 没收库门外堆着的木箱里，有一个箱盖松了。一样又小又旧的东西跟你走了。|{~挡住过道的那排书架上有个缺口，缺口里有一本没人惦记的小书。你把它带了上去。|你的手沿着合上的书架摸过去，摸到一根松动的书脊。它跟你走了。|倒下的书架后面有一叠散页，非常旧。你把它们卷进了袖子。}}
+# en: {heist_depth >= 7: The goblin catches you at the crates and says so. You leave them be.|{~The shelf leans on you, very gently, until you stop.|You find nothing but dust, and a splinter.|The shelf breathes in, and you jump back, and leave it be.}}
+opt.right.say.2 [96fb4c] = {heist_depth >= 7: 你在木箱边被地精逮了个正着，它还大声说了出来。你不再碰它们。|{~书架非常轻地压在你身上，直到你停手。|你什么也没找到，只有灰尘和一根木刺。|书架吸了一口气，你往后一跳，不再碰它。}}
+
+@event st1_taut_chains
+# en: The Chains Pull Taut
+title [20c429] = 锁链拉紧了
+# en: {seen(st1_taut_chains) > 1: The chains know you now. They draw taut across the aisle at knee and throat as you come, slower than they used to, as if to see whether you've got careless.|{heist_depth == 1: At the foot of the stair the chains from the shelf above come down through the ceiling and run off between the shelves, and as you step off the last stair they draw taut across the aisle, one at the knee, one at the throat.|Round the next bookcase the chains from the shelf above run between the shelves, and as you come they draw taut across the aisle, one at the knee, one at the throat.} Something is pulling them, slowly, to see what you'll do.}
+text [82226d] = {seen(st1_taut_chains) > 1: 锁链认得你了。你一来，它们就在膝盖和喉咙的高度横着过道绷紧，比以前慢一些，像是要看看你有没有变得大意。|{heist_depth == 1: 楼梯底下，上面书架的锁链穿过天花板垂下来，在书架之间延伸开去。你刚踏下最后一级台阶，它们就横着过道绷紧了，一根在膝盖高，一根在喉咙高。|绕过下一个书架，上面书架的锁链在书架之间延伸，你一走近，它们就横着过道绷紧了，一根在膝盖高，一根在喉咙高。}有什么东西在拉着它们，慢慢地，要看你怎么办。}
+# en: A narrow dark aisle between library shelves strung with iron chains, the chains drawn tight across the aisle at different heights, a student ducking between them.
+scene [49eadb] = 狭窄黑暗的过道里，书架之间拉着铁链，高低不一地横在过道上，一个学生正从链子之间钻过去。
+# en: Slip back the way you came
+opt.left.label [ebfef5] = 原路溜回去
+# en: {~You go back the way you came, and the chains go slack behind you, satisfied.|You decide the chains have made their point.}
+opt.left.say.1 [6e3dea] = {~你原路退回去，锁链在身后松了下来，心满意足。|你认定锁链已经把意思表达清楚了。}
+# en: Thread between them
+opt.right.label [fe387d] = 从链子之间钻过去
+# en: {~Under, over, sideways, holding your breath. On the far side a page has fallen from a chained book, gold-leafed. You take it.|You go through the chains like a cat through railings. One of them twangs, very softly, as you pass, and a loose illuminated page drifts down. You catch it.}
+opt.right.say.1 [6dfc60] = {~从下面，从上面，侧着身，屏住呼吸。到了另一边，有一张从锁链书上掉下来的泥金书页。你拿走了。|你像猫钻栏杆一样穿过锁链。你经过时，其中一根非常轻地铮了一声，一张散落的泥金插图书页飘了下来。你接住了它。}
+# en: {~A chain catches your ankle and rings like a bell all the way up to the shelf.|You misjudge one and it takes you across the shoulder, hard, and every chain in the aisle shivers.}
+opt.right.say.2 [a8e0bf] = {~一根链子钩住了你的脚踝，像钟一样一路响到上面的书架。|你判断错了一根，它重重地抽在你肩上，过道里每一根链子都抖了起来。}
+
+@event st1_library_rounds
+# en: The Night Lamp
+title [3b4238] = 夜灯
+# en: {seen(st1_library_rounds) > 1: The night lamp again, along the gallery overhead, on the same slow round, looking everywhere.|A lamp comes along the gallery overhead: a prefect walking the library's night round, who has no reason to look down the stair and every reason to look everywhere.} {flag(forbidden_rounds): By Odile's green ink, this is the late round, and it turns back at the reading room.|The glow moves slowly. You have no idea where it goes next.}
+text [932ad5] = {seen(st1_library_rounds) > 1: 夜灯又来了，沿着头顶的回廊，走着同样缓慢的巡逻路线，四处都看。|一盏灯沿着头顶的回廊过来了：一位级长在走图书馆的夜间巡逻，他没有理由往楼梯下看，却有一切理由四处看。}{flag(forbidden_rounds): 照奥迪尔的绿墨水笔记，这是晚班巡逻，到阅览室就折回。|光晕移动得很慢。你完全不知道它下一步去哪儿。}
+# en: A lamp's glow moving along the top of a library bookcase, seen from below in a dark aisle, a student pressed flat against the books.
+scene [e00291] = 从黑暗的过道往上看，一盏灯的光晕沿着书架顶部移动，一个学生紧紧贴在书上。
+# en: Back up the stair while you can
+opt.left.label [c71785] = 趁还来得及，退回楼梯上
+# en: {~You go back up behind the lamp, step for step, and out.|You let the round have the library tonight.}
+opt.left.say.1 [1ea635] = {~你跟在灯后面一步一步回到上面，出去了。|今晚就把图书馆让给巡逻吧。}
+# en: Stand still in the shelves
+opt.right.label [11c3eb] = 在书架间一动不动
+# en: {~The lamp passes over you, over the stair, over the dark, and goes on. You breathe out for what feels like a minute.|You stand so still among the books you could be one. The lamp moves on to the reading room.}
+opt.right.say.1 [e1bbff] = {~灯光从你身上掠过，从楼梯上掠过，从黑暗上掠过，继续往前去了。你长长地呼出一口气，好像呼了一分钟。|你在书中间站得那么静，简直成了其中一本。灯往阅览室去了。}
+# en: {~The lamp stops. "Hello?" says the prefect, to the dark. You run.|You shift your weight, and a board answers. The lamp swings down the stair.}
+opt.right.say.2 [53cc35] = {~灯停住了。“有人吗？”级长对着黑暗说。你跑了。|你挪了一下重心，一块地板回应了。灯转向了楼梯下面。}
+
+@event st1_catalogue
+# en: The Catalogue Below
+title [4bef84] = 下面的目录
+# en: {seen(st1_catalogue) > 1: The catalogue at the bend again. WHAT IS WHERE has a new card in it since last time, in fresher ink.|An old card catalogue stands at the bend of the aisle, for the books down here that the library upstairs pretends not to own. One drawer is labelled in a dead librarian's hand: WHAT IS WHERE, AND WHAT MUST NOT BE MOVED.}
+text [c6b6f5] = {seen(st1_catalogue) > 1: 拐弯处的目录柜又在那儿。“什么在哪里”里比上次多了一张卡，墨迹更新。|过道拐弯处立着一个旧卡片目录柜，收录的是楼上图书馆假装没有的下面这些书。其中一个抽屉上，一位已故图书管理员的笔迹写着：什么在哪里，以及什么绝不能挪动。}
+# en: An old wooden card catalogue in a dark library basement, one long drawer pulled out, cards written in faded brown ink, a candle on top.
+scene [26e778] = 黑暗的图书馆地下室里，一个旧木卡片目录柜，一个长抽屉被拉开，卡片上是褪色的褐色墨水字，柜顶放着一支蜡烛。
+# en: Leave it, and slip away
+opt.left.label [98273a] = 别管它，溜走
+# en: {~You leave the drawer shut and the dead librarian's secrets with it.|You go, and take nothing, not even a look.}
+opt.left.say.1 [8f7f86] = {~你没打开抽屉，把那位已故图书管理员的秘密留在了里面。|你走了，什么也没拿，连看都没看一眼。}
+# en: Read the drawer
+opt.right.label [716e6f] = 读那个抽屉
+# en: {~WHAT IS WHERE turns out to be a map in cards. You pocket the three that matter and go on knowing where you're going.|You read fast by candle and pocket the card for the deep stacks. Half of it is a warning. You take the other half.}
+opt.right.say.1 [2e9932] = {~“什么在哪里”原来是一张用卡片拼成的地图。你把要紧的三张揣进口袋，知道自己要去哪儿了。|你借着烛光飞快地读，把通往深层书库的那张卡揣进口袋。一半是警告。你拿了另一半。}
+# en: {~The drawer jams, then comes out all at once, and four hundred cards go across the floor.|You read too long. The candle gutters, and in the dark you knock the whole catalogue a foot sideways, loudly.}
+opt.right.say.2 [aeca9c] = {~抽屉卡住了，然后一下子全滑了出来，四百张卡片撒了一地。|你读得太久了。蜡烛摇曳将熄，黑暗中你把整个目录柜撞得往旁边挪了一尺，动静很大。}
+
+@event st2_breathing
+# en: Between Breaths
+title [d5c4f4] = 两次呼吸之间
+# en: {seen(st2_breathing) > 1: The breathing shelves again. You know their rhythm now, mostly, and they seem to know yours: tonight they breathe a little faster.|Down here the shelves breathe, and they're close enough together that when they breathe in, the aisle closes. You'd have to go through on the out-breath, all the way, before the next in.}
+text [ab2480] = {seen(st2_breathing) > 1: 又是会呼吸的书架。你如今大致摸清了它们的节奏，它们似乎也摸清了你的：今晚它们呼吸得快了一点。|到了这下面，书架在呼吸，而且挨得很近，它们一吸气，过道就合上了。你得趁它们呼气时一口气穿过去，赶在下一次吸气之前。}
+# en: Tall black bookcases in deep darkness, leaning very slightly inward and outward as if breathing, a narrow gap closing between them, a student waiting to slip through.
+scene [05b3f2] = 深沉的黑暗中，高大的黑色书架微微向里向外倾斜，像在呼吸，它们之间的一道窄缝正在合拢，一个学生等着钻过去。
+# en: Leave the breathing to them
+opt.left.label [a5dde8] = 让它们自己呼吸去
+# en: {~You go back the way you came, and the shelves breathe easier behind you.|You decide you don't want to be between them on an in-breath.}
+opt.left.say.1 [769695] = {~你原路返回，书架在你身后呼吸得轻松了些。|你认定自己不想在它们吸气时夹在中间。}
+# en: Go on the out-breath
+opt.right.label [e5f858] = 趁呼气时过去
+# en: {~You go on the out-breath, fast and flat, and the shelves sigh shut behind your heels. A book has fallen in the gap. It's yours now.|You time it, and go, and come out the far side with a black-bound book that fell into your arms on the way.}
+opt.right.say.1 [98feb8] = {~你趁着呼气，又快又平地冲过去，书架在你脚跟后叹息着合上了。缝里掉了一本书。现在它是你的了。|你算准时机，冲过去，到了另一边，怀里多了一本途中掉进你怀里的黑皮书。}
+# en: {~You're late by a breath. The shelves hold you, gently, all over, for a long minute, and let go.|The aisle closes on your satchel and keeps it a while. Its idea of a while.}
+opt.right.say.2 [8f8ded] = {~你晚了一口气。书架轻轻地、全方位地夹住了你，夹了长长的一分钟，才放开。|过道合上时夹住了你的书包，夹了好一阵。按它的标准，好一阵。}
+
+@event st2_charging_book
+# en: The Book That Charges
+title [de4687] = 收费的书
+# en: {seen(st2_charging_book) > 1: The book that charges is open on its lectern again, at the page where you stopped, and it hasn't forgotten what you owe.|On a lectern in the dark is a book with a duellist's hand on the cover, a forbidden manual from some war nobody teaches. When you turn its page, the corner pricks your finger and takes a drop. The next page will cost another. It charges its reader for everything it teaches.}
+text [11c30c] = {seen(st2_charging_book) > 1: 那本收费的书又摊在读经台上，停在你上次停下的那一页，它没忘记你还欠它什么。|黑暗中的一个读经台上放着一本书，封面上是一只决斗者的手，是某场没人讲授的战争留下的禁用手册。你翻页时，页角刺破你的手指，取走一滴血。下一页还要再收一滴。它教你的一切，都要读者付钱。}
+# en: An open black book on a lectern in a dark library stack, a single drop of blood on the corner of its page, a student's pricked finger held above it.
+scene [71442a] = 黑暗书库里的读经台上摊着一本黑书，书页一角有一滴血，一个学生被刺破的手指悬在书上方。
+# en: Close it, and slip away
+opt.left.label [170c49] = 合上它，溜走
+# en: {~You close it. It lets you, this time. You suck your finger all the way back up the stair.|You leave the book on its lectern, owed nothing.}
+opt.left.say.1 [9df04a] = {~你合上了它。这次它让你合上了。回楼梯的一路上你都在吮手指。|你把书留在读经台上，谁也不欠谁。}
+# en: Read it to the end, and pay
+opt.right.label [0e1528] = 读到最后，付钱
+# en: Torment, at a price.
+opt.right.hint [8355e9] = 折磨，要付出代价。
+# en: {~Page by page, drop by drop. By the end your fingertips are sore and you understand the trick of it: make every spell the other side casts cost them, and hurt. Torment. You feel the shape of it in your hands, and wish you didn't.|You pay to the last page. The book closes itself, satisfied. You know Torment now, and how it feels to be charged for every step.}
+opt.right.say.1 [8283ee] = {~一页一滴，一页一滴。读到最后你的指尖都疼了，你也明白了其中的诀窍：让对方施的每一个法术都要付出代价，而且痛。折磨。你在手里感觉到了它的形状，却希望自己没有。|你一直付到最后一页。书自己合上了，心满意足。现在你会折磨了，也知道了每走一步都被收费是什么滋味。}
+# en: {~You read too fast, and it charges too much. You come to on the floor with the book shut and the room very loud.|It takes more than a drop. You stumble back from the lectern into a shelf, which tells everyone.}
+opt.right.say.2 [184115] = {~你读得太快，它收得太多。你醒来时躺在地上，书合着，屋里非常吵。|它取走的不止一滴。你踉跄着从读经台退开，撞上了一排书架，这下谁都知道了。}
+
+@event st2_other_lamp
+# en: Someone Else's Lamp
+title [d48244] = 别人的灯
+# en: {seen(st2_other_lamp) > 1: Another lamp ahead, shaded low. Someone else is copying down here again, a different hood, the same hurry. They haven't seen you.|There's a lamp ahead, shaded low. Someone else is down here: a hooded student copying out of a black book, very fast, with a satchel of copied pages at their feet. They haven't seen you. They will in a minute.}
+text [c35c7c] = {seen(st2_other_lamp) > 1: 前面又有一盏灯，光压得很低。又有人在下面抄东西，换了一顶兜帽，还是一样匆忙。他们还没看见你。|前面有一盏灯，光压得很低。还有人在下面：一个戴兜帽的学生正飞快地从一本黑书里抄东西，脚边放着一书包抄好的书页。他们还没看见你。再过一分钟就会看见了。}
+# en: A hooded student at a desk deep in dark library stacks, copying from a black book by a small shaded lamp, not yet aware of a second student watching from the aisle.
+scene [e4db58] = 深处黑暗的书库里，一个戴兜帽的学生在桌前借着一盏遮了光的小灯抄一本黑书，还没察觉过道里有另一个学生在看着。
+# en: Back away before they look up
+opt.left.label [eb7267] = 趁他们抬头前退开
+# en: {~You back away into the dark, and leave them to their copying and their luck.|You go. One thief in the stacks is plenty.}
+opt.left.say.1 [937834] = {~你退回黑暗里，把那人留给抄写和运气。|你走了。书库里有一个贼就够了。}
+# en: Slip past them
+opt.right.label [ff0971] = 从他们身边溜过去
+# en: {~You go past behind their back, close enough to read their page. They never look up. You never ask who.|You wait till they bend to the book, and go by like a draught.}
+opt.right.say.1 [68a159] = {~你从那人背后溜过去，近得能看清那一页。那人始终没抬头。你也始终没问是谁。|你等那人俯身看书时，像一阵穿堂风一样过去了。}
+# en: {~They look up, and you both freeze, and then you both run, in opposite directions, loudly.|They see you and blow out their lamp, and in the dark you go straight into a shelf.}
+opt.right.say.2 [c6df31] = {~那人抬起头，你们俩都僵住了，然后都跑了，方向相反，动静很大。|那人看见了你，吹灭了灯，黑暗中你一头撞上了书架。}
+# en: Take a sheaf of their pages
+opt.take.label [f424a9] = 拿走一叠他们的抄页
+# en: {~You lift a sheaf from the top of their satchel while they turn a page, and are three aisles away before they reach for it.|You take their copied pages, which is stealing from a thief, which still counts.}
+opt.take.say.1 [2530d6] = {~趁那人翻页，你从书包顶上抽走一叠，等那人伸手去拿时，你已经在三排书架开外了。|你拿走了那人抄好的书页，这是偷贼的东西，但照样算偷。}
+# en: {~They catch your wrist, and shout. Somewhere above, a lamp comes on.|The satchel's buckle rings on the floor, and they're up and shouting before you've got a page.}
+opt.take.say.2 [be2dcb] = {~那人抓住你的手腕，喊了起来。上面某处，一盏灯亮了。|书包的搭扣当啷一声掉在地上，你一页还没拿到，那人就已经站起来大喊了。}
+
+@event st3_mirror_desk
+# en: The Mirror Desk
+title [236cd8] = 镜面书桌
+# en: {seen(st3_mirror_desk) > 1: The mirror desk again. Your reflection is already there, a line further on than where you stopped.|Deep in the stacks there's a reading desk of black mirror-glass with a book open on it. When you lean over, your reflection is already reading, a line ahead of you, and its lips are moving. Whatever you read, it reads back.}
+text [a06a00] = {seen(st3_mirror_desk) > 1: 又是那张镜面书桌。你的倒影已经在那儿了，比你上次停下的地方多读了一行。|书库深处有一张黑色镜面玻璃做的读书桌，上面摊着一本书。你俯身过去，你的倒影已经在读了，比你快一行，嘴唇还在动。不管你读什么，它都反读回来。}
+# en: A reading desk of black mirrored glass deep in a dark library, a book open on it, the student's reflection in the glass reading the book with its lips moving.
+scene [42b487] = 黑暗图书馆深处一张黑色镜面玻璃读书桌，上面摊着一本书，玻璃里学生的倒影正在读那本书，嘴唇在动。
+# en: Look away, and slip off
+opt.left.label [db4338] = 移开目光，溜走
+# en: {~You look away first. For a week your reflection in windows is a line ahead.|You leave the desk to its reader.}
+opt.left.say.1 [acf1c9] = {~你先移开了目光。之后一个星期，你在窗玻璃里的倒影都比你快一行。|你把书桌留给它的读者。}
+# en: Read along with it
+opt.right.label [de1d41] = 跟着它一起读
+# en: Reflect, if you can keep up.
+opt.right.hint [e5db6c] = 反照，如果你跟得上。
+# en: {~You read with your reflection until you're reading together, and then it reads you, and gives it all back. That's the trick: give it all back. Reflect.|By the last line you understand the desk. Everything put to it comes back, every word. You take the lesson up the stairs with you.}
+opt.right.say.1 [6523a2] = {~你跟着倒影一起读，直到你们读在一处，然后它读起了你，又把一切都还给你。诀窍就在这儿：全部还回去。反照。|读到最后一行，你明白了这张书桌。递给它的一切都会回来，一字不差。你带着这一课走上了楼梯。}
+# en: {~Your reflection gets ahead, then a page ahead, then shuts the book on you. The glass rings like a struck glass.|You read too slowly, and the desk reads your face back at you, all of it, very loud.}
+opt.right.say.2 [16c61c] = {~你的倒影抢先了，然后抢先了一页，然后当着你的面把书合上了。玻璃像被敲响的玻璃杯一样嗡鸣。|你读得太慢，书桌把你的脸反读回给你，全部，非常响。}
+
+@event st3_no_lamp
+# en: Where No Lamp Reaches
+title [53bcd0] = 灯照不到的地方
+# en: {seen(st3_no_lamp) > 1: The dark at the bottom again, where your candle gives up. You know the first twenty spines by touch now; it's the rest that worry you.|Down here no lamp reaches, and your candle won't stay lit; it leans over and gives up. The last stretch to the vault is by touch: spines under your fingers, and the floor going down by inches.} ⚠ Lose your way here, and there's no near thing.
+text [eb6e9b] = {seen(st3_no_lamp) > 1: 又到了最底下的黑暗，你的蜡烛在这里放弃。前二十根书脊你如今凭手感都认得了；让你担心的是剩下的。|到了这下面，灯照不到，你的蜡烛也点不住；它歪过去，放弃了。通往没收库的最后一段只能靠摸：手指下的书脊，一寸一寸往下的地面。}⚠ 在这里迷了路，就没有险些这回事了。
+# en: Pitch darkness in a vast library, a single hand on the spine of a book, the faintest outline of endless shelves.
+scene [cc7e51] = 巨大图书馆里一片漆黑，只有一只手搭在一本书的书脊上，无尽书架的轮廓若隐若现。
+# en: Turn back while you know the way
+opt.left.label [34f4ba] = 趁还认得路，回头
+# en: {~You turn round in the dark and walk back by the spines you know.|You decide that the dark here is someone's, and not yours.}
+opt.left.say.1 [ab4e71] = {~你在黑暗中转过身，顺着认得的书脊走回去。|你认定这里的黑暗属于别人，不属于你。}
+# en: Go on by touch
+opt.right.label [d375da] = 摸着往前走
+# en: {~Spine by spine, in a dark like deep water. Your hand closes on a small book lying loose on a shelf, and you take it, and keep going.|You count the shelves by touch, and at the end of the count, a door.}
+opt.right.say.1 [19fd2f] = {~在深水般的黑暗里一根书脊一根书脊地摸过去。你的手碰到书架上一本松放着的小书，你拿上它，继续走。|你凭手感数着书架，数到头，是一扇门。}
+# en: {~You lose the spines, then the floor, then the way. When the lantern finds you, you're sitting in the dark holding a book you can't see, nowhere near anywhere.|Something in the dark takes your hand and leads you, kindly, all the way to the prefects' door.}
+opt.right.say.2 [85499b] = {~你摸丢了书脊，接着是地面，接着是路。提灯找到你时，你正坐在黑暗里，抱着一本看不见的书，离哪儿都很远。|黑暗里有个东西握住你的手，好心地领着你，一路领到了级长的门口。}
+
+@event st3_glass_case
+# en: The Glass Case
+title [5a3f24] = 玻璃柜
+# en: {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): The glass case again, a few books fewer, and the charm on its lock rewoven tighter than before. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}|In an alcove stands a glass case of grimoires no bigger than your thumb, each with a clasp of gold, a hundred spells to a book. The lock has no keyhole, only a charm laid over it that hums when your breath fogs the glass. Any collector would sell their mother for one of them.}
+text [3f9d80] = {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): 又是那个玻璃柜，小书少了几本，锁上的咒语比以前织得更紧了。有人注意到了。|又是那个玻璃柜，每本小书都还在原处，咒语照旧嗡嗡作响。}|一个壁龛里立着一个玻璃柜，里面的魔法书都不比你的拇指大，每本都有金扣，一本里有一百个法术。锁没有钥匙孔，只覆着一道咒语，你的呼吸在玻璃上起雾时，它就嗡嗡作响。随便哪个收藏家都愿意为其中一本卖掉亲娘。}
+# en: A small glass display case in a dark library, full of tiny leather-bound books no bigger than a thumb, a faint shimmer of a charm over its lock.
+scene [516541] = 黑暗图书馆里一个小小的玻璃陈列柜，里面满是不比拇指大的皮面小书，锁上微微闪着一道咒语的光。
+# en: Leave them under glass
+opt.left.label [e1a19c] = 让它们待在玻璃里
+# en: {~You leave the little books to their glass and go back up the way you came.|You fog the glass once more, for the pleasure of it, and go.}
+opt.left.say.1 [1c17bd] = {~你把小书留在玻璃里，原路回上去。|你又在玻璃上呵了一次雾，图个乐子，然后走了。}
+# en: Unpick the charm
+opt.right.label [723673] = 拆开那道咒语
+# en: {~The charm comes apart under your fingers like wet paper. You take two of the little books, and the case closes itself behind you as if offended.|You unpick the charm thread by thread and lift out the smallest book. Then, because you're here, a second.}
+opt.right.say.1 [18f1b7] = {~咒语在你指下像湿纸一样散开。你拿了两本小书，柜子在你身后自己合上了，像是被冒犯了。|你一根丝一根丝地拆开咒语，取出最小的那本书。然后，既然来都来了，又拿了一本。}
+# en: {~The charm bites back, a white flash, and the glass rings like a struck bell all through the stacks.|You pull the wrong thread, and the whole charm goes off in your face with a noise like a slammed book.}
+opt.right.say.2 [62016a] = {~咒语反咬了一口，一道白光，玻璃像被敲响的钟一样响彻整个书库。|你拉错了一根丝，整道咒语在你脸前炸开，声音像合上一本书。}
+
+@event st_vault
+# en: The Confiscation Vault
+title [404008] = 没收库
+# en: At the bottom of the deep stacks, a door with a prefects' padlock and crates outside labelled for the confiscation vault. Behind it, three hundred years of everything the faculty ever took off a student. {flag(vault_catalogued): You catalogued half of it yourself, in detention. You know which shelf is which.|You've no idea what's where.} {flag(elixir_confiscated): Somewhere in there is the bottle the prefects took from your trunk.|}
+text [bd1ad3] = 深层书库的最底下，一扇挂着级长挂锁的门，门外堆着标明送往没收库的木箱。门后是三百年来教职员从学生身上收走的一切。{flag(vault_catalogued): 其中一半是你关禁闭时亲手登记的。你知道哪个架子放着什么。|你完全不知道什么在哪儿。} {flag(elixir_confiscated): 级长从你箱子里拿走的那只瓶子，就在里面某处。|}
+# en: An iron-banded oak door in a dark library basement, a heavy prefects' padlock on it, crates labelled for confiscation stacked outside, a student kneeling at the lock with picks.
+scene [3bf709] = 黑暗图书馆地下室里一扇包铁的橡木门，门上挂着沉重的级长挂锁，门外堆着标明没收的木箱，一个学生拿着撬锁针跪在锁前。
+# en: Leave it locked, and go
+opt.leave.label [676cf0] = 让它锁着，走吧
+# en: {~You leave the vault to its padlock. Getting here was the heist.|You touch the padlock once, for luck, and go back up.}
+opt.leave.say.1 [36e663] = {~你把没收库留给它的挂锁。能走到这儿，就算偷成了。|你为了运气摸了一下挂锁，然后回上去了。}
+# en: Pick the lock for the crates
+opt.crates.label [0733ae] = 撬锁去拿箱子里的东西
+# en: {~The padlock gives with a click like a knuckle. Inside, a century of contraband on shelves: charmed dice, love letters, a stuffed owl that blinks. You fill your shirt with the small valuable things and lock it again behind you.|You go straight to the shelf you catalogued in detention and take the three best things on it. The padlock clicks shut after you as if nothing happened.}
+opt.crates.say.1 [e8e5d3] = {~挂锁咔哒一声开了，像掰响指节。里面是一个世纪又一个世纪的违禁品摆在架子上：施了咒的骰子，情书，一只会眨眼的猫头鹰标本。你把值钱的小东西塞满衬衫，出来时又把门锁上了。|你直奔关禁闭时登记过的那个架子，拿走上面最好的三样东西。挂锁在你身后咔哒锁上，像什么也没发生过。}
+# en: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
+opt.crates.say.2 [864544] = {~撬锁针断在锁里，在这下面响得像一声枪响。|没收库的警报器，一只嗓门非常大的地精，醒过来了，还大声说了出来。}
+# en: Pick the lock for your own bottle back
+opt.bottle.label [89f81b] = 撬锁拿回你自己的瓶子
+# en: {~The padlock gives. Your things are on a shelf with a label in a prefect's neat hand, your name spelled right. You take them back, and one small thing more for the trouble.|Inside, a shelf of confiscated elixirs, gold and black, each labelled with a name. You find what's yours, and leave the rest to their owners' consciences.}
+opt.bottle.say.1 [46f990] = {~挂锁开了。你的东西在一个架子上，标签是某位级长工整的笔迹，你的名字拼得一字不差。你把它们拿了回来，又顺手拿了一件小东西，算是辛苦费。|里面有一架子没收来的药水，金的黑的，每瓶都标着名字。你找到了属于你的，其余的留给它们主人的良心。}
+# en: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
+opt.bottle.say.2 [864544] = {~撬锁针断在锁里，在这下面响得像一声枪响。|没收库的警报器，一只嗓门非常大的地精，醒过来了，还大声说了出来。}
+# en: Fetch Corvin's grandfather's deck
+opt.deck.label [9c8ad9] = 拿回科尔文祖父的那副牌
+# en: {~The deck is in a tin on the third shelf, labelled in faded ink with a date and a very rude word. You give it to Corvin at breakfast. He doesn't say anything for a whole minute, which is a record.|You find the deck, and the faculty's note on it: "Marked. Obviously." Corvin, when you give it to him, laughs until he has to sit down, and then holds it very carefully.}
+opt.deck.say.1 [0e4568] = {~那副牌在第三层架子上的一个铁盒里，褪色的墨水标签上写着日期和一个非常粗鲁的词。早饭时你把它交给科尔文。他整整一分钟什么也没说，这是破纪录的。|你找到了那副牌，还有教职员附在上面的字条：“做过记号。显然。”你把它交给科尔文时，他笑得不得不坐下，然后小心翼翼地捧着它。}
+# en: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
+opt.deck.say.2 [864544] = {~撬锁针断在锁里，在这下面响得像一声枪响。|没收库的警报器，一只嗓门非常大的地精，醒过来了，还大声说了出来。}

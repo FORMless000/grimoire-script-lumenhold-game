@@ -276,6 +276,10 @@ text: The prefects are going down your corridor at dawn, trunk by trunk, sniffin
       mood -small
       if has(brightwater_bottle) or has(owls_ink_bottle):
         flag elixir_confiscated
+        if has(owls_ink_bottle):
+          flag confiscated_owls_ink
+        if has(brightwater_bottle):
+          flag confiscated_brightwater
         gain detention
         say: They find it in under a minute. The bottle goes into a bag labelled for the confiscation vault, your name goes into a notebook, and the whole corridor watches you go red.
       else:
@@ -287,6 +291,10 @@ text: The prefects are going down your corridor at dawn, trunk by trunk, sniffin
   mood -small
   if has(brightwater_bottle) or has(owls_ink_bottle):
     flag elixir_confiscated
+    if has(owls_ink_bottle):
+      flag confiscated_owls_ink
+    if has(brightwater_bottle):
+      flag confiscated_brightwater
     say: You hand it over before they reach your trunk. The prefect bags it for the confiscation vault, looks at you for a long moment, and writes only a warning. It still stings.
   else:
     say: You tell them before they ask. With nothing to confiscate, the prefect writes only a warning, and gives you a long look. It still stings.

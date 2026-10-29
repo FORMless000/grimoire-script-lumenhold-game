@@ -1,0 +1,147 @@
+# ============================================================
+#  Midnight heists (threads 1, docs/threads-1-plan.md Part C): two stealing mini-delves, the Restricted Stacks
+#  (heists/stacks.grim) and the seventh tower (heists/tower.grim). Like the Whisperwood delve (whisperwood/delve.grim),
+#  but quiet: guile checks (deceive past people, feats using guile on locks, shelves and boards), now and then a
+#  research or a spell check, never a fight or a negotiation; midnight only. The Cartographers' Master Map opens them
+#  (heist_stacks_known, heist_tower_known; content/events/cartographers.grim).
+#
+#  Counters, reset on entry: heist_where (1 the stacks, 2 the tower), heist_depth (how deep or high), heist_loot (what
+#  you carry), heist_cover (slips you can survive: 1, +1 with a prefect's round times, +1 more for the place's own
+#  advantage). heist_stacks_deepest and heist_tower_highest persist.
+#  Each step: left slips away with what you carry (heist_way_out); right goes on (heist_depth += 1, maybe loot, next).
+#  A lost check queues heist_slip while cover lasts (cover, health or loot pay for it; a word may reach a prefect),
+#  else heist_caught (the loot is taken, a month of detention, and the prefects' notice escalates as night_suspicion's
+#  does: watched, then locked out; outrunning them leaves only the morning's word). A hazard marked ⚠ goes straight to
+#  heist_caught. Stealing is a little Hollow, paid at the way out.
+# ============================================================
+
+@event heist_way_out
+title: Out Before Dawn
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: pouch
+tags: danger money
+scene: A student slipping out of a dark doorway at the grey end of night, a bundle held under one arm, looking both ways down a castle corridor.
+text: {heist_loot == 0: {heist_deck_tonight == 1: You come out with nothing to sell but a tin of cards that was never yours to sell, and a grin.|You come out with nothing but dust on your knees and your heart going like a drum.}|{heist_loot <= 2: You come out with a few small, old things under your shirt, each worth more than it looks.|{heist_loot <= 4: You come out with a real bundle: {heist_where == 1: pages, and something heavier that sighs when you move|papers, and something heavier that clinks when you move}.|You come out with more than your shirt will hold, and walk very carefully.}}} {heist_where == 1: The library is grey with dawn behind you.|The tower's slits are going grey above you.}
+> left: Sell it to the collector
+  hint: Crowns, by what you carry. A little Hollow.
+  if heist_loot >= 1:
+    alignment -tiny
+  if heist_loot >= 6:
+    gold +huge
+  elif heist_loot >= 4:
+    gold +large
+  elif heist_loot >= 2:
+    gold +medium
+  elif heist_loot >= 1:
+    gold +small
+  say: {heist_loot == 0: {heist_deck_tonight == 1: The tin goes to Corvin, not the collector. You go to bed, and lie awake grinning.|There's nothing to sell. You go to bed, and lie awake anyway.}|{~The collector in the village back room weighs each thing in a gloved hand and pays in old crowns, without a question.|The collector's man meets you by the village pump at noon. He counts your things, and then his coins, and both counts are fair.|The collector holds your best piece up to the window and is quiet for a long time. Then he pays more than you'd have asked.}}
+  if heist_where == 1 and heist_depth > heist_stacks_deepest:
+    heist_stacks_deepest = heist_depth
+  if heist_where == 2 and heist_depth > heist_tower_highest:
+    heist_tower_highest = heist_depth
+  heist_depth = 0
+  heist_loot = 0
+  heist_deck_tonight = 0
+> right: Keep it, and read it
+  hint: Lore, by what you carry. A little Hollow.
+  if heist_loot >= 1:
+    alignment -tiny
+  if heist_loot >= 6:
+    lore +large
+    guile +small
+  elif heist_loot >= 4:
+    lore +medium
+  elif heist_loot >= 2:
+    lore +small
+  elif heist_loot >= 1:
+    lore +tiny
+  say: {heist_loot == 0: There's nothing to keep but the night, and you keep that.|{~You spread it all on your bed behind drawn curtains and read until breakfast. Half of it you shouldn't know. You know it now.|You hide it under a loose floorboard and take it out a piece at a time, over weeks, like a box of sweets.|You read it all twice and burn the worst of it. The rest you keep, and it keeps you up.}}
+  if heist_where == 1 and heist_depth > heist_stacks_deepest:
+    heist_stacks_deepest = heist_depth
+  if heist_where == 2 and heist_depth > heist_tower_highest:
+    heist_tower_highest = heist_depth
+  heist_depth = 0
+  heist_loot = 0
+  heist_deck_tonight = 0
+
+@event heist_slip
+title: A Near Thing
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: lantern
+tags: danger
+scene: A student flattened into a dark alcove, holding their breath, as the glow of a lantern slides past along the floor.
+on_show:
+  heist_cover -= 1
+  health -tiny
+  heist_dropped = 0
+  if heist_loot > 0:
+    heist_loot -= 1
+    heist_dropped = 1
+text: {heist_dropped == 1: {~You get away, just, and something you carried doesn't: it's lying out there in the dark where you dropped it.|You end up flat in an alcove with your heart in your mouth and one thing fewer in your shirt.|You're clear, scraped and shaking, and you've left something behind for somebody to find.}|{~You get away, just, with nothing to lose but your nerve, and some of that.|You end up flat in an alcove with your heart in your mouth, glad your shirt was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff.}} {heist_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+> left: That's enough for tonight
+  queue heist_way_out now
+  say: {~You take what's left and go, by the long way.|You decide the night has made its point.|You go while you can.}
+> right: Wait, and go on
+  hint: On: the next slip may not be a near thing.
+  queue night_suspicion chance unlikely
+  if heist_where == 1:
+    queue any in heist_stacks now
+  else:
+    queue any in heist_tower now
+  say: {~You wait till the dark is quiet again, and go on.|You count to five hundred, and go on.|You go on. Somewhere behind you, someone is looking at the place where you were.}
+
+@event heist_caught
+title: Caught
+trigger: queued
+class: story
+tone: grim
+repeat: 1
+art: eye
+tags: danger crisis
+scene: A prefect's lantern held high in a dark doorway, lighting up a student caught with a bundle of stolen things in their arms.
+on_show:
+  if heist_where == 1 and heist_depth > heist_stacks_deepest:
+    heist_stacks_deepest = heist_depth
+  if heist_where == 2 and heist_depth > heist_tower_highest:
+    heist_tower_highest = heist_depth
+  heist_depth = 0
+  heist_deck_tonight = 0
+  heist_warned = 0
+  if has(watched):
+    heist_warned = 1
+text: A lantern comes up full in your face. {heist_where == 1: Down in the stacks, at night,|Halfway up the seventh tower, at night,} {heist_loot == 0: and empty-handed, which convinces nobody.|with your arms full of things that aren't yours. The prefect takes them all, into a sack for the confiscation vault.} The prefect behind the lantern looks less angry than tired.
+> left: Go quietly
+  gain detention
+  mood -small
+  if has(watched):
+    lose watched
+    gain locked_out
+  else:
+    gain watched
+  heist_loot = 0
+  say: {heist_warned == 1: You go quietly. You'd been warned: a month of detention, and three of a door that is checked at midnight.|You go quietly. It doesn't help much: a month of detention, starting with the first free afternoon, and your name on the prefects' list.}
+> right: Run for it
+  challenge feat using guile journeyman:
+    win:
+      health -tiny
+      mood -small
+      heist_loot = 0
+      queue night_suspicion now
+      say: {heist_loot == 0: You run, and know every turn better than they do. You get away. You also know they saw your face.|You leave the sack to the prefect and run, and know every turn better than they do. You get away. You also know they saw your face.}
+    lose:
+      gain detention
+      health -small
+      mood -small
+      if has(watched):
+        lose watched
+        gain locked_out
+      else:
+        gain watched
+      heist_loot = 0
+      say: {heist_warned == 1: You run two corridors and into a second prefect. You'd been warned: a month of detention, three of a locked door at midnight, and a bruised shin.|You run two corridors and into a second prefect. A month of detention, a bruised shin, and your name on the prefects' list.}

@@ -1,0 +1,392 @@
+# ============================================================
+#  The seventh tower heist (threads 1; the shape is in heists/shared.grim). Up the servants' stair inside the wall
+#  (lead lead_tower_stair): band 1 the wall stair (depth 1–2, apprentice), band 2 the old classrooms above the landing
+#  of candles (3–4, journeyman), band 3 the upper classrooms (5–6, adept), and at depth 7 the old duelling master's
+#  study, the heist's end. Teaches Extraction. Cover: +1 with `prefect_rota`, +1 if you know the tower by day (three
+#  visits). The chimney (`carto_tower_chimney`) starts you at depth 3.
+#  Plot safety: the tower's top room holds the star key (hs_seventh_tower). The heist ends at the study beside the desks
+#  two turns below the top, and never goes past them to the top room or the hollow; it names no key, grants no clue and
+#  gives no reason for the tower's locking (canon: nobody living remembers). After the key has gone it says only that
+#  the tower above is quiet.
+# ============================================================
+
+@pool tower_heist_entry
+place: seventh_tower
+slot: midnight
+class: routine
+repeat: 1
+order: last
+
+@event heist_tower_enter
+title: The Stair in the Wall
+pool: tower_heist_entry
+tone: tense
+when: flag(heist_tower_known)
+art: door
+tags: danger mystery
+scene: A dark vaulted cellar at midnight, a rack of empty bottles swung aside from a curved stone wall, a narrow stair curling up inside it, a student with a shaded candle.
+text: {heist_tower_highest == 0: Midnight in the seventh tower's cellar. Behind the rack of empty bottles, your stair curls up inside the wall, one shoulder wide. Above the landing of candles are the old classrooms, shut for a century, with everything their teachers left behind.|{~The bottle rack, the hollow stone, the stair in the wall.|The cellar at midnight, and the cold coming down the wall stair.|Your stair, curling up into the dark inside the stone.}} {flag(carto_tower_chimney): The chimney's soot-black mouth gapes beside it.|}
+> left: Not tonight
+  say: {~You put the rack back and go to bed with the stair in your head.|Not tonight. The tower can keep its classrooms a while longer.|You stand at the foot of the stair and listen to the tower settle, and go no further.}
+> right: Go up
+  hint: A heist: press on card by card, slip away with what you carry any time.
+  flag heist_tower_tried
+  heist_where = 2
+  heist_loot = 0
+  heist_cover = 1
+  if flag(prefect_rota):
+    heist_cover += 1
+  if visits_to(seventh_tower) >= 3:
+    heist_cover += 1
+  if flag(carto_tower_chimney):
+    heist_depth = 3
+  else:
+    heist_depth = 1
+  queue any in heist_tower now
+  say: {flag(carto_tower_chimney): You go up the chimney, back to one side and feet to the other, and come out in a classroom grate, sooty and grinning.|{~You turn sideways and go up into the wall.|You shade your candle and climb, counting the turns.|You go up quietly, one shoulder to the stone, the tower breathing round you.}}
+
+@event heist_tower_unmapped
+title: The Tower at Midnight
+pool: tower_heist_entry
+tone: eerie
+when: not flag(heist_tower_known)
+repeat: 4
+art: door
+tags: mystery
+scene: The foot of a dark tower stair at midnight, the door locked, a student with a candle looking up at arrow-slits full of moonlight.
+text: {~Midnight at the foot of the seventh tower. The stair is locked, as it has been for a century, and the arrow-slits above are full of moon.|The seventh tower at midnight, locked, and very quiet. Somewhere up in it, the wind finds a slit and plays one note.} {member(cartographers): The Cartographers swear the tower is fatter outside than in.|Somebody in the castle must know another way up.}
+> left: Listen to the tower
+  lore +tiny
+  mood -tiny
+  say: {~You sit on the cold bottom step and listen. The tower creaks and settles, floor by floor, and then on one floor it stops, as if something up there is listening back.|You listen until the candle gutters. High up, a door that nobody opens bangs once in the wind.}
+> right: Go back to bed
+  say: {~You leave the tower to its century.|Not without a way up. You go back to bed.}
+
+@thread heist_tower
+from: scene
+clues: lead_tower_stair
+name: The Seventh Tower by Night
+premise: A servants' stair climbs inside the seventh tower's wall to the old classrooms, shut for a century. The Cartographers go at midnight.
+journal:
+  flag(heist_tower_tried): You climbed the stair inside the seventh tower's wall at midnight.
+  flag(heist_tower_extraction): In the old duelling master's study you read how to take another's magic, and learned Extraction.
+  flag(heist_tower_study): You reached the old duelling master's study, at the top of the classrooms.
+status:
+  resolved: flag(heist_tower_study)
+
+# The way shut: as in the stacks, a rare step for any depth that ends the night, and the one left when nothing else is.
+@event tw_dead_end
+title: A Door That Won't
+thread: heist_tower
+class: routine
+tone: eerie
+when: heist_depth >= 1 and (heist_depth <= 6 or (seen(tw_masters_study) > 0 and since(tw_masters_study) == 0))
+repeat: 1
+weight: 1
+art: door
+tags: heist
+scene: A narrow tower landing in darkness, an old classroom door swollen shut in its frame, a student's candle at its foot.
+text: {heist_depth >= 7: The study's lock won't take another try tonight, and every board on the landing has heard you. The only way left is down.|{~The door to the next floor has swollen shut in a century of damp, and it isn't going to open quietly tonight.|The stair turns, and turns, and comes back to the same landing. The tower has decided you've climbed enough.|A whole flight of the old stair has rotted away above you. The rest of the tower is out of reach tonight.}}
+> left: Go back down with what you carry
+  queue heist_way_out now
+  say: {heist_depth >= 7: You leave the master's door to its century and go down, all the way, with what you have.|{~You go back down by the way you know.|You take the hint, and the stair.|You go down, and the tower settles behind you.}}
+> right: Search where you stand
+  challenge research apprentice:
+    win:
+      heist_loot += 1
+      say: {heist_depth >= 7: Behind the stacked desks by the study door, a drawer has come loose. Something small and old comes with you.|{~Under a loose board on the landing, a tin of old marbles and a note that just says "Sorry about the frog". You take the tin.|In a niche in the wall, a brass bell-pull handle, very fine. It comes down with you.|On the window ledge, a pair of spectacles with gold rims, left a century ago. You take them.}}
+    lose:
+      health -tiny
+      say: {heist_depth >= 7: The desks shift as you reach in, and the whole heap groans. You leave them be.|{~You find a splinter, and dust, and nothing.|A board gives under your knee, and you leave the landing alone.|The ledge is crumbling, and so, briefly, are you.}}
+  queue heist_way_out now
+
+# ---------------- Band 1: the wall stair (depth 1–2, apprentice) ----------------
+
+@event tw1_one_shoulder
+title: One Shoulder Wide
+thread: heist_tower
+class: routine
+tone: tense
+when: heist_depth >= 1 and heist_depth <= 2
+repeat: 1
+art: door
+tags: heist danger
+scene: A student squeezing sideways up an impossibly narrow spiral stair inside a stone wall, candle held up, cobwebs in their hair.
+text: {seen(tw1_one_shoulder) > 1: The pinch in the wall stair again. You know exactly how far to breathe out now, and the stone still takes a button for its trouble.|Halfway up the wall stair narrows from one shoulder to less. The servants who built it must have been very thin, or very determined. Somewhere above the pinch, a draught; somewhere below it, everything you've climbed.}
+> left: Back down while you can turn round
+  queue heist_way_out now
+  say: {~You back down into the cellar and the stair lets you go.|You decide the pinch is the tower's way of saying no.}
+> right: Breathe out and squeeze
+  challenge feat using guile apprentice:
+    win:
+      heist_depth += 1
+      next
+      say: {~You breathe out, turn sideways and go up the pinch an inch at a time. On the far side, the stair widens like a sigh.|You squeeze through with your candle held over your head and a button left behind on the stone.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~You stick, halfway, for a very long minute, and come loose with a scrape that the whole tower hears.|Your candle catches the cobwebs, and for a moment the stair is full of light and smoke and you.}
+
+@event tw1_someone_else
+title: Someone Else's Climb
+thread: heist_tower
+class: routine
+tone: tense
+when: heist_depth >= 1 and heist_depth <= 2
+repeat: 1
+art: lantern
+tags: heist danger
+scene: A narrow stone stair in darkness, a lantern's glow coming down it from above, a student pressed into a tiny niche in the wall.
+text: {seen(tw1_someone_else) > 1: A light coming down the wall stair again, and footsteps. You're not the only one who uses it, and never were.|A light is coming down the wall stair towards you, and footsteps. Someone else knows this stair.} The only place to go is a niche in the stone, barely deep enough for a candle, let alone you.
+> left: Go back down before they reach you
+  queue heist_way_out now
+  say: {~You go back down faster than you came up, and out through the cellar, and never see who it was.|You retreat. The light stops at the top of the pinch, as if listening, and goes back up.}
+> right: Press into the niche
+  challenge deceive apprentice:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~They pass so close their sleeve brushes yours: a student in a house scarf, out of bounds with a lantern and a sack, who never looks sideways. On the step where they paused, a dropped coin. You take it and climb on.|A student with Cartographer chalk on their sleeve goes down past you, humming. On the step above, they've dropped a silver thimble. It's yours now.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The lantern swings round into your face, and you bolt before the prefect behind it can find your name.|You sneeze. It's the dust. The lantern stops.}
+
+@event tw1_spyhole
+title: The Spyhole
+thread: heist_tower
+class: routine
+tone: eerie
+when: heist_depth >= 1 and heist_depth <= 2
+repeat: 1
+art: eye
+tags: heist
+scene: A tiny spyhole in a stone wall, a student's eye at it, beyond it a broad tower staircase with a prefect's lantern moving down it.
+text: {seen(tw1_spyhole) > 1: The spyhole again, and through it the round's lantern on the main stair, on time to the minute.|The wall stair has a spyhole onto the tower's main stair, so the servants could see who was coming. Through it, a lantern: a prefect on the tower's round, slow, thorough, and heading up the way you're going.}
+> left: Wait for the round to pass, then go down
+  queue heist_way_out now
+  say: {~You watch the prefect all the way up and all the way down, and then you go back to bed.|You take the round as the tower's answer, and go.}
+> right: Time your climb to the round
+  challenge research using guile apprentice:
+    win:
+      heist_depth += 1
+      next
+      say: {~You count the prefect's steps through the spyhole, and climb when they climb, so their footsteps cover yours.|You learn the round in one pass, and go up behind it, a floor behind, like a shadow it hasn't noticed.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~You climb a beat too late. Your step lands in a silence, and the prefect's lantern stops.|You lose count, and come out on the landing face to face with the round.}
+
+# ---------------- Band 2: the old classrooms (depth 3–4, journeyman) ----------------
+
+@event tw2_exam_cupboard
+title: The Examiner's Cupboard
+thread: heist_tower
+class: routine
+tone: light
+when: heist_depth >= 3 and heist_depth <= 4
+repeat: 1
+art: paper
+tags: heist money
+scene: A dusty old classroom at night, a tall locked cupboard with its doors open a crack, bundles of yellowed exam papers tied with ribbon inside.
+text: {seen(tw2_exam_cupboard) > 1: {flag(heist_papers_taken): The examiner's cupboard again, its lock scratched now, a bundle or two lighter than it was.|The examiner's cupboard again, locked as ever, the ribbons still tied.}|The first classroom off the landing still has its examiner's cupboard, locked, and through the crack in the doors, bundles of exam papers tied with faded ribbon, a century of them, answers and all. Collectors pay for old papers. Historians pay more.}
+> left: Leave the papers, and go
+  queue heist_way_out now
+  say: {~You leave the past's exams to the past.|You go back down the wall stair with clean hands and nothing in them.}
+> right: Pick the cupboard's lock
+  challenge feat using guile journeyman:
+    win:
+      heist_loot += 2
+      heist_depth += 1
+      flag heist_papers_taken
+      next
+      say: {~The old lock gives in a puff of dust. You take the two bundles with the best seals, a century of sweat in faded ink.|Inside, the papers, and on top, a marked script with a teacher's note: "See me." You take that one, and two bundles more.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The lock gives, and so does the cupboard, slowly, forward, onto the floor.|The pick snaps, and the cupboard door swings out and bangs like a shot.}
+
+@event tw2_telling_floor
+title: The Telling Floor
+thread: heist_tower
+class: routine
+tone: tense
+when: heist_depth >= 3 and heist_depth <= 4
+repeat: 1
+art: door
+tags: heist danger
+scene: A long dark classroom with old desks in rows, moonlight in stripes across worn floorboards, a student stepping carefully from board to board.
+text: {seen(tw2_telling_floor) > 1: The telling floor again. You know half the chalked crosses by heart now, and the other half by bruises.|The old classrooms are a run of rooms, one into the next, and their floorboards have had a century to learn to talk. Every one creaks a different note. Someone, a hundred years ago, chalked a few of them with a cross.}
+> left: Go back the way you know
+  queue heist_way_out now
+  say: {~You go back over the boards you've already crossed, and down.|You leave the floor to its talking.}
+> right: Cross on the chalked boards
+  challenge feat using guile journeyman:
+    win:
+      heist_depth += 1
+      next
+      say: {~You go from cross to cross like stepping stones, and the floor keeps its mouth shut all the way across.|You cross in a silence so careful the floor seems to hold its breath with you.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~One cross was a joke. The board under it shrieks like a gull.|You miss a chalk mark by an inch, and the floor tells the whole tower.}
+
+@event tw2_class_register
+title: The Last Register
+thread: heist_tower
+class: routine
+tone: eerie
+when: heist_depth >= 3 and heist_depth <= 4
+repeat: 1
+art: book
+tags: heist mystery
+scene: A teacher's desk in an abandoned classroom, an old leather register open on it, the last page of names with a date a century old, moonlight on it.
+text: {seen(tw2_class_register) > 1: The register still lies open at its last day, everyone present, its silver clasp catching the moon.|On the teacher's desk, a class register lies open at its last day, a century ago. Every name is ticked present. After the last name, in the same hand: "Tower closed. Lessons moved." Nothing about why. The register is bound in good leather, with a silver clasp.}
+> left: Leave it open at its last day
+  queue heist_way_out now
+  say: {~You leave the register as it was, everyone present.|You don't take it. It seems rude to the class.}
+> right: Take the register
+  challenge feat using guile journeyman:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~You slip it into your shirt, silver clasp cold against your ribs, and go on as quietly as a class that has been told to.|You take it. Somewhere a door bangs in the wind, and nobody comes.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The silver clasp snaps shut on your finger with a click that carries.|As you lift it, the whole desk shifts on the boards, and the tower answers.}
+
+# ---------------- Band 3: the upper classrooms (depth 5–6, adept) ----------------
+
+@event tw3_no_wind
+title: When the Wind Stops
+thread: heist_tower
+class: routine
+tone: tense
+when: heist_depth >= 5 and heist_depth <= 6
+repeat: 1
+art: moon
+tags: heist danger
+scene: A dark tower corridor lined with arrow-slits, moonlight falling through them in bars, utterly still air, a student frozen mid-step.
+text: {seen(tw3_no_wind) > 1: The corridor of slits again, and again the wind drops as you reach it, as if it knows your step.|Up here the arrow-slits have been playing the wind all night, covering your steps. Now, between one note and the next, the wind stops, and the tower is so quiet you can hear your candle burn.} ⚠ One wrong sound here, and there's no near thing.
+> left: Wait for the wind, then go back down
+  queue heist_way_out now
+  say: {~You wait, not breathing, until the wind comes back, and go down under its cover.|You stand like a statue until the slits start singing again, and take the hint.}
+> right: Cross in the silence
+  challenge feat using guile adept-:
+    win:
+      heist_loot += 1
+      heist_depth += 1
+      next
+      say: {~You cross the whole corridor in the silence, step by soundless step. At the end, on a sill, a silver pencil someone left in a hurry. You take it.|You go through the quiet like a cat through a sleeping house, and find on the far side a dropped purse, very old.}
+    lose:
+      queue heist_caught now
+      say: {~Your shoe squeaks. In that silence, it's a shout.|You drop the candle. It rolls, very loudly, all the way down the corridor and the stair, to a prefect's feet.}
+
+@event tw3_orrery
+title: The Orrery
+thread: heist_tower
+class: routine
+tone: eerie
+when: heist_depth >= 5 and heist_depth <= 6
+repeat: 1
+art: star
+tags: heist money
+scene: An abandoned astronomy classroom at night, a large brass orrery of planets on arms still slowly turning in the dark, a student reaching carefully toward one small planet.
+text: {seen(tw3_orrery) > 1: {flag(heist_pearl_taken): The orrery is still turning, one planet short where you took the pearl.|The orrery is still turning, the pearl still riding its little arm.}|The astronomy classroom's brass orrery is still turning, a century after anyone wound it, its planets on long arms going round and round in the dark. The smallest planet is a pearl. It would come off its arm, if you were quick, and the orrery wouldn't stop.}
+> left: Leave it turning
+  queue heist_way_out now
+  say: {~You watch it go round once more and leave it to its century.|You leave the planets where they are. Somebody should.}
+> right: Take the pearl as it passes
+  challenge feat using guile adept-:
+    win:
+      flag heist_pearl_taken
+      heist_loot += 2
+      heist_depth += 1
+      next
+      say: {~You time the arm, and the pearl is in your palm before it's gone round. The orrery doesn't notice. It goes on turning, one planet short.|Quick as a pickpocket, you lift the pearl as it passes. The little arm swings on, empty, keeping time.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~You catch the arm instead of the pearl, and the whole orrery stops with a groan of brass that wakes the tower.|You're too slow, and the arm takes your knuckles going round, and you yelp.}
+
+@event tw3_portrait_eyes
+title: The Portrait on the Landing
+thread: heist_tower
+class: routine
+tone: eerie
+when: heist_depth >= 5 and heist_depth <= 6
+repeat: 1
+art: eye
+tags: heist danger
+scene: A dim tower corridor with a large stern painted portrait of a robed professor, a student creeping past beneath it, the painted eyes turned toward them.
+text: {seen(tw3_portrait_eyes) > 1: The portrait at the top of the classrooms opens its painted eyes before you've reached it. "You again," it says.|At the top of the classrooms hangs a portrait of a professor a century dead, in a frame worth more than your trunk. The painted eyes follow you, and the painted mouth is opening, as portraits here do, to ask what you think you're doing.}
+> left: Apologise to him, and go
+  queue heist_way_out now
+  say: {~You bow, and say you were just leaving, and he says "Quite," and you were.|You tell the portrait you're lost. "Down," he says, and you go down.}
+> right: Talk your way past him
+  challenge deceive adept-:
+    win:
+      heist_depth += 1
+      next
+      say: {~You tell him you're the new caretaker, sent to check the damp. He's been bored for a century, and believes you because he wants to.|You tell him the lessons are moving back up. He's so pleased he forgets to ask your name.}
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~"Intruder," says the portrait, in a voice built for a full hall, and doesn't stop saying it.|He doesn't believe a word, and he has a century of saved-up shouting.}
+
+# ---------------- Depth 7: the duelling master's study (the heist's end) ----------------
+
+@event tw_masters_study
+title: The Duelling Master's Study
+thread: heist_tower
+class: routine
+tone: grim
+when: heist_depth >= 7
+repeat: 1
+art: book
+tags: heist magic danger
+scene: A small locked study at the top of an old tower's classrooms, a desk under a dust sheet, a leather notebook in a glass case, a student kneeling at the lock with picks.
+text: At the top of the old classrooms, the stair is choked with stacked desks, and beside them is a locked study with a brass plate: MASTER OF DUELLING. It was locked with the rest of the tower, and nobody has had its key since. {flag(star_key) or flag(gave_star_key) or flag(key_taken): Up past the desks, the tower is quiet.|Up past the desks, something in the tower hums at midnight, and every hair on your arms stands up. You won't be going higher.}
+> left: Leave the master to his study
+  flag heist_tower_study
+  queue heist_way_out now
+  say: {~You touch the brass plate once and go back down. You got this far.|You don't try the door. Some rooms are closed for a reason.}
+> right: Pick the lock and search the study
+  challenge feat using guile adept-:
+    win:
+      flag heist_tower_study
+      heist_loot += 2
+      heist_depth += 1
+      if spell_level(extraction) < 1:
+        learn_spell extraction
+        flag heist_tower_extraction
+        alignment -small
+        say: In a glass case lies a notebook the master confiscated from a student duellist long ago, its ink faded brown. In a neat and terrible hand it tells how to reach into someone and take their magic for yours. You read it through, and close it with a strength in your hands that isn't yours. Extraction.
+      else:
+        say: The confiscated notebook is in its glass case, and you know already what it says. You leave it, and take the master's silver inkstand and a box of old duelling medals instead.
+      queue heist_way_out now
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: {~The old lock is warded, and it rings like a struck sword.|The door gives, and so does its top hinge, and it comes down on the desks with a crash that wakes everything.}

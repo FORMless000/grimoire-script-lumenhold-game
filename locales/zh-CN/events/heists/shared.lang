@@ -1,0 +1,61 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/heists/shared.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event heist_way_out
+# en: Out Before Dawn
+title [8d8cfc] = 天亮前出来
+# en: {heist_loot == 0: {heist_deck_tonight == 1: You come out with nothing to sell but a tin of cards that was never yours to sell, and a grin.|You come out with nothing but dust on your knees and your heart going like a drum.}|{heist_loot <= 2: You come out with a few small, old things under your shirt, each worth more than it looks.|{heist_loot <= 4: You come out with a real bundle: {heist_where == 1: pages, and something heavier that sighs when you move|papers, and something heavier that clinks when you move}.|You come out with more than your shirt will hold, and walk very carefully.}}} {heist_where == 1: The library is grey with dawn behind you.|The tower's slits are going grey above you.}
+text [2cc658] = {heist_loot == 0: {heist_deck_tonight == 1: 你出来时没有什么可卖的，只有一铁盒本来就不归你卖的牌，还有一脸笑。|你出来时除了膝盖上的灰和咚咚直跳的心，什么也没带。}|{heist_loot <= 2: 你衬衫底下揣着几样又小又旧的东西出来了，每一样都比看上去值钱。|{heist_loot <= 4: 你带出来真正的一包：{heist_where == 1: 几页纸，还有一样更沉的东西，你一动它就叹气|几张纸，还有一样更沉的东西，你一动它就叮当响}。|你带出来的东西多得衬衫装不下，走得非常小心。}}} {heist_where == 1: 身后的图书馆被晨光染灰了。|头顶塔上的箭孔渐渐泛灰。}
+# en: A student slipping out of a dark doorway at the grey end of night, a bundle held under one arm, looking both ways down a castle corridor.
+scene [42dbc8] = 夜色将尽时，一个学生从黑暗的门口溜出来，胳膊底下夹着一个包，在城堡走廊里左右张望。
+# en: Sell it to the collector
+opt.left.label [90e67f] = 卖给收藏家
+# en: Crowns, by what you carry. A little Hollow.
+opt.left.hint [28243a] = 按你带的东西换克朗。稍偏空洞。
+# en: {heist_loot == 0: {heist_deck_tonight == 1: The tin goes to Corvin, not the collector. You go to bed, and lie awake grinning.|There's nothing to sell. You go to bed, and lie awake anyway.}|{~The collector in the village back room weighs each thing in a gloved hand and pays in old crowns, without a question.|The collector's man meets you by the village pump at noon. He counts your things, and then his coins, and both counts are fair.|The collector holds your best piece up to the window and is quiet for a long time. Then he pays more than you'd have asked.}}
+opt.left.say.1 [7c9cf0] = {heist_loot == 0: {heist_deck_tonight == 1: 铁盒归科尔文，不归收藏家。你上床睡觉，睁着眼躺着，一直在笑。|没什么可卖的。你上床睡觉，却照样睁着眼躺着。}|{~村里那间后屋的收藏家戴着手套把每件东西掂了掂，付了旧克朗，一个问题也没问。|收藏家的人中午在村里的水泵边等你。他先数你的东西，再数他的钱，两样都数得公道。|收藏家把你最好的那件举到窗前，沉默了很久。然后他付的比你开的价还多。}}
+# en: Keep it, and read it
+opt.right.label [c7a87f] = 留着，读一读
+# en: Lore, by what you carry. A little Hollow.
+opt.right.hint [c67ffe] = 按你带的东西得学识。稍偏空洞。
+# en: {heist_loot == 0: There's nothing to keep but the night, and you keep that.|{~You spread it all on your bed behind drawn curtains and read until breakfast. Half of it you shouldn't know. You know it now.|You hide it under a loose floorboard and take it out a piece at a time, over weeks, like a box of sweets.|You read it all twice and burn the worst of it. The rest you keep, and it keeps you up.}}
+opt.right.say.1 [43e1e2] = {heist_loot == 0: 除了这一夜，没什么可留的，那你就留着这一夜。|{~你拉上床帘，把东西全摊在床上，一直读到早饭。有一半你本不该知道。现在你知道了。|你把它们藏在一块松动的地板底下，几个星期里一件一件拿出来，像一盒糖。|你全都读了两遍，把最糟的那些烧了。其余的你留着，它们让你睡不着。}}
+
+@event heist_slip
+# en: A Near Thing
+title [920312] = 险些
+# en: {heist_dropped == 1: {~You get away, just, and something you carried doesn't: it's lying out there in the dark where you dropped it.|You end up flat in an alcove with your heart in your mouth and one thing fewer in your shirt.|You're clear, scraped and shaking, and you've left something behind for somebody to find.}|{~You get away, just, with nothing to lose but your nerve, and some of that.|You end up flat in an alcove with your heart in your mouth, glad your shirt was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff.}} {heist_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text [0cf283] = {heist_dropped == 1: {~你逃开了，勉强，可你带的一样东西没逃开：它躺在后面的黑暗里，就在你掉下它的地方。|你最后贴在一个壁龛里，心提到了嗓子眼，衬衫里少了一样东西。|你脱身了，擦破了皮，浑身发抖，还给别人留下了点东西去发现。}|{~你逃开了，勉强，除了胆子没什么可丢的，胆子也丢了一点。|你最后贴在一个壁龛里，心提到了嗓子眼，庆幸衬衫里是空的。|你脱身了，擦破了皮，浑身发抖，除了一道擦痕什么也没留下。}} {heist_cover > 0: 也许你还能再险一次。|那是你最后一次险些。}
+# en: A student flattened into a dark alcove, holding their breath, as the glow of a lantern slides past along the floor.
+scene [bf7e6a] = 一个学生贴在黑暗的壁龛里屏住呼吸，提灯的光晕沿着地面从旁边滑过。
+# en: That's enough for tonight
+opt.left.label [e41fc4] = 今晚到此为止
+# en: {~You take what's left and go, by the long way.|You decide the night has made its point.|You go while you can.}
+opt.left.say.1 [9b9c3e] = {~你带着剩下的东西，绕远路走了。|你认定今晚已经把话说清楚了。|趁还走得了，你走了。}
+# en: Wait, and go on
+opt.right.label [5458f2] = 等一等，接着走
+# en: On: the next slip may not be a near thing.
+opt.right.hint [1c2ad6] = 继续：下一次失手可能就不只是险些了。
+# en: {~You wait till the dark is quiet again, and go on.|You count to five hundred, and go on.|You go on. Somewhere behind you, someone is looking at the place where you were.}
+opt.right.say.1 [726ea1] = {~你等到黑暗重新安静下来，接着往前走。|你数到五百，接着往前走。|你接着往前走。身后某处，有人正看着你刚才待过的地方。}
+
+@event heist_caught
+# en: Caught
+title [63a445] = 被抓
+# en: A lantern comes up full in your face. {heist_where == 1: Down in the stacks, at night,|Halfway up the seventh tower, at night,} {heist_loot == 0: and empty-handed, which convinces nobody.|with your arms full of things that aren't yours. The prefect takes them all, into a sack for the confiscation vault.} The prefect behind the lantern looks less angry than tired.
+text [a37b5d] = 一盏提灯正对着你的脸照过来。{heist_where == 1: 深夜，在书库底下，|深夜，在第七塔半腰，}{heist_loot == 0: 两手空空，这谁也说服不了。|怀里抱满了不属于你的东西。级长把它们全收进一只送往没收库的袋子。}提灯后面的级长看起来与其说生气，不如说疲惫。
+# en: A prefect's lantern held high in a dark doorway, lighting up a student caught with a bundle of stolen things in their arms.
+scene [75041a] = 黑暗的门口，一位级长高举提灯，照出一个怀里抱满偷来的东西、被当场抓住的学生。
+# en: Go quietly
+opt.left.label [250d1c] = 乖乖跟他走
+# en: {heist_warned == 1: You go quietly. You'd been warned: a month of detention, and three of a door that is checked at midnight.|You go quietly. It doesn't help much: a month of detention, starting with the first free afternoon, and your name on the prefects' list.}
+opt.left.say.1 [793562] = {heist_warned == 1: 你乖乖跟着走。你被警告过的：一个月禁闭，外加三个月午夜有人查的门。|你乖乖跟着走。没多大用：一个月禁闭，从第一个空闲的下午开始，你的名字也上了级长的名单。}
+# en: Run for it
+opt.right.label [38d292] = 拔腿就跑
+# en: {heist_loot == 0: You run, and know every turn better than they do. You get away. You also know they saw your face.|You leave the sack to the prefect and run, and know every turn better than they do. You get away. You also know they saw your face.}
+opt.right.say.1 [015d77] = {heist_loot == 0: 你拔腿就跑，每个拐角你都比他们熟。你逃掉了。你也知道他们看见了你的脸。|你把袋子留给级长，拔腿就跑，每个拐角你都比他们熟。你逃掉了。你也知道他们看见了你的脸。}
+# en: {heist_warned == 1: You run two corridors and into a second prefect. You'd been warned: a month of detention, three of a locked door at midnight, and a bruised shin.|You run two corridors and into a second prefect. A month of detention, a bruised shin, and your name on the prefects' list.}
+opt.right.say.2 [ed51ce] = {heist_warned == 1: 你跑过两条走廊，撞上了第二位级长。你被警告过的：一个月禁闭，三个月午夜锁上的门，还有一块青肿的小腿。|你跑过两条走廊，撞上了第二位级长。一个月禁闭，一块青肿的小腿，你的名字也上了级长的名单。}
