@@ -159,7 +159,7 @@ title: The Laboratory Writes Again
 pool: career_letter
 when: flag(return_conclave) and not flag(offer_conclave)
 scene: A letter on laboratory paper, slightly singed at one corner, sealed with seven small towers.
-text: The Conclave Laboratory remembers your summer, and especially the ward that held. Your old supervisor writes that a place as a junior researcher is yours from the autumn if you'll take it. "Don't make me ask twice," she adds. Answer by the last day.
+text: The Conclave Laboratory remembers your summer, and the report your supervisor wrote at the end of it. She writes that a place as a junior researcher is yours from the autumn if you'll take it. "Don't make me ask twice," she adds. Answer by the last day.
 on_show:
   career_letter_turn = turn
 > left: Write back yes, in principle
@@ -177,7 +177,7 @@ title: The Works Write Again
 pool: career_letter
 when: flag(return_guild) and not flag(offer_guild)
 scene: A grubby letter with a chemical stain on the envelope, stamped with the Guild of Alchemists' retort.
-text: The Guild of Alchemists' works remember your summer and the batch you saved. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day.
+text: The Guild of Alchemists' works remember your summer, and how you kept your head at the vats. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day.
 on_show:
   career_letter_turn = turn
 > left: Write back yes, in principle
@@ -219,10 +219,10 @@ on_show:
 > left: Write back yes, in principle
   flag offer_field_station
   mood +small
-  say: You write back yes. The next letter has a second paw print on it, which the warden says is the foal's way of agreeing.
+  say: You write back yes. The next letter has a second paw print on it, which the warden says belongs to whoever was sitting on the desk, and counts as a vote.
 > right: Ask about the winters
   flag offer_field_station
-  vigor +tiny
+  lore +tiny
   mood -tiny
   say: Long, wet and lonely, the warden writes, honestly, and the best work there is. You believe the second half.
 
@@ -249,7 +249,7 @@ title: The Office Writes Again
 pool: career_letter
 when: flag(return_unseen) and not flag(offer_unseen)
 scene: A blank sheet of paper on a desk that, held to a candle, shows writing in brown ink.
-text: A blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and the file you didn't open. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day.
+text: A blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and how few questions you asked. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day.
 on_show:
   career_letter_turn = turn
 > left: Burn it, as they'd want
@@ -332,7 +332,7 @@ on_show:
   say: It fits. You fly a lap of the lake that evening for no reason at all, and the loft cheers you down.
 > right: Ask about the winter routes
   flag offer_courier
-  vigor +tiny
+  lore +tiny
   mood -tiny
   say: The chief shows you the map of the winter routes, with the crosses where couriers came down. There are not many. There are some.
 

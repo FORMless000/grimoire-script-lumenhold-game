@@ -87,7 +87,7 @@ text: You read together now, the two of you, one book between you in the window 
 > left: Read it slowly, together
   spark seraphine +small
   lore +tiny
-  say: {~You read aloud, slowly, one page at a time. She doesn't say the ending. At the end she says, "I was wrong. It ends happier than I saw." It's the first time she's ever been glad to be wrong.|You read and she listens, and twice she starts to say something and stops. When you finish, she's smiling. "I didn't know," she says. "I didn't let myself."}
+  say: {~You read aloud, slowly, one page at a time. She doesn't say the ending. At the end she says, "I was wrong. It ends happier than I saw." She is always glad to be wrong about endings.|You read and she listens, and twice she starts to say something and stops. When you finish, she's smiling. "I didn't know," she says. "I didn't let myself."}
 > right: Ask her to tell you
   rel seraphine +tiny
   mood +tiny
@@ -139,11 +139,11 @@ text: Seraphine catches your wrist in the doorway and won't let go. Her face is 
 @event seraphine_ex
 title: She Painted the Ending
 specializes: soc_ex_encounter
+when: seen(seraphine_ex) == 0
 class: milestone
 tone: warm
 trigger: social
 actor: seraphine
-repeat: 6
 art: mirror
 tags: romance
 scene: A girl in a paint-stained smock handing a small canvas to a former lover in a corridor, both careful not to touch hands.
@@ -213,7 +213,7 @@ class: routine
 tone: light
 trigger: social
 actor: corvin
-when: rel(corvin) >= 9 and seen(corvin_confiscation_vault) > 0 and courting(corvin)
+when: rel(corvin) >= 9 and flag(corvin_deck_back) and courting(corvin)
 repeat: 4
 weight: 10
 art: cards
@@ -321,7 +321,7 @@ text: You've a tradition now: once a month Corvin leaves a lock open somewhere i
 > right: Leave a lock open for him
   rel corvin +small
   alignment -tiny
-  say: {~You pick your first lock, badly, and leave a note: "Your turn." He finds it in ten minutes and is so proud of you he can't speak.|You leave the observatory door open with a note. He finds it, and you, and says you're a terrible influence.}
+  say: {~You pick a lock, badly, and leave a note: "Your turn." He finds it in ten minutes and is so proud of you he can't speak.|You leave the observatory door open with a note. He finds it, and you, and says you're a terrible influence.}
 
 @event corvin_honest_once
 title: Honest for Once
@@ -341,7 +341,7 @@ text: Corvin has been joking all evening, and it's getting thin. Something's wro
     win:
       spark corvin +medium
       rel corvin +small
-      say: You don't let him off. Eventually the jokes run out, and he tells you: his brother wrote. Wants money. Threatened to come. You sit with him while he says it all, plainly, no jokes. "That's the first time I've said that to anyone," he says.
+      say: You don't let him off. Eventually the jokes run out, and he tells you: his brother wrote. Wants money. Threatened to come. You sit with him while he says it all, plainly, no jokes. {seen(corvin_brother) > 0: "You knew already," he says. "I still had to say it out loud."|"That's the first time I've said that to anyone," he says.}
     lose:
       spark corvin -small
       say: Every question gets a better joke. You end up laughing despite yourself, and he looks relieved and sad at once, and you know you lost.
@@ -366,21 +366,20 @@ text: Corvin's brother is at the castle gate again. This time he isn't asking Co
   spark corvin +medium
   rel corvin +small
   mood -small
-  say: You step up beside him. The brother looks at the two of you a long time, then spits, and goes. Corvin shakes for an hour afterwards. "Nobody's ever done that," he says. "Stood next to me."
+  say: You step up beside him. The brother looks at the two of you a long time, then spits, and goes. Corvin shakes for an hour afterwards. {chosen(corvin_brother, left): "Twice now," he says. "You keep standing next to me."|"Nobody's ever done that," he says. "Stood next to me."}
 > right: Pay him to go
   gold -large
   spark corvin +small
-  alignment -tiny
-  say: You give the brother everything in your purse. He goes. Corvin is furious with you, and grateful, and furious about being grateful. "Never again," he says. "Promise me." You promise. You'd do it again.
+  say: You pay the brother what he asks, which is a great deal. He goes. Corvin is furious with you, and grateful, and furious about being grateful. "Never again," he says. "Promise me." You promise. You'd do it again.
 
 @event corvin_ex
 title: New Locks
 specializes: soc_ex_encounter
+when: seen(corvin_ex) == 0
 class: milestone
 tone: warm
 trigger: social
 actor: corvin
-repeat: 6
 art: lock
 tags: romance
 scene: A lanky student kneeling at a dormitory door fitting a new lock, looking up at his ex with a grin that doesn't reach his eyes.
@@ -510,7 +509,7 @@ text: Mir has drawn a blueprint for something for you. {~"A lamp that turns itse
 > right: Pin it up, for later
   rel mir +small
   study +tiny
-  say: {~You pin it on your wall, next to your timetable. Mir sees it there the next time they visit and goes very quiet and very pleased.|"Later," you say. Mir nods fast. "Later is good. Later is a plan." They say "later" several times on the way out.}
+  say: {~You pin it on your wall, next to your timetable, and go back to the essay it interrupted. Mir sees it there the next time they visit and goes very quiet and very pleased.|"Later," you say, and go back to your revision. Mir nods fast. "Later is good. Later is a plan." They say "later" several times on the way out.}
 
 @event mir_tinkering_evenings
 title: Tinkering Evenings
@@ -580,11 +579,11 @@ text: A letter from Mir's family, on company paper. They have heard there is som
 @event mir_ex
 title: The Owl Holds a Grudge
 specializes: soc_ex_encounter
+when: seen(mir_ex) == 0
 class: milestone
 tone: light
 trigger: social
 actor: mir
-repeat: 6
 art: owl
 tags: romance
 scene: A clockwork owl glaring from a high shelf at a former partner of its maker, ruffling its brass feathers.
@@ -605,12 +604,12 @@ text: Mir's clockwork owl sees you across the courtyard, lands on a gargoyle and
 @event mir_gift_given
 title: A Gift With Gears
 specializes: soc_gift_given
+when: seen(mir_gift_given) == 0
 class: routine
 tone: light
 trigger: social
 actor: mir
 weight: 10
-repeat: 6
 art: gear
 tags: social
 scene: An artificer turning a small gift over and over in their hands, peering at it through goggles as if checking for gears.

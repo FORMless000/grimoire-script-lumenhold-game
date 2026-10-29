@@ -41,7 +41,7 @@ tone: light
 art: meal
 tags: home
 scene: A tea-shop counter with three familiar cakes under glass domes and a fourth, mysterious one on a plate beside them, a woman in an apron watching expectantly.
-text: {Mabel's has three kinds of cake. Today, on a plate beside them, there is a fourth. "Experimental," says Mabel. "Free, if you're brave, petal."|Another fourth cake. Mabel has started a little card for each one: name, date, survivors.|The fourth cake. Mabel slides it across before you've asked; you have a reputation for bravery, or greed.} {This one is blue.|This one is suspiciously plain.|{season == "winter": It smells of cloves and something like snow.|It's still warm and very slightly humming.}}
+text: {Mabel's has three kinds of cake. Today, on a plate beside them, there is a fourth. "Experimental," says Mabel. "Free, if you're brave, petal."|Another fourth cake. Mabel has started a little card for each one: name, date, survivors.|The fourth cake. Mabel slides it across before you've asked, in case today is the day you're brave.} {This one is blue.|This one is suspiciously plain.|{season == "winter": It smells of cloves and something like snow.|It's still warm and very slightly humming.}}
 > left: Be brave and try it
   chance likely:
     mood +small
@@ -64,14 +64,15 @@ tags: social home
 scene: A big round table in a tea shop crowded with elderly villagers playing dominoes and arguing, one of them waving a student over.
 text: {The big round table at Mabel's belongs to the village regulars, four old friends, a box of dominoes and fifty years of arguments. They wave you over. "Settle something for us."|The regulars wave you over again. Today's dispute is about the academy in their day, when, they say, the stairs moved twice as often.|The regulars have saved you a chair. They've started calling you "the referee".} {The dominoes are clicking.|One of them was a student at the castle sixty years ago, and won't let anyone forget it.|{season == "winter": The window behind them is fogged from the teapots.|Mabel brings them more tea without being asked.}}
 > left: Join the domino game
-  chance even:
-    gold +small
-    mood +small
-    say: {You win a whole crown off a retired miller who swears he let you. He didn't.|You win, and the old student declares that the academy has gone soft and been lucky. You'll take it.|You win, and the regulars demand a rematch next time. "The referee's been practising."}
-  else:
-    gold -small
-    mood -tiny
-    say: {The retired miller cleans you out with a smile like a closing door.|You lose to a woman of ninety who plays with her eyes shut.|You lose, and the regulars toast your generosity. Mabel brings you a consolation biscuit.}
+  challenge research journeyman wild:
+    win:
+      gold +small
+      mood +small
+      say: {You keep count of every tile played and win a whole crown off a retired miller who swears he let you. He didn't.|You win, and the old student declares that the academy has gone soft and been lucky. You'll take it.|You win, and the regulars demand a rematch next time. "The referee's been practising."}
+    lose:
+      gold -small
+      mood -tiny
+      say: {The retired miller cleans you out with a smile like a closing door.|You lose to a woman of ninety who plays with her eyes shut.|You lose, and the regulars toast your generosity. Mabel brings you a consolation biscuit.}
 > right: Listen to their stories
   lore +small
   say: {You hear about the year a professor turned the refectory into a pond by accident, and the year someone taught the stairs to waltz. Half of it might be true.|The old student describes the castle as it was: the same stairs, different shoes. It's strange to hear your life told back sixty years early.|You referee three arguments and hear four stories. Your tea goes cold. It's worth it.}
@@ -190,7 +191,7 @@ tone: warm
 art: scroll
 tags: social
 scene: A small elderly woman with a satchel of slates stopping a student in academy robes in the middle of a busy market street.
-text: {In the market you're stopped by the old schoolmistress who taught half the town its letters. "Come and tell my little ones about the academy," she says. "They won't believe me."|The schoolmistress again, with her satchel of slates. "They've talked of nothing else since last time. Come back."|The schoolmistress waves from across the square. The children at her heels are wearing paper wizard hats, badly folded.} {She looks smaller than she used to.|She smells of chalk, as she always did.|{season == "winter": Her breath steams; she's been out in the cold looking for you.|A market dog is following her for the biscuits in her pocket.}}
+text: {In the market you're stopped by the old schoolmistress who taught half the town its letters. "Come and tell my little ones about the academy," she says. "They won't believe me."|The schoolmistress again, with her satchel of slates. "The offer stands. They still don't believe me."|The schoolmistress waves from across the square. The children at her heels are wearing paper wizard hats, badly folded.} {She looks smaller than she used to.|She smells of chalk, as she always did.|{season == "winter": Her breath steams; she's been out in the cold looking for you.|A market dog is following her for the biscuits in her pocket.}}
 > left: Visit the schoolroom
   charm +small
   mood +small

@@ -61,8 +61,8 @@ text [c3342c] = 现在你们俩一起读书，窗台上，一本书摊在两人�
 scene [8e2b8f] = 两个人蜷在窗台上，中间一本书，其中一个用手捂着书页。
 # en: Read it slowly, together
 opt.left.label [aa3f5e] = 一起慢慢读
-# en: {~You read aloud, slowly, one page at a time. She doesn't say the ending. At the end she says, "I was wrong. It ends happier than I saw." It's the first time she's ever been glad to be wrong.|You read and she listens, and twice she starts to say something and stops. When you finish, she's smiling. "I didn't know," she says. "I didn't let myself."}
-opt.left.say.1 [1c1504] = {~你出声慢慢地读，一次一页。她没说结局。读完时她说：“我错了。结局比我看见的要快乐。”这是她第一次为自己错了而高兴。|你读，她听，有两次她想说什么又停住了。读完时她在微笑。“我不知道，”她说，“我没让自己知道。”}
+# en: {~You read aloud, slowly, one page at a time. She doesn't say the ending. At the end she says, "I was wrong. It ends happier than I saw." She is always glad to be wrong about endings.|You read and she listens, and twice she starts to say something and stops. When you finish, she's smiling. "I didn't know," she says. "I didn't let myself."}
+opt.left.say.1 [0430d9] = {~你出声慢慢地读，一次一页。她没说结局。读完时她说：“我错了。结局比我看见的要快乐。”她总是乐于在结局上猜错。|你读，她听，有两次她想说什么又停住了。读完时她在微笑。“我不知道，”她说，“我没让自己知道。”}
 # en: Ask her to tell you
 opt.right.label [fb782a] = 让她告诉你
 # en: {~She tells you the ending, delighted, in half a sentence. You finish the other half together, wrong, and laugh.|She tells you. It's terrible. You read it anyway, and she was right, and you both throw the book across the room.}
@@ -227,8 +227,8 @@ opt.left.label [1f3c53] = 找到它，跟上去
 opt.left.say.1 [052765] = {~午夜你找到了。他在顶上等着，带着一条毯子和一个肯定不是买来的蛋糕。你们边吃边从背面看着钟的指针走动。|你找到那扇门。他在里面，在黑暗中，用一架借来的钢琴弹一支难听的曲子，只弹给你听。}
 # en: Leave a lock open for him
 opt.right.label [57ef7b] = 也给他留一把锁
-# en: {~You pick your first lock, badly, and leave a note: "Your turn." He finds it in ten minutes and is so proud of you he can't speak.|You leave the observatory door open with a note. He finds it, and you, and says you're a terrible influence.}
-opt.right.say.1 [01b8c7] = {~你撬了人生第一把锁，撬得很笨，留了张字条：“轮到你了。”他十分钟就找到了，骄傲得说不出话。|你把观星台的门留着，附上一张字条。他找到了门，也找到了你，说你是个坏影响。}
+# en: {~You pick a lock, badly, and leave a note: "Your turn." He finds it in ten minutes and is so proud of you he can't speak.|You leave the observatory door open with a note. He finds it, and you, and says you're a terrible influence.}
+opt.right.say.1 [2c4e39] = {~你撬了一把锁，撬得很笨，留了张字条：“轮到你了。”他十分钟就找到了，骄傲得说不出话。|你把观星台的门留着，附上一张字条。他找到了门，也找到了你，说你是个坏影响。}
 
 @event corvin_honest_once
 # en: Honest for Once
@@ -241,8 +241,8 @@ scene [1afbc7] = 一个瘦高的学生转过身去，背对着另一个人开着
 opt.left.label [9c7bb7] = 让他说出来
 # en: He deflects; get past the jokes.
 opt.left.hint [278d90] = 他在打岔；越过那些玩笑。
-# en: You don't let him off. Eventually the jokes run out, and he tells you: his brother wrote. Wants money. Threatened to come. You sit with him while he says it all, plainly, no jokes. "That's the first time I've said that to anyone," he says.
-opt.left.say.1 [3de646] = 你不放过他。玩笑终于用完了，他告诉你：他哥哥写信来了。要钱。威胁说要来。你陪着他把话说完，平平实实，没有玩笑。“这是我第一次跟别人说这些。”他说。
+# en: You don't let him off. Eventually the jokes run out, and he tells you: his brother wrote. Wants money. Threatened to come. You sit with him while he says it all, plainly, no jokes. {seen(corvin_brother) > 0: "You knew already," he says. "I still had to say it out loud."|"That's the first time I've said that to anyone," he says.}
+opt.left.say.1 [1f2d56] = 你不放过他。玩笑终于用完了，他告诉你：他哥哥写信来了。要钱。威胁说要来。你陪着他把话说完，平平实实，没有玩笑。{seen(corvin_brother) > 0: “你早就知道了，”他说，“可我还是得亲口说出来。”|“这是我第一次跟别人说这些。”他说。}
 # en: Every question gets a better joke. You end up laughing despite yourself, and he looks relieved and sad at once, and you know you lost.
 opt.left.say.2 [9ea63f] = 每个问题都换来一个更好的笑话。最后你自己也忍不住笑了，他看上去既松了口气又很难过，你知道你输了。
 # en: Let him joke
@@ -259,12 +259,12 @@ text [22ef2b] = 科尔文的哥哥又出现在城堡大门口。这次他不是�
 scene [725064] = 一个穿旧外套的强壮男人堵在城堡大门口，一个瘦高的学生护在另一个学生身前。
 # en: Stand beside Corvin, not behind
 opt.left.label [9ffa73] = 站到科尔文身边，不是身后
-# en: You step up beside him. The brother looks at the two of you a long time, then spits, and goes. Corvin shakes for an hour afterwards. "Nobody's ever done that," he says. "Stood next to me."
-opt.left.say.1 [5c8e42] = 你走上前，站到他身边。那个哥哥盯着你们俩看了很久，啐了一口，走了。科尔文之后抖了一个钟头。“从没有人这样做过，”他说，“站在我旁边。”
+# en: You step up beside him. The brother looks at the two of you a long time, then spits, and goes. Corvin shakes for an hour afterwards. {chosen(corvin_brother, left): "Twice now," he says. "You keep standing next to me."|"Nobody's ever done that," he says. "Stood next to me."}
+opt.left.say.1 [351b85] = 你走上前，站到他身边。那个哥哥盯着你们俩看了很久，啐了一口，走了。科尔文之后抖了一个钟头。{chosen(corvin_brother, left): “第二次了，”他说，“你总是站在我旁边。”|“从没有人这样做过，”他说，“站在我旁边。”}
 # en: Pay him to go
 opt.right.label [af717a] = 给钱让他走
-# en: You give the brother everything in your purse. He goes. Corvin is furious with you, and grateful, and furious about being grateful. "Never again," he says. "Promise me." You promise. You'd do it again.
-opt.right.say.1 [d0bf37] = 你把钱袋里所有的钱都给了那个哥哥。他走了。科尔文对你又气又感激，又因为感激而更气。“下不为例，”他说，“答应我。”你答应了。你还会再这么做。
+# en: You pay the brother what he asks, which is a great deal. He goes. Corvin is furious with you, and grateful, and furious about being grateful. "Never again," he says. "Promise me." You promise. You'd do it again.
+opt.right.say.1 [4f2cb2] = 你把那个哥哥要的钱给了他，数目很大。他走了。科尔文对你又气又感激，又因为感激而更气。“下不为例，”他说，“答应我。”你答应了。你还会再这么做。
 
 @event corvin_ex
 # en: New Locks
@@ -361,8 +361,8 @@ opt.left.label [ff55ff] = 帮忙造出来
 opt.left.say.1 [9bd0bd] = {~你们一起把它造出来，米尔全程说个不停，两人的指尖都被燎了。它能用。基本能用。米尔抱了抱它，又抱了抱你，然后被自己吓了一跳。|你们一直造到午夜。它不能用。米尔说这才是最好的部分：现在你们得一起再造一次。}
 # en: Pin it up, for later
 opt.right.label [4d2c5f] = 先钉起来，以后再说
-# en: {~You pin it on your wall, next to your timetable. Mir sees it there the next time they visit and goes very quiet and very pleased.|"Later," you say. Mir nods fast. "Later is good. Later is a plan." They say "later" several times on the way out.}
-opt.right.say.1 [c68e5a] = {~你把它钉在墙上，就在课表旁边。米尔下次来时看见了，变得非常安静，也非常高兴。|“以后吧。”你说。米尔飞快地点头。“以后很好。以后是个计划。”出门的路上TA把“以后”说了好几遍。}
+# en: {~You pin it on your wall, next to your timetable, and go back to the essay it interrupted. Mir sees it there the next time they visit and goes very quiet and very pleased.|"Later," you say, and go back to your revision. Mir nods fast. "Later is good. Later is a plan." They say "later" several times on the way out.}
+opt.right.say.1 [59716d] = {~你把它钉在墙上，就在课表旁边，然后回去写被它打断的论文。米尔下次来时看见了，变得非常安静，也非常高兴。|“以后吧。”你说着回去复习。米尔飞快地点头。“以后很好。以后是个计划。”出门的路上TA把“以后”说了好几遍。}
 
 @event mir_tinkering_evenings
 # en: Tinkering Evenings

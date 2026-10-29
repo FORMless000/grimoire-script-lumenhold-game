@@ -247,6 +247,7 @@ text: "The confiscation vault," Corvin breathes. "Three hundred years of everyth
   alignment -tiny
   challenge deceive adept-:
     win:
+      flag corvin_deck_back
       rel corvin +large
       gold +small
       say: He comes out with the deck and a handful of confiscated coins "for your trouble". The deck is, it turns out, genuinely lucky. He wins at cards for a month.
@@ -258,9 +259,11 @@ text: "The confiscation vault," Corvin breathes. "Three hundred years of everyth
   rel corvin -tiny
   challenge negotiate vs corvin.guile:
     win:
+      flag corvin_deck_back
       rel corvin +medium
       say: You convince him to just ask Thorne. Thorne, astonishingly, gives it back. "Your grandfather cheated me with it in '41," he says. "Tell him I said hello."
     lose:
+      flag corvin_deck_back
       say: He goes anyway, alone. He comes back with the deck and a black eye from the goblin. Worth it, he says.
 
 @event corvin_brother

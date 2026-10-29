@@ -496,6 +496,16 @@ again; of the phase 4 cards, only `spot_witness_promise` is not.
 The Legend rate stays as it is (see Deviations). `verify:full` passed without the browser e2e (skipped by standing
 instruction): the slow tests, and the full balance above in place of `balance --quick`.
 
+## Critic pass of 2026-10-28 (independent)
+
+An independent critic pass over 574 current cards (`docs/reviews/critic-current-2026-10-28/`) raised 84 findings. All are fixed, none declined: [the response](../build/batches/critic-current-2026-10-28.response.md) maps each finding to its fix.
+
+The main rulings:
+- the yearbook's "Strike the rest" keeps the line you chose;
+- a last-standing ring night can be left for a forfeit (`ring_forfeit`) and is never fight-only;
+- a specialization's own `repeat:` is ignored, so one-time specialized scenes say `when: seen(<id>) == 0`;
+- two premises were reworked after retrieval: the desks on the stair, and the thorn wand.
+
 ## Next up
 
 Phase 4's four systems are built, balanced and recorded (`PROGRESS.md`, design §0.3). Next: a human playtest of

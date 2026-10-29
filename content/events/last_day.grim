@@ -282,7 +282,7 @@ title: Two Pale Heads
 class: story
 tone: warm
 trigger: auto
-when: turn == max_turns and met(kael) and (flag(dumont_reunited) or flag(ilse_taken))
+when: turn == max_turns and met(kael) and (flag(dumont_reunited) or flag(ilse_taken)) and not flag(ilse_went_north)
 priority: 71
 art: snow
 tags: story social
@@ -360,7 +360,7 @@ text: The yearbook committee has your page in proof, with the lines they mean to
   when: flag(thesis_hollowstar)
   flag remember_thesis
   say: The line about your thesis on the founders' seal has been half struck through already, in the headmistress's hand. You un-strike it.
-> plain: Strike them all
-  hint: Just your name, and the year.
+> plain: Strike the rest
+  hint: Only the line you keep; on its own, just your name and the year.
   mood +tiny
-  say: You strike out every line. The editor sighs and prints your name and the year, and nothing else. It suits you, somehow.
+  say: You strike out everything else on the page. The editor sighs and reaches for the red pen. Less, it turns out, suits you.

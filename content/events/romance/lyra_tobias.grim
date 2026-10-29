@@ -74,7 +74,7 @@ text: {~The duelling hall's torches go out at ten. Lyra lights one flame in her 
 > right: Make her stop
   rel lyra +small
   study -tiny
-  say: {~"Enough," you say, and take her wrist. The flame goes out. "You'll be useless tomorrow." She glares at you in the dark, and then lets you walk her back, which is a first.|You sit on the bench and refuse to move until she does. It takes an hour. Your own reading doesn't get done.|You make her eat something. She eats it as if it's an insult, and then eats yours.}
+  say: {~"Enough," you say, and take her wrist. The flame goes out. "You'll be useless tomorrow." She glares at you in the dark, and then lets you walk her back, which she almost never does.|You sit on the bench and refuse to move until she does. It takes an hour. Your own reading doesn't get done.|You make her eat something. She eats it as if it's an insult, and then eats yours.}
 
 @event lyra_partner_watch
 title: Burnout Watch
@@ -96,7 +96,7 @@ text: You've an arrangement now, the two of you: at midnight, you go and find he
 > right: Stay and finish it with her
   study +tiny
   health -tiny
-  say: {~You pull up a chair and read chapter ten aloud while she takes notes. By eleven you're both asleep on the table, and the librarian covers you with a cloak.|You stay. She finishes. She says it's the first book she's ever finished without being alone.}
+  say: {~You pull up a chair and read chapter ten aloud while she takes notes. By two you're both asleep on the table, and the librarian covers you with a cloak.|You stay. She finishes. She says finishing a book with someone there is a different thing entirely.}
 
 @event lyra_not_second
 title: Not Second to Anyone
@@ -150,11 +150,11 @@ text: Lyra's final bout of the year. In the front row of the gallery is a velvet
 @event lyra_ex
 title: Cold Hearth
 specializes: soc_ex_encounter
+when: seen(lyra_ex) == 0
 class: milestone
 tone: warm
 trigger: social
 actor: lyra
-repeat: 6
 art: flame
 tags: romance
 scene: Two people passing in a corridor, one a red-haired girl who keeps her chin high and her eyes forward.
@@ -198,12 +198,12 @@ text: Lyra is in your doorway with her arms folded. "I don't wait for people," s
 @event lyra_lends
 title: A Loan, Vaneshade Style
 specializes: soc_borrow_money
+when: seen(lyra_lends) == 0
 class: routine
 tone: light
 trigger: social
 actor: lyra
 weight: 10
-repeat: 6
 art: pouch
 tags: social money
 scene: A red-haired girl holding out a heavy purse at arm's length, not looking at it, as if it were beneath her notice.
@@ -236,7 +236,7 @@ text: Tobias holds Gerald up to your face. Gerald is wearing {~a new hat|his win
   learn tobias.gerald
   rel tobias +small
   spark tobias +small
-  say: {~You bow. Gerald screams very softly, which Tobias says is approval. Tobias looks at you as if you'd done something wonderful. You think maybe you have.|You bow, and Gerald pats your nose with a leaf. Tobias goes pink. "He's never done that," he says. "Not even to me."}
+  say: {~You bow. Gerald screams very softly, which Tobias says is approval. Tobias looks at you as if you'd done something wonderful. You think maybe you have.|You bow, and Gerald pats your nose with a leaf. Tobias goes pink. "He hardly ever does that," he says. "Not even to me."}
 > right: Offer Gerald a finger
   health -tiny
   mood +small
@@ -283,7 +283,7 @@ text: It's pouring, and Tobias has the biggest umbrella you've ever seen: patche
 > left: Walk close under it
   spark tobias +small
   health -tiny
-  say: {~You walk back under it, very close, because the umbrella insists. He tells you a long story about a goat that fell in a well, and you don't hear the end of it, and don't mind.|Halfway across the courtyard he stops talking. So do you. The rain does the talking.}
+  say: {~You walk back under it, very close, because the umbrella insists, and your outside shoulder is soaked through by the door anyway. He tells you a long story about a goat that fell in a well, and you don't hear the end of it, and don't mind.|Halfway across the courtyard he stops talking. So do you. The rain does the talking, and runs down the back of your neck.}
 > right: Race him to the door
   vigor +small
   mood +small
@@ -362,11 +362,11 @@ text: Gerald is wilting. His hat has slipped, his leaves are grey, and he hasn't
 @event tobias_ex
 title: He Still Waters Your Plant
 specializes: soc_ex_encounter
+when: seen(tobias_ex) == 0
 class: milestone
 tone: warm
 trigger: social
 actor: tobias
-repeat: 6
 art: flower
 tags: romance
 scene: A large student watering a single pot on a windowsill that isn't his, glancing guiltily at the door.
@@ -387,12 +387,12 @@ text: You find Tobias at your window, watering the plant on your sill. He jumps.
 @event tobias_dance_specialized
 title: The Broom Waltz, Again
 specializes: date_dance_lesson
+when: seen(tobias_dance_specialized) == 0
 class: routine
 tone: light
 trigger: social
 actor: tobias
 weight: 10
-repeat: 4
 art: music
 tags: romance
 scene: A large student counting steps under his breath in a moonlit greenhouse, guiding another student between rows of plants.

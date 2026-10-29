@@ -160,11 +160,11 @@ text: Kael has done something hard, a practical he wasn't sure he'd pass, and pa
 @event kael_ex
 title: Frost Recedes
 specializes: soc_ex_encounter
+when: seen(kael_ex) == 0
 class: milestone
 tone: warm
 trigger: social
 actor: kael
-repeat: 6
 art: snow
 tags: romance
 scene: A long corridor of tall windows, frost on every pane except the ones nearest a student walking past alone.
@@ -185,12 +185,12 @@ text: You notice it on a cold morning: the corridor windows are frosted over, ev
 @event kael_gift_given
 title: A Snowflake Under Glass
 specializes: soc_gift_given
+when: seen(kael_gift_given) == 0
 class: routine
 tone: warm
 trigger: social
 actor: kael
 weight: 10
-repeat: 7
 art: snow
 tags: social
 scene: A tiny glass dome in a student's palm, a single perfect snowflake inside it that has not melted.
@@ -378,11 +378,11 @@ text: The Ledger's press has cracked down the middle, a hundred years old and do
 @event nessa_ex
 title: Retraction
 specializes: soc_ex_encounter
+when: seen(nessa_ex) == 0
 class: milestone
 tone: warm
 trigger: social
 actor: nessa
-repeat: 6
 art: paper
 tags: romance
 scene: A tiny boxed paragraph on the back page of a school newspaper, a student reading it alone in a window seat.
@@ -403,12 +403,12 @@ text: In this week's Ledger, at the very bottom of the back page, in the smalles
 @event nessa_argument
 title: On the Record
 specializes: soc_argument
+when: seen(nessa_argument) == 0
 class: routine
 tone: light
 trigger: social
 actor: nessa
 weight: 8
-repeat: 6
 art: bolt
 tags: social
 scene: Two students arguing in a corridor, one of them with a notebook out, a quill floating at her shoulder taking it all down.

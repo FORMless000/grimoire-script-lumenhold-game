@@ -119,14 +119,15 @@ art: meal
 scene: A breakfast table mid-argument, several relatives pointing at a student as if they were the deciding vote.
 text: {At breakfast the family is arguing, and someone says, "Ask the scholar."|The argument has started without you. Everyone turns as you come down the stairs.|"The scholar is up," someone announces. They've saved today's argument for you.} {season == "winter": {Is it colder than the year of the big snow?|Can you freeze a pond by thinking at it?|Can a wizard make the hens lay in winter?}|{Do swallows sleep at the bottom of rivers?|Will it rain on the fair, and can you stop it?|Is the old well really haunted, and should it be?}}
 > left: Settle it with what I've learned
-  chance likely:
-    lore +small
-    mood +small
-    say: {You explain it so clearly that the argument ends. There is a short, respectful silence, and then a new argument starts.|You settle it. An uncle demands to see it in writing. You write it on a napkin, and he keeps the napkin.|You settle it with a diagram on the back of the almanac. It's still pinned by the stove the next time you're home.}
-  else:
-    lore +tiny
-    mood -small
-    say: {You explain it perfectly, and they all decide the academy has taught you nonsense.|Halfway through you realise you're wrong. So does everyone else.|You're right, and you prove it, and nobody believes you, because the almanac says otherwise.}
+  challenge research apprentice likely:
+    win:
+      lore +small
+      mood +small
+      say: {You explain it so clearly that the argument ends. There is a short, respectful silence, and then a new argument starts.|You settle it. An uncle demands to see it in writing. You write it on a napkin, and he keeps the napkin.|You settle it with a diagram on the back of the almanac. It's still pinned by the stove the next time you're home.}
+    lose:
+      lore +tiny
+      mood -small
+      say: {You explain it perfectly, and they all decide the academy has taught you nonsense.|Halfway through you realise you're wrong. So does everyone else.|You're right, and you prove it, and nobody believes you, because the almanac says otherwise.}
 > right: Refuse to take sides
   charm +small
   say: {You butter your toast with great care and say, "Hm." It does not stop anyone, but it does save you.|You change the subject to the neighbour's fence. It works, but now there are two arguments.|You say both sides have a point. Both sides turn on you. It's the most united the family has been all year.}
@@ -270,13 +271,14 @@ text: {Your supervisor reads the day's tasks aloud, once, very fast.|You bring t
   mood -small
   say: {Your supervisor explains it again, slowly, while the other interns smirk. Two of them come to you at lunch to ask what it meant.|"Good question," says your supervisor, in a tone that suggests it wasn't. You get the task right, anyway.|You ask before anyone else can pretend. Your supervisor answers, and three pens around you start writing.}
 > right: Guess and get on with it
-  chance even:
-    lore +small
-    mood +tiny
-    say: {You guess right. Your supervisor nods as if they never doubted you.|It turns out the odd task was "take the rest of the morning off". Lucky. You spend it reading in the archive.|You guess, and you've guessed this one before. The task is done before anyone else has finished asking.}
-  else:
-    mood -small
-    say: {You guess wrong and spend the morning carefully doing the opposite of what was wanted.|You did the right task to the wrong thing. The wrong thing will never be the same again.|Your guess is confident, thorough and wrong. Your supervisor reads the result twice and asks you, kindly, to ask next time.}
+  challenge research apprentice even:
+    win:
+      lore +small
+      mood +tiny
+      say: {You guess right. Your supervisor nods as if they never doubted you.|It turns out the odd task was "take the rest of the morning off". Lucky. You spend it reading in the archive.|You guess, and you've guessed this one before. The task is done before anyone else has finished asking.}
+    lose:
+      mood -small
+      say: {You guess wrong and spend the morning carefully doing the opposite of what was wanted.|You did the right task to the wrong thing. The wrong thing will never be the same again.|Your guess is confident, thorough and wrong. Your supervisor reads the result twice and asks you, kindly, to ask next time.}
 
 @event break_internship_other_interns
 title: The Other Interns
@@ -484,7 +486,7 @@ text: {Scholars upstairs send their requests down a brass chute. Your job is to 
   perform intern_royal_library -tiny
   lore +tiny
   mood +tiny
-  say: {You fetch the easy ones and leave the deep slips for someone else. Someone else notices.|You're fast and pleasant, and everyone knows you've never been below the third landing.|You clear the near shelves twice over. The long rattles go to someone else, who looks at you as they pass.}
+  say: {You fetch the easy ones and leave the deep slips for someone else. Someone else notices.|You're fast and pleasant, and today the third landing is as deep as you go.|You clear the near shelves twice over. The long rattles go to someone else, who looks at you as they pass.}
 
 @event intern_royal_library_mending
 title: The Mending Table
@@ -496,10 +498,10 @@ weight: 10
 art: book
 tags: study
 scene: A bright worktable under a lamp, a crumbling manuscript laid out in pieces and a student holding fine tweezers.
-text: {Today you're at the mending table, where crumbling records are put back together one flake at a time.|The binder hands you the tweezers without a word, which counts as a greeting.|The binder trusts you with the older pages now, which are the worst.} {The page is a royal decree on the correct length of goose necks.|The page is a recipe, half eaten by something.|The page is a list of names, one crossed out very hard.}
+text: {Today you're at the mending table, where crumbling records are put back together one flake at a time.|The binder hands you the tweezers without a word, which counts as a greeting.|The binder hands you one of the older pages today, which are the worst.} {The page is a royal decree on the correct length of goose necks.|The page is a recipe, half eaten by something.|The page is a list of names, one crossed out very hard.}
 > left: Mend it myself
   wage
-  challenge research journeyman+ steady:
+  challenge research journeyman+:
     win:
       perform intern_royal_library +small
       lore +small
@@ -537,7 +539,7 @@ text: {The Conclave's researchers need someone to cast their newest spell for th
     lose:
       health -small
       perform intern_conclave -tiny
-      say: {The spell goes off sideways. Your eyebrows are fine. Your fringe has views of its own now.|The spell goes off sideways, and your robes will never fold the same way again.|The spell goes off sideways and adds a new scorch mark to the wall. Someone labels it with your name.}
+      say: {The spell goes off sideways. Your eyebrows are fine. Your fringe has views of its own now, and the backlash leaves your hands stinging for a day.|The spell goes off sideways, and the jolt of it leaves you dizzy until supper. Your robes will never fold the same way again.|The spell goes off sideways, you take the edge of the blast on your forearm, and it adds a new scorch mark to the wall. Someone labels it with your name.}
 > right: Take readings behind the glass
   wage
   arcana +tiny
@@ -558,15 +560,16 @@ scene: A long table of elderly mages in heavy robes, all talking at once, a youn
 text: {You've been asked to take the minutes of a Conclave research committee. There are nine members, and none of them ever agrees.|The committee is still arguing about last time's question, and now about the minutes too.|You could take these minutes in your sleep, and some of the committee do attend them that way.} {Two of them are not speaking to each other, and want it recorded.|One of them asks what you think.|One of them falls asleep, and wakes up to vote.}
 > left: Offer an opinion when asked
   wage
-  chance even:
-    perform intern_conclave +small
-    renown +tiny
-    mood -tiny
-    say: {The table goes silent. Then the oldest mage says, "The intern is right," and the rest pretend they agreed all along.|Your opinion settles the argument. It also starts two new ones.|You give your opinion and the sleeper wakes up to agree with it. It carries, seven to two.}
-  else:
-    perform intern_conclave -tiny
-    mood -small
-    say: {Nine heads turn towards you, slowly. You say something about wands. It isn't minuted.|You give your opinion and it is recorded in full, with the note "(intern)".|Your opinion is noted, discussed, voted down and then adopted next meeting without credit.}
+  challenge research journeyman even:
+    win:
+      perform intern_conclave +small
+      renown +tiny
+      mood -tiny
+      say: {The table goes silent. Then the oldest mage says, "The intern is right," and the rest pretend they agreed all along.|Your opinion settles the argument. It also starts two new ones.|You give your opinion and the sleeper wakes up to agree with it. It carries, seven to two.}
+    lose:
+      perform intern_conclave -tiny
+      mood -small
+      say: {Nine heads turn towards you, slowly. You say something about wands. It isn't minuted.|You give your opinion and it is recorded in full, with the note "(intern)".|Your opinion is noted, discussed, voted down and then adopted next meeting without credit.}
 > right: Keep my head down and write
   wage
   perform intern_conclave +small
@@ -619,14 +622,15 @@ scene: A break room in an alchemical works, workers gathered around a kettle sit
 text: {There's a strict rule at the works against naked flames, and against any heating reaction the foreman hasn't approved. The break room has spent forty years looking for one he will.|Break time. The kettle sits on its warm stone, and the workers look at you hopefully.|By now the break room asks the academy intern first, whatever the problem.} {Today the warm stone has gone cold.|Today someone wants toast, which is a much bigger question.|Today a new inspector is touring the works.}
 > left: Help brew the flameless tea
   wage
-  chance likely:
-    alchemy +small
-    mood +small
-    say: {You heat the kettle with a reaction you learned in your first year. The break room calls it "the academy method" and adopts it on the spot.|It works, though everything boiled on it comes out a little purple.|You brew the tea with the new inspector in the room, and explain the method so confidently that he takes notes.}
-  else:
-    perform intern_alchemists -small
-    mood -tiny
-    say: {Your method works so well that someone in charge notices the steam from a reaction nobody approved. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.|The inspector walks in mid-reaction. There's a form for it, and you fill it in.}
+  challenge brew apprentice likely:
+    win:
+      alchemy +small
+      mood +small
+      say: {You heat the kettle with a reaction you learned in your first year. The break room calls it "the academy method" and adopts it on the spot.|It works, though everything boiled on it comes out a little purple.|You brew the tea with the new inspector in the room, and explain the method so confidently that he takes notes.}
+    lose:
+      perform intern_alchemists -small
+      mood -tiny
+      say: {Your method works so well that someone in charge notices the steam from a reaction nobody approved. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.|The inspector walks in mid-reaction. There's a form for it, and you fill it in.}
 > right: Stick to the rules
   wage
   perform intern_alchemists +tiny
@@ -646,13 +650,13 @@ weight: 10
 art: compass
 tags: study
 scene: A line of expedition members climbing a rocky ridge at dusk, carrying brass instruments wrapped in blankets.
-text: {The instruments have to go up to the ridge before dark, and the air on the plateau is very thin.|Your legs know the path now. Your lungs are still negotiating.|You've carried things up this ridge so often that the goats have stopped looking at you.} {season == "winter": {Snow has drifted against the path.|The wind cuts through every layer you own.|Ice has glazed the steps cut into the rock.}|{The rocks are still hot from the afternoon.|The sky is clear all the way to the top of the world.|The evening wind smells of thyme and stone.}}
+text: {The instruments have to go up to the ridge before dark, and the air on the plateau is very thin.|The path up the ridge again. The thin air is still negotiating with everybody's lungs.|The ridge, and the goats on it, who have long since stopped looking at anyone from the station.} {season == "winter": {Snow has drifted against the path.|The wind cuts through every layer you own.|Ice has glazed the steps cut into the rock.}|{The rocks are still hot from the afternoon.|The sky is clear all the way to the top of the world.|The evening wind smells of thyme and stone.}}
 > left: Carry the great lens
   wage
   perform intern_expedition +small
   vigor +tiny
   health -small
-  say: {You carry the great lens to the top without dropping it, then sit very still for a long time. The leader nods at you, once.|Your arms are numb by the top, and the lens is perfect. It's worth it when the first star shows in it.|You carry the lens up without thinking about it. Nobody watches you any more, which is the compliment.}
+  say: {You carry the great lens to the top without dropping it, then sit very still for a long time. The leader nods at you, once.|Your arms are numb by the top, and the lens is perfect. It's worth it when the first star shows in it.|You carry the lens up steadily, without fuss. Nobody watches you, which up here is the compliment.}
 > right: Do the sums in the tent
   wage
   lore +small
@@ -679,14 +683,15 @@ text: {Your chart and the senior astronomer's disagree about where one faint sta
   say: {You recheck it until dawn. You were right by a hair, and nobody will ever care but you.|You were wrong by a hair. You fix it, and know the sky better than you did.|You recheck by lamplight and find the air was bending the star. You note it, and the astronomer copies your note.}
 > right: Raise it with the astronomer
   wage
-  chance even:
-    perform intern_expedition +small
-    charm +tiny
-    say: {The astronomer checks, grumbles and corrects their chart. Then they buy you a cup of the camp's terrible coffee.|"Well spotted," says the astronomer, through their teeth.|You raise it, and the astronomer has already checked it. "You first, this time," they say.}
-  else:
-    perform intern_expedition -small
-    mood -tiny
-    say: {The astronomer checks and shows you, in front of everyone, exactly where you went wrong.|They don't check. They just look at you over their spectacles until you go away.|The astronomer blames the thin air and refuses to discuss it further. The star stays where they put it.}
+  challenge appeal journeyman even:
+    win:
+      perform intern_expedition +small
+      charm +tiny
+      say: {The astronomer checks, grumbles and corrects their chart. Then they buy you a cup of the camp's terrible coffee.|"Well spotted," says the astronomer, through their teeth.|You raise it, and the astronomer has already checked it. "You first, this time," they say.}
+    lose:
+      perform intern_expedition -small
+      mood -tiny
+      say: {The astronomer checks and shows you, in front of everyone, exactly where you went wrong.|They don't check. They just look at you over their spectacles until you go away.|The astronomer blames the thin air and refuses to discuss it further. The star stays where they put it.}
 
 # ---------------- Internship: the Beastcraft Field Station ----------------
 
@@ -701,7 +706,7 @@ weight: 10
 art: feather
 tags: study nature
 scene: A student lying flat in the heather at dawn, a tally board in hand, watching nesting towers on the moor.
-text: {Every morning someone has to lie in the heather and count what's living on the moor. Today it's you.|You've learned which tussock is the least wet, and you guard it.|You're the station's best counter now, mostly because you've stopped minding the damp.} {season == "winter": {Snow hares are out, white on white.|Frost has made the heather crackle under you.|A fox is counting the same hares.}|{The skylarks are going up one after another.|The midges have found you.|The heather is warm, and so is your tussock.}}
+text: {Every morning someone has to lie in the heather and count what's living on the moor. Today it's you.|You've learned which tussock is the least wet, and you guard it.|The dawn count again. The station's best counter, the warden says, is whoever minds the damp least.} {season == "winter": {Snow hares are out, white on white.|Frost has made the heather crackle under you.|A fox is counting the same hares.}|{The skylarks are going up one after another.|The midges have found you.|The heather is warm, and so is your tussock.}}
 > left: Count every last one
   wage
   perform intern_field_station +small
@@ -710,14 +715,15 @@ text: {Every morning someone has to lie in the heather and count what's living o
   say: {You count until your fingers are numb and the tally is perfect. The warden reads it twice and pins it on the wall.|You stay out until the very last nest is counted. You come back soaked and very proud of the number.|You count them all from your tussock. The warden copies your tally into the station book without checking it.}
 > right: Make a sensible estimate
   wage
-  chance likely:
-    lore +small
-    mood +tiny
-    say: {You mark it "estimated" in the margin, the way the station counts the far nests anyway. The warden accepts it, and you spend the extra hour by the stove with a cup of tea.|The warden checks your estimate against his own count and nods. He does the same on wet mornings.|Your estimate is close enough that the warden uses it for the far nests too. You get the stove first.}
-  else:
-    perform intern_field_station -small
-    mood -tiny
-    say: {The warden counted too. His number is not your number. He makes a note.|Your estimate includes a flock that left last week. The warden is very nice about it, which is worse.|Your estimate misses a new colony on the far slope. The warden found it yesterday and was waiting to see if you would.}
+  challenge research apprentice likely:
+    win:
+      lore +small
+      mood +tiny
+      say: {You mark it "estimated" in the margin, the way the station counts the far nests anyway. The warden accepts it, and you spend the extra hour by the stove with a cup of tea.|The warden checks your estimate against his own count and nods. He does the same on wet mornings.|Your estimate is close enough that the warden uses it for the far nests too. You get the stove first.}
+    lose:
+      perform intern_field_station -small
+      mood -tiny
+      say: {The warden counted too. His number is not your number. He makes a note.|Your estimate includes a flock that left last week. The warden is very nice about it, which is worse.|Your estimate misses a new colony on the far slope. The warden found it yesterday and was waiting to see if you would.}
 
 @event intern_field_station_patient
 title: The Patient in Paddock Three
@@ -732,14 +738,15 @@ scene: A muddy paddock with a splinted creature glaring from a straw nest, a stu
 text: {The station's latest patient is a moor-drake with a splinted wing and no gratitude at all.|Feeding time in paddock three. The patient sees you coming and lowers its head.|The drake in paddock three recognises you now. This hasn't made it any nicer.} {It has eaten a glove.|It is pretending to sleep, which it does very badly.|It has learned to open the bucket by itself.} {season == "winter": Its breath steams in the frosty air.|It is lying in the one patch of shade.}
 > left: Feed it by hand
   wage
-  chance likely:
-    perform intern_field_station +small
-    vigor +small
-    say: {It takes the food from your hand, very gently. Then it bites the bucket, to make a point.|It lets you check the splint, grumbling the whole time like an old man at the barber's.|It eats from your hand and then opens the bucket to check you haven't kept any back.}
-  else:
-    health -small
-    vigor +tiny
-    say: {It takes the food, a bit of your sleeve and a bruise's worth of your arm.|It butts you into the mud and then looks pleased with itself.|It opens the bucket itself and eats the lot, then bites you for being slow.}
+  challenge soothe apprentice likely:
+    win:
+      perform intern_field_station +small
+      vigor +small
+      say: {It takes the food from your hand, very gently. Then it bites the bucket, to make a point.|It lets you check the splint, grumbling the whole time like an old man at the barber's.|It eats from your hand and then opens the bucket to check you haven't kept any back.}
+    lose:
+      health -small
+      vigor +tiny
+      say: {It takes the food, a bit of your sleeve and a bruise's worth of your arm.|It butts you into the mud and then looks pleased with itself.|It opens the bucket itself and eats the lot, then bites you for being slow.}
 > right: Use the long tongs
   wage
   perform intern_field_station +tiny
@@ -819,13 +826,14 @@ scene: A plain room with no windows and a gleaming coffee machine, quiet people 
 text: {Nobody at the Office talks about anything, except the coffee machine. It's very good.|A queue forms around the machine each evening, though nobody seems to join it.|The coffee queue, you've learned, is where the Office's real work gets done.} {Two people beside you discuss the weather in a way that isn't about the weather.|A cup has a name on it that was there yesterday, under another name.|The machine hisses, and everyone falls silent until it stops.}
 > left: Linger at the machine
   wage
-  chance likely:
-    guile +small
-    perform intern_unseen_office +tiny
-    say: {You learn three things nobody told you, and one thing nobody knows you know.|You drink your coffee slowly and listen. By the second cup you understand what nobody is saying.|You stand in the queue long enough to be part of it. Someone tells you something, and you understand it was meant for you.}
-  else:
-    mood -small
-    say: {Someone notices you listening and asks, very kindly, how your day is going. You don't sleep that night.|You overhear something you very much wish you hadn't. It can't be unheard.|The machine hisses mid-sentence and the room goes silent. When it stops, everyone is looking at you.}
+  challenge deceive apprentice likely:
+    win:
+      guile +small
+      perform intern_unseen_office +tiny
+      say: {You learn three things nobody told you, and one thing nobody knows you know.|You drink your coffee slowly and listen. By the second cup you understand what nobody is saying.|You stand in the queue long enough to be part of it. Someone tells you something, and you understand it was meant for you.}
+    lose:
+      mood -small
+      say: {Someone notices you listening and asks, very kindly, how your day is going. You don't sleep that night.|You overhear something you very much wish you hadn't. It can't be unheard.|The machine hisses mid-sentence and the room goes silent. When it stops, everyone is looking at you.}
 > right: Take my cup back to my desk
   wage
   perform intern_unseen_office +small

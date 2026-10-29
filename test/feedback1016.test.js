@@ -192,7 +192,7 @@ test('3.1 a Newt night: the company offer, then the high table; accepting deals 
   assert.equal(visit(eng, 'gilded_newt', 'midnight')[0].id, 'newt_company_regular', 'back after the rest');
 });
 
-test('3.2 a boathouse night: a ring card first, then one drawn card; wins lead on, last-standing nights force it', () => {
+test('3.2 a boathouse night: a ring card first, then one drawn card; wins lead on, last-standing nights cost a forfeit to leave', () => {
   const eng = fresh(); eng.s.flags.night_unlocked = true; eng.s.places.boathouse = { found: 1 };
   eng.s.flags.grisk_contact = true;
   for (let seed = 1; seed < 8; seed++) {
@@ -201,13 +201,17 @@ test('3.2 a boathouse night: a ring card first, then one drawn card; wins lead o
     assert.ok(['midnight_boathouse_ring', 'ring_on_yourself'].includes(ids[0]), 'the ring first: ' + ids.join(','));
     assert.ok(!ids.slice(1).some((id) => ['midnight_boathouse_ring', 'ring_on_yourself'].includes(id)), 'only one ring card');
   }
-  // not tonight: the side bets; on a forced night the bouts have one way out (losing)
+  // not tonight: the side bets; on a last-standing night walking out costs a forfeit
   eng.s.day = null; eng.s.deck = []; eng.s.cur = { id: 'midnight_boathouse_ring', actor: null };
   quiet(() => eng.choose('right'));
   assert.equal(eng.s.deck[0].id, 'ring_side_bets');
   eng.s.flags.ring_last_standing = true;
   eng.s.cur = { id: 'ring_bout_2', actor: null };
-  assert.deepEqual(eng.view(eng.s.cur).options.filter((o) => !o.disabled).map((o) => o.key), ['left'], 'forced: only Fight');
-  delete eng.s.flags.ring_last_standing;
+  assert.deepEqual(eng.view(eng.s.cur).options.filter((o) => !o.disabled).map((o) => o.key), ['left', 'right'], 'never soft-locked');
+  const gold = eng.s.vals.gold;
+  quiet(() => eng.choose('right'));
+  assert.ok(!eng.s.flags.ring_last_standing, 'the forfeit ends the last-standing night');
+  assert.ok(eng.s.vals.gold < gold, 'and costs gold');
+  eng.s.cur = { id: 'ring_bout_2', actor: null };
   assert.deepEqual(eng.view(eng.s.cur).options.filter((o) => !o.disabled).map((o) => o.key), ['left', 'right']);
 });

@@ -38,7 +38,7 @@ text: {No steam on Mabel's windows, and no smell of toast. The range behind the 
 > left: Fetch coal from the yard
   health -tiny
   mood +small
-  say: {You haul two buckets in from the frozen yard. When the kettle finally sings, Mabel pours yours first and waves your coins away.|Two buckets, one dropped on your foot. The range catches on the third try, and Mabel puts a scone by your cup, "for the foot".|You fetch the coal without being asked. Mabel tells the queue you're "staff, near enough", and makes you carry the milk.}
+  say: {You haul two heavy buckets in from the coal yard. When the kettle finally sings, Mabel pours yours first and waves your coins away.|Two buckets, one dropped on your foot. The range catches on the third try, and Mabel puts a scone by your cup, "for the foot".|You fetch the coal without being asked. Mabel tells the queue you're "staff, near enough", and makes you carry the milk.}
 > right: Read in the cold till it's lit
   health -tiny
   lore +tiny
@@ -62,7 +62,7 @@ text: {A rowing crew comes in off the lake soaked to the skin, laughing through 
   vigor +tiny
   say: {You run up to the loft and back with an armful of dry wood. By the time the stove's going you're as wet as they are, from the sweat.|The loft ladder, in the dark, with an armful of wood. You make it. The crew make room for you on the bench.|The loft ladder is the worst part. The crew cheer you down it like a returning hero.}
 > right: Lend your scarf and leave them to it
-  mood -tiny
+  health -tiny
   charm +tiny
   say: {You give your scarf to the one with blue lips and walk back up to the castle with a cold neck. You'll get the scarf back. Probably.|You hand round your scarf and your sympathy and leave them to it. The scarf comes back a week later, smelling of lake.|Scarf, a joke, and goodnight. They wave you off, still shivering, still laughing.}
 > up[flame]: Dry the kindling with a flame
@@ -295,6 +295,7 @@ text: {The boathouse has six boats that leak and one, the blue one, that doesn't
 > up[glamour]: Charm him off the blue boat
   mood +small
   charm +tiny
+  alignment -tiny
   say: {You turn on a little more charm than you have, and he finds himself telling you about his late wife, and then lending you the blue boat, and then wondering why.|A smile with Glamour in it. The boatman gets up, holds the boat steady for you, and calls you "young sir or madam" like a courtier.|He remembers liking you and not quite why. You get the blue boat for the rest of the day and a cup of his terrible tea after.}
 
 @event courtyard_prefects_notebook
@@ -320,6 +321,7 @@ text: {You have, it turns out, been walking on the lawn, which is for looking at
   say: {You take it. Bram writes slowly, so everyone can see. "Next time," he says, and means it kindly, in his way.|Demerit. You walk off the lawn with your hands in your pockets. A first-year on a bench gives you a sympathetic look.|You take the demerit with a bow. Bram doesn't know what to do with a bow, and writes that down too.}
 > up[glamour]: Remind him he likes you
   mood +small
+  alignment -tiny
   rel bram +tiny
   say: {You say his name the way people say a friend's, with a little Glamour in it. Bram's pencil stops. He forgets, quite visibly, what he was writing.|A smile with a spell behind it. Bram closes the notebook, tells you to "watch the edges", and walks off frowning at himself.|Bram remembers liking you and not why. He lets you off, then follows you to the cloister to explain rule nine properly, which is its own punishment.}
 
@@ -343,6 +345,7 @@ text: {Behind Mr Grimsby's counter there's a book wrapped in brown paper, kept a
 > up[glamour]: Charm the parcel out of him
   lore +small
   mood +small
+  alignment -tiny
   say: {You smile at him with a little more charm than you own, and he finds himself handing you the parcel. "Ah," he says, puzzled. "It was you all along. Was it?"|Glamour, and a compliment about his shelving. He unwraps the book for you himself. It's the one you came in for last month and couldn't find.|He beams, decides you've been a customer for years, and wraps the parcel again for you, more nicely, with string.}
 
 # ---------------- Haste ----------------
@@ -362,6 +365,7 @@ deals: pool haste_uses
 title: The Far Bell
 pool: haste_uses
 place: lecture_tower
+when: term
 time: morning noon afternoon
 tone: light
 art: bell
@@ -374,11 +378,12 @@ text: {The bell for your lecture is ringing in the other tower, and you are on t
       say: {You slide into your seat on the last stroke with your books in a heap. The lecturer looks at the clock, then at you, then lets it go.|You make it, red-faced and triumphant. Your neighbour pushes a quill at you without a word.|You know the run now: left foot on the second plank, duck the lamp. In with a stroke to spare.}
     lose:
       study -tiny
+      mood -small
       say: {You drop your books halfway across the bridge and arrive five minutes late with half of them.|You arrive as the door closes, and spend the hour listening through it. It's not the same.|You trip on the top step and the whole lecture turns to watch you pick up your inkwell.}
 > right: Arrive late, quietly
   study -tiny
-  mood -tiny
-  say: {You walk, and slip in at the back ten minutes late. You miss the one thing that'll be on the exam.|You arrive late and sit on the end of the back row, where the notes from the front arrive late too.|Late, and calm, and behind for the rest of the hour. Someone lends you their notes afterwards, in a hand you can't read.}
+  mood +tiny
+  say: {You walk, unhurried, and slip in at the back ten minutes late, breathing easy. You miss the one thing that'll be on the exam.|You arrive late and sit on the end of the back row, where the notes from the front arrive late too.|Late, and calm, and behind for the rest of the hour. Someone lends you their notes afterwards, in a hand you can't read.}
 > up[haste]: Borrow a hare's legs
   mood +small
   say: {You cross the bridge in four strides with the wind whistling, and sit down before the bell has finished. Your books arrive a moment later, in your arms.|Haste, and the bridge goes by in a blur of light. You're in your seat, notes open, looking as if you've been there an hour.|{spell_level(haste) >= 2: You're early. You've time to sharpen a quill and help a first-year find the room.|You arrive breathless but on the stroke. The lecturer says "Prompt," which from them is warm.}}
@@ -453,6 +458,7 @@ deals: pool shadowstep_uses
 title: A Volunteer
 pool: shadowstep_uses
 place: lecture_tower
+when: term
 time: morning noon afternoon
 tone: light
 art: wand
@@ -595,6 +601,7 @@ art: feather
 scene: A reedy lakeshore, a huge white swan with wings raised and neck lowered, hissing at a first-year who has wandered too close to its nest.
 text: {A first-year has wandered into the reeds too close to the swans' nest. The cob is coming out of the water with his wings up, hissing like a kettle.|The swans are nesting again. The cob has grown, or your memory of him has, and there's a first-year in the reeds.|The cob sees you from across the lake and starts hissing in advance.}
 > left: Step between them
+  alignment +tiny
   challenge soothe using vigor apprentice+ wild:
     win:
       vigor +small

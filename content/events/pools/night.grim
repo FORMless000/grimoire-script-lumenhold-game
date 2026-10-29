@@ -180,7 +180,7 @@ repeat: 3
 art: cup
 tags: money company_night
 scene: A loud birthday party in a tavern's upstairs room, a stout merchant in a paper crown, a cake shaped like a ship.
-text: {A cloth merchant from the capital is sixty tonight and wants a room full of young people laughing at his stories.|The cloth merchant is back, a year older by his own count, and he remembers which stories you laughed at.|The merchant's birthday again. He has started inviting his rivals, so that they can watch him be adored.} The cake is shaped like one of his ships.
+text: {A cloth merchant from the capital is sixty tonight and wants a room full of young people laughing at his stories.|The cloth merchant is back with another party. He says it's his birthday again, and nobody dares to count.|Another of the merchant's birthdays. He has started inviting his rivals, so that they can watch him be adored.} The cake is shaped like one of his ships.
 > left: Be the life of the party
   hint: Charm the room; big tips, a long night.
   challenge perform journeyman+:
@@ -393,7 +393,7 @@ text: {The room has gone quiet. Players from every other table have drifted over
     lose:
       mood -small
       queue night_suspicion chance likely
-      say: {Grisk turns a card you didn't think was left in the deck. Everything you won tonight goes back to him, and then some. He's very kind about it, which is worse.|You lose it all on one card. The crowd drifts back to their own tables as if nothing happened. On the stair, a prefect's lamp is waiting.|The pot goes to Grisk. He counts it slowly, in front of you, and offers to call you a carriage. There are no carriages.}
+      say: {Grisk turns a card you didn't think was left in the deck. Your stake goes back to him, a fat slice of the night's winnings with it. He's very kind about it, which is worse.|You lose the hand on one card. The crowd drifts back to their own tables as if nothing happened. On the stair, a prefect's lamp is waiting.|The pot goes to Grisk. He counts it slowly, in front of you, and offers to call you a carriage. There are no carriages.}
 > right: Leave on a winning streak
   hint: Two hands won, and a story to tell.
   renown +tiny
@@ -459,7 +459,7 @@ repeat: 3
 art: book
 tags: money study company_night
 scene: A long tavern table covered in wine bottles and loose manuscript pages, ink-stained poets arguing, one standing on a chair to recite.
-text: {A society of village poets has taken the upstairs room for its yearly supper, and needs someone to judge the contest.|The poets are back. Their president remembers your verdict from last year and has not forgiven it.|The poets' supper again, and this year the contest is in rhyming couplets only, including the toasts.} The landlady says: whoever wins, the wine bill gets paid.
+text: {A society of village poets has taken the upstairs room for its supper, and needs someone to judge the contest.|{chosen(company_poets, left): The poets are back. Their president remembers your last verdict and has not forgiven it.|The poets are back. Their president remembers you pouring the wine, and asks whether you'd dare to judge this time.}|The poets' supper again, and tonight the contest is in rhyming couplets only, including the toasts.} The landlady says: whoever wins, the wine bill gets paid.
 > left: Judge the contest
   hint: A clever verdict pleases everyone; a bad one pleases nobody.
   challenge appeal journeyman-:
@@ -497,7 +497,7 @@ on_show:
   unflag ring_last_standing ring_down
   chance unlikely:
     flag ring_last_standing
-text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your wand is. Cast what you like. Nobody down here tells."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {flag(ring_last_standing): Across the top of his slate he has chalked LAST STANDING: step in tonight and you fight until you drop or have beaten four.|Win, and the next bout pays more.}
+text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your wand is. Cast what you like. Nobody down here tells."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {flag(ring_last_standing): Across the top of his slate he has chalked LAST STANDING: step in tonight and you fight until you drop or have beaten four, or you pay the house a forfeit to walk out.|Win, and the next bout pays more.}
 > left: Bet your purse on yourself
   alignment -tiny
   gold -medium
@@ -535,6 +535,16 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
   queue ring_side_bets now
   say: {The bookmaker shrugs and rubs your name off the slate.|"Your loss," says the bookmaker. "Or someone else's gain. Care to back one?"|You leave your name on the slate and your wand in your pocket.}
 
+# Walking out of a last-standing night (the critic, 2026-10-28): every fight down here keeps a way out. The house keeps
+# a forfeit from the purse and the crowd remembers it.
+@preset ring_forfeit
+desc: Leaving the ring on a last-standing night.
+do:
+  unflag ring_last_standing
+  gold -medium
+  renown -small
+  mood -small
+
 @event ring_bout_2
 title: The Second Bout
 trigger: queued
@@ -544,7 +554,7 @@ art: sword
 tags: danger money
 scene: A chalk ring under a boathouse, a fresh opponent twirling a wand, a crowd pressing in with coins in their fists.
 when: not flag(ring_down)
-text: The money-holder points at the chalk again. {~A lanky girl steps in who quit the academy last spring. She kept the wand, and the duelling stance.|A fairground conjurer steps in, still in spangles, rolling a spark across his knuckles. The crowd knows him.|A hedge-hexer from past the village steps in, a cord of knotted charms at her wrist. Some of those knots aren't legal anywhere.} {flag(ring_last_standing): Last standing: there's no stepping out now.|The purse has doubled. Or you can take what you've won and go.}
+text: The money-holder points at the chalk again. {~A lanky girl steps in who quit the academy last spring. She kept the wand, and the duelling stance.|A fairground conjurer steps in, still in spangles, rolling a spark across his knuckles. The crowd knows him.|A hedge-hexer from past the village steps in, a cord of knotted charms at her wrist. Some of those knots aren't legal anywhere.} {flag(ring_last_standing): Last standing: stepping out now costs a forfeit.|The purse has doubled. Or you can take what you've won and go.}
 > left: Fight on
   hint: A harder bout, a bigger purse.
   challenge combat adept:
@@ -558,11 +568,14 @@ text: The money-holder points at the chalk again. {~A lanky girl steps in who qu
       mood -small
       queue night_suspicion chance even
       say: {~She was the best in her year before she left, and she still is. She helps you up off the flagstones, which is worse.|He palms a spark, and while you watch it, the other hand ends the bout. You limp up the steps with the night's winnings and singed sleeves.|One knot comes undone, and something cold walks through your head. You come round outside, with your purse, and a headache that lasts a day.}
-> right: Take the purse and go
-  hint: Keep what you've won.
-  when: not flag(ring_last_standing)
-  mood +tiny
-  say: {~You bow out with the purse in your fist. The dropout shrugs and finds someone else.|You leave the conjurer to the next fool, and count your winnings on the walk home.|The hexer laughs as you go, and ties another knot.}
+> right: {flag(ring_last_standing): Forfeit, and walk out|Take the purse and go}
+  hint: {flag(ring_last_standing): Last standing: the house keeps a forfeit, and the crowd remembers.|Keep what you've won.}
+  if not flag(ring_last_standing):
+    mood +tiny
+    say: {~You bow out with the purse in your fist. The dropout shrugs and finds someone else.|You leave the conjurer to the next fool, and count your winnings on the walk home.|The hexer laughs as you go, and ties another knot.}
+  else:
+    ring_forfeit
+    say: You raise your hand and step out of the chalk. The bookmaker chalks FORFEIT across your name, takes the house's share of your purse in front of everyone, and the cellar hisses you up the stairs.
 
 @event ring_bout_3
 title: The Third Bout
@@ -573,7 +586,7 @@ art: sword
 tags: danger money
 scene: A packed boathouse cellar roaring at a chalk ring, a wizard in a long coat stepping in, lantern light swinging.
 when: not flag(ring_down)
-text: Two down. The cellar is packed now and the betting is loud. {~The house sends in a Conclave clerk in ink-stained cuffs, moonlighting for the purse. He reads your stance like a form.|The house sends in a prefect who lost the sash last year, and has been angry about it ever since.|The house sends in someone in a hood whose wand hand is grey to the wrist. The steps go quiet.} {flag(ring_last_standing): Last standing: the chalk is the only way out.|One more win and the purse is the biggest yet. Or walk away a winner.}
+text: Two down. The cellar is packed now and the betting is loud. {~The house sends in a Conclave clerk in ink-stained cuffs, moonlighting for the purse. He reads your stance like a form.|The house sends in a prefect who lost the sash last year, and has been angry about it ever since.|The house sends in someone in a hood whose wand hand is grey to the wrist. The steps go quiet.} {flag(ring_last_standing): Last standing: the chalk, or the forfeit.|One more win and the purse is the biggest yet. Or walk away a winner.}
 > left: Fight on
   hint: Harder still, and worth it.
   challenge combat adept+:
@@ -588,11 +601,14 @@ text: Two down. The cellar is packed now and the betting is loud. {~The house se
       health -large
       queue night_suspicion chance even
       say: {~The clerk dismantles you, politely, by the numbers. You wake on the steps with the purse still in your pocket and a ringing ear.|The ex-prefect's ward doesn't move, and neither, after a while, do you. Your ribs remember it all week.|The hooded caster drinks something out of you that isn't blood. You go down and stay down, and someone carries you to the door.}
-> right: Take the purse and go
-  hint: Leave a winner.
-  when: not flag(ring_last_standing)
-  mood +small
-  say: {~You leave the clerk waiting in the chalk with his forms. The crowd boos, and your purse doesn't care.|The ex-prefect calls you a coward. Nobody else does; you're holding too much money.|You bow to the hood and climb the steps. Some fights are better not known.}
+> right: {flag(ring_last_standing): Forfeit, and walk out|Take the purse and go}
+  hint: {flag(ring_last_standing): Last standing: the house keeps a forfeit, and the crowd remembers.|Leave a winner.}
+  if not flag(ring_last_standing):
+    mood +small
+    say: {~You leave the clerk waiting in the chalk with his forms. The crowd boos, and your purse doesn't care.|The ex-prefect calls you a coward. Nobody else does; you're holding too much money.|You bow to the hood and climb the steps. Some fights are better not known.}
+  else:
+    ring_forfeit
+    say: Two down, and you step out. It's a forfeit under the rules: the house takes its cut of your winnings, and the crowd, which had money on you, lets you know about it all the way to the door.
 
 @event ring_bout_4
 title: The Last Bout
@@ -621,11 +637,14 @@ text: Three down, and the cellar has gone quiet. {~The ring's own champion steps
       health -large
       queue night_suspicion chance likely
       say: {~The champion ends it in one spell, and you understand why the academy wanted them gone. You wake on the steps with your night's winnings and a long walk.|The bookmaker casts things the library keeps chained, and wins clean. You crawl up the steps holding your purse and your ribs.|You can't tell the girl from her shadow, and the wrong one hits you. The crowd is so loud the prefects must hear it.}
-> right: Take the purse and go
-  hint: Three wins is a fine night.
-  when: not flag(ring_last_standing)
-  mood +small
-  say: {~You bow out with three wins and a heavy purse. The champion nods: next time.|You don't fight the man who sets the odds, and knows your thoughts. You take your winnings before he can change his mind.|You look at the runaway's shadow and decide three is plenty.}
+> right: {flag(ring_last_standing): Forfeit, and walk out|Take the purse and go}
+  hint: {flag(ring_last_standing): Last standing: the house keeps a forfeit, and the crowd remembers.|Three wins is a fine night.}
+  if not flag(ring_last_standing):
+    mood +small
+    say: {~You bow out with three wins and a heavy purse. The champion nods: next time.|You don't fight the man who sets the odds, and knows your thoughts. You take your winnings before he can change his mind.|You look at the runaway's shadow and decide three is plenty.}
+  else:
+    ring_forfeit
+    say: You step out before the last bout. The bookmaker counts out the forfeit from your purse with great ceremony, and the cellar boos you, and a few people, quietly, look relieved for you.
 
 @event ring_side_bets
 title: Side Bets
@@ -694,12 +713,14 @@ text: Before the next bout someone vaults the rope into the chalk: Corvin, sleev
       rel corvin +tiny
       say: He was never where your spell landed. He hauls you up by the collar, collects his purse, and presses a few coins of it into your hand. "Your cut, for the hating. You were very convincing."
 > right: Put on a show, and let him win
-  hint: Your night ends; his debt doesn't.
-  when: not flag(ring_last_standing)
+  hint: {flag(ring_last_standing): Last standing: this counts as a forfeit.|Your night ends; his debt doesn't.}
   flag ring_down
   alignment -tiny
   rel corvin +medium
   say: You shout, he shouts, sparks fly everywhere but at each other, and you go down with a groan the back row will talk about all week. The bettors who backed you never know. Corvin does. "I owe you," he says on the steps. "Add it to the list."
+  if flag(ring_last_standing):
+    ring_forfeit
+    say: On a last-standing night it counts as a forfeit: the bookmaker takes the house's share of your winnings on the way out.
 
 @event ring_cameo_lyra
 title: Someone Worth Losing To
@@ -723,12 +744,14 @@ text: The crowd parts. Lyra Vaneshade is in the chalk, gloves off, hair tied bac
       rel lyra +tiny
       say: She takes you apart in four exchanges, beautifully. Then she walks you up the steps herself, holding your elbow. "Now you know," she says, "where you belong. It isn't here."
 > right: Walk out with her
-  hint: The crowd won't like it.
-  when: not flag(ring_last_standing)
+  hint: {flag(ring_last_standing): Last standing: this counts as a forfeit.|The crowd won't like it.}
   flag ring_down
   renown -tiny
   rel lyra +medium
   say: You step out of the chalk and offer her your arm. The cellar boos you both up the steps. Outside, in the cold, Lyra lets go of your arm and doesn't say thank you. She does walk you all the way back.
+  if flag(ring_last_standing):
+    ring_forfeit
+    say: On a last-standing night it counts as a forfeit: the bookmaker takes the house's share of your winnings on the way out.
 
 @event ring_cameo_bram
 title: Out of Uniform
@@ -752,11 +775,13 @@ text: The next challenger steps in hooded, and drops the hood: Bram Hollis, with
       rel bram +tiny
       say: He walks through your spells like rain and puts you on the flagstones. On the steps he stops. "Not a word," he says. "And not a demerit either. We were never here."
 > right: Let him have the bout
-  hint: Leave him his secret, and the purse.
-  when: not flag(ring_last_standing)
+  hint: {flag(ring_last_standing): Last standing: this counts as a forfeit.|Leave him his secret, and the purse.}
   flag ring_down
   rel bram +medium
   say: You step back out of the chalk and bow to him. He stares at you as if it were a trick. On the stairs to the dormitory next morning, your name isn't in his ledger, and he looks away first.
+  if flag(ring_last_standing):
+    ring_forfeit
+    say: On a last-standing night it counts as a forfeit: the bookmaker takes the house's share of your winnings on the way out.
 
 @event ring_cameo_ilse
 title: Frost in the Chalk
@@ -780,12 +805,14 @@ text: The cellar goes cold. The lanterns shrink. A girl in white furs steps into
       rel ilse +tiny
       say: Rime closes over your wand hand and you can't feel it to cast. She stands over you, unimpressed. "You fight like someone taught you," she says. "Find someone who didn't." Your fingers ache till morning.
 > right: Ask her why she's down here
-  hint: Talk, and give up the night's next bout.
-  when: not flag(ring_last_standing)
+  hint: {flag(ring_last_standing): Last standing: this counts as a forfeit.|Talk, and give up the night's next bout.}
   flag ring_down
   rel ilse +small
   lore +tiny
   say: She doesn't answer. Instead she tells you your stance is wrong, then fixes it, roughly, with her boot. "Southerners," she says, as if that explained everything. The crowd boos you both, and she doesn't seem to hear.
+  if flag(ring_last_standing):
+    ring_forfeit
+    say: On a last-standing night it counts as a forfeit: the bookmaker takes the house's share of your winnings on the way out.
 
 @event lyra_ring_word
 title: Lyra Has Heard

@@ -16,6 +16,7 @@
 from: story
 with: begun=flag(rounds_begun)
 class: story
+defer: not term
 repeat: 1
 tags: story
 clues: lead_missed_round
@@ -50,7 +51,7 @@ text: The fever charm over the far bed has burned down to a red glow. It should 
   flag rounds_begun
   find lead_missed_round
   queue infirmary_sister_fevered now
-  say: The evening tray is still on the ward table, every bottle full. Her office door, at the back, is open a crack, and dark.
+  say: You go looking through the cold back corridor in your shirtsleeves. The evening tray is still on the ward table, every bottle full. Her office door, at the back, is open a crack, and dark.
 > right: It isn't your ward
   mood -tiny
   say: You tell yourself she's only late. On your way out, the patient in the far bed is still awake, watching the dark.
@@ -163,6 +164,7 @@ text: Sister Amaranth is up a week too soon, grey at the edges, taking the tray 
 from: story
 with: begun=flag(red_ink_begun)
 class: story
+defer: not term
 repeat: 1
 tags: study
 clues: lead_red_ink
@@ -173,7 +175,8 @@ journal:
   flag(red_ink_answered): The ink asked why you want to be good at this. You answered in the margin.
   flag(red_ink_glimpse): You hid on the landing and saw who took the essay: a first-year in robes two sizes too big.
   flag(red_ink_met): The red ink is hers: a first-year who can't say a word in front of a room. She has a seminar on Thursday.
-  flag(red_ink_finished): On Thursday she spoke, all the way to the end.
+  flag(red_ink_finished) and not flag(red_ink_silent): On Thursday she spoke, all the way to the end.
+  flag(red_ink_silent): On Thursday she sat down without reading. Her red ink is still the best marking you've ever had.
 status:
   resolved: flag(red_ink_finished)
 members:
@@ -207,7 +210,7 @@ title: A Question in the Margin
 thread: red_ink
 trigger: queued
 tone: light
-when: not flag(red_ink_answered) and not flag(red_ink_glimpse)
+when: not flag(red_ink_answered) and not flag(red_ink_glimpse) and not flag(red_ink_waited)
 art: paper
 scene: An essay left on a stone stair, its pages bleeding red ink, a single question written small at the bottom of the last page.
 text: The essay is back on the stair, bleeding red. Most of it is about your argument. At the bottom, smaller: "Why do you want to be good at this?" It's the first question the ink has asked.
@@ -218,14 +221,15 @@ text: The essay is back on the stair, bleeding red. Most of it is about your arg
   queue lecture_tower_red_ink_front_row in 1
   say: You write three lines you'd never say aloud, and leave the essay on the stair. It's gone by noon. You spend the afternoon wishing you'd written two.
 > right: Wait on the stair to see who takes it
-  challenge deceive master- likely:
+  challenge deceive apprentice likely:
     win:
+      flag red_ink_glimpse
       guile +small
       say: You hide on the landing above. A first-year in robes two sizes too big gathers up the pages, reads the first line right there on the step, and makes a small, furious noise.
     lose:
+      flag red_ink_waited
       health -tiny
       say: You fall asleep on the stair. When you wake the essay is gone, and there's a note on your chest in red: "Paragraph six. Also, you snore."
-  flag red_ink_glimpse
   queue lecture_tower_red_ink_front_row in 1
 
 @event lecture_tower_red_ink_front_row
@@ -234,7 +238,7 @@ thread: red_ink
 trigger: queued
 slot: morning
 tone: warm
-when: (flag(red_ink_answered) or flag(red_ink_glimpse)) and not flag(red_ink_met)
+when: (flag(red_ink_answered) or flag(red_ink_glimpse) or flag(red_ink_waited)) and not flag(red_ink_met)
 art: book
 scene: A lecture hall of first-years, one small student alone in the front row with red ink on her fingers, looking down at a page of perfect notes while the lecturer waits.
 text: You cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor. {flag(red_ink_glimpse): The robes are the ones from the stair, two sizes too big.|Her notes, you can see from the aisle, are perfect.}
@@ -269,6 +273,7 @@ text: Thursday. The first-year stands at the seminar lectern with her paper in b
       renown +small
       say: You stand and say her fourth paragraph is wrong. It isn't, and she knows it, and she's so annoyed she forgets to be frightened. She takes your objection apart for ten minutes. The room applauds, mostly for her.
     lose:
+      flag red_ink_silent
       mood -small
       lore +tiny
       say: You stand and object, and your objection is bad, and she's too polite to say so out loud. She sits down without reading. Your essay comes back that week with one line of red: "Good try. Bad argument."
@@ -434,7 +439,7 @@ text: Not ten minutes later, a shout from the square. The horse trough has froze
     lose:
       health -small
       mood -small
-      say: It takes an hour, three kettles from the inn and a carter who will tell this story for years.
+      say: It takes an hour, three kettles from the inn carried at a run, and your own hands scalded red holding the carter's arm in the steam. He will tell this story for years.
   flag bloomer_ice_done
   queue home_cottage_bloomer_letter in 1
 
@@ -460,4 +465,4 @@ text: {flag(bloomer_damped): She comes by one evening, the grey bead on its cord
   study -tiny
   mood +medium
   flag bloomer_finished
-  say: {flag(bloomer_promise): You never did ask at the castle. Instead you leave her|You leave her} the practice candle you've had since your first week, the one you learned on, burned down to a stub. A month later a letter comes with a drawing of the stub, still lit.
+  say: {flag(bloomer_promise): You never did ask at the castle. Instead you leave her|You leave her} the practice candle you've had since your first week, the one you learned on and still revise by, burned down to a stub. You'll be reading by the window for a while. A month later a letter comes with a drawing of the stub, still lit.

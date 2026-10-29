@@ -82,11 +82,13 @@ when: enrolled(illusion) and spell_level(glamour) <= level(illusion)
 art: spell_glamour
 tags: class magic
 scene: A bright classroom where a smiling professor in a violet scarf sits on her own desk, students across from her trying very hard to look likeable.
-text: {level(illusion) == 0: Illusion I begins with Professor Vey asking the class to make her like them more, without saying a word. "Glamour," she says, "is not lying. It's lighting."|{level(illusion) == 1: Illusion II: glamour that lasts past the door. Vey sends you to the refectory at lunch with one rule. "Be remembered for something you didn't do."|Advanced Illusion opens with Vey wearing your face. She teaches the first ten minutes in your voice, quite well. "Now take it back," she says.}}
+text: {level(illusion) == 0: Illusion I begins where Professor Vey always begins: every student glamours their own face first, one small change held for a minute. Then she sits on her desk. "Now make me like you more, without a word. Glamour is not lying. It's lighting."|{level(illusion) == 1: Illusion II: glamour that lasts past the door. Vey sends you to the refectory at lunch with one rule. "Be remembered for something you didn't do."|Advanced Illusion opens with Vey wearing your face. She teaches the first ten minutes in your voice, quite well. "Now take it back," she says.}}
 > left: Try it on Vey herself
   learn_spell glamour
   charm +small
   mana -small
+  if level(illusion) == 1:
+    alignment -tiny
   say: {level(illusion) == 0: Vey likes you a great deal for almost a minute, then shakes it off and applauds. You feel wrung out, as if you'd smiled all day.|{level(illusion) == 1: By supper three people remember you saving the cook from a falling ladle. There was no ladle. You're too tired to enjoy it.|You take your face back from her a feature at a time. It costs you everything you had. Vey hands over the last one, your frown, with regret.}}
 > right: Practise on a mirror first
   learn_spell glamour
@@ -109,7 +111,7 @@ text: {level(beastcraft) == 0: Beastcraft I's first spell is taught at a run. Pr
   vigor +small
   health -tiny
   say: {level(beastcraft) == 0: You catch the hare on the fourth go, briefly, and it bites you. You sleep eleven hours. Brask says that's the price, and the hare agrees.|{level(beastcraft) == 1: You reach the far tower a wingbeat behind the hawk, and the hawk looks smug about it. Your legs shake all through supper.|You run the field at the hippogriff's shoulder and say "good afternoon" at the end, gasping. Brask laughs once. You're stiff for three days.}}
-> right: Watch how the hare moves
+> right: Study how it moves first
   learn_spell haste
   study beastcraft +tiny
   mood -tiny
@@ -217,7 +219,7 @@ weight: 20
 art: spell_wildfire
 tags: social magic
 scene: An empty duel hall at night, a crimson-haired student holding a fire that keeps growing in her cupped hands, its light up to the rafters.
-text: Lyra lets you into the duel hall after it has closed. She cups her hands and the fire in them grows, and grows, until it lights the rafters. "They taught me to keep it small," she says. "This is what it does when I stop. I've never shown anyone."
+text: Lyra lets you into the duel hall after it has closed. She cups her hands and the fire in them grows, and grows, until it lights the rafters. "They taught me to keep it small," she says. "This is what it does when I stop. {I've never shown anyone."|You've seen it once already. The offer's still open."}
 > left: Ask her to teach you
   learn_spell wildfire
   rel lyra +small

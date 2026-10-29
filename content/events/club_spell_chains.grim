@@ -360,7 +360,7 @@ weight: 60
 art: leaf
 tags: club nature
 scene: Two students kneeling in a greenhouse bed planting a seedling, a lantern between them and earth up to their elbows.
-text: The seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, "if you can keep a secret, dearie."
+text: The seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says she still keeps a bed at the back of the same greenhouse, by the old pipes, that nobody else is allowed to touch, "if you can keep a secret, dearie."
 > left: Plant it with Tobias
   flag bramble_planted
   rel tobias +small
@@ -373,10 +373,10 @@ text: The seed has outgrown your pocket. It needs a bed. Tobias offers the corne
       queue verdant_cold_snap now
     elif not flag(bramble_choir):
       queue verdant_mandrake_choir now
-> right: Plant it in Maud's garden
+> right: Plant it in Maud's corner
   flag bramble_planted
   rel maud +small
-  say: Maud leads you through a door you'd never noticed into a garden you'll never find on your own. You plant it there. "It'll be happy," she says, "for a while."
+  say: Maud leads you to the back of the greenhouse, behind a stack of broken frames you'd never have looked past, to a bed she has kept for forty years. You plant it there. "It'll be happy," she says, "for a while."
   if chain_beat != turn:
     chain_beat = turn
     if since(verdant_far_bed) >= 1 and flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2:
@@ -940,7 +940,7 @@ text: On the dead-letter shelf, behind a parcel addressed to nobody, is a stoppe
   flag tailwind_chain
   find lead_tailwind
   vigor +tiny
-  say: The jar hums in your hands, and every broom in the loft leans toward you. The loft master writes your name on the jar's label, under a name too faded to read.
+  say: The jar hums in your hands, and every broom in the loft leans toward you. You strap it on for one loop of the yard, just to see, and come back windblown and breathless. The loft master writes your name on the jar's label, under a name too faded to read.
   chain_beat = turn
   queue courier_fisherman_waves now
 > right: Leave it on the shelf
@@ -978,7 +978,7 @@ tone: light
 art: broom
 tags: job
 scene: A student on a broom flying flat out over a lake in a cloud of wheeling gulls, letters fluttering in a satchel.
-text: The gulls over the lake race couriers for fun. The fisherman says the jar's wind won't follow you until you've beaten them once, flat out, from the jetty to the far bank.
+text: The gulls over the lake race couriers for fun. {flag(tailwind_fisherman): The fisherman says the jar's wind won't follow you until you've beaten them once, flat out, from the jetty to the far bank.|The jar's label has grown a second line, in the same faded hand: BEAT THE GULLS FIRST. Jetty to far bank, flat out.}
 > left: Race them flat out
   challenge feat journeyman wild:
     win:

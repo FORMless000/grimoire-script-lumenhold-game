@@ -8,14 +8,12 @@
 
 @event evo_fog_to_the_line
 title: Fog to the Line
-track: evocation
+pool: evocation_class
 level: 2
-class: routine
 tone: light
 repeat: 4
-weight: 10
 art: wave
-tags: class magic
+tags: magic
 scene: A lecture hall filling slowly with white fog from students' hands, a chalk line drawn on the wall at shoulder height, a stern old professor holding a measuring stick.
 text: {Professor Thorne chalks a line on the wall at shoulder height. "Water and fire together. Make fog. To the line, and not a hair over."|Fog day. Thorne's chalk line is lower than last time.|The fog line again. Thorne no longer explains; he just draws it and folds his arms.} {The windows have been shut.|Somebody's fog smells of burnt toast.|{season == "winter": The fog freezes on the windows in ferns.|The hall is warm, and the fog comes too easily.}}
 > left: Balance fire and water exactly
@@ -31,20 +29,18 @@ text: {Professor Thorne chalks a line on the wall at shoulder height. "Water and
 > right: Hold the water; let a partner burn
   mana -small
   study evocation +tiny
-  say: {You call the water and your partner warms it. Half the credit, half the effort, and all the mana you had.|You hold a ball of water steady for twenty minutes while your partner fusses with the flame. Your arms shake; your fog is fine.|You're the best water-holder in the class now, which Thorne calls "a respectable specialism" in a tone that isn't sure.}
+  say: {You call the water and your partner warms it. Half the credit, half the effort, and a good share of your mana.|You hold a ball of water steady for twenty minutes while your partner fusses with the flame. Your arms shake; your fog is fine.|You're the best water-holder in the class now, which Thorne calls "a respectable specialism" in a tone that isn't sure.}
 
 # ---------------- Astromancy I ----------------
 
 @event astro_dream_diary
 title: The Dream Diary
-track: astromancy
+pool: astromancy_class
 level: 1
-class: routine
 tone: light
 repeat: 4
-weight: 10
 art: moon
-tags: class study
+tags: study
 scene: A circle of yawning students under an observatory dome, each holding a small notebook, one standing to read aloud while the others try not to laugh.
 text: {Every first-year astromancer keeps a dream diary, and once a month you read an entry aloud for the class to interpret. Today it's your turn.|Dream diaries again. The lecturer reminds you that dreams are evidence; the class reminds you they're also very funny.|Your turn with the dream diary. The class leans in; your entries have a following.} {Last night you dreamed about a goat in a crown.|Last night you dreamed your teeth were made of keys.|{season == "winter": Last night you dreamed of snow falling upward.|Last night you dreamed of an exam in a language made of birds.}}
 > left: Read the real one aloud
@@ -53,6 +49,7 @@ text: {Every first-year astromancer keeps a dream diary, and once a month you re
   mood -small
   say: {You read about the goat. The class interprets it as ambition, appetite and possibly a farm. You go pink, and learn more than they do.|You read the dream of key-teeth. The lecturer finds three meanings in it; the class finds four, one of them rude.|You read it straight. The interpretations are thoughtful and humiliating, in equal parts.}
 > right: Invent something impressive
+  alignment -tiny
   challenge deceive standard:
     win:
       guile +small
@@ -67,14 +64,11 @@ text: {Every first-year astromancer keeps a dream diary, and once a month you re
 
 @event alch_antidote_race
 title: The Antidote Race
-track: alchemy
+pool: alchemy_class
 level: 3
-class: routine
 tone: tense
 repeat: 4
-weight: 10
 art: potion
-tags: class
 scene: A laboratory bench lined with beakers of clear liquid, each pair of students racing to identify and counter a mild poison while a healer watches an hourglass.
 text: {Sister Amaranth sets a beaker of clear liquid in front of each pair. "A mild poison. Identify it. Counter it. Then drink both. Hourglass."|Antidote day. Sister Amaranth has made the poisons milder and the hourglass shorter.|The antidote race. You can smell three of Sister Amaranth's poisons from the door now; she has started using a fourth.} {The last pair to finish washes everyone's beakers.|One pair's tongues are already blue.|{season == "summer": The heat makes everything evaporate twice as fast.|Rain hammers the windows and nobody can hear the hourglass.}}
 > left: Identify it by testing
@@ -181,7 +175,7 @@ weight: 10
 art: gear
 tags: class magic
 scene: A workshop bench crowded with half-built clockwork entries for the Artificers' Fair, a student holding a tiny screwdriver over a machine that twitches.
-text: {Every Artifice student is expected to have something for the Artificers' Fair. Yours is a clockwork wren that sings a little flat.|Fair entries again. Your wren now sings on key, mostly, and has started to hop.|Your fair entry has a name, a shelf and a temperament. The class has opinions about it.} {Your neighbour's entry, a self-pouring teapot, is pouring onto the floor.|Someone's entry has escaped and is hiding under the bench.|{season == "spring": The fair is weeks away and nobody is ready.|The fire buckets have been moved closer to the benches, on the faculty's orders.}}
+text: {Every Artifice student is expected to have something for the Artificers' Fair. Yours is a clockwork wren that sings a little flat.|Fair entries again. Your wren has started to hop, all by itself, which nobody built into it.|Your fair entry has a name, a shelf and a temperament. The class has opinions about it.} {Your neighbour's entry, a self-pouring teapot, is pouring onto the floor.|Someone's entry has escaped and is hiding under the bench.|{season == "spring": The fair is weeks away and nobody is ready.|The fire buckets have been moved closer to the benches, on the faculty's orders.}}
 > left: Tinker with your own
   challenge enchant standard:
     win:

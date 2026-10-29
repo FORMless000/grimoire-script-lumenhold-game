@@ -20,7 +20,7 @@ text: {Under the dome on the sixth floor the echoes are wrong in a useful way. A
 > left: Lean on the rail and listen
   guile +small
   alignment -tiny
-  say: {You learn the third question of next week's test, probably. Eavesdroppers, it turns out, don't feel as clever as they'd hoped.|The proposal ends in a yes, and you weren't invited. You feel like a thief who has stolen a wedding.|You learn exactly what the front desk thinks of you. It's fair, which is worse.}
+  say: {You learn the third question of next week's test, probably. Eavesdroppers, it turns out, don't feel as clever as they'd hoped.|The rehearsal ends with a yes, said in the same voice as the question. You feel like a thief who has stolen a wedding that hasn't happened yet.|You learn exactly what the front desk thinks of you. It's fair, which is worse.}
 > right: Cough loudly, and read
   lore +small
   say: {Your cough rolls down the dome like thunder. Seven floors stop whispering at once, and you read in a silence you made.|You cough. Somewhere below, the proposal stops mid-sentence. You read a whole chapter before you stop wondering how it ended.|You cough on purpose now. Below, every whisper stops, and the dome is yours, and so is the chapter.}
@@ -33,7 +33,7 @@ tone: eerie
 art: lantern
 tags: study
 scene: A library at closing time, lamps going out floor by floor from the top down, a student half-hidden between two shelves with a book held to their chest.
-text: {The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the doors. You know the alcove on the fourth floor where the last lamp dies.} {Footnote is doing his rounds, tail up.|Rain is loud on the high windows.|{final_year: You wonder who will hide in your alcove next year.|Somewhere a book closes itself with a snap.}}
+text: {The bell rings to close the upper galleries, and their lamps begin to go out from the top floor down, one floor a minute. Students drift down to the reading room, which keeps its lamps for the night.|The galleries' closing bell. You've noticed the shelves up here lean together a little after hours, as if to talk.|The bell, the lamps, the drift down the stairs. You know the alcove on the fourth floor where the last lamp dies.} {Footnote is doing his rounds, tail up.|Rain is loud on the high windows.|{final_year: You wonder who will hide in your alcove next year.|Somewhere a book closes itself with a snap.}}
 > left: Stay hidden past closing
   challenge deceive apprentice:
     win:
@@ -43,7 +43,7 @@ text: {The closing bell rings and the lamps begin to go out from the top floor d
     lose:
       mood -small
       renown -tiny
-      say: {A shelf shuffles sideways and nudges you, firmly, toward the door. A prefect on the stair watches you evicted by furniture.|The shelves close the aisle behind you like a mouth and walk you to the exit. The story is round the house by breakfast.|Footnote finds you, sits on your book and yowls until the porter comes. The porter tells everyone. Footnote is unrepentant.}
+      say: {A shelf shuffles sideways and nudges you, firmly, toward the stairs. A prefect on the stair watches you evicted by furniture.|The shelves close the aisle behind you like a mouth and walk you down to the reading room. The story is round the house by breakfast.|Footnote finds you, sits on your book and yowls until the porter comes. The porter tells everyone. Footnote is unrepentant.}
 > right: Leave with the crowd
   health +small
   say: {You go to bed at a decent hour, which feels almost illicit.|You leave with everyone else and sleep like a shelved book.|You walk out under the dying lamps and sleep well. The alcove can wait for you.}
@@ -135,11 +135,11 @@ weight: 10
 art: music
 tags: festival social
 scene: Students on ladders painting a huge backdrop on the great hall's stage while a cook carries in a tray of tasting plates.
-text: {season == "autumn": Scenery for the Harvest Feast is going up on the stage: a painted moon the size of a barn.|{season == "winter": They're building the Midwinter Ball's ice arch out of painted canvas and optimism.|{season == "spring": The Spring Tournament's banners are being hemmed on the stage, in five house colours.|They're painting the Starfall backdrop, a whole sky, star by star.}}} {A sign by the stage says STAGEHANDS WANTED, NO EXPERIENCE NECESSARY.|The sign now says SOME EXPERIENCE PREFERRED, and someone has pencilled your name under it.|They hand you a brush as you come in.} Meanwhile the kitchens are testing the feast menu on anyone who sits still.
+text: {season == "autumn": Scenery for the Harvest Feast is going up on the stage: a painted moon the size of a barn.|{season == "winter": They're building the Midwinter Ball's ice arch out of painted canvas and optimism.|{season == "spring": The Spring Tournament's banners are being hemmed on the stage, in five house colours.|They're painting the Starfall backdrop, a whole sky, star by star.}}} {A sign by the stage says STAGEHANDS WANTED, NO EXPERIENCE NECESSARY.|The sign now says SOME EXPERIENCE PREFERRED. Nobody is checking.|Someone hands you a brush as you come in, just in case.} Meanwhile the kitchens are testing the feast menu on anyone who sits still.
 > left: Paint, hammer and hold ladders
   arcana +small
   health -tiny
-  say: {You paint for three hours and charm the paint to shimmer at the edges. It's the best thing on the stage. Your shoulders disagree.|You hold ladders, hammer, paint, hit your thumb twice and get paint in your hair that won't come out till the festival. Someone stands back and says "oh", the good kind.|You're trusted with the tricky bit now, the part that has to move when the candles do. It does. You get splinters, and applause.}
+  say: {You paint for three hours and charm the paint to shimmer at the edges. It's the best thing on the stage. Your shoulders disagree.|You hold ladders, hammer, paint, hit your thumb twice and get paint in your hair that won't come out till the festival. Someone stands back and says "oh", the good kind.|They give you the tricky bit, the part that has to move when the candles do, because nobody else will. It does. You get splinters, and applause.}
 > right: Taste-test for the kitchens
   health +small
   mood +small
@@ -336,10 +336,9 @@ tone: light
 art: hourglass
 tags: social
 scene: A narrow stone bench at the foot of a spiral stair, a pale first-year sitting on it clutching a summons, a stone owl watching from above.
-text: {On the bench at the foot of the stair sits a first-year with a summons in one hand and doom on their face. "What's she like?" they whisper.|Another summoned first-year on the bench, another whisper: "Is it true she can read minds?"|The waiting bench has a first-year on it again; you suspect it always will. "Have you been in? What happens?"} {The stone owl watches you both.|Somewhere above, a door opens and closes.|{final_year: You remember sitting there yourself, a hundred years ago, last week.|The summons is smudged from being held so hard.}}
+text: {On the bench at the foot of the stair sits a first-year with a summons in one hand and doom on their face. "What's she like?" they whisper.|Another summoned first-year on the bench, another whisper: "Is it true she can read minds?"|The waiting bench has a first-year on it again; you suspect it always will. "Have you been in? What happens?"} {The stone owl watches you both.|Somewhere above, a door opens and closes.|{final_year: By next year you'll be gone, and the bench will still have someone on it.|The summons is smudged from being held so hard.}}
 > left: Tell them the kind truth
   charm +small
-  alignment +tiny
   say: {"She'll listen," you say, "and it will be worse than shouting, and then it will be better." The first-year breathes for the first time in an hour.|"She can't read minds," you say. "She just doesn't need to." The first-year laughs, shakily, and goes up a little taller.|"She'll pour you tea," you say. "Drink it. Tell her the truth." The first-year nods and goes up the stair like someone visiting a friend.}
 > right: Tell them a horror story
   guile +small
@@ -383,32 +382,33 @@ text: {The wind plays the seventh tower's arrow-slits like a flute, a different 
 > left: Hum along and listen
   mood +small
   mana -small
-  say: {You hum back. For a moment the tower answers in harmony, and the air goes thin and bright, and you come away drained and happy, as after a long song.|You hum, and one window falls silent as if to listen. It costs you something to keep going. You keep going.|You hum the part you know and the tower plays the rest. When it's done your hands are cold to the elbow and you're smiling.}
+  say: {You hum back. The tower answers in harmony, and you feel it drawing your magic out through the tune, thin and bright. You come away drained and happy, as after a long song.|You hum, and one window falls silent as if to listen. The tune pulls at your magic like a tide; it costs you something to keep going. You keep going.|You hum the part you know and the tower plays the rest, on your magic as much as the wind. When it's done your fingertips are cold and empty, and you're smiling.}
 > right: Write the tune down
   lore +small
   say: {You mark each window's note in your notebook. It's a scale nobody uses any more; you find it later in a very old songbook.|You write the notes down and get a different tune each time you read them back. That seems important, and you can't think why.|Your page of notes is filling up. The tune has the same shape as the stair, you realise; you climb it, more or less.}
 
 @event seventh_tower_outside_ledge
-title: The Outside Ledge
+title: The Desks on the Stair
 pool: seventh_tower_routine
-tone: tense
+tone: eerie
 art: tower
 tags: danger
-scene: A narrow stone ledge running round the outside of a high tower, a student edging along it with their back to the wall, six other towers and their bridges of light spread out below.
-text: {From the window at the top, a ledge a foot wide runs round the outside of the tower. From the far side, they say, you can see all seven towers and every bridge at once.|The ledge. Someone has chalked a tiny arrow on the sill: THIS WAY, BRAVE ONE.|You know the ledge's handholds now: the gargoyle's ear, the iron ring, the crack shaped like a smile.} {The wind is mild.|{season == "winter": There's ice on the stone.|A crow is sitting exactly where you'd put your foot.}|The bridges below are just lighting up for evening.}
-> left: Edge round the ledge
+scene: A narrow tower stair choked with a heap of old wooden classroom desks stacked legs-up, a student with a candle looking for a way through.
+text: {Two turns below the top, the stair is choked with old classroom desks, stacked legs-up to the ceiling, the way somebody left them a century ago. There's a gap, just.|The desks on the stair have shifted again; the gap is somewhere else this time.|You know the heap now: the desk with the cracked lid, the one that wobbles, the one you never lean on.} {A draught whistles through the legs.|{season == "winter": Frost has furred the old varnish.|A mouse watches you from an inkwell.}|Your candle finds a carved date, and loses it.}
+> left: Shift the desks and clear the way
   challenge feat apprentice+ wild:
     win:
       vigor +small
       mood +small
-      say: {You reach the far side and there they are, seven towers, every bridge of light, the lake holding the whole castle upside down. You forget to be afraid until the way back.|You inch round past the arrow and stand, breathing, over the whole academy. Somebody far below waves. You wave back like a fool.|Ear, ring, smile. You're round in a minute and sit with your feet over the drop, the castle lit up below like a map of itself.}
+      say: {You haul the desks off the heap one by one and stand them against the wall, legs down, properly. When you're done the stair is a stair again, and your arms are lead.|You lift, slide and wedge until the gap is wide enough to walk through upright. Someone has been at the heap since; you put it right again.|Cracked lid, wobbler, the one you never lean on: in that order. You're through in ten minutes and up at the top with the dust and the moon.}
     lose:
       health -small
       mood -small
-      say: {Your foot slips on the first step and you spend a long moment hugging the wall. You climb back in through the window shaking and scraped.|The wind takes your scarf and very nearly you. You crawl back inside on grazed hands and sit on the floor a while.|You misjudge the crack shaped like a smile. Your knee meets the stone hard, and you retreat, limping.}
-> right: Look out from the window
-  mood +small
-  say: {You lean on the sill and look out at the three towers you can see. It's enough. It's more than enough.|You stay inside and read the chalk arrow until it stops sounding like a dare.|You stay at the window and watch the bridges light, one by one, without needing to see them all.}
+      say: {The heap shifts the wrong way and a desk comes down the stair after you. You get out of its way, mostly. Your shin does not.|You pull the wrong desk and the whole heap groans. You back down the stair with a splinter the size of a pen in your palm.|The wobbler wobbles. You catch it with your shoulder, hard, and decide the top of the tower can wait.}
+> right: Look inside the desks
+  lore +small
+  mood -tiny
+  say: {You lift one cracked lid. Inside are a quill, a ruler and a page of conjugations copied out a hundred years ago, stopping halfway down. You finish it, for them, and feel oddly sad.|Another lid, another desk: a note passed in class, "meet me by the lake", never answered. Underneath it is the lesson, and you read that instead.|You've been through half the desks now. Every one stops in the middle of something, as if the bell rang and nobody came back.}
 
 # ---------------- The Thesis Laboratory ----------------
 
