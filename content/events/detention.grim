@@ -1,0 +1,182 @@
+# ============================================================
+#  Detention (threads 1, docs/threads-1-plan.md): while you have detention, a term month's two visits are served here
+#  instead of on the map (`@state detention`: afternoon=detention evening=detention). Canon (lore demerits): detention
+#  is scrubbing pans or cataloguing contraband. Only those two slots draw these cards; the punishment is the visits
+#  lost, and each card is still a choice.
+# ============================================================
+
+@pool detention
+class: routine
+when: has(detention)
+repeat: 3
+weight: 10
+
+@event det_vault_catalogue
+title: Cataloguing the Vault
+pool: detention
+tone: light
+art: lock
+tags: mystery study
+scene: A cramped stone vault crammed with confiscated student contraband, a student with a ledger and a candle, a goblin-shaped alarm glaring from above the door.
+text: {Detention in the confiscation vault, among three hundred years of everything the faculty ever took off a student, and a ledger nobody has kept properly in decades.|Today's shelf is the cursed dice. The goblin alarm over the door watches you take down the first box.|The goblin alarm over the door remembers you, and says so, loudly, until the prefect hushes it.} {A fanged flying disc snaps at your sleeve.|A goblet of endless soup is still, after all these years, gently simmering.|A box marked DO NOT OPEN is rattling politely.}
+> left: Catalogue it shelf by shelf
+  lore +small
+  mood -tiny
+  flag vault_catalogued
+  say: {You write up forty things by candlelight, and by the end you know where the vault keeps what. Your eyes feel sandpapered.|Shelf by shelf. You find where this year's confiscations go, by the door, and where nothing has been touched since before Maud was a student. Your wrist aches.|Today it's the love potions, shelf after shelf of them. It's dull work, and you now know the vault better than the prefects do.}
+> right: Read what students left behind
+  mood +small
+  alignment -tiny
+  say: {Some of the confiscated things are diaries. You read one instead of cataloguing, and laugh until the goblin coughs, and feel bad about it after.|A whole folder of notes passed in class, taken and never given back. "Meet me after Astromancy." You read them all. The ledger doesn't move an inch.|A love letter, taken in a lecture and never given back. You read it twice, feel like a thief, and put it back exactly where it was.}
+
+@event det_prefects_room
+title: Clerk to the Prefects
+pool: detention
+tone: tense
+art: paper
+tags: social study
+cast:
+  other: any where met(other) and tagged(other, student)
+scene: A cramped prefects' room with red sashes on pegs, a student copying names from a battered ledger into a clean one, a duty rota pinned to the wall above the desk.
+text: {Your detention is clerking. The prefects' demerit ledger has to be copied out fair, every name and every crime, in a hand they can read.|The rota on the wall has a new prefect's initials on it, and the week's demerits are waiting to be copied.|The ledger, the clean copy, and a prefect at the window who hums while you work.} {{other} has three demerits this week, one for "insolent humming".|{other} is in this week, for "a tone of voice".|{other}'s name comes up twice, both times in the same prefect's hand.} The rota above the desk says who walks which corridor tonight.
+> left: Copy it, and the rota too
+  guile +small
+  mood -tiny
+  flag prefect_rota
+  say: {You copy the ledger faithfully, and the rota into your head while you're at it. Now you know who walks the east stair, and when the library goes unwatched. Your hand cramps by the end.|Every name, every crime, and in the back of your mind the rota, quarter-hour by quarter-hour. It's the dullest useful {slot == "evening": evening|afternoon} you've had.|You copy the week out neatly. A fresh rota is pinned up; you learn it without moving your lips.}
+> right: Leave {other}'s name out
+  alignment -tiny
+  challenge deceive apprentice:
+    win:
+      rel other +small
+      say: {You copy everything but one line. Nobody checks. {other} never knows why their week was so quiet, and you never say.|One name fewer in the clean copy. The prefect signs it without reading. {other} buys you a cup of tea a week later, for no reason they can name.|You leave out {other}'s line. The ledger is lighter by one insolence, and you feel lighter by none.}
+    lose:
+      mood -small
+      say: {The prefect checks your copy against the old one, finds the gap, and writes {other}'s name back in, and yours underneath.|"You missed a line," says the prefect, and reads it aloud. You copy it in, in your best hand, while they watch.|A prefect reads over your shoulder. "Friend of yours?" They put the name back in red, and stay to watch you finish.}
+
+@event det_apology
+title: Four Hundred Words of Sorry
+pool: detention
+tone: light
+art: letter
+tags: study
+scene: An empty classroom in fading light, a student frowning at a nearly blank sheet of parchment, a professor's note pinned to the desk.
+text: {Detention, and a note pinned to the desk. A letter of apology, four hundred words, sincere, to be read by the professor concerned.|The professor's note adds, this time, that spelling counts.|This time the professor has left two good apologies as examples, both by the same student, ten years apart.} {The note underlines "sincere" twice.|Someone has carved SORRY into the desk, very deep.|The quill provided is the scratchiest in the castle.}
+> left: Mean every word
+  alignment +tiny
+  charm +small
+  mood -small
+  say: {You write it plainly, and it's harder than lying would have been. The professor reads it, folds it, and says "thank you", and means it.|You find you are sorry, about two hundred words in. The rest come slowly. The professor keeps the letter, which feels worse than if they'd burned it.|It doesn't get easier to mean it; you only get better at it. The professor nods at the last line and doesn't make you read it aloud.}
+> right: Write a magnificent one
+  alignment -tiny
+  challenge deceive adept- wild:
+    win:
+      guile +small
+      mood +small
+      say: {Four hundred words of polished regret, with a quotation from the founders. The professor reads it twice and looks almost moved.|You write the apology of the century. The professor calls it "very thorough" and files it with the others, which are apparently a collection.|A masterpiece of remorse, and you enjoy writing it more than you should.}
+    lose:
+      health -tiny
+      mood -small
+      say: {"This is a performance," says the professor, and hands it back. "Again. Sincerely, this time." You're there until the lamps go out.|The professor reads one line aloud, flatly, and the whole thing sounds as hollow as it is. You start again on a fresh sheet, until your hand cramps and the room goes cold.|"Very pretty," says the professor. "Now the real one." You write the real one, late, with cold feet.}
+
+@event det_candle_wax
+title: Wax on the Long Tables
+pool: detention
+tone: light
+art: candle
+tags: magic
+scene: The great hall emptied after a meal, floating candles drifting overhead, a student scraping hardened wax off a long wooden table.
+text: {The floating candles over the Great Hall drip all through every meal, and between meals someone must scrape the long tables clean. Today it's you.|The long tables, the scraper, and a meal's worth of wax, with an extra puddle under the high table.|The kitchens have left you a better scraper, which is either a kindness or a hint.} {One candle hangs lower than the others, dripping with enthusiasm.|The house banners rustle above you.|The ceiling shows tomorrow's weather: {season == "winter": snow|rain}.}
+> left: Scrape every table clean
+  vigor +small
+  health -tiny
+  say: {Five long tables, one scraper, and a sore back. By the end the oak shines and you can see your tired face in it.|You scrape until your shoulders burn, and the tables come up like new. Somewhere above you a candle drips, in the middle of the first one.|You know which tables drip worst now, and start there. It still takes until your arms give out.}
+> right: Coax the candles down to trim them
+  challenge spell apprentice:
+    win:
+      arcana +small
+      say: {You call the candles down one by one and trim their wicks. The dripping stops. Tomorrow's breakfast will be the cleanest in a year.|The candles come down to your hand like tame birds. You trim them, and they bob back up looking smart.|Down they come, all forty. You trim them neatly, and one of them, you'd swear, bows.}
+    lose:
+      mood -small
+      health -tiny
+      say: {A candle comes down too fast and drips a perfect circle of hot wax onto your head. The prefect laughs for a full minute.|The candles scatter like startled pigeons and drip on everything, you included. You scrape for twice as long.|Three candles come down; one comes down on your hand. You finish with a scraper and a blister.}
+
+@event det_great_lens
+title: The Great Lens
+pool: detention
+tone: warm
+art: planet
+tags: study magic
+scene: The inside of a brass observatory dome, a huge telescope, a student on a ladder rubbing its lens with a chamois cloth.
+text: {Detention in the observatory. The great telescope's brass and its lens are to be polished by hand, with a chamois and a bucket of warm water that goes cold at once.|Someone has written a rude word in the dust on the great lens, backwards, so it reads right from the eyepiece.|The telescope has turned itself to face the door, as if it were expecting you.} {{slot == "evening": The dome is open, and the stars are coming out over your shoulder.|The dome is half open on a pale sky.}|The brass is green at the joints.|A moth is asleep on the eyepiece.}
+> left: Polish every inch of it
+  lore +small
+  health -tiny
+  say: {You polish the brass until it gleams and the lens until it disappears. Your fingers are numb. The keeper of the dome checks it and says nothing, which here is praise.|You learn the telescope's whole body by polishing it, every screw and gear. You also learn how cold a brass dome can get.|An hour of small circles. When you climb down, the lens is so clean the sky looks closer.}
+> right: Look through it instead
+  mood +small
+  study -tiny
+  say: {{slot == "evening": You put your eye to the lens and the first stars come up out of the dark. The keeper finds you an hour later, the brass still dull.|It swings, as it likes, to the far shore and the mountains past it. The keeper finds you an hour later, the brass still dull.} You owe your revision an evening.|You look instead of polishing. The sky, close up, is worth an essay you won't now write.|You look, and the lens is so smeared it's like looking through honey, and still it's beautiful. The reading you'd planned waits for another night.}
+
+@event det_flight_divots
+title: Filling the Divots
+pool: detention
+tone: light
+art: broom
+tags: nature
+scene: A grassy flight field pocked with crater-like divots, a student with a spade and a barrow of turf, brooms racked by the fence.
+text: {Detention on the Flight Field. Every bad landing of the week has left a divot, and every divot needs filling before the next practice.|The weekend's race has left a crater the exact shape of a broom-handle, and plenty of its friends.|Somebody from the race team has left a bag of turf by the fence, with a note: SORRY.} {One crater is large enough to sit in.|The brooms in the rack by the fence are unwatched.|{season == "winter": The turf is frozen into bricks.|The grass smells of rain.}}
+> left: Fill every last one
+  vigor +small
+  health -tiny
+  say: {You dig and stamp and dig until the field is level and your blisters have blisters.|By the last divot you can lift a full barrow one-handed. You mean to be proud of that once your arms stop shaking.|You fill the field flat. The next practice lands on it and makes new divots before you've left the fence.}
+> right: Borrow a broom while nobody's looking
+  challenge deceive apprentice wild:
+    win:
+      mood +small
+      vigor +tiny
+      say: {One lap of the field, low and fast, and back on the ground before the prefect looks up. The divots can wait for the wind.|You take a broom from the rack and fly the length of the field and back. Nobody saw. It was the best part of the week.|A lap, then another. You land beside your spade and pick it up, breathless, as the prefect turns round.}
+    lose:
+      mood -small
+      renown -tiny
+      say: {The prefect turns round just as you take off. The whole race team, arriving for practice, sees you marched back to your barrow.|You're spotted halfway down the field. The prefect makes you fill the divot you made landing.|You get as far as the fence. The prefect is waiting there with your spade, and the team cheers, sarcastically.}
+
+@event det_inkwells
+title: Three Hundred Inkwells
+pool: detention
+tone: light
+art: scroll
+tags: study
+scene: A tiered lecture hall emptied for the night, rows of desks with brass inkwells, a student walking the rows with a big jug of ink.
+text: {Detention in the Lecture Tower. Every inkwell in every hall, three hundred of them, to be filled before morning from one heavy jug.|Somebody has been drinking from one of the inkwells, and carved a confession into the desk beside it.|Three hundred inkwells, and a new jug, heavier than the last one.} {The lecturer's own well at the front is empty.|Someone has left their spectacles on a desk.|A paper bird has been left on a desk.}
+> left: Fill them all, neatly
+  study +tiny
+  mood -tiny
+  say: {Row by row, hall by hall, with the jug getting heavier. In the quiet you plan your next essay from first line to last.|Three hundred wells, not one spilled. Your arms ache, and somewhere around the hundredth well the problem you were stuck on came loose.|You fill the wells in the order you'd answer an exam, and mutter the answers as you go. The halls don't mind.}
+> right: Doctor the lecturer's well
+  challenge deceive apprentice:
+    win:
+      mood +small
+      renown +tiny
+      say: {A drop of something that turns blue in the light, in the lecturer's well only. By noon tomorrow the whole year knows why the lecturer's hands are blue.|You add a pinch of sneezing powder to the front well. The next morning's lecture is punctuated, and nobody can prove a thing.|A drop of colour-change ink in the lecturer's well. The notes come out a shy pink. The class will talk of nothing else for a week.}
+    lose:
+      mood -small
+      health -tiny
+      say: {The prefect sees the little bottle in your hand. You refill all three hundred wells again, from fresh ink, until midnight.|The lecturer finds the blue ink before the lecture, and you in front of it. You stay until every well is clean and refilled.|Caught with the bottle. You empty and refill every well in the hall while the prefect reads aloud from the rules.}
+
+@event det_gargoyle_scrub
+title: The Gargoyles' Bath
+pool: detention
+tone: light
+art: rain
+tags: mystery
+scene: A windy castle parapet lined with stone gargoyles, a student with a bucket and a stiff brush scrubbing pigeon mess off a grinning stone face, the lake far below.
+text: {Detention on the north parapet. The gargoyles, a bucket and a brush, and a year of pigeons to scrub off them. The third one along has a draught behind it.|A pigeon has moved into the mouth of the cleanest gargoyle on the parapet, the third one along.|The wind is up, and the third gargoyle along is humming in it, very faintly.} {The wind tries to take the bucket.|The lake below is very still.|{season == "winter": The water in the bucket keeps freezing.|A pigeon watches you clean its work, offended.}}
+> left: Scrub them till they grin
+  vigor +small
+  health -tiny
+  say: {You scrub until every face along the parapet is clean and grinning. Your knuckles are raw and you smell of pigeon.|A whole row of clean gargoyles. The pigeons are already lining up to undo it.|You scrub hard and fast in the wind. By the end you're freezing and the gargoyles look delighted.}
+> right: Linger at the third gargoyle
+  guile +small
+  health -tiny
+  say: {member(cartographers): {You check the chalk mark behind the third gargoyle is still fresh while you scrub, and smudge it a little, so it looks old.|You give the third gargoyle a very thorough wash, and the passage behind it a very thorough look. All clear.|You scrub the third gargoyle last and slowest, and leave it shining as if it had nothing to hide.}|{You scrub around the draught slowly, and it comes from no wall. You feel for the edge of something.|The stone behind the third one is warmer than it should be. You don't find a door. You're nearly sure there is one.|You spend so long on the third gargoyle that the prefect asks if you're in love with it. You learn nothing, and suspect a great deal.}}

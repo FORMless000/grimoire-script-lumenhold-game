@@ -67,9 +67,9 @@ text: {Old Maud catches you on the path by her cottage. "You've a hungry look, d
 
 @event detention_cauldrons
 title: Cauldron Duty
-pool: statuses_routine
+# Served in a detention slot (threads 1): the pool that the detention day draws from.
+pool: detention
 tone: light
-when: has(detention)
 art: cauldron
 tags: study
 scene: A dim potions storeroom, a student up to the elbows in a crusted cauldron while a prefect reads by a lamp at the door.
@@ -78,11 +78,11 @@ text: {Detention, and a row of crusted cauldrons and a prefect by the door with 
   alchemy +small
   health -tiny
   say: {You scrub until your knuckles are raw, and learn which residues bite back and which only sulk.|By the last cauldron you can tell a week-old draught from a month-old one by the smell alone. Your hands sting for days.|You scrub your old acquaintances one by one. The one that knows you gives up its crust almost gently.}
-> right: Talk your way to an early night
+> right: Talk your way out early
   challenge appeal apprentice+:
     win:
       mood +small
-      say: {You talk about the prefect's book until the prefect is talking about it too, and at nine they wave you off. "Same time next week. Possibly."|You find out you're both from the same county. The cauldrons can wait for someone less charming.|The prefect is on the second book and glad of the interruption. You talk until nine, and the cauldrons stay crusted another week.}
+      say: {You talk about the prefect's book until the prefect is talking about it too, and an hour early they wave you off. "Same time next week. Possibly."|You find out you're both from the same county. The cauldrons can wait for someone less charming.|The prefect is on the second book and glad of the interruption. You talk until they send you off early, and the cauldrons stay crusted another week.}
     lose:
       mood -small
       health -tiny
@@ -90,13 +90,10 @@ text: {Detention, and a row of crusted cauldrons and a prefect by the door with 
 
 @event detention_lines
 title: Lines, With Company
-class: routine
+pool: detention
 tone: light
 cast:
   other: any where met(other) and tagged(other, student)
-when: has(detention)
-repeat: 2
-weight: 16
 art: book
 tags: study social
 scene: An empty classroom at dusk, two students at separate desks writing the same sentence over and over, a quill scratching on its own at the front.

@@ -69,13 +69,15 @@ text: {has(locked_out): {~The lock on your door turns at curfew now, from the ou
   sleep
   say: {break and has(plan_home): {~You sleep the way you only sleep at home: all night, without a single dream you remember.|Somebody looks in on you before they go to bed, as if you were still small. You pretend to be asleep, and then you are.|You wake late, to bread and the smell of the garden. Home mends things.}|{~You blow out the candle, and the day goes with it.|You're asleep before the candle has stopped smoking.|You lie awake a little, listening, and then you don't.}}
 
-# The morning after you were noticed (queued by the night's cards, I4): the only source of lockouts.
+# The morning after you were noticed (queued by the night's cards, I4): the only source of lockouts. Caught while
+# watched: three months confined after dark and a month of detention (threads 1: it takes next month's visits).
 @event night_suspicion
 title: A Word in the Morning
 trigger: queued
 slot: morning
-# Caught in a term's last month and off home or to an internship (I6): it waits until you're back on campus.
-defer: off_campus
+# Caught in a term's last month and off home or to an internship (I6): it waits until you're back on campus; on a
+# castle break it waits for term too, so the month of detention it gives is served (threads 1).
+defer: off_campus or break
 repeat: 1
 class: incident
 tone: tense
@@ -88,9 +90,9 @@ text: {has(watched): Bram is waiting at the foot of the stair, and this time he 
   if has(watched):
     lose watched
     gain locked_out
-    gain detention 3
+    gain detention
     mood -medium
-    say: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
+    say: A month of detention, and three of a door that is checked at midnight. Bram writes it all down, neatly.
   else:
     gain watched
     say: "I'll be keeping an eye on you." He means it literally.
@@ -99,9 +101,9 @@ text: {has(watched): Bram is waiting at the foot of the stair, and this time he 
   if has(watched):
     lose watched
     gain locked_out
-    gain detention 3
+    gain detention
     mood -medium
-    say: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
+    say: A month of detention, and three of a door that is checked at midnight. Bram writes it all down, neatly.
   else:
     gain watched
     say: "I'll be keeping an eye on you." He means it literally.

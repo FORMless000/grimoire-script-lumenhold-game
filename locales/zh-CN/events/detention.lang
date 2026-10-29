@@ -1,0 +1,143 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/detention.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event det_vault_catalogue
+# en: Cataloguing the Vault
+title [f48c6e] = 清点没收品库
+# en: {Detention in the confiscation vault, among three hundred years of everything the faculty ever took off a student, and a ledger nobody has kept properly in decades.|Today's shelf is the cursed dice. The goblin alarm over the door watches you take down the first box.|The goblin alarm over the door remembers you, and says so, loudly, until the prefect hushes it.} {A fanged flying disc snaps at your sleeve.|A goblet of endless soup is still, after all these years, gently simmering.|A box marked DO NOT OPEN is rattling politely.}
+text [ca1cab] = {禁闭地点是没收品库，三百年来教职员从学生手里没收的所有东西都堆在这里，还有一本几十年没人好好记过的登记簿。|今天要清的是放诅咒骰子的那一层。门上那只地精警报器看着你取下第一只盒子。|门上那只地精警报器认出了你，还大声嚷嚷了出来，直到级长让它闭嘴。} {一只长着獠牙的飞盘咬住了你的袖子。|一只永远舀不空的汤杯，过了这么多年，还在轻轻冒着热气。|一只写着“请勿打开”的盒子正彬彬有礼地咔哒作响。}
+# en: A cramped stone vault crammed with confiscated student contraband, a student with a ledger and a candle, a goblin-shaped alarm glaring from above the door.
+scene [dc3972] = 一间狭小的石头库房，架子上塞满了从学生那里没收来的违禁品，一个学生拿着登记簿和一支蜡烛，门上方一只地精模样的警报器怒目而视。
+# en: Catalogue it shelf by shelf
+opt.left.label [0789e4] = 一层一层地登记
+# en: {You write up forty things by candlelight, and by the end you know where the vault keeps what. Your eyes feel sandpapered.|Shelf by shelf. You find where this year's confiscations go, by the door, and where nothing has been touched since before Maud was a student. Your wrist aches.|Today it's the love potions, shelf after shelf of them. It's dull work, and you now know the vault better than the prefects do.}
+opt.left.say.1 [ad8a09] = {你借着烛光登记了四十样东西，到最后，库里什么放在哪儿你都清清楚楚。眼睛像被砂纸磨过。|一层接一层。你找到了今年没收品放的地方，就在门边；也找到了从莫德还是学生之前就没人动过的地方。手腕酸得厉害。|今天是迷情药水，一层又一层。活儿很枯燥，而你现在比级长们更熟悉这座库房了。}
+# en: Read what students left behind
+opt.right.label [abf214] = 读学生们留下的东西
+# en: {Some of the confiscated things are diaries. You read one instead of cataloguing, and laugh until the goblin coughs, and feel bad about it after.|A whole folder of notes passed in class, taken and never given back. "Meet me after Astromancy." You read them all. The ledger doesn't move an inch.|A love letter, taken in a lecture and never given back. You read it twice, feel like a thief, and put it back exactly where it was.}
+opt.right.say.1 [b46246] = {有些没收品是日记。你没去登记，而是读了一本，笑到地精警报器咳嗽起来，事后又觉得过意不去。|一整夹课堂上传的纸条，被没收后再没还回去。“天文课后见。”你一张张全读了。登记簿上一个字也没多。|一封情书，在课堂上被没收，再也没还回去。你读了两遍，觉得自己像个贼，又把它原样放了回去。}
+
+@event det_prefects_room
+# en: Clerk to the Prefects
+title [3c7fe4] = 级长室的抄写员
+# en: {Your detention is clerking. The prefects' demerit ledger has to be copied out fair, every name and every crime, in a hand they can read.|The rota on the wall has a new prefect's initials on it, and the week's demerits are waiting to be copied.|The ledger, the clean copy, and a prefect at the window who hums while you work.} {{other} has three demerits this week, one for "insolent humming".|{other} is in this week, for "a tone of voice".|{other}'s name comes up twice, both times in the same prefect's hand.} The rota above the desk says who walks which corridor tonight.
+text [31ba50] = {你的禁闭是当抄写员。级长们的记过簿要誊写一份干净的，每个名字、每条罪名，都得写得让他们看得懂。|墙上的值勤表多了一个新级长的姓名缩写，这一周的记过正等着誊写。|记过簿、誊清本，还有一个站在窗边、边看你干活边哼歌的级长。} {这周{other}被记了三次过，其中一次是因为“傲慢地哼歌”。|{other}这周也上榜了，罪名是“说话的语气”。|{other}的名字出现了两次，都是同一个级长的笔迹。}桌子上方的值勤表写着今晚谁巡哪条走廊。
+# en: A cramped prefects' room with red sashes on pegs, a student copying names from a battered ledger into a clean one, a duty rota pinned to the wall above the desk.
+scene [4ebe78] = 一间狭小的级长室，钉子上挂着红色绶带，一个学生正把一本破旧记过簿上的名字誊到一本新的上，桌子上方的墙上钉着值勤表。
+# en: Copy it, and the rota too
+opt.left.label [f218c5] = 照抄，顺便记下值勤表
+# en: {You copy the ledger faithfully, and the rota into your head while you're at it. Now you know who walks the east stair, and when the library goes unwatched. Your hand cramps by the end.|Every name, every crime, and in the back of your mind the rota, quarter-hour by quarter-hour. It's the dullest useful {slot == "evening": evening|afternoon} you've had.|You copy the week out neatly. A fresh rota is pinned up; you learn it without moving your lips.}
+opt.left.say.1 [8465da] = {你一字不差地誊完记过簿，顺手把值勤表也记进了脑子里。现在你知道谁巡东楼梯，图书馆什么时候没人看着了。抄到最后手都抽筋了。|每个名字，每条罪名，脑子里还有那张值勤表，一刻钟一刻钟地排着。这是你过过的最无聊也最有用的一个{slot == "evening": 晚上|下午}。|你把这一周的记录工工整整地誊好。墙上钉了一张新的值勤表；你嘴唇都没动，就把它记住了。}
+# en: Leave {other}'s name out
+opt.right.label [d29e95] = 漏掉{other}的名字
+# en: {You copy everything but one line. Nobody checks. {other} never knows why their week was so quiet, and you never say.|One name fewer in the clean copy. The prefect signs it without reading. {other} buys you a cup of tea a week later, for no reason they can name.|You leave out {other}'s line. The ledger is lighter by one insolence, and you feel lighter by none.}
+opt.right.say.1 [8150bc] = {你誊了所有内容，只漏了一行。没人核对。{other}永远不会知道自己这周为什么这么清静，你也永远不会说。|誊清本上少了一个名字。级长看都没看就签了字。一周后，{other}请你喝了杯茶，说不上为什么。|你漏掉了{other}那一行。记过簿上少了一桩傲慢，你心里却没轻松半分。}
+# en: {The prefect checks your copy against the old one, finds the gap, and writes {other}'s name back in, and yours underneath.|"You missed a line," says the prefect, and reads it aloud. You copy it in, in your best hand, while they watch.|A prefect reads over your shoulder. "Friend of yours?" They put the name back in red, and stay to watch you finish.}
+opt.right.say.2 [230cc1] = {级长把你的誊本和旧本对了一遍，发现了空缺，把{other}的名字补了回去，你的名字就写在下面。|“你漏了一行，”级长说，还大声念了出来。你用最好的字迹把它补上，他就在旁边看着。|一个级长从你肩后看过来。“你朋友？”他用红笔把名字补回去，还留下来看着你抄完。}
+
+@event det_apology
+# en: Four Hundred Words of Sorry
+title [34c0a8] = 四百字的道歉
+# en: {Detention, and a note pinned to the desk. A letter of apology, four hundred words, sincere, to be read by the professor concerned.|The professor's note adds, this time, that spelling counts.|This time the professor has left two good apologies as examples, both by the same student, ten years apart.} {The note underlines "sincere" twice.|Someone has carved SORRY into the desk, very deep.|The quill provided is the scratchiest in the castle.}
+text [905499] = {禁闭，桌上钉着一张字条。一封道歉信，四百字，要真诚，由当事的教授亲自过目。|这回教授的字条上还加了一句：拼写也算分。|这回教授留了两封写得好的道歉信作范例，出自同一个学生之手，前后相隔十年。} {字条上的“真诚”被划了两道线。|有人在桌面上刻了“对不起”，刻得很深。|配给你的羽毛笔是全城堡最刮纸的一支。}
+# en: An empty classroom in fading light, a student frowning at a nearly blank sheet of parchment, a professor's note pinned to the desk.
+scene [d0f816] = 暮色中一间空教室，一个学生对着几乎空白的羊皮纸皱眉，桌上钉着一位教授留的字条。
+# en: Mean every word
+opt.left.label [6447e5] = 每个字都出自真心
+# en: {You write it plainly, and it's harder than lying would have been. The professor reads it, folds it, and says "thank you", and means it.|You find you are sorry, about two hundred words in. The rest come slowly. The professor keeps the letter, which feels worse than if they'd burned it.|It doesn't get easier to mean it; you only get better at it. The professor nods at the last line and doesn't make you read it aloud.}
+opt.left.say.1 [de7f4b] = {你写得很朴实，这比撒谎难多了。教授读完，把信折好，说了声“谢谢”，是真心的。|写到两百字左右，你发现自己确实感到抱歉。剩下的字写得很慢。教授把信留下了，这比烧掉还让人难受。|真心并没有变得更容易，你只是更擅长了。教授对着最后一行点点头，没让你念出来。}
+# en: Write a magnificent one
+opt.right.label [dc2cba] = 写一封华丽的
+# en: {Four hundred words of polished regret, with a quotation from the founders. The professor reads it twice and looks almost moved.|You write the apology of the century. The professor calls it "very thorough" and files it with the others, which are apparently a collection.|A masterpiece of remorse, and you enjoy writing it more than you should.}
+opt.right.say.1 [461108] = {四百字打磨得光亮的悔意，还引了一句创院者的话。教授读了两遍，看上去几乎被感动了。|你写出了本世纪最好的道歉信。教授称之为“非常周全”，把它和别的道歉信归在一起，那些显然是一套收藏。|一篇悔过的杰作，而你写得比应该的更开心。}
+# en: {"This is a performance," says the professor, and hands it back. "Again. Sincerely, this time." You're there until the lamps go out.|The professor reads one line aloud, flatly, and the whole thing sounds as hollow as it is. You start again on a fresh sheet, until your hand cramps and the room goes cold.|"Very pretty," says the professor. "Now the real one." You write the real one, late, with cold feet.}
+opt.right.say.2 [dd203d] = {“这是表演，”教授说着把信递还给你，“重写。这回要真诚。”你一直写到熄灯。|教授平板地念出其中一行，整封信听上去和它本身一样空洞。你换了一张新纸重新开始，写到手抽筋、屋里发冷。|“很漂亮，”教授说，“现在写真的。”你写了真的那封，写得很晚，脚都冻僵了。}
+
+@event det_candle_wax
+# en: Wax on the Long Tables
+title [4e06cc] = 长桌上的蜡
+# en: {The floating candles over the Great Hall drip all through every meal, and between meals someone must scrape the long tables clean. Today it's you.|The long tables, the scraper, and a meal's worth of wax, with an extra puddle under the high table.|The kitchens have left you a better scraper, which is either a kindness or a hint.} {One candle hangs lower than the others, dripping with enthusiasm.|The house banners rustle above you.|The ceiling shows tomorrow's weather: {season == "winter": snow|rain}.}
+text [42c0aa] = {大礼堂的浮空蜡烛每顿饭都滴个不停，两顿饭之间得有人把长桌刮干净。今天轮到你。|长桌、刮刀，还有一顿饭积下的蜡，高桌底下还多了一摊。|厨房给你留了一把更好的刮刀，不知是好意还是暗示。} {有一支蜡烛飘得比别的低，滴得格外起劲。|学院旗在你头顶沙沙作响。|天花板显示着明天的天气：{season == "winter": 下雪|下雨}。}
+# en: The great hall emptied after a meal, floating candles drifting overhead, a student scraping hardened wax off a long wooden table.
+scene [3b750d] = 饭后空荡荡的大礼堂，浮空蜡烛在头顶飘荡，一个学生正从一张长木桌上刮下凝固的蜡。
+# en: Scrape every table clean
+opt.left.label [37d01b] = 把每张桌子都刮干净
+# en: {Five long tables, one scraper, and a sore back. By the end the oak shines and you can see your tired face in it.|You scrape until your shoulders burn, and the tables come up like new. Somewhere above you a candle drips, in the middle of the first one.|You know which tables drip worst now, and start there. It still takes until your arms give out.}
+opt.left.say.1 [d7dbc8] = {五张长桌，一把刮刀，一副酸痛的腰背。最后橡木桌面锃亮，你能从里面看见自己疲惫的脸。|你刮到肩膀发烫，桌子焕然一新。头顶某处，一支蜡烛正好滴在第一张桌子正中间。|你现在知道哪几张桌子滴得最凶，就从那儿开始。还是一直刮到胳膊使不上劲为止。}
+# en: Coax the candles down to trim them
+opt.right.label [355a14] = 把蜡烛哄下来剪烛芯
+# en: {You call the candles down one by one and trim their wicks. The dripping stops. Tomorrow's breakfast will be the cleanest in a year.|The candles come down to your hand like tame birds. You trim them, and they bob back up looking smart.|Down they come, all forty. You trim them neatly, and one of them, you'd swear, bows.}
+opt.right.say.1 [847eee] = {你把蜡烛一支支唤下来，剪好烛芯。滴蜡停了。明天的早饭会是一年来最干净的一顿。|蜡烛像驯服的鸟一样落到你手上。你把它们修剪好，它们又精神抖擞地飘了回去。|四十支全下来了。你把它们剪得整整齐齐，有一支——你敢发誓——还鞠了个躬。}
+# en: {A candle comes down too fast and drips a perfect circle of hot wax onto your head. The prefect laughs for a full minute.|The candles scatter like startled pigeons and drip on everything, you included. You scrape for twice as long.|Three candles come down; one comes down on your hand. You finish with a scraper and a blister.}
+opt.right.say.2 [b73e83] = {一支蜡烛下来得太快，在你头顶滴了一个完美的热蜡圈。级长足足笑了一分钟。|蜡烛像受惊的鸽子一样四散，滴得到处都是，你也没能幸免。你多刮了一倍的时间。|下来了三支蜡烛，其中一支落在了你手上。你拿着刮刀、顶着一个水泡把活儿干完了。}
+
+@event det_great_lens
+# en: The Great Lens
+title [70cfab] = 大透镜
+# en: {Detention in the observatory. The great telescope's brass and its lens are to be polished by hand, with a chamois and a bucket of warm water that goes cold at once.|Someone has written a rude word in the dust on the great lens, backwards, so it reads right from the eyepiece.|The telescope has turned itself to face the door, as if it were expecting you.} {{slot == "evening": The dome is open, and the stars are coming out over your shoulder.|The dome is half open on a pale sky.}|The brass is green at the joints.|A moth is asleep on the eyepiece.}
+text [3f2566] = {禁闭地点在观星台。那台大望远镜的黄铜和镜片要用麂皮手工擦亮，配一桶刚提来就凉透的温水。|有人在大透镜的灰上写了个脏字，还是反着写的，从目镜里看正好是正的。|望远镜自己转过来对着门，好像在等你。} {{slot == "evening": 穹顶开着，星星正从你肩后冒出来。|穹顶半开，外面是一片苍白的天。}|黄铜接口处长了绿锈。|一只飞蛾睡在目镜上。}
+# en: The inside of a brass observatory dome, a huge telescope, a student on a ladder rubbing its lens with a chamois cloth.
+scene [d86a94] = 黄铜观星穹顶内部，一台巨大的望远镜，一个学生站在梯子上用麂皮擦拭镜片。
+# en: Polish every inch of it
+opt.left.label [2820f3] = 每一寸都擦亮
+# en: {You polish the brass until it gleams and the lens until it disappears. Your fingers are numb. The keeper of the dome checks it and says nothing, which here is praise.|You learn the telescope's whole body by polishing it, every screw and gear. You also learn how cold a brass dome can get.|An hour of small circles. When you climb down, the lens is so clean the sky looks closer.}
+opt.left.say.1 [fcca94] = {你把黄铜擦得锃亮，把镜片擦得仿佛消失了。手指都冻麻了。穹顶的管理员检查了一遍，什么也没说，在这儿这就是夸奖。|你靠擦拭摸清了望远镜的整个身子，每颗螺丝、每个齿轮。你也领教了黄铜穹顶能冷到什么地步。|一个钟头的小圈圈。你爬下梯子时，镜片干净得让天空都近了些。}
+# en: Look through it instead
+opt.right.label [12e5ae] = 改为看一看
+# en: {{slot == "evening": You put your eye to the lens and the first stars come up out of the dark. The keeper finds you an hour later, the brass still dull.|It swings, as it likes, to the far shore and the mountains past it. The keeper finds you an hour later, the brass still dull.} You owe your revision an evening.|You look instead of polishing. The sky, close up, is worth an essay you won't now write.|You look, and the lens is so smeared it's like looking through honey, and still it's beautiful. The reading you'd planned waits for another night.}
+opt.right.say.1 [c09806] = {{slot == "evening": 你把眼睛凑到目镜上，第一批星星从黑暗中升起。一个钟头后管理员找到你，黄铜还是灰扑扑的。|它随心所欲地转向湖对岸和更远处的群山。一个钟头后管理员找到你，黄铜还是灰扑扑的。}你欠了复习一个晚上。|你没擦，光顾着看。凑近了看，天空值得一篇你如今写不成的论文。|你看了，镜片脏得像隔着蜂蜜，却依然很美。原本计划的阅读只好等下一个晚上了。}
+
+@event det_flight_divots
+# en: Filling the Divots
+title [32cb9c] = 填坑
+# en: {Detention on the Flight Field. Every bad landing of the week has left a divot, and every divot needs filling before the next practice.|The weekend's race has left a crater the exact shape of a broom-handle, and plenty of its friends.|Somebody from the race team has left a bag of turf by the fence, with a note: SORRY.} {One crater is large enough to sit in.|The brooms in the rack by the fence are unwatched.|{season == "winter": The turf is frozen into bricks.|The grass smells of rain.}}
+text [826fa2] = {禁闭地点在飞行场。这一周每次糟糕的落地都留下了一个坑，每个坑都得在下次训练前填平。|周末的比赛留下了一个扫帚柄形状的坑，还有一大堆它的同伴。|竞速队有人在围栏边留了一袋草皮，附一张字条：对不起。} {有一个坑大得能坐进去。|围栏边架子上的扫帚没人看管。|{season == "winter": 草皮冻成了砖头。|草地上有雨水的气味。}}
+# en: A grassy flight field pocked with crater-like divots, a student with a spade and a barrow of turf, brooms racked by the fence.
+scene [e96fd1] = 一片满是坑洼的草地飞行场，一个学生拿着铁锹推着一车草皮，扫帚靠在围栏边的架子上。
+# en: Fill every last one
+opt.left.label [b9a9fd] = 一个不落地填平
+# en: {You dig and stamp and dig until the field is level and your blisters have blisters.|By the last divot you can lift a full barrow one-handed. You mean to be proud of that once your arms stop shaking.|You fill the field flat. The next practice lands on it and makes new divots before you've left the fence.}
+opt.left.say.1 [133be3] = {你挖了填，填了踩，一直干到场地平整，水泡上又起了水泡。|填到最后一个坑时，你能单手推起一满车。等胳膊不抖了，你打算为此骄傲一下。|你把整片场地填平了。下一场训练落地时又砸出了新坑，你还没走出围栏。}
+# en: Borrow a broom while nobody's looking
+opt.right.label [219125] = 趁没人看着借把扫帚
+# en: {One lap of the field, low and fast, and back on the ground before the prefect looks up. The divots can wait for the wind.|You take a broom from the rack and fly the length of the field and back. Nobody saw. It was the best part of the week.|A lap, then another. You land beside your spade and pick it up, breathless, as the prefect turns round.}
+opt.right.say.1 [f232b3] = {绕场一圈，又低又快，在级长抬头前落回了地面。坑可以等风来填。|你从架子上抽了把扫帚，沿着场地飞了个来回。没人看见。这是这周最棒的一刻。|一圈，又一圈。你降落在铁锹旁，喘着气把它捡起来，级长正好转过身来。}
+# en: {The prefect turns round just as you take off. The whole race team, arriving for practice, sees you marched back to your barrow.|You're spotted halfway down the field. The prefect makes you fill the divot you made landing.|You get as far as the fence. The prefect is waiting there with your spade, and the team cheers, sarcastically.}
+opt.right.say.2 [0ca64e] = {你刚起飞，级长就转过了身。前来训练的整个竞速队都看着你被押回手推车边。|你飞到半场就被发现了。级长让你把自己落地砸出的坑也填上。|你只飞到了围栏。级长拿着你的铁锹在那儿等着，竞速队阴阳怪气地欢呼起来。}
+
+@event det_inkwells
+# en: Three Hundred Inkwells
+title [a512dc] = 三百个墨水瓶
+# en: {Detention in the Lecture Tower. Every inkwell in every hall, three hundred of them, to be filled before morning from one heavy jug.|Somebody has been drinking from one of the inkwells, and carved a confession into the desk beside it.|Three hundred inkwells, and a new jug, heavier than the last one.} {The lecturer's own well at the front is empty.|Someone has left their spectacles on a desk.|A paper bird has been left on a desk.}
+text [374f34] = {禁闭地点在讲堂塔。每间讲堂的每个墨水瓶，一共三百个，都得在早上之前用一只沉甸甸的大壶灌满。|有人从某个墨水瓶里喝过东西，还在旁边的课桌上刻了一段忏悔。|三百个墨水瓶，外加一只新壶，比上一只还沉。} {讲台上讲师自己的墨水瓶是空的。|有人把眼镜落在了课桌上。|课桌上留着一只纸鸟。}
+# en: A tiered lecture hall emptied for the night, rows of desks with brass inkwells, a student walking the rows with a big jug of ink.
+scene [1975db] = 夜里清空的阶梯讲堂，一排排课桌上摆着黄铜墨水瓶，一个学生提着一大壶墨水沿着过道走。
+# en: Fill them all, neatly
+opt.left.label [381266] = 全部仔细灌满
+# en: {Row by row, hall by hall, with the jug getting heavier. In the quiet you plan your next essay from first line to last.|Three hundred wells, not one spilled. Your arms ache, and somewhere around the hundredth well the problem you were stuck on came loose.|You fill the wells in the order you'd answer an exam, and mutter the answers as you go. The halls don't mind.}
+opt.left.say.1 [6b4f71] = {一排接一排，一间接一间，壶越来越沉。安静中你把下一篇论文从第一句到最后一句都想好了。|三百个墨水瓶，一滴没洒。你胳膊酸了，而在第一百个瓶子前后，你卡了很久的那道题忽然想通了。|你按答考卷的顺序灌墨水，边灌边念叨答案。讲堂们并不介意。}
+# en: Doctor the lecturer's well
+opt.right.label [84cceb] = 在讲师的墨水瓶里做手脚
+# en: {A drop of something that turns blue in the light, in the lecturer's well only. By noon tomorrow the whole year knows why the lecturer's hands are blue.|You add a pinch of sneezing powder to the front well. The next morning's lecture is punctuated, and nobody can prove a thing.|A drop of colour-change ink in the lecturer's well. The notes come out a shy pink. The class will talk of nothing else for a week.}
+opt.right.say.1 [7696d5] = {只在讲师的墨水瓶里滴了一滴遇光变蓝的东西。到明天中午，全年级都知道讲师的手为什么是蓝的了。|你往讲台的墨水瓶里撒了一撮喷嚏粉。第二天早上的课被喷嚏打断了好几回，谁也证明不了什么。|讲师的墨水瓶里多了一滴变色墨水。笔记写出来是羞答答的粉红色。全班会议论一个星期。}
+# en: {The prefect sees the little bottle in your hand. You refill all three hundred wells again, from fresh ink, until midnight.|The lecturer finds the blue ink before the lecture, and you in front of it. You stay until every well is clean and refilled.|Caught with the bottle. You empty and refill every well in the hall while the prefect reads aloud from the rules.}
+opt.right.say.2 [738ad9] = {级长看见了你手里的小瓶子。你用新墨水把三百个墨水瓶全部重新灌了一遍，一直干到午夜。|讲师在上课前发现了蓝墨水，也发现了站在它跟前的你。你留到每个墨水瓶都洗净重灌为止。|你被抓了个正着。级长大声念着校规，你把整间讲堂的墨水瓶倒空又灌满。}
+
+@event det_gargoyle_scrub
+# en: The Gargoyles' Bath
+title [4d9e77] = 石像鬼洗澡
+# en: {Detention on the north parapet. The gargoyles, a bucket and a brush, and a year of pigeons to scrub off them. The third one along has a draught behind it.|A pigeon has moved into the mouth of the cleanest gargoyle on the parapet, the third one along.|The wind is up, and the third gargoyle along is humming in it, very faintly.} {The wind tries to take the bucket.|The lake below is very still.|{season == "winter": The water in the bucket keeps freezing.|A pigeon watches you clean its work, offended.}}
+text [7120ed] = {禁闭地点在北面的城垛上。一排石像鬼，一只桶，一把刷子，还有积了一年的鸽子粪要刷掉。第三座后面有一股穿堂风。|一只鸽子住进了城垛上最干净的那座石像鬼嘴里，就是第三座。|起风了，第三座石像鬼在风里发出极轻的嗡鸣。} {风想把桶刮走。|下面的湖面一动不动。|{season == "winter": 桶里的水一直在结冰。|一只鸽子看着你清理它的杰作，很是不满。}}
+# en: A windy castle parapet lined with stone gargoyles, a student with a bucket and a stiff brush scrubbing pigeon mess off a grinning stone face, the lake far below.
+scene [697e46] = 刮着风的城堡城垛上排着石像鬼，一个学生提着桶、拿着硬毛刷，正刷掉一张咧嘴笑的石脸上的鸽子粪，远处下方是湖。
+# en: Scrub them till they grin
+opt.left.label [360135] = 刷到它们咧嘴笑
+# en: {You scrub until every face along the parapet is clean and grinning. Your knuckles are raw and you smell of pigeon.|A whole row of clean gargoyles. The pigeons are already lining up to undo it.|You scrub hard and fast in the wind. By the end you're freezing and the gargoyles look delighted.}
+opt.left.say.1 [47f0c4] = {你一直刷到城垛上每张脸都干干净净、咧着嘴笑。指节磨破了，身上一股鸽子味。|一整排干干净净的石像鬼。鸽子们已经排好队准备重新弄脏它们了。|你在风里又快又狠地刷。刷完时你冻僵了，石像鬼们看上去乐坏了。}
+# en: Linger at the third gargoyle
+opt.right.label [e30b83] = 在第三座石像鬼前逗留
+# en: {member(cartographers): {You check the chalk mark behind the third gargoyle is still fresh while you scrub, and smudge it a little, so it looks old.|You give the third gargoyle a very thorough wash, and the passage behind it a very thorough look. All clear.|You scrub the third gargoyle last and slowest, and leave it shining as if it had nothing to hide.}|{You scrub around the draught slowly, and it comes from no wall. You feel for the edge of something.|The stone behind the third one is warmer than it should be. You don't find a door. You're nearly sure there is one.|You spend so long on the third gargoyle that the prefect asks if you're in love with it. You learn nothing, and suspect a great deal.}}
+opt.right.say.1 [55d2ae] = {member(cartographers): {你一边刷，一边检查第三座石像鬼后面的粉笔记号是否还新鲜，又把它抹淡了些，好让它看上去像旧的。|你把第三座石像鬼洗得非常彻底，也把它后面的通道看得非常彻底。一切正常。|你最后才刷第三座，刷得最慢，把它擦得锃亮，仿佛它什么也没藏。}|{你慢慢绕着那股穿堂风刷，风却不是从哪面墙来的。你摸索着某样东西的边缘。|它后面的石头比该有的温度暖。你没找到门。你几乎可以肯定那儿有一扇。|你在第三座石像鬼上花了太久，级长问你是不是爱上它了。你什么也没查到，却怀疑了很多。}}

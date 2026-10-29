@@ -5,13 +5,13 @@ step. Status lives here, not in AGENTS.md.
 
 ## Next up
 
-Engine additions (state day in term, a pool as a recipe source, a sized boost), then T1.
+T2 (elixirs): move the draft into content, then zh-CN, the batch report and the critic. The engine additions (6cd4273) and T1 are done.
 
 ## Budget ledger
 
 | Batch | Planned | Written | Critic | zh-CN |
 |---|---:|---:|---|---|
-| T1 detention | 12 | | | |
+| T1 detention | 12 | 8 new + 2 moved | accepted (round 2) | 100% |
 | T2 elixirs | 26 | | | |
 | T3 cartographers | 14 | | | |
 | T4 Restricted Stacks + shared heist | 20 | | | |
@@ -20,11 +20,13 @@ Engine additions (state day in term, a pool as a recipe source, a sized boost), 
 
 ## Batch log
 
-(none yet)
+- **Engine** (6cd4273): a state's day in term, a pool as a recipe source, a sized boost; `test/threads1.test.js`.
+- **T1 detention:** 8 new cards in `content/events/detention.grim`, plus `detention_cauldrons` and `detention_lines` moved into `@pool detention`; `night_suspicion`'s second catch gives one month and keeps the lockout. Detention months a game: cautious 1.1, balanced 2.0, nightlife 4.4. Critic: rejected in round 1 (9 issues), accepted in round 2 with 2 polish fixes, both applied. Notes: `build/batches/T1-detention.notes.md`.
 
 ## Deviations and open questions
 
-(none yet)
+- Detention has 8 new cards, not about 10: the retrieval pass dropped 16 ideas as too close to existing cards (see the T1 notes).
+- Owl's Ink's `exam:large` is 12 (`boost_sizes: small 4 medium 8 large 12`). On balanced bots at turn 10 it moves A grades from 81% to 96%. Re-check it on weaker styles in the balance step.
 
 ---
 

@@ -398,15 +398,18 @@ tick:
   mood +2
   say: {~A free morning, a lie-in, a twinge of guilt.|You skip a lecture, and nobody seems to mind yet.}
 
+# Detention (threads 1): a term month's two visits are served in detention instead of on the map (the `detention`
+# pool, content/events/detention.grim). Its duration counts the term months it has taken; a break clears it.
 @state detention
 name: Detention
 kind: debuff
 art: lock
 duration: 1
-desc: Scrubbing cauldrons under the eye of a prefect.
+desc: Your afternoons and evenings belong to a prefect, a bucket and a long list of chores.
+day: morning=courses noon=social:1-2 afternoon=detention evening=detention night=world:1-2 midnight=special:0-1
 tick:
-  mood -3
-  say: {~Cauldrons scrubbed under a prefect's eye.|Evenings in detention, smelling of old potion.}
+  if break:
+    lose detention
 
 @state probation
 name: Academic Probation

@@ -1,0 +1,104 @@
+{
+  "name": "T1-detention",
+  "at": 1793255312219,
+  "files": [
+    "content/events/detention.grim"
+  ],
+  "events": [
+    "det_vault_catalogue",
+    "det_prefects_room",
+    "det_apology",
+    "det_candle_wax",
+    "det_great_lens",
+    "det_flight_divots",
+    "det_inkwells",
+    "det_gargoyle_scrub"
+  ],
+  "contentHash": "fc6895",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "alarms": [
+        "aggressive: mood lasts 32 term months, health the run (design: breaks down by 5 / 9)",
+        "118 event(s) never seen by any play style: between_suitors_compare, between_couple_bubble, mir_between_owl, lyra_become_close, bram_become_close, ilse_become_close, corvin_locked_out, corvin_bad_odds, ilse_frost_door, ilse_contempt, choose_origin, career_return_field_station, hs_kael_sister, timeloop_noticed, crisis_probation, marisol_trust, mabel_cup, grimsby_mind_the_shop, picture_lyra, picture_bram, picture_maud, picture_thorne, picture_brask, hs_go_down_early, hs_key_recover, hs_aftermath_freed, xchg_farewell, intro_lunch, nudge_footnote, nudge_red_ink, item_hazel_tuned, item_hazel_water, item_ashwood_lyra, item_frost_ward_cold, item_spoon_daughters, sell_a_secret, scandal_secret_out, midnight_newt_cards, midnight_passage_mapping, corvin_runaway, gargoyle_passage_parapet_cards, cartographers_lantern_patrol, letter_old_friend, letter_corvin_no_jokes, ring_cameo_ilse, headmistress_tower_quiet_hour, gig_library_stocktake, gig_library_lost_shelf, gig_library_last_day, gig_newt_rush, gig_newt_brawl, gig_newt_fire, gig_pell_night_knock, gig_post_storm_run, gig_post_wrong_parcel, gig_post_last_parcel, break_work_opening_up, break_work_regular, lesson_rime, lesson_compel, lesson_torment, lesson_extraction, lesson_heartprice, probation_advisor, probation_letter, owl_six_oclock, verdant_head_gardener_show, library_senior_banned_book, library_senior_night_flood, tavern_manager_grisk_offer, lyra_partner_neglect, seraphine_confess_generic, mir_notebooks, scandal_memoir_book, scandal_ex_tells_all, evo_final_practical, soc_make_peace, jealousy_two_invitations, jealousy_cold_supper, fame_after_you, spot_witness_promise, spot_history_essay, spot_villain_play, ww_tree_bram, maud_worse_out, ww_mastery_map, offer_heartwood_wand, offer_spinner_silk_robe, item_lodestone_kael, item_lodestone_stacks, item_tine_brask, item_heartwood_tobias, item_thorn_wants, item_thorn_brask, item_locket_midnight, item_silk_corvin, item_grimoire_isolde, ww2_grumpy_oak_fight, ww2_stag_tine, ww3_shadow_stag_fight, ww3_elder_oak_fight, ww3_masked_offer, ww4_silence, ww4_rime_hollow, ww4_web_halls, ww4_moonpetal_bloom, ww4_spinner_court, ww_hush_heart, ww_spinner_meet, ww_spinner_fight, ww_spinner_fight_weak, ww_spinner_hoard, ww_cocooned, ww_outcast_meet, ww_outcast_table, ww_outcast_fight, ww_outcast_victory, ww_outcast_loss"
+      ]
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 61,
+      "total": 61
+    }
+  },
+  "critic": {
+    "batch": "T1-detention",
+    "accept": false,
+    "summary": "A good set: varied canon-true chores (the vault, the Great Hall's candles, the third gargoyle), real trades, and the pool and state wiring are clean. Rejected for repeats that will grate: the cards share the stock 'The X again.' / 'You know X by name now' ladder while a detention month deals two of them back to back. There are also sequence lines that pay off a choice or imply the same classmate as last time, and several lines that break when a card lands in the afternoon. More than 1 in 5 cards has a fix.",
+    "issues": [
+      {
+        "event": "(batch) det_vault_catalogue, det_prefects_room, det_apology, det_great_lens, det_flight_divots, det_inkwells, det_gargoyle_scrub, det_candle_wax, detention_cauldrons",
+        "problem": "The sequence steps follow one stock ladder, which pools.md says to avoid. Step 2 is 'The vault again', 'The prefects' room again', 'The great lens again', 'The divots again', 'The inkwells again', 'The gargoyles again' and 'Another apology to write', and step 3 is 'Wax again'. The last step is 'You know these cauldrons by name now', 'You have names for some of them', 'You know the gargoyles by their faces now', 'You know the lens's every scratch' and 'You can read a whole race in the divots'. A detention month deals two of these cards in one day, so the player reads the same opener twice in a row.",
+        "fix": "Rewrite the step-2 and step-3 openers of each card as a development particular to that place. For example: the goblin over the vault door remembers you and says so, loudly; the rota has a new prefect's initials on it; a pigeon has moved into the gargoyle you scrubbed cleanest. Keep at most one 'again' in the whole pool and drop the 'you know them by name now' beat from all but one card."
+      },
+      {
+        "event": "det_prefects_room",
+        "problem": "The cast role is drawn fresh each showing, but text step 2 says '{other} is in again', which implies the same classmate was in the ledger last time. Win say step 3 'You skip {other}'s line again' implies both the same classmate and an earlier choice. Left say step 3 'The rota has changed; you learn the new one too' pays off a choice the player may never have made (sequences count showings, not choices). Left say step 2 'the dullest useful evening you've had' is wrong when the card is dealt in the afternoon.",
+        "fix": "Change step 2 to '{other} is in this week, for \"a tone of voice\".' Change win step 3 to 'You leave out {other}'s line…' without 'again'. Change left step 3 to 'A fresh rota is pinned up; you learn it without moving your lips.', or gate it on flag(prefect_rota). Write '{slot == \"evening\": evening|afternoon}' in step 2."
+      },
+      {
+        "event": "det_candle_wax",
+        "problem": "Text step 1 says the tables must be scraped 'before breakfast… Today it's you', and step 2 says 'a night's worth of wax'. The card is only dealt in the afternoon or the evening.",
+        "fix": "Change step 1 to '…drip all through every meal, and between meals someone must scrape the long tables clean.' Change step 2 to '…and a meal's worth of wax.'"
+      },
+      {
+        "event": "detention_cauldrons",
+        "problem": "Now that this card is in the detention pool it can come in the afternoon, but the right label 'Talk your way to an early night' and the win says 'at nine they wave you off' / 'You talk until nine' assume the evening.",
+        "fix": "Relabel it 'Talk your way out early'. Replace 'at nine' with '{slot == \"evening\": at nine|an hour early}', or with 'an hour early' in both lines."
+      },
+      {
+        "event": "det_vault_catalogue",
+        "problem": "Text step 2 'You have reached the shelf of cursed dice' and left step 3 'You finish the dice' describe cataloguing progress the player made only if they picked left earlier. The right option's alignment -tiny is shown only in variant 3, the love letter. Variants 1 and 2 read the faculty's confiscation slips and excuses, which is not a moral act. 'Fanged frisbee' uses a real-world trademark.",
+        "fix": "Make step 2 the prefect's assignment ('Today's shelf is the cursed dice.') so it doesn't depend on past picks. Make every right-say variant read something private left with the thing (a confiscated diary, a note passed in class), or drop the alignment. Write 'A fanged flying disc' instead of 'A fanged frisbee'."
+      },
+      {
+        "event": "det_apology",
+        "problem": "In the deceive check you are fooling the professor who reads the letter, a faculty member, but it is pitched at 'apprentice' (mundane obstacles). In win say variant 3, 'You feel nothing, which is a little alarming' contradicts the win's mood +small. Lose variant 2 doesn't show its health -tiny.",
+        "fix": "Use 'challenge deceive adept- wild' (the professor, eased for a small ask), or make the obstacle a prefect who files the letters unread. Rewrite win variant 3 to show the pleasure ('…and enjoy it more than you should'). In lose variant 2 add the cost, for example '…on a fresh sheet, until your hand cramps and the hall goes cold.'"
+      },
+      {
+        "event": "det_great_lens",
+        "problem": "Canon (place observatory) says 'The great telescope points wherever it likes; usually that is the right place.' Right say variant 1 has you aim it: 'You turn it on the far shore, and the mountains past it.'",
+        "fix": "Let the telescope choose: 'It swings, as it likes, to the far shore and the mountains past it.' (Do the same in the evening branch if it implies aiming.)"
+      },
+      {
+        "event": "det_gargoyle_scrub",
+        "problem": "The right label 'Take your time at the third one' comes on the first showing, but text step 1 never mentions a third gargoyle, so 'the third one' points at nothing.",
+        "fix": "Relabel it 'Linger at the third gargoyle', or add the third gargoyle to text step 1 ('The third one along has a draught behind it.')."
+      },
+      {
+        "event": "night_suspicion",
+        "problem": "The say promises 'A month of detention', but the card has only 'defer: off_campus'. A second catch in a term's last month, by a player spending the break at the castle, fires during the break, and the detention state's tick clears it ('if break: lose detention') before it is served.",
+        "fix": "Write 'defer: off_campus or break' so the morning-after card waits for the first term month, as it already does for players away from campus."
+      }
+    ]
+  },
+  "spotCheck": [
+    "det_vault_catalogue"
+  ],
+  "accepted": false
+}
