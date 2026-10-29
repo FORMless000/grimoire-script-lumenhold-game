@@ -1,0 +1,231 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/cartographers.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@thread carto_master_map
+# en: The Master Map
+name [d14ae0] = 总图
+# en: The Cartographers' Master Map has two great blanks nobody has filled in thirty years. Draw two lines there, and Corvin will ask you to keep the map with him.
+premise [b3906a] = 制图社的总图上有两大块空白，三十年没人填过。在那儿画下两条线，科尔文就会请你和他一起保管总图。
+# en: Corvin unrolled the Master Map and showed you its two great blanks. "Two lines on it," he said, "and you keep it with me."
+journal.1 [c9c73f] = 科尔文展开总图，给你看上面的两大块空白。“在上面画两条线，”他说，“你就和我一起保管它。”
+# en: You charted the stair under the last chained shelf, down to the deep stacks and the confiscation vault.
+journal.2 [e3474f] = 你在最后一排锁链书架下面画出了那段楼梯，一直通到深层书库和没收库。
+# en: You found the seventh tower's second stair, inside the wall, from the cellars to the landing of candles.
+journal.3 [2905be] = 你找到了第七塔的第二道楼梯，藏在墙里，从地窖一直通到蜡烛平台。
+# en: You rode the old book-lift down its shaft, from the bindery to the bottom of the deep stacks.
+journal.4 [55a71b] = 你坐着旧书梯顺着竖井下去，从装订室一直到深层书库的最底层。
+# en: You climbed the seventh tower's old chimney from the cellars and came out in a classroom a floor above the landing of candles.
+journal.5 [6a0ea1] = 你从地窖爬上第七塔的旧烟囱，从蜡烛平台上面一层的一间教室里钻了出来。
+# en: Corvin put the Master Map in your hands. You keep it together now.
+journal.6 [56b6e5] = 科尔文把总图放到你手里。现在由你们俩一起保管它。
+# en: You told Corvin to keep the map himself. He looked relieved.
+journal.7 [7dc114] = 你让科尔文自己保管总图。他看起来松了一口气。
+
+@event carto_map_blanks
+# en: The Blanks on the Map
+title [bc61e9] = 总图上的空白
+# en: {seen(carto_map_blanks) > 1: Corvin has the Master Map out again, and the two blanks are still white as snow. "Still thirty years," he says. "Still yours if you want them."|Corvin has the Master Map out on the passage floor, weighted with candle stubs: silver lines that move a little, like breathing, and two great blanks. One is under the library, below the last chained shelf; one is inside the seventh tower's wall. "The last Keeper left it to me this summer," he says. "Two lines on those, and you keep it with me. Fancy it?"}
+text [f36fa0] = {seen(carto_map_blanks) > 1: 科尔文又把总图拿了出来，那两块空白还是白得像雪。“还是三十年，”他说。“你要的话，还是你的。”|科尔文把总图摊在通道的地上，四角压着蜡烛头：会微微移动的银线，像在呼吸，还有两大块空白。一块在图书馆底下，最后一排锁链书架的下方；一块在第七塔的墙里面。“上一任保管人今年夏天把它留给了我，”他说。“在那两块上画两条线，你就和我一起保管它。有兴趣吗？”}
+# en: A huge map in shifting silver ink spread on the stone floor of a secret passage, weighted with candle stubs, two regions of it completely blank.
+scene [6c3a33] = 秘密通道的石地上摊着一张巨大的地图，银色墨线不停变动，四角压着蜡烛头，其中两块区域完全空白。
+# en: "Show me where to start."
+opt.left.label [372df6] = “告诉我从哪儿开始。”
+# en: Corvin grins and rolls the map to the library end. "The chained shelf, then," he says. "Bring chalk. Don't touch the chains."
+opt.left.say.1 [e13ce7] = 科尔文咧嘴一笑，把地图卷到图书馆那一端。“那就从锁链书架开始，”他说。“带上粉笔。别碰那些锁链。”
+# en: "Not this year."
+opt.right.label [7485e3] = “今年不行。”
+# en: {seen(carto_map_blanks) > 1: "One day," says Corvin, and rolls it up without a joke this time.|"Thirty-one years, then," says Corvin, and rolls the map up a little too neatly.}
+opt.right.say.1 [13bda9] = {seen(carto_map_blanks) > 1: “总有一天，”科尔文说，这次卷起地图时没开玩笑。|“那就三十一年了，”科尔文说着把地图卷起来，卷得有点太整齐了。}
+
+@event carto_deep_stacks
+# en: The Stair Under the Chained Shelf
+title [3e1ddc] = 锁链书架下的楼梯
+# en: Below the last chained shelf in the Restricted Section, the Master Map simply stops. The chains on that shelf run down through the floor, and at night something below pulls them taut. Corvin's way in is a book-return hatch nobody has locked since it was built. The shelf is yours to chart.
+text [6a845b] = 到了禁书区最后一排锁链书架的下方，总图就断了。那排书架的锁链穿过地板往下延伸，到了夜里，下面有什么东西把它们拉得紧紧的。科尔文的进门办法是一个还书口，自打造好就没人锁过。这排书架归你来画。
+# en: The bottom shelf of a dark library aisle, iron chains running from the books down through holes in the floorboards, a student kneeling with a stub of chalk.
+scene [3ae0b9] = 黑暗的图书馆过道里最底层的书架，铁链从书上垂下，穿过地板上的孔洞，一个学生拿着一截粉笔跪在那里。
+# en: Find the stair and pace it down
+opt.left.label [80382b] = 找到楼梯，一步步量下去
+# en: Behind the shelf's kickboard, a stair goes down forty-four steps, between shelves that breathe in their sleep, to stacks no lamp reaches. At the bottom is a door with a prefects' padlock: the confiscation vault. You chart it all, and come up very quietly.
+opt.left.say.1 [fa08d7] = 书架踢脚板后面有一道楼梯往下走了四十四级，两边的书架在睡梦中呼吸，一直通到灯光照不到的书库。最底下是一扇挂着级长挂锁的门：没收库。你把这一切都画了下来，然后非常安静地上来了。
+# en: You find the stair, and it turns more times than it has steps. You come up in the same aisle you went down from, with your chalk worn to nothing and the chains above you swinging.
+opt.left.say.2 [54fabc] = 你找到了楼梯，可它转的弯比台阶还多。你从下去的那条过道里又冒了出来，粉笔用光了，头顶的锁链还在晃。
+# en: Copy what the old margins say
+opt.right.label [8fade4] = 抄下旧图页边写的东西
+# en: The oldest map in the club has a note in the margin by the chained shelf, in brown ink: "Stair: yes. Down: no. Ask the chains." You copy it out neatly. The blank stays blank.
+opt.right.say.1 [666def] = 社里最老的那张地图上，锁链书架旁的页边有一行褐色墨水写的批注：“楼梯：有。往下：别。去问锁链。”你工工整整地抄了下来。空白还是空白。
+
+@event carto_tower_stair
+# en: Two Strides Fatter
+title [79c577] = 胖了两步
+# en: The seventh tower's blank on the Master Map isn't its own stair, locked as it is; that's on every old plan. It's the wall. Corvin has measured the tower from outside and from in, and the outside is two strides fatter. "There's a second stair in there," he says. "A servants' stair, from the cellars up. Find its door."
+text [b4ebe4] = 总图上第七塔的空白不在它自己的楼梯上，那段楼梯虽然锁着，每张旧图上都有。空白在墙里。科尔文从外面和里面各量过一次塔，外面要胖两步。“墙里还有一道楼梯，”他说。“仆人走的楼梯，从地窖往上。找到它的门。”
+# en: A student in a dark vaulted cellar pressing an ear to a curved stone wall, a candle and a coil of measuring string at their feet.
+scene [89996c] = 昏暗的拱顶地窖里，一个学生把耳朵贴在一面弧形石墙上，脚边放着一支蜡烛和一卷量绳。
+# en: Sound the cellar walls
+opt.left.label [7b7edf] = 敲遍地窖的墙
+# en: Behind a rack of empty bottles, one stone rings hollow. The door behind it opens on a stair one shoulder wide, curling up inside the wall. You follow it to a loose panel that comes out on the landing of candles, halfway up, and nobody on the main stair any the wiser.
+opt.left.say.1 [b1653b] = 在一排空酒瓶架后面，有一块石头敲起来是空的。后面的门通向一道只容一肩的楼梯，在墙里盘旋而上。你顺着它走到一块松动的嵌板前，出来就是半腰的蜡烛平台，主楼梯上的人谁也没察觉。
+# en: You knock on stone until your knuckles are raw and every wall in the cellar sounds the same. The tower keeps its two strides to itself, for now.
+opt.left.say.2 [329b96] = 你敲石头敲到指节都破了，地窖里每面墙听起来都一样。塔把它那两步暂时留给了自己。
+# en: Measure it again from outside
+opt.right.label [f9127b] = 再从外面量一次
+# en: You walk the tower's foot in the cold with Corvin's string, and get the same answer he did: two strides. Your fingers are numb and the blank is still blank, but now you believe in it.
+opt.right.say.1 [7c1a96] = 你拿着科尔文的绳子在寒风里绕塔脚走了一圈，得到和他一样的答案：两步。你的手指冻麻了，空白还是空白，但现在你相信它了。
+
+@event carto_book_lift
+# en: The Book-Lift
+title [a84949] = 书梯
+# en: Under the library, the bindery has an old book-lift: a wooden box on a rope in a shaft, from the days when the stacks went deeper than anyone now admits. The rope is new. Somebody still uses it.
+text [013cec] = 图书馆底下的装订室里有一部旧书梯：竖井里一根绳子吊着一只木箱，是书库比如今人们承认的还要深的那个年代留下的。绳子是新的。还有人在用它。
+# en: A dusty wooden box on a rope inside a narrow shaft, an old library bindery around it, a student climbing into the box with a candle.
+scene [74721f] = 一间旧的图书馆装订室，狭窄的竖井里一根绳子吊着一只落满灰的木箱，一个学生举着蜡烛往箱里爬。
+# en: Ride it down
+opt.left.label [db9ed4] = 坐它下去
+# en: The box lowers you in the dark past floor after floor of shelves, and stops at the bottom of the deep stacks so gently it might know you. A quicker way down than any stair. You ink the shaft onto the map before you've stopped shaking.
+opt.left.say.1 [2a3fcf] = 木箱载着你在黑暗中经过一层又一层书架，在深层书库的最底层停下，轻得好像认识你。比哪段楼梯都快的一条下去的路。你还没停止发抖，就把竖井画上了总图。
+# en: The rope slips a yard, then another, then catches. You climb out at the first floor down with skinned palms and a new respect for whoever oils it.
+opt.left.say.2 [6de146] = 绳子滑了一码，又一码，然后卡住了。你在往下第一层就爬了出来，掌心擦破了皮，对那个给绳子上油的人多了一分敬意。
+# en: Find out who oils the rope
+opt.right.label [199e38] = 打听是谁在给绳子上油
+# en: Nobody in the bindery will say. Footnote, the library cat, sits by the shaft all afternoon, as if waiting for a lift that never comes.
+opt.right.say.1 [660f61] = 装订室里没人肯说。图书馆的猫脚注在竖井边坐了一下午，好像在等一趟永远不来的书梯。
+
+@event carto_tower_chimney
+# en: Wide as a Coffin
+title [3715f2] = 宽得像口棺材
+# en: The old classrooms in the seventh tower each had a fireplace, and the fireplaces share one chimney, which starts in the cellar beside your wall stair. A Cartographer fifty years gone wrote in the margin beside it: "Chimney: wide as a coffin. Climbable. Don't."
+text [6a4f79] = 第七塔的旧教室各有一个壁炉，这些壁炉共用一根烟囱，烟囱就从你那道墙中楼梯旁边的地窖里起头。一个五十年前的制图社成员在旁边的页边写道：“烟囱：宽如棺材。能爬。别爬。”
+# en: A student wedged inside a narrow soot-black chimney, climbing with back and feet, a lantern hung from their belt lighting the brick above.
+scene [bd004b] = 一个学生卡在狭窄乌黑的烟囱里，背抵一边、脚撑一边往上爬，腰间挂着的提灯照亮上方的砖壁。
+# en: Climb it
+opt.left.label [494793] = 爬上去
+# en: Back against one side, feet against the other, soot to the elbows. You come out of a classroom grate a floor above the landing of candles, past the wall stair's slow part, and sit in a century of dust laughing quietly.
+opt.left.say.1 [af05ef] = 背抵一边，脚撑另一边，煤灰一直沾到手肘。你从蜡烛平台上面一层的一间教室的炉栅里钻出来，绕过了墙中楼梯最慢的那一段，坐在一个世纪的灰尘里悄悄笑了起来。
+# en: Halfway up the chimney narrows, and so do you, and for a long minute neither of you gives. You come down the way you went up, black from head to foot.
+opt.left.say.2 [122bc2] = 爬到一半烟囱变窄了，你也只好缩起来，有好一会儿谁都不肯让步。你原路下来，从头到脚一身黑。
+# en: Send a lantern up on a cord
+opt.right.label [60c97b] = 用绳子把提灯吊上去
+# en: The lantern goes up and up and comes back sooty, swinging. The margin was right about the coffin.
+opt.right.say.1 [f81041] = 提灯一直往上升，回来时晃晃悠悠，满是煤灰。页边那句关于棺材的话说得没错。
+
+@event carto_map_keeper
+# en: The Keeping of the Map
+title [c5cf29] = 总图的保管
+# en: The Cartographers gather round the Master Map with candles. {(flag(heist_stacks_known) and (flag(heist_tower_known) or flag(carto_book_lift))) or (flag(heist_tower_known) and flag(carto_tower_chimney)): Where the blanks were, your lines are, faintly silver and not quite settled.|The blanks are still mostly blank, but the club has watched you try. "Close enough is a Cartographer's whole trade," says Corvin.} "The club says you keep it with me. There's a test. There's always a test. Walk from here to the Thursday stair with the map in your head and no candle."
+text [074531] = 制图社的人举着蜡烛围在总图旁。{(flag(heist_stacks_known) and (flag(heist_tower_known) or flag(carto_book_lift))) or (flag(heist_tower_known) and flag(carto_tower_chimney)): 原来空白的地方，现在是你画的线，微微泛着银光，还没完全定下来。|空白大多还是空白，但社里的人看着你努力过。“差不多就是制图社的全部手艺，”科尔文说。}“社里说了，由你和我一起保管它。有个考验。总有个考验。不带蜡烛，凭脑子里的地图，从这儿走到周四楼梯。”
+# en: A circle of students with candles in a secret passage, one of them holding out a rolled map in silver ink to another.
+scene [98f310] = 秘密通道里，一圈学生举着蜡烛，其中一个把一卷银墨地图递给另一个。
+# en: Walk it in the dark
+opt.left.label [e58a75] = 摸黑走过去
+# en: You walk it blind, every turning where the map says it is, and at the foot of the Thursday stair the club is waiting with candles. Corvin puts the rolled map in your hands. "Keepers," he says, and for once he doesn't laugh after.
+opt.left.say.1 [9b06b1] = 你闭着眼走完了全程，每个拐角都在地图说的地方，在周四楼梯脚下，社里的人举着蜡烛等着你。科尔文把卷好的地图放到你手里。“两位保管人，”他说，这一次他说完没有笑。
+# en: Three turnings in, the castle moves one. You walk into a wall, very gently, in the dark, and stand there until someone comes with a candle. "It wants more of you," says Corvin kindly. "Come back."
+opt.left.say.2 [4960f9] = 走到第三个拐角，城堡挪动了一个。你在黑暗里非常轻地撞上了一堵墙，站在那儿直到有人拿着蜡烛过来。“它还想要你多付出一点，”科尔文温和地说。“再来。”
+# en: "It's yours, Corvin. Keep it."
+opt.right.label [a70c61] = “它是你的，科尔文。你来保管。”
+# en: Corvin looks at you for a long moment, then rolls the map back up and tucks it into his coat, where it has lived since the summer. He looks relieved, and then embarrassed about looking relieved.
+opt.right.say.1 [7bc74f] = 科尔文看了你很久，然后把地图卷回去，塞进外套里，它从夏天起就一直待在那儿。他看起来松了一口气，接着又为自己松了一口气而难为情。
+
+@event carto_forged_map
+# en: A Map for Sale
+title [5ea074] = 出售地图
+# en: A first-year is selling "the secret map of the castle" in the corridor for a crown a copy. It is a forgery, and a good one, and every passage on it leads, by a lovely roundabout way, straight to the prefects' office. Corvin swears it wasn't him.
+text [c5235f] = 一个一年级生在走廊里卖“城堡秘密地图”，一个克朗一份。那是伪造的，还造得很好，上面每一条通道都绕着一条可爱的弯路，直通级长办公室。科尔文发誓不是他干的。
+# en: A first-year in a corridor selling folded paper maps from a satchel to a small crowd of younger students.
+scene [835972] = 走廊里，一个一年级生从书包里拿出折好的纸地图，卖给一小群更小的学生。
+# en: Let it sell
+opt.left.label [bc5a41] = 让它卖下去
+# en: You get a copy for the club's wall. All week first-years turn up, breathless, at the prefects' door. The prefects are delighted. Nobody looks behind the third gargoyle at all.
+opt.left.say.1 [eca176] = 你弄到一份挂在社里的墙上。整整一个星期，一年级生们气喘吁吁地出现在级长办公室门口。级长们高兴极了。根本没人去看第三座石像鬼后面。
+# en: Buy up the stock and burn it
+opt.right.label [6df54a] = 把货全买下来烧掉
+# en: You buy the whole satchel and burn it in the passage grate. The first-year is thrilled with the money. Somewhere, the forger is very annoyed.
+opt.right.say.1 [bb2fcb] = 你买下了整书包，在通道的炉栅里烧了。那个一年级生拿到钱高兴得不得了。在某个地方，那个伪造者非常恼火。
+
+@event carto_quiet_prefect
+# en: The Prefect Who Doesn't Look
+title [114054] = 不看的级长
+# en: A senior prefect walks the north parapet on her rounds and never once looks at the third gargoyle. This time she stops beside it, still not looking. "The draught behind this one's got worse," she says to the dark. "Tell whoever needs telling. And somebody's been eating the grapes in the dish. Those were mine."
+text [d57789] = 有位高年级级长巡逻时总要走北边的女儿墙，却从来不看第三座石像鬼一眼。这一次她在它旁边停下，还是不看它。“这一座后面的穿堂风更大了，”她对着黑暗说。“告诉该知道的人。还有，有人在吃盘子里的葡萄。那是我的。”
+# en: A senior prefect with a lantern on a windy parapet at night, standing beside a gargoyle and not looking at it, talking to a student in the shadows.
+scene [f2cf13] = 夜里刮风的女儿墙上，一位提着灯的高年级级长站在一座石像鬼旁却不看它，对暗处的一个学生说着话。
+# en: Trade a shortcut for her rota
+opt.left.label [28d384] = 用一条近路换她的值班表
+# en: You give her the back way from the parapet to the prefects' common room, four minutes quicker. She gives you, without a word, the times of every round on her rota. Corvin, when he hears, says giving routes away is how clubs end.
+opt.left.say.1 [3e5707] = 你把从女儿墙到级长休息室的后路告诉了她，能快四分钟。她一言不发，把她值班表上每一轮巡逻的时间都给了你。科尔文听说后说，把路线送人，社团就是这么完蛋的。
+# en: Play dumb
+opt.right.label [98ad99] = 装傻
+# en: "Draught?" you say. "What gargoyle?" She almost smiles, and walks on, swinging the lantern. You keep the club's secrets, and she keeps hers.
+opt.right.say.1 [d78563] = “穿堂风？”你说。“什么石像鬼？”她差点笑了，晃着灯走开了。你守着社里的秘密，她守着她的。
+
+@event carto_member_out
+# en: One Map Fewer
+title [91f250] = 少一张地图
+# en: One of the club's seniors has been caught twice this term, and wants out before a third. The club's rule is that leavers burn their maps. She has a year of them in a bundle, and she asks you to sit with her while she does it. "Or hide them," she says. "I can't watch them go."
+text [a954d3] = 社里一位高年级生这学期已经被抓了两次，想在第三次之前退出。社里的规矩是，退出的人要烧掉自己的地图。她攒了一年的地图捆成一捆，请你陪她一起烧。“或者藏起来，”她说。“我看不得它们烧掉。”
+# en: Two students kneeling by a small grate in a stone passage, a stack of hand-drawn maps between them, one holding a lit match.
+scene [97e332] = 石头通道里，两个学生跪在一个小炉栅旁，中间放着一叠手绘地图，其中一个举着一根点着的火柴。
+# en: Burn them with her
+opt.left.label [a80d45] = 陪她一起烧
+# en: You feed the grate one map at a time and she reads each one aloud before it goes. At the end she thanks you, and goes up to bed a member of nothing, and lighter.
+opt.left.say.1 [f56653] = 你一张一张地把地图喂进炉栅，每一张烧掉之前她都大声念一遍。最后她向你道谢，上楼睡觉去了，不再属于任何社团，也轻松了。
+# en: Keep them for the club
+opt.right.label [1c2cba] = 替社里留着
+# en: You hide the bundle in the passage where only the club will find it, which means carrying a caught-twice member's maps through the castle after curfew. She doesn't ask where. She'll know, every time she passes the gargoyle, that she didn't really leave.
+opt.right.say.1 [850c61] = 你把那捆地图藏在通道里只有社里的人才找得到的地方，这意味着要在宵禁后带着一个被抓过两次的社员的地图穿过城堡。她没问在哪儿。每次经过那座石像鬼，她都会知道，自己并没有真正离开。
+
+@event carto_recruit
+# en: Your Turn to Invite
+title [69d65f] = 轮到你邀请
+# en: Corvin hands you a black card, blank but for a silver line that wanders. "Members bring members," he says. "Your turn. Who?" You think of {pick} before he's finished asking.
+text [43c69a] = 科尔文递给你一张黑卡片，上面空空的，只有一道蜿蜒的银线。“社员带社员，”他说。“轮到你了。请谁？”他还没问完，你就想到了{pick}。
+# en: A black card with a silver map drawn on it being slid under a dormitory door in a dark corridor.
+scene [ae6848] = 黑暗的走廊里，一张画着银色地图的黑卡片正被塞进宿舍的门缝。
+# en: Slip it under {pick}'s door
+opt.left.label [083279] = 把它塞进{pick}的门缝
+# en: You slide the card under {pick}'s door at midnight and run. Three nights later {pick} comes in under the gargoyle with a candle and a look you'll remember: someone finding out the castle is bigger than they thought.
+opt.left.say.1 [5dc605] = 午夜你把卡片塞进{pick}的门缝就跑了。三个晚上之后，{pick}举着蜡烛钻到石像鬼底下，脸上的神情你会一直记得：一个人发现城堡比自己以为的要大。
+# en: "Nobody I'd trust with it."
+opt.right.label [3e88a5] = “没有我信得过的人。”
+# en: Corvin takes the card back. "Careful's a good thing in a Cartographer," he says, and doesn't sound as if he means it.
+opt.right.say.1 [fb1948] = 科尔文把卡片收了回去。“小心对制图社的人来说是好事，”他说，听上去并不是真心的。
+
+@event gargoyle_midnight_one_short
+# en: One Short
+title [86f07d] = 少了一个
+# en: Midnight under the gargoyle, and the headcount comes up one short. {~Someone went into the passages alone an hour ago, to settle a bet about a stair that only goes down on wet nights.|Someone took a dare about the kitchens' dumbwaiter, and the dare was "alone".|A new member, it turns out, sleepwalks, and nodded off on the bench an hour ago, and the bench is empty.} Nobody says anything for a moment.
+text [15b2bf] = 午夜，石像鬼底下点人数，少了一个。{~有人一个钟头前独自进了通道，为了一个赌：有段楼梯只在下雨的夜里往下通。|有人接了个关于厨房送菜升降机的赌，赌注是“一个人去”。|原来有个新社员会梦游，一个钟头前在长凳上打起了盹，现在长凳空了。}一时间谁都没说话。
+# en: A huddle of students with candles in a dark stone passage, one of them counting heads, an empty gap in the circle.
+scene [86d231] = 黑暗的石头通道里，一群学生举着蜡烛挤在一起，其中一个在点人数，圈子里空着一个位置。
+# en: Go after them
+opt.left.label [8fffa5] = 去找他们
+# en: {~You find them two floors down, on a step that wasn't there yesterday and can't now be got off. You talk them down one stride at a time.|You find them stuck in the dumbwaiter between two floors, very glad of company. You wind them down by the rope, slowly, and walk them back.|You find them on the parapet, asleep on their feet and walking the edge. You turn them round by the shoulders, gently, and walk them home.}
+opt.left.say.1 [1f0f54] = {~你在往下两层的地方找到了那个人，坐在一级昨天还不存在、现在又下不来的台阶上。你一步一步把那人劝了下来。|你在两层楼之间的送菜升降机里找到了那个人，卡在那儿，有人作伴高兴得不得了。你拉着绳子慢慢把那人放下来，送了回去。|你在女儿墙上找到了那个人，站着睡着了，沿着墙边走。你轻轻扶着那人的肩膀让人转过身来，送回了家。}
+# en: {~The passages turn you round twice, and a prefect's lantern turns you round a third time. The missing member gets back on their own at dawn, grinning.|You never find the dumbwaiter's shaft, and a prefect nearly finds you. They come back at dawn, floury and triumphant.|You search every passage but the right one. At dawn they wake in their own bed, with no idea anyone looked.}
+opt.left.say.2 [00da66] = {~通道把你转了两圈，一位级长的提灯又把你转了第三圈。失踪的那位天亮时自己回来了，笑嘻嘻的。|你始终没找到升降机的竖井，倒差点被一位级长找到。那人天亮时回来了，满身面粉，得意洋洋。|你把每条通道都找遍了，就是没找对那一条。天亮时那人在自己床上醒来，完全不知道有人找过自己。}
+# en: Wait with the others
+opt.right.label [8454ee] = 和其他人一起等
+# en: {~You sit in the circle with the gap in it, and at dawn they climb back out of the wall, filthy and triumphant. The waiting was worse than going.|At dawn they come back through the wall, floury to the elbows, with a story nobody believes. The waiting was worse than going.|At dawn somebody finds them asleep in the library. The waiting was worse than going.}
+opt.right.say.1 [1e4631] = {~你坐在那个缺了一个人的圈子里，天亮时那人从墙里爬出来，满身脏污，得意洋洋。等待比自己去找还难熬。|天亮时那人从墙里回来，面粉一直沾到手肘，讲了一个没人相信的故事。等待比自己去找还难熬。|天亮时有人发现那人睡在图书馆里。等待比自己去找还难熬。}
+
+@event gargoyle_midnight_lost_map
+# en: A Map on the Wrong Table
+title [48c545] = 放错桌子的地图
+# en: {~A second-year Cartographer dropped their copy of the kitchens' passages, and it's turned up on a table in the prefects' common room.|One of the club's old route maps, the one to the boathouse, is lying on the prefects' study desk, where a cleaner left it.|A first-year member lent their map to a friend, and the friend lost it to a prefect's coat pocket, and the coat is hanging in the prefects' common room.} Nobody has opened it yet. It's still there at midnight.
+text [10dcc4] = {~一个二年级的制图社成员弄丢了自己那份厨房通道图，它出现在级长休息室的一张桌子上。|社里一张通往船屋的旧路线图躺在级长自习室的书桌上，是清洁工留在那儿的。|一个一年级社员把地图借给了朋友，朋友又把它弄丢在一位级长的外套口袋里，而那件外套就挂在级长休息室里。}还没人打开过它。到了午夜它还在那儿。
+# en: A dark common room with red sashes hung over chairs, a folded hand-drawn map lying on a table in a pool of moonlight.
+scene [0feb4c] = 昏暗的休息室里，椅背上搭着红肩带，一张折好的手绘地图躺在桌上的一片月光里。
+# en: Steal it back
+opt.left.label [bf3560] = 把它偷回来
+# en: {~In through the door, across the moonlit rug, map into your shirt, out. A prefect turns over in an armchair by the fire and doesn't wake.|You lift it off the desk between two snores. The club has it back by one o'clock.|You go through the coat's pockets in the dark, find the map and a toffee, and take only the map.}
+opt.left.say.1 [c30bcc] = {~进门，穿过月光下的地毯，地图塞进衬衫，出来。炉火边扶手椅里的一位级长翻了个身，没醒。|你在两声鼾声之间把它从桌上拿走了。一点钟时社里已经把它拿回来了。|你在黑暗中摸遍外套的口袋，找到了地图和一块太妃糖，只拿了地图。}
+# en: {~You get the map, and a prefect gets a very good look at you holding it. You run. The map is safe; you aren't, quite.|A floorboard by the desk squeaks. You get out with the map and a prefect's voice behind you, asking your name.|The coat's owner comes back for it while your hand's in the pocket. You run, map and all, and they know your face.}
+opt.left.say.2 [6bfe8b] = {~你拿到了地图，一位级长也把你拿着地图的样子看得清清楚楚。你跑了。地图安全了；你不太安全。|书桌旁的一块地板吱呀一响。你带着地图逃出来，身后一位级长在问你的名字。|你的手还在口袋里，外套的主人回来取它了。你连地图带人跑了，他们认得你的脸。}
+# en: Redraw the routes instead
+opt.right.label [2ded4f] = 改掉那些路线
+# en: {~The club spends the night changing every route to the kitchens: new chalk, new turnings, a passage given up for good.|The club gives up the old boathouse route for good, and spends the night finding a worse one.|The club spends the night redrawing everything the lost map showed. By dawn it's worth nothing to anyone.}
+opt.right.say.1 [33e4a6] = {~社里花了一整夜，把通往厨房的每一条路线都改了：新的粉笔记号，新的拐角，一条通道就此永远放弃。|社里永远放弃了那条去船屋的老路线，花了一整夜找到一条更差的。|社里花了一整夜，把丢失的地图上画的一切都重画了。到天亮，它对谁都一文不值。}

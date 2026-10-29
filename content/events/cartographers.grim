@@ -1,0 +1,318 @@
+# ============================================================
+#  The Midnight Cartographers, expanded (threads 1, docs/threads-1-plan.md Part E).
+#  - The Master Map (a quest thread): Corvin, its new Keeper, shows a member the map's two great blanks. Draw two
+#    lines on it (either blank, or a blank and the shortcut found inside it) and he asks you to keep it with him.
+#    Two of the blanks open the midnight heists: the stair below the chained shelf (`heist_stacks_known`, lead
+#    lead_deep_stacks; content/events/heists/stacks.grim) and the seventh tower's wall stair (`heist_tower_known`,
+#    lead lead_tower_stair; heists/tower.grim). Once a blank is filled, a shortcut inside it can be charted
+#    (`carto_book_lift`, `carto_tower_chimney`). None of it touches the main plot: the tower blank is the wall, and the
+#    chimney comes out among the old classrooms, well below the top room.
+#  - Routine society cards (drawn at the third gargoyle, like the club's others) and two midnight cards there.
+# ============================================================
+
+# ---------------- The Master Map (quest) ----------------
+
+@thread carto_master_map
+from: quest
+with: begun=carto_map_chain
+when: turn >= 8
+track: cartographers
+clues: lead_master_map lead_deep_stacks lead_tower_stair
+name: The Master Map
+premise: The Cartographers' Master Map has two great blanks nobody has filled in thirty years. Draw two lines there, and Corvin will ask you to keep the map with him.
+journal:
+  flag(carto_map_chain): Corvin unrolled the Master Map and showed you its two great blanks. "Two lines on it," he said, "and you keep it with me."
+  flag(heist_stacks_known): You charted the stair under the last chained shelf, down to the deep stacks and the confiscation vault.
+  flag(heist_tower_known): You found the seventh tower's second stair, inside the wall, from the cellars to the landing of candles.
+  flag(carto_book_lift): You rode the old book-lift down its shaft, from the bindery to the bottom of the deep stacks.
+  flag(carto_tower_chimney): You climbed the seventh tower's old chimney from the cellars and came out in a classroom a floor above the landing of candles.
+  flag(carto_map_keeper): Corvin put the Master Map in your hands. You keep it together now.
+  flag(carto_map_done) and not flag(carto_map_keeper): You told Corvin to keep the map himself. He looked relieved.
+status:
+  resolved: flag(carto_map_done)
+members:
+  start carto_map_blanks
+  part carto_deep_stacks flag=heist_stacks_known
+  part carto_tower_stair flag=heist_tower_known
+  part carto_book_lift flag=carto_book_lift
+  part carto_tower_chimney flag=carto_tower_chimney
+  final carto_map_keeper
+
+@event carto_map_blanks
+title: The Blanks on the Map
+thread: carto_master_map
+class: routine
+tone: eerie
+when: member(cartographers)
+actor: corvin
+art: map
+tags: club mystery
+scene: A huge map in shifting silver ink spread on the stone floor of a secret passage, weighted with candle stubs, two regions of it completely blank.
+text: {seen(carto_map_blanks) > 1: Corvin has the Master Map out again, and the two blanks are still white as snow. "Still thirty years," he says. "Still yours if you want them."|Corvin has the Master Map out on the passage floor, weighted with candle stubs: silver lines that move a little, like breathing, and two great blanks. One is under the library, below the last chained shelf; one is inside the seventh tower's wall. "The last Keeper left it to me this summer," he says. "Two lines on those, and you keep it with me. Fancy it?"}
+> left: "Show me where to start."
+  flag carto_map_chain
+  find lead_master_map
+  guile +tiny
+  say: Corvin grins and rolls the map to the library end. "The chained shelf, then," he says. "Bring chalk. Don't touch the chains."
+  chain_beat = turn
+  queue carto_deep_stacks now
+> right: "Not this year."
+  rel corvin -tiny
+  mood +tiny
+  say: {seen(carto_map_blanks) > 1: "One day," says Corvin, and rolls it up without a joke this time.|"Thirty-one years, then," says Corvin, and rolls the map up a little too neatly.}
+
+@event carto_deep_stacks
+title: The Stair Under the Chained Shelf
+thread: carto_master_map
+class: routine
+tone: eerie
+art: book
+tags: club mystery danger
+scene: The bottom shelf of a dark library aisle, iron chains running from the books down through holes in the floorboards, a student kneeling with a stub of chalk.
+text: Below the last chained shelf in the Restricted Section, the Master Map simply stops. The chains on that shelf run down through the floor, and at night something below pulls them taut. Corvin's way in is a book-return hatch nobody has locked since it was built. The shelf is yours to chart.
+> left: Find the stair and pace it down
+  challenge research using guile journeyman:
+    win:
+      flag heist_stacks_known
+      find lead_deep_stacks
+      guile +small
+      say: Behind the shelf's kickboard, a stair goes down forty-four steps, between shelves that breathe in their sleep, to stacks no lamp reaches. At the bottom is a door with a prefects' padlock: the confiscation vault. You chart it all, and come up very quietly.
+    lose:
+      mood -small
+      say: You find the stair, and it turns more times than it has steps. You come up in the same aisle you went down from, with your chalk worn to nothing and the chains above you swinging.
+  next
+> right: Copy what the old margins say
+  lore +small
+  say: The oldest map in the club has a note in the margin by the chained shelf, in brown ink: "Stair: yes. Down: no. Ask the chains." You copy it out neatly. The blank stays blank.
+
+@event carto_tower_stair
+title: Two Strides Fatter
+thread: carto_master_map
+class: routine
+tone: eerie
+art: door
+tags: club mystery
+scene: A student in a dark vaulted cellar pressing an ear to a curved stone wall, a candle and a coil of measuring string at their feet.
+text: The seventh tower's blank on the Master Map isn't its own stair, locked as it is; that's on every old plan. It's the wall. Corvin has measured the tower from outside and from in, and the outside is two strides fatter. "There's a second stair in there," he says. "A servants' stair, from the cellars up. Find its door."
+> left: Sound the cellar walls
+  challenge research using guile journeyman:
+    win:
+      flag heist_tower_known
+      find lead_tower_stair
+      guile +small
+      say: Behind a rack of empty bottles, one stone rings hollow. The door behind it opens on a stair one shoulder wide, curling up inside the wall. You follow it to a loose panel that comes out on the landing of candles, halfway up, and nobody on the main stair any the wiser.
+    lose:
+      mood -small
+      health -tiny
+      say: You knock on stone until your knuckles are raw and every wall in the cellar sounds the same. The tower keeps its two strides to itself, for now.
+  next
+> right: Measure it again from outside
+  lore +tiny
+  health -tiny
+  say: You walk the tower's foot in the cold with Corvin's string, and get the same answer he did: two strides. Your fingers are numb and the blank is still blank, but now you believe in it.
+
+@event carto_book_lift
+title: The Book-Lift
+thread: carto_master_map
+class: routine
+tone: tense
+when: flag(heist_stacks_known)
+art: book
+tags: club mystery danger
+scene: A dusty wooden box on a rope inside a narrow shaft, an old library bindery around it, a student climbing into the box with a candle.
+text: Under the library, the bindery has an old book-lift: a wooden box on a rope in a shaft, from the days when the stacks went deeper than anyone now admits. The rope is new. Somebody still uses it.
+> left: Ride it down
+  challenge feat apprentice+:
+    win:
+      flag carto_book_lift
+      guile +tiny
+      vigor +tiny
+      say: The box lowers you in the dark past floor after floor of shelves, and stops at the bottom of the deep stacks so gently it might know you. A quicker way down than any stair. You ink the shaft onto the map before you've stopped shaking.
+    lose:
+      health -small
+      say: The rope slips a yard, then another, then catches. You climb out at the first floor down with skinned palms and a new respect for whoever oils it.
+  next
+> right: Find out who oils the rope
+  charm +tiny
+  say: Nobody in the bindery will say. Footnote, the library cat, sits by the shaft all afternoon, as if waiting for a lift that never comes.
+
+@event carto_tower_chimney
+title: Wide as a Coffin
+thread: carto_master_map
+class: routine
+tone: tense
+when: flag(heist_tower_known)
+art: door
+tags: club mystery danger
+scene: A student wedged inside a narrow soot-black chimney, climbing with back and feet, a lantern hung from their belt lighting the brick above.
+text: The old classrooms in the seventh tower each had a fireplace, and the fireplaces share one chimney, which starts in the cellar beside your wall stair. A Cartographer fifty years gone wrote in the margin beside it: "Chimney: wide as a coffin. Climbable. Don't."
+> left: Climb it
+  challenge feat apprentice+:
+    win:
+      flag carto_tower_chimney
+      vigor +tiny
+      guile +tiny
+      say: Back against one side, feet against the other, soot to the elbows. You come out of a classroom grate a floor above the landing of candles, past the wall stair's slow part, and sit in a century of dust laughing quietly.
+    lose:
+      health -small
+      mood -tiny
+      say: Halfway up the chimney narrows, and so do you, and for a long minute neither of you gives. You come down the way you went up, black from head to foot.
+  next
+> right: Send a lantern up on a cord
+  lore +tiny
+  say: The lantern goes up and up and comes back sooty, swinging. The margin was right about the coffin.
+
+@event carto_map_keeper
+title: The Keeping of the Map
+thread: carto_master_map
+tone: warm
+actor: corvin
+art: map
+tags: club
+scene: A circle of students with candles in a secret passage, one of them holding out a rolled map in silver ink to another.
+text: The Cartographers gather round the Master Map with candles. {(flag(heist_stacks_known) and (flag(heist_tower_known) or flag(carto_book_lift))) or (flag(heist_tower_known) and flag(carto_tower_chimney)): Where the blanks were, your lines are, faintly silver and not quite settled.|The blanks are still mostly blank, but the club has watched you try. "Close enough is a Cartographer's whole trade," says Corvin.} "The club says you keep it with me. There's a test. There's always a test. Walk from here to the Thursday stair with the map in your head and no candle."
+> left: Walk it in the dark
+  challenge research using guile adept- +1 if flag(heist_stacks_known) +1 if flag(heist_tower_known) +1 if flag(carto_book_lift) +1 if flag(carto_tower_chimney):
+    win:
+      flag carto_map_done carto_map_keeper
+      guile +small
+      rel corvin +small
+      mood +small
+      say: You walk it blind, every turning where the map says it is, and at the foot of the Thursday stair the club is waiting with candles. Corvin puts the rolled map in your hands. "Keepers," he says, and for once he doesn't laugh after.
+    lose:
+      mood -small
+      say: Three turnings in, the castle moves one. You walk into a wall, very gently, in the dark, and stand there until someone comes with a candle. "It wants more of you," says Corvin kindly. "Come back."
+> right: "It's yours, Corvin. Keep it."
+  flag carto_map_done
+  rel corvin +medium
+  say: Corvin looks at you for a long moment, then rolls the map back up and tucks it into his coat, where it has lived since the summer. He looks relieved, and then embarrassed about looking relieved.
+
+# ---------------- The society's other nights (track: cartographers) ----------------
+
+@event carto_forged_map
+title: A Map for Sale
+track: cartographers
+class: routine
+tone: light
+art: map
+tags: club money
+scene: A first-year in a corridor selling folded paper maps from a satchel to a small crowd of younger students.
+text: A first-year is selling "the secret map of the castle" in the corridor for a crown a copy. It is a forgery, and a good one, and every passage on it leads, by a lovely roundabout way, straight to the prefects' office. Corvin swears it wasn't him.
+> left: Let it sell
+  guile +tiny
+  mood +small
+  alignment -tiny
+  say: You get a copy for the club's wall. All week first-years turn up, breathless, at the prefects' door. The prefects are delighted. Nobody looks behind the third gargoyle at all.
+> right: Buy up the stock and burn it
+  gold -small
+  alignment +tiny
+  say: You buy the whole satchel and burn it in the passage grate. The first-year is thrilled with the money. Somewhere, the forger is very annoyed.
+
+@event carto_quiet_prefect
+title: The Prefect Who Doesn't Look
+track: cartographers
+class: routine
+tone: eerie
+art: lantern
+tags: club
+scene: A senior prefect with a lantern on a windy parapet at night, standing beside a gargoyle and not looking at it, talking to a student in the shadows.
+text: A senior prefect walks the north parapet on her rounds and never once looks at the third gargoyle. This time she stops beside it, still not looking. "The draught behind this one's got worse," she says to the dark. "Tell whoever needs telling. And somebody's been eating the grapes in the dish. Those were mine."
+> left: Trade a shortcut for her rota
+  flag prefect_rota
+  guile +tiny
+  rel corvin -tiny
+  say: You give her the back way from the parapet to the prefects' common room, four minutes quicker. She gives you, without a word, the times of every round on her rota. Corvin, when he hears, says giving routes away is how clubs end.
+> right: Play dumb
+  mood +tiny
+  say: "Draught?" you say. "What gargoyle?" She almost smiles, and walks on, swinging the lantern. You keep the club's secrets, and she keeps hers.
+
+@event carto_member_out
+title: One Map Fewer
+track: cartographers
+class: routine
+tone: grim
+art: map
+tags: club
+scene: Two students kneeling by a small grate in a stone passage, a stack of hand-drawn maps between them, one holding a lit match.
+text: One of the club's seniors has been caught twice this term, and wants out before a third. The club's rule is that leavers burn their maps. She has a year of them in a bundle, and she asks you to sit with her while she does it. "Or hide them," she says. "I can't watch them go."
+> left: Burn them with her
+  mood -small
+  alignment +tiny
+  say: You feed the grate one map at a time and she reads each one aloud before it goes. At the end she thanks you, and goes up to bed a member of nothing, and lighter.
+> right: Keep them for the club
+  guile +small
+  queue night_suspicion chance slim
+  say: You hide the bundle in the passage where only the club will find it, which means carrying a caught-twice member's maps through the castle after curfew. She doesn't ask where. She'll know, every time she passes the gargoyle, that she didn't really leave.
+
+@event carto_recruit
+title: Your Turn to Invite
+track: cartographers
+class: routine
+tone: warm
+cast:
+  pick: any where met(pick) and tagged(pick, student) and not npc_is(corvin)
+art: map
+tags: club social
+scene: A black card with a silver map drawn on it being slid under a dormitory door in a dark corridor.
+text: Corvin hands you a black card, blank but for a silver line that wanders. "Members bring members," he says. "Your turn. Who?" You think of {pick} before he's finished asking.
+> left: Slip it under {pick}'s door
+  rel pick +small
+  queue night_suspicion chance slim
+  say: You slide the card under {pick}'s door at midnight and run. Three nights later {pick} comes in under the gargoyle with a candle and a look you'll remember: someone finding out the castle is bigger than they thought.
+> right: "Nobody I'd trust with it."
+  rel corvin -tiny
+  guile +tiny
+  say: Corvin takes the card back. "Careful's a good thing in a Cartographer," he says, and doesn't sound as if he means it.
+
+# ---------------- The third gargoyle at midnight ----------------
+
+@event gargoyle_midnight_one_short
+title: One Short
+pool: gargoyle_passage_routine
+slot: midnight
+tone: tense
+repeat: 4
+weight: 10
+art: lantern
+tags: club danger
+scene: A huddle of students with candles in a dark stone passage, one of them counting heads, an empty gap in the circle.
+text: Midnight under the gargoyle, and the headcount comes up one short. {~Someone went into the passages alone an hour ago, to settle a bet about a stair that only goes down on wet nights.|Someone took a dare about the kitchens' dumbwaiter, and the dare was "alone".|A new member, it turns out, sleepwalks, and nodded off on the bench an hour ago, and the bench is empty.} Nobody says anything for a moment.
+> left: Go after them
+  challenge feat using guile journeyman:
+    win:
+      guile +small
+      mood +small
+      say: {~You find them two floors down, on a step that wasn't there yesterday and can't now be got off. You talk them down one stride at a time.|You find them stuck in the dumbwaiter between two floors, very glad of company. You wind them down by the rope, slowly, and walk them back.|You find them on the parapet, asleep on their feet and walking the edge. You turn them round by the shoulders, gently, and walk them home.}
+    lose:
+      health -small
+      queue night_suspicion chance unlikely
+      say: {~The passages turn you round twice, and a prefect's lantern turns you round a third time. The missing member gets back on their own at dawn, grinning.|You never find the dumbwaiter's shaft, and a prefect nearly finds you. They come back at dawn, floury and triumphant.|You search every passage but the right one. At dawn they wake in their own bed, with no idea anyone looked.}
+> right: Wait with the others
+  mood -small
+  say: {~You sit in the circle with the gap in it, and at dawn they climb back out of the wall, filthy and triumphant. The waiting was worse than going.|At dawn they come back through the wall, floury to the elbows, with a story nobody believes. The waiting was worse than going.|At dawn somebody finds them asleep in the library. The waiting was worse than going.}
+
+@event gargoyle_midnight_lost_map
+title: A Map on the Wrong Table
+pool: gargoyle_passage_routine
+slot: midnight
+tone: tense
+repeat: 4
+weight: 8
+art: map
+tags: club danger
+scene: A dark common room with red sashes hung over chairs, a folded hand-drawn map lying on a table in a pool of moonlight.
+text: {~A second-year Cartographer dropped their copy of the kitchens' passages, and it's turned up on a table in the prefects' common room.|One of the club's old route maps, the one to the boathouse, is lying on the prefects' study desk, where a cleaner left it.|A first-year member lent their map to a friend, and the friend lost it to a prefect's coat pocket, and the coat is hanging in the prefects' common room.} Nobody has opened it yet. It's still there at midnight.
+> left: Steal it back
+  challenge deceive journeyman:
+    win:
+      guile +small
+      mood +tiny
+      say: {~In through the door, across the moonlit rug, map into your shirt, out. A prefect turns over in an armchair by the fire and doesn't wake.|You lift it off the desk between two snores. The club has it back by one o'clock.|You go through the coat's pockets in the dark, find the map and a toffee, and take only the map.}
+    lose:
+      mood -small
+      queue night_suspicion now
+      say: {~You get the map, and a prefect gets a very good look at you holding it. You run. The map is safe; you aren't, quite.|A floorboard by the desk squeaks. You get out with the map and a prefect's voice behind you, asking your name.|The coat's owner comes back for it while your hand's in the pocket. You run, map and all, and they know your face.}
+> right: Redraw the routes instead
+  lore +tiny
+  mood -small
+  say: {~The club spends the night changing every route to the kitchens: new chalk, new turnings, a passage given up for good.|The club gives up the old boathouse route for good, and spends the night finding a worse one.|The club spends the night redrawing everything the lost map showed. By dawn it's worth nothing to anyone.}

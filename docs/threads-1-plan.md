@@ -5,7 +5,7 @@ step. Status lives here, not in AGENTS.md.
 
 ## Next up
 
-T3 (cartographers): draft in progress. Engine, T1 and T2 are pushed.
+T4 (the Restricted Stacks heist and the shared heist cards): draft in tmp, being reworked after retrieval. Engine and T1–T3 are pushed.
 
 ## Budget ledger
 
@@ -13,7 +13,7 @@ T3 (cartographers): draft in progress. Engine, T1 and T2 are pushed.
 |---|---:|---:|---|---|
 | T1 detention | 12 | 8 new + 2 moved | accepted (round 2) | 100% |
 | T2 elixirs | 26 | 17 | accepted (round 2; 4 polish fixes applied) | 100% |
-| T3 cartographers | 14 | | | |
+| T3 cartographers | 14 | 12 | accepted (round 3) | 100% |
 | T4 Restricted Stacks + shared heist | 20 | | | |
 | T5 seventh tower | 16 | | | |
 | T6 spell moves, Eclipse, retirements | edits | | | |
@@ -23,6 +23,13 @@ T3 (cartographers): draft in progress. Engine, T1 and T2 are pushed.
 - **Engine** (6cd4273): a state's day in term, a pool as a recipe source, a sized boost; `test/threads1.test.js`.
 - **T1 detention:** 8 new cards in `content/events/detention.grim`, plus `detention_cauldrons` and `detention_lines` moved into `@pool detention`; `night_suspicion`'s second catch gives one month and keeps the lockout. Detention months a game: cautious 1.1, balanced 2.0, nightlife 4.4. Critic: rejected in round 1 (9 issues), accepted in round 2 with 2 polish fixes, both applied. Notes: `build/batches/T1-detention.notes.md`.
 - **T2 elixirs:** 17 cards in `content/events/contraband.grim` and 6 states in `content/states/contraband.grim`, plus the Brightwater and Owl's Ink lore, `@cond before_finals`, `boost_sizes` and the clue `lead_grisk_bottles`. Critic: round 1 rejected (12 issues), round 2 accepted with 4 polish fixes, all applied. Reach over 30 games a style: a craving in 12 of 30 nightlife games and 9 of 30 balanced. `amaranth_quit` and `elixir_finals_buyers` stay rare with bots; look again in the balance step. Notes: `build/batches/T2-elixirs.notes.md`.
+- **T3 cartographers:** `content/events/cartographers.grim`.
+  - The Master Map quest: Corvin inherited the map this summer. It has two great blanks (the stacks stair and the tower's wall stair, which open the heists), plus a gated shortcut inside each, and a final where you keep the map with him.
+  - 4 society cards and 2 midnight cards at the third gargoyle.
+  - Clues `lead_master_map`, `lead_deep_stacks`, `lead_tower_stair`; lore `master_map`.
+  - The places are also discovered through the heist flags.
+  - Critic: round 1 rejected (12 issues, among them Corvin's canon as a first-year), round 2 rejected (one plot-safety variant, the boathouse tunnel), round 3 accepted.
+  - Notes: `build/batches/T3-cartographers.notes.md`.
 
 ## Deviations and open questions
 

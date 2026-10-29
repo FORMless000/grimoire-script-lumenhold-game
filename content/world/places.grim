@@ -176,7 +176,7 @@ region: castle
 map: campus 352,245
 kind: public
 open: afternoon evening midnight
-discover: flag(forbidden_key) or seen(forbidden_section_1) > 0
+discover: flag(forbidden_key) or seen(forbidden_section_1) > 0 or flag(heist_stacks_known)
 hint: A door at the back of the library that is always locked, and always slightly warm.
 hinted_when: turn >= 2
 art: lock
@@ -203,7 +203,7 @@ region: castle
 map: campus 500,72
 kind: public
 open: afternoon evening
-discover: clue(lead_seventh_tower) or clues(hollowstar) >= 4
+discover: clue(lead_seventh_tower) or clues(hollowstar) >= 4 or flag(heist_tower_known)
 hint: A locked stair that leads up into a tower nobody admits is there.
 hinted_when: clock(hollowstar) >= 1
 art: key
