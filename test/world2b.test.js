@@ -528,9 +528,14 @@ test('defer: a suspicion card waits until you are back on campus (I6)', () => {
   const r = quiet(() => eng.advance());
   assert.ok(!(r.kind === 'card' && r.view.id === 'night_suspicion'), 'not shown while away');
   assert.ok(eng.s.queue.some((q) => q.id === 'night_suspicion' && q.due === eng.s.turn + 1), 'back in the queue for next month');
-  delete eng.s.states.plan_home; eng.s.cur = null;
+  // It waits out a break at the castle too (its detention needs a term to serve), and shows in term.
+  delete eng.s.states.plan_home; eng.s.cur = null; eng.s.queue = [];
   eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
-  assert.equal(quiet(() => eng.advance()).view.id, 'night_suspicion', 'shown on campus');
+  const r2 = quiet(() => eng.advance());
+  assert.ok(!(r2.kind === 'card' && r2.view.id === 'night_suspicion'), 'not shown in a break');
+  eng.s.turn = 7; eng.s.cur = null; eng.s.queue = [];
+  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
+  assert.equal(quiet(() => eng.advance()).view.id, 'night_suspicion', 'shown on campus in term');
 });
 
 // The holiday versions of term jobs (X15) need a job's top rank and a working break, which simulated players
