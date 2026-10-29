@@ -1,3 +1,16 @@
+## New threads 1: detention, contraband elixirs, midnight heists, the Cartographers (October 29)
+
+The plan, decisions, ledger and batch log: `docs/threads-1-plan.md`. 67 new cards in six batches (T1–T6), each through retrieval, the critic and zh-CN (complete).
+
+- **Engine (additions only, schema v1):** a state's `day:` holds in term too; a recipe slot may name a `@pool`; a `boost:` may carry a size (`exam:large`, from `@balance boost_sizes`).
+- **Detention** takes both of the month's visits for punishment cards (the `detention` pool) and clears on a break. Caught at midnight a second time: one month of detention (was three) with the three-month lockout.
+- **Contraband elixirs:** Brightwater and Owl's Ink, two months a dose, a four-month craving with withdrawal cards, Grisk as the steady supplier, sold before finals. Owl's Ink is an illicit exam boost (an A in about 69% of exams against 43%): a recorded deviation from §9.3.
+- **The Midnight Cartographers:** the Master Map quest, whose lines open the heists, and six routine cards.
+- **Midnight heists** in the Restricted Stacks (to the confiscation vault) and the seventh tower (to the duelling master's study, never the star key). Guile only; they replace the old midnight cards there (retired with `when: false`).
+- **Spell sources:** Torment and Reflect from the stacks, Extraction from the tower, Heartprice alone from the Outcast, Eclipse from the man in grey. Toll still has no source (it had none before).
+- **Balance (matched against the commit before threads 1):** the plot funnel is unchanged (every act in 100% of games). GPA and skills hold. Gold moves within noise (nightlife −7%, sleuth +12% from heists, about 21 gold a night). Alignment drifts Hollow by about 10 a game for styles that drink the elixirs (−tiny a dose), and about 24 for sleuths, who also steal: a consequence of choices, so no retune. Detention: 1–2 months in 48 for most styles, about 5 for a night-goer. `balance --quick`: 0 invariant failures; 4 alarms, all there before (social's still-searching headline, truant's archmage at 50% against 43%, aggressive's bars); balanced's tight-month alarm cleared. Cards no quick style sees rose from 104 to 158: the heists, the Cartographers' quest and the rarer elixir cards, which need the club or a night-going style.
+- **Open:** the bots rarely join the Cartographers, so heists are measured on sleuths only; a human playtest should judge heist pacing and how often a craving lands.
+
 ## Phase 4 started: the Journal, facts, NPCs among themselves, renown (October 27)
 
 The plan, budgets (about 228 new cards in 14 batches), decisions, ledger and "Next up" live in `docs/phase4-plan.md`; archetypes, spawned characters and memory recall are deferred.

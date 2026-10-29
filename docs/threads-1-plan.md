@@ -5,7 +5,14 @@ step. Status lives here, not in AGENTS.md.
 
 ## Next up
 
-Commit T4–T6 together (they share `heist_slip`'s branch), then the balance step and the records. Engine and T1–T3 are pushed. The Hollow Star funnel (40 games each, balanced/hollow/plot) reaches every act in 100% of games, as before.
+Done: every batch and the balance step are in; the records are in the design doc (§4.2 detention and heists, §9.1 spell sources, §9.3 the Owl's Ink deviation) and PROGRESS.md. Next: a human playtest of heist pacing and how often a craving lands. Toll still has no source (it had none before threads 1).
+
+## Balance (October 29, against the commit before threads 1, same seeds)
+
+- `hs-funnel` 40 games each, balanced/hollow/plot: every act opens in 100% of games; Eclipse is now taught by the man in grey.
+- `grim analyze --styles quick --games 30` and `economy.js --by event`: GPA and skills hold. Gold within noise (nightlife +919 → +854 a game, sleuth +428 → +481 with `heist_way_out` at about 21 gold a night over 1.65 heists). Alignment drifts Hollow by about 10 a game (balanced −28 → −38, social +34 → +25) from the elixirs' −tiny a dose, and by 24 for sleuths (heists). Kept: these are the player's choices.
+- Detention months in 48: social 1.2, random 1.6, balanced 1.9, truant 2.4, sleuth 3.5, nightlife 4.8.
+- `balance --quick`: 0 invariant failures. 4 alarms, all there before; balanced's tight-month alarm cleared. Never-seen cards 104 → 158 (heists and the Cartographers' quest need the club; the quick styles don't join it).
 
 ## Budget ledger
 
