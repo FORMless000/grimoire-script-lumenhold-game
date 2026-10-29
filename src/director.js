@@ -26,6 +26,8 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
   const SLOTS = ['morning', 'noon', 'afternoon', 'evening', 'night', 'midnight'];
+  // The built-in sources of a day recipe's slots; any other source names a @pool (threads 1).
+  const DAY_SOURCES = ['courses', 'social', 'visit', 'world', 'special', 'plan'];
   // `@place always: a b|c` -> [['a'], ['b', 'c']]   (= Grimoire.alwaysGroups)
   const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
   const PRIORITY = { story: 5, track: 4, pushed: 3, friend: 2.5, social: 2, ambient: 1 };
@@ -48,7 +50,20 @@
     // The last day (`@game day_last:`) resolves the run: only its pushed cards, no pools (playtest 2, M21).
     isLastDay() { return this.s.turn >= this.maxTurns && !!(this.c.game.day_last && this.c.game.day_last.length); },
     // On a break, the active plan's `day:` (E2) shapes the day: four visits at the castle or at home, three around a gig.
-    recipe() { return (this.isLastDay() ? this.c.game.day_last : this.phaseOf() === 'break' ? this.planDay() || this.c.game.day_break : this.c.game.day_term) || []; },
+    recipe() { return this.recipeFor(this.s.day ? this.s.day.dayState : null); },
+    recipeFor(dayState) {
+      if (this.isLastDay()) return this.c.game.day_last || [];
+      if (this.phaseOf() === 'break') return this.planDay() || this.c.game.day_break || [];
+      return (dayState && this.c.states[dayState] && this.c.states[dayState].day) || this.c.game.day_term || [];
+    },
+    // A state's day in term (threads 1): a held state with `day:` that isn't a plan (detention) shapes a term day in
+    // place of @game day_term. Which one is fixed when the day starts, so a state gained today shapes tomorrow.
+    dayStateNow() {
+      if (this.isLastDay() || this.phaseOf() === 'break') return null;
+      return Object.keys(this.s.states || {}).find((k) => { const d = this.c.states[k]; return d && d.day && d.kind !== 'plan' && !d.deprecated; }) || null;
+    },
+    // A recipe slot whose source names a @pool (threads 1): it draws that pool's cards, and only that slot does.
+    isPoolSource(src) { return !DAY_SOURCES.includes(src) && !!(this.c.pools || {})[src]; },
     planDay() {
       const k = Object.keys(this.s.states || {}).find((x) => this.c.states[x] && this.c.states[x].kind === 'plan' && this.c.states[x].day);
       return k ? this.c.states[k].day : null;
@@ -58,7 +73,10 @@
     /* ---------------- index (built once) ---------------- */
     directorIndex() {
       if (this._dir) return this._dir;
-      const c = this.c, ix = { legacyTrack: {}, byPlace: {}, byTrack: {}, byPlan: {}, slotBound: [], ambient: [], social: [], arc: [], personal: {}, letter: [], ramp: [] };
+      const c = this.c, ix = { legacyTrack: {}, byPlace: {}, byTrack: {}, byPlan: {}, slotBound: [], ambient: [], social: [], arc: [], personal: {}, letter: [], ramp: [], byRecipePool: {} };
+      // Pools that a day recipe names as a slot's source (threads 1): their cards are drawn by that slot alone.
+      const recipes = [c.game.day_term, c.game.day_break, c.game.day_last, ...Object.values(c.states || {}).map((d) => d.day)];
+      const recipePools = new Set([].concat(...recipes.filter(Boolean)).map((r) => r.source).filter((x) => this.isPoolSource(x)));
       for (const t of Object.values(c.tracks || {})) for (const st of t.legacy || []) ix.legacyTrack[st] = t.id;
       // Events gated on a legacy state count as that track's events (compat).
       const legacyOf = (e) => { if (!e.when) return null; let hit = null; const G = this.G; G.walkAst(e.when.ast, (n) => { if (n.t === 'call' && n.n === 'has' && n.args[0] && n.args[0].t === 'sym' && ix.legacyTrack[n.args[0].v]) hit = ix.legacyTrack[n.args[0].v]; }); return hit; };
@@ -70,6 +88,8 @@
         if (e.trigger === 'letter') { ix.letter.push(e); continue; }   // letters live apart from every other pool (M38)
         if (e.ramp) { ix.ramp.push(e); continue; }   // milestones are pushed on their ramp, outside the pools (M13)
         if (e.arc && e.beat != null) { ix.arc.push(e); continue; }
+        const rp = (e.pools || []).find((p) => recipePools.has(p));
+        if (rp) { (ix.byRecipePool[rp] = ix.byRecipePool[rp] || []).push(e); continue; }
         const track = e.track || legacyOf(e);
         if (e.place) (ix.byPlace[e.place] = ix.byPlace[e.place] || []).push(e);
         else if (track) (ix.byTrack[track] = ix.byTrack[track] || []).push(e);
@@ -377,7 +397,9 @@
      * Everything lives in s.day, so a save resumes mid-day.
      */
     startDay() {
-      const s = this.s, ix = this.directorIndex(), rec = this.recipe(), used = new Set(s.deck.map((d) => d.id));
+      const s = this.s, ix = this.directorIndex(), dayState = this.dayStateNow(), rec = this.recipeFor(dayState), used = new Set(s.deck.map((d) => d.id));
+      // The state shaping today serves one of its months (threads 1; engine tickStates counts them down).
+      if (dayState) s.states[dayState].served = true;
       // Warmth fades a little every month (design §5.5).
       for (const n of Object.values(s.npcs)) if (n.warmth) n.warmth = Math.floor(n.warmth * FRIENDS.fade);
       const slots = rec.map((r) => r.slot), first = slots[0];
@@ -406,7 +428,7 @@
       // Social and world cards through the day (M43): `@game spread:` keeps each source's budget and deals its cards
       // to random slots of the day (the special slots excepted) instead of drawing them all in their own slot.
       const spread = {}, spreading = new Set(this.c.game.spread || []);
-      const open = rec.filter((r) => r.source !== 'special').map((r) => r.slot);
+      const open = rec.filter((r) => r.source !== 'special' && !this.isPoolSource(r.source)).map((r) => r.slot);
       for (const r of rec) {
         if (!spreading.has(r.source)) continue;
         const n = r.min == null ? 1 : r.min + Math.floor(this.rand() * ((r.max || r.min) - r.min + 1));
@@ -415,7 +437,7 @@
       // Those who come looking for you (track 2) arrive in this slot; they roll when it comes, on that moment's warmth.
 
       s.day = { v: 2, phase: 'slots', at: 0, stage: 0, picks: [], nextPicks: [], used: [...used], items: [], withToday: [], pushed, spread, friendSlot,
-        plotLeft: this.plotCap() - plot, count: s.deck.length, done: false };
+        plotLeft: this.plotCap() - plot, count: s.deck.length, done: false, dayState };
     },
     // The appointments at one occasion, in the content's order (built once).
     appointmentsAt(at) {
@@ -538,7 +560,7 @@
       const d = this.s.day;
       if (!d || d.v === 2) return;
       if (d.phase === 'pick') this.startDay();
-      else this.s.day = { v: 2, phase: 'slots', at: this.recipe().length, stage: 0, picks: d.picks || [], nextPicks: [], used: [], items: [], withToday: [], pushed: [], spread: {}, count: 0, done: true };
+      else this.s.day = { v: 2, phase: 'slots', at: this.recipe().length, stage: 0, picks: d.picks || [], nextPicks: [], used: [], items: [], withToday: [], pushed: [], spread: {}, count: 0, done: true, dayState: d.dayState || null };
     },
     // A visit slot: the recipe's, or one opened today by `visit <slot>` (M41).
     isVisitAt(at) { const r = this.recipe()[at], d = this.s.day; return !!r && (r.source === 'visit' || (!!d && d.extraVisit === r.slot)); },
@@ -607,6 +629,7 @@
         : source === 'social' ? ix.social
         : source === 'special' ? ix.slotBound.filter((e) => e.slot === r.slot)
         : source === 'plan' ? (plan && ix.byPlan[plan.replace(/^plan_/, '')]) || ix.ambient
+        : this.isPoolSource(source) ? ix.byRecipePool[source] || []
         : ix.ambient.concat(ix.slotBound));
       if (r.source === 'courses') {
         // The course slot's appointments (`class`: one card from each course and thesis you're in).
@@ -708,7 +731,7 @@
           if (shiftTrack) for (const it of items.slice(startAt)) it.shift = true;
           this._place = null; this._shift = false;
         }
-      } else if (r.source === 'social' || r.source === 'world' || r.source === 'special' || r.source === 'plan') {
+      } else if (r.source === 'social' || r.source === 'world' || r.source === 'special' || r.source === 'plan' || this.isPoolSource(r.source)) {
         const pool = poolOf(r.source);
         for (let k = 0; k < count; k++) { const it = this.draw(pool, used, day.concat(items), { prio: r.source === 'social' ? 'social' : 'ambient' }); if (it) items.push(it); }
         // Track 1 at lunch (design §5.5): anyone whose schedule has them at a place you know in this slot, met or not.

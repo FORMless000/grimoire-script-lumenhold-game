@@ -119,6 +119,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `swing` | structured |  |
 |  | `negotiate` | structured |  |
 |  | `tonic` | text |  |
+|  | `boost_sizes` | structured |  |
 |  | `wage` | structured |  |
 |  | `coursework` | structured |  |
 |  | `exam_bands` | structured |  |

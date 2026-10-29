@@ -419,14 +419,29 @@ function analyze(content) {
   }
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));
   for (const s of Object.values(content.states)) {
-    if (s.day && s.kind !== 'plan') P('error', loc(s), 'day: only a plan (kind: plan) shapes a break\'s day');
-    if (s.day && !s.day.some((r) => r.slot === (content.game.day_break || [])[0]?.slot)) P('warn', loc(s), 'day: should start with the same slot as @game day_break (the plan is often picked in it)');
+    // A plan's day shapes its break; any other state's day shapes a term day while held (threads 1), slot for slot.
+    const termSlots = (content.game.day_term || []).map((r) => r.slot).join(' ');
+    if (s.day && s.kind !== 'plan' && s.day.map((r) => r.slot).join(' ') !== termSlots) P('error', loc(s), 'day: off a plan it replaces a term day, so it needs @game day_term\'s slots in order (' + termSlots + ')');
+    if (s.day && s.kind === 'plan' && !s.day.some((r) => r.slot === (content.game.day_break || [])[0]?.slot)) P('warn', loc(s), 'day: should start with the same slot as @game day_break (the plan is often picked in it)');
     if (s.deprecated && !['true', 'yes'].includes(String(s.deprecated))) P('error', loc(s), 'deprecated: a state takes "true"');
-    for (const k of s.boost || []) {
+    for (const x of s.boost || []) {
+      const [k, size] = String(x).split(':'), sizes = (content.balance && content.balance.boost_sizes) || {};
       if (!(G.CHALLENGE_KINDS[k] || k === 'exam')) P('error', loc(s), 'boost: unknown check kind "' + k + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
       else if (G.MINIGAME_KINDS[k]) P('error', loc(s), 'boost: ' + k + ' is played as a minigame; a tonic never touches it');
+      if (size != null && sizes[size] == null) P('error', loc(s), 'boost: ' + x + ': no size "' + size + '" in @balance boost_sizes (' + (Object.keys(sizes).join(' ') || 'none') + ')');
     }
     if ((s.boost || []).length && !(content.balance && content.balance.tonic)) P('warn', loc(s), 'boost: with no @balance tonic it adds nothing');
+  }
+  // A day recipe's sources (threads 1): a built-in one, or a @pool whose cards that slot alone draws.
+  {
+    const SOURCES = ['courses', 'social', 'visit', 'world', 'special', 'plan'];
+    const recipes = [['@game day_term', content.game.day_term, null], ['@game day_break', content.game.day_break, null], ['@game day_last', content.game.day_last, null]]
+      .concat(Object.values(content.states).filter((s) => s.day).map((s) => ['@state ' + s.id, s.day, s]));
+    for (const [what, rec, s] of recipes) for (const r of rec || []) {
+      if (SOURCES.includes(r.source)) continue;
+      if (!(content.pools || {})[r.source]) P('error', s ? loc(s) : 'content/core/rules.grim', what + ': slot ' + r.slot + ' draws from "' + r.source + '", neither a source (' + SOURCES.join(' ') + ') nor a @pool');
+      else if (!Object.values(content.events).some((e) => (e.pools || []).includes(r.source))) P('warn', s ? loc(s) : 'content/core/rules.grim', what + ': slot ' + r.slot + ' draws from @pool ' + r.source + ', which has no cards');
+    }
   }
   // The kit (E4): a slot, worn effects that name spells or known groups, and art.
   for (const d of Object.values(content.items || {})) {

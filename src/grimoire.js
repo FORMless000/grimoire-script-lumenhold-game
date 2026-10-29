@@ -244,8 +244,8 @@
       'combat', 'combat_cost', 'swing',
       // the negotiation stub's mix until the minigame (E8): skill weights, and mood and renown around their middle
       'negotiate',
-      // what a tonic adds to the checks its state's `boost:` names (world expansion 1, K3)
-      'tonic',
+      // what a tonic adds to the checks its state's `boost:` names (world expansion 1, K3); a sized boost's amounts (threads 1)
+      'tonic', 'boost_sizes',
       // a shift's pay per wage word (`wage short`), as a share of the job's `pay:` at your rank (M10)
       'wage',
       // coursework: the size tier of a course's monthly skill XP at each course level (feedback 2026-10-15)
@@ -280,7 +280,8 @@
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks', 'gone_when', 'distant'], effects: [] },
     // `map_id:` on a plan (A1): the map shown while it lasts, a map id or a track kind (the place of your track of that kind)
-    // `day:` on a plan (E2): the day's recipe while it lasts, in place of @game day_break.
+    // `day:` on a plan (E2): the day's recipe while it lasts, in place of @game day_break. On any other state (threads 1):
+    // a term day's recipe while it holds, in place of @game day_term.
     // `deprecated: true` (E11): kept so saves still hold it, never shown and never ticking; an item's `legacy:` usually takes over.
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money', 'map_id', 'day', 'deprecated', 'boost'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
@@ -430,7 +431,7 @@
     calendar(t) { const out = []; for (const x of words(t)) { const m = x.match(/^([a-z_]+)=(\d+)-(\d+)$/); if (!m) throw 'calendar: expected name=from-to, got "' + x + '"'; for (let i = +m[2]; i <= +m[3]; i++) out[i - 1] = m[1]; } return out; },
     seasons(t) { return STRUCT_PROPS.calendar(t); },
     // "morning=courses noon=social:1-2 afternoon=visit night=world:1" -> [{slot, source, min, max}]
-    day_term(t) { return words(t).map((x) => { const m = x.match(/^([a-z_]+)=([a-z_]+)(?::(\d+)(?:-(\d+))?)?$/); if (!m) throw 'day recipe: expected slot=source[:min-max], got "' + x + '"'; const min = m[3] != null ? +m[3] : null; return { slot: m[1], source: m[2], min, max: m[4] != null ? +m[4] : min }; }); },
+    day_term(t) { return words(t).map((x) => { const m = x.match(/^([a-z_]+)=([a-z_][a-z0-9_]*)(?::(\d+)(?:-(\d+))?)?$/); if (!m) throw 'day recipe: expected slot=source[:min-max], got "' + x + '"'; const min = m[3] != null ? +m[3] : null; return { slot: m[1], source: m[2], min, max: m[4] != null ? +m[4] : min }; }); },
     day_break(t) { return STRUCT_PROPS.day_term(t); },
     day_last(t) { return STRUCT_PROPS.day_term(t); },
     day(t) { return STRUCT_PROPS.day_term(t); },
@@ -443,6 +444,7 @@
     negotiate(t) { return STRUCT_PROPS.weights(t); },
     swing(t) { return STRUCT_PROPS.weights(t); },
     wage(t) { return STRUCT_PROPS.weights(t); },
+    boost_sizes(t) { return STRUCT_PROPS.weights(t); },
     spark_follow(t) { return STRUCT_PROPS.weights(t); },
     odds(t) { return STRUCT_PROPS.weights(t); },
     study(t) { return STRUCT_PROPS.weights(t); },

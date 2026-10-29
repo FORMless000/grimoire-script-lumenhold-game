@@ -402,12 +402,20 @@
     }
     // A tonic (world expansion 1, K3): a state whose `boost:` names this check's kind adds `@balance tonic` to it. Tonics
     // share a `group:`, so one holds at a time; two states naming the same kind still add it once. Never on a fight or a
-    // negotiation (minigames: what you drank doesn't win an argument).
+    // negotiation (minigames: what you drank doesn't win an argument). A sized entry (`exam:large`, threads 1) adds
+    // `@balance boost_sizes` for that size instead; with several, the largest counts.
     boost(kind) {
-      const b = (this.c.balance && this.c.balance.tonic) || 0;
-      if (!b || MINIGAME_KINDS[kind]) return 0;
-      for (const id of Object.keys(this.s.states || {})) { const d = this.c.states[id]; if (d && !d.deprecated && (d.boost || []).includes(kind)) return b; }
-      return 0;
+      if (MINIGAME_KINDS[kind]) return 0;
+      const b = this.c.balance || {}, rung = b.tonic || 0, sizes = b.boost_sizes || {};
+      let best = 0;
+      for (const id of Object.keys(this.s.states || {})) {
+        const d = this.c.states[id]; if (!d || d.deprecated) continue;
+        for (const x of d.boost || []) {
+          const [k, size] = String(x).split(':'); if (k !== kind) continue;
+          const v = size ? (sizes[size] != null ? sizes[size] : rung) : rung; if (v > best) best = v;
+        }
+      }
+      return best;
     }
     // The check ladder (docs/authoring/checks.md, design §8.6). A @balance value, or its default.
     ladder(key) { const b = this.c.balance || {}; return b[key] != null ? b[key] : LADDER_DEFAULTS[key]; }
@@ -1746,7 +1754,10 @@
         const ctx = this.newCtx(null, def.name || id, id);
         if (st.since < s.turn) {
           this.run(def.tick, ctx);
-          if (st.left != null) { st.left--; if (st.left <= 0) this.removeState(id, ctx, true); }
+          // A state that shapes a term day (`day:` off a plan, threads 1) counts the days it has shaped, not the months
+          // held: gained today, it still shapes next month's day. On a break it counts months as usual.
+          const served = !(def.day && def.kind !== 'plan') || st.served || this.phaseOf() === 'break';
+          if (st.left != null && served) { st.left--; delete st.served; if (st.left <= 0) this.removeState(id, ctx, true); }
         }
         this.handleZeroed(ctx);
         if (Object.keys(ctx.deltas).length || ctx.notes.length || ctx.say.length) summary.push(Object.assign(this.summaryItem(ctx, def.hidden ? null : (def.name || id)), { src: 'state ' + id }));
