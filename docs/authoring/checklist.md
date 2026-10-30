@@ -11,6 +11,8 @@ Validators check the first group automatically; the critic (a separate pass, wit
 - **Canon:** names, places, facts and history match the worldbook; nothing contradicts hard lore; new names come with a soft `@lore` entry.
 - **Voice:** characters sound like their `voice:` and act on their traits and facts.
 - **Choices:** no option is obviously best (`costs.md`): options trade by giving different things or by a cost or risk; every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment); every option has a specific `say:`.
+- **Spell options** (`up[spell]`): the option does what the spell's `desc` says (`content/world/spells.grim`) and is a clean way through the scene; the text and the other options never assume the player knows the spell, so without it the card reads as an ordinary problem. Mana (and a forbidden spell's alignment) is taken automatically; prose never names it.
+- **Repeats:** an "again" line keys on `seen(<own id>) > 1`, not on a counter other cards move; no variant assumes how an earlier showing ended, and every variant of a `say:` shows its option's cost (`pools.md`).
 - **Tone:** warm, witty, slightly melancholy; humour from specifics; no gore, nothing explicit, adults only.
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
 - **Continuity** (the defects the critic found most often in world expansion 1):

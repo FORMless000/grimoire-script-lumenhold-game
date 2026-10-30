@@ -60,6 +60,9 @@ Wiring is said once, where a group of cards shares it, not on every card (`docs/
 | a mini-plot (a bespoke storyline) | `thread: <id>` | `@thread <id>`, `from: story`, `with: begun=flag(<what the start card sets>)`, `members: start <card>`; steps wait on it without repeating the test |
 | a club or job capstone (start, preparations, a spell) | `thread: <spell>_quest`; a part's working option ends `next` | `@thread … from: quest` with `with: begun=<flag>`, `members:` (`start`, `part … flag=…`, `final`) |
 | a scene (cards in one sitting: a delve, a party) | `thread: <scene>`; a step ends `next` | `@thread <scene>`, `from: scene`; whatever starts it does `queue any in <scene> now` |
+| a step of a midnight mini-delve (the Whisperwood, the heists) | `thread: <its scene>`, its band in `when:` (a depth counter), `next` on the way on | the scene's thread, and the shared cards that end a step (the heists: the way out, a slip, caught; the shape is in `content/events/heists/shared.grim`'s header). A dead-end step for any depth makes sure no night ends without a way out |
+| a punishment card | `pool: detention` | the `detention` state's `day:`, which gives both of the month's visits to that pool |
+| a spell problem (a trouble one spell solves) | `pool: spell_use`, `weight: spell_draw(<spell>)`, `place:`, the spell as `up[<spell>]` | `spell_use` (`content/events/spell_uses.grim`) and `@cond spell_draw` (rare before you know the spell, likely after); the course spells' everyday uses add a pool and an appointment per spell |
 | the main plot | `thread: hollowstar` (an arc) | `@arc`: its `beat:` cards are dealt by `beats`, one plot card a month |
 | a follow-up | `trigger: queued` | the card that queues it (`queue x in 2`, `queue x now`) |
 
@@ -78,6 +81,8 @@ Each event will be seen several times. Use at least three variation points acros
 **Cast roles are re-filled on every showing.** A sequence must never imply the same companion as last time ("a scarf to go with last time's hat", "you each suspect the other"): anchor the progression on the place or the player, and let `{friend}` be new each time. Restrict classmate roles with `tagged(friend, student)` (a character's `role:` counts as a tag), so outsiders and staff aren't cast as fellow students.
 
 **Sequences count showings, not choices.** A sequence advances every time the card is shown, whatever the player picked. So it must never describe the payoff of a choice ("a reader you helped last time", "Lyra respects your calls now"): a player who always took the other option, or lost the challenge, never earned it. Gate such lines on state instead (`performance(track) >= 60`, `rel(lyra) >= 20`).
+
+**Familiarity reads this card's own history.** An "again" line keys on `seen(<own id>) > 1`, never on a counter other cards move too (the deepest step reached, visits to a place): the player may never have met this card. A later showing never assumes how an earlier one ended (the lock you picked, the charm that was confiscated); gate such a line on a flag the option sets (`{flag(heist_pearl_taken): …|…}`).
 
 Don't build a repeatable on a one-time surprise (a secret door, a confession). Those are milestones, not pool events. The premise should be a *situation that recurs*: the queue at the refectory, the draft in the observatory, the lecturer's habit.
 
