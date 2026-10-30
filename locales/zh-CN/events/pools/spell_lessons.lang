@@ -5,20 +5,710 @@
 
 
 @event lesson_flame
-# en: Putting Fire Out
-title [dc5132] = 把火灭掉
-# en: Flame is yours now. Professor Thorne gathers the year's new Flame casters in the stone practice room and lights a brazier. "Any fool can start a fire," he says. "You are here to learn to stop one." There is a bucket of water at his feet, and he forbids you to touch it.
-text [490b3a] = 火焰咒如今归你了。索恩教授把这一年新学会火焰咒的人召集到石头练习室，点燃一只火盆。“任何蠢货都能生火，”他说，“你们来这儿，是学怎么把火停下。”他脚边有一桶水，他不许你碰。
-# en: A stone practice room with scorched walls, a stern grey-bearded professor beside a roaring brazier, a bucket of water at his feet.
-scene [dd2300] = 四壁焦黑的石头练习室，一位严厉的灰胡子教授站在熊熊燃烧的火盆旁，脚边一桶水。
-# en: Pull the fire back into your hand
-opt.left.label [4451c4] = 把火收回手里
-# en: You call the flame back like a sleeve pulled over a wrist. It stings, and the brazier flares and sinks. "Again," says Thorne. He says it eleven times.
-opt.left.say.1 [c20bd6] = 你把火焰召回，就像把袖子拉回手腕。手被灼得生疼，火盆窜起又落下。“再来，”索恩说。他说了十一遍。
-# en: Ask what the bucket is for
-opt.right.label [f6e8aa] = 问那桶水是干什么的
-# en: "For the student who doesn't ask," says Thorne, and empties it over the brazier of the boy beside you. Then he explains, for an hour, how every great fire he has known began.
-opt.right.say.1 [933d3a] = “给不提问的学生用的，”索恩说着，把整桶水浇在你旁边那个男生的火盆上。然后他花了一个钟头，讲他见过的每一场大火是怎么烧起来的。
+# en: The Frozen Pump
+title [f1397c] = 冻住的水泵
+# en: {The kitchen pump froze solid in the night, and the cook is standing in the yard with an empty kettle and a face like thunder. No water, no porridge, and the whole school down for breakfast in half an hour.|The pump again, frozen again. The cook has wrapped it in sacking, which has also frozen.|Frost on the pump, an empty kettle, a cook looking round the yard. Her eyes stop on you.}
+text [b57477] = {厨房的水泵夜里冻得结结实实，厨娘拎着空水壶站在院子里，脸色像要打雷。没水就没粥，半个钟头后全校都要下来吃早饭。|又是水泵，又冻住了。厨娘拿麻袋把它裹了起来，麻袋也冻住了。|水泵上的霜，空水壶，一位在院子里四下张望的厨娘。她的目光停在了你身上。}
+# en: A kitchen yard at a winter dawn, an iron pump furred white with frost, a cook with an empty kettle and a queue of porridge pans.
+scene [b22db5] = 冬日黎明的厨房院子，一台铁水泵上结满白霜，一位厨娘拎着空水壶，旁边排着一溜粥锅。
+# en: Carry water up from the lake
+opt.left.label [216f12] = 从湖边挑水上来
+# en: {You haul buckets up from the lake till your hands are blue. Breakfast is late, and the cook gives you the first bowl and the skin off the top.|Up the path with a bucket, down with an empty one. The porridge is lumpy and nobody minds.|You and two kitchen hands carry the lake up to the castle a bucket at a time. The cook calls you her water-horses.}
+opt.left.say.1 [a26580] = {你从湖边一桶桶往上挑，直到手冻得发青。早饭晚了，厨娘给你盛了第一碗，还有最上面那层皮。|提着桶上坡，拎着空桶下坡。粥结了块，没人在乎。|你和两个帮厨一桶一桶地把湖挑进城堡。厨娘管你们叫她的水马。}
+# en: Help her serve bread and cheese instead
+opt.right.label [3d285c] = 帮她改发面包奶酪
+# en: {No porridge today. You slice bread with the cook while the hall grumbles, and the grumbling is mostly at you.|Bread, cheese and cold milk. The first-years look betrayed.|You hand out bread at the hatch and take the complaints with a smile. The cook says you've a future in kitchens, and doesn't mean it as a compliment.}
+opt.right.say.1 [6e01b0] = {今天没粥。你和厨娘一起切面包，膳堂里一片抱怨，大多冲着你。|面包，奶酪，冷牛奶。一年级生们一脸被背叛。|你在窗口发面包，笑着接下所有抱怨。厨娘说你在厨房有前途，不是夸你。}
+# en: Thaw it with your hand
+opt.up.label [59da6a] = 用手把它化开
+# en: {You close your hand round the pump and let the heat come. The frost runs off it like sweat, and the handle swings. The cook fills her kettle and pats your cheek with a floury hand.|A little fire in a cupped palm. The pump coughs, and water comes. Breakfast is on time, and the cook knows exactly why.|{spell_level(flame) >= 2: You thaw the pump, the trough and the yard step for good measure. The cook gives you porridge with honey on it every morning that week.|You warm the pump till it ticks, and the water comes. The cook asks if you'll be up this early every frost.}}
+opt.up.say.1 [684e23] = {你用手握住水泵，让热意透出来。白霜像汗一样流下，泵把手一压就动。厨娘灌满了水壶，用沾着面粉的手拍了拍你的脸。|掌心拢着一点小火。水泵咳了一声，水来了。早饭准时，厨娘清楚为什么。|{spell_level(flame) >= 2: 你化开了水泵，顺手把水槽和院子台阶也化开了。那一星期厨娘每天早上都给你的粥里加蜂蜜。|你把水泵焐到嘀嗒作响，水来了。厨娘问你是不是每个霜天都起这么早。}}
+
+@event lesson_foresight
+# en: Behind the Hippogriff
+title [bdcdb2] = 鹰头马身有翼兽的后面
+# en: {Professor Brask wants the feed bucket from the far end of the aisle, and the only way there is behind the grey hippogriff, who kicks. Not always. That's the trouble.|The grey hippogriff again, hoof cocked, between you and the bucket. Brask, from somewhere: "Don't stop behind her!"|The aisle, the bucket, the hippogriff. She turns one eye back to watch you decide.}
+text [009ec7] = {布拉斯克教授要过道尽头那只饲料桶，而去那儿的唯一一条路，就是从那匹会踢人的灰色鹰头马身有翼兽身后走过去。它不总踢。麻烦就在这儿。|又是那匹灰色的，蹄子抬着，挡在你和桶之间。布拉斯克不知在哪儿喊：“别在她身后停下！”|过道，桶，鹰头马身有翼兽。它回过一只眼睛来，看你怎么决定。}
+# en: A narrow stable aisle, a big grey hippogriff in a stall with its back hoof cocked, a bucket of feed left on the far side of it.
+scene [ad0259] = 狭窄的马厩过道，一匹高大的灰色鹰头马身有翼兽站在隔栏里，一只后蹄抬着，饲料桶就放在它另一头。
+# en: Go round by the yard
+opt.left.label [16c129] = 从院子绕过去
+# en: {You go out into the rain, round the whole stable block and in at the far door. Brask takes the bucket and says, "Took your time."|The long way, through mud to the ankles. The hippogriff watches you arrive at the far end with what looks like satisfaction.|Round by the yard, again. You know every puddle of it now by name.}
+opt.left.say.1 [63a5c7] = {你冒雨出门，绕着整座马厩走了一圈，从另一头的门进来。布拉斯克接过桶，说：“磨蹭。”|远路，泥没到脚踝。鹰头马身有翼兽看着你从另一头出现，神情像是很满意。|又从院子绕。如今每个水坑你都叫得出名字了。}
+# en: Tempt her round with an apple
+opt.right.label [815ac5] = 拿苹果引它转身
+# en: {You hold an apple out over the stall door until she turns her whole body round for it, hoof and all, and slip past behind her. Brask says nothing, which from her is a medal.|An apple, a murmur, and she swings round to face you. You walk past her tail. Brask grunts approval from the hayloft.|She turns for the apple and takes your sleeve with it. You get past anyway. Brask stops what she's doing to watch.}
+opt.right.say.1 [ec2884] = {你把苹果举在隔栏门上，直到它连蹄子带身子整个转过来够它，你从它身后溜了过去。布拉斯克什么也没说，这在她那儿就是一枚勋章。|一个苹果，一声低语，它转过来面对你。你从它尾巴后走了过去。布拉斯克在干草棚上哼了一声表示赞许。|它为苹果转过身，连你的袖子一起叼走了。你还是过去了。布拉斯克停下手里的活来看。}
+# en: {She takes the apple and kicks anyway. Not you; the bucket, which kicks you. Brask sighs very loudly.|She eats the apple without turning an inch. The hoof catches your hip and you sit down hard in the straw.|A crunch, a kick, a clatter, and a long lecture from Brask about bribing hippogriffs.}
+opt.right.say.2 [c560e1] = {它吃了苹果，照样踢。不是踢你；踢桶，桶踢了你。布拉斯克叹了一口很响的气。|它吃着苹果，一寸也没转。蹄子扫中你的胯骨，你一屁股坐进了干草里。|一声咔嚓，一踢，一声哐当，然后是布拉斯克关于贿赂鹰头马身有翼兽的一长段训话。}
+# en: Walk past between kicks
+opt.up.label [0d07a3] = 在两踢之间走过去
+# en: {You glimpse the kick a moment before it comes, step back, let it pass, and stroll on. Brask, who saw, raises one eyebrow by a quarter of an inch.|A moment ahead: kick, gap, walk. You come back with the bucket and she hasn't touched you.|You see the hoof lift before she knows she'll lift it. She turns her head to look at you as if you'd cheated, which you have.}
+opt.up.say.1 [8aa2d7] = {你比那一踢早一刻瞥见了它，退后一步，让它踢过去，然后从容走过。看见了的布拉斯克，把一边眉毛抬了四分之一寸。|早一刻：一踢，一空，一走。你把桶拿回来了，它碰都没碰到你。|蹄子还没抬，你就先看见了，比它自己知道得还早。它扭过头来看你，像是你作弊了，你确实作弊了。}
+
+@event lesson_mend
+# en: Broken Spectacles
+title [62f2eb] = 摔碎的眼镜
+# en: {A cart bumps an old man in the market and his spectacles go under the wheel. He's on his knees on the cobbles, feeling for the pieces. "I can't read a price without them," he says, to nobody.|Market day, and the same old man, the same cobbles, a different cart. He keeps the pieces in a handkerchief now, and holds it out to whoever stops.|The old man with the spectacles has seen you coming and is already unwrapping the handkerchief.}
+text [a7269c] = {集市上一辆车撞了一位老人，他的眼镜掉到了车轮底下。他跪在石子路上摸那些碎片。“没有它，价钱我一个也看不清，”他说，不知是对谁说。|集市日，又是那位老人，又是那条石子路，换了一辆车。他现在把碎片包在手帕里，谁停下来就递给谁看。|戴眼镜的老人已经看见你走过来，正把手帕打开。}
+# en: A cobbled village street on market day, an old man on his knees feeling among the stones for the pieces of his spectacles.
+scene [1ae60a] = 集市日的村中石子路上，一位老人跪在地上，在石缝间摸索着自己眼镜的碎片。
+# en: Read him the prices
+opt.left.label [480bfa] = 替他念价钱
+# en: {You spend the morning on your feet reading him the prices of everything. He buys you a bun with the change and tells you about his late wife's marrows.|Price after price, stall after stall, till your feet ache. He haggles like a general. You buy him a cup of tea because he's earned it.|You read for him; he bargains. By noon you're footsore, and the stallholders call you his eyes.}
+opt.left.say.1 [5cd068] = {你站着花了一上午给他念每样东西的价钱。他用找零给你买了个小面包，跟你讲他过世的太太种的西葫芦。|一个价钱接一个价钱，一个摊子接一个摊子，直到你脚都酸了。他砍价像个将军。你请他喝了杯茶，这是他应得的。|你念，他砍。到中午你脚都走疼了，摊贩们都管你叫他的眼睛。}
+# en: Take the pieces to the glazier for him
+opt.right.label [7ffaff] = 替他把碎片送去配镜匠
+# en: {The glazier wants a fortnight and a silver. You pay the deposit. The old man grips your hand and says he'll remember your face, if he can see it.|A deposit, a receipt, a fortnight. He thanks you three times and asks your name twice.|You pay for the new lenses. He insists on writing you an IOU, which you can't read either.}
+opt.right.say.1 [eb6ed4] = {配镜匠要两个星期和一枚银币。你付了定金。老人紧紧握着你的手，说他会记住你的脸，只要他看得见。|定金，收据，两个星期。他谢了你三回，问了你两回名字。|你付了新镜片的钱。他坚持给你写一张欠条，你也看不懂。}
+# en: Mend them on the spot
+opt.up.label [bf5c8f] = 当场把它修好
+# en: {You lay the pieces on your palm and close your fingers. When you open them, the spectacles are whole. He puts them on, looks at you, and laughs out loud.|Glass to glass, crack to crack. They mend with a sound like a held breath let go. He reads you the nearest price at once, to prove it.|{spell_level(mend) >= 2: You mend them so well they're better than new; he swears he can see the church clock from here. He can't, but he's delighted.|You mend them; he wipes them on his scarf. "There you are," he says to the market, which he can see again.}}
+opt.up.say.1 [d15508] = {你把碎片放在掌心，合拢手指。再张开时，眼镜完好如初。他戴上，看着你，大声笑了出来。|玻璃对玻璃，裂缝对裂缝。它们愈合时发出一声像是憋着的气终于吐出来的声音。他立刻给你念了最近的一个价钱，以示证明。|{spell_level(mend) >= 2: 你修得比新的还好；他发誓从这儿就能看见教堂的钟。他看不见，但他高兴极了。|你修好了；他在围巾上擦了擦。“这就对了，”他对着集市说，他又看得见它了。}}
+
+@event lesson_glamour
+# en: Tutor Wanted
+title [6ae6c6] = 诚聘家教
+# en: {A first-year's mother, in a hat with a whole bird on it, is interviewing tutors in front of the job board. The pay is very good. There are four seniors in the queue ahead of you, and she has rejected two for their shoes.|The lady with the hat is back: her son has failed another test. The queue is shorter, the hat is bigger.|The hat again, and a new list of questions. The seniors in the queue look as if they've been through this before.}
+text [0486f8] = {一个一年级生的母亲戴着一顶上面趴着一整只鸟的帽子，正在招工告示板前面试家教。报酬非常好。你前面排着四个高年级生，她已经因为鞋子刷掉了两个。|戴帽子的太太又来了：她儿子又没考过。队伍短了，帽子大了。|又是那顶帽子，又是一张新的问题清单。队里的高年级生看起来都经历过这一遭。}
+# en: A cork notice board in an entrance hall, a stiff, well-dressed mother interviewing a queue of older students for a tutoring post.
+scene [005441] = 门厅里的软木告示板前，一位衣着讲究、神情严厉的母亲正在面试一队想当家教的高年级生。
+# en: Wait your turn and answer straight
+opt.left.label [01e1d3] = 排队，照实回答
+# en: {She asks about your marks, your family and your shoes. You answer straight. She hires you "on trial", which lasts the rest of term.|You give her honest answers and she likes them better than the flattery before yours. A month of tutoring, well paid.|Straight answers, again. She says you're "refreshingly dull", and hires you.}
+opt.left.say.1 [369afe] = {她问你的成绩、你的家世、你的鞋。你照实回答。她“试用”了你，一试就试到了学期末。|你给她的老实话，她比你前面那些奉承话更爱听。一个月的家教，报酬丰厚。|又是老实话。她说你“无聊得叫人耳目一新”，雇了你。}
+# en: {She looks at your shoes. That's the interview.|She hires the senior behind you, who agreed with her about everything.|"Not quite what we're looking for," says the hat.}
+opt.left.say.2 [147585] = {她看了看你的鞋。面试就到这儿了。|她雇了你后面那个高年级生，那人什么都同意她。|“不太是我们要找的，”那顶帽子说。}
+# en: Point her at a friend who needs the money
+opt.right.label [a3165e] = 把她引荐给缺钱的朋友
+# en: {You tell her about a classmate who's brilliant and broke. She writes the name down. Your classmate buys you supper with the first week's pay.|You send her somewhere better than you. Your friend gets the job and the hat, in a manner of speaking.|A name, a recommendation, a handshake. You walk away with nothing but goodwill, which keeps.}
+opt.right.say.1 [d141b2] = {你跟她说起一个聪明又穷的同学。她记下了名字。你的同学用第一周的工钱请你吃了晚饭。|你把她送去了比你更好的地方。你的朋友得了这份工，也算得了那顶帽子。|一个名字，一句推荐，一次握手。你走开时除了人情什么也没带，而人情是存得住的。}
+# en: Charm her before she asks
+opt.up.label [42583a] = 在她开口前迷住她
+# en: {You smile, and she warms to you before you've said a word. By the end she's offering more than the notice said. You're not sure you earned it.|A little more charm than you have. She hires you on the spot and tells the queue to go home. They look at you very hard.|She remembers liking you and not quite why. The post is yours, and her son, it turns out, is a sweet lad who hates arithmetic.}
+opt.up.say.1 [ab3d7a] = {你一笑，她还没等你开口就对你有了好感。到最后她给的比告示上写的还多。你不确定这是你挣来的。|比你本有的多一点魅力。她当场雇了你，叫队里其他人都回去。他们非常用力地看着你。|她记得自己喜欢你，却说不太清为什么。这份工是你的了，而她儿子原来是个乖小伙，只是讨厌算术。}
+
+@event lesson_haste
+# en: The Crockery Stall
+title [88677c] = 陶器摊
+# en: {Market day, and the trestle under the crockery stall gives a crack and starts to fold at one end. A hundred jars and jugs begin to slide, all together, towards the cobbles, and the stallholder has both hands over her mouth.|The crockery stall again, a new trestle, the same crack. This time it's teapots.|The trestle cracks, the jugs slide, the stallholder looks straight at you.}
+text [971250] = {集市日，陶器摊下的支架咔的一声，一头开始折下去。上百只罐子和水壶一齐朝石子路滑去，摊主双手捂着嘴。|又是那个陶器摊，换了新支架，还是那一声咔。这回是茶壶。|支架一裂，水壶一滑，摊主径直看向你。}
+# en: A village market, a crockery stall's trestle buckling at one end, a hundred jars and jugs beginning to slide towards the cobbles, a stallholder with her hands to her mouth.
+scene [2eb239] = 村里的集市，一个陶器摊的支架一头正在弯折，上百只罐子和水壶开始朝石子路滑去，摊主双手捂着嘴。
+# en: Get your shoulder under the trestle
+opt.left.label [4725de] = 用肩膀顶住支架
+# en: {You dive under the folding end and take it on your shoulder. Half the jars stop; the other half don't. The stallholder says half is a miracle.|You hold the trestle up with your back while she grabs what she can. You walk home crooked.|Shoulder, trestle, groan. You save the big jugs and lose the little ones, and she gives you a cracked one to keep.}
+opt.left.say.1 [3536d0] = {你钻到折下去的那头底下，用肩膀扛住。一半罐子停住了；另一半没有。摊主说一半就是奇迹。|你用背撑住支架，她能抢多少抢多少。你歪着身子走回家。|肩膀，支架，一声呻吟。大水壶保住了，小的没了，她送你一只有裂纹的留作纪念。}
+# en: Help sweep up and sell the seconds
+opt.right.label [496e90] = 帮忙清扫，卖次品
+# en: {You help her sweep up, then stand at the stall all morning calling out "slightly chipped, half price". You sell the lot.|Broom, dustpan, then patter. By noon the market has bought every cracked jug as a bargain.|You sweep up and sell the survivors. She says you've the gift of the gab and offers you a Saturday job.}
+opt.right.say.1 [dc8bf3] = {你帮她扫干净，然后在摊前站了一上午，吆喝“微有磕碰，半价”。你全卖光了。|扫帚，簸箕，然后是吆喝。到中午，集市把每只裂了的水壶都当便宜货买走了。|你扫干净，把幸存的卖掉。她说你能说会道，问你周六要不要来打工。}
+# en: Catch them as they fall
+opt.up.label [1df051] = 趁它们落下时接住
+# en: {The world slows and you don't. You catch a jar, set it down, catch a jug, set it down, a dozen in a breath, and when the world speeds up again nothing is broken.|You move in the gaps between their falling. Jar, jug, teapot, jar. The market stops to stare; the stallholder kisses the last jug.|A blur of hands. When it's over the whole stall is stacked on the cobbles, unbroken, and you're out of breath and grinning. It wears off quickly.}
+opt.up.say.1 [d35873] = {世界慢了下来，你没有。你接住一只罐子，放下，接住一只水壶，放下，一口气十几只，等世界重新快起来，什么也没碎。|你在它们下落的间隙里移动。罐子，水壶，茶壶，罐子。整个集市停下来看；摊主亲了最后那只水壶。|一阵手影。结束时整个摊子都码在了石子路上，完好无损，你喘着气咧嘴笑。它很快就消退了。}
+
+@event lesson_ward
+# en: The Rattling Engine
+title [0dc825] = 哐哐作响的机器
+# en: {Somebody's half-built engine on the workshop bench has started to rattle, and steam is coming out of places steam shouldn't. Four students are leaning in to watch it, closer and closer. Its maker has gone to fetch a spanner.|The engine again, rebuilt, rattling again. The watchers lean in again. Nobody in this workshop learns.|A rattle, a hiss, a ring of faces leaning in. You know how this ends.}
+text [4ffd48] = {工坊台上不知谁的半成品机器开始哐哐作响，蒸汽从不该冒汽的地方冒出来。四个学生凑过去看，越凑越近。造它的人去拿扳手了。|又是那台机器，重造了，又在响。看热闹的又凑了过去。这间工坊里没人长记性。|一阵哐哐，一声嘶嘶，一圈凑近的脸。你知道结局。}
+# en: A cluttered workshop, a half-built brass engine on the bench rattling and steaming, a handful of students leaning in close to watch.
+scene [6079ac] = 杂乱的工坊，工作台上一台半成品的黄铜机器哐哐作响、冒着蒸汽，几个学生凑得很近在看。
+# en: Open the relief valve yourself
+opt.left.label [094186] = 亲手打开泄压阀
+# en: {You reach through the steam and wrench the valve open. It screams, scalds your knuckles and settles. The watchers decide it was always meant to do that.|Valve, wrench, a jet of steam that takes the skin off two fingers. The engine stops rattling and sulks.|You find the valve by feel and open it. The steam goes up, the pressure goes down, and your hand goes into a bucket.}
+opt.left.say.1 [05b4a0] = {你把手伸进蒸汽，一把拧开阀门。它尖叫着烫了你的指节，然后平息了。看热闹的认定它本来就该这样。|阀门，扳手，一股蒸汽烫掉了两根手指的皮。机器不响了，闹起了脾气。|你摸着找到阀门，把它打开。蒸汽上去，压力下来，你的手进了水桶。}
+# en: Throw the fire bucket over it
+opt.right.label [df9735] = 把消防桶泼上去
+# en: {You empty the fire bucket over the engine. It dies with a hiss, and its maker, coming back with the spanner, wants to know who drowned it.|Water on hot brass. The workshop fills with steam and everyone's opinion of you.|You douse it. It's safe and it's ruined, and its maker won't speak to you for a week.}
+opt.right.say.1 [c860b8] = {你把消防桶泼在机器上。它嘶的一声死了，拿着扳手回来的主人想知道是谁淹死了它。|水浇在滚烫的黄铜上。工坊里满是蒸汽，还有每个人对你的看法。|你浇灭了它。安全了，也毁了，主人一星期没跟你说话。}
+# en: Close a ward round it
+opt.up.label [c53d27] = 用护界罩住它
+# en: {You close a pale shell round the engine just as it goes. The blast stays inside it, a little storm in a bowl, and when it clears the engine is whole, only shaken. Its maker, back with the spanner, finds a valve to fix and nothing worse.|The ward takes the bang. When it fades, the engine is singed but standing, and the watchers are applauding.|{spell_level(ward) >= 2: You close one ward round the engine and another round the watchers. It goes off like a firework in a jar, and its maker asks you to do that again, for science.|The ward holds it in. Inside, the engine shudders, hisses, and stops, and its whole term's work survives.}}
+opt.up.say.1 [06cb6b] = {机器炸开的一刻，你在它周围合上一层淡淡的壳。爆炸被关在里面，像碗里的一场小风暴，等它散去，机器完好，只是震了一下。拿着扳手回来的主人发现只需修一个阀门，没有更糟的。|护界接下了那一声巨响。等它消散，机器焦了但还立着，看热闹的在鼓掌。|{spell_level(ward) >= 2: 你在机器周围合上一道护界，又在看热闹的人周围合上一道。它像罐子里的烟火一样炸开，主人请你为了科学再来一次。|护界把它关在了里面。里面的机器颤抖，嘶嘶作响，然后停了，它整个学期的心血保住了。}}
+
+@event lesson_shadowstep
+# en: The Wrong Side of the Gate
+title [bd4405] = 门的另一边
+# en: {You lingered by the wall a little too long, and the porter has locked the courtyard gate with you on the outside of it. The dormitory is thirty yards away, behind iron.|The gate again, locked again, you outside it again. You must like it out here.|Thirty yards of courtyard and one locked gate. The porter's lodge lamp has just gone out.}
+text [98d798] = {你在墙边多待了一会儿，门房就把庭院的门锁上了，把你锁在了外面。宿舍就在三十码外，隔着铁栏。|又是那道门，又锁了，你又在门外。你一定很喜欢外面。|三十码的庭院，一道锁着的门。门房小屋的灯刚刚熄了。}
+# en: A tall iron gate in a courtyard wall at night, locked, a student on the outside of it, the castle windows dark beyond.
+scene [739a1e] = 夜里庭院墙上一道高高的铁门，锁着，一个学生站在门外，门后城堡的窗户一片漆黑。
+# en: Ring for the porter
+opt.left.label [9b7339] = 摇铃叫门房
+# en: {The porter comes in his nightcap, says nothing, writes your name in a book and lets you in. He hums while he writes it.|You ring. He comes. He looks at you for a long time and lets you in with a lecture on the history of gates.|The porter lets you in and asks if you'll be wanting a key of your own. He doesn't mean it kindly.}
+opt.left.say.1 [657800] = {门房戴着睡帽出来了，一言不发，把你的名字写进一本簿子，放你进去。他写的时候还哼着歌。|你摇铃。他来了。他盯着你看了很久，一边放你进去一边给你讲了一通门的历史。|门房放你进去，问你要不要配一把自己的钥匙。他不是好心问的。}
+# en: Climb the wall
+opt.right.label [69cf9b] = 翻墙
+# en: {Up the ivy, along the top, down the water butt. Nobody sees you but a cat, who thinks less of you for it.|You know the ivy now. Over, down, in.|A clean climb in the dark. You land in the courtyard without a sound, and the castle doesn't notice.}
+opt.right.say.1 [d663e1] = {爬上常春藤，沿着墙头走，顺着雨水桶下来。除了一只猫谁也没看见你，那只猫因此看低了你。|常春藤你如今熟了。翻过去，下来，进去。|在黑暗里干净利落地一翻。你落进庭院时没出一点声，城堡什么也没察觉。}
+# en: {The ivy comes away in your hands. You land in the rosebed on the right side of the wall, which is something.|You make the top and slip. Your knee will tell the story for a week.|Down the water butt, and into the water butt. You squelch to bed.}
+opt.right.say.2 [a2497b] = {常春藤在你手里断了。你掉进了墙这边的玫瑰花坛，好歹是这边。|你爬到墙头，滑了。你的膝盖会把这个故事讲上一个星期。|顺着雨水桶下来，下进了雨水桶。你一路吱吱嘎嘎地湿着回去睡觉。}
+# en: Step through the gate's shadow
+opt.up.label [b678c6] = 借门影一步穿过
+# en: {You step into the gate's long shadow and out of the courtyard wall's. The shadows in between are cold and don't like you. You're in.|Shadow to shadow, iron between. You come out shivering in the right place.|A step, a chill, and the courtyard. Behind you the gate is still locked, which feels like winning.}
+opt.up.say.1 [846c9f] = {你踏进铁门长长的影子，从庭院墙的影子里走出来。中间的影子又冷又不喜欢你。你进来了。|影子到影子，铁栏在中间。你打着寒战，出现在了对的地方。|一步，一阵凉意，庭院到了。身后那道门还锁着，感觉像是赢了。}
+
+@event lesson_animate
+# en: Chairs After the Feast
+title [528225] = 宴会后的椅子
+# en: {You're on the stacking rota tonight, and the feast has left three hundred chairs scattered across the great hall like a battlefield. The rota says everyone else has a note from the infirmary.|The stacking rota again. Three hundred chairs again. The same notes from the infirmary, in the same handwriting.|Chairs. Hundreds. You and a rota sheet. Somewhere a prefect is pretending to have a cold.}
+text [b2f998] = {今晚轮到你叠椅子，宴会留下三百把椅子，像战场一样散在大礼堂里。值日表上说，其他人都有医务室开的条子。|又轮到你叠椅子。又是三百把椅子。又是那些医务室的条子，又是同一个笔迹。|椅子。几百把。你和一张值日表。某处有个级长正在假装感冒。}
+# en: The great hall after a feast, hundreds of chairs scattered between long tables, one tired student with a rota sheet.
+scene [b66cdd] = 宴会过后的大礼堂，几百把椅子散落在长桌之间，一个疲惫的学生拿着一张值日表。
+# en: Stack them all yourself
+opt.left.label [8c2bbd] = 全部自己叠
+# en: {You stack till midnight. Your arms are the shape of chairs. The hall, in the morning, is perfect, and nobody notices.|Chair by chair. You find a dropped earring, two forks and a love letter, and stack them all neatly with the rest.|You finish by lamplight. The cook brings you the last of the pudding, which is worth the arms.}
+opt.left.say.1 [3d05d6] = {你一直叠到半夜。你的胳膊成了椅子的形状。第二天早上礼堂完美无缺，没有一个人注意到。|一把一把地叠。你捡到一只耳环、两把叉子和一封情书，都跟椅子一起整整齐齐地码好了。|你借着灯光叠完了。厨娘给你端来最后一点布丁，这胳膊值了。}
+# en: Bribe some first-years with sweets
+opt.right.label [0dac7b] = 用糖收买几个一年级生
+# en: {A bag of toffees buys four first-years for an hour. They stack chairs into a tower that touches the gallery. You take it down quickly.|Sweets for labour. They finish in half the time and ask if there's a feast every week.|You pay in toffee. The work is done badly and cheerfully.}
+opt.right.say.1 [102fba] = {一袋太妃糖买了四个一年级生一个钟头。他们把椅子叠成一座碰得到楼座的塔。你赶紧把它拆了。|糖换苦力。他们一半时间就干完了，还问是不是每周都有宴会。|你用太妃糖付账。活干得很糟，干得很开心。}
+# en: Set the chairs stacking themselves
+opt.up.label [dd0c32] = 让椅子自己叠起来
+# en: {The first chair gets up, walks to the wall and sits on another. The rest follow, in a long, polite queue. You sit on the last one and watch.|The chairs stack themselves, one a breath, and keep on doing it. Afterwards one keeps trying to stack itself on a bench.|You animate the chairs. They do it, and do it, and do it. By the end the cook is clapping, and one chair has stacked itself on you.}
+opt.up.say.1 [b8e12e] = {第一把椅子站起来，走到墙边，坐到另一把上面。其余的跟着，排成长长一队，彬彬有礼。你坐在最后一把上看着。|椅子们自己叠，一口气一把，一直叠下去。事后有一把还老想往长凳上叠。|你让椅子活了过来。它们叠啊叠啊叠。到最后厨娘在鼓掌，有一把椅子叠到了你身上。}
+
+@event lesson_starlight
+# en: The Dark Stair
+title [4d4dd1] = 漆黑的楼梯
+# en: {The wind has blown out every lamp on the observatory stair, and halfway up it a knot of first-years is frozen in the dark, holding hands. Something in the dark is dripping. It's probably only the dark.|The stair again, lamps out again. The first-years this time have brought a candle, which has gone out too.|Black stair, cold draught. The first-years have learned to wait for you.}
+text [a8b8f0] = {风把观星台楼梯上的灯全吹灭了，半中间有一小撮一年级生在黑暗里冻住了，手拉着手。黑暗里有什么在滴水。多半只是黑暗。|又是那道楼梯，灯又灭了。这次一年级生们带了一支蜡烛，也灭了。|漆黑的楼梯，冰冷的穿堂风。一年级生们已经学会了等你。}
+# en: A narrow spiral stair inside the observatory at night, pitch black, a cluster of first-years pressed against the wall halfway up.
+scene [a346f2] = 夜里观星台里一道狭窄的螺旋楼梯，伸手不见五指，一群一年级生贴着墙挤在半中间。
+# en: Lead them down by touch
+opt.left.label [3e355d] = 摸着带他们下去
+# en: {Hand over hand on the rail, step by step, counting out loud. At the bottom they let go of you one finger at a time.|You lead them down singing, badly, so they'll laugh. They do.|By touch, by count. One of them says you've done this before. You have.}
+opt.left.say.1 [d9c740] = {一只手接一只手扶着栏杆，一级一级，大声数着。到了底下，他们一根手指一根手指地松开了你。|你唱着歌领他们下去，唱得很糟，好让他们笑。他们笑了。|摸着，数着。其中一个说你以前干过这个。你确实干过。}
+# en: Fetch a lamp from the porter
+opt.right.label [ff0baf] = 去门房那儿拿灯
+# en: {You go for a lamp. By the time you're back they've found their own way down, and one is crying, and none of them will say why.|The porter gives you a lamp and a lecture on the observatory's wind. When you light the stair, it's empty and dripping.|You come back with the lamp. They're all sitting on the stair, perfectly fine, and furious with you for taking so long.}
+opt.right.say.1 [1f6627] = {你去拿灯。等你回来，他们已经自己摸下去了，有一个在哭，谁也不肯说为什么。|门房给了你一盏灯，外加一通关于观星台的风的训话。你照亮楼梯时，上面空无一人，还在滴水。|你拿着灯回来。他们全都坐在楼梯上，好好的，气你去了这么久。}
+# en: Hold up a star
+opt.up.label [6c838e] = 举起一颗星
+# en: {You hold up a named star in your palm. The stair goes silver to the top, and the first-years walk up into it as if into morning.|Starlight in the hand. The dark draws back from it, slowly, the way it does from a fire. The dripping stops.|A star, held up. The first-years ask its name, and you tell them, and they say it all the way up the stair.}
+opt.up.say.1 [d9267d] = {你在掌心托起一颗有名字的星。楼梯一直银到顶，一年级生们走进那光里，像走进早晨。|手中的星光。黑暗慢慢地从它面前退开，就像从火堆前退开那样。滴水声停了。|一颗星，举了起来。一年级生们问它的名字，你告诉了他们，他们一路念着它走上了楼梯。}
+
+@event lesson_seal
+# en: Keep Sealed
+title [450a48] = 务必封好
+# en: {A parcel on the dispatch bench is stamped KEEP SEALED in red, and its wax has split. Something inside is buzzing, and the buzzing is getting louder. It's due at the Conclave by nightfall.|Another KEEP SEALED, another split seal, another buzz. Somebody in the Conclave is sending live things by post.|The bench, the parcel, the buzz. The dispatch bell rings as if it's your fault.}
+text [9ad068] = {发件台上有个包裹，盖着红色的“务必封好”，封蜡却裂了。里面有什么在嗡嗡响，越来越响。天黑前要送到七塔议会。|又一个“务必封好”，又一道裂开的封蜡，又一阵嗡嗡声。议会里有人在用邮政寄活物。|发件台，包裹，嗡嗡声。发件铃响了，好像全是你的错。}
+# en: A draughty courier loft, a parcel stamped KEEP SEALED with its wax split open, something inside it buzzing angrily.
+scene [244c03] = 四面漏风的信使阁楼里，一个盖着“务必封好”的包裹，封蜡裂开了，里面有什么在气冲冲地嗡嗡响。
+# en: Tie it shut and hope
+opt.left.label [2fe439] = 捆住它，听天由命
+# en: {Twine, three times round and a sailor's knot. It buzzes all the way to the Conclave, but it gets there shut, and the Conclave tips.|You lash it like a sea chest. The courier who takes it holds it at arm's length, and brings you back a tip.|Tied, double-knotted, and sent. The Conclave sends back a tip.}
+opt.left.say.1 [290c2f] = {麻绳绕三圈，打个水手结。它一路嗡嗡到了议会，但到的时候还是封着的，议会给了小费。|你像捆船上的箱子一样捆住它。接手的信使把它举得远远的，回来时给你带了笔小费。|捆好，打双结，送走。议会回赠了一笔小费。}
+# en: {The twine snaps. Out comes a cloud of very small, very cross moths. The loft is grey with them for an hour.|You tie it; it bursts. Something stings you, and the parcel is half empty when it arrives.|The knot slips and the lid lifts. You sit on it until somebody brings a crate.}
+opt.left.say.2 [8d146c] = {麻绳断了。出来一团很小、很恼火的蛾子。阁楼灰了整整一个钟头。|你捆了，它炸了。有什么蜇了你一下，包裹到的时候只剩半箱。|结一滑，盖子就掀开了。你坐在上面，直到有人搬来一只板条箱。}
+# en: Send it back marked "damaged"
+opt.right.label [d13ea4] = 标上“破损”退回
+# en: {You stamp it DAMAGED IN TRANSIT and put it on the return shelf. Somebody at the Conclave will be cross with somebody else.|Back it goes. It buzzes all the way down the shelf.|Return to sender. You write a note about wax that is longer than it needs to be.}
+opt.right.say.1 [91c0f0] = {你盖上“运输途中破损”，把它放到退件架上。议会里会有人冲另一个人发火。|退回去了。它沿着架子一路嗡嗡下去。|退回寄件人。你写了一张关于封蜡的条子，写得比需要的长。}
+# en: Seal it shut
+opt.up.label [d888dd] = 把它封上
+# en: {You lay your hand on the split wax and close it. The buzzing stops dead. What's sealed stays where you put it, and the Conclave's tip is a whole silver.|Sealed. The parcel goes so still you check it's still there. The Conclave's tip is generous.|A touch, and it's shut, and the tip comes back with the receipt. The dispatch clerk asks you to stay on Thursdays.}
+opt.up.say.1 [13f438] = {你把手按在裂开的蜡上，把它合拢。嗡嗡声戛然而止。封住的东西就待在你放的地方，议会的小费是整整一枚银币。|封住了。包裹一下子静得你得确认它还在。议会的小费很大方。|一碰，就合上了，小费随回执一起送来。发件员问你周四能不能留下来。}
+
+@event lesson_brace
+# en: The Runaway Wagon
+title [9e7b97] = 失控的干草车
+# en: {Someone has left Old Maud's hay wagon at the top of the flight field without its chock, and it has started to roll. At the bottom, a broom lesson of first-years has its back to it.|The hay wagon again, rolling again. Maud swears she chocked it. The first-years again, backs turned again.|The wagon. The slope. The lesson at the bottom. You're already moving.}
+text [ffafe6] = {有人把老莫德的干草车停在飞行场坡顶，没塞车轮楔，它开始溜了。坡底，一堂一年级的扫帚课背对着它。|又是那辆干草车，又溜了。莫德发誓她塞了楔子。又是一年级生，又背对着。|车。坡。坡底的课。你已经动起来了。}
+# en: A sloping green field, a hay wagon rolling loose down the slope with no horse, a knot of first-years at a broom lesson in its path.
+scene [192601] = 一片斜坡草地，一辆没套马的干草车顺坡溜了下来，坡底一群一年级生正在上扫帚课，正挡在它的路上。
+# en: Shout and run for the first-years
+opt.left.label [c0a437] = 大喊着冲向一年级生
+# en: {You reach them first and shove the nearest two flat. The wagon thunders past and turns over in the hoops. Hay everywhere; nobody hurt.|You yell, they scatter, you trip. The wagon misses everyone and stops in a ditch.|You herd them clear with your arms out like a goose girl. The wagon passes so close you smell the hay.}
+opt.left.say.1 [f6dc5c] = {你先到一步，把最近的两个推倒在地。车轰隆隆冲过去，在环圈那儿翻了。干草满天；没人受伤。|你大喊，他们四散，你绊倒了。车谁也没撞着，停进了沟里。|你张开双臂像赶鹅一样把他们赶开。车擦身而过，近得你闻得到干草味。}
+# en: Grab the shaft and dig in your heels
+opt.right.label [2928a0] = 抓住车辕，脚跟蹬地
+# en: {You catch the shaft and dig in. It drags you a dozen yards and stops. The broom lesson stares at you as if you'd caught a dragon by the tail.|Heels in the turf, shaft in your hands. It stops. Your shoulders will remember.|You haul it round side-on and it stalls. The first-years cheer; Maud arrives with the chock, very red.}
+opt.right.say.1 [654a30] = {你抓住车辕，死死蹬住。它把你拖了十几码，停了。扫帚课的学生瞪着你，像你揪住了一条龙的尾巴。|脚跟扎进草皮，车辕握在手里。它停了。你的肩膀会记住这一回。|你把它拽得横了过来，它卡住了。一年级生们欢呼；莫德抱着楔子跑过来，脸通红。}
+# en: {The shaft wrenches out of your hands and you sit down hard. The wagon misses everyone, by luck alone.|It drags you, then drops you. The hay comes down on top of you like a judgement.|You catch it; it catches you. Bruised, but the first-years scatter in time.}
+opt.right.say.2 [71e6bf] = {车辕从你手里猛地挣脱，你重重坐倒。车谁也没撞着，全凭运气。|它拖着你，又甩开了你。干草像审判一样落在你身上。|你抓住了它，它也抓住了你。一身淤青，但一年级生们及时散开了。}
+# en: Plant yourself in its path
+opt.up.label [1db05f] = 站稳在它的路上
+# en: {You plant your feet and take the wagon full on. It stops dead against you, and you don't move an inch. The first-years go very quiet.|Braced, the blow lands soft. The wagon stops; your boots leave two grooves in the turf.|You stand in front of it and it stops, as if it had hit a wall that had decided to be you.}
+opt.up.say.1 [cfab23] = {你站稳脚跟，正面接下那辆车。它撞在你身上戛然而止，你一寸没动。一年级生们一下子安静了。|坚守之下，撞击落得很轻。车停了；你的靴子在草皮上犁出两道沟。|你站在它前面，它就停了，就像撞上了一堵决定要做你的墙。}
+
+@event lesson_quickquill
+# en: The Fast Talker
+title [ab4277] = 语速飞快的讲师
+# en: {The visiting lecturer talks like a runaway horse, and you promised a sick classmate a full set of notes. Ten minutes in, you have half a page and a cramp.|Another guest, another gallop. Your sick classmate has sent a note asking for "everything, please".|The fast talker is back by popular demand. You've brought three quills.}
+text [d33de4] = {来访讲师讲起话来像匹脱缰的马，而你答应过给一个生病的同学一整份笔记。十分钟过去，你记了半页，手抽了筋。|又一位客座，又一阵狂奔。生病的同学捎来一张条子，要“全部，拜托了”。|那位快嘴应大家要求又来了。你带了三支羽毛笔。}
+# en: A lecture hall, a visiting scholar talking at a gallop in front of a blackboard covered in diagrams, students' quills flying.
+scene [1dd28c] = 讲堂里，一位来访学者在画满图解的黑板前飞快地讲着，学生们的羽毛笔飞舞。
+# en: Write what you can and ask after
+opt.left.label [cfb07d] = 能记多少记多少，课后再问
+# en: {Half the notes and a long chat with the lecturer afterwards, who is delighted anyone wanted to know more. Your classmate gets the half and the gossip.|You catch every fourth word and fill in the rest from his books after. It takes all evening.|Gaps everywhere. You ask him afterwards; he says it all again, faster.}
+opt.left.say.1 [f0cf02] = {半份笔记，外加课后和讲师的一场长谈，他高兴极了有人想多知道些。你的同学拿到了一半笔记和一堆闲话。|你每四个字抓住一个，剩下的课后从他的书里补。花了一整晚。|处处是空。课后你去问他，他又讲了一遍，更快。}
+# en: Borrow someone's notes and copy them
+opt.right.label [be63fb] = 借别人的笔记抄
+# en: {The front row's best note-taker lends you hers. You copy till midnight; your classmate gets a beautiful set.|You trade a week of your notes for one lecture's. A good bargain for everyone but your wrist.|Borrowed notes, copied by candlelight. Your handwriting gets worse as the night goes on.}
+opt.right.say.1 [7294aa] = {前排最会记笔记的那位把她的借给了你。你抄到半夜；你的同学拿到了一份漂亮的笔记。|你拿一周的笔记换一堂课的。对谁都是好买卖，除了你的手腕。|借来的笔记，烛光下抄。夜越深，你的字越难看。}
+# en: Set a quill to take it all down
+opt.up.label [c6a467] = 让一支羽毛笔全记下来
+# en: {You set the quill going. It takes every word, word for word, and adds a small remark in the margin about the lecturer's grammar.|The quill scribbles on, faster than the lecturer. Your classmate gets every word and a drawing of a horse.|It takes it all down. It has opinions about your handwriting, and now about his.}
+opt.up.say.1 [939ac5] = {你让羽毛笔动起来。它逐字逐句全记下了，还在页边添了一小句关于讲师语法的评论。|羽毛笔一路疾书，比讲师还快。你的同学拿到了每一个字，外加一幅马的画。|它全记下来了。它对你的字有意见，现在对他的也有了。}
+
+@event lesson_bramble
+# en: The Gap in the Fence
+title [d03b15] = 篱笆上的缺口
+# en: {Deer are in the orchard again, through a gap where the fence rail rotted. They're stripping bark off the young pear trees, and Old Maud says she can't mend it till the hedging's done.|The deer again, the gap again. Maud has propped it with a broom, which the deer have eaten.|Two deer, one gap, a row of young trees looking very undressed.}
+text [4183c9] = {鹿又进果园了，从一根横木烂掉的缺口钻进来的。它们在剥小梨树的树皮，老莫德说得等修完树篱才能补。|又是鹿，又是那个缺口。莫德拿一把扫帚撑住了它，鹿把扫帚吃了。|两头鹿，一个缺口，一排看上去光溜溜的小树。}
+# en: An old orchard at morning, a broken fence rail, a pair of deer stripping bark from the young trees.
+scene [57bb76] = 清晨的老果园，一根断掉的篱笆横木，两头鹿正在剥小树的树皮。
+# en: Chase them off and stand guard
+opt.left.label [72ad70] = 赶走它们，站岗守着
+# en: {You run at them waving your arms and they leave, slowly, insultingly. You sit on the fence the rest of the morning.|You chase, they bound, you chase. They come back the moment you go for lunch.|You guard the gap with a stick until Maud relieves you and calls you a good dog.}
+opt.left.say.1 [5b5515] = {你挥着胳膊冲过去，它们走了，慢吞吞的，很是侮辱人。整个上午你都坐在篱笆上。|你追，它们跳，你再追。你一去吃午饭它们就回来了。|你拿根棍子守着缺口，直到莫德来换你的班，夸你是条好狗。}
+# en: Patch the gap with branches
+opt.right.label [a49ad2] = 用树枝堵住缺口
+# en: {You weave dead branches into the gap. It's ugly and it'll hold a week.|A barricade of prunings. A deer looks at it, then at you, then goes round.|You patch it. Maud says it'll do, and means the opposite.}
+opt.right.say.1 [9a2315] = {你把枯枝编进缺口。难看，能撑一个星期。|一道修剪下来的枝条堆成的路障。一头鹿看看它，又看看你，绕过去了。|你堵上了。莫德说凑合吧，意思正相反。}
+# en: Grow a hedge in the gap
+opt.up.label [312ffc] = 在缺口长出一道树篱
+# en: {You kneel at the gap and a hedge comes up out of the ground, thick and thorned. The deer take one look and go back to the woods.|A hedge, now, where there wasn't one. Maud walks its length twice and asks how much you charge.|Bramble fills the gap. The deer stand outside it, offended. The trees look relieved, if trees can.}
+opt.up.say.1 [d0af54] = {你跪在缺口前，一道树篱从地里长出来，又密又多刺。鹿看了一眼，回林子里去了。|一道树篱，现在，在原本没有的地方。莫德沿着它走了两遍，问你收多少钱。|荆棘填满了缺口。鹿站在外面，被冒犯了。树看上去松了口气，如果树会的话。}
+
+@event lesson_index
+# en: One Quotation
+title [8075fd] = 一句引文
+# en: {A fourth-year in the reading room is near tears. Their thesis is due within the hour, and they need one quotation from a book they read last spring. They don't remember which book, only that its cover was green.|The same reading room, a different fourth-year, the same despair. "Green," they say. "The cover was green, I'm sure of it."|Another thesis, another lost quotation. The clock seems louder than usual.}
+text [447f44] = {阅览室里一个四年级生快哭了。他们的论文一个钟头内就要交，还差一句引文，出自去年春天读过的一本书。是哪本，他们不记得了，只记得封面是绿色的。|还是那间阅览室，换了个四年级生，还是那样绝望。“绿色的，”他们说，“封面是绿色的，我肯定。”|又一篇论文，又一句找不到的引文。那只钟似乎比平时响。}
+# en: A library reading room, a frantic fourth-year surrounded by heaped books, ink on their face, a clock on the wall.
+scene [c7f1a0] = 图书馆阅览室里，一个慌乱的四年级生被成堆的书围着，脸上沾着墨水，墙上挂着一只钟。
+# en: Help them search the shelves
+opt.left.label [982bfb] = 帮他们在书架上找
+# en: {You split the shelf and go through green book after green book. You find it with four minutes to spare. They kiss the book.|Shelf by shelf. You don't find it; you find a better one, which they use instead.|You search together. At the last moment they remember the quotation was in their own notes.}
+opt.left.say.1 [4fac8b] = {你们分了书架，一本接一本翻绿皮书。离截止还有四分钟时你找到了。他们亲了那本书。|一架一架地找。你没找到那本；你找到了一本更好的，他们改用了它。|你们一起找。最后一刻他们想起来，那句引文就在他们自己的笔记里。}
+# en: Fetch the head librarian
+opt.right.label [9d65ba] = 去请总馆员
+# en: {The head librarian listens, walks to a shelf without looking and hands over the book. She looks at you as if you should have known.|You fetch her. She finds it, and tuts at both of you for the state of the reading room.|The head librarian sighs and finds it. The fourth-year thanks you; she does not.}
+opt.right.say.1 [0710db] = {总馆员听完，看也不看就走到一个书架前，把书递了过来。她看你的眼神像是你早该知道。|你请来了她。她找到了书，又为阅览室的乱样冲你们俩啧了一声。|总馆员叹口气，找到了。四年级生谢了你；她没谢。}
+# en: Find the page
+opt.up.label [672d94] = 找到那一页
+# en: {You take a green book off the heap, and it falls open where they need it. They stare at the page, then at you, and run.|Index: the right book, the right page, the right line. They copy it with shaking hands and make the deadline.|You hold the pile and one book in it is warm. It opens on the quotation. The fourth-year says they'll name a child after you.}
+opt.up.say.1 [a25cc8] = {你从那堆书里拿起一本绿皮书，它就在他们要的地方摊开了。他们盯着那一页，又盯着你，然后跑了。|索引：对的书，对的页，对的行。他们双手发抖地抄下来，赶上了截止。|你扶着那摞书，其中一本是温的。它在那句引文处打开了。四年级生说要拿你的名字给孩子起名。}
+
+@event lesson_rapport
+# en: The Baker's Window
+title [008559] = 面包房的窗户
+# en: {Somebody from the academy put a ball through the bakery window last night. The baker is in his doorway with his arms folded, a crowd is gathering, and every student in the street is suddenly a suspect, you included.|The bakery window again: new glass, new crack. The baker has a list of names this time.|The baker's arms are folded before you reach the door. The crowd knows the routine.}
+text [5b6b2c] = {昨晚学院里有人一球砸穿了面包房的橱窗。面包师抱着胳膊站在门口，人越聚越多，街上每个学院学生忽然都成了嫌疑人，包括你。|又是面包房的窗户：新玻璃，新裂纹。这回面包师手里有份名单。|你还没走到门口，面包师就抱起了胳膊。围观的人都熟悉这套流程了。}
+# en: A village bakery with a cracked front window, the red-faced baker in the doorway, villagers gathering, a few academy students edging away.
+scene [1a56c8] = 村里一家面包房，橱窗玻璃裂了，满脸通红的面包师站在门口，村民们围拢过来，几个学院学生悄悄往后退。
+# en: Offer to pay towards the glass
+opt.left.label [b4b88b] = 主动凑钱赔玻璃
+# en: {You put coins on the counter for a thing you didn't do. The baker unfolds his arms and gives you a bun, grudgingly. The crowd thins.|You pay your share. The baker says you're the first one with manners, and the crowd drifts off.|Coins down. The baker counts them twice and says he'll remember your face, kindly this time.}
+opt.left.say.1 [b09fce] = {你为一件不是你干的事把钱放在柜台上。面包师松开胳膊，不情不愿地给了你一个小面包。人群散了一些。|你出了你那份。面包师说你是头一个有礼貌的，人群渐渐散了。|钱放下了。面包师数了两遍，说他会记住你的脸，这回是好意。}
+# en: Keep your head down and walk on
+opt.right.label [3b0d46] = 低着头走过去
+# en: {You walk past. The crowd's mutter follows you up the hill.|You go the long way round, and buy your buns at the market instead. They aren't as good.|Head down, past the window. The baker calls after you, and you pretend not to hear.}
+opt.right.say.1 [e2ee78] = {你走了过去。人群的嘀咕声一路跟你上了山。|你绕了远路，去集市上买小面包。没那么好吃。|低着头，从窗前走过。面包师在后面喊你，你装作没听见。}
+# en: Make the street laugh
+opt.up.label [1530da] = 让整条街都笑起来
+# en: {You say the right thing at the right moment, about the glass and the bread and the state of the academy's aim. The crowd laughs. So, after a second, does the baker.|A joke, a bow, a promise to bring the culprit by the ear. The street that was turning laughs instead.|You get the baker laughing before he's got a word out. He's still laughing when he hands you a bun for nothing.}
+opt.up.say.1 [c77958] = {你在对的时候说了对的话，关于玻璃、面包，还有学院的准头。人群笑了。过了一秒，面包师也笑了。|一个笑话，一个鞠躬，一个揪着罪魁祸首耳朵来认错的承诺。原本要翻脸的一条街笑了起来。|面包师还没开口，你就把他逗笑了。他把一个小面包白送给你时还在笑。}
+
+@event lesson_purify
+# en: Too Weak to Help
+title [795a57] = 药力太弱
+# en: {Old Pell is out on his rounds. An old shepherd at the counter has a fever tonic for his wife, and Pell's daughter behind the counter says it's too weak, because the roots were poor this year. Pell won't be back till evening.|The same thin tonic, the same old shepherd, and his wife's fever back with the cold. Pell's daughter looks at you the moment you come in.|Pell's out, the tonic's weak, and the old shepherd is turning his cap again. You know the drawer by now.}
+text [3a6abe] = {老佩尔出诊去了。柜台前一位老牧羊人给他老伴买了一瓶退烧补剂，柜台后佩尔的女儿说药力太弱，因为今年的根不好。佩尔要到傍晚才回来。|还是那种稀薄的补剂，还是那位老牧羊人，天一冷他老伴的烧又回来了。你一进门，佩尔的女儿就看向了你。|佩尔不在，补剂太弱，老牧羊人又在转他的帽子。那个抽屉你现在熟了。}
+# en: An apothecary of a thousand drawers, an old shepherd at the counter turning his cap in his hands, a thin pale tonic in a bottle.
+scene [1737ae] = 一间有一千个抽屉的药铺，一位老牧羊人站在柜台前，手里转着帽子，一瓶稀薄苍白的补剂。
+# en: Run for Pell
+opt.left.label [2aa270] = 跑去找佩尔
+# en: {You run the lanes till you find him at a farmhouse. He comes at once, grumbling, and strengthens the tonic himself.|You find Pell two villages over. He gives you a lift back in a cart that smells of sheep.|You fetch him. He looks at the tonic, then at you. "Good," he says, about one of you.}
+opt.left.say.1 [7e9584] = {你跑遍了小路，在一户农舍找到了他。他嘟囔着马上就来，亲手把补剂调浓了。|你在两个村子外找到了佩尔。他让你搭了一辆满是羊味的车回来。|你把他找来了。他看看补剂，又看看你。“好，”他说，说的是你们中的一个。}
+# en: Brew a fresh batch with his daughter
+opt.right.label [09cfe6] = 和他女儿重新熬一锅
+# en: {You and Pell's daughter boil fresh roots for an hour. The new tonic is strong and the shop smells of it for a week.|A fresh brew, done slowly, by the book. The shepherd waits and thanks you both twice.|You brew. It's late, but it's strong, and his wife's fever breaks by morning.}
+opt.right.say.1 [85f138] = {你和佩尔的女儿把新鲜的根熬了一个钟头。新补剂很浓，药铺里一个星期都是那股味儿。|重新熬，慢慢来，照着方子。牧羊人等着，谢了你们俩两回。|你熬好了。晚了，但浓，他老伴的烧到早上退了。}
+# en: Distill the strength out of it
+opt.up.label [1ea9a6] = 把药力萃取出来
+# en: {Drop by drop you draw the tonic down to a spoonful, and every drop costs you a little. The shepherd takes it up the hill at a trot. You sit down on the step for a while.|You distill it strong. It takes nothing from your magic. It takes it from you. The shepherd holds your hand on his way out.|The tonic comes down dark and strong. Pell's daughter puts a chair behind you before you need it.}
+opt.up.say.1 [b431f4] = {你一滴一滴把补剂萃到只剩一勺，每一滴都要你付出一点。牧羊人一路小跑着把它送上山。你在台阶上坐了好一会儿。|你把它萃浓了。它不取你的魔力。它取的是你。牧羊人出门时握了握你的手。|补剂萃成了深色，浓浓的。没等你需要，佩尔的女儿就在你身后放了把椅子。}
+
+@event lesson_tailwind
+# en: The Forgotten Wand
+title [7e3b58] = 落下的魔杖
+# en: {The duelling team left for an away fixture twenty minutes ago, and the captain's wand is still lying on the bench. Through the window the carriage is a dot on the road to the village. The first bout is at four.|The team's away again, and again something's on the bench: this time the captain's gloves and the team's lucky wand.|An empty hall, a forgotten wand, a carriage on the road. Somebody always leaves something.}
+text [5fe736] = {决斗队二十分钟前出发去打客场，队长的魔杖还躺在长凳上。透过窗户，马车已是去村子路上的一个小点。第一场在四点。|队伍又去打客场了，长凳上又落下了东西：这回是队长的手套和队里的幸运魔杖。|空荡荡的大厅，落下的魔杖，路上的马车。总有人落下点什么。}
+# en: An empty duelling hall, a captain's wand forgotten on a bench, and through the high window a team carriage already far down the road.
+scene [5efbc0] = 空荡荡的决斗厅，队长的魔杖落在长凳上，透过高窗，球队的马车已经在路上走远了。
+# en: Run after the carriage
+opt.left.label [b422c3] = 追着马车跑
+# en: {You run the whole road and catch them at the ford, watering the horses. The captain takes the wand and kisses it, then you, absent-mindedly.|You catch the carriage at the village. The team cheers you through the window and doesn't offer you a lift back.|Two miles at a dead run. The captain takes the wand without a word, then wins the first bout with it.}
+opt.left.say.1 [93f9cf] = {你跑完了整条路，在浅滩追上他们，他们正在饮马。队长接过魔杖亲了一下，又心不在焉地亲了你一下。|你在村里追上了马车。全队隔着窗户给你欢呼，没人提出捎你回去。|全速跑了两英里。队长一言不发地接过魔杖，然后用它赢了第一场。}
+# en: {You run till you can't, and watch the dot get smaller. The captain fights with a borrowed wand and loses.|A stitch at the first mile and a ditch at the second. The carriage doesn't wait.|You get to the village as the carriage leaves it. You walk back slowly, wand in hand.}
+opt.left.say.2 [502829] = {你跑到跑不动，看着那个小点越来越小。队长用借来的魔杖上场，输了。|第一英里岔了气，第二英里掉进了沟。马车没等。|你到村里时马车正好离开。你拿着魔杖慢慢走了回去。}
+# en: Send it after them by owl
+opt.right.label [01c583] = 派猫头鹰送去
+# en: {An owl from the stables, a copper for its trouble. It arrives at the second bout, and the captain fights the first with a borrowed wand.|You send it by owl and wait in the library. The captain writes that it came, late and slightly chewed.|The owl takes it. You'll never know if it got there in time, and nobody tells you.}
+opt.right.say.1 [d2f08d] = {马厩的一只猫头鹰，一个铜板的辛苦费。它在第二场时到了，队长第一场用的是借来的魔杖。|你派猫头鹰送去，在图书馆等着。队长写信说收到了，晚了，还有点被啃过。|猫头鹰带走了它。你永远不会知道它是否及时送到，也没人告诉你。}
+# en: Surge after them
+opt.up.label [ef207f] = 顺风疾追
+# en: {The wind gets behind you and keeps pushing. You pass the carriage on the long hill and are waiting at the ford when it comes, wand held out.|Fast, then faster, and never stopping. You catch them at the village, and the horses shy at you.|You run the whole road with the wind at your back. The team arrives at the fixture to find you already there, and the captain doesn't ask.}
+opt.up.say.1 [ba5adf] = {风到了你身后，一直推着你。你在长坡上超过了马车，等它到浅滩时，你已经举着魔杖等在那儿。|快，再快，一刻不停。你在村里追上了他们，马都被你惊得一跳。|你顺着风跑完了整条路。队伍到了客场，发现你已经在那儿，队长什么也没问。}
+
+@event lesson_wildfire
+# en: The Soaked Bonfire
+title [364e00] = 泡湿的篝火
+# en: {The end-of-harvest bonfire is stacked in the middle of the courtyard, and a week of rain has soaked it through. Half the school is standing round it in scarves, and the prefect's torch has gone out twice.|The bonfire again, soaked again. The prefect has brought three torches this year, all damp.|Wet timber, a waiting crowd, and a prefect looking round it for anyone useful.}
+text [bd2e28] = {收获节结束的篝火堆在庭院中央，下了一个星期的雨，全泡透了。半个学院的人围着围巾站在四周，级长的火把已经灭了两回。|又是篝火，又泡湿了。级长今年带了三支火把，全是潮的。|湿木柴，等着的人群，还有一位在人群里四处找能帮上忙的人的级长。}
+# en: A castle courtyard at dusk in autumn, a tall stack of soaked timber in the middle, students in scarves waiting round it, a prefect with a dripping torch.
+scene [51b88e] = 秋日黄昏的城堡庭院，中央堆着一大垛湿透的木柴，围着围巾的学生们等在四周，一位级长举着一支滴水的火把。
+# en: Dig dry wood out of the woodshed
+opt.left.label [d025f6] = 去柴房里翻干柴
+# en: {You burrow to the back of the woodshed for anything dry and build a little fire in the heart of the stack. It smoulders for an hour, then catches. The courtyard sings at it.|Dry shavings, a sheltered corner, patience. It catches near curfew. Half the school has gone to bed.|You find dry logs under the old cart. The bonfire goes up late and smoky, and everyone says it's the best yet.}
+opt.left.say.1 [4287a3] = {你钻到柴房最里头找一切干的东西，在柴垛中心生了一小堆火。它闷烧了一个钟头，然后着了。庭院里的人对着它唱起歌来。|干刨花，一个避风的角落，耐心。快到宵禁时才着。半个学院的人已经回去睡了。|你在旧推车底下找到了干柴。篝火烧得又晚又冒烟，大家都说这是最好的一回。}
+# en: Move the party into the great hall
+opt.right.label [354f14] = 把聚会挪进大礼堂
+# en: {No bonfire, but half the school in the great hall with a fiddle is its own kind of fire.|You herd everyone indoors. It's cramped and steaming, and the cook finds the cider.|The party goes indoors. The prefect lights the hall's candles instead, all of them, out of spite.}
+opt.right.say.1 [33277d] = {没有篝火，但半个学院的人和一把小提琴挤在大礼堂里，本身就是一种火。|你把大家都赶进了室内。又挤又热气腾腾，厨娘找出了苹果酒。|聚会挪进了室内。级长赌气把礼堂里的蜡烛全点上了，一根不落。}
+# en: Light it, and let it grow
+opt.up.label [8f62f4] = 点燃它，任它长大
+# en: {You start a small flame in your palm and hold it while it grows, and grows, and then you let it go into the stack. The whole bonfire goes up in one roar, and the courtyard cheers the sky.|Fire you stop holding small. You hold it till it bites, then loose it. The bonfire stands up like a tower of light.|It grows while you hold it and runs when you let go. The stack goes up all at once, and the fire never quite forgets you're there.}
+opt.up.say.1 [4d1788] = {你在掌心生起一小簇火，握着它，看它长啊长，然后把它放进柴垛。整堆篝火轰的一声烧起来，庭院里的人朝天欢呼。|一旦你不再把它握小，火就会长。你握到它咬人，然后松手。篝火像一座光塔一样立了起来。|握着它就长，松了手就跑。柴垛一下子全烧了起来，而那火永远不会完全忘记你在那儿。}
+# en: {You hold it too long and it bites your hand. The bonfire catches anyway, eventually, from the end of your sleeve.|You let it go too early; it runs across the wet flagstones instead, and the prefect stamps it out.|It gets away from you for one bad moment. You get it back. Your eyebrows don't.}
+opt.up.say.2 [958863] = {你握得太久，它咬了你的手。篝火最后还是着了，是从你袖口烧过去的。|你放手太早；它反倒沿着湿漉漉的石板跑开了，级长把它踩灭了。|有那么糟糕的一刻，它从你手里挣脱了。你把它收了回来。你的眉毛没回来。}
+
+@event lesson_heartwood
+# en: No Shade
+title [6b674f] = 无处遮阴
+# en: {The summer assembly is out in the courtyard this year, in black robes, under a sun like a hammer. A first-year in the front row is swaying, and the speeches have barely started.|Another hot assembly, another first-year going grey. The speeches are longer this year.|The courtyard, the sun, the robes, the speeches. You've learned to stand where you can see the front row.}
+text [ca2128] = {今年的夏季集会搬到了庭院里，穿着黑袍，顶着锤子一样的太阳。前排一个一年级生在摇晃，而讲话才刚开始。|又一场炎热的集会，又一个一年级生脸色发灰。今年的讲话更长了。|庭院，太阳，袍子，讲话。你已经学会站在能看见前排的地方。}
+# en: A blazing summer courtyard, rows of first-years in black robes standing for an outdoor assembly, one of them swaying.
+scene [46fdc4] = 烈日炎炎的夏日庭院，一排排穿黑袍的一年级生站着参加户外集会，其中一个摇摇晃晃。
+# en: Get them out of the line
+opt.left.label [a94917] = 把他们拉出队列
+# en: {You step out of line, catch the first-year under the arm and walk them into the shade of the arch. A professor glares; the first-year is sick on her shoes.|You lead them out. The speech pauses for exactly as long as it takes to disapprove of you.|Out of the line and into the cloisters. Two more follow you, and the speech goes on to an emptier courtyard.}
+opt.left.say.1 [956c16] = {你走出队列，架住那个一年级生的胳膊，把他们扶进拱门的阴影里。一位教授怒目而视；一年级生吐在了她的鞋上。|你把他们领了出去。讲话停顿了一下，刚好够表达对你的不满。|出了队列，进了回廊。又有两个跟着你出来，讲话在一个更空的庭院里继续。}
+# en: Pass along your water flask
+opt.right.label [c1ab7c] = 把水壶传过去
+# en: {Your flask goes along the row, hand to hand. It comes back empty, and the first-year stays upright.|You give up your water. The speeches go on. So do you, thirsty.|The flask goes round. You spend the rest of the assembly dreaming of the lake.}
+opt.right.say.1 [d36b0f] = {你的水壶沿着一排一手传一手。回来时空了，那个一年级生站住了。|你把水让了出去。讲话继续。你也继续，渴着。|水壶传了一圈。集会剩下的时间，你一直在想那片湖。}
+# en: Grow a tree over the front row
+opt.up.label [565c73] = 在前排上方长出一棵树
+# en: {You root your feet and a young tree comes up out of the flagstones, spreading its shade over the front row. The speeches stop. Then the courtyard claps.|Heartwood: a tree in a breath, and shade under it. The first-year sits down in it and thanks you with their eyes shut.|The tree goes up, the front row sighs, and the headmistress, mid-speech, looks up at it and makes no comment at all.}
+opt.up.say.1 [2cd8b6] = {你双脚生根，一棵小树从石板缝里长出来，把树荫铺在前排上方。讲话停了。然后庭院里响起了掌声。|心木：一口气一棵树，树下有荫。那个一年级生在树荫里坐下，闭着眼谢了你。|树长了起来，前排松了口气，正在讲话的院长抬头看了看它，一个字也没评论。}
+
+@event lesson_omen
+# en: The Losing Team
+title [ab9f1b] = 输球的队伍
+# en: {The village team has lost every match this summer, and the captain says there's no point playing the last one. The whole team is sitting on the bench in their caps, looking at their boots.|The village team again, a different summer, the same row of losses. The captain spots you at the boundary and sighs.|The green, the bench, the caps, the gloom. They've started saving you a seat.}
+text [d1db86] = {村里的球队今年夏天场场都输，队长说最后一场没必要打了。全队戴着帽子坐在长凳上，盯着自己的靴子。|又是村队，换了个夏天，还是一排败绩。队长在场边看见你，叹了口气。|草地，长凳，帽子，沮丧。他们开始给你留座了。}
+# en: A village green in summer, a team of farmhands in faded caps sitting gloomily on a bench, their captain looking at a scoreboard full of losses.
+scene [4ab79c] = 夏日的村中草地，一队戴着褪色帽子的农工垂头丧气地坐在长凳上，队长望着一块满是败绩的记分板。
+# en: Make up their numbers and play
+opt.left.label [e3f283] = 替他们凑个人数上场
+# en: {You make up the numbers and play like a hen in a gale. They lose by less than usual, and buy you a cider for it.|You play. You're terrible. They laugh all afternoon, and the laughing helps.|You take the last place on the team. They lose, gloriously, and talk about it all winter.}
+opt.left.say.1 [0c4c05] = {你凑上了人数，打得像大风里的一只母鸡。他们输得比平时少，为此请你喝了杯苹果酒。|你上场了。你糟透了。他们笑了一下午，笑本身就有用。|你补上了队里最后一个位置。他们输了，输得很光彩，整个冬天都在谈论。}
+# en: Cheer them from the boundary
+opt.right.label [1fb17b] = 在场边给他们加油
+# en: {You cheer every run, however small. They lose, but they stand up straighter doing it.|You bring half the academy to the boundary to shout. The other team asks who you all are.|You cheer till you're hoarse. They lose, and the captain shakes your hand as if you'd scored.}
+opt.right.say.1 [f2934c] = {每一分，不管多小，你都欢呼。他们输了，但输的时候腰板挺得更直了。|你拉来半个学院在场边呐喊。对方球队问你们都是谁。|你喊到嗓子哑了。他们输了，队长跟你握手，好像是你得的分。}
+# en: Tell them they'll win
+opt.up.label [1b16e5] = 告诉他们会赢
+# en: {You say it out loud, on the green, "You'll win the last match." It lands. Not that day, nor the next week, but in the last match of the summer, by one run.|You foretell it, and they laugh, and they win. The captain says you're a witch. You're a student.|"You'll win." It lands. The village paints your name on the scoreboard, misspelled.}
+opt.up.say.1 [30a434] = {你在草地上大声说出来：“最后一场你们会赢。”它落地了。不是那天，也不是下周，而是在夏天的最后一场，赢了一分。|你预言了，他们笑了，然后他们赢了。队长说你是女巫。你是个学生。|“你们会赢。”它落地了。村里人把你的名字漆在了记分板上，拼错了。}
+
+@event lesson_sleight
+# en: Deep Pockets
+title [2c5044] = 深口袋
+# en: {Mr Grimsby is up a ladder looking for something he'll never find, and a man in a long coat has just slipped a slim first edition into his inside pocket. He's heading for the door, browsing as he goes.|The long coat again. A different book, the same pocket.|Grimsby, the ladder, the coat, the pocket. You know the rhythm.}
+text [4b2e0b] = {格林斯比先生在梯子上找一样他永远找不到的东西，一个穿长大衣的男人刚把一本薄薄的初版书塞进了内袋。他正往门口走，边走边翻看。|又是那件长大衣。换了本书，还是那个口袋。|格林斯比，梯子，大衣，口袋。这套节奏你熟了。}
+# en: A crowded old bookshop, a man in a long coat with deep pockets slipping a slim first edition inside it while the shopkeeper is up a ladder.
+scene [f14248] = 一家拥挤的老书店，一个穿长大衣、口袋很深的男人趁店主在梯子上，把一本薄薄的初版书塞进了大衣里。
+# en: Call out to Mr Grimsby
+opt.left.label [b9b2d4] = 喊格林斯比先生
+# en: {"Mr Grimsby, that gentleman has a book of yours." The coat stops, laughs, and hands it back "absent-mindedly". Grimsby gives you a bookmark.|You call out; the coat goes red and pays for it. Grimsby wraps it very slowly.|You speak up, and the man finds the book "must have fallen in". Grimsby thanks you all afternoon.}
+opt.left.say.1 [1a11d5] = {“格林斯比先生，那位先生拿了您一本书。”大衣停下，笑了笑，“心不在焉地”把书还了回来。格林斯比送了你一枚书签。|你一喊，大衣的脸就红了，付了钱。格林斯比包得非常慢。|你开了口，那人发现书“一定是掉进去的”。格林斯比谢了你一下午。}
+# en: {The coat turns, all innocence, and opens it. The pocket's empty; he's passed it on somehow. Grimsby apologises to him for you.|He laughs at you and walks out. Grimsby didn't see a thing.|You call out; he's gone before Grimsby's off the ladder.}
+opt.left.say.2 [4b1820] = {大衣转过身来，一脸无辜，把口袋翻开。口袋是空的：他不知怎么已经把书转走了。格林斯比替你向他道了歉。|他冲你笑了笑，走了出去。格林斯比什么也没看见。|你一喊；格林斯比还没下梯子，他就不见了。}
+# en: Let it go
+opt.right.label [7a5d2f] = 随它去
+# en: {He walks out with it. You go back to your shelf and read about ships.|You say nothing. Later, in the window of a dealer up the street, a slim first edition.|It goes. Grimsby will never know, which is worse, somehow.}
+opt.right.say.1 [5c686b] = {他带着书走了。你回到你的书架前，读关于船的书。|你什么也没说。后来，在街那头一个书商的橱窗里，有一本薄薄的初版书。|它走了。格林斯比永远不会知道，不知怎么的，这更糟。}
+# en: Lift it back out of his pocket
+opt.up.label [e89ff9] = 从他口袋里取回来
+# en: {You brush past him in the aisle, and the book walks out of his pocket and into your hand. You put it back on its shelf. He finds out at the door.|A palm, a swap; he leaves with a penny dreadful from the bargain box instead. It is still theft, though of a better kind.|Lifted, and put back. Grimsby, coming down the ladder, finds it exactly where it should be and is mildly surprised.}
+opt.up.say.1 [662b5b] = {你在过道里和他擦身而过，书就从他口袋里走进了你手里。你把它放回了书架。他到门口才发现。|一藏，一换；他离开时带走的是特价箱里的一本廉价小说。这仍然是偷窃，只是好一点的那种。|取回来，放回去。格林斯比下了梯子，发现书就在它该在的地方，略感意外。}
+
+@event lesson_contraption
+# en: The Broken Bellows
+title [b60469] = 破了的风箱
+# en: {The bakery's great bellows split in the night, and the oven won't draw without them. The whole village wants its bread by seven. The baker's family is kneading as if kneading will help.|The bellows again, split again, along a new seam. The bakers have started to look at the door for you.|Dawn, cold oven, split bellows. The village is already queueing.}
+text [afb9ce] = {面包房的大风箱夜里裂了，没有它炉子就不通风。全村七点前都要面包。面包师一家揉着面，好像揉面能管用。|又是风箱，又裂了，这回裂在一道新缝上。面包师们开始往门口看，等你来。|黎明，冷炉，破风箱。村里人已经在排队了。}
+# en: A village bakery before dawn, a great brick oven, a split leather bellows on the floor, the baker's family kneading in despair.
+scene [da3fa2] = 黎明前的村中面包房，一座大砖炉，一只裂开的皮风箱躺在地上，面包师一家绝望地揉着面。
+# en: Work the oven door by hand
+opt.left.label [c139f7] = 用手扇炉门
+# en: {You flap the oven door like a fan for an hour, till the fire roars. The first loaves come out late and perfect, and they pay you in rolls.|You fan till your arms fall off. The village gets its bread at eight, and thinks it's the best yet.|An hour at the door with a tray for a fan. The bakers sing at you.}
+opt.left.say.1 [aba488] = {你把炉门当扇子扇了一个钟头，直到火呼呼地旺起来。第一批面包出炉晚了，但完美，他们用小面包付你工钱。|你扇到胳膊都要掉了。村里八点拿到面包，觉得这是最好吃的一回。|在炉门前拿托盘当扇子扇了一个钟头。面包师们冲你唱歌。}
+# en: Patch the bellows with a glove
+opt.right.label [f7b800] = 用手套补风箱
+# en: {You stitch an old glove over the split. It wheezes, but it works, and the bread comes out at half past.|A glove, some glue, a prayer. The bellows works one breath in three.|You patch it. The patch holds till the last batch, then flies across the room.}
+opt.right.say.1 [847349] = {你把一只旧手套缝在裂口上。它呼哧呼哧的，但能用，面包七点半出炉。|一只手套，一点胶，一句祷告。风箱三口气里有一口是好的。|你补上了。补丁撑到了最后一炉，然后飞过了半个屋子。}
+# en: Build them a machine
+opt.up.label [f21e71] = 给他们造一台机器
+# en: {A cartwheel, a pump handle, a wash-board and a belt, and you build a fan that drives itself off the oven's own heat. It works at once, mostly as meant.|The machine you build is ugly and works beautifully. Stand back when it stops, you tell them. It doesn't stop till noon.|You build them a contraption that roars the oven up in minutes, then shakes itself to bits by the last batch. The baker names the pieces after you.}
+opt.up.say.1 [b31f81] = {一个车轮，一个水泵把手，一块搓衣板和一根皮带：你造出一台靠炉子自己的热气驱动的风扇。它立刻就能用，大体照预想的那样。|你造的机器很丑，干活很漂亮。等它停下来的时候站远点，你告诉他们。它一直到中午才停。|你给他们造了个奇械，几分钟就把炉火鼓旺了，到最后一炉时它把自己抖散了架。面包师拿你的名字给那些零件命名。}
+
+@event lesson_hoarfrost
+# en: The Melting Ices
+title [930836] = 融化的冰品
+# en: {It's the hottest day of the year, the ice store has failed, and the end-of-term puddings are melting on their trays. The cook is fanning them with a pan lid and swearing at the sun.|The ice store again, the heat again, the puddings slumping again. The cook doesn't swear this time; she just points at you.|Heat, puddings, a cook with a lid. You're getting a reputation.}
+text [e2d37b] = {一年中最热的一天，冰窖坏了，学期末的布丁正在托盘上化掉。厨娘拿锅盖扇着它们，冲着太阳骂。|又是冰窖，又是热天，布丁又在塌。厨娘这回没骂；她只是指了指你。|热天，布丁，拿着锅盖的厨娘。你开始有名声了。}
+# en: A sweltering kitchen behind a dining hall, trays of ice puddings slumping into puddles, a frantic cook fanning them with a lid.
+scene [160edf] = 膳堂后面闷热的厨房，一盘盘冰布丁正塌成一摊摊水，一位手忙脚乱的厨娘拿锅盖给它们扇风。
+# en: Run them down to the cold cellar
+opt.left.label [dd14f7] = 跑着送进冷窖
+# en: {Tray after tray down the cellar steps at a run. Most of them survive. The cook gives you the ones that don't.|You run puddings for an hour. The cellar's full, the trays are empty, your shirt is soaked.|Down and up, down and up. The cook calls you her best mule.}
+opt.left.say.1 [3c03eb] = {一盘接一盘跑着送下冷窖的台阶。大多数保住了。没保住的厨娘都给了你。|你跑了一个钟头的布丁。冷窖满了，托盘空了，你的衬衫湿透了。|下去上来，下去上来。厨娘管你叫她最好的骡子。}
+# en: Help turn them into a trifle
+opt.right.label [49ce20] = 帮忙改成乳脂松糕
+# en: {If you can't save them, drown them in custard. The trifle is enormous, and the hall says it's the best end-of-term pudding in years.|A melted pudding, a lot of sponge, a lot of cream. Nobody misses the ices.|You and the cook build a trifle the size of a font. She says not to tell anyone it was an accident.}
+opt.right.say.1 [540217] = {救不了，就拿蛋奶冻淹了它们。松糕大得惊人，膳堂说这是好几年来最好的学期末甜点。|一份化了的布丁，许多海绵蛋糕，许多奶油。没人想念冰品。|你和厨娘做了一个洗礼盆那么大的松糕。她叫你别告诉任何人这是个意外。}
+# en: Freeze the lot
+opt.up.label [84c11a] = 把它们全冻住
+# en: {You call cold down hard on the trays, and the puddings stand up straight again, frosted white. The cook kisses you on both cheeks.|Hoarfrost on every tray. The kitchen goes cold enough to see your breath, and the cook sits in it for a while, blissful.|You freeze them. The end-of-term ices come out perfect, and the cook keeps a bowl back for you every summer.}
+opt.up.say.1 [c274c4] = {你把严寒狠狠地召到托盘上，布丁重新站直了，结着白霜。厨娘在你两边脸上各亲了一下。|每个托盘都挂上了白霜。厨房冷得能看见自己的呼吸，厨娘在冷气里坐了一会儿，心满意足。|你把它们冻住了。学期末的冰品端出来完美无缺，从此每年夏天厨娘都给你留一碗。}
+
+@event lesson_candour
+# en: Both of Them Swear
+title [dde1c9] = 两人都发誓
+# en: {A library book has come back with a page torn out, and the two students who borrowed it in turn each swear it was the other. The head librarian has said both will be banned for the term unless somebody tells her the truth.|The torn page again, a different book, a different pair, the same whispered fight.|Two students, one torn book, and the head librarian at the end of the row, waiting.}
+text [f27250] = {一本图书馆的书还回来时少了一页，先后借过它的两个学生都发誓是对方干的。总馆员说了，除非有人告诉她实话，两个人这学期都要被禁止借书。|又是撕掉的一页，换了本书，换了一对人，还是那场压低声音的争吵。|两个学生，一本撕坏的书，总馆员在这排书架尽头，等着。}
+# en: A library desk, a borrowed book with a torn page lying open, two students accusing each other in fierce whispers.
+scene [985860] = 图书馆的一张书桌，一本借来的书摊开着，缺了一页，两个学生压低声音激烈地互相指责。
+# en: Hear both sides out
+opt.left.label [83d018] = 把两边都听完
+# en: {You listen to both for an hour. You never find out which one tore it, but by the end they're laughing, and they go to the librarian together.|You hear them out and get two different stories and a headache.|You listen till they run out of anger. One of them admits it, to you, not to her.}
+opt.left.say.1 [8386bf] = {你听两人各讲了一个钟头。你始终没弄清是谁撕的，但到最后他们在笑，一起去找了总馆员。|你听完了，得到两个不同的说法和一阵头疼。|你一直听到他们的火气耗尽。其中一个承认了，是对你承认的，不是对她。}
+# en: Stay out of it
+opt.right.label [03d24a] = 不掺和
+# en: {You go back to your book. In the morning, both are banned. The library is quieter.|Not your quarrel. You read, and they whisper, and in the end the librarian bans one at random.|You keep out. Later you hear who did it, from someone who heard it from someone.}
+opt.right.say.1 [d84ee3] = {你回去看你的书。早上，两人都被禁了。图书馆安静多了。|不是你的架。你看书，他们低声吵，最后总馆员随手禁了一个。|你没掺和。后来你从别人那儿听说了是谁，那人也是听别人说的。}
+# en: Ask the one right question
+opt.up.label [176099] = 问那一个对的问题
+# en: {You ask the right question, and the honest answer comes out of the guilty one before they can stop it. They go to the librarian and say it again, more quietly.|One question, one honest answer, more honest than anyone wanted. The other one is cleared and hugs you.|You ask. They tell. Afterwards the guilty one says they're glad, and seem to mean it.}
+opt.up.say.1 [355475] = {你问了那个对的问题，老实话没等那个犯错的人拦住，就从他们嘴里出来了。他们去找总馆员，把话又说了一遍，声音小了些。|一个问题，一句实话，比谁想要的都实在。另一个洗清了嫌疑，抱了你一下。|你问了。他们说了。事后犯错的那个说他们很高兴说出来，似乎是真心的。}
+
+@event lesson_lodestar
+# en: Lost Among the Rows
+title [ea8151] = 迷失在果树行间
+# en: {The village children came up to help with the apple harvest, and at dusk one of them hasn't come back down. Her mother is calling between the rows, and the rows all look the same in the dark.|The harvest again, dusk again, and a different child somewhere in the rows. The orchard is older than the towers, and it's very good at hiding things.|Dusk in the orchard, and a name being called. The rows go on further than they do by day.}
+text [e96875] = {村里的孩子们上来帮忙收苹果，到了黄昏，有一个没下来。她母亲在果树行间呼唤，而天一黑，每一行看起来都一样。|又是收获，又是黄昏，换了个孩子在行间某处。果园比那些塔还老，很会藏东西。|果园里的黄昏，有人在喊一个名字。那些行比白天时延伸得更远。}
+# en: An old orchard at dusk after the harvest, long rows of trees fading into dark, a village woman calling a child's name.
+scene [8e6b83] = 收获后黄昏的老果园，一行行果树没入黑暗，一个村妇在呼唤孩子的名字。
+# en: Search row by row
+opt.left.label [1300a6] = 一行一行地找
+# en: {Row by row, calling, till you find her asleep in a pile of windfalls with an apple in each hand.|You search till full dark. She's found by her mother, two rows over, singing to a tree.|You walk every row. She's under the oldest pear, perfectly happy, and she wants to know why everyone's shouting.}
+opt.left.say.1 [a6a55e] = {一行一行，喊着，直到你发现她睡在一堆落果里，两只手各攥着一个苹果。|你找到天全黑。她被母亲在隔了两行的地方找到了，正对着一棵树唱歌。|你走遍了每一行。她在最老的那棵梨树下，开心得很，想知道大家为什么都在喊。}
+# en: Fetch lanterns from the porter's lodge
+opt.right.label [20a510] = 去门房小屋拿灯
+# en: {You come back with lanterns and half the village, and a line of lights sweeps the orchard. She walks out into it on her own.|Lanterns, people, a long line. The orchard gives her back without a fuss.|You fetch help. By the time it comes, she's found, and the lanterns are used for walking home.}
+opt.right.say.1 [be3680] = {你带着灯和半个村子回来，一排灯光扫过果园。她自己走进了光里。|灯，人，长长一排。果园没费什么事就把她还了回来。|你去叫人。等人来了，她已经找到了，灯就拿来照着回家。}
+# en: Gather a light to guide her
+opt.up.label [d82185] = 聚起一道光为她引路
+# en: {You gather a light around you, a little more each breath, till it stands over the orchard like a small moon. A thin voice calls from three rows away, and walks towards it.|The light grows, steady and gold. Between the trees a small figure turns towards it and comes, rubbing her eyes.|You raise the light, and the rows are only rows again. She comes out of them holding the hand of nobody you can see, and lets go when she reaches her mother.}
+opt.up.say.1 [5cc280] = {你在身周聚起一道光，每口气多一点，直到它像一轮小月亮悬在果园上方。三行外传来一个细小的声音，朝光走来。|光越来越亮，稳稳的，金色的。树丛间一个小小的身影转向它，揉着眼睛走过来。|你举起光，那些行又只是行了。她从里面走出来，牵着一只你看不见的手，走到母亲跟前才松开。}
+
+@event lesson_moonwell
+# en: The Sweet Well
+title [8f5738] = 甜水井
+# en: {The charm on Maud's old well, the one that keeps the water sweet, has worn through at last, and the bucket comes up cloudy and smelling of pond. Renewing it takes more magic than anyone carries at once. "Takes a whole night, dearie," says Maud. "Always did."|The well's gone cloudy again. Maud has put a chair beside it, and a blanket on the chair.|The cloudy bucket, the chair, the blanket. Maud doesn't even ask any more.}
+text [716a72] = {莫德那口老井上的咒语，那个让井水保持甘甜的咒语，终于磨穿了，打上来的水浑浊，一股池塘味。要重新施咒，需要的魔力比谁一次带得动的都多。“得一整夜，亲爱的，”莫德说，“一向如此。”|井水又浑了。莫德在井边放了把椅子，椅子上放了条毯子。|浑水桶，椅子，毯子。莫德连问都不问了。}
+# en: An old stone well behind a thatched cottage at dusk, a bucket of cloudy water on its rim, an old woman frowning into it.
+scene [e71c34] = 黄昏时茅草小屋后的一口老石井，井沿上放着一桶浑水，一位老妇人皱着眉往里看。
+# en: Carry water up from the stream
+opt.left.label [aa9bb1] = 从溪边挑水上来
+# en: {You carry bucket after bucket up from the stream till her barrels are full. Maud says it'll last her a fortnight, and feeds you till you can't move.|Up the field, down the field, a yoke on your shoulders. Bartholomew follows you both ways, supervising.|You fill every barrel. Maud says you've the arms of a ploughman and the sense of a hen, and means both kindly.}
+opt.left.say.1 [b6ad48] = {你一桶接一桶从溪边挑水上来，直到她的水桶全满。莫德说这够她用两个星期，喂你吃到你动不了。|田里上去，田里下来，肩上一副扁担。巴塞洛缪两趟都跟着你，监工。|你装满了每一只桶。莫德说你有庄稼汉的胳膊和母鸡的脑子，两句都是好意。}
+# en: Fetch the village dowser
+opt.right.label [3ca610] = 去请村里的探水人
+# en: {The dowser comes, walks round the well twice and says it needs a new charm. He charges you for saying so.|You fetch the dowser and pay his walk. He and Maud argue about wells until dark, happily. The water stays cloudy.|The dowser takes his fee and says he'll come back with his book. Maud says he said that in the spring.}
+opt.right.say.1 [2ec29f] = {探水人来了，绕着井走了两圈，说它需要一道新咒语。他为这句话收了你的钱。|你请来探水人，付了他的跑腿钱。他和莫德为井的事争到天黑，争得很开心。水照样浑。|探水人收了钱，说他会带着书再来。莫德说他春天就这么说过。}
+# en: Sit by the well till it's full
+opt.up.label [eeb310] = 坐在井边直到满盈
+# en: {You sit on the cold wall all night and let magic pool in you like moonlight in a basin, then pour it into the old charm. At dawn the bucket comes up clear, and you come down stiff. Slow, and free.|A night of stillness on cold stone, and the well drinks it all. Maud brings you tea at midnight and doesn't say a word, which from Maud is a great deal.|You fill and give, fill and give, till the water runs sweet and your knees have set. Maud tastes it, nods, and says it's better than her mother's.}
+opt.up.say.1 [189417] = {你在冰冷的井沿上坐了一整夜，让魔力像月光落进盆里一样在你身上积起来，再把它倒进那道老咒语。天亮时打上来的水清了，你下来时浑身僵硬。慢，且不花分文。|冰冷的石头上一夜静坐，井把它全喝了下去。莫德半夜给你端来茶，一个字也没说，这在莫德已是很多。|你满了又给，满了又给，直到水变甜，你的膝盖也僵住了。莫德尝了尝，点点头，说比她母亲那时候还好。}
+
+@event lesson_reflect
+# en: A Hex in the Back
+title [27c35e] = 背后的恶咒
+# en: {You've won a practice bout, fair and square, and you're walking back to the benches. Behind you, the sore loser is raising their wand, and the referee is looking the other way.|The same sore loser, another bout, another raised wand behind your back. Some people don't learn.|You win, you turn, and you hear it: the little intake of breath before a hex.}
+text [7aafc5] = {你光明正大地赢了一场练习赛，正往长凳走回去。身后，那个输不起的人在举魔杖，裁判正看着别处。|还是那个输不起的人，又一场比赛，又一根在你背后举起的魔杖。有些人就是学不乖。|你赢了，你转身，你听见了：恶咒之前那一下小小的吸气声。}
+# en: A duelling hall after a practice bout, a student walking away from the circle, a sore loser behind them raising a wand.
+scene [fe5c7e] = 练习赛后的决斗厅，一个学生正从决斗圈走开，身后一个输不起的人举起了魔杖。
+# en: Dive for the floor
+opt.left.label [416891] = 扑倒在地
+# en: {You drop and roll; the hex smacks into the bench and turns it pink. The referee turns round in time to see who did it.|Down. It goes over you and into the rafters, where it startles the pigeons.|You dive. The hex misses. The hall saw everything, and so does the loser's reputation.}
+opt.left.say.1 [c3dedd] = {你一扑一滚；恶咒打在长凳上，把它变成了粉色。裁判转过身来，正好看见是谁干的。|趴下。它从你头顶飞过，打进了椽子里，惊飞了鸽子。|你扑了出去。恶咒落空了。全厅都看见了，那个输家的名声也看见了。}
+# en: {Too slow. It catches you between the shoulders and your hair stands on end for an hour.|You dive into the hex instead of out of it. The referee comes over, at last.|It hits. You spend the evening in the infirmary explaining that you didn't start it.}
+opt.left.say.2 [0d9e99] = {太慢了。它打在你两肩之间，你的头发竖了一个钟头。|你扑进了恶咒里，而不是扑出去。裁判终于过来了。|打中了。你一晚上都在医务室解释不是你先动手的。}
+# en: Turn and face them
+opt.right.label [2f266e] = 转身面对他们
+# en: {You turn round and the hex glances off your shoulder, stinging. You look at them. They lower the wand, slowly, and the hall goes very quiet.|You face them and take the edge of it on your arm. They mutter something about a cramp and walk off.|You turn in time to take a glancing blow, not a full one. The referee finally notices.}
+opt.right.say.1 [ad79df] = {你一转身，恶咒擦过你的肩膀，火辣辣的。你看着他们。他们慢慢放下魔杖，全厅一片寂静。|你面对他们，胳膊挨了它一下边。他们嘟囔着说抽筋了，走开了。|你及时转身，只挨了擦边的一下，没有挨个正着。裁判终于注意到了。}
+# en: Send it back
+opt.up.label [aed0d3] = 把它反照回去
+# en: {You don't turn round. The hex hits you, and goes back where it came from, all of it. The sore loser sits down hard, with pink hair.|It comes; it goes back. The hall laughs, and the referee pretends not to have seen either half.|Reflected, all of it. The loser spends the evening in the infirmary explaining that they didn't start it.}
+opt.up.say.1 [349558] = {你没有转身。恶咒打中你，又回到了它来的地方，一点不剩。那个输不起的人一屁股坐倒，头发成了粉色。|它来了；它回去了。全厅都笑了，裁判假装两半都没看见。|全部反照了回去。那个输家一晚上都在医务室解释不是他们先动手的。}
+
+@event lesson_rime
+# en: The Rotten Ladder
+title [d300ac] = 朽烂的梯子
+# en: {You're near the top of the hayloft ladder with an armful of owl post when the rung under your foot snaps. The next one is groaning too. The stable floor is stone, and it's a long way down.|The hayloft ladder again. Brask says she's mended it. A rung disagrees, loudly, under your foot.|The ladder, the loft, the crack of old wood. You know this sound now.}
+text [f718a2] = {你抱着一摞猫头鹰邮件快爬到干草棚梯子顶上时，脚下的横档断了。下一根也在呻吟。马厩的地面是石头的，离你很远。|又是干草棚的梯子。布拉斯克说她修好了。一根横档不同意，在你脚下大声表示。|梯子，草棚，老木头的一声脆响。这声音你现在熟了。}
+# en: A tall hayloft ladder in old stables, one rung snapped, a student near the top clinging on, a stone floor a long way below.
+scene [2b401a] = 旧马厩里一架高高的干草棚梯子，一根横档断了，一个学生贴在梯子顶上，下面是很远的石头地面。
+# en: Jump for the beam
+opt.left.label [9ea520] = 扑向横梁
+# en: {You throw yourself at the beam and hang there, owl post in your teeth, till Brask comes with another ladder.|You catch the beam with one hand. The owls applaud with their wings, or seem to.|A leap, a grab, a dangle. Brask gets you down and fixes the ladder, at last.}
+opt.left.say.1 [567826] = {你扑向横梁，吊在上面，牙里叼着猫头鹰邮件，直到布拉斯克搬来另一架梯子。|你一只手抓住了横梁。猫头鹰们拍着翅膀鼓掌，或者看起来是。|一扑，一抓，一吊。布拉斯克把你弄下来，终于修好了梯子。}
+# en: {You miss the beam and land on a bale, which is luck, and then on the floor, which isn't.|You catch the beam and lose it. The post goes everywhere; so do you.|The beam slips out of your fingers and the stones come up to meet you.}
+opt.left.say.2 [16a014] = {你没抓住横梁，落在一捆干草上，这是运气，然后落到地上，这不是。|你抓住了横梁又松脱了。邮件撒了一地；你也是。|横梁从你指间滑走，石头迎面而来。}
+# en: Ride the ladder down
+opt.right.label [52191c] = 顺着梯子下去
+# en: {You hug the ladder and let it fall slowly sideways onto the hay. Not graceful. Mostly unhurt.|You slide down the rails like a sailor and take a splinter the length of your thumb.|Down the rails, fast. Your palms are raw, the post is safe.}
+opt.right.say.1 [b08466] = {你抱紧梯子，让它慢慢侧倒在干草上。不好看。基本没伤。|你像水手一样顺着梯柱滑下去，扎了一根拇指那么长的木刺。|顺着梯柱，飞快地下来。你的手掌磨破了，邮件安然无恙。}
+# en: Let the cold take the fall
+opt.up.label [d0cd7c] = 让寒冰接住这一摔
+# en: {The rung goes, and you go, and the sliver of winter in your collar wakes. You hit the floor frozen solid and thaw a moment later, unhurt and very cold.|You fall. Rime takes the blow. You lie on the stones for a while, thawing, watching the owls watch you.|The fall that should fell you finds you frozen instead. Brask finds you sitting up, frosted, and asks no questions at all.}
+opt.up.say.1 [b00b9d] = {横档断了，你也掉了，缝在你领子里的那一缕冬天醒了过来。你冻得硬邦邦地砸在地上，过一会儿化开，毫发无伤，冷得要命。|你掉了下去。雾凇接下了这一击。你在石头上躺了一会儿，慢慢化开，看着猫头鹰们看着你。|本该把你击倒的一摔，却发现你已冻住。布拉斯克看见你结着霜坐起来，什么也没问。}
+
+@event lesson_siphon
+# en: The Wasps' Nest
+title [9fabd5] = 马蜂窝
+# en: {There's a wasps' nest the size of a head under the boathouse eaves, right over the door. Three rowers have been stung this week, and one has swelled up so badly she's in the infirmary.|The wasps have rebuilt. A new nest, the same eaves, the same swollen arms.|The nest, the eaves, the hum. The crews go in at a run now.}
+text [188a4d] = {船屋屋檐下、正对着门的地方，有个人头那么大的马蜂窝。这星期已经有三个划船手被蜇了，有一个肿得厉害，进了医务室。|马蜂又筑好了。新的窝，同样的屋檐，同样肿起的胳膊。|窝，屋檐，嗡嗡声。划船队现在都是跑着进门。}
+# en: A boathouse doorway in summer, a grey papery wasps' nest the size of a head under the eaves, rowers with swollen stings on their arms.
+scene [b3a4b2] = 夏日的船屋门口，屋檐下一个人头大小的灰色纸质马蜂窝，划船手们胳膊上带着肿起的蜇伤。
+# en: Smoke it out at dusk
+opt.left.label [38b5a1] = 黄昏时用烟熏
+# en: {You smoke it at dusk with wet straw, then knock it down into a sack. Two stings, and the crews can use the door again.|Smoke, a long pole and nerve. The nest comes down; the wasps go elsewhere, eventually.|You smoke them out. The crews bring you honey from the village by way of thanks, which feels pointed.}
+opt.left.say.1 [7d4f2b] = {你黄昏时用湿稻草熏它，再把它捅下来装进麻袋。挨了两下蜇，划船队又能走那扇门了。|烟，一根长杆，加上胆量。窝掉下来了；马蜂最终去了别处。|你把它们熏了出来。划船队从村里给你带来蜂蜜作谢礼，感觉别有深意。}
+# en: {The smoke drifts the wrong way, and the wasps come out the right way, at you. You run into the lake.|They don't like smoke and they like you less. Five stings.|The nest falls the wrong way. You jump into the lake; the nest floats beside you.}
+opt.left.say.2 [051f4f] = {烟往错的方向飘，马蜂往对的方向出来，冲着你。你跑进了湖里。|它们不喜欢烟，更不喜欢你。五下蜇伤。|窝掉错了方向。你跳进湖里；窝漂在你旁边。}
+# en: Leave it for Old Maud
+opt.right.label [cda0e6] = 留给老莫德
+# en: {You leave Maud a note. She comes in a week, by which time two more rowers are swollen.|You tell Maud, who says it's on her list. The list is long.|Not your nest. You use the side window.}
+opt.right.say.1 [eddc57] = {你给莫德留了张条子。她一星期后才来，这期间又有两个划船手肿了。|你告诉了莫德，她说在她的清单上。清单很长。|不是你的窝。你走侧窗。}
+# en: Draw the life out of it
+opt.up.label [133ee0] = 把它的生命抽出来
+# en: {You reach towards the nest and draw. The hum goes thin, then silent. Something warm comes back along the line into you. You feel better, and wish you didn't.|You siphon it, slowly, and keep it. The nest goes quiet; you go very well indeed. It's forbidden for a reason, and you know the reason now.|The life comes out of the nest and into you. The crews cheer the silence. You don't tell them how it happened.}
+opt.up.say.1 [8d87ef] = {你朝那窝伸出手，开始抽取。嗡嗡声变细，然后无声。有什么温热的东西顺着那条线流回你身上。你感觉好多了，又希望自己没有。|你慢慢地虹吸它，把它留下来。窝安静了；你好得出奇。它被禁止是有原因的，现在你知道原因了。|生命从窝里出来，进了你的身体。划船队为这片寂静欢呼。你没告诉他们是怎么回事。}
+
+@event lesson_compel
+# en: The Shell Game
+title [127c80] = 猜豆游戏
+# en: {A stranger at the Newt is running a shell game on a barrel top, three cups and a pea, and a young farmhand is losing his whole week's wages. You saw the pea go up the stranger's sleeve. Nobody else did.|The shell-game man again, a different barrel, a different farmhand. The same sleeve.|Three cups, one pea, one sleeve. The landlady gives you a look that says "well?"}
+text [23db47] = {蝾螈酒馆里一个陌生人在木桶顶上摆猜豆游戏，三只杯子一颗豆子，一个年轻农工正在把整整一星期的工钱输掉。你看见豆子溜进了陌生人的袖子。别人都没看见。|又是那个摆猜豆的人，换了只木桶，换了个农工。还是那只袖子。|三只杯子，一颗豆子，一只袖子。老板娘看了你一眼，意思是“怎么样？”}
+# en: A smoky tavern corner, a grinning man moving three cups over a pea on a barrel top, a young farmhand losing his wages.
+scene [28b571] = 烟雾缭绕的酒馆角落，一个咧嘴笑的男人在木桶顶上挪动三只杯子盖着一颗豆子，一个年轻农工在输他的工钱。
+# en: Call him a cheat
+opt.left.label [0ed473] = 揭穿他是骗子
+# en: {You say it loud. The room turns; the sleeve is shaken; the pea rolls out across the floor. The farmhand gets his wages back and buys you a cider.|You call it, and the regulars back you. The stranger leaves faster than he came.|"Check his sleeve." They do. The landlady throws him out personally.}
+opt.left.say.1 [a4c970] = {你大声说了出来。一屋子人转过头来；袖子被抖开；豆子滚过地板。农工拿回了工钱，请你喝了杯苹果酒。|你揭穿了，常客们给你撑腰。陌生人走得比来得还快。|“查查他的袖子。”他们查了。老板娘亲自把他扔了出去。}
+# en: {He shows his empty sleeves with a flourish, and the room laughs at you. The pea is somewhere else now.|He makes you look a fool and the farmhand loses again.|You call it. He smiles and leaves before anyone checks, with the money.}
+opt.left.say.2 [1b2671] = {他夸张地亮出空空的袖子，满屋人都笑你。豆子这会儿在别处了。|他让你出了丑，农工又输了。|你揭穿他。他笑笑，没等人查就带着钱走了。}
+# en: Get the farmhand away
+opt.right.label [5e65d5] = 把农工拉走
+# en: {You steer him to the bar with a cider and a long story. He keeps what wages he has left.|A drink and a word. He goes home poorer but not penniless.|You get him away from the barrel with a cider on you. He's angry with you till the morning, then grateful.}
+opt.right.say.1 [38f39c] = {你请他喝杯苹果酒、讲个长故事，把他引到吧台边。他保住了剩下的工钱。|一杯酒，一句话。他回家时穷了，但没穷光。|你请他喝了杯苹果酒，把他从木桶边拉开。他气你气到第二天早上，然后谢了你。}
+# en: Make him do that move again
+opt.up.label [a4eea8] = 让他把那手再做一遍
+# en: {You make him do what he just did, again, and again, slower each time, till the whole room sees the pea go up the sleeve. He can't stop. He hates it. The farmhand gets every coin back.|Again. Again. The stranger's hand does it over and over, whether he wants to or not. Nobody stops him; nobody needs to.|You compel the move. The room watches the trick, three times, and then watches the stranger, who's very pale.}
+opt.up.say.1 [ebe51d] = {你让他把刚才那一手再做一遍，又一遍，一遍比一遍慢，直到满屋人都看见豆子溜进袖子。他停不下来。他恨透了。农工拿回了每一个铜板。|再来。再来。陌生人的手一遍又一遍地做着，不管他愿不愿意。没人拦他；也不用人拦。|你强令那一手重来。满屋人把戏法看了三遍，然后看着那个陌生人，他脸色惨白。}
+
+@event lesson_torment
+# en: The Illegal Charm
+title [0516b9] = 违禁护符
+# en: {Your practice opponent is wearing a charm at the wrist that makes every spell of theirs hit twice. It's illegal, and the referee is watching the bout at the other end. You're losing.|Another practice bout, another opponent with a charm at the wrist. Somebody in the village is selling them, and the referee is watching the wrong end again.|A charm glinting at an opponent's wrist, again. They come and go, the charms, like the people who wear them.}
+text [aeeaca] = {你的练习对手腕上戴着一枚护符，让他们的每个咒语都打两下。这是违禁的，而裁判在看另一头的比赛。你在输。|又一场练习赛，又一个手腕上戴着护符的对手。村里有人在卖这东西，裁判又在看错的那一头。|又一枚护符在对手腕上闪光。护符来来去去，就像戴它们的人一样。}
+# en: A duelling circle in a stone hall, an opponent with a forbidden charm glinting at their wrist, a referee watching the wrong end of the bout.
+scene [a88d94] = 石头大厅里的决斗圈，对手腕上一枚违禁护符闪着光，裁判在看比赛的另一头。
+# en: Stop the bout and tell the referee
+opt.left.label [7e99b3] = 叫停比赛，告诉裁判
+# en: {You lower your wand and call the referee over. The charm is found; your opponent is benched for a month. Half the hall thinks you're a tell-tale.|You stop it. The referee confiscates the charm and gives you the bout. Nobody thanks you.|You call it. Your opponent swears the charm is a family heirloom. It's confiscated anyway.}
+opt.left.say.1 [04934d] = {你放下魔杖，叫裁判过来。护符被搜了出来；你的对手被罚坐一个月冷板凳。半个大厅觉得你是告密的。|你叫停了。裁判没收了护符，判你赢。没人谢你。|你揭发了。你的对手发誓那是传家宝。照样没收。}
+# en: Fight on, fair, and lose
+opt.right.label [7174ba] = 公平地打下去，输掉
+# en: {You fight fair against an unfair charm and lose by a hair. You learn more from losing to it than you would from winning.|You lose, honourably and painfully.|You go down fighting, and bruised. The hall noticed; so did your opponent.}
+opt.right.say.1 [30241b] = {你公平地对抗一枚不公平的护符，以毫厘之差输了。输给它学到的，比赢了还多。|你输了，输得光荣，也输得疼。|你战到最后，一身淤青。大厅注意到了；你的对手也是。}
+# en: Make every spell they pay for hurt
+opt.up.label [f97802] = 让他们付出的每个咒语都疼
+# en: {You cast it, and every spell they pay for hurts them. They falter, then stop casting at all, white and shaking. You win, and wish the hall had been looking somewhere else.|Torment: every cast a cost. The charm makes it twice the cost. The bout ends very quickly.|You win. Afterwards they take the charm off and put it in their pocket, and won't look at you.}
+opt.up.say.1 [66f0e8] = {你施了咒，他们付出的每个咒语都开始折磨他们。他们迟疑了，然后干脆不再施咒，脸色发白，浑身发抖。你赢了，希望大厅当时在看别处。|折磨：每次施咒都有代价。护符让代价翻倍。比赛很快就结束了。|你赢了。事后他们摘下护符塞进口袋，不肯看你。}
+
+@event lesson_extraction
+# en: The Empty Well
+title [5e45f7] = 干涸的井
+# en: {You're halfway through a practical and nearly dry, with the dregs of one casting left and a dozen still to do. The student at the next station is fairly glowing with magic, and the examiner is at the far end of the room.|The practical again, the well nearly empty again, and a different classmate glowing beside you.|Nearly dry, mid-practical, with plenty right beside you. You know exactly where it is.}
+text [0d528d] = {实践考试做到一半，你快干了，只剩一次施咒的残余，还有十几次要做。隔壁台的学生浑身都在发着魔力的光，考官在房间另一头。|又是实践考试，井又快见底了，又换了个同学在你身边发光。|快干了，考到一半，充足的就在身旁。你清楚地知道它在哪儿。}
+# en: A practical exam hall, rows of students at stations casting, one student with empty hands beside a classmate brimming with light.
+scene [3a609b] = 实践考试的大厅，一排排学生在各自的台前施咒，一个两手空空的学生旁边是一个满溢着光的同学。
+# en: Hand in what you've done
+opt.left.label [7227e0] = 交上已完成的部分
+# en: {You hand in half a practical and a very honest note. The examiner says you may resit it next week. It's a long week.|You stop and explain. The examiner says it happens to everyone once, and books you a resit.|Half done, handed in, a resit to come. The examiner says "Rest next time." You will.}
+opt.left.say.1 [c629a1] = {你交上半份实践和一张非常诚实的条子。考官说你下周可以补考。那是很长的一周。|你停下来解释。考官说人人都会遇上一回，给你排了补考。|做了一半，交了，还有补考要来。考官说：“下次休息好。”你会的。}
+# en: Ask your neighbour to lend a little
+opt.right.label [555a3d] = 请邻座借你一点
+# en: {You whisper; they hesitate, then pass you a little, the honest way, hand to hand. You both finish, both tired.|They lend you some, and the examiner sees, and lets it go, this once.|They give it freely. You'll owe them for a long time.}
+opt.right.say.1 [09916d] = {你低声问；他们犹豫了一下，然后用正当的方式，手递手地传给你一点。你们都做完了，都累了。|他们借了你一些，考官看见了，这回放过了。|他们心甘情愿地给了。你会欠他们很久。}
+# en: Take theirs
+opt.up.label [5945f7] = 拿走他们的
+# en: {You reach into them and take their magic for yours. They sag at their station and don't know why. You finish with marks to spare. They don't.|Extraction: theirs, then yours. They feel it. Everyone who has felt it remembers.|You take it and finish. Afterwards they look at you across the hall for a long time, and never sit beside you again.}
+opt.up.say.1 [953259] = {你伸进他们体内，把他们的魔力据为己有。他们在台前瘫软下去，不知为何。你绰绰有余地做完了。他们没有。|汲取：他们的，然后是你的。他们感觉到了。每个感觉过它的人都记得。|你拿走了，做完了。事后他们隔着大厅久久地看着你，再也没坐到你旁边。}
+
+@event lesson_eclipse
+# en: The Scalded Hand
+title [6ec599] = 烫伤的手
+# en: {The solder pot tips and you catch it the wrong way. Your hand is scalded red, and the machine on the bench has to be charged tonight or the whole term's work is wasted. Charging it takes everything you have.|Another accident, another burn, the same machine waiting to be charged. The workshop doesn't care about your hand.|The pot, the burn, the deadline. Your hand throbs in time with the clock.}
+text [9a5109] = {焊锡锅翻了，你接错了地方。你的手烫得通红，而工作台上的机器今晚必须充能，否则整个学期的心血就白费了。给它充能要用上你的全部。|又一次意外，又一处烫伤，还是那台等着充能的机器。工坊才不在乎你的手。|锅，烫伤，期限。你的手跟着钟一起一跳一跳地疼。}
+# en: A cluttered workshop at night, a solder pot tipped over, a student holding a reddened hand, a half-finished enchanted machine waiting on the bench.
+scene [cfccfa] = 夜里杂乱的工坊，一只焊锡锅打翻了，一个学生捂着通红的手，工作台上一台未完成的附魔机器在等着。
+# en: Go to the infirmary and let the work go
+opt.left.label [705172] = 去医务室，放下这活
+# en: {Sister Amaranth dresses the burn and tells you to keep it out of the workshop. The machine waits, cold, and so does your mark.|You go. The hand heals. The machine doesn't charge itself.|Bandaged, scolded, done for the night. The term's work will have to wait.}
+opt.left.say.1 [25efa5] = {阿玛兰斯修女包扎了烫伤，叫你别把它带进工坊。机器冷冷地等着，你的分数也是。|你去了。手好了。机器不会自己充能。|包扎好，挨了训，今晚就到此为止。整个学期的活只能等了。}
+# en: Bandage it and charge it anyway
+opt.right.label [9a5c17] = 包上它，照样充能
+# en: {You wrap it in a rag and work through it. The machine charges. You can't hold a fork for a week.|Bandage, bite your lip, charge. It hums. You don't.|You do it one-handed and slowly. It's finished at dawn, and so are you.}
+opt.right.say.1 [42b92c] = {你拿块布裹上，忍着干完。机器充好了。你一个星期拿不住叉子。|包扎，咬住嘴唇，充能。它嗡嗡响了。你没有。|你一只手慢慢干。天亮时完成了，你也完了。}
+# en: Turn the pain into power
+opt.up.label [cf5576] = 把痛化作力量
+# en: {You take the pain and turn it, and every throb becomes power held, and the machine charges in a single breath. You still feel all of it.|Pain taken, power held. The machine roars into life. Your hand doesn't stop hurting just because it's useful.|You burn the hurt for fuel. The work's done. You lie awake afterwards with the burn, and the feeling that you'd do it again.}
+opt.up.say.1 [ff4931] = {你接住疼痛，把它转过来，每一下抽痛都成了握住的力量，机器一口气就充满了。你仍然每一分都感觉得到。|痛被接住，力被握住。机器轰然启动。你的手并不因为有用就不疼了。|你把伤痛烧作燃料。活干完了。事后你带着烫伤醒着躺了很久，觉得自己还会再这么做。}
+
+@event lesson_heartprice
+# en: The Pinned Foot
+title [0ba1c2] = 被压住的脚
+# en: {A roof stone has come down in the passage and pinned the foot of the student who came up with you. It needs magic to lift, and you spent the last of yours an hour ago on the climb. They're very pale, and very quiet.|Another fallen stone, another pinned foot. The passage is crumbling faster this year.|Stone, foot, dark. Your magic is spent again. It always is when it matters.}
+text [fc6076] = {密道里掉下一块顶石，压住了和你一起上来的那个学生的脚。要用魔法才搬得动，而你一个钟头前爬上来时已经把最后一点用光了。他们脸色惨白，一声不吭。|又一块掉落的石头，又一只被压住的脚。密道今年塌得更快了。|石头，脚，黑暗。你的魔力又用光了。每到要紧时总是这样。}
+# en: A narrow secret passage behind a stone gargoyle, a slab of fallen roofstone pinning a student's foot, a candle guttering on the floor.
+scene [c238aa] = 石像鬼后一条狭窄的密道，一块掉落的顶石压住了一个学生的脚，地上一支蜡烛摇摇欲灭。
+# en: Lever it with a broken beam
+opt.left.label [248687] = 用断梁撬开它
+# en: {You find a beam and lever the slab up an inch, then two, and they drag the foot free. Swollen, not broken.|Wood, stone, every muscle you have. It lifts. You both lie in the dust laughing.|A broken beam does what magic couldn't. The beam doesn't survive it.}
+opt.left.say.1 [191697] = {你找到一根梁，把石板撬起一寸，又一寸，他们把脚拖了出来。肿了，没断。|木头，石头，你身上的每一块肌肉。它起来了。你们俩躺在尘土里笑。|一根断梁做到了魔法没做到的事。梁没撑过去。}
+# en: {The beam snaps and the slab settles back with a sound you'll hear for weeks. You go for help, running.|You lever, it shifts, it falls. They're freed by others an hour later.|The beam breaks and so does the nail of your thumb. Help comes, eventually.}
+opt.left.say.2 [f754a4] = {梁断了，石板落回去的声音你几个星期都忘不了。你跑着去求救。|你撬，它动，它落。一个钟头后别人把他们救了出来。|梁断了，你的拇指指甲也断了。救援最后来了。}
+# en: Run for help
+opt.right.label [689bdc] = 跑去求救
+# en: {You run for the others. They come with ropes and a lantern. It takes an hour, and your friend doesn't say a word the whole time.|You fetch help. By the time it comes, they've wriggled the foot halfway free on their own.|Help, ropes, a long night. The foot will mend.}
+opt.right.say.1 [035222] = {你跑去找其他人。他们带着绳子和提灯来了。用了一个钟头，你的朋友一句话也没说。|你去叫人。等人来了，他们自己已经把脚挣出来一半。|求救，绳子，漫长的一夜。脚会好的。}
+# en: Pay with yourself
+opt.up.label [493908] = 用你自己来付
+# en: {Nothing left to spend, so you pay in yourself. The stone lifts, and something in your chest goes with it. You walk home slowly, holding the wall.|You pay with your strength, for as long as you can stand it. Long enough. The foot comes free; you sit down in the dust.|Heartprice. The slab rises. You feel every ounce of it, and you'll feel it for days.}
+opt.up.say.1 [ca1de9] = {没什么可花的了，你就拿自己来付。石头抬起来了，你胸口里有什么也跟着去了。你扶着墙慢慢走回去。|你用自己的力气来付，能撑多久就付多久。够久了。脚挣了出来；你在尘土里坐下。|心价。石板升起。每一两重量你都感觉得到，往后几天也会。}
 
 @event lesson_tide
 # en: Waist-Deep at Dawn
@@ -36,88 +726,6 @@ opt.right.label [a49270] = 在岸上施咒
 # en: You work the spell from the dry pebbles and raise a neat little swell. Marisol looks at your dry boots with real sorrow, as if at a poem with no ending.
 opt.right.say.1 [0ca97b] = 你站在干燥的卵石上施咒，掀起一道整整齐齐的小浪。玛丽索尔看着你干爽的靴子，真心实意地难过，像在看一首没有结尾的诗。
 
-@event lesson_foresight
-# en: The Bottom of the Cup
-title [d6ff5b] = 杯底
-# en: The astromancy lecturer, who wears three scarves in every season, sits the class at the observatory with cups of tea and no instructions. Foresight, it turns out, begins at the bottom of the cup: what you think you see, and what you want to.
-text [4e84c1] = 那位一年四季围三条围巾的星象讲师，让全班坐在观星台里，每人一杯茶，什么也不讲。原来，预见始于杯底：你以为自己看见了什么，和你想看见什么。
-# en: An observatory room with tea cups on every desk, a lecturer in three scarves peering into a student's cup with a magnifying glass.
-scene [abb57c] = 观星台的房间里每张桌上都放着茶杯，一位围着三条围巾的讲师拿放大镜窥看学生的杯子。
-# en: Read your own cup
-opt.left.label [130c28] = 读你自己的杯子
-# en: The leaves say a hard week is coming. It does, from Tuesday. The lecturer says that's the trouble with reading your own: you start making it true.
-opt.left.say.1 [fdc255] = 茶叶说，艰难的一周就要来了。从周二开始，果然来了。讲师说，读自己的杯子麻烦就在这儿：你会开始让它成真。
-# en: Read your neighbour's
-opt.right.label [661301] = 读邻座的杯子
-# en: You tell your neighbour a letter is on its way. A letter arrives at supper. Now half the dormitory wants their leaves read, and you have to learn to say "unclear" kindly.
-opt.right.say.1 [15b70b] = 你告诉邻座，有封信在路上。晚饭时信就到了。现在半个宿舍都想让你读茶叶，你只好学会温和地说“看不清”。
-
-@event lesson_starlight
-# en: A Jar on the Roof
-title [346e45] = 屋顶上的罐子
-# en: Starlight is practised after midnight on the observatory roof, where your Starcalling tutor hands you a glass jar and tells you to hold it up "until something falls in". The stars are very far away. The roof is very cold.
-text [a2c014] = 星光咒是午夜后在观星台屋顶上练的。你的唤星术导师递给你一只玻璃罐，让你举着，“直到有东西掉进去”。星星非常远。屋顶非常冷。
-# en: A flat observatory roof at night, a student holding up a glass jar toward a sky crowded with stars, breath steaming.
-scene [64cb32] = 夜里平坦的观星台屋顶，一个学生朝满天繁星举起玻璃罐，呼出的气冒着白雾。
-# en: Hold the jar until it fills
-opt.left.label [72681d] = 举着罐子，直到装满
-# en: At three in the morning a thread of light settles in the jar like milk in tea. You carry it down the stairs in both hands. You can't feel your fingers until breakfast.
-opt.left.say.1 [12b784] = 凌晨三点，一缕光沉进罐子里，像牛奶落进茶里。你双手捧着它下楼。直到早饭时，你的手指都没有知觉。
-# en: Lie back and watch the sky
-opt.right.label [3f4130] = 躺下看星空
-# en: You lie on the roof and name the constellations with whoever is beside you. Your jar stays empty. The lecturer, passing, says that's the first lesson too, and the one most people skip.
-opt.right.say.1 [ad51ae] = 你躺在屋顶上，和身边的人一起数星座。你的罐子一直空着。讲师路过时说，这也是第一课，而且是大多数人跳过的那一课。
-
-@event lesson_mend
-# en: Teacups First
-title [606e4e] = 先修茶杯
-# en: Sister Amaranth teaches Mend with teacups. She drops one on the infirmary floor without looking. "Mend it." When it's whole she drops another. "Bones are harder," she says, rolling bandages. "Cups first."
-text [bd4c39] = 阿玛兰斯修女用茶杯教愈合咒。她看都不看就把一只茶杯摔在医务室地上。“修好它。”修好了，她又摔一只。“骨头更难，”她一边卷绷带一边说，“先修杯子。”
-# en: An infirmary storeroom, a stern healer dropping a teacup to the stone floor while a student kneels over the pieces with a wand.
-scene [32aa56] = 医务室的储藏间，一位严厉的医者把茶杯摔在石地上，一个学生拿着魔杖跪在碎片旁。
-# en: Mend cup after cup
-opt.left.label [0314eb] = 一只接一只地修
-# en: By the twentieth cup you can hear the crack close before you see it. Amaranth says "Keep doing that," and drops a teapot.
-opt.left.say.1 [0628fd] = 修到第二十只，你还没看见裂缝合上，就先听见了。阿玛兰斯说“继续这样做”，然后摔了一只茶壶。
-# en: Ask her about the bones
-opt.right.label [4f800c] = 问她骨头的事
-# en: She tells you, still rolling bandages, about the worst break she ever set. It was a student's; that student is a professor now. You go a little pale, and listen to every word.
-opt.right.say.1 [37dcc5] = 她一边卷绷带，一边给你讲她接过的最糟的一次骨折。那是个学生的；那个学生现在当了教授。你脸色有点发白，但一字不落地听完了。
-
-@event lesson_purify
-# en: Make It Stronger
-title [fcd954] = 让它更浓
-# en: Sister Amaranth has heard that Pell taught you to Distill. She sets a cauldron of something green in front of you that she will not name. "Pell teaches it fast," she says. "I teach it so you're still standing afterwards. Make it stronger." Then she goes back to her own work.
-text [4c9d1e] = 阿玛兰斯修女听说佩尔教会了你萃取。她把一锅不肯说名字的绿色东西放在你面前。“佩尔教得快，”她说，“我教的是让你萃完还站得住。让它更浓。”说完她回去忙自己的了。
-# en: An alchemy lab bench with a cauldron of thick green liquid, a healer standing over a student who holds a wand above it.
-scene [77f705] = 炼金实验室的工作台上一锅浓稠的绿色液体，一位医者站在举着魔杖的学生身边。
-# en: Distill it drop by drop
-opt.left.label [a3f178] = 一滴一滴地萃取
-# en: Drop by drop, the green comes down to one dark spoonful, and each drop costs you a little. You sit down halfway, as she said you would. Amaranth tastes the result, nods and puts it on the high shelf.
-opt.left.say.1 [9cf12d] = 一滴又一滴，那锅绿色浓缩成深色的一勺，每一滴都从你身上拿走一点。萃到一半你坐了下来，正如她说的那样。阿玛兰斯尝了尝成果，点点头，把它放上了高架。
-# en: Ask what it was
-opt.right.label [210c34] = 问那是什么
-# en: "Last term's soup," she says. You decide not to believe her, then decide you do. She shows you where to stop before it takes too much from you, and you distill half a cup, badly.
-opt.right.say.1 [b138c3] = “上学期的汤，”她说。你决定不信，然后又决定信。她教你在它从你身上拿走太多之前停手，你萃了半杯，萃得很糟。
-
-@event lesson_glamour
-# en: Pick a Card
-title [760613] = 抽一张牌
-# en: Professor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. "Fool me, and you may skip the essay."
-text [952f53] = 维伊教授的魅影课是一场纸牌游戏。每个学生把一张普通的牌伪装成星辰皇后，维伊从一堆牌里挑出真正的皇后。她说，从来没人让她挑错过。“骗过我，就可以免交论文。”
-# en: A velvet-curtained classroom, a professor in a violet coat fanning out a hand of playing cards toward a row of students.
-scene [dce887] = 挂着天鹅绒帘子的教室，一位穿紫罗兰色外套的教授把一手扑克牌扇形展开，朝向一排学生。
-# en: Glamour your card
-opt.left.label [0c0fb9] = 给你的牌施魅影
-# en: Vey picks your card, turns it over and finds a plain two. She laughs out loud, a real laugh, and the class goes silent. "Well," she says. "Well, well. No essay for you." By supper the whole tower knows, and Vey has started calling you "my card sharp".
-opt.left.say.1 [3f0a00] = 维伊挑中你的牌，翻过来，是一张普通的二。她放声大笑，真心的笑，全班鸦雀无声。“好，”她说，“好，好啊。你不用交论文了。”到晚饭时全塔都知道了，维伊开始叫你“我的老千”。
-# en: Vey passes over your card without a glance. "The queen of stars," she says kindly, "does not blush." But you saw how she chose: by the hands, not the cards.
-opt.left.say.2 [8f34d2] = 维伊看都没看就略过了你的牌。“星辰皇后，”她和气地说，“是不会脸红的。”可你看清了她是怎么挑的：看手，不看牌。
-# en: Watch how she catches them
-opt.right.label [be78bf] = 看她怎么识破
-# en: You watch her eyes instead of the cards. She never looks at the faces, only at the hands holding them. You write that down, and she sees you write it, and smiles.
-opt.right.say.1 [1511f9] = 你不看牌，看她的眼睛。她从不看牌面，只看拿牌的手。你把这点记下来，她看见你在记，笑了。
-
 @event lesson_mirror
 # en: Gently
 title [99b2bc] = 温柔些
@@ -134,26 +742,6 @@ opt.right.label [42aa1b] = 问她为什么躲开镜子
 # en: "Vanity," says Vey, with a magnificent smile that answers nothing at all. But she lets you stay after the others leave, and shows you how to soften the charm's edges.
 opt.right.say.1 [ffe355] = “虚荣，”维伊说，露出一个华丽的笑容，什么也没回答。不过别人走后她让你留下，教你怎么把咒语的锋芒磨软一些。
 
-@event lesson_haste
-# en: Race the Hippogriff
-title [8af651] = 和鹰头马身有翼兽赛跑
-# en: Professor Brask teaches Haste on the flight field, with a stopwatch and a hippogriff that is faster than the spell. "Beat her," she says to you. To the hippogriff she explains, at length and politely, that she is not to bite you if you win.
-text [165778] = 布拉斯克教授在飞行场教疾速咒，拿着一块秒表，还有一头比咒语还快的鹰头马身有翼兽。“赢过她，”她对你说。然后她又对那头兽客客气气、详详细细地解释：你要是赢了，不许咬你。
-# en: A windy flight field marked with flags, a grey-haired professor holding a stopwatch, a student sprinting beside a hippogriff.
-scene [57e5ef] = 插着旗子的飞行场上风很大，一位灰发教授拿着秒表，一个学生在鹰头马身有翼兽旁边飞奔。
-# en: Race the hippogriff
-opt.left.label [691071] = 和它赛跑
-# en: You cross the flag a beak's length ahead. The hippogriff looks at Brask; Brask looks at the stopwatch, then at you. "Hm," she says. From her, it's a medal.
-opt.left.say.1 [d51c8e] = 你领先一个喙的长度冲过旗子。那头兽看着布拉斯克；布拉斯克看着秒表，又看看你。“嗯，”她说。从她嘴里出来，这就是一枚奖章。
-# en: The hippogriff wins by a length and takes your hat as her prize. Brask tells a story about a student who lost to a goose. It ends with a bite. "Moral: faster."
-opt.left.say.2 [4beef4] = 那头兽领先一个身位赢了，还把你的帽子叼走当奖品。布拉斯克讲了个学生输给一只鹅的故事。结尾是被咬了一口。“寓意：快点。”
-# en: Time the others first
-opt.right.label [f5b3cc] = 先给别人计时
-# en: You hold the stopwatch and watch the fast ones. They aren't running harder; they start the spell a step before they need it. Brask sees you notice, and hands you the next race.
-opt.right.say.1 [38d0ad] = 你拿着秒表看跑得快的人。他们并没有跑得更用力；他们在需要之前一步就起咒了。布拉斯克看出你注意到了，把下一场比赛交给了你。
-# en: Afterwards you ask her how to start the spell a step early yourself. She shows you, and remembers that you asked.
-opt.right.say.2 [dcbb36] = 之后你问她，自己该怎样提前一步起咒。她教了你，并且记住了你开口问过。
-
 @event lesson_beast_speech
 # en: The Mule Has Views
 title [ec4453] = 骡子有看法
@@ -169,437 +757,3 @@ opt.left.say.1 [b8cda1] = 第四个钟头，骡子的想法传了过来：大多
 opt.right.label [59b22b] = 直接施咒
 # en: You cast before you've listened and get one word back, very clearly: "Rude." Brask laughs once, loudly. It's the laugh of the term, and everyone in the stables heard it.
 opt.right.say.1 [9b7054] = 你还没听就施了咒，清清楚楚地收到一个词：“无礼。”布拉斯克大笑了一声。这是本学期的那一声笑，整个马厩都听见了。
-
-@event lesson_ward
-# en: Chalk
-title [e38b98] = 粉笔
-# en: At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer drills first-years in their Ward by throwing chalk. Hard, and without warning. "A ward that only works when you're ready," says the lecturer, "is a decoration."
-text [0d49cc] = 讲堂塔顶上，灯故意点得很暗，暗影讲师用扔粉笔的方法训练新生的护界。扔得很狠，毫无预兆。“只在你准备好时才管用的护界，”讲师说，“是装饰品。”
-# en: A dim room at the top of a tower, low lamps, a lecturer mid-throw with a piece of chalk while students hold up shimmering wards.
-scene [066bb6] = 塔顶昏暗的房间，灯光低垂，一位讲师正扔出一截粉笔，学生们举着微微发光的护界。
-# en: Hold the ward all hour
-opt.left.label [2d1be2] = 撑住护界一整节课
-# en: The first chalk hits your forehead. The fifth bounces off the ward with a sound like a bell. By the end of the hour your ward is up before you know you've raised it.
-opt.left.say.1 [c53b86] = 第一截粉笔砸中你的额头。第五截从护界上弹开，响得像一声钟。到下课时，你的护界在你意识到之前就已经立起来了。
-# en: Watch the lecturer's wrist
-opt.right.label [965178] = 盯着讲师的手腕
-# en: You let the ward drop and watch how the throws begin. Three pieces of chalk find your forehead while you do. But you see it now: the shoulder moves first.
-opt.right.say.1 [2c86ff] = 你放下护界，观察每一次投掷是怎么开始的。这期间有三截粉笔砸中了你的额头。但你看出来了：先动的是肩膀。
-
-@event lesson_shadowstep
-# en: Where the Voice Was
-title [9b35f0] = 声音在的地方
-# en: Shadowstep is taught in the dark. The umbral lecturer puts out the last dim lamp and calls your name from somewhere else in the room. You have to arrive where the voice was before it moves. Somewhere, a chair is waiting for your shins.
-text [05e14f] = 影步是在黑暗里教的。暗影讲师熄灭最后一盏暗灯，从房间别处叫你的名字。你得在声音移开之前，到达它刚才所在的地方。某处有一把椅子，正等着你的小腿。
-# en: A pitch-dark tower room with one dim lamp guttering out, the outline of a student stepping between deep shadows.
-scene [877abd] = 漆黑的塔中房间，一盏暗灯即将熄灭，一个学生的轮廓正踏入深深的阴影之间。
-# en: Step into the dark
-opt.left.label [2680ac] = 踏进黑暗
-# en: You step, and the dark folds, and you're across the room with a bruise from the chair. The voice is right beside you. "Better," it says, and moves away again.
-opt.left.say.1 [25eb2c] = 你迈出一步，黑暗折叠起来，你已到了房间另一头，腿上被椅子撞出一块青。声音就在你身边。“好一点了，”它说，又移开了。
-# en: Wait for your eyes to adjust
-opt.right.label [565cb0] = 等眼睛适应
-# en: You stand still until the dark has edges. The lecturer, somewhere, says that's cheating, and that cheating is half of umbral magic. You step only once, but you step exactly.
-opt.right.say.1 [98d714] = 你一动不动，直到黑暗有了边缘。讲师在某处说这是作弊，而作弊是暗影魔法的一半。你只迈了一步，但这一步分毫不差。
-
-@event lesson_animate
-# en: The Chair That Follows
-title [d19868] = 跟着走的椅子
-# en: The Artifice homework is to animate something and live with it for a day. You pick a chair, which follows you to every lecture. The teapot is the other option. It has opinions about being carried.
-text [d289ff] = 奇械术的作业是活化一样东西，和它一起过一天。你挑了一把椅子，它跟着你去上每一节课。另一个选项是茶壶，它对被人提着走颇有意见。
-# en: A workshop corridor, a wooden chair trotting after a student like a dog, a teapot waddling behind it.
-scene [ffbfad] = 工坊走廊里，一把木椅像小狗一样小跑着跟在一个学生身后，后面还摇摇摆摆跟着一只茶壶。
-# en: Live with the chair
-opt.left.label [76d3db] = 和椅子过一天
-# en: The chair follows you everywhere and offers itself whenever you stop, including on the stairs, at speed. By evening you have bruised shins and a very loyal chair.
-opt.left.say.1 [8427ee] = 椅子走到哪儿跟到哪儿，你一停下它就凑上来让你坐，包括在楼梯上、全速的时候。到傍晚，你的小腿青一块紫一块，换来一把非常忠心的椅子。
-# en: Animate the teapot instead
-opt.right.label [4d6ebe] = 改为活化茶壶
-# en: The teapot waddles after you all day, pouring when you sit. It takes more out of you than the chair would, but your friends have never been so well looked after.
-opt.right.say.1 [fd76ab] = 茶壶摇摇摆摆地跟了你一整天，你一坐下它就倒茶。它比椅子更耗你的力气，但你的朋友们从没被照顾得这么周到过。
-
-@event lesson_seal
-# en: Only for the Addressee
-title [372311] = 只给收信人
-# en: Today's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. "If I can," she says mildly, "you haven't."
-text [f31824] = 今天空洞研究的练习：封好一封信，让只有收信人才能打开。院长会先试着打开。“要是我打得开，”她温和地说，“你就没封住。”
-# en: A windowless room, a student pressing their thumb to a folded letter while a headmistress watches with her hands folded.
-scene [7faf91] = 一间没有窗户的房间，一个学生把拇指按在一封折好的信上，一位院长双手交叠地看着。
-# en: Seal it against her
-opt.left.label [8b087d] = 封住，防着她
-# en: She tries the letter for a long minute with one finger, then hands it back unopened. "Better than I was at your age," she says, which doesn't sound like a compliment. You feel hollowed out till supper.
-opt.left.say.1 [42dc8e] = 她用一根手指试了足足一分钟，然后把信原封不动地还给你。“比我在你这个年纪时强，”她说，听上去不像夸奖。直到晚饭你都觉得被掏空了。
-# en: Ask how she'd break it
-opt.right.label [902617] = 问她会怎么破解
-# en: She shows you, kindly and very quickly, how she'd break yours. You leave the room knowing a great deal more about seals and rather less sure of your own.
-opt.right.say.1 [6b2748] = 她和气地、飞快地给你演示了她会怎么破你的封。离开时你对封缄懂得多了，对自己的封却没那么有把握了。
-
-@event lesson_wildfire
-# en: Longer Each Night
-title [8c3b43] = 一夜长过一夜
-# en: Lyra wants you in the duel hall after hours. "You let it go too early," she says, and lights her own. "Hold it. Longer each night. It will bite you; let it."
-text [4e22f7] = 莱拉要你下课后来决斗厅。“你松手松得太早了，”她说着点起自己的火，“握住它。一夜比一夜久。它会咬你；让它咬。”
-# en: An empty duel hall at night, two students each holding a growing fire, one watching the other's with narrowed eyes.
-scene [1f034f] = 夜里空荡荡的决斗厅，两个学生各自握着一团不断长大的火，其中一人眯着眼盯着另一人的火。
-# en: Hold it until it bites
-opt.left.label [1580f1] = 握到它咬人
-# en: You hold it until the heat is in your teeth and then a breath longer. When you let it go it runs to the rafters. Lyra looks at your blistered palm and says nothing, which is approval.
-opt.left.say.1 [37eafe] = 你一直握到热气钻进牙缝，然后再多握一口气。一松手，它直奔房梁。莱拉看着你起泡的掌心，什么也没说，这就是认可。
-# en: Ask her how she stands it
-opt.right.label [be5a97] = 问她怎么受得了
-# en: She doesn't answer at first. Then she shows you her palms, scarred and old, and tells you about the first time, and her mother. You don't practise much. It's still the right night.
-opt.right.say.1 [d54a01] = 她起初没回答。然后她给你看了她的掌心，伤痕累累，是旧伤，讲了第一次的事，还有她的母亲。你没怎么练。这一晚依然是对的。
-
-@event lesson_heartwood
-# en: A Tree by the Window
-title [2d71f6] = 窗边的一棵树
-# en: Tobias wants you to grow a heartwood every evening for a week, "so your hands remember". Today he suggests the courtyard under your dormitory window, where nothing has grown in years.
-text [ad5103] = 托比亚斯要你连续一周每晚都种一棵心木，“好让你的手记住”。今天他提议种在你宿舍窗下的庭院里，那里好几年没长过东西了。
-# en: A dormitory courtyard at dusk, a young tree that wasn't there that morning, two students sitting under it looking pleased with themselves.
-scene [c8ec59] = 黄昏的宿舍庭院，一棵早上还不存在的小树，两个学生坐在树下，一脸得意。
-# en: Grow it properly, roots and all
-opt.left.label [c091b7] = 好好种，连根带枝
-# en: It takes everything you've got and a blister. By dusk there's a young tree under your window, and your back aches like a harvest. Tobias says it's the best one he's seen, and apologises for saying so.
-opt.left.say.1 [8496a0] = 这用尽了你所有的力气，还磨出一个水泡。到黄昏，你窗下立着一棵小树，你的背酸得像收了一季麦子。托比亚斯说这是他见过最好的一棵，又为这么说道了歉。
-# en: Sit under his instead
-opt.right.label [709e57] = 改坐在他的树下
-# en: You let him grow it and sit under it with him, talking about nothing. Your hands don't remember much. The rest of you does.
-opt.right.say.1 [a1dc24] = 你让他来种，和他一起坐在树下闲聊。你的手没记住多少。你其余的部分记住了。
-
-@event lesson_omen
-# en: The Spoon Will Fall
-title [67cae0] = 勺子会掉
-# en: At breakfast Seraphine says, without looking up, "Practise on small things. Spoons. Doors. The weather. Never people, not yet." Then she looks at you, quite clearly, for once.
-text [55b703] = 早饭时，瑟拉芬头也不抬地说：“在小事上练。勺子。门。天气。别用在人身上，还不行。”然后她看着你，难得地清清楚楚。
-# en: A refectory table at breakfast, a pale student pointing at a spoon balanced on the edge of a bowl, a second student staring at it.
-scene [0de841] = 早饭时膳堂的长桌，一个苍白的学生指着一把搭在碗沿上的勺子，另一个学生盯着它看。
-# en: Foretell small things all day
-opt.left.label [5b12d1] = 一整天预言小事
-# en: The spoon falls. The door sticks. It rains at four. By evening it unnerves you how well it works, and you catch yourself foretelling the soup.
-opt.left.say.1 [8a1997] = 勺子掉了。门卡住了。四点下雨了。到傍晚，它灵验得让你发毛，你发现自己在预言汤。
-# en: Ask what "not yet" means
-opt.right.label [daf7eb] = 问“还不行”是什么意思
-# en: "Later," she says, then, "I mean that exactly." She doesn't explain. She does pass you the salt before you've asked for it.
-opt.right.say.1 [9395cc] = “以后，”她说，接着说，“我就是字面意思。”她没解释。不过你还没开口，她就把盐递了过来。
-
-@event lesson_sleight
-# en: Pockets and Decks
-title [d97053] = 口袋与牌堆
-# en: Corvin is teaching you to keep your hand in. "Decks are practice," he says, shuffling. "Pockets are performance." Bram is asleep in an armchair nearby, his whistle on a ribbon round his neck.
-text [e4450d] = 科尔文在教你保持手感。“牌堆是练习，”他洗着牌说，“口袋是表演。”附近一张扶手椅上，布拉姆睡着了，他的哨子用缎带挂在脖子上。
-# en: A dim corner of a common room, a grinning student fanning a deck of cards while another student palms a coin under the table.
-scene [f184cd] = 公共休息室昏暗的角落，一个咧嘴笑的学生展开一副牌，另一个学生在桌下藏起一枚硬币。
-# en: Practise on the deck
-opt.left.label [c7e5c3] = 拿牌堆练
-# en: Two hours of coins and cards until your fingers cramp. It's dull, and by the end the coin vanishes so cleanly even Corvin blinks. "Saint," he says, "with very quick hands."
-opt.left.say.1 [d449a1] = 两个钟头的硬币和纸牌，练到手指抽筋。很枯燥，但到最后硬币消失得干净利落，连科尔文都眨了眨眼。“圣人，”他说，“手很快的那种。”
-# en: Lift Bram's whistle and return it
-opt.right.label [66b534] = 摸走布拉姆的哨子再还回去
-# en: The whistle comes off its ribbon without a sound and goes back on it the same way. Bram snores through all of it. Corvin is delighted and slightly worried about you.
-opt.right.say.1 [e0a626] = 哨子无声无息地离开缎带，又同样无声无息地回去。布拉姆从头打鼾到尾。科尔文乐坏了，又有点替你担心。
-
-@event lesson_contraption
-# en: The Breakfast Engine
-title [42c819] = 早餐引擎
-# en: Mir slides a breakfast tray across to you. "Practice! Make it do breakfast. Toast, butter, tea. It's the hardest machine there is, probably." Half the refectory has already turned to watch.
-text [d21132] = 米尔把一只早餐托盘推到你面前。“练习！让它做早餐。吐司、黄油、茶。这是世上最难的机器，大概吧。”半个膳堂已经转过头来看了。
-# en: A breakfast table where a clattering machine made of a toast rack, a spoon and a teapot is buttering toast at alarming speed.
-scene [be285b] = 早餐桌上，一台由吐司架、勺子和茶壶拼成的机器正咔嗒作响，以惊人的速度往吐司上抹黄油。
-# en: Build the breakfast engine
-opt.left.label [9d4c5d] = 造早餐引擎
-# en: Your engine butters four slices, pours one cup and singes your eyebrow before it falls apart in a shower of crumbs. The refectory applauds. Mir writes something down, beaming.
-opt.left.say.1 [cf3c7b] = 你的引擎抹了四片黄油，倒了一杯茶，燎了你一根眉毛，然后在一阵面包屑雨中散了架。膳堂鼓起掌来。米尔笑容满面地记下了什么。
-# en: Build it with Mir, slowly
-opt.right.label [500d56] = 和米尔慢慢造
-# en: You build it together, Mir explaining every joint. It makes one perfect slice of toast and then retires. Mir says it's the best machine of the year, probably.
-opt.right.say.1 [9461a7] = 你们一起造，米尔讲解每一个接头。它做出了一片完美的吐司，然后退休了。米尔说这是今年最好的机器，大概吧。
-
-@event lesson_hoarfrost
-# en: Putting Out Fires
-title [3a4863] = 灭火
-# en: "It's for putting fires out," Kael says again, and nods across the duel hall to where Lyra is practising, very loudly, with a very large flame. He waits to see whether you'll take the hint.
-text [a79905] = “这是用来灭火的，”凯尔又说了一遍，朝决斗厅另一头点点头，莱拉正在那儿非常响亮地练着一团非常大的火。他等着看你会不会领会。
-# en: A duel hall where one student's flame is frosting over and going out, its caster glaring, a quiet student standing nearby.
-scene [812686] = 一座决斗厅，一个学生的火焰正在结霜熄灭，施法者怒目而视，一个安静的学生站在旁边。
-# en: Put out Lyra's flame
-opt.left.label [d5a941] = 冻熄莱拉的火
-# en: Your frost meets her flame and they cancel with a hiss and a cloud of steam. Lyra's face, when it clears, is magnificent. Kael makes a sound you think is a laugh.
-opt.left.say.1 [6a4da5] = 你的霜迎上她的火，两者嘶的一声在一团蒸汽中抵消了。蒸汽散去时莱拉的表情精彩极了。凯尔发出一个你觉得是笑的声音。
-# en: Practise on the braziers instead
-opt.right.label [61fdba] = 改拿火盆练
-# en: You frost the braziers one by one. It's useful, and dull, and Kael stays with you for all of it without saying anything. You suspect that was the point.
-opt.right.say.1 [e38212] = 你一个个给火盆结霜。有用，也枯燥，凯尔一直陪着你，一句话没说。你怀疑这才是重点。
-
-@event lesson_candour
-# en: Questions People Want to Answer
-title [a15e8c] = 别人想回答的问题
-# en: Nessa hands you a notebook in the refectory. "Three people, three true answers, by the end of lunch," she says. "Ask the question they want to answer. Use the spell only when you have to."
-text [d16f34] = 内莎在膳堂递给你一个笔记本。“三个人，三个真话，午饭结束前，”她说，“问他们想回答的问题。只有不得已时才用咒语。”
-# en: A busy refectory, a bossy editor pointing out students at random tables to another student holding a notebook.
-scene [487f75] = 热闹的膳堂，一位颐指气使的编辑随手指着各桌的学生，另一个学生拿着笔记本。
-# en: Use the spell on all three
-opt.left.label [38e831] = 三个人都用咒语
-# en: Three truths by the pudding course, and one of them is about you, and not kind. Nessa reads your notes and says, "Now you know why I don't use it much."
-opt.left.say.1 [5231a1] = 布丁上桌时你已经拿到三句真话，其中一句是关于你的，而且不太客气。内莎读完你的笔记说：“现在你知道我为什么不常用了。”
-# en: Ask good questions instead
-opt.right.label [30a254] = 只凭问得好
-# en: You only manage two truths without the spell, but they're good ones, and nobody minded telling you. Nessa says that's the better trick, and that she won't print either.
-opt.right.say.1 [e030fc] = 不用咒语你只拿到两句真话，但都很好，而且没人介意告诉你。内莎说这是更好的本事，还说两句都不会登。
-
-@event lesson_brace
-# en: Planted
-title [5ea443] = 站稳
-# en: The eyepatched dummy is empty now, but it still throws a hex or two out of habit. The Circle uses it to practise bracing. Today the seniors are taking bets on how long you'll stand.
-text [f44646] = 那个戴眼罩的假人现在空了，但出于习惯还会扔出一两道恶咒。决斗社用它练坚守。今天高年级生们在打赌你能站多久。
-# en: A duel hall's practice corner, an eyepatched dummy firing weak hexes at a student who stands planted and unmoving.
-scene [c00534] = 决斗厅的练习角落，一个戴眼罩的假人朝一个学生扔出软弱的恶咒，学生站得稳稳的，一动不动。
-# en: Stand until it gives up
-opt.left.label [727463] = 站到它放弃
-# en: You stand there for an hour while the dummy throws everything it has left. The seniors pay out to whoever bet longest. Your shins are a mess and you are unmovable.
-opt.left.say.1 [835744] = 你在那儿站了一个小时，假人把剩下的一切都扔了过来。高年级生们赔钱给押时间最长的人。你的小腿一塌糊涂，人却纹丝不动。
-# en: Coach the first-years instead
-opt.right.label [6d90f5] = 改去指导新生
-# en: You stand behind a row of first-years and fix their feet, one by one, while they get hexed. They're grateful. You're bored. The dummy throws one at you on the way out, out of spite.
-opt.right.say.1 [082447] = 你站在一排新生身后，一个个纠正他们的站姿，他们挨着恶咒。他们很感激。你很无聊。你出门时假人朝你扔了一道，纯属泄愤。
-
-@event lesson_quickquill
-# en: Lecture Notes
-title [c0b410] = 课堂笔记
-# en: Your quill wants to take your lecture notes for you. It writes everything down, word for word, faster than the lecturer can talk. It also writes what it thinks of the lecturer, in the margins.
-text [bbcb65] = 你的羽毛笔想替你记课堂笔记。它一字不落，比讲师说得还快。它还在页边写下了它对讲师的看法。
-# en: A lecture hall, a quill writing busily by itself in a notebook while its owner sits back with folded arms, the lecturer squinting at them.
-scene [a03909] = 一间讲堂，一支羽毛笔在笔记本上自己忙着写，主人抱着胳膊往后靠，讲师眯眼看着他们。
-# en: Let it take the notes
-opt.left.label [468c14] = 让它记笔记
-# en: You have perfect notes, every word, and a margin full of the quill's views on the lecturer's waistcoat. You spend the evening inking them out before anyone sees.
-opt.left.say.1 [52f4b1] = 你有了完美的笔记，一字不差，还有满满一页边羽毛笔对讲师马甲的高见。你花了一晚上用墨涂掉它们，免得被人看见。
-# en: Make it take only what you say
-opt.right.label [db7273] = 让它只记你说的
-# en: It sulks, and then takes down exactly what you tell it, no more. It's work keeping it honest. You come out with half the notes and the full trust of your quill.
-opt.right.say.1 [847ea4] = 它闹了会儿脾气，然后一字不多地记下你让它记的。管住它不说谎可费劲。你只得到一半的笔记，却得到了羽毛笔全部的信任。
-
-@event lesson_bramble
-# en: A Hedge on Demand
-title [680c51] = 随叫随到的树篱
-# en: Old Maud has heard about your hedge. "There's a gap in my fence the rabbits use, dearie," she says. "Grow me one there. Thorns on the outside, mind." The rabbits are watching from the cabbages.
-text [729710] = 老莫德听说了你的树篱。“我篱笆上有个缺口，兔子老从那儿钻，亲爱的，”她说，“给我种一道。刺朝外，记着。”兔子们在卷心菜地里看着。
-# en: Old Maud's cottage garden, a groundskeeper pointing at a gap in her fence while a student coaxes a thorny hedge up out of the ground to fill it.
-scene [dea0bc] = 老莫德小屋的花园，一位园丁指着篱笆上的缺口，一个学生正哄着一道带刺的树篱从地里长出来填补它。
-# en: Grow it thorns and all
-opt.left.label [3d5051] = 连刺一起种
-# en: The hedge comes up thick and thorny, and takes a strip off your knuckles on the way. Maud inspects it and says it'll do. The rabbits look betrayed.
-opt.left.say.1 [67c5a8] = 树篱长得又密又多刺，冒出来时还刮掉了你指节上一层皮。莫德检查了一番，说行。兔子们一脸被背叛。
-# en: Grow it gently, for the cabbages
-opt.right.label [529a7c] = 种得温和些，为了卷心菜
-# en: You grow it soft and plant a row of cabbages beyond it for the rabbits. Maud laughs until she has to sit down. "You'll understand that in two weeks," she says.
-opt.right.say.1 [2c37a8] = 你把它种得很软，又在外面给兔子们种了一排卷心菜。莫德笑得不得不坐下。“过两个星期你就明白了，”她说。
-
-@event lesson_index
-# en: The Right Page
-title [8bae11] = 对的那一页
-# en: Every book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest.
-text [7d6f48] = 现在你碰到的每本书都会翻到你需要的那一页。麻烦在于图书馆知道了，书纷纷离开书架来找你。脚注坐在最大的那本上。
-# en: A library table piled with heavy books, every one falling open at a different marked page as a student touches it, a cat watching from the top of the pile.
-scene [40e94c] = 一张堆满厚书的图书馆长桌，学生碰到哪本，哪本就翻开到不同的标记页，一只猫在书堆顶上看着。
-# en: Read every page they offer
-opt.left.label [019527] = 读完它们送上的每一页
-# en: You read every page that offers itself until the lamps go out. You learn a great deal, most of it useful, and none of it what you came in for.
-opt.left.say.1 [1c13c9] = 你读每一页送上门来的书，直到灯熄。你学到很多，大部分有用，没有一样是你来找的。
-# en: Find one thing for your exams
-opt.right.label [f27744] = 只找一样考试要的
-# en: You ask for one thing, firmly. Twelve books bring it. You take your page and leave the others, who sulk on the table until a clerk shelves them.
-opt.right.say.1 [31f3f8] = 你坚定地只要一样东西。十二本书都送来了。你拿了你那一页就走，其余的在桌上生闷气，直到一位职员把它们放回去。
-
-@event lesson_rapport
-# en: A Room That Was Turning
-title [660228] = 一屋子正要翻脸的人
-# en: Two tables in the refectory are on the edge of a food fight, and every head is turning. It's the Newt all over again, with worse gravy.
-text [9b4121] = 膳堂里两张桌子眼看要打一场食物大战，所有人都转过头来。这简直是蝾螈酒馆重演，只是肉汁更难吃。
-# en: A refectory at supper where two tables are on the edge of an argument, a student stepping between them with a raised mug and a grin.
-scene [078221] = 晚饭时的膳堂，两张桌子眼看要吵起来，一个学生举着杯子笑着走到中间。
-# en: Step in and turn it
-opt.left.label [fbcbbf] = 上前扭转局面
-# en: One joke about the gravy, at exactly the right moment, and both tables laugh instead of throwing it. The prefects look relieved and slightly suspicious. Your heart doesn't slow down until bed.
-opt.left.say.1 [5bef0c] = 在恰好的时刻说一句关于肉汁的笑话，两桌人笑了，没有扔。级长们松了口气，又有点起疑。你的心跳直到睡前才慢下来。
-# en: Let it happen
-opt.right.label [e54ca5] = 随它去
-# en: You let it go, and the food fight is magnificent. You watch from under the table, laughing. Nobody remembers it was nearly stopped.
-opt.right.say.1 [6bc4ce] = 你随它去，这场食物大战壮观极了。你躲在桌子底下笑着看。没人记得它差点被拦下。
-
-@event lesson_tailwind
-# en: Never Stop
-title [fd9083] = 永不停下
-# en: The fisherman's rule for the wind is "never stop". You take the long way round the lake on your free afternoon to practise it, and the wind gets behind you as soon as you're off the jetty.
-text [c7f206] = 渔夫关于风的规矩是“永不停下”。你在空闲的下午绕湖远飞去练，刚离开码头，风就绕到了你身后。
-# en: A student on a broom skimming low over a lake at tremendous speed, a wake of spray behind them and a fisherman waving from a boat.
-scene [5023b4] = 一个学生骑扫帚贴着湖面极速掠过，身后溅起一道水花，一个渔夫在船上挥手。
-# en: Never stop
-opt.left.label [dd27a3] = 永不停下
-# en: You go round the lake three times without stopping, faster each lap, until your hands are numb on the handle. The fisherman waves every lap now.
-opt.left.say.1 [dedab4] = 你绕湖三圈，一刻不停，一圈比一圈快，直到握扫帚柄的手冻麻了。现在渔夫每一圈都挥手。
-# en: Land and talk to him
-opt.right.label [2bd58c] = 落下来和他聊聊
-# en: You land by his boat and tell him about the storm run. He listens, nods, and says, "Never stop," again, and hands you a fish to take home.
-opt.right.say.1 [dc479a] = 你落在他的船边，给他讲了风暴那趟。他听着，点点头，又说了一遍“永不停下”，递给你一条鱼带回家。
-
-@event lesson_lodestar
-# en: The Lighthouse Light
-title [20cc48] = 灯塔之光
-# en: The light gathers round your shoulders in Grimsby's shop without your meaning it to, and the old man puts down his pen. "Lodestar," he says softly. "A lighthouse keeper's spell. She used it to walk the lamp-stair in storms." He doesn't say who she was. You think you know.
-text [375d35] = 在格林斯比的店里，光不由自主地聚到了你肩头，老人放下了笔。“引星，”他轻声说。“灯塔看守人的咒语。她在暴风雨里靠它走灯塔的楼梯。”他没说她是谁。你觉得你知道。
-# en: An old bookseller in a dark shop watching a soft guiding light gather around a student's shoulders, his spectacles reflecting it.
-scene [7fe392] = 昏暗的书店里，一位老书商看着一团柔和的引路之光聚在学生的肩头，眼镜上映着那光。
-# en: Ask him to watch you cast it
-opt.left.label [ee990d] = 请他看你施咒
-# en: You let the light build, breath by breath, until it stands round you like a lantern. Grimsby nods along to your breathing, as if to a tune he knows. "Slower," he says. "She was always slower."
-opt.left.say.1 [90c2df] = 你让光一口气一口气地聚起来，直到它像一盏灯笼一样围着你。格林斯比随着你的呼吸点头，像在跟一支他熟悉的曲子。“慢一点，”他说。“她总是更慢一些。”
-# en: Ask about the lighthouse
-opt.right.label [d77ac4] = 问问灯塔的事
-# en: He tells you about the lamp, the stair, the keeper who wanted to see a long way, and the books she bought from him for forty years. The light round your shoulders stays lit the whole time, listening.
-opt.right.say.1 [824783] = 他跟你讲那盏灯，那道楼梯，那个想看得很远的看守人，还有她四十年来从他这儿买的书。你肩头的光一直亮着，一直在听。
-
-@event lesson_moonwell
-# en: Sitting Still
-title [41cd49] = 静坐
-# en: Old Maud finds you on her garden bench at dusk, trying to make Moonwell go faster. She sits down beside you. "That's your trouble," she says. "It's a sitting-still spell, dearie. You can't hurry a basin."
-text [b0f0a7] = 黄昏时，老莫德发现你坐在她花园的长凳上，想让月泉来得快一点。她在你身边坐下。“这就是你的毛病，”她说。“这是个静坐的咒语，亲爱的。石盆是催不来的。”
-# en: An old woman and a student sitting on a garden bench under the moon, eyes closed, a faint silver light pooling in the student's cupped hands.
-scene [8c5c9d] = 月光下，一位老妇人和一个学生坐在花园长凳上，闭着眼，学生捧着的双手里积着一点淡淡的银光。
-# en: Sit still with her
-opt.left.label [54e6c0] = 陪她静坐
-# en: You sit until the moon is up and your feet are cold. Somewhere in the second hour, the light starts pooling, and you stop trying, and it fills. Maud is asleep. You don't wake her.
-opt.left.say.1 [085c4a] = 你一直坐到月亮升起，脚都冷了。第二个小时里的某一刻，光开始积聚，你不再用力，它就满了。莫德睡着了。你没叫醒她。
-# en: Ask how she knows the spell
-opt.right.label [be9857] = 问她怎么会这个咒语
-# en: "Learned it in the wood," says Maud, "same as you, sixty years back. Everybody who goes deep enough learns it eventually. The ones who come back, anyway." She pats your knee as if that were reassuring.
-opt.right.say.1 [0e8952] = “在林子里学的，”莫德说，“跟你一样，六十年前。走得够深的人迟早都会学会。至少是那些回来了的人。”她拍拍你的膝盖，好像这话很让人安心。
-
-@event lesson_reflect
-# en: Hall of Mirrors
-title [785523] = 镜廊
-# en: Professor Vey hears you've learned Reflect and appears in the mirror corridor with a bag of very small, very harmless hexes. "Show me," Vey says, and throws one at your head.
-text [64d864] = 维伊教授听说你学会了反照，就带着一袋非常小、非常无害的恶咒出现在镜廊里。“露一手，”维伊说，然后朝你脑袋扔了一个。
-# en: A theatrical professor in a corridor of mirrors throwing a small spell at a student, who sends it bouncing back down the corridor.
-scene [08a5e9] = 镜子走廊里，一位很有舞台感的教授朝一个学生扔出一个小咒语，学生把它沿着走廊弹了回去。
-# en: Send it back
-opt.left.label [aed0d3] = 弹回去
-# en: You catch the hex and return it. Vey ducks, delighted, and throws three. You return two. The third gives you rabbit ears for an hour, which Vey says is the lesson.
-opt.left.say.1 [7f4a36] = 你接住恶咒，弹了回去。维伊高兴地一躲，扔了三个。你弹回去两个。第三个让你长了一小时的兔耳朵，维伊说这就是这一课。
-# en: Send it somewhere else
-opt.right.label [92bf64] = 弹到别处去
-# en: You catch the hex and bounce it off a mirror into a suit of armour, which sneezes. Vey laughs so hard the mirrors ring. "Oh, you're going to be trouble."
-opt.right.say.1 [50f320] = 你接住恶咒，让它在一面镜子上弹了一下，飞进一副盔甲里，盔甲打了个喷嚏。维伊笑得镜子都在响。“噢，你以后会是个大麻烦。”
-
-@event lesson_rime
-# en: Cold Enough
-title [207a71] = 够冷了
-# en: Kael sees the frost at your collar and goes still. "Rime," he says. "Where did you... no. Don't tell me." He looks at {season == "winter": the snow|the courtyard, and frost runs out from his boots across the flagstones}. "In the North we learn it as children. You don't feel the cold less. You just stop letting it decide things."
-text [2f332e] = 凯尔看见你衣领上的霜，一下子僵住了。“雾凇，”他说。“你从哪儿……不。别告诉我。”他看着{season == "winter": 雪|庭院，霜从他的靴底蔓延出去，铺满了石板}。“在北方，我们小时候就学这个。你并不会觉得没那么冷。你只是不再让冷来替你做决定。”
-# en: A pale Northern student and another student standing in a frost-whitened courtyard, frost spreading from their collars, breath steaming.
-scene [895b91] = 结满白霜的庭院里，一个苍白的北方学生和另一个学生站着，霜从他们的衣领蔓延开，呼吸冒着白气。
-# en: Let him show you
-opt.left.label [a35ef6] = 让他教你
-# en: He makes you stand in {season == "winter": the snow|the cold he's laid on the flagstones} until it hurts, and then until it doesn't, and then a while longer. When you go in, he's almost smiling. "Now it's yours," he says.
-opt.left.say.1 [e6b6d8] = 他让你站在{season == "winter": 雪里|他铺在石板上的寒气里}，一直站到疼，再站到不疼，然后再多站一会儿。你们进屋时，他几乎在笑。“现在它是你的了，”他说。
-# en: Ask what else they learn as children
-opt.right.label [4921a8] = 问他们小时候还学什么
-# en: "Not to want things," he says, and then looks as if he wishes he hadn't. He leaves before you can ask anything else. The frost at your collar feels colder.
-opt.right.say.1 [d5279c] = “不去想要东西，”他说，然后一副后悔说出口的样子。你还没来得及再问，他就走了。衣领上的霜感觉更冷了。
-
-@event lesson_siphon
-# en: The Fern on the Sill
-title [82797f] = 窗台上的蕨
-# en: You're tired, and there are lectures at eight, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
-text [73569c] = 你很累，明早八点还有课，窗台上有一盆蕨，绿油油的，满是它用不上的生命。虹吸就在你手里。除了那盆蕨，没人会知道。
-# en: A student at a dormitory window at night with a hand hovering over a potted fern, the fern's leaves beginning to curl.
-scene [2f67ab] = 夜里，一个学生站在宿舍窗前，手悬在一盆蕨上方，蕨叶开始卷曲。
-# en: Just a little
-opt.left.label [ee6350] = 就一点点
-# en: The fern greys from the tips inward. You feel wonderful. You throw the fern out in the morning, before anyone sees it.
-opt.left.say.1 [d7ac4f] = 蕨从叶尖开始往里变灰。你感觉好极了。早上，你赶在别人看见之前把那盆蕨扔了。
-# en: Go to bed tired
-opt.right.label [6f4bc5] = 累着去睡觉
-# en: You go to bed tired, and wake tired, and the fern is green. You water it, which feels like an apology to something.
-opt.right.say.1 [f67a10] = 你累着上了床，累着醒来，那盆蕨是绿的。你给它浇了水，感觉像是在向什么东西道歉。
-
-@event lesson_compel
-# en: "Again"
-title [357cd7] = “再来”
-# en: A first-year drops a stack of books in the corridor, and laughs at themselves, and you could say the word. "Again." They'd drop them again, and again, and never know why. It would be funny. That's the worst part: it would be funny.
-text [18a208] = 一个一年级生在走廊里把一摞书掉在了地上，还自嘲地笑了，而你可以说出那个词。“再来。”他们会把书再掉一次，一次又一次，永远不知道为什么。那会很好笑。这才是最糟的：那会很好笑。
-# en: A student in a castle corridor watching another student drop a stack of books, a word forming on their lips.
-scene [84d873] = 城堡走廊里，一个学生看着另一个学生掉了一摞书，嘴唇正在组成一个词。
-# en: Say it, once
-opt.left.label [d536d0] = 说一次
-# en: They drop the books again, and stare at their hands. You walk on quickly. It wasn't funny.
-opt.left.say.1 [b16160] = 他们又把书掉了，盯着自己的手。你快步走开了。一点也不好笑。
-# en: Help pick them up
-opt.right.label [aa8624] = 帮忙捡起来
-# en: You pick up half the books and the first-year thanks you twice. The word stays in your mouth, unused, like a stone you could throw.
-opt.right.say.1 [814c2f] = 你捡起了一半的书，那个一年级生谢了你两次。那个词留在你嘴里，没用出去，像一块你本可以扔出去的石头。
-
-@event lesson_torment
-# en: The Shape of It
-title [0e26e7] = 它的形状
-# en: Sparring in the duelling hall, you feel Torment rise in your hand like a reflex. You stop it. Professor Thorne, across the hall, saw something: he's looking at you the way he looks at a fire in the wrong place.
-text [a99348] = 在决斗厅里对练时，你感到折磨像一种本能一样在你手里升起。你止住了它。决斗厅那头的索恩教授看见了什么：他看你的眼神，像在看一团烧错了地方的火。
-# en: A stern grey-bearded professor in a duelling hall looking hard at a student whose wand hand has frozen mid-cast.
-scene [dfc983] = 决斗厅里，一位严厉的灰胡子教授紧盯着一个学生，学生的持杖手僵在施咒的半途。
-# en: Tell him
-opt.left.label [bcfe3c] = 告诉他
-# en: You tell him. He listens without a word, then says, "Then you know what it costs. Most people learn that afterwards." He gives you extra drills for a month, which you suspect is kindness.
-opt.left.say.1 [48273a] = 你告诉了他。他一言不发地听着，然后说：“那你就知道它的代价了。大多数人是事后才知道的。”他给你加了一个月的训练，你怀疑这是一种好意。
-# en: As you leave he adds that he lost to the storm because he didn't stop in time. You knew already. You've never heard him say it like that.
-opt.left.say.2 [79fd1d] = 你要走时他补了一句：他输给那场风暴，是因为没有及时停手。你早就知道了。但你从没听他这样说过。
-# en: Say it was nothing
-opt.right.label [4f60bd] = 说没什么
-# en: "Nothing, sir." He doesn't believe you. He doesn't say so. He watches you spar for the rest of the term.
-opt.right.say.1 [596353] = “没什么，先生。”他不信。他没说出来。那一学期剩下的时间里，他一直看着你对练。
-
-@event lesson_extraction
-# en: Someone Else's Spark
-title [3e3d67] = 别人的火花
-# en: In a study group, the student beside you is casting a little light to read by, and you can feel their magic like warmth from a stove. Extraction would take it. They'd feel tired, that's all. You've got so much to do.
-text [36f616] = 在学习小组里，你旁边的学生点着一点光照着读书，你能感觉到他们的魔力，像炉子的热气。汲取能把它拿走。他们只会觉得累，仅此而已。而你还有那么多事要做。
-# en: A study group around a library table at night, one student's quill glowing with magic, another student staring at it hungrily.
-scene [8b35f2] = 夜里图书馆桌旁的学习小组，一个学生的羽毛笔闪着魔光，另一个学生饥渴地盯着它。
-# en: Take a little
-opt.left.label [5e0faf] = 拿一点点
-# en: Their light gutters. They yawn, rub their eyes, and go to bed early. You study until dawn on someone else's magic, and remember none of it.
-opt.left.say.1 [2b4d40] = 他们的光暗了下去。他们打了个哈欠，揉揉眼睛，早早去睡了。你靠别人的魔力学到了天亮，什么都没记住。
-# en: Lend them yours instead
-opt.right.label [c52238] = 把你的借给他们
-# en: You light the table yourself so they can rest their hand. They grin at you. The hunger goes quiet, for now.
-opt.right.say.1 [fdc096] = 你自己把桌子照亮，好让他们歇歇手。他们冲你咧嘴一笑。那份饥渴安静了下来，暂时。
-
-@event lesson_eclipse
-# en: The Burn
-title [ef83b1] = 烫伤
-# en: You burn your hand on a cauldron in the lab, badly. And Eclipse wakes up: the pain could be power, it says, all of it, held and ready. You'd still feel the burn. You'd just have something to show for it.
-text [c2aa09] = 你在实验室里被坩埚烫伤了手，烫得很厉害。然后蚀醒了：它说，这疼痛可以变成力量，全部，攒着，随时可用。你还是会感觉到烫伤。你只是会有点东西可以拿出来。
-# en: A student in an alchemy lab clutching a burnt hand, a faint dark glow gathering around the injury.
-scene [b92a5d] = 炼金实验室里，一个学生捂着被烫伤的手，伤处周围聚起一圈淡淡的暗光。
-# en: Hold the pain
-opt.left.label [dcf061] = 攒住这份疼
-# en: You let the burn become power and carry it all day like a coal in your pocket. It's very strong. It still hurts. Both of those stay true.
-opt.left.say.1 [e20e0d] = 你让烫伤变成力量，一整天都揣着它，像兜里揣着一块炭。它非常强。它也还是疼。两件事都一直是真的。
-# en: Go to the infirmary
-opt.right.label [f09b9c] = 去医务室
-# en: Sister Amaranth dresses it and tells you off for daydreaming. The power you didn't take aches a little, like a tooth.
-opt.right.say.1 [5193c9] = 阿玛兰斯修女给你包扎好，数落你走神。那份你没拿的力量隐隐作痛，像一颗牙。
-
-@event lesson_heartprice
-# en: Paying in Yourself
-title [716107] = 用自己付账
-# en: It's late, {mana < 15: your Mana is spent|your Mana is low and tomorrow has a practical}, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
-text [dea4cb] = 夜深了，{mana < 15: 你的魔力用光了|你的魔力所剩无几，明天还有实践课}，论文还没写完。心价说你不需要魔力。你有你自己。你可以用它来付，付到你撑不住为止。
-# en: An exhausted student at a desk late at night, a faint red glow in their chest feeding a spell, candles burnt down.
-scene [530e5f] = 深夜里，一个筋疲力尽的学生坐在桌前，胸口一点淡淡的红光在为一个咒语供能，蜡烛已经燃尽。
-# en: Pay in yourself
-opt.left.label [202fcd] = 用自己付
-# en: You finish the essay on your own strength. In the morning your hands shake and the essay is very good. You don't feel proud of it.
-opt.left.say.1 [56beb6] = 你靠自己的力气写完了论文。早上你的手在抖，论文写得非常好。你并不为它感到骄傲。
-# en: Leave it for tomorrow
-opt.right.label [69476d] = 留到明天
-# en: You go to bed with the essay unfinished. It's worse than it would have been. You're better than you would have been.
-opt.right.say.1 [6e9f49] = 你带着没写完的论文上了床。它会比本来的样子差一些。你会比本来的样子好一些。

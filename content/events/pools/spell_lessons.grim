@@ -1,27 +1,897 @@
-# Spell lessons (playtest 2, N3): once a spell is learned, the next term month shows where and how it's really taught,
-# and by whom. One card per spell, once a run. Written for the current twelve spells; reworked if the minigames change them.
+# ============================================================
+#  Spell problems (2026-10-29; these were the spell lessons of playtest 2, N3, kept under their ids). One card per
+#  spell: a trouble at a place with two ordinary ways through, and the spell as the third (`up[spell]`), shown only
+#  once you know it. The cards never assume you do. They come far less often before you learn the spell
+#  (`spell_draw(s)` in conds.grim: 3 against 120); otherwise they share everything with the everyday uses (`spell_use`).
+# ============================================================
+
+# ---------------- The course spells and Ward ----------------
 
 @event lesson_flame
-title: Putting Fire Out
-trigger: auto
-when: spell_level(flame) >= 1 and term
-class: routine
+title: The Frozen Pump
+pool: spell_use
+weight: spell_draw(flame)
+place: refectory
+time: morning
+when: season == "winter"
 tone: light
-actor: thorne
-art: flame
-tags: magic study
-scene: A stone practice room with scorched walls, a stern grey-bearded professor beside a roaring brazier, a bucket of water at his feet.
-text: Flame is yours now. Professor Thorne gathers the year's new Flame casters in the stone practice room and lights a brazier. "Any fool can start a fire," he says. "You are here to learn to stop one." There is a bucket of water at his feet, and he forbids you to touch it.
-> left: Pull the fire back into your hand
-  meet thorne
-  arcana +small
-  mana -small
-  say: You call the flame back like a sleeve pulled over a wrist. It stings, and the brazier flares and sinks. "Again," says Thorne. He says it eleven times.
-> right: Ask what the bucket is for
-  meet thorne
+art: snow
+tags: food
+scene: A kitchen yard at a winter dawn, an iron pump furred white with frost, a cook with an empty kettle and a queue of porridge pans.
+text: {The kitchen pump froze solid in the night, and the cook is standing in the yard with an empty kettle and a face like thunder. No water, no porridge, and the whole school down for breakfast in half an hour.|The pump again, frozen again. The cook has wrapped it in sacking, which has also frozen.|Frost on the pump, an empty kettle, a cook looking round the yard. Her eyes stop on you.}
+> left: Carry water up from the lake
+  health -small
+  vigor +small
+  say: {You haul buckets up from the lake till your hands are blue. Breakfast is late, and the cook gives you the first bowl and the skin off the top.|Up the path with a bucket, down with an empty one. The porridge is lumpy and nobody minds.|You and two kitchen hands carry the lake up to the castle a bucket at a time. The cook calls you her water-horses.}
+> right: Help her serve bread and cheese instead
+  charm +tiny
+  mood -tiny
+  say: {No porridge today. You slice bread with the cook while the hall grumbles, and the grumbling is mostly at you.|Bread, cheese and cold milk. The first-years look betrayed.|You hand out bread at the hatch and take the complaints with a smile. The cook says you've a future in kitchens, and doesn't mean it as a compliment.}
+> up[flame]: Thaw it with your hand
+  mood +small
+  charm +tiny
+  say: {You close your hand round the pump and let the heat come. The frost runs off it like sweat, and the handle swings. The cook fills her kettle and pats your cheek with a floury hand.|A little fire in a cupped palm. The pump coughs, and water comes. Breakfast is on time, and the cook knows exactly why.|{spell_level(flame) >= 2: You thaw the pump, the trough and the yard step for good measure. The cook gives you porridge with honey on it every morning that week.|You warm the pump till it ticks, and the water comes. The cook asks if you'll be up this early every frost.}}
+
+@event lesson_foresight
+title: Behind the Hippogriff
+pool: spell_use
+weight: spell_draw(foresight)
+place: stables
+time: morning afternoon
+tone: light
+art: paw
+tags: beasts
+scene: A narrow stable aisle, a big grey hippogriff in a stall with its back hoof cocked, a bucket of feed left on the far side of it.
+text: {Professor Brask wants the feed bucket from the far end of the aisle, and the only way there is behind the grey hippogriff, who kicks. Not always. That's the trouble.|The grey hippogriff again, hoof cocked, between you and the bucket. Brask, from somewhere: "Don't stop behind her!"|The aisle, the bucket, the hippogriff. She turns one eye back to watch you decide.}
+> left: Go round by the yard
+  health -tiny
+  vigor +tiny
+  say: {You go out into the rain, round the whole stable block and in at the far door. Brask takes the bucket and says, "Took your time."|The long way, through mud to the ankles. The hippogriff watches you arrive at the far end with what looks like satisfaction.|Round by the yard, again. You know every puddle of it now by name.}
+> right: Tempt her round with an apple
+  challenge soothe apprentice:
+    win:
+      rel brask +small
+      say: {You hold an apple out over the stall door until she turns her whole body round for it, hoof and all, and slip past behind her. Brask says nothing, which from her is a medal.|An apple, a murmur, and she swings round to face you. You walk past her tail. Brask grunts approval from the hayloft.|She turns for the apple and takes your sleeve with it. You get past anyway. Brask stops what she's doing to watch.}
+    lose:
+      health -small
+      say: {She takes the apple and kicks anyway. Not you; the bucket, which kicks you. Brask sighs very loudly.|She eats the apple without turning an inch. The hoof catches your hip and you sit down hard in the straw.|A crunch, a kick, a clatter, and a long lecture from Brask about bribing hippogriffs.}
+> up[foresight]: Walk past between kicks
+  mood +small
+  vigor +tiny
+  say: {You glimpse the kick a moment before it comes, step back, let it pass, and stroll on. Brask, who saw, raises one eyebrow by a quarter of an inch.|A moment ahead: kick, gap, walk. You come back with the bucket and she hasn't touched you.|You see the hoof lift before she knows she'll lift it. She turns her head to look at you as if you'd cheated, which you have.}
+
+@event lesson_mend
+title: Broken Spectacles
+pool: spell_use
+weight: spell_draw(mend)
+place: village
+time: morning noon afternoon
+tone: warm
+art: eye
+tags: village
+scene: A cobbled village street on market day, an old man on his knees feeling among the stones for the pieces of his spectacles.
+text: {A cart bumps an old man in the market and his spectacles go under the wheel. He's on his knees on the cobbles, feeling for the pieces. "I can't read a price without them," he says, to nobody.|Market day, and the same old man, the same cobbles, a different cart. He keeps the pieces in a handkerchief now, and holds it out to whoever stops.|The old man with the spectacles has seen you coming and is already unwrapping the handkerchief.}
+> left: Read him the prices
+  mood +small
+  health -tiny
+  say: {You spend the morning on your feet reading him the prices of everything. He buys you a bun with the change and tells you about his late wife's marrows.|Price after price, stall after stall, till your feet ache. He haggles like a general. You buy him a cup of tea because he's earned it.|You read for him; he bargains. By noon you're footsore, and the stallholders call you his eyes.}
+> right: Take the pieces to the glazier for him
+  gold -small
+  charm +tiny
+  say: {The glazier wants a fortnight and a silver. You pay the deposit. The old man grips your hand and says he'll remember your face, if he can see it.|A deposit, a receipt, a fortnight. He thanks you three times and asks your name twice.|You pay for the new lenses. He insists on writing you an IOU, which you can't read either.}
+> up[mend]: Mend them on the spot
+  mood +small
+  renown +tiny
+  say: {You lay the pieces on your palm and close your fingers. When you open them, the spectacles are whole. He puts them on, looks at you, and laughs out loud.|Glass to glass, crack to crack. They mend with a sound like a held breath let go. He reads you the nearest price at once, to prove it.|{spell_level(mend) >= 2: You mend them so well they're better than new; he swears he can see the church clock from here. He can't, but he's delighted.|You mend them; he wipes them on his scarf. "There you are," he says to the market, which he can see again.}}
+
+@event lesson_glamour
+title: Tutor Wanted
+pool: spell_use
+weight: spell_draw(glamour)
+place: job_board
+time: morning noon afternoon
+tone: light
+art: paper
+tags: work
+scene: A cork notice board in an entrance hall, a stiff, well-dressed mother interviewing a queue of older students for a tutoring post.
+text: {A first-year's mother, in a hat with a whole bird on it, is interviewing tutors in front of the job board. The pay is very good. There are four seniors in the queue ahead of you, and she has rejected two for their shoes.|The lady with the hat is back: her son has failed another test. The queue is shorter, the hat is bigger.|The hat again, and a new list of questions. The seniors in the queue look as if they've been through this before.}
+> left: Wait your turn and answer straight
+  challenge appeal journeyman:
+    win:
+      gold +small
+      say: {She asks about your marks, your family and your shoes. You answer straight. She hires you "on trial", which lasts the rest of term.|You give her honest answers and she likes them better than the flattery before yours. A month of tutoring, well paid.|Straight answers, again. She says you're "refreshingly dull", and hires you.}
+    lose:
+      mood -tiny
+      say: {She looks at your shoes. That's the interview.|She hires the senior behind you, who agreed with her about everything.|"Not quite what we're looking for," says the hat.}
+> right: Point her at a friend who needs the money
+  charm +small
+  say: {You tell her about a classmate who's brilliant and broke. She writes the name down. Your classmate buys you supper with the first week's pay.|You send her somewhere better than you. Your friend gets the job and the hat, in a manner of speaking.|A name, a recommendation, a handshake. You walk away with nothing but goodwill, which keeps.}
+> up[glamour]: Charm her before she asks
+  gold +small
+  alignment -tiny
+  say: {You smile, and she warms to you before you've said a word. By the end she's offering more than the notice said. You're not sure you earned it.|A little more charm than you have. She hires you on the spot and tells the queue to go home. They look at you very hard.|She remembers liking you and not quite why. The post is yours, and her son, it turns out, is a sweet lad who hates arithmetic.}
+
+@event lesson_haste
+title: The Crockery Stall
+pool: spell_use
+weight: spell_draw(haste)
+place: village
+time: morning noon
+tone: light
+art: cup
+tags: village
+scene: A village market, a crockery stall's trestle buckling at one end, a hundred jars and jugs beginning to slide towards the cobbles, a stallholder with her hands to her mouth.
+text: {Market day, and the trestle under the crockery stall gives a crack and starts to fold at one end. A hundred jars and jugs begin to slide, all together, towards the cobbles, and the stallholder has both hands over her mouth.|The crockery stall again, a new trestle, the same crack. This time it's teapots.|The trestle cracks, the jugs slide, the stallholder looks straight at you.}
+> left: Get your shoulder under the trestle
+  health -tiny
+  vigor +small
+  say: {You dive under the folding end and take it on your shoulder. Half the jars stop; the other half don't. The stallholder says half is a miracle.|You hold the trestle up with your back while she grabs what she can. You walk home crooked.|Shoulder, trestle, groan. You save the big jugs and lose the little ones, and she gives you a cracked one to keep.}
+> right: Help sweep up and sell the seconds
+  charm +small
+  mood -tiny
+  say: {You help her sweep up, then stand at the stall all morning calling out "slightly chipped, half price". You sell the lot.|Broom, dustpan, then patter. By noon the market has bought every cracked jug as a bargain.|You sweep up and sell the survivors. She says you've the gift of the gab and offers you a Saturday job.}
+> up[haste]: Catch them as they fall
+  mood +small
+  renown +tiny
+  say: {The world slows and you don't. You catch a jar, set it down, catch a jug, set it down, a dozen in a breath, and when the world speeds up again nothing is broken.|You move in the gaps between their falling. Jar, jug, teapot, jar. The market stops to stare; the stallholder kisses the last jug.|A blur of hands. When it's over the whole stall is stacked on the cobbles, unbroken, and you're out of breath and grinning. It wears off quickly.}
+
+@event lesson_ward
+title: The Rattling Engine
+pool: spell_use
+weight: spell_draw(ward)
+place: workshop
+time: afternoon evening
+tone: tense
+art: gear
+tags: making
+scene: A cluttered workshop, a half-built brass engine on the bench rattling and steaming, a handful of students leaning in close to watch.
+text: {Somebody's half-built engine on the workshop bench has started to rattle, and steam is coming out of places steam shouldn't. Four students are leaning in to watch it, closer and closer. Its maker has gone to fetch a spanner.|The engine again, rebuilt, rattling again. The watchers lean in again. Nobody in this workshop learns.|A rattle, a hiss, a ring of faces leaning in. You know how this ends.}
+> left: Open the relief valve yourself
+  health -tiny
+  alchemy +tiny
+  say: {You reach through the steam and wrench the valve open. It screams, scalds your knuckles and settles. The watchers decide it was always meant to do that.|Valve, wrench, a jet of steam that takes the skin off two fingers. The engine stops rattling and sulks.|You find the valve by feel and open it. The steam goes up, the pressure goes down, and your hand goes into a bucket.}
+> right: Throw the fire bucket over it
+  mood -tiny
+  vigor +tiny
+  say: {You empty the fire bucket over the engine. It dies with a hiss, and its maker, coming back with the spanner, wants to know who drowned it.|Water on hot brass. The workshop fills with steam and everyone's opinion of you.|You douse it. It's safe and it's ruined, and its maker won't speak to you for a week.}
+> up[ward]: Close a ward round it
+  mood +small
+  renown +tiny
+  say: {You close a pale shell round the engine just as it goes. The blast stays inside it, a little storm in a bowl, and when it clears the engine is whole, only shaken. Its maker, back with the spanner, finds a valve to fix and nothing worse.|The ward takes the bang. When it fades, the engine is singed but standing, and the watchers are applauding.|{spell_level(ward) >= 2: You close one ward round the engine and another round the watchers. It goes off like a firework in a jar, and its maker asks you to do that again, for science.|The ward holds it in. Inside, the engine shudders, hisses, and stops, and its whole term's work survives.}}
+
+@event lesson_shadowstep
+title: The Wrong Side of the Gate
+pool: spell_use
+weight: spell_draw(shadowstep)
+place: courtyard
+time: night
+tone: tense
+art: door
+tags: night
+scene: A tall iron gate in a courtyard wall at night, locked, a student on the outside of it, the castle windows dark beyond.
+text: {You lingered by the wall a little too long, and the porter has locked the courtyard gate with you on the outside of it. The dormitory is thirty yards away, behind iron.|The gate again, locked again, you outside it again. You must like it out here.|Thirty yards of courtyard and one locked gate. The porter's lodge lamp has just gone out.}
+> left: Ring for the porter
+  mood -small
+  lore +tiny
+  say: {The porter comes in his nightcap, says nothing, writes your name in a book and lets you in. He hums while he writes it.|You ring. He comes. He looks at you for a long time and lets you in with a lecture on the history of gates.|The porter lets you in and asks if you'll be wanting a key of your own. He doesn't mean it kindly.}
+> right: Climb the wall
+  challenge feat using guile apprentice:
+    win:
+      guile +small
+      say: {Up the ivy, along the top, down the water butt. Nobody sees you but a cat, who thinks less of you for it.|You know the ivy now. Over, down, in.|A clean climb in the dark. You land in the courtyard without a sound, and the castle doesn't notice.}
+    lose:
+      health -small
+      say: {The ivy comes away in your hands. You land in the rosebed on the right side of the wall, which is something.|You make the top and slip. Your knee will tell the story for a week.|Down the water butt, and into the water butt. You squelch to bed.}
+> up[shadowstep]: Step through the gate's shadow
+  mood +small
+  guile +tiny
+  say: {You step into the gate's long shadow and out of the courtyard wall's. The shadows in between are cold and don't like you. You're in.|Shadow to shadow, iron between. You come out shivering in the right place.|A step, a chill, and the courtyard. Behind you the gate is still locked, which feels like winning.}
+
+@event lesson_animate
+title: Chairs After the Feast
+pool: spell_use
+weight: spell_draw(animate)
+place: great_hall
+time: evening
+tone: light
+art: house
+tags: work
+scene: The great hall after a feast, hundreds of chairs scattered between long tables, one tired student with a rota sheet.
+text: {You're on the stacking rota tonight, and the feast has left three hundred chairs scattered across the great hall like a battlefield. The rota says everyone else has a note from the infirmary.|The stacking rota again. Three hundred chairs again. The same notes from the infirmary, in the same handwriting.|Chairs. Hundreds. You and a rota sheet. Somewhere a prefect is pretending to have a cold.}
+> left: Stack them all yourself
+  health -small
+  vigor +small
+  say: {You stack till midnight. Your arms are the shape of chairs. The hall, in the morning, is perfect, and nobody notices.|Chair by chair. You find a dropped earring, two forks and a love letter, and stack them all neatly with the rest.|You finish by lamplight. The cook brings you the last of the pudding, which is worth the arms.}
+> right: Bribe some first-years with sweets
+  gold -tiny
+  charm +tiny
+  say: {A bag of toffees buys four first-years for an hour. They stack chairs into a tower that touches the gallery. You take it down quickly.|Sweets for labour. They finish in half the time and ask if there's a feast every week.|You pay in toffee. The work is done badly and cheerfully.}
+> up[animate]: Set the chairs stacking themselves
+  mood +small
+  alchemy +tiny
+  say: {The first chair gets up, walks to the wall and sits on another. The rest follow, in a long, polite queue. You sit on the last one and watch.|The chairs stack themselves, one a breath, and keep on doing it. Afterwards one keeps trying to stack itself on a bench.|You animate the chairs. They do it, and do it, and do it. By the end the cook is clapping, and one chair has stacked itself on you.}
+
+@event lesson_starlight
+title: The Dark Stair
+pool: spell_use
+weight: spell_draw(starlight)
+place: observatory
+time: night
+tone: eerie
+art: star
+tags: night
+scene: A narrow spiral stair inside the observatory at night, pitch black, a cluster of first-years pressed against the wall halfway up.
+text: {The wind has blown out every lamp on the observatory stair, and halfway up it a knot of first-years is frozen in the dark, holding hands. Something in the dark is dripping. It's probably only the dark.|The stair again, lamps out again. The first-years this time have brought a candle, which has gone out too.|Black stair, cold draught. The first-years have learned to wait for you.}
+> left: Lead them down by touch
+  health -tiny
+  charm +small
+  say: {Hand over hand on the rail, step by step, counting out loud. At the bottom they let go of you one finger at a time.|You lead them down singing, badly, so they'll laugh. They do.|By touch, by count. One of them says you've done this before. You have.}
+> right: Fetch a lamp from the porter
+  mood -tiny
+  lore +tiny
+  say: {You go for a lamp. By the time you're back they've found their own way down, and one is crying, and none of them will say why.|The porter gives you a lamp and a lecture on the observatory's wind. When you light the stair, it's empty and dripping.|You come back with the lamp. They're all sitting on the stair, perfectly fine, and furious with you for taking so long.}
+> up[starlight]: Hold up a star
+  mood +small
+  lore +tiny
+  say: {You hold up a named star in your palm. The stair goes silver to the top, and the first-years walk up into it as if into morning.|Starlight in the hand. The dark draws back from it, slowly, the way it does from a fire. The dripping stops.|A star, held up. The first-years ask its name, and you tell them, and they say it all the way up the stair.}
+
+@event lesson_seal
+title: Keep Sealed
+pool: spell_use
+weight: spell_draw(seal)
+place: courier_loft
+time: morning afternoon
+tone: light
+art: pouch
+tags: work
+scene: A draughty courier loft, a parcel stamped KEEP SEALED with its wax split open, something inside it buzzing angrily.
+text: {A parcel on the dispatch bench is stamped KEEP SEALED in red, and its wax has split. Something inside is buzzing, and the buzzing is getting louder. It's due at the Conclave by nightfall.|Another KEEP SEALED, another split seal, another buzz. Somebody in the Conclave is sending live things by post.|The bench, the parcel, the buzz. The dispatch bell rings as if it's your fault.}
+> left: Tie it shut and hope
+  challenge feat apprentice:
+    win:
+      guile +tiny
+      gold +tiny
+      say: {Twine, three times round and a sailor's knot. It buzzes all the way to the Conclave, but it gets there shut, and the Conclave tips.|You lash it like a sea chest. The courier who takes it holds it at arm's length, and brings you back a tip.|Tied, double-knotted, and sent. The Conclave sends back a tip.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {The twine snaps. Out comes a cloud of very small, very cross moths. The loft is grey with them for an hour.|You tie it; it bursts. Something stings you, and the parcel is half empty when it arrives.|The knot slips and the lid lifts. You sit on it until somebody brings a crate.}
+> right: Send it back marked "damaged"
+  lore +tiny
+  say: {You stamp it DAMAGED IN TRANSIT and put it on the return shelf. Somebody at the Conclave will be cross with somebody else.|Back it goes. It buzzes all the way down the shelf.|Return to sender. You write a note about wax that is longer than it needs to be.}
+> up[seal]: Seal it shut
+  mood +small
+  gold +tiny
+  say: {You lay your hand on the split wax and close it. The buzzing stops dead. What's sealed stays where you put it, and the Conclave's tip is a whole silver.|Sealed. The parcel goes so still you check it's still there. The Conclave's tip is generous.|A touch, and it's shut, and the tip comes back with the receipt. The dispatch clerk asks you to stay on Thursdays.}
+
+# ---------------- The club and job spells ----------------
+
+@event lesson_brace
+title: The Runaway Wagon
+pool: spell_use
+weight: spell_draw(brace)
+place: flight_field
+time: morning afternoon
+tone: tense
+art: broom
+tags: grounds
+scene: A sloping green field, a hay wagon rolling loose down the slope with no horse, a knot of first-years at a broom lesson in its path.
+text: {Someone has left Old Maud's hay wagon at the top of the flight field without its chock, and it has started to roll. At the bottom, a broom lesson of first-years has its back to it.|The hay wagon again, rolling again. Maud swears she chocked it. The first-years again, backs turned again.|The wagon. The slope. The lesson at the bottom. You're already moving.}
+> left: Shout and run for the first-years
+  vigor +small
+  health -tiny
+  say: {You reach them first and shove the nearest two flat. The wagon thunders past and turns over in the hoops. Hay everywhere; nobody hurt.|You yell, they scatter, you trip. The wagon misses everyone and stops in a ditch.|You herd them clear with your arms out like a goose girl. The wagon passes so close you smell the hay.}
+> right: Grab the shaft and dig in your heels
+  challenge feat journeyman:
+    win:
+      vigor +small
+      renown +tiny
+      say: {You catch the shaft and dig in. It drags you a dozen yards and stops. The broom lesson stares at you as if you'd caught a dragon by the tail.|Heels in the turf, shaft in your hands. It stops. Your shoulders will remember.|You haul it round side-on and it stalls. The first-years cheer; Maud arrives with the chock, very red.}
+    lose:
+      health -small
+      say: {The shaft wrenches out of your hands and you sit down hard. The wagon misses everyone, by luck alone.|It drags you, then drops you. The hay comes down on top of you like a judgement.|You catch it; it catches you. Bruised, but the first-years scatter in time.}
+> up[brace]: Plant yourself in its path
+  mood +small
+  vigor +tiny
+  say: {You plant your feet and take the wagon full on. It stops dead against you, and you don't move an inch. The first-years go very quiet.|Braced, the blow lands soft. The wagon stops; your boots leave two grooves in the turf.|You stand in front of it and it stops, as if it had hit a wall that had decided to be you.}
+
+@event lesson_quickquill
+title: The Fast Talker
+pool: spell_use
+weight: spell_draw(quickquill)
+place: lecture_tower
+time: morning afternoon
+tone: light
+art: scroll
+tags: study
+scene: A lecture hall, a visiting scholar talking at a gallop in front of a blackboard covered in diagrams, students' quills flying.
+text: {The visiting lecturer talks like a runaway horse, and you promised a sick classmate a full set of notes. Ten minutes in, you have half a page and a cramp.|Another guest, another gallop. Your sick classmate has sent a note asking for "everything, please".|The fast talker is back by popular demand. You've brought three quills.}
+> left: Write what you can and ask after
   lore +small
-  rel thorne +small
-  say: "For the student who doesn't ask," says Thorne, and empties it over the brazier of the boy beside you. Then he explains, for an hour, how every great fire he has known began.
+  mood -tiny
+  say: {Half the notes and a long chat with the lecturer afterwards, who is delighted anyone wanted to know more. Your classmate gets the half and the gossip.|You catch every fourth word and fill in the rest from his books after. It takes all evening.|Gaps everywhere. You ask him afterwards; he says it all again, faster.}
+> right: Borrow someone's notes and copy them
+  charm +tiny
+  health -tiny
+  say: {The front row's best note-taker lends you hers. You copy till midnight; your classmate gets a beautiful set.|You trade a week of your notes for one lecture's. A good bargain for everyone but your wrist.|Borrowed notes, copied by candlelight. Your handwriting gets worse as the night goes on.}
+> up[quickquill]: Set a quill to take it all down
+  mood +small
+  lore +tiny
+  say: {You set the quill going. It takes every word, word for word, and adds a small remark in the margin about the lecturer's grammar.|The quill scribbles on, faster than the lecturer. Your classmate gets every word and a drawing of a horse.|It takes it all down. It has opinions about your handwriting, and now about his.}
+
+@event lesson_bramble
+title: The Gap in the Fence
+pool: spell_use
+weight: spell_draw(bramble)
+place: maud_cottage
+time: morning afternoon
+tone: light
+art: tree
+tags: grounds
+scene: An old orchard at morning, a broken fence rail, a pair of deer stripping bark from the young trees.
+text: {Deer are in the orchard again, through a gap where the fence rail rotted. They're stripping bark off the young pear trees, and Old Maud says she can't mend it till the hedging's done.|The deer again, the gap again. Maud has propped it with a broom, which the deer have eaten.|Two deer, one gap, a row of young trees looking very undressed.}
+> left: Chase them off and stand guard
+  health -tiny
+  vigor +tiny
+  say: {You run at them waving your arms and they leave, slowly, insultingly. You sit on the fence the rest of the morning.|You chase, they bound, you chase. They come back the moment you go for lunch.|You guard the gap with a stick until Maud relieves you and calls you a good dog.}
+> right: Patch the gap with branches
+  alchemy +tiny
+  mood -tiny
+  say: {You weave dead branches into the gap. It's ugly and it'll hold a week.|A barricade of prunings. A deer looks at it, then at you, then goes round.|You patch it. Maud says it'll do, and means the opposite.}
+> up[bramble]: Grow a hedge in the gap
+  mood +small
+  alchemy +tiny
+  say: {You kneel at the gap and a hedge comes up out of the ground, thick and thorned. The deer take one look and go back to the woods.|A hedge, now, where there wasn't one. Maud walks its length twice and asks how much you charge.|Bramble fills the gap. The deer stand outside it, offended. The trees look relieved, if trees can.}
+
+@event lesson_index
+title: One Quotation
+pool: spell_use
+weight: spell_draw(index)
+place: library
+time: afternoon evening
+tone: tense
+art: book
+tags: study
+scene: A library reading room, a frantic fourth-year surrounded by heaped books, ink on their face, a clock on the wall.
+text: {A fourth-year in the reading room is near tears. Their thesis is due within the hour, and they need one quotation from a book they read last spring. They don't remember which book, only that its cover was green.|The same reading room, a different fourth-year, the same despair. "Green," they say. "The cover was green, I'm sure of it."|Another thesis, another lost quotation. The clock seems louder than usual.}
+> left: Help them search the shelves
+  lore +small
+  mood -tiny
+  say: {You split the shelf and go through green book after green book. You find it with four minutes to spare. They kiss the book.|Shelf by shelf. You don't find it; you find a better one, which they use instead.|You search together. At the last moment they remember the quotation was in their own notes.}
+> right: Fetch the head librarian
+  charm +tiny
+  say: {The head librarian listens, walks to a shelf without looking and hands over the book. She looks at you as if you should have known.|You fetch her. She finds it, and tuts at both of you for the state of the reading room.|The head librarian sighs and finds it. The fourth-year thanks you; she does not.}
+> up[index]: Find the page
+  mood +small
+  lore +tiny
+  say: {You take a green book off the heap, and it falls open where they need it. They stare at the page, then at you, and run.|Index: the right book, the right page, the right line. They copy it with shaking hands and make the deadline.|You hold the pile and one book in it is warm. It opens on the quotation. The fourth-year says they'll name a child after you.}
+
+@event lesson_rapport
+title: The Baker's Window
+pool: spell_use
+weight: spell_draw(rapport)
+place: village
+time: noon afternoon
+tone: tense
+art: house
+tags: village
+scene: A village bakery with a cracked front window, the red-faced baker in the doorway, villagers gathering, a few academy students edging away.
+text: {Somebody from the academy put a ball through the bakery window last night. The baker is in his doorway with his arms folded, a crowd is gathering, and every student in the street is suddenly a suspect, you included.|The bakery window again: new glass, new crack. The baker has a list of names this time.|The baker's arms are folded before you reach the door. The crowd knows the routine.}
+> left: Offer to pay towards the glass
+  gold -small
+  charm +small
+  say: {You put coins on the counter for a thing you didn't do. The baker unfolds his arms and gives you a bun, grudgingly. The crowd thins.|You pay your share. The baker says you're the first one with manners, and the crowd drifts off.|Coins down. The baker counts them twice and says he'll remember your face, kindly this time.}
+> right: Keep your head down and walk on
+  mood -small
+  say: {You walk past. The crowd's mutter follows you up the hill.|You go the long way round, and buy your buns at the market instead. They aren't as good.|Head down, past the window. The baker calls after you, and you pretend not to hear.}
+> up[rapport]: Make the street laugh
+  mood +small
+  charm +tiny
+  say: {You say the right thing at the right moment, about the glass and the bread and the state of the academy's aim. The crowd laughs. So, after a second, does the baker.|A joke, a bow, a promise to bring the culprit by the ear. The street that was turning laughs instead.|You get the baker laughing before he's got a word out. He's still laughing when he hands you a bun for nothing.}
+
+@event lesson_purify
+title: Too Weak to Help
+pool: spell_use
+weight: spell_draw(purify)
+place: pell_apothecary
+time: morning afternoon
+tone: warm
+art: potion
+tags: village
+scene: An apothecary of a thousand drawers, an old shepherd at the counter turning his cap in his hands, a thin pale tonic in a bottle.
+text: {Old Pell is out on his rounds. An old shepherd at the counter has a fever tonic for his wife, and Pell's daughter behind the counter says it's too weak, because the roots were poor this year. Pell won't be back till evening.|The same thin tonic, the same old shepherd, and his wife's fever back with the cold. Pell's daughter looks at you the moment you come in.|Pell's out, the tonic's weak, and the old shepherd is turning his cap again. You know the drawer by now.}
+> left: Run for Pell
+  health -tiny
+  vigor +tiny
+  say: {You run the lanes till you find him at a farmhouse. He comes at once, grumbling, and strengthens the tonic himself.|You find Pell two villages over. He gives you a lift back in a cart that smells of sheep.|You fetch him. He looks at the tonic, then at you. "Good," he says, about one of you.}
+> right: Brew a fresh batch with his daughter
+  alchemy +small
+  mood -tiny
+  say: {You and Pell's daughter boil fresh roots for an hour. The new tonic is strong and the shop smells of it for a week.|A fresh brew, done slowly, by the book. The shepherd waits and thanks you both twice.|You brew. It's late, but it's strong, and his wife's fever breaks by morning.}
+> up[purify]: Distill the strength out of it
+  health -small
+  mood +small
+  say: {Drop by drop you draw the tonic down to a spoonful, and every drop costs you a little. The shepherd takes it up the hill at a trot. You sit down on the step for a while.|You distill it strong. It takes nothing from your magic. It takes it from you. The shepherd holds your hand on his way out.|The tonic comes down dark and strong. Pell's daughter puts a chair behind you before you need it.}
+
+@event lesson_tailwind
+title: The Forgotten Wand
+pool: spell_use
+weight: spell_draw(tailwind)
+place: duel_hall
+time: afternoon
+tone: light
+art: wand
+tags: duelling
+scene: An empty duelling hall, a captain's wand forgotten on a bench, and through the high window a team carriage already far down the road.
+text: {The duelling team left for an away fixture twenty minutes ago, and the captain's wand is still lying on the bench. Through the window the carriage is a dot on the road to the village. The first bout is at four.|The team's away again, and again something's on the bench: this time the captain's gloves and the team's lucky wand.|An empty hall, a forgotten wand, a carriage on the road. Somebody always leaves something.}
+> left: Run after the carriage
+  challenge feat apprentice:
+    win:
+      vigor +small
+      say: {You run the whole road and catch them at the ford, watering the horses. The captain takes the wand and kisses it, then you, absent-mindedly.|You catch the carriage at the village. The team cheers you through the window and doesn't offer you a lift back.|Two miles at a dead run. The captain takes the wand without a word, then wins the first bout with it.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {You run till you can't, and watch the dot get smaller. The captain fights with a borrowed wand and loses.|A stitch at the first mile and a ditch at the second. The carriage doesn't wait.|You get to the village as the carriage leaves it. You walk back slowly, wand in hand.}
+> right: Send it after them by owl
+  gold -tiny
+  lore +tiny
+  say: {An owl from the stables, a copper for its trouble. It arrives at the second bout, and the captain fights the first with a borrowed wand.|You send it by owl and wait in the library. The captain writes that it came, late and slightly chewed.|The owl takes it. You'll never know if it got there in time, and nobody tells you.}
+> up[tailwind]: Surge after them
+  mood +small
+  vigor +tiny
+  say: {The wind gets behind you and keeps pushing. You pass the carriage on the long hill and are waiting at the ford when it comes, wand held out.|Fast, then faster, and never stopping. You catch them at the village, and the horses shy at you.|You run the whole road with the wind at your back. The team arrives at the fixture to find you already there, and the captain doesn't ask.}
+
+# ---------------- The friends' spells ----------------
+
+@event lesson_wildfire
+title: The Soaked Bonfire
+pool: spell_use
+weight: spell_draw(wildfire)
+place: courtyard
+time: evening
+when: season == "autumn"
+tone: light
+art: flame
+tags: grounds
+scene: A castle courtyard at dusk in autumn, a tall stack of soaked timber in the middle, students in scarves waiting round it, a prefect with a dripping torch.
+text: {The end-of-harvest bonfire is stacked in the middle of the courtyard, and a week of rain has soaked it through. Half the school is standing round it in scarves, and the prefect's torch has gone out twice.|The bonfire again, soaked again. The prefect has brought three torches this year, all damp.|Wet timber, a waiting crowd, and a prefect looking round it for anyone useful.}
+> left: Dig dry wood out of the woodshed
+  health -tiny
+  vigor +tiny
+  say: {You burrow to the back of the woodshed for anything dry and build a little fire in the heart of the stack. It smoulders for an hour, then catches. The courtyard sings at it.|Dry shavings, a sheltered corner, patience. It catches near curfew. Half the school has gone to bed.|You find dry logs under the old cart. The bonfire goes up late and smoky, and everyone says it's the best yet.}
+> right: Move the party into the great hall
+  charm +small
+  mood -tiny
+  say: {No bonfire, but half the school in the great hall with a fiddle is its own kind of fire.|You herd everyone indoors. It's cramped and steaming, and the cook finds the cider.|The party goes indoors. The prefect lights the hall's candles instead, all of them, out of spite.}
+> up[wildfire]: Light it, and let it grow
+  challenge spell journeyman:
+    win:
+      mood +small
+      arcana +tiny
+      say: {You start a small flame in your palm and hold it while it grows, and grows, and then you let it go into the stack. The whole bonfire goes up in one roar, and the courtyard cheers the sky.|Fire you stop holding small. You hold it till it bites, then loose it. The bonfire stands up like a tower of light.|It grows while you hold it and runs when you let go. The stack goes up all at once, and the fire never quite forgets you're there.}
+    lose:
+      health -small
+      mood -small
+      say: {You hold it too long and it bites your hand. The bonfire catches anyway, eventually, from the end of your sleeve.|You let it go too early; it runs across the wet flagstones instead, and the prefect stamps it out.|It gets away from you for one bad moment. You get it back. Your eyebrows don't.}
+
+@event lesson_heartwood
+title: No Shade
+pool: spell_use
+weight: spell_draw(heartwood)
+place: courtyard
+time: noon afternoon
+when: season == "summer"
+tone: warm
+art: sun
+tags: grounds
+scene: A blazing summer courtyard, rows of first-years in black robes standing for an outdoor assembly, one of them swaying.
+text: {The summer assembly is out in the courtyard this year, in black robes, under a sun like a hammer. A first-year in the front row is swaying, and the speeches have barely started.|Another hot assembly, another first-year going grey. The speeches are longer this year.|The courtyard, the sun, the robes, the speeches. You've learned to stand where you can see the front row.}
+> left: Get them out of the line
+  charm +tiny
+  renown -tiny
+  say: {You step out of line, catch the first-year under the arm and walk them into the shade of the arch. A professor glares; the first-year is sick on her shoes.|You lead them out. The speech pauses for exactly as long as it takes to disapprove of you.|Out of the line and into the cloisters. Two more follow you, and the speech goes on to an emptier courtyard.}
+> right: Pass along your water flask
+  health -tiny
+  mood +tiny
+  say: {Your flask goes along the row, hand to hand. It comes back empty, and the first-year stays upright.|You give up your water. The speeches go on. So do you, thirsty.|The flask goes round. You spend the rest of the assembly dreaming of the lake.}
+> up[heartwood]: Grow a tree over the front row
+  mood +small
+  renown +small
+  say: {You root your feet and a young tree comes up out of the flagstones, spreading its shade over the front row. The speeches stop. Then the courtyard claps.|Heartwood: a tree in a breath, and shade under it. The first-year sits down in it and thanks you with their eyes shut.|The tree goes up, the front row sighs, and the headmistress, mid-speech, looks up at it and makes no comment at all.}
+
+@event lesson_omen
+title: The Losing Team
+pool: spell_use
+weight: spell_draw(omen)
+place: village
+time: afternoon
+when: season == "summer"
+tone: warm
+art: trophy
+tags: village
+scene: A village green in summer, a team of farmhands in faded caps sitting gloomily on a bench, their captain looking at a scoreboard full of losses.
+text: {The village team has lost every match this summer, and the captain says there's no point playing the last one. The whole team is sitting on the bench in their caps, looking at their boots.|The village team again, a different summer, the same row of losses. The captain spots you at the boundary and sighs.|The green, the bench, the caps, the gloom. They've started saving you a seat.}
+> left: Make up their numbers and play
+  health -tiny
+  vigor +small
+  say: {You make up the numbers and play like a hen in a gale. They lose by less than usual, and buy you a cider for it.|You play. You're terrible. They laugh all afternoon, and the laughing helps.|You take the last place on the team. They lose, gloriously, and talk about it all winter.}
+> right: Cheer them from the boundary
+  charm +small
+  mood -tiny
+  say: {You cheer every run, however small. They lose, but they stand up straighter doing it.|You bring half the academy to the boundary to shout. The other team asks who you all are.|You cheer till you're hoarse. They lose, and the captain shakes your hand as if you'd scored.}
+> up[omen]: Tell them they'll win
+  mood +small
+  lore +tiny
+  say: {You say it out loud, on the green, "You'll win the last match." It lands. Not that day, nor the next week, but in the last match of the summer, by one run.|You foretell it, and they laugh, and they win. The captain says you're a witch. You're a student.|"You'll win." It lands. The village paints your name on the scoreboard, misspelled.}
+
+@event lesson_sleight
+title: Deep Pockets
+pool: spell_use
+weight: spell_draw(sleight)
+place: grimsbys_books
+time: noon afternoon
+tone: tense
+art: book
+tags: village
+scene: A crowded old bookshop, a man in a long coat with deep pockets slipping a slim first edition inside it while the shopkeeper is up a ladder.
+text: {Mr Grimsby is up a ladder looking for something he'll never find, and a man in a long coat has just slipped a slim first edition into his inside pocket. He's heading for the door, browsing as he goes.|The long coat again. A different book, the same pocket.|Grimsby, the ladder, the coat, the pocket. You know the rhythm.}
+> left: Call out to Mr Grimsby
+  challenge appeal apprentice:
+    win:
+      rel grimsby +small
+      say: {"Mr Grimsby, that gentleman has a book of yours." The coat stops, laughs, and hands it back "absent-mindedly". Grimsby gives you a bookmark.|You call out; the coat goes red and pays for it. Grimsby wraps it very slowly.|You speak up, and the man finds the book "must have fallen in". Grimsby thanks you all afternoon.}
+    lose:
+      mood -small
+      say: {The coat turns, all innocence, and opens it. The pocket's empty; he's passed it on somehow. Grimsby apologises to him for you.|He laughs at you and walks out. Grimsby didn't see a thing.|You call out; he's gone before Grimsby's off the ladder.}
+> right: Let it go
+  mood -tiny
+  lore +tiny
+  say: {He walks out with it. You go back to your shelf and read about ships.|You say nothing. Later, in the window of a dealer up the street, a slim first edition.|It goes. Grimsby will never know, which is worse, somehow.}
+> up[sleight]: Lift it back out of his pocket
+  mood +small
+  guile +tiny
+  say: {You brush past him in the aisle, and the book walks out of his pocket and into your hand. You put it back on its shelf. He finds out at the door.|A palm, a swap; he leaves with a penny dreadful from the bargain box instead. It is still theft, though of a better kind.|Lifted, and put back. Grimsby, coming down the ladder, finds it exactly where it should be and is mildly surprised.}
+
+@event lesson_contraption
+title: The Broken Bellows
+pool: spell_use
+weight: spell_draw(contraption)
+place: village
+time: morning
+tone: light
+art: gear
+tags: village
+scene: A village bakery before dawn, a great brick oven, a split leather bellows on the floor, the baker's family kneading in despair.
+text: {The bakery's great bellows split in the night, and the oven won't draw without them. The whole village wants its bread by seven. The baker's family is kneading as if kneading will help.|The bellows again, split again, along a new seam. The bakers have started to look at the door for you.|Dawn, cold oven, split bellows. The village is already queueing.}
+> left: Work the oven door by hand
+  health -small
+  vigor +small
+  say: {You flap the oven door like a fan for an hour, till the fire roars. The first loaves come out late and perfect, and they pay you in rolls.|You fan till your arms fall off. The village gets its bread at eight, and thinks it's the best yet.|An hour at the door with a tray for a fan. The bakers sing at you.}
+> right: Patch the bellows with a glove
+  alchemy +tiny
+  mood -tiny
+  say: {You stitch an old glove over the split. It wheezes, but it works, and the bread comes out at half past.|A glove, some glue, a prayer. The bellows works one breath in three.|You patch it. The patch holds till the last batch, then flies across the room.}
+> up[contraption]: Build them a machine
+  mood +small
+  alchemy +tiny
+  say: {A cartwheel, a pump handle, a wash-board and a belt, and you build a fan that drives itself off the oven's own heat. It works at once, mostly as meant.|The machine you build is ugly and works beautifully. Stand back when it stops, you tell them. It doesn't stop till noon.|You build them a contraption that roars the oven up in minutes, then shakes itself to bits by the last batch. The baker names the pieces after you.}
+
+@event lesson_hoarfrost
+title: The Melting Ices
+pool: spell_use
+weight: spell_draw(hoarfrost)
+place: refectory
+time: afternoon
+when: season == "summer"
+tone: light
+art: snow
+tags: food
+scene: A sweltering kitchen behind a dining hall, trays of ice puddings slumping into puddles, a frantic cook fanning them with a lid.
+text: {It's the hottest day of the year, the ice store has failed, and the end-of-term puddings are melting on their trays. The cook is fanning them with a pan lid and swearing at the sun.|The ice store again, the heat again, the puddings slumping again. The cook doesn't swear this time; she just points at you.|Heat, puddings, a cook with a lid. You're getting a reputation.}
+> left: Run them down to the cold cellar
+  health -tiny
+  vigor +tiny
+  say: {Tray after tray down the cellar steps at a run. Most of them survive. The cook gives you the ones that don't.|You run puddings for an hour. The cellar's full, the trays are empty, your shirt is soaked.|Down and up, down and up. The cook calls you her best mule.}
+> right: Help turn them into a trifle
+  alchemy +tiny
+  mood +tiny
+  say: {If you can't save them, drown them in custard. The trifle is enormous, and the hall says it's the best end-of-term pudding in years.|A melted pudding, a lot of sponge, a lot of cream. Nobody misses the ices.|You and the cook build a trifle the size of a font. She says not to tell anyone it was an accident.}
+> up[hoarfrost]: Freeze the lot
+  mood +small
+  arcana +tiny
+  say: {You call cold down hard on the trays, and the puddings stand up straight again, frosted white. The cook kisses you on both cheeks.|Hoarfrost on every tray. The kitchen goes cold enough to see your breath, and the cook sits in it for a while, blissful.|You freeze them. The end-of-term ices come out perfect, and the cook keeps a bowl back for you every summer.}
+
+@event lesson_candour
+title: Both of Them Swear
+pool: spell_use
+weight: spell_draw(candour)
+place: library
+time: morning afternoon
+tone: tense
+art: book
+tags: study
+scene: A library desk, a borrowed book with a torn page lying open, two students accusing each other in fierce whispers.
+text: {A library book has come back with a page torn out, and the two students who borrowed it in turn each swear it was the other. The head librarian has said both will be banned for the term unless somebody tells her the truth.|The torn page again, a different book, a different pair, the same whispered fight.|Two students, one torn book, and the head librarian at the end of the row, waiting.}
+> left: Hear both sides out
+  charm +small
+  mood -tiny
+  say: {You listen to both for an hour. You never find out which one tore it, but by the end they're laughing, and they go to the librarian together.|You hear them out and get two different stories and a headache.|You listen till they run out of anger. One of them admits it, to you, not to her.}
+> right: Stay out of it
+  lore +tiny
+  say: {You go back to your book. In the morning, both are banned. The library is quieter.|Not your quarrel. You read, and they whisper, and in the end the librarian bans one at random.|You keep out. Later you hear who did it, from someone who heard it from someone.}
+> up[candour]: Ask the one right question
+  mood +small
+  charm +tiny
+  say: {You ask the right question, and the honest answer comes out of the guilty one before they can stop it. They go to the librarian and say it again, more quietly.|One question, one honest answer, more honest than anyone wanted. The other one is cleared and hugs you.|You ask. They tell. Afterwards the guilty one says they're glad, and seem to mean it.}
+
+# ---------------- The hidden spells ----------------
+
+@event lesson_lodestar
+title: Lost Among the Rows
+pool: spell_use
+weight: spell_draw(lodestar)
+place: maud_cottage
+time: evening
+when: season == "autumn"
+tone: eerie
+art: lantern
+tags: grounds
+scene: An old orchard at dusk after the harvest, long rows of trees fading into dark, a village woman calling a child's name.
+text: {The village children came up to help with the apple harvest, and at dusk one of them hasn't come back down. Her mother is calling between the rows, and the rows all look the same in the dark.|The harvest again, dusk again, and a different child somewhere in the rows. The orchard is older than the towers, and it's very good at hiding things.|Dusk in the orchard, and a name being called. The rows go on further than they do by day.}
+> left: Search row by row
+  health -tiny
+  mood +small
+  say: {Row by row, calling, till you find her asleep in a pile of windfalls with an apple in each hand.|You search till full dark. She's found by her mother, two rows over, singing to a tree.|You walk every row. She's under the oldest pear, perfectly happy, and she wants to know why everyone's shouting.}
+> right: Fetch lanterns from the porter's lodge
+  charm +tiny
+  lore +tiny
+  say: {You come back with lanterns and half the village, and a line of lights sweeps the orchard. She walks out into it on her own.|Lanterns, people, a long line. The orchard gives her back without a fuss.|You fetch help. By the time it comes, she's found, and the lanterns are used for walking home.}
+> up[lodestar]: Gather a light to guide her
+  mood +small
+  lore +tiny
+  say: {You gather a light around you, a little more each breath, till it stands over the orchard like a small moon. A thin voice calls from three rows away, and walks towards it.|The light grows, steady and gold. Between the trees a small figure turns towards it and comes, rubbing her eyes.|You raise the light, and the rows are only rows again. She comes out of them holding the hand of nobody you can see, and lets go when she reaches her mother.}
+
+@event lesson_moonwell
+title: The Sweet Well
+pool: spell_use
+weight: spell_draw(moonwell)
+place: maud_cottage
+time: evening
+tone: warm
+art: moon
+tags: grounds
+scene: An old stone well behind a thatched cottage at dusk, a bucket of cloudy water on its rim, an old woman frowning into it.
+text: {The charm on Maud's old well, the one that keeps the water sweet, has worn through at last, and the bucket comes up cloudy and smelling of pond. Renewing it takes more magic than anyone carries at once. "Takes a whole night, dearie," says Maud. "Always did."|The well's gone cloudy again. Maud has put a chair beside it, and a blanket on the chair.|The cloudy bucket, the chair, the blanket. Maud doesn't even ask any more.}
+> left: Carry water up from the stream
+  health -small
+  vigor +small
+  say: {You carry bucket after bucket up from the stream till her barrels are full. Maud says it'll last her a fortnight, and feeds you till you can't move.|Up the field, down the field, a yoke on your shoulders. Bartholomew follows you both ways, supervising.|You fill every barrel. Maud says you've the arms of a ploughman and the sense of a hen, and means both kindly.}
+> right: Fetch the village dowser
+  gold -tiny
+  charm +tiny
+  say: {The dowser comes, walks round the well twice and says it needs a new charm. He charges you for saying so.|You fetch the dowser and pay his walk. He and Maud argue about wells until dark, happily. The water stays cloudy.|The dowser takes his fee and says he'll come back with his book. Maud says he said that in the spring.}
+> up[moonwell]: Sit by the well till it's full
+  health -tiny
+  mood +small
+  alchemy +tiny
+  say: {You sit on the cold wall all night and let magic pool in you like moonlight in a basin, then pour it into the old charm. At dawn the bucket comes up clear, and you come down stiff. Slow, and free.|A night of stillness on cold stone, and the well drinks it all. Maud brings you tea at midnight and doesn't say a word, which from Maud is a great deal.|You fill and give, fill and give, till the water runs sweet and your knees have set. Maud tastes it, nods, and says it's better than her mother's.}
+
+@event lesson_reflect
+title: A Hex in the Back
+pool: spell_use
+weight: spell_draw(reflect)
+place: duel_hall
+time: afternoon evening
+tone: tense
+art: duel
+tags: duelling
+scene: A duelling hall after a practice bout, a student walking away from the circle, a sore loser behind them raising a wand.
+text: {You've won a practice bout, fair and square, and you're walking back to the benches. Behind you, the sore loser is raising their wand, and the referee is looking the other way.|The same sore loser, another bout, another raised wand behind your back. Some people don't learn.|You win, you turn, and you hear it: the little intake of breath before a hex.}
+> left: Dive for the floor
+  challenge feat apprentice:
+    win:
+      vigor +small
+      say: {You drop and roll; the hex smacks into the bench and turns it pink. The referee turns round in time to see who did it.|Down. It goes over you and into the rafters, where it startles the pigeons.|You dive. The hex misses. The hall saw everything, and so does the loser's reputation.}
+    lose:
+      health -small
+      say: {Too slow. It catches you between the shoulders and your hair stands on end for an hour.|You dive into the hex instead of out of it. The referee comes over, at last.|It hits. You spend the evening in the infirmary explaining that you didn't start it.}
+> right: Turn and face them
+  charm +tiny
+  health -tiny
+  say: {You turn round and the hex glances off your shoulder, stinging. You look at them. They lower the wand, slowly, and the hall goes very quiet.|You face them and take the edge of it on your arm. They mutter something about a cramp and walk off.|You turn in time to take a glancing blow, not a full one. The referee finally notices.}
+> up[reflect]: Send it back
+  mood +small
+  lore +tiny
+  say: {You don't turn round. The hex hits you, and goes back where it came from, all of it. The sore loser sits down hard, with pink hair.|It comes; it goes back. The hall laughs, and the referee pretends not to have seen either half.|Reflected, all of it. The loser spends the evening in the infirmary explaining that they didn't start it.}
+
+@event lesson_rime
+title: The Rotten Ladder
+pool: spell_use
+weight: spell_draw(rime)
+place: stables
+time: morning afternoon
+tone: tense
+art: owl
+tags: beasts
+scene: A tall hayloft ladder in old stables, one rung snapped, a student near the top clinging on, a stone floor a long way below.
+text: {You're near the top of the hayloft ladder with an armful of owl post when the rung under your foot snaps. The next one is groaning too. The stable floor is stone, and it's a long way down.|The hayloft ladder again. Brask says she's mended it. A rung disagrees, loudly, under your foot.|The ladder, the loft, the crack of old wood. You know this sound now.}
+> left: Jump for the beam
+  challenge feat apprentice:
+    win:
+      vigor +small
+      say: {You throw yourself at the beam and hang there, owl post in your teeth, till Brask comes with another ladder.|You catch the beam with one hand. The owls applaud with their wings, or seem to.|A leap, a grab, a dangle. Brask gets you down and fixes the ladder, at last.}
+    lose:
+      health -medium
+      say: {You miss the beam and land on a bale, which is luck, and then on the floor, which isn't.|You catch the beam and lose it. The post goes everywhere; so do you.|The beam slips out of your fingers and the stones come up to meet you.}
+> right: Ride the ladder down
+  health -small
+  guile +tiny
+  say: {You hug the ladder and let it fall slowly sideways onto the hay. Not graceful. Mostly unhurt.|You slide down the rails like a sailor and take a splinter the length of your thumb.|Down the rails, fast. Your palms are raw, the post is safe.}
+> up[rime]: Let the cold take the fall
+  mood +small
+  arcana +tiny
+  say: {The rung goes, and you go, and the sliver of winter in your collar wakes. You hit the floor frozen solid and thaw a moment later, unhurt and very cold.|You fall. Rime takes the blow. You lie on the stones for a while, thawing, watching the owls watch you.|The fall that should fell you finds you frozen instead. Brask finds you sitting up, frosted, and asks no questions at all.}
+
+# ---------------- The forbidden spells ----------------
+
+@event lesson_siphon
+title: The Wasps' Nest
+pool: spell_use
+weight: spell_draw(siphon)
+place: boathouse
+time: afternoon evening
+when: season == "summer"
+tone: grim
+art: spider
+tags: lake
+scene: A boathouse doorway in summer, a grey papery wasps' nest the size of a head under the eaves, rowers with swollen stings on their arms.
+text: {There's a wasps' nest the size of a head under the boathouse eaves, right over the door. Three rowers have been stung this week, and one has swelled up so badly she's in the infirmary.|The wasps have rebuilt. A new nest, the same eaves, the same swollen arms.|The nest, the eaves, the hum. The crews go in at a run now.}
+> left: Smoke it out at dusk
+  challenge feat apprentice:
+    win:
+      vigor +tiny
+      mood +small
+      say: {You smoke it at dusk with wet straw, then knock it down into a sack. Two stings, and the crews can use the door again.|Smoke, a long pole and nerve. The nest comes down; the wasps go elsewhere, eventually.|You smoke them out. The crews bring you honey from the village by way of thanks, which feels pointed.}
+    lose:
+      health -small
+      say: {The smoke drifts the wrong way, and the wasps come out the right way, at you. You run into the lake.|They don't like smoke and they like you less. Five stings.|The nest falls the wrong way. You jump into the lake; the nest floats beside you.}
+> right: Leave it for Old Maud
+  mood -tiny
+  say: {You leave Maud a note. She comes in a week, by which time two more rowers are swollen.|You tell Maud, who says it's on her list. The list is long.|Not your nest. You use the side window.}
+> up[siphon]: Draw the life out of it
+  health +small
+  mood -tiny
+  say: {You reach towards the nest and draw. The hum goes thin, then silent. Something warm comes back along the line into you. You feel better, and wish you didn't.|You siphon it, slowly, and keep it. The nest goes quiet; you go very well indeed. It's forbidden for a reason, and you know the reason now.|The life comes out of the nest and into you. The crews cheer the silence. You don't tell them how it happened.}
+
+@event lesson_compel
+title: The Shell Game
+pool: spell_use
+weight: spell_draw(compel)
+place: gilded_newt
+time: evening
+tone: tense
+art: cup
+tags: newt
+scene: A smoky tavern corner, a grinning man moving three cups over a pea on a barrel top, a young farmhand losing his wages.
+text: {A stranger at the Newt is running a shell game on a barrel top, three cups and a pea, and a young farmhand is losing his whole week's wages. You saw the pea go up the stranger's sleeve. Nobody else did.|The shell-game man again, a different barrel, a different farmhand. The same sleeve.|Three cups, one pea, one sleeve. The landlady gives you a look that says "well?"}
+> left: Call him a cheat
+  challenge appeal journeyman:
+    win:
+      charm +small
+      say: {You say it loud. The room turns; the sleeve is shaken; the pea rolls out across the floor. The farmhand gets his wages back and buys you a cider.|You call it, and the regulars back you. The stranger leaves faster than he came.|"Check his sleeve." They do. The landlady throws him out personally.}
+    lose:
+      mood -small
+      say: {He shows his empty sleeves with a flourish, and the room laughs at you. The pea is somewhere else now.|He makes you look a fool and the farmhand loses again.|You call it. He smiles and leaves before anyone checks, with the money.}
+> right: Get the farmhand away
+  gold -tiny
+  charm +tiny
+  say: {You steer him to the bar with a cider and a long story. He keeps what wages he has left.|A drink and a word. He goes home poorer but not penniless.|You get him away from the barrel with a cider on you. He's angry with you till the morning, then grateful.}
+> up[compel]: Make him do that move again
+  mood +small
+  guile +tiny
+  say: {You make him do what he just did, again, and again, slower each time, till the whole room sees the pea go up the sleeve. He can't stop. He hates it. The farmhand gets every coin back.|Again. Again. The stranger's hand does it over and over, whether he wants to or not. Nobody stops him; nobody needs to.|You compel the move. The room watches the trick, three times, and then watches the stranger, who's very pale.}
+
+@event lesson_torment
+title: The Illegal Charm
+pool: spell_use
+weight: spell_draw(torment)
+place: duel_hall
+time: afternoon evening
+tone: grim
+art: duel
+tags: duelling
+scene: A duelling circle in a stone hall, an opponent with a forbidden charm glinting at their wrist, a referee watching the wrong end of the bout.
+text: {Your practice opponent is wearing a charm at the wrist that makes every spell of theirs hit twice. It's illegal, and the referee is watching the bout at the other end. You're losing.|Another practice bout, another opponent with a charm at the wrist. Somebody in the village is selling them, and the referee is watching the wrong end again.|A charm glinting at an opponent's wrist, again. They come and go, the charms, like the people who wear them.}
+> left: Stop the bout and tell the referee
+  charm +tiny
+  mood -tiny
+  say: {You lower your wand and call the referee over. The charm is found; your opponent is benched for a month. Half the hall thinks you're a tell-tale.|You stop it. The referee confiscates the charm and gives you the bout. Nobody thanks you.|You call it. Your opponent swears the charm is a family heirloom. It's confiscated anyway.}
+> right: Fight on, fair, and lose
+  health -small
+  arcana +small
+  say: {You fight fair against an unfair charm and lose by a hair. You learn more from losing to it than you would from winning.|You lose, honourably and painfully.|You go down fighting, and bruised. The hall noticed; so did your opponent.}
+> up[torment]: Make every spell they pay for hurt
+  mood -tiny
+  guile +small
+  say: {You cast it, and every spell they pay for hurts them. They falter, then stop casting at all, white and shaking. You win, and wish the hall had been looking somewhere else.|Torment: every cast a cost. The charm makes it twice the cost. The bout ends very quickly.|You win. Afterwards they take the charm off and put it in their pocket, and won't look at you.}
+
+@event lesson_extraction
+title: The Empty Well
+pool: spell_use
+weight: spell_draw(extraction)
+place: lecture_tower
+time: morning afternoon
+tone: grim
+art: spell_extraction
+tags: study
+scene: A practical exam hall, rows of students at stations casting, one student with empty hands beside a classmate brimming with light.
+text: {You're halfway through a practical and nearly dry, with the dregs of one casting left and a dozen still to do. The student at the next station is fairly glowing with magic, and the examiner is at the far end of the room.|The practical again, the well nearly empty again, and a different classmate glowing beside you.|Nearly dry, mid-practical, with plenty right beside you. You know exactly where it is.}
+> left: Hand in what you've done
+  lore +small
+  mood -small
+  say: {You hand in half a practical and a very honest note. The examiner says you may resit it next week. It's a long week.|You stop and explain. The examiner says it happens to everyone once, and books you a resit.|Half done, handed in, a resit to come. The examiner says "Rest next time." You will.}
+> right: Ask your neighbour to lend a little
+  charm +tiny
+  health -tiny
+  say: {You whisper; they hesitate, then pass you a little, the honest way, hand to hand. You both finish, both tired.|They lend you some, and the examiner sees, and lets it go, this once.|They give it freely. You'll owe them for a long time.}
+> up[extraction]: Take theirs
+  mood -tiny
+  arcana +small
+  say: {You reach into them and take their magic for yours. They sag at their station and don't know why. You finish with marks to spare. They don't.|Extraction: theirs, then yours. They feel it. Everyone who has felt it remembers.|You take it and finish. Afterwards they look at you across the hall for a long time, and never sit beside you again.}
+
+@event lesson_eclipse
+title: The Scalded Hand
+pool: spell_use
+weight: spell_draw(eclipse)
+place: workshop
+time: evening night
+tone: grim
+art: hand
+tags: making
+scene: A cluttered workshop at night, a solder pot tipped over, a student holding a reddened hand, a half-finished enchanted machine waiting on the bench.
+text: {The solder pot tips and you catch it the wrong way. Your hand is scalded red, and the machine on the bench has to be charged tonight or the whole term's work is wasted. Charging it takes everything you have.|Another accident, another burn, the same machine waiting to be charged. The workshop doesn't care about your hand.|The pot, the burn, the deadline. Your hand throbs in time with the clock.}
+> left: Go to the infirmary and let the work go
+  mood -small
+  health +tiny
+  say: {Sister Amaranth dresses the burn and tells you to keep it out of the workshop. The machine waits, cold, and so does your mark.|You go. The hand heals. The machine doesn't charge itself.|Bandaged, scolded, done for the night. The term's work will have to wait.}
+> right: Bandage it and charge it anyway
+  health -small
+  alchemy +small
+  say: {You wrap it in a rag and work through it. The machine charges. You can't hold a fork for a week.|Bandage, bite your lip, charge. It hums. You don't.|You do it one-handed and slowly. It's finished at dawn, and so are you.}
+> up[eclipse]: Turn the pain into power
+  mood -tiny
+  arcana +small
+  say: {You take the pain and turn it, and every throb becomes power held, and the machine charges in a single breath. You still feel all of it.|Pain taken, power held. The machine roars into life. Your hand doesn't stop hurting just because it's useful.|You burn the hurt for fuel. The work's done. You lie awake afterwards with the burn, and the feeling that you'd do it again.}
+
+@event lesson_heartprice
+title: The Pinned Foot
+pool: spell_use
+weight: spell_draw(heartprice)
+place: gargoyle_passage
+time: evening midnight
+tone: grim
+art: map
+tags: night
+scene: A narrow secret passage behind a stone gargoyle, a slab of fallen roofstone pinning a student's foot, a candle guttering on the floor.
+text: {A roof stone has come down in the passage and pinned the foot of the student who came up with you. It needs magic to lift, and you spent the last of yours an hour ago on the climb. They're very pale, and very quiet.|Another fallen stone, another pinned foot. The passage is crumbling faster this year.|Stone, foot, dark. Your magic is spent again. It always is when it matters.}
+> left: Lever it with a broken beam
+  challenge feat journeyman:
+    win:
+      vigor +small
+      say: {You find a beam and lever the slab up an inch, then two, and they drag the foot free. Swollen, not broken.|Wood, stone, every muscle you have. It lifts. You both lie in the dust laughing.|A broken beam does what magic couldn't. The beam doesn't survive it.}
+    lose:
+      health -small
+      say: {The beam snaps and the slab settles back with a sound you'll hear for weeks. You go for help, running.|You lever, it shifts, it falls. They're freed by others an hour later.|The beam breaks and so does the nail of your thumb. Help comes, eventually.}
+> right: Run for help
+  mood -small
+  say: {You run for the others. They come with ropes and a lantern. It takes an hour, and your friend doesn't say a word the whole time.|You fetch help. By the time it comes, they've wriggled the foot halfway free on their own.|Help, ropes, a long night. The foot will mend.}
+> up[heartprice]: Pay with yourself
+  health -medium
+  mood +small
+  say: {Nothing left to spend, so you pay in yourself. The stone lifts, and something in your chest goes with it. You walk home slowly, holding the wall.|You pay with your strength, for as long as you can stand it. Long enough. The foot comes free; you sit down in the dust.|Heartprice. The slab rises. You feel every ounce of it, and you'll feel it for days.}
+
+# ---------------- Retired (ids kept) ----------------
 
 @event lesson_tide
 # retired by spells v2 (was "spell_level(tide) >= 1 and term"): tide is cut
@@ -46,124 +916,11 @@ text: Professor Marisol teaches Tide where it lives: waist-deep in the lake at d
   rel marisol -tiny
   say: You work the spell from the dry pebbles and raise a neat little swell. Marisol looks at your dry boots with real sorrow, as if at a poem with no ending.
 
-@pool spell_lessons_auto_routine
-trigger: auto
-class: routine
-tags: magic
-
-@event lesson_foresight
-title: The Bottom of the Cup
-pool: spell_lessons_auto_routine
-when: spell_level(foresight) >= 1 and term
-tone: warm
-art: eye
-tags: study
-scene: An observatory room with tea cups on every desk, a lecturer in three scarves peering into a student's cup with a magnifying glass.
-text: The astromancy lecturer, who wears three scarves in every season, sits the class at the observatory with cups of tea and no instructions. Foresight, it turns out, begins at the bottom of the cup: what you think you see, and what you want to.
-> left: Read your own cup
-  lore +small
-  mood -tiny
-  say: The leaves say a hard week is coming. It does, from Tuesday. The lecturer says that's the trouble with reading your own: you start making it true.
-> right: Read your neighbour's
-  charm +small
-  say: You tell your neighbour a letter is on its way. A letter arrives at supper. Now half the dormitory wants their leaves read, and you have to learn to say "unclear" kindly.
-
-@event lesson_starlight
-title: A Jar on the Roof
-pool: spell_lessons_auto_routine
-when: spell_level(starlight) >= 1 and term
-tone: warm
-slot: night
-art: star
-tags: study
-scene: A flat observatory roof at night, a student holding up a glass jar toward a sky crowded with stars, breath steaming.
-text: Starlight is practised after midnight on the observatory roof, where your Starcalling tutor hands you a glass jar and tells you to hold it up "until something falls in". The stars are very far away. The roof is very cold.
-> left: Hold the jar until it fills
-  lore +small
-  health -tiny
-  say: At three in the morning a thread of light settles in the jar like milk in tea. You carry it down the stairs in both hands. You can't feel your fingers until breakfast.
-> right: Lie back and watch the sky
-  mood +small
-  say: You lie on the roof and name the constellations with whoever is beside you. Your jar stays empty. The lecturer, passing, says that's the first lesson too, and the one most people skip.
-
-@event lesson_mend
-title: Teacups First
-trigger: auto
-when: spell_level(mend) >= 1 and term
-class: routine
-tone: warm
-actor: amaranth
-art: cup
-tags: magic study
-scene: An infirmary storeroom, a stern healer dropping a teacup to the stone floor while a student kneels over the pieces with a wand.
-text: Sister Amaranth teaches Mend with teacups. She drops one on the infirmary floor without looking. "Mend it." When it's whole she drops another. "Bones are harder," she says, rolling bandages. "Cups first."
-> left: Mend cup after cup
-  meet amaranth
-  alchemy +small
-  mana -small
-  say: By the twentieth cup you can hear the crack close before you see it. Amaranth says "Keep doing that," and drops a teapot.
-> right: Ask her about the bones
-  meet amaranth
-  lore +small
-  mood -tiny
-  say: She tells you, still rolling bandages, about the worst break she ever set. It was a student's; that student is a professor now. You go a little pale, and listen to every word.
-
-@event lesson_purify
-title: Make It Stronger
-trigger: auto
-when: spell_level(purify) >= 1 and term
-class: routine
-tone: light
-actor: amaranth
-art: cauldron
-tags: magic study
-scene: An alchemy lab bench with a cauldron of thick green liquid, a healer standing over a student who holds a wand above it.
-text: Sister Amaranth has heard that Pell taught you to Distill. She sets a cauldron of something green in front of you that she will not name. "Pell teaches it fast," she says. "I teach it so you're still standing afterwards. Make it stronger." Then she goes back to her own work.
-> left: Distill it drop by drop
-  meet amaranth
-  alchemy +small
-  health -tiny
-  say: Drop by drop, the green comes down to one dark spoonful, and each drop costs you a little. You sit down halfway, as she said you would. Amaranth tastes the result, nods and puts it on the high shelf.
-> right: Ask what it was
-  meet amaranth
-  rel amaranth +small
-  say: "Last term's soup," she says. You decide not to believe her, then decide you do. She shows you where to stop before it takes too much from you, and you distill half a cup, badly.
-
 @pool spell_lessons_vey_auto_routine
 actor: vey
 trigger: auto
 class: routine
 tags: magic
-
-@event lesson_glamour
-title: Pick a Card
-pool: spell_lessons_vey_auto_routine
-when: spell_level(glamour) >= 1 and term
-tone: light
-art: cards
-tags: study
-scene: A velvet-curtained classroom, a professor in a violet coat fanning out a hand of playing cards toward a row of students.
-text: Professor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. "Fool me, and you may skip the essay."
-> left: Glamour your card
-  meet vey
-  challenge deceive master- unlikely +1 if spell_level(glamour) >= 2:
-    win:
-      renown +medium
-      rel vey +medium
-      charm +small
-      if enrolled(illusion):
-        study illusion +large
-      else:
-        charm +small
-      say: Vey picks your card, turns it over and finds a plain two. She laughs out loud, a real laugh, and the class goes silent. "Well," she says. "Well, well. No essay for you." By supper the whole tower knows, and Vey has started calling you "my card sharp".
-    lose:
-      mood -tiny
-      guile +small
-      say: Vey passes over your card without a glance. "The queen of stars," she says kindly, "does not blush." But you saw how she chose: by the hands, not the cards.
-> right: Watch how she catches them
-  meet vey
-  guile +small
-  say: You watch her eyes instead of the cards. She never looks at the faces, only at the hands holding them. You write that down, and she sees you write it, and smiles.
 
 @event lesson_mirror
 # retired by spells v2 (was "spell_level(mirror) >= 1 and term"): mirror is cut
@@ -184,35 +941,6 @@ text: Professor Vey teaches Mirror in an empty classroom with the curtains drawn
   meet vey
   rel vey +small
   say: "Vanity," says Vey, with a magnificent smile that answers nothing at all. But she lets you stay after the others leave, and shows you how to soften the charm's edges.
-
-@event lesson_haste
-title: Race the Hippogriff
-trigger: auto
-when: spell_level(haste) >= 1 and term
-class: routine
-tone: light
-actor: brask
-art: feather
-tags: magic study
-scene: A windy flight field marked with flags, a grey-haired professor holding a stopwatch, a student sprinting beside a hippogriff.
-text: Professor Brask teaches Haste on the flight field, with a stopwatch and a hippogriff that is faster than the spell. "Beat her," she says to you. To the hippogriff she explains, at length and politely, that she is not to bite you if you win.
-> left: Race the hippogriff
-  meet brask
-  challenge feat adept-:
-    win:
-      vigor +small
-      rel brask +tiny
-      say: You cross the flag a beak's length ahead. The hippogriff looks at Brask; Brask looks at the stopwatch, then at you. "Hm," she says. From her, it's a medal.
-    lose:
-      mood -tiny
-      say: The hippogriff wins by a length and takes your hat as her prize. Brask tells a story about a student who lost to a goose. It ends with a bite. "Moral: faster."
-> right: Time the others first
-  meet brask
-  lore +small
-  say: You hold the stopwatch and watch the fast ones. They aren't running harder; they start the spell a step before they need it. Brask sees you notice, and hands you the next race.
-  if knows(brask.asking):
-    rel brask +tiny
-    say: Afterwards you ask her how to start the spell a step early yourself. She shows you, and remembers that you asked.
 
 @event lesson_beast_speech
 # retired by spells v2 (was "spell_level(beast_speech) >= 1 and term"): beast_speech is cut
@@ -236,530 +964,3 @@ text: Beast-speech, says Professor Brask, is mostly listening. She sits you in a
   arcana +small
   mana -small
   say: You cast before you've listened and get one word back, very clearly: "Rude." Brask laughs once, loudly. It's the laugh of the term, and everyone in the stables heard it.
-
-@event lesson_ward
-title: Chalk
-pool: spell_lessons_auto_routine
-when: spell_level(ward) >= 1 and term
-tone: light
-art: shield
-tags: study
-scene: A dim room at the top of a tower, low lamps, a lecturer mid-throw with a piece of chalk while students hold up shimmering wards.
-text: At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer drills first-years in their Ward by throwing chalk. Hard, and without warning. "A ward that only works when you're ready," says the lecturer, "is a decoration."
-> left: Hold the ward all hour
-  guile +small
-  mana -small
-  say: The first chalk hits your forehead. The fifth bounces off the ward with a sound like a bell. By the end of the hour your ward is up before you know you've raised it.
-> right: Watch the lecturer's wrist
-  lore +small
-  health -tiny
-  say: You let the ward drop and watch how the throws begin. Three pieces of chalk find your forehead while you do. But you see it now: the shoulder moves first.
-
-@event lesson_shadowstep
-title: Where the Voice Was
-pool: spell_lessons_auto_routine
-when: spell_level(shadowstep) >= 1 and term
-tone: tense
-time: night
-art: moon
-tags: study
-scene: A pitch-dark tower room with one dim lamp guttering out, the outline of a student stepping between deep shadows.
-text: Shadowstep is taught in the dark. The umbral lecturer puts out the last dim lamp and calls your name from somewhere else in the room. You have to arrive where the voice was before it moves. Somewhere, a chair is waiting for your shins.
-> left: Step into the dark
-  guile +small
-  health -tiny
-  say: You step, and the dark folds, and you're across the room with a bruise from the chair. The voice is right beside you. "Better," it says, and moves away again.
-> right: Wait for your eyes to adjust
-  lore +small
-  say: You stand still until the dark has edges. The lecturer, somewhere, says that's cheating, and that cheating is half of umbral magic. You step only once, but you step exactly.
-
-# ---------------- Spells v2: practice for the new spells (one each, after you learn it) ----------------
-
-@event lesson_animate
-title: The Chair That Follows
-pool: spell_lessons_auto_routine
-when: spell_level(animate) >= 1 and term
-tone: light
-art: spell_animate
-tags: study
-scene: A workshop corridor, a wooden chair trotting after a student like a dog, a teapot waddling behind it.
-text: The Artifice homework is to animate something and live with it for a day. You pick a chair, which follows you to every lecture. The teapot is the other option. It has opinions about being carried.
-> left: Live with the chair
-  alchemy +small
-  health -tiny
-  say: The chair follows you everywhere and offers itself whenever you stop, including on the stairs, at speed. By evening you have bruised shins and a very loyal chair.
-> right: Animate the teapot instead
-  arcana +small
-  mana -small
-  say: The teapot waddles after you all day, pouring when you sit. It takes more out of you than the chair would, but your friends have never been so well looked after.
-
-@event lesson_seal
-title: Only for the Addressee
-pool: spell_lessons_auto_routine
-when: spell_level(seal) >= 1 and term
-tone: eerie
-art: spell_seal
-tags: study
-scene: A windowless room, a student pressing their thumb to a folded letter while a headmistress watches with her hands folded.
-text: Today's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. "If I can," she says mildly, "you haven't."
-> left: Seal it against her
-  guile +small
-  mana -small
-  say: She tries the letter for a long minute with one finger, then hands it back unopened. "Better than I was at your age," she says, which doesn't sound like a compliment. You feel hollowed out till supper.
-> right: Ask how she'd break it
-  lore +small
-  mood -tiny
-  say: She shows you, kindly and very quickly, how she'd break yours. You leave the room knowing a great deal more about seals and rather less sure of your own.
-
-@event lesson_wildfire
-title: Longer Each Night
-trigger: auto
-when: spell_level(wildfire) >= 1 and term
-class: routine
-tone: tense
-actor: lyra
-art: spell_wildfire
-tags: magic duel
-scene: An empty duel hall at night, two students each holding a growing fire, one watching the other's with narrowed eyes.
-text: Lyra wants you in the duel hall after hours. "You let it go too early," she says, and lights her own. "Hold it. Longer each night. It will bite you; let it."
-> left: Hold it until it bites
-  arcana +small
-  health -tiny
-  say: You hold it until the heat is in your teeth and then a breath longer. When you let it go it runs to the rafters. Lyra looks at your blistered palm and says nothing, which is approval.
-> right: Ask her how she stands it
-  rel lyra +small
-  mood -tiny
-  say: She doesn't answer at first. Then she shows you her palms, scarred and old, and tells you about the first time, and her mother. You don't practise much. It's still the right night.
-
-@event lesson_heartwood
-title: A Tree by the Window
-trigger: auto
-when: spell_level(heartwood) >= 1 and term
-class: routine
-tone: warm
-actor: tobias
-art: spell_heartwood
-tags: magic nature
-scene: A dormitory courtyard at dusk, a young tree that wasn't there that morning, two students sitting under it looking pleased with themselves.
-text: Tobias wants you to grow a heartwood every evening for a week, "so your hands remember". Today he suggests the courtyard under your dormitory window, where nothing has grown in years.
-> left: Grow it properly, roots and all
-  vigor +small
-  health -tiny
-  say: It takes everything you've got and a blister. By dusk there's a young tree under your window, and your back aches like a harvest. Tobias says it's the best one he's seen, and apologises for saying so.
-> right: Sit under his instead
-  mood +small
-  rel tobias +tiny
-  say: You let him grow it and sit under it with him, talking about nothing. Your hands don't remember much. The rest of you does.
-
-@event lesson_omen
-title: The Spoon Will Fall
-trigger: auto
-when: spell_level(omen) >= 1 and term
-class: routine
-tone: eerie
-actor: seraphine
-art: spell_omen
-tags: magic study
-scene: A refectory table at breakfast, a pale student pointing at a spoon balanced on the edge of a bowl, a second student staring at it.
-text: At breakfast Seraphine says, without looking up, "Practise on small things. Spoons. Doors. The weather. Never people, not yet." Then she looks at you, quite clearly, for once.
-> left: Foretell small things all day
-  lore +small
-  mood -tiny
-  say: The spoon falls. The door sticks. It rains at four. By evening it unnerves you how well it works, and you catch yourself foretelling the soup.
-> right: Ask what "not yet" means
-  rel seraphine +small
-  say: "Later," she says, then, "I mean that exactly." She doesn't explain. She does pass you the salt before you've asked for it.
-
-@event lesson_sleight
-title: Pockets and Decks
-trigger: auto
-when: spell_level(sleight) >= 1 and term
-class: routine
-tone: light
-actor: corvin
-art: spell_sleight
-tags: magic
-scene: A dim corner of a common room, a grinning student fanning a deck of cards while another student palms a coin under the table.
-text: Corvin is teaching you to keep your hand in. "Decks are practice," he says, shuffling. "Pockets are performance." Bram is asleep in an armchair nearby, his whistle on a ribbon round his neck.
-> left: Practise on the deck
-  guile +small
-  mood -tiny
-  say: Two hours of coins and cards until your fingers cramp. It's dull, and by the end the coin vanishes so cleanly even Corvin blinks. "Saint," he says, "with very quick hands."
-> right: Lift Bram's whistle and return it
-  guile +medium
-  alignment -tiny
-  say: The whistle comes off its ribbon without a sound and goes back on it the same way. Bram snores through all of it. Corvin is delighted and slightly worried about you.
-
-@event lesson_contraption
-title: The Breakfast Engine
-trigger: auto
-when: spell_level(contraption) >= 1 and term
-class: routine
-tone: light
-actor: mir
-art: spell_contraption
-tags: magic
-scene: A breakfast table where a clattering machine made of a toast rack, a spoon and a teapot is buttering toast at alarming speed.
-text: Mir slides a breakfast tray across to you. "Practice! Make it do breakfast. Toast, butter, tea. It's the hardest machine there is, probably." Half the refectory has already turned to watch.
-> left: Build the breakfast engine
-  alchemy +small
-  health -tiny
-  say: Your engine butters four slices, pours one cup and singes your eyebrow before it falls apart in a shower of crumbs. The refectory applauds. Mir writes something down, beaming.
-> right: Build it with Mir, slowly
-  rel mir +small
-  mood +tiny
-  say: You build it together, Mir explaining every joint. It makes one perfect slice of toast and then retires. Mir says it's the best machine of the year, probably.
-
-@event lesson_hoarfrost
-title: Putting Out Fires
-trigger: auto
-when: spell_level(hoarfrost) >= 1 and term
-class: routine
-tone: light
-actor: kael
-art: spell_hoarfrost
-tags: magic duel
-scene: A duel hall where one student's flame is frosting over and going out, its caster glaring, a quiet student standing nearby.
-text: "It's for putting fires out," Kael says again, and nods across the duel hall to where Lyra is practising, very loudly, with a very large flame. He waits to see whether you'll take the hint.
-> left: Put out Lyra's flame
-  arcana +small
-  rel lyra -tiny
-  say: Your frost meets her flame and they cancel with a hiss and a cloud of steam. Lyra's face, when it clears, is magnificent. Kael makes a sound you think is a laugh.
-> right: Practise on the braziers instead
-  arcana +tiny
-  rel kael +tiny
-  say: You frost the braziers one by one. It's useful, and dull, and Kael stays with you for all of it without saying anything. You suspect that was the point.
-
-@event lesson_candour
-title: Questions People Want to Answer
-trigger: auto
-when: spell_level(candour) >= 1 and term
-class: routine
-tone: warm
-actor: nessa
-art: spell_candour
-tags: magic social
-scene: A busy refectory, a bossy editor pointing out students at random tables to another student holding a notebook.
-text: Nessa hands you a notebook in the refectory. "Three people, three true answers, by the end of lunch," she says. "Ask the question they want to answer. Use the spell only when you have to."
-> left: Use the spell on all three
-  charm +small
-  mood -tiny
-  say: Three truths by the pudding course, and one of them is about you, and not kind. Nessa reads your notes and says, "Now you know why I don't use it much."
-> right: Ask good questions instead
-  rel nessa +small
-  charm +tiny
-  say: You only manage two truths without the spell, but they're good ones, and nobody minded telling you. Nessa says that's the better trick, and that she won't print either.
-
-@event lesson_brace
-title: Planted
-pool: spell_lessons_auto_routine
-when: spell_level(brace) >= 1 and term
-tone: light
-art: spell_brace
-tags: duel
-scene: A duel hall's practice corner, an eyepatched dummy firing weak hexes at a student who stands planted and unmoving.
-text: The eyepatched dummy is empty now, but it still throws a hex or two out of habit. The Circle uses it to practise bracing. Today the seniors are taking bets on how long you'll stand.
-> left: Stand until it gives up
-  vigor +small
-  health -tiny
-  say: You stand there for an hour while the dummy throws everything it has left. The seniors pay out to whoever bet longest. Your shins are a mess and you are unmovable.
-> right: Coach the first-years instead
-  charm +small
-  mood -tiny
-  say: You stand behind a row of first-years and fix their feet, one by one, while they get hexed. They're grateful. You're bored. The dummy throws one at you on the way out, out of spite.
-
-@event lesson_quickquill
-title: Lecture Notes
-pool: spell_lessons_auto_routine
-when: spell_level(quickquill) >= 1 and term
-tone: light
-art: spell_quickquill
-tags: study
-scene: A lecture hall, a quill writing busily by itself in a notebook while its owner sits back with folded arms, the lecturer squinting at them.
-text: Your quill wants to take your lecture notes for you. It writes everything down, word for word, faster than the lecturer can talk. It also writes what it thinks of the lecturer, in the margins.
-> left: Let it take the notes
-  study +tiny
-  mood -tiny
-  say: You have perfect notes, every word, and a margin full of the quill's views on the lecturer's waistcoat. You spend the evening inking them out before anyone sees.
-> right: Make it take only what you say
-  guile +small
-  mana -tiny
-  say: It sulks, and then takes down exactly what you tell it, no more. It's work keeping it honest. You come out with half the notes and the full trust of your quill.
-
-@event lesson_bramble
-title: A Hedge on Demand
-pool: spell_lessons_auto_routine
-when: spell_level(bramble) >= 1 and term
-tone: light
-art: spell_bramble
-tags: nature
-scene: Old Maud's cottage garden, a groundskeeper pointing at a gap in her fence while a student coaxes a thorny hedge up out of the ground to fill it.
-text: Old Maud has heard about your hedge. "There's a gap in my fence the rabbits use, dearie," she says. "Grow me one there. Thorns on the outside, mind." The rabbits are watching from the cabbages.
-> left: Grow it thorns and all
-  alchemy +small
-  health -tiny
-  say: The hedge comes up thick and thorny, and takes a strip off your knuckles on the way. Maud inspects it and says it'll do. The rabbits look betrayed.
-> right: Grow it gently, for the cabbages
-  rel maud +small
-  mood +tiny
-  say: You grow it soft and plant a row of cabbages beyond it for the rabbits. Maud laughs until she has to sit down. "You'll understand that in two weeks," she says.
-
-@event lesson_index
-title: The Right Page
-pool: spell_lessons_auto_routine
-when: spell_level(index) >= 1 and term
-tone: light
-art: spell_index
-tags: study
-scene: A library table piled with heavy books, every one falling open at a different marked page as a student touches it, a cat watching from the top of the pile.
-text: Every book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest.
-> left: Read every page they offer
-  lore +small
-  mood -tiny
-  say: You read every page that offers itself until the lamps go out. You learn a great deal, most of it useful, and none of it what you came in for.
-> right: Find one thing for your exams
-  study +tiny
-  say: You ask for one thing, firmly. Twelve books bring it. You take your page and leave the others, who sulk on the table until a clerk shelves them.
-
-@event lesson_rapport
-title: A Room That Was Turning
-pool: spell_lessons_auto_routine
-when: spell_level(rapport) >= 1 and term
-tone: light
-art: spell_rapport
-tags: social
-scene: A refectory at supper where two tables are on the edge of an argument, a student stepping between them with a raised mug and a grin.
-text: Two tables in the refectory are on the edge of a food fight, and every head is turning. It's the Newt all over again, with worse gravy.
-> left: Step in and turn it
-  renown +small
-  mood -tiny
-  say: One joke about the gravy, at exactly the right moment, and both tables laugh instead of throwing it. The prefects look relieved and slightly suspicious. Your heart doesn't slow down until bed.
-> right: Let it happen
-  mood +small
-  say: You let it go, and the food fight is magnificent. You watch from under the table, laughing. Nobody remembers it was nearly stopped.
-
-@event lesson_tailwind
-title: Never Stop
-pool: spell_lessons_auto_routine
-when: spell_level(tailwind) >= 1 and term
-tone: light
-art: spell_tailwind
-scene: A student on a broom skimming low over a lake at tremendous speed, a wake of spray behind them and a fisherman waving from a boat.
-text: The fisherman's rule for the wind is "never stop". You take the long way round the lake on your free afternoon to practise it, and the wind gets behind you as soon as you're off the jetty.
-> left: Never stop
-  vigor +small
-  health -tiny
-  say: You go round the lake three times without stopping, faster each lap, until your hands are numb on the handle. The fisherman waves every lap now.
-> right: Land and talk to him
-  mood +small
-  charm +tiny
-  say: You land by his boat and tell him about the storm run. He listens, nods, and says, "Never stop," again, and hands you a fish to take home.
-
-# ---------------- The Whisperwood's spells (world expansion 1) ----------------
-# Four hidden spells found in the wood, each recognised by someone at the academy, and six forbidden ones nobody
-# will teach: their "lesson" is the first quiet moment you could use one, and whether you do.
-
-@event lesson_lodestar
-title: The Lighthouse Light
-trigger: auto
-when: spell_level(lodestar) >= 1 and term
-class: routine
-tone: warm
-actor: grimsby
-art: spell_lodestar
-tags: magic
-scene: An old bookseller in a dark shop watching a soft guiding light gather around a student's shoulders, his spectacles reflecting it.
-text: The light gathers round your shoulders in Grimsby's shop without your meaning it to, and the old man puts down his pen. "Lodestar," he says softly. "A lighthouse keeper's spell. She used it to walk the lamp-stair in storms." He doesn't say who she was. You think you know.
-> left: Ask him to watch you cast it
-  meet grimsby
-  arcana +small
-  mana -tiny
-  say: You let the light build, breath by breath, until it stands round you like a lantern. Grimsby nods along to your breathing, as if to a tune he knows. "Slower," he says. "She was always slower."
-> right: Ask about the lighthouse
-  meet grimsby
-  lore +small
-  rel grimsby +tiny
-  say: He tells you about the lamp, the stair, the keeper who wanted to see a long way, and the books she bought from him for forty years. The light round your shoulders stays lit the whole time, listening.
-
-@event lesson_moonwell
-title: Sitting Still
-trigger: auto
-when: spell_level(moonwell) >= 1 and term
-class: routine
-tone: warm
-actor: maud
-art: spell_moonwell
-tags: magic
-scene: An old woman and a student sitting on a garden bench under the moon, eyes closed, a faint silver light pooling in the student's cupped hands.
-text: Old Maud finds you on her garden bench at dusk, trying to make Moonwell go faster. She sits down beside you. "That's your trouble," she says. "It's a sitting-still spell, dearie. You can't hurry a basin."
-> left: Sit still with her
-  meet maud
-  arcana +small
-  health +tiny
-  say: You sit until the moon is up and your feet are cold. Somewhere in the second hour, the light starts pooling, and you stop trying, and it fills. Maud is asleep. You don't wake her.
-> right: Ask how she knows the spell
-  meet maud
-  lore +small
-  rel maud +tiny
-  say: "Learned it in the wood," says Maud, "same as you, sixty years back. Everybody who goes deep enough learns it eventually. The ones who come back, anyway." She pats your knee as if that were reassuring.
-
-@event lesson_reflect
-title: Hall of Mirrors
-pool: spell_lessons_vey_auto_routine
-when: spell_level(reflect) >= 1 and term
-tone: light
-art: spell_reflect
-scene: A theatrical professor in a corridor of mirrors throwing a small spell at a student, who sends it bouncing back down the corridor.
-text: Professor Vey hears you've learned Reflect and appears in the mirror corridor with a bag of very small, very harmless hexes. "Show me," Vey says, and throws one at your head.
-> left: Send it back
-  meet vey
-  arcana +small
-  mana -tiny
-  say: You catch the hex and return it. Vey ducks, delighted, and throws three. You return two. The third gives you rabbit ears for an hour, which Vey says is the lesson.
-> right: Send it somewhere else
-  meet vey
-  guile +small
-  rel vey +tiny
-  say: You catch the hex and bounce it off a mirror into a suit of armour, which sneezes. Vey laughs so hard the mirrors ring. "Oh, you're going to be trouble."
-
-@event lesson_rime
-title: Cold Enough
-trigger: auto
-when: spell_level(rime) >= 1 and term and met(kael)
-class: routine
-tone: warm
-actor: kael
-art: spell_rime
-tags: magic
-scene: A pale Northern student and another student standing in a frost-whitened courtyard, frost spreading from their collars, breath steaming.
-text: Kael sees the frost at your collar and goes still. "Rime," he says. "Where did you... no. Don't tell me." He looks at {season == "winter": the snow|the courtyard, and frost runs out from his boots across the flagstones}. "In the North we learn it as children. You don't feel the cold less. You just stop letting it decide things."
-> left: Let him show you
-  meet kael
-  arcana +small
-  health -tiny
-  say: He makes you stand in {season == "winter": the snow|the cold he's laid on the flagstones} until it hurts, and then until it doesn't, and then a while longer. When you go in, he's almost smiling. "Now it's yours," he says.
-> right: Ask what else they learn as children
-  meet kael
-  rel kael +tiny
-  mood -tiny
-  say: "Not to want things," he says, and then looks as if he wishes he hadn't. He leaves before you can ask anything else. The frost at your collar feels colder.
-
-@event lesson_siphon
-title: The Fern on the Sill
-pool: spell_lessons_auto_routine
-when: spell_level(siphon) >= 1 and term
-slot: night
-tone: grim
-art: spell_siphon
-tags: forbidden
-scene: A student at a dormitory window at night with a hand hovering over a potted fern, the fern's leaves beginning to curl.
-text: You're tired, and there are lectures at eight, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
-> left: Just a little
-  alignment -small
-  health +small
-  say: The fern greys from the tips inward. You feel wonderful. You throw the fern out in the morning, before anyone sees it.
-> right: Go to bed tired
-  alignment +tiny
-  health -tiny
-  say: You go to bed tired, and wake tired, and the fern is green. You water it, which feels like an apology to something.
-
-@event lesson_compel
-title: "Again"
-pool: spell_lessons_auto_routine
-when: spell_level(compel) >= 1 and term
-tone: grim
-art: spell_compel
-tags: forbidden
-scene: A student in a castle corridor watching another student drop a stack of books, a word forming on their lips.
-text: A first-year drops a stack of books in the corridor, and laughs at themselves, and you could say the word. "Again." They'd drop them again, and again, and never know why. It would be funny. That's the worst part: it would be funny.
-> left: Say it, once
-  alignment -small
-  guile +small
-  say: They drop the books again, and stare at their hands. You walk on quickly. It wasn't funny.
-> right: Help pick them up
-  alignment +tiny
-  mood +tiny
-  say: You pick up half the books and the first-year thanks you twice. The word stays in your mouth, unused, like a stone you could throw.
-
-@event lesson_torment
-title: The Shape of It
-trigger: auto
-when: spell_level(torment) >= 1 and term
-class: routine
-tone: grim
-actor: thorne
-art: spell_torment
-tags: magic forbidden
-scene: A stern grey-bearded professor in a duelling hall looking hard at a student whose wand hand has frozen mid-cast.
-text: Sparring in the duelling hall, you feel Torment rise in your hand like a reflex. You stop it. Professor Thorne, across the hall, saw something: he's looking at you the way he looks at a fire in the wrong place.
-> left: Tell him
-  meet thorne
-  alignment +small
-  rel thorne +tiny
-  mood -small
-  say: You tell him. He listens without a word, then says, "Then you know what it costs. Most people learn that afterwards." He gives you extra drills for a month, which you suspect is kindness.
-  if knows(thorne.lost):
-    rel thorne +tiny
-    say: As you leave he adds that he lost to the storm because he didn't stop in time. You knew already. You've never heard him say it like that.
-> right: Say it was nothing
-  meet thorne
-  guile +tiny
-  rel thorne -tiny
-  say: "Nothing, sir." He doesn't believe you. He doesn't say so. He watches you spar for the rest of the term.
-
-@event lesson_extraction
-title: Someone Else's Spark
-pool: spell_lessons_auto_routine
-when: spell_level(extraction) >= 1 and term
-tone: grim
-art: spell_extraction
-tags: forbidden
-scene: A study group around a library table at night, one student's quill glowing with magic, another student staring at it hungrily.
-text: In a study group, the student beside you is casting a little light to read by, and you can feel their magic like warmth from a stove. Extraction would take it. They'd feel tired, that's all. You've got so much to do.
-> left: Take a little
-  alignment -small
-  mana +small
-  say: Their light gutters. They yawn, rub their eyes, and go to bed early. You study until dawn on someone else's magic, and remember none of it.
-> right: Lend them yours instead
-  alignment +tiny
-  mana -tiny
-  say: You light the table yourself so they can rest their hand. They grin at you. The hunger goes quiet, for now.
-
-@event lesson_eclipse
-title: The Burn
-pool: spell_lessons_auto_routine
-when: spell_level(eclipse) >= 1 and term
-tone: grim
-art: spell_eclipse
-tags: forbidden
-scene: A student in an alchemy lab clutching a burnt hand, a faint dark glow gathering around the injury.
-text: You burn your hand on a cauldron in the lab, badly. And Eclipse wakes up: the pain could be power, it says, all of it, held and ready. You'd still feel the burn. You'd just have something to show for it.
-> left: Hold the pain
-  alignment -small
-  arcana +small
-  health -tiny
-  say: You let the burn become power and carry it all day like a coal in your pocket. It's very strong. It still hurts. Both of those stay true.
-> right: Go to the infirmary
-  alignment +tiny
-  health +tiny
-  say: Sister Amaranth dresses it and tells you off for daydreaming. The power you didn't take aches a little, like a tooth.
-
-@event lesson_heartprice
-title: Paying in Yourself
-pool: spell_lessons_auto_routine
-when: spell_level(heartprice) >= 1 and term
-slot: night
-tone: grim
-art: spell_heartprice
-tags: forbidden
-scene: An exhausted student at a desk late at night, a faint red glow in their chest feeding a spell, candles burnt down.
-text: It's late, {mana < 15: your Mana is spent|your Mana is low and tomorrow has a practical}, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
-> left: Pay in yourself
-  alignment -tiny
-  study +tiny
-  health -small
-  say: You finish the essay on your own strength. In the morning your hands shake and the essay is very good. You don't feel proud of it.
-> right: Leave it for tomorrow
-  study -tiny
-  mood -tiny
-  say: You go to bed with the essay unfinished. It's worse than it would have been. You're better than you would have been.

@@ -996,6 +996,7 @@ desc: Palm, swap, pocket. …
   - Mana (and alignment, for a spell with `alignment:`) is taken automatically and shown in the preview.
   - Effects can read `spell_level(ward)`.
   - Translation keys: `opt.up.*`.
+- **Spell problems** (2026-10-29; `content/events/pools/spell_lessons.grim`, the old lesson ids): one card per spell, a trouble at a place that two ordinary options get you through and the spell's `up` option solves outright, worded so a player who has never heard of the spell sees an ordinary problem. They are drawn far more often once you know the spell (`@cond spell_draw`: weight 3 before, 120 after, a usual card 10; a 5-month cooldown), so each spell keeps showing what it is for. Toll, which has no source, has none.
 - **Saves:** a spell content no longer has is dropped on load, and a level past the spell's levels is clamped.
 
 ### 9.2 Challenges

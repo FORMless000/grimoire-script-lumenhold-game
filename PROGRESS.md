@@ -1,3 +1,7 @@
+## Spell problems: the spell lessons reworked (October 29)
+
+The 34 spell lessons (one card per spell, dealt once after you learned it, both options assuming you knew it) are now **spell problems**: a trouble at a place, two ordinary ways through, and the spell as the third option, shown once you know it. Nothing else on the card assumes you know the spell, and the card comes up without it, much more rarely (`@cond spell_draw`: weight 3 before, 120 after). Measured: a known spell's card comes back about once a year or more (3.5–5 a game in all), an unknown one's rarely (2.5–4 a game across about 26 spells). Ids kept; zh-CN complete; the critic accepted both halves (rounds 2 and 3). Notes, retrieval and measurements: `build/batches/spell-problems.notes.md`.
+
 ## New threads 1: detention, contraband elixirs, midnight heists, the Cartographers (October 29)
 
 The plan, decisions, ledger and batch log: `docs/threads-1-plan.md`. 67 new cards in six batches (T1–T6), each through retrieval, the critic and zh-CN (complete).
