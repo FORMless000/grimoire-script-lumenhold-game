@@ -83,7 +83,7 @@ If a new event never appears, its `when` is too narrow, its `weight` too low, or
 ## 4. Translate (required while a translation exists)
 
 1. `node tools/grim.js i18n zh-CN` adds empty lines for new strings and marks changed English `# STALE`.
-2. Follow `locales/zh-CN/GLOSSARY.md`; add new proper nouns there.
+2. Follow `locales/zh-CN/GLOSSARY.md`, one form per term (where it lists a choice, use the one it marks); add new proper nouns there. 他／她 follows each character's `pronouns:` in `content/world/cast.grim`.
 3. Fill the `.lang` lines (or stage them in `locales/zh-CN/_in/` and re-run `i18n zh-CN`). Keep `{npc}` `{player}` `{lyra}` `{=…}`; drop `{s}` and `{are}`; full-width punctuation; labels ≤ 14 characters.
 4. `node tools/grim.js i18n` until 100%, then `lint` and `sim 100 --lang zh-CN`.
 

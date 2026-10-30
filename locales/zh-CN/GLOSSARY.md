@@ -19,7 +19,7 @@ Translators (human or LLM) must follow this table so names and terms stay consis
 | Lumenhold Academy / Lumenhold | 流明堡学院 / 流明堡 |
 | the seven towers | 七塔 |
 | the lake | 湖 |
-| the village | 山下小镇 |
+| the village | 叙述中用“村子／村里”；初次介绍或正式场合可称“山下小镇” |
 | the Whisperwood | 低语森林 |
 | Thornwick Academy | 荆木学院 |
 | Port Calder | 考尔德港 |
@@ -41,6 +41,10 @@ Translators (human or LLM) must follow this table so names and terms stay consis
 | prefect | 级长 |
 | detention | 禁闭 |
 | demerit | 记过 |
+| head librarian | 总馆员 |
+| porter | 门房 |
+| the cook (the refectory's) | 厨娘 |
+| groundskeeper (Old Maud) | 场地管理员 |
 
 ## 人物
 
@@ -60,7 +64,7 @@ Translators (human or LLM) must follow this table so names and terms stay consis
 | tamsin | Tamsin Reed (they/them) | 塔姆辛·里德 | 塔姆辛（代词用 TA） |
 | ilse | Ilse Dumont | 伊尔泽·杜蒙 | 伊尔泽 |
 
-Minor characters: Professor Marisol 玛丽索尔教授 · Professor Vey 维伊教授 · Professor Brask 布拉斯克教授 · Sister Amaranth 阿玛兰斯修女 · Grisk 格里斯克（地精放贷人） · the man in grey 灰衣人 · Pim 皮姆（你带的一年级生） · Footnote (library cat) 脚注 · Bartholomew (Maud's goat) 巴塞洛缪 · Edmund 埃德蒙 · the Duchess of Ambry 安布里公爵夫人 · the Oracle of Vell 维尔神谕 · Lady Vaneshade 凡妮希德夫人 · Gregory (moth) 格雷戈里 · Prudence Ashworth 普鲁登丝·阿什沃斯 · Gerald (mandrake) 杰拉尔德 · Ember (fox) 余烬 · Old Pell 老佩尔 · Odile Varn 奥迪尔·瓦恩（把银钥匙交给你的四年级生）.
+Minor characters (代词以 `content/world/cast.grim` 的 pronouns 为准，括号里注明): Professor Marisol 玛丽索尔教授（她） · Professor Vey 维伊教授（她） · Professor Brask 布拉斯克教授（她） · Sister Amaranth 阿玛兰斯修女（她） · Mabel 梅布尔（她） · Mr Grimsby 格林斯比先生（他） · Grisk 格里斯克（地精放贷人，他） · the man in grey 灰衣人 · Pim 皮姆（你带的一年级生） · Footnote (library cat) 脚注 · Bartholomew (Maud's goat) 巴塞洛缪 · Edmund 埃德蒙 · the Duchess of Ambry 安布里公爵夫人 · the Oracle of Vell 维尔神谕 · Lady Vaneshade 凡妮希德夫人 · Gregory (moth) 格雷戈里 · Prudence Ashworth 普鲁登丝·阿什沃斯 · Gerald (mandrake) 杰拉尔德 · Ember (fox) 余烬 · Old Pell 老佩尔（他） · Odile Varn 奥迪尔·瓦恩（把银钥匙交给你的四年级生）.
 
 Houses: Emberhall 烬厅 · Rootward 根庐 · Stillwater 静水 · Duskgate 暮门 · Brasswick 铜芯 · Faculty 教职员.
 
@@ -85,10 +89,13 @@ Houses: Emberhall 烬厅 · Rootward 根庐 · Stillwater 静水 · Duskgate 暮
 
 1 Harvestmoon 丰收月 · 2 Emberwane 烬落月 · 3 Mistveil 雾纱月 · 4 Frostcall 霜唤月 · 5 Deepwinter 深冬月 · 6 Thawmoon 融雪月 · 7 Stormbloom 风暴月 · 8 Greenrise 青苏月 · 9 Blossomtide 花潮月 · 10 Highsun 盛阳月 · 11 Goldenhaze 金霭月 · 12 Starfall 星坠月
 
-## 课程、社团、工作
+## 课程、社团、工作（v0.2 旧名）
+
+较早的文本里仍会出现这些名字；现行的课程、社团、工作与实习名称见下文“世界书”一节，两处冲突时以“世界书”为准。
+
 
 - **选修课 Electives**：Pyromancy 火焰术 · Tidecalling 唤潮术 · Illusion & Glamour 幻术与魅影 · Practical Alchemy 实用炼金 · Divination 占卜学 · Artifice 奇械术 · Beastcraft 驭兽学 · Astromancy 星象学 · Healing Arts 治愈术 · Umbral Theory 暗影理论
-- **社团 Clubs**：Dueling Circle 决斗社 · Choir of the Spheres 天球合唱团 · Skyrace Squad 天空竞速队 · The Lumen Ledger 《流明纪事报》社 · Verdant Circle 青翠社 · Stargazers 观星社 · Midnight Cartographers 午夜制图社
+- **社团 Clubs**：Duelling Circle 决斗社 · Choir of the Spheres 天球合唱团 · Skyrace Squad 天空竞速队 · The Lumen Ledger 《流明纪事报》社 · Verdant Circle 青翠社 · Stargazers 观星社 · Midnight Cartographers 午夜制图社
 - **工作 Jobs**：Library Assistant 图书馆助理 · The Gilded Newt 镀金蝾螈酒馆 · Apothecary Clerk 药铺店员 · Familiar Stables 魔宠马厩 · First-Year Tutor 一年级辅导员 · Broom Courier 飞帚信使
 
 ## 节庆与事件
@@ -105,11 +112,11 @@ friend 朋友 · close 挚友 · rival 对手 · nemesis 宿敌 · partner 恋�
 
 ## 世界书（v0.3）：地点、课程与社团、咒语、阵营
 
-Places: The Courtyard 庭院 · The Library 图书馆 · The Refectory 膳堂 · The Lakeshore 湖岸 · The Lecture Tower 讲堂塔 · The Observatory 观星台 · The Great Hall 大礼堂 · The Alchemy Laboratory 炼金实验室 · Mir's Workshop 米尔的工坊 · The Job Board 招工告示板 · The Lumen Ledger Office 《流明纪事报》编辑部 · The Headmistress's Tower 院长塔 · The Third Gargoyle 第三座石像鬼 · The Seventh Tower 第七塔 · The Thesis Laboratory 论文实验室 · The Duelling Hall 决斗厅 · The Greenhouses 温室 · The Flight Field 飞行场 · The Familiar Stables 使魔马厩 · The Boathouse 船屋 · The Orchard 果园 · Old Maud's Cottage 老莫德的小屋 · The Secret Garden 秘密花园 · The Courier Loft 信使阁楼 · The Bakery 面包房 · the Mirror Lake 镜湖 · the Sorting Mirror 分院镜 · the Spire Library 尖塔图书馆.
+Places (与 `world/places.lang` 一致): The Courtyard 庭院 · The Library 图书馆 · The Refectory 膳堂 · The Lakeshore 湖岸 · The Village Square 村庄广场 · The Lecture Tower 讲堂塔 · The Observatory 观星台 · The Great Hall 大礼堂 · The Infirmary 医务室 · The Alchemy Laboratory 炼金实验室 · Mir's Workshop 米尔的工坊 · The Job Board 招工告示板 · The Lumen Ledger Office 《流明纪事报》编辑部 · The Headmistress's Tower 院长塔 · The Restricted Section 禁书区 · The Third Gargoyle 第三座石像鬼 · The Seventh Tower 第七塔 · The Thesis Laboratory 论文实验室 · The Duelling Hall 决斗厅 · The Greenhouses 温室 · The Flight Field 飞行场 · The Familiar Stables 魔宠马厩 · The Boathouse 船屋 · The Orchard 果园 · Old Maud's Cottage 老莫德的小屋 · The Secret Garden 秘密花园 · The Courier Loft 信使阁楼 · The Gilded Newt 镀金蝾螈酒馆 · Mabel's Tea Shop 梅布尔茶馆 · Grimsby's Books 格林斯比书店 · Pell & Daughters 佩尔父女药铺 · The Bakery 面包房 · The Whisperwood 低语森林 · the Mirror Lake 镜湖 · the Sorting Mirror 分院镜 · the Spire Library 尖塔图书馆. Internship places: The Royal Library Archives 皇家图书馆档案馆 · The Conclave Laboratory 七塔议会实验室 · The Guild Works 公会工坊 · The Expedition Camp 远征营地 · The Beastcraft Field Station 驭兽术野外站 · The Thornwick Exchange Lab 荆木交换实验室 · The Office of Unseen Affairs 隐秘事务署.
 
 Courses (课程): Evocation 塑能术 · Astromancy & Divination 星象与占卜 · Alchemy & Healing 炼金与治愈 · Illusion & Glamour 幻术与魅影 · Beastcraft & Flight 驭兽与飞行 · Umbral Theory 暗影理论 · Artifice 奇械术 · Starcalling 唤星术 · Hollow Studies 空洞研究 · Thesis 毕业论文. Level names use 、 between levels (塑能术 I、塑能术 II、高等塑能术).
 
-Clubs and jobs: Duelling Circle 决斗社 · The Lumen Ledger 《流明纪事报》社 · Verdant Circle 青翠社 · Midnight Cartographers 午夜制图社 · Library Assistant 图书馆助理 · Server at the Gilded Newt 镀金蝾螈酒馆侍应 · Apothecary Clerk 药铺店员 · Broom Courier 飞帚信使. Ranks are separated by 、.
+Clubs and jobs: Duelling Circle 决斗社 · The Lumen Ledger 《流明纪事报》社 · Verdant Circle 青翠社 · Midnight Cartographers 午夜制图社 · Library Assistant 图书馆助理 · Server at the Gilded Newt 镀金蝾螈酒馆侍应 · Apothecary Clerk 药铺店员 · Broom Courier 飞帚信使. Internships: Royal Library Archives 皇家图书馆档案馆 · Conclave Laboratory 七塔议会实验室 · Guild of Alchemists' Works 炼金师公会工坊 · Observatory Expedition 观星远征 · Beastcraft Field Station 驭兽术野外站 · Thornwick Exchange Lab 荆木交换实验室 · Office of Unseen Affairs 隐秘事务署. Ranks are separated by 、.
 
 Spells (咒语; spells v2, ids in `content/world/spells.grim`): Flame 火焰 · Foresight 预见 · Mend 愈合 · Glamour 魅影 · Haste 疾速 · Shadowstep 影步 · Ward 护界 · Animate 活化 · Starlight 星光 · Seal 封缄 · Wildfire 野火 · Heartwood 心木 · Omen 预兆 · Sleight 妙手 · Contraption 奇械 · Hoarfrost 白霜 · Candour 坦言 · Brace 坚守 · Quickquill 速记羽 · Bramble 荆棘 · Index 索引 · Rapport 投契 · Distill 萃取 (id `purify`; English was Distil, the Chinese name stays) · Tailwind 顺风. Hidden: Rime 雾凇 · Reflect 反照 · Moonwell 月泉 · Lodestar 引星 · Toll 鸣钟. Forbidden: Torment 折磨 · Extraction 汲取 · Siphon 虹吸 · Compel 强令 · Eclipse 蚀 · Heartprice 心价. Cut (no longer in the game): Tide 潮涌 · Mirror 镜像 · Beast-speech 兽语. Card verbs follow the spell: Burn 燃, Foresee 预见, Hasten 疾行…
 
@@ -121,7 +128,7 @@ Numbers and options (v0.3): Mana 法力 · Alignment 立场 (Lumen 光明 / Holl
 
 Calendar: term 学期中 · break 假期（winter break 冬假 · summer break 暑假）· Year 4 / final year 最后一年 · time slots 清晨 / 正午 / 午后 / 傍晚 / 夜晚 / 午夜.
 
-Tracks: Enrolment 选课 · course fees 课程费 · GPA（保留英文）· term marks 学期成绩 · academic probation 学业察看 · grades A–F（保留字母）· obligation (practice / shift / session) 练习 / 班次 / 课时 · promotion 晋升 · dropped 除名 · application 申请 · internship 实习 · supervisor 导师 · stipend 津贴 · thesis 毕业论文 · proposal 开题 · defence 答辩 · distinction 优等 · resubmit 重交.
+Tracks: Enrolment 选课 · course fees 课程费 · GPA（保留英文）· term marks 学期成绩 · academic probation 学业察看 · grades A–F（保留字母）· obligation (practice / shift / session) 练习 / 班次 / 课时 · promotion 晋升 · dropped 除名 · application 申请 · internship 实习 · supervisor 导师（论文）／主管（实习单位） · stipend 津贴 · thesis 毕业论文 · proposal 开题 · defence 答辩 · distinction 优等 · resubmit 重交.
 
 Break plans: Stay at the castle 留在城堡 · Go home 回家 · Work full-time 全职打工 · Board at the castle 城堡食宿. Home places: The Family Cottage 老家小屋 · The Fields 田野 · The Market Town 集镇.
 
@@ -135,4 +142,8 @@ Creatures and the Whisperwood foes (world expansion 1): races critter 小兽 · 
 
 The Whisperwood delve (world expansion 1): delve / step off the path 深入 / 离开小路 · haul 收获 · the Fringe 林缘 · the Thicket 灌木林 · the heartwood (the place) 心木林 · the Hush 寂境 · moonpetal 月瓣花 · Tuppence (the Spinner, Maud's old pet) 塔彭丝 · Absalom Vrell (the Outcast) 阿布萨隆·弗雷尔 · hippogriff 鹰头马身有翼兽 · pixies 小精灵 · wisps 鬼火 · ember foxes 余烬的族人 · the toll stone 收费石 · the waystone 路石 · "Nobody comes to catch you down here" 在这底下，没人会来接住你. Spells: Lodestar 引星 · Moonwell 月泉 · Reflect 反照 · Rime 雾凇 · Siphon 虹吸 · Compel 强令 · Torment 折磨 · Extraction 汲取 · Eclipse 蚀 · Heartprice 心价.
 
-New threads 1 (detention, contraband): detention 禁闭 · the confiscation vault 没收库 · Brightwater 亮泉水 · Owl's Ink 枭墨 · a dose 一剂 · wanting (the craving states) 想要… · withdrawal（叙述里不直说“戒断”，写具体的症状）· the finals trade 期末前的买卖.
+New threads 1 (detention, contraband): detention 禁闭 · the confiscation vault 没收库（不写“没收品库”） · Brightwater 亮泉水 · Owl's Ink 枭墨 · a dose 一剂 · wanting (the craving states) 想要… · withdrawal（叙述里不直说“戒断”，写具体的症状）· the finals trade 期末前的买卖.
+
+New threads 1 (the Cartographers and the midnight heists): the Master Map 总图 · its Keeper 保管人 · a blank (on the map) 空白 · the chained shelf 锁链书架 · the deep stacks 深层书库 · the breathing shelves 会呼吸的书架 · the bindery's book-lift 装订室的书梯 · the wall stair (in the seventh tower) 墙中楼梯 · the landing of candles 蜡烛平台 · the old classrooms 旧教室 · the duelling master 决斗师 · the collector (who buys the loot) 收藏家 · a near thing / a slip 险些 · caught 被抓 · the way out 天亮前出来（卡名）. ⚠ 标记的步骤里“there's no near thing”译作“就没有险些这回事了”.
+
+Spell problems (2026-10-29; `events/pools/spell_lessons.lang`): 每张卡的第三个选项 `opt.up.*` 就是施放那条咒语；标签用咒语自己的动作（“用手把它化开”“把它反照回去”“让一支羽毛笔全记下来”），咒语名照上表，正文和另外两个选项里不要提咒语。
