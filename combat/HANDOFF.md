@@ -10,7 +10,7 @@ The minigame is wired in: every `challenge combat` and `challenge duel` a player
   - `build/combat.bundle.js` (`node combat/tools/bundle.mjs`; `--no-wasm` reuses the built `web/core.wasm`): one global `LumenholdCombat`, also `require()`-able. It's committed; `grim build --check` and `test/combat-bridge.test.js` fail when it's stale.
   - `src/engine.js`: `eng.fights` (a resolver), `fightRequest`, `playFight`, `fightAhead(key)` and `choose(key, {fights})`.
   - `src/combat.js`: the bridge (`foeOf`, `createFight`, `fightResult`, `autoplay`). The foe's level uses the engine's own DC (`foeLevel`), not `challengeDC`.
-  - `src/combat-ui.js` and `src/combat.css`: the fight screen, in place of the card, which waits under it.
+  - `src/combat-ui.js` and `src/combat.css`: the fight screen, in place of the card, which waits under it. Since 2026-10-30 it is the bench's fork B, "Arena" (`experiments/combat-ui`; PROGRESS.md).
   - `web/analysis.mjs`: the engine's analysis for the player, shared by the bench's engine panel and the game's "engine analysis" setting (a cheat; `createAnalyst()` in the bundle runs it in its own worker).
   - `tools/combat-sim.js`: the simulated players' resolver, both sides played by the AI.
   - `locales/<lang>/combat.lang`: the fight's text by key (`combat/setup/text.mjs`, `web/text-table.mjs`), written by `grim i18n`.

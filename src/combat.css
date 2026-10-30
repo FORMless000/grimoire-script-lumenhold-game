@@ -1,406 +1,14 @@
-/* The fight screen (src/combat-ui.js): the combat minigame's fight played in place of the card, its look ported from
- * combat/web/style.css (HANDOFF §5) and scoped under .fight-layer. The game's tokens (--night*, --line, --gold*, --parch,
- * --ink*, --muted, --text, --good, --bad, --radius, the fonts) come from src/style.css, so the zh-CN font swap applies here
- * too; only the fight's own tokens are defined. Generated selectors keep the bench's names: when the bench's look changes,
- * port the rule here. */
+/* The fight screen (src/combat-ui.js): the combat minigame's fight played in place of the card, in the "Arena" layout from
+ * the combat bench's fork B (experiments/combat-ui, iteration 3). Scoped under .fight-layer; the class names keep the
+ * prototypes' (fs- here for their pf-, so a fork loaded beside this sheet in the bench never picks these rules up). The
+ * game's tokens (--night*, --line, --gold*, --muted, --text, --good, --bad, --radius, the fonts) come from src/style.css,
+ * so the zh-CN font swap applies here too; only the fight's own tokens are defined. */
 /* While a fight is on, the card is suspended: the deck (the card and the stack behind it) and the choices are hidden, and
  * the fight takes their place in the stage. The card's outcome follows when the fight ends. */
 .stage.fighting { position: relative; }
 .stage.fighting > .deck, .stage.fighting > .choices { display: none; }
-.fight-layer {
-  --line-2: rgba(233, 214, 160, .3); --hp: #e06a6a; --mana: #5fa8e8; --flux: #8a7fd6; --you: #f0d58c; --opp: #8fc9e8;
-  --k-dmg: #ff9d90; --k-spell: #d68fff; --k-heal: #8fe39b; --k-mana: #8fc9f2; --k-guard: #e9d49c; --k-buff: #c9b9ff; --k-debuff: #f2a8d6; --k-gold: #f0d58c;
-  position: relative; flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 8px; display: flex; flex-direction: column; align-items: center;
-  overflow-x: hidden; overflow-y: auto; container: fight / inline-size;
-  font: 14px/1.4 var(--sans); color: var(--text); -webkit-font-smoothing: antialiased;
-}
-.fight-layer, .fight-layer * { box-sizing: border-box; }
-.fight-layer [hidden] { display: none !important; }
-.fight-layer .fight-setting { margin: 0 0 6px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--line); background: rgba(20, 24, 48, .6); color: var(--muted); font-size: 12px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 2px 14px; }
-.fight-layer .fight-setting b { color: var(--gold-2); font-weight: 700; }
-.fight-layer .fight-note { margin: 0; padding: 5px 10px; border-radius: 10px; border: 1px solid rgba(255, 138, 128, .4); background: rgba(60, 20, 30, .55); color: #f3c9c3; font-size: 12.5px; }
-.fight-layer .fight-loading { padding: 18px; text-align: center; color: var(--muted); font: italic 16px var(--serif); }
-.fight-layer .result .fl-continue { margin-top: 10px; min-width: 160px; }
-/* World expansion 1: a lesson's coach marks, leaving a fight with nothing at stake, the kit before the first exchange, a wind-up. */
-.fight-layer .coach { margin: 0 0 6px; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(240, 200, 120, .45); background: rgba(48, 40, 18, .6); color: #f3e2b8; font-size: 12.5px; line-height: 1.4; }
-.fight-layer .coach b { color: var(--gold-2); margin-right: 4px; }
-.fight-layer .fl-leave { display: block; margin: 8px auto 0; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: 12px; cursor: pointer; }
-.fight-layer .fl-leave:hover { color: var(--text, #fff); border-color: rgba(255, 255, 255, .3); }
-.fight-layer .fight-kit { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 0 0 6px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--line); background: rgba(20, 24, 48, .6); font-size: 12px; color: var(--muted); }
-.fight-layer .fight-kit b { color: var(--gold-2); }
-.fight-layer .fight-kit label { display: flex; align-items: center; gap: 6px; }
-.fight-layer .fight-kit select { font: inherit; font-size: 12px; background: rgba(10, 12, 28, .8); color: inherit; border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 46vw; }
-/* A blow on its way (an Omen, a delayed blow): when it lands, for how much, what stops it. */
-.fight-layer .intent.incoming { border-color: rgba(255, 170, 110, .45); margin-bottom: 6px; }
-.fight-layer .intent.incoming b { color: #ffc28a; }
-.fight-layer .intent.incoming.now { border-color: rgba(255, 120, 90, .8); background: rgba(255, 120, 90, .08); }
-.fight-layer .intent.incoming.now b { color: #ffab8a; }
-.fight-layer .pf svg.avatar { width: 100%; height: 100%; }
-.fight-layer button,.fight-layer input,.fight-layer select{font:inherit;color:inherit}
-.fight-layer button{cursor:pointer;border:1px solid var(--line);border-radius:12px;background:var(--night-3);padding:9px 14px;font-weight:600;transition:border-color .2s,background .2s,transform .12s}
-.fight-layer button:hover:not(:disabled){border-color:var(--gold)}
-.fight-layer button:disabled{opacity:.4;cursor:default}
-.fight-layer :focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
-.fight-layer .primary{background:linear-gradient(180deg,#e7c470,#c99a3a);color:#23190a;border-color:transparent}
-.fight-layer .fine{font-size:11.5px;line-height:1.5;color:var(--muted)}
-.fight-layer .link{background:none;border:0;padding:4px 0;color:var(--gold-2);font-weight:500;font-size:12px}
-.fight-layer .fight-wrap{flex:none;width:100%;max-width:640px;display:flex;flex-direction:column}
-.fight-layer .fight-body,.fight-layer .fight-main,.fight-layer .controls{display:flex;flex-direction:column;gap:8px;min-width:0}
-.fight-layer .fight{position:relative;flex:none;display:flex;flex-direction:column;gap:8px}
-.fight-layer .fight>*{flex:none}
-.fight-layer .fighters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fight-layer .fighter{display:flex;gap:10px;align-items:center;min-width:0;padding:5px 10px;border-radius:14px;background:var(--night-2);border:1px solid var(--line)}
-.fight-layer .fighter.opp{flex-direction:row-reverse;cursor:pointer}
-.fight-layer .fighter.opp:hover{border-color:var(--line-2)}
-.fight-layer .fighter.opp .fname{text-align:right}
-.fight-layer .pf{position:relative;flex:none;width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid var(--line-2);background:var(--night)}
-.fight-layer .fighter.you .pf{border-color:rgba(240,213,140,.55)}
-.fight-layer .fighter.opp .pf{border-color:rgba(143,201,232,.55)}
-.fight-layer .pf img,.fight-layer .pf svg{display:block;width:100%;height:100%;object-fit:cover}
-.fight-layer .pf.blank{border-style:dashed}
-.fight-layer .pf-eye{position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-radius:50%;background:var(--night-3);border:1px solid var(--line-2);display:grid;place-items:center;color:var(--opp)}
-.fight-layer .pf-eye svg{width:12px;height:12px}
-.fight-layer .fi{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.fight-layer .fname{display:flex;align-items:baseline;gap:6px;min-width:0}
-.fight-layer .fighter.opp .fname{flex-direction:row-reverse}
-.fight-layer .fname b{flex:0 1 auto;min-width:0;font:600 17px var(--display);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fight-layer .fighter.you .fname b{color:var(--you)}
-.fight-layer .fighter.opp .fname b{color:var(--opp)}
-.fight-layer .fname small{flex:none;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fight-layer .fname small em{font-style:normal;color:var(--good)}
-.fight-layer .bar{position:relative;display:grid;grid-template-columns:auto minmax(24px,1fr) auto;align-items:center;gap:6px}
-.fight-layer .bnum{position:relative;min-width:62px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.05;white-space:nowrap}
-.fight-layer .bnum small{font-size:11px;font-weight:500;color:var(--muted)}
-.fight-layer .bk{font-size:11px;margin-right:3px;vertical-align:2px}
-.fight-layer .hp .bk{color:var(--hp)}
-.fight-layer .mana .bk{color:var(--mana)}
-.fight-layer .btrack{position:relative;height:9px;border-radius:5px;background:rgba(0,0,0,.35);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
-.fight-layer .btrack i{position:absolute;left:0;top:0;bottom:0;display:block}
-.fight-layer .btrack .fill{transition:width .45s cubic-bezier(.2,.8,.2,1)}
-.fight-layer .btrack .trail{transition:width .7s ease .45s}
-.fight-layer .btrack .flux{transition:width .45s,left .45s}
-.fight-layer .hp .fill{background:linear-gradient(90deg,#b6463d,var(--hp))}
-.fight-layer .hp .trail{background:#f3d3a8}
-.fight-layer .mana .fill{background:linear-gradient(90deg,#3a7fb5,var(--mana))}
-.fight-layer .mana .trail{background:#d7e9f3}
-.fight-layer .mana .flux{background:repeating-linear-gradient(135deg,#8b7fd6 0 4px,#6d64b6 4px 8px);opacity:.85}
-.fight-layer .hp .shield{background:linear-gradient(90deg,#c9a24a,var(--gold-2));opacity:.9;transition:width .45s,left .45s}
-.fight-layer .bshield{font-size:11px;font-weight:700;color:var(--k-guard);font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
-.fight-layer .cx{flex:none;display:inline-flex;align-items:center;gap:1px;margin:0;align-self:center;padding:0 5px 0 2px;height:17px;border-radius:9px;vertical-align:2px;font:700 10.5px var(--sans);color:var(--k-heal);background:var(--night-3);border:1px solid var(--line)}
-.fight-layer .cx .mini-icon{width:14px;height:14px}
-.fight-layer .cx .mini-icon svg{width:12px;height:12px}
-.fight-layer .fighter.you .cx .mini-icon{color:var(--you)}
-.fight-layer .fighter.opp .cx .mini-icon{color:var(--opp)}
-.fight-layer .bflux{font-size:11px;font-weight:600;color:#b9b0f2;font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
-.fight-layer .bflux.none{opacity:.35}
-.fight-layer .bar>.bnum{position:static}
-.fight-layer .delta{position:absolute;right:30px;top:-13px;font-size:13px;font-weight:700;pointer-events:none;animation:fl-floatUp 1.6s ease-out forwards;text-shadow:0 1px 3px #000}
-.fight-layer .delta.neg{color:var(--bad)}
-.fight-layer .delta.pos{color:var(--good)}
-/* Mana's changes float in blue (lighter for a gain), apart from HP's red and green. */
-.fight-layer .bar.mana .delta.neg{color:#6fa8e8}
-.fight-layer .bar.mana .delta.pos{color:#a9dcff}
-@keyframes fl-floatUp{0%{opacity:0;transform:translateY(6px)}15%{opacity:1}100%{opacity:0;transform:translateY(-22px)}}
-.fight-layer .bar.drop .btrack{animation:fl-barDrop .5s ease}
-.fight-layer .bar.rise .btrack{animation:fl-barRise .7s ease}
-@keyframes fl-barDrop{30%{box-shadow:0 0 10px 2px var(--hp);transform:translateX(-2px)}60%{transform:translateX(2px)}}
-@keyframes fl-barRise{40%{box-shadow:0 0 12px 2px #9fe0a7}}
-@media (prefers-reduced-motion:reduce){.fight-layer .btrack i{transition:none!important}
-.fight-layer .bar .btrack,.fight-layer .delta{animation:none!important}}
-.fight-layer .intent{display:flex;gap:10px;align-items:center;padding:6px 10px;border-radius:12px;background:var(--night-3);border:1px solid var(--line)}
-.fight-layer .intent .it{flex:1;min-width:0}
-.fight-layer .intent b{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font-size:13.5px;font-weight:600}
-.fight-layer .intent small{display:block;color:var(--muted);font-size:12px;line-height:1.3}
-.fight-layer .intent .flavor{font:italic 14px/1.3 var(--serif);color:#d9cfe9}
-.fight-layer .intent.hidden .it{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px}
-.fight-layer .intent.shown{cursor:pointer;border-color:rgba(143,201,232,.4)}
-.fight-layer .intent.forced{border-color:var(--k-debuff)}
-.fight-layer .intent.shown:hover{border-color:var(--opp)}
-.fight-layer .it-more{color:var(--muted);display:flex}
-.fight-layer .it-more svg{width:18px;height:18px}
-.fight-layer .tele-icon{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(143,201,232,.45);background:var(--night-2);color:var(--opp)}
-.fight-layer .tele-icon svg{width:26px;height:26px}
-.fight-layer .hidden-move{color:var(--muted);border-style:dashed;border-color:var(--line-2)}
-.fight-layer .eff{display:inline-flex;align-items:baseline;gap:3px;white-space:nowrap}
-.fight-layer .eff b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.fight-layer .eff small{font-size:10.5px;font-weight:500;opacity:.85}
-.fight-layer .k-dmg .eff,.fight-layer .eff.k-dmg{color:var(--k-dmg)}
-.fight-layer .k-spell .eff,.fight-layer .eff.k-spell{color:var(--k-spell)}
-.fight-layer .k-heal .eff,.fight-layer .eff.k-heal{color:var(--k-heal)}
-.fight-layer .k-mana .eff,.fight-layer .eff.k-mana{color:var(--k-mana)}
-.fight-layer .k-guard .eff,.fight-layer .eff.k-guard{color:var(--k-guard)}
-.fight-layer .k-buff .eff,.fight-layer .eff.k-buff{color:var(--k-buff)}
-.fight-layer .k-debuff .eff,.fight-layer .eff.k-debuff{color:var(--k-debuff)}
-.fight-layer .k-gold .eff,.fight-layer .eff.k-gold{color:var(--k-gold)}
-.fight-layer .track{--cw:40px;--ch:28px;--lw:64px;--tk-bg:#13172f;padding:4px 8px 6px;border-radius:12px;background:var(--tk-bg);border:1px solid var(--line)}
-.fight-layer .tk-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;overscroll-behavior-x:contain}
-.fight-layer .tk-row{display:flex;align-items:center;width:max-content;min-width:100%}
-.fight-layer .tk-l{flex:0 0 var(--lw);width:var(--lw);margin-right:auto;overflow:hidden;position:sticky;left:0;z-index:2;align-self:stretch;display:flex;align-items:center;background:var(--tk-bg);padding-right:6px}
-.fight-layer .tk-c{flex:none;width:var(--cw);height:22px;display:flex;align-items:center;justify-content:center;position:relative}
-.fight-layer .tk-c.now{background:rgba(240,213,140,.07);box-shadow:inset 1px 0 0 var(--line-2),inset -1px 0 0 var(--line-2)}
-.fight-layer .tk-head .tk-c.now{border-radius:8px 8px 0 0}
-.fight-layer .tk-scroll>.tk-row:last-child .tk-c.now{border-radius:0 0 8px 8px}
-.fight-layer .tk-c.past.on{background:rgba(255,255,255,.05)}
-.fight-layer .tk-head{min-height:18px}
-.fight-layer .tk-head .tk-c{height:18px}
-.fight-layer .tk-head .tk-c>*{font-size:10.5px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;background:none;border:0;padding:0}
-.fight-layer .tk-head .tk-c.now b{color:var(--gold-2);font-weight:700}
-.fight-layer .tk-head .past.on button{color:var(--text)}
-.fight-layer .tk-act .tk-c{height:var(--ch)}
-.fight-layer .tk-who{min-width:0;font:600 15px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fight-layer .s0 .tk-who{color:var(--you)}
-.fight-layer .s1 .tk-who{color:var(--opp)}
-.fight-layer .tk-act .past .mini-icon{width:26px;height:26px;padding:0;border:0;border-radius:7px;background:none}
-.fight-layer .tk-act .past .mini-icon svg{width:19px;height:19px}
-.fight-layer .s0 .past .mini-icon{color:var(--you)}
-.fight-layer .s1 .past .mini-icon{color:var(--opp)}
-.fight-layer .tk-act .past .mini-icon:hover{background:var(--night-3)}
-.fight-layer .slot{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);border:1px dashed var(--line-2);background:none;padding:0}
-.fight-layer .slot svg{width:18px;height:18px}
-.fight-layer .slot.open{border-color:var(--line);width:8px;height:8px;border-radius:50%;border-style:solid}
-.fight-layer .slot.shows{border:1px solid rgba(143,201,232,.55);color:var(--opp);background:var(--night-2)}
-.fight-layer .slot.shows:not(button) svg{width:15px;height:15px;opacity:.85}
-.fight-layer .slot.forced{border:1px solid var(--k-debuff);color:var(--k-debuff)}
-.fight-layer .slot.lost{border:1px solid rgba(143,201,232,.4);color:#bfe6ff;opacity:.8}
-.fight-layer .slot.mine{border:1px solid rgba(240,213,140,.5);color:var(--you);font-size:10px}
-.fight-layer .slot.now-you{border-style:solid;border-color:rgba(240,213,140,.5);color:var(--you);font-size:10px}
-.fight-layer .slot.now-you:empty{border-style:dashed}
-.fight-layer .slot.wait{font-size:14px}
-.fight-layer .tk-eff{min-height:15px}
-.fight-layer .tk-eff .tk-c{height:15px}
-.fight-layer .tl-on{position:relative;display:block;width:100%;height:3px;background:var(--you);opacity:.8}
-.fight-layer .s1 .tl-on{background:var(--opp)}
-.fight-layer .tl-on.first{border-radius:2px 0 0 2px;margin-left:12px}
-.fight-layer .tl-on.last{border-radius:0 2px 2px 0;margin-right:6px}
-.fight-layer .tl-on.first.last{border-radius:2px}
-.fight-layer .tl-on.open{background:linear-gradient(90deg,var(--you),transparent)}
-.fight-layer .s1 .tl-on.open{background:linear-gradient(90deg,var(--opp),transparent)}
-.fight-layer .tk-ico{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;color:var(--you)}
-.fight-layer .s1 .tk-ico{color:var(--opp)}
-.fight-layer .tk-ico svg{width:13px;height:13px}
-.fight-layer .tl-on .tk-ico{position:absolute;left:-12px;top:50%;transform:translateY(-50%)}
-.fight-layer .tl-hit{margin:auto;display:inline-flex;align-items:center;gap:1px;font-style:normal;color:var(--k-dmg);font-size:11px;font-weight:700;white-space:nowrap}
-.fight-layer .tl-hit .tk-ico{color:var(--k-dmg)}
-.fight-layer .tl-hit.spell,.fight-layer .tl-hit.spell .tk-ico{color:var(--k-spell)}
-.fight-layer .tl-hit.heal,.fight-layer .tl-hit.heal .tk-ico{color:var(--k-heal)}
-.fight-layer .split-impact{color:var(--k-dmg)}
-.fight-layer .split-spell{color:var(--k-spell)}
-.fight-layer .tl-hit.later small{font-size:9px;opacity:.75;margin-left:1px}
-.fight-layer .hfull{display:flex;flex-direction:column;gap:4px;margin-top:5px;padding:6px 2px 0;border-top:1px solid var(--line)}
-.fight-layer .hfull .link{align-self:flex-start}
-.fight-layer .hx-full h4{margin:0 0 2px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
-.fight-layer .hx-full h4 small{text-transform:none;font-weight:400}
-.fight-layer .hl{display:flex;gap:7px;align-items:flex-start}
-.fight-layer .hl p{margin:0;font-size:13px;line-height:1.35}
-.fight-layer .hl b{font-weight:600}
-.fight-layer .hl.you b{color:var(--you)}
-.fight-layer .hl.opp b{color:var(--opp)}
-.fight-layer .hl .mini-icon{margin-top:1px;width:auto;min-width:20px}
-.fight-layer .hl.you .mini-icon{color:var(--you)}
-.fight-layer .hl.opp .mini-icon{color:var(--opp)}
-.fight-layer .flavor{font:italic 14.5px/1.35 var(--serif);color:#e2d9ef}
-.fight-layer .flavor.finish{display:block;margin:2px 0 0 27px;font-size:14px;color:var(--gold-2)}
-.fight-layer .mini-icon{flex:none;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;color:var(--text)}
-.fight-layer .mini-icon svg{width:18px;height:18px}
-.fight-layer .glyph{font-size:13px}
-.fight-layer .action-state{font-size:12.5px;color:var(--gold-2)}
-.fight-layer .acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}
-.fight-layer .act{position:relative;aspect-ratio:1;min-width:0;padding:6px 5px 5px;border-radius:14px;background:var(--night-2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;text-align:center;font-weight:500}
-.fight-layer .act:hover:not(:disabled){background:#1c2147}
-.fight-layer .act.selected{border-color:var(--gold);background:#262c58;box-shadow:0 0 0 1px var(--gold),0 0 18px rgba(217,180,90,.25)}
-.fight-layer .a-ico{position:relative;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;color:var(--text)}
-.fight-layer .a-ico svg{width:30px;height:30px}
-.fight-layer .a-name{font-size:11px;line-height:1.1;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fight-layer .eff .lbl+.t::before{content:'· '}
-.fight-layer .act .eff{line-height:1}
-.fight-layer .act .lbl.same{display:none}
-.fight-layer .act .lbl.same+.t::before{content:none}
-.fight-layer .act .eff b{font-size:15px}
-.fight-layer .act .eff small{font-size:10px}
-.fight-layer .a-cost{position:absolute;top:4px;right:6px;display:flex;flex-direction:column;align-items:flex-end;gap:1px;font-variant-numeric:tabular-nums}
-.fight-layer .a-cost b{font-size:14px;font-weight:700;line-height:1}
-.fight-layer .c-mana{color:var(--k-mana)}
-.fight-layer .c-mana::before{content:'';display:inline-block;width:6px;height:6px;margin-right:3px;vertical-align:2px;background:var(--k-mana);transform:rotate(45deg);border-radius:1px}
-.fight-layer .c-hp{color:var(--k-dmg)}
-.fight-layer .c-hp::before{content:'♥';font-size:9px;margin-right:2px;vertical-align:2px}
-.fight-layer .commit-bar{display:flex;gap:10px;align-items:center;padding:6px 8px 6px 12px;border-radius:12px;background:var(--night-3);border:1px solid var(--line)}
-.fight-layer .preview{flex:1;min-width:0;font-size:13px}
-.fight-layer .preview b{font-weight:600}
-.fight-layer .preview .price{color:var(--muted);font-size:12px}
-.fight-layer .preview p{margin:3px 0 0;font-size:12.5px;line-height:1.35;color:#cfc6de}
-.fight-layer small.scales{display:block;margin-top:3px;font-size:11px;color:var(--gold-2);opacity:.85}
-.fight-layer .preview.hint{color:var(--muted)}
-.fight-layer .fl-commit{flex:none;min-width:104px;padding:8px 14px;display:inline-flex;align-items:center;justify-content:center;gap:5px}
-.fight-layer .control-icon{display:inline-flex}
-.fight-layer .control-icon svg{width:15px;height:15px}
-.fight-layer .result{padding:14px 16px;border-radius:14px;border:1px solid var(--gold);background:var(--night-3);text-align:center}
-.fight-layer .result h2{margin:0;font:700 34px var(--display);color:var(--gold-2)}
-.fight-layer .result.loss h2{color:var(--bad)}
-.fight-layer .result.draw h2{color:var(--muted)}
-.fight-layer .result>p{margin:2px 0 8px;color:var(--muted)}
-.fight-layer .net-costs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;font-size:13px;text-transform:capitalize}
-.fight-layer .net-costs b{font-variant-numeric:tabular-nums}
-.fight-layer .net-costs .neg{color:var(--bad)}
-.fight-layer .net-costs .pos{color:var(--good)}
-.fight-layer .sheet{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:16px;background:rgba(6,8,20,.6);backdrop-filter:blur(3px)}
-.fight-layer .sheet-card{width:min(560px,100%);max-height:88dvh;overflow:auto;padding:14px 16px;border-radius:var(--radius);background:var(--night-2);border:1px solid var(--line-2);box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.fight-layer .sh-head{display:flex;gap:12px;align-items:center;margin-bottom:8px}
-.fight-layer .sh-head>div:not(.pf){flex:1;min-width:0}
-.fight-layer .sh-head b{display:block;font:600 22px var(--display);color:var(--opp)}
-.fight-layer .sh-head small{color:var(--muted);font-size:12px}
-.fight-layer .sh-head .pf{width:52px;height:52px}
-.fight-layer .close{width:32px;height:32px;padding:0;border-radius:50%;font-size:18px;line-height:1;background:var(--night-3)}
-.fight-layer .sheet-intent .sh-head b{color:var(--opp)}
-.fight-layer .sheet-card h4{margin:12px 0 6px;font-size:10.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-.fight-layer .sheet-card>p{font-size:13.5px;line-height:1.45}
-.fight-layer .sk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 14px}
-.fight-layer .sk span{display:grid;grid-template-columns:1fr auto;gap:2px 6px;font-size:12px}
-.fight-layer .sk small{color:var(--muted);text-transform:capitalize}
-.fight-layer .sk i{grid-column:1;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--opp) var(--w),rgba(255,255,255,.08) var(--w))}
-.fight-layer .sk b{grid-row:1/3;grid-column:2;align-self:center}
-.fight-layer .kit{list-style:none;margin:0;padding:0}
-.fight-layer .kit li{display:flex;gap:9px;padding:7px 0;border-top:1px solid var(--line)}
-.fight-layer .kit li .mini-icon{width:26px;height:26px;color:var(--opp)}
-.fight-layer .kit li .mini-icon svg{width:24px;height:24px}
-.fight-layer .kit b{font-weight:600}
-.fight-layer .kit .price{color:var(--muted);font-size:12px}
-.fight-layer .kit em{color:var(--bad);font-size:11.5px;font-style:normal}
-.fight-layer .kit p{margin:2px 0 0;font-size:12.5px;line-height:1.35;color:#cfc6de}
-.fight-layer .kit li.off{opacity:.55}
-.fight-layer .recent{display:flex;flex-wrap:wrap;gap:4px}
-@container fight (min-width:640px){.fight-layer .fight-wrap{max-width:980px}
-.fight-layer .fight-body{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:10px;align-items:start}
-.fight-layer .acts{grid-template-columns:repeat(5,1fr);gap:4px}
-.fight-layer .act{border-radius:11px;padding:4px 3px 4px;gap:1px}
-.fight-layer .act .a-ico svg{width:22px;height:22px}
-.fight-layer .a-name{font-size:9px;letter-spacing:-.01em}
-.fight-layer .act .eff b{font-size:13px}
-.fight-layer .act .eff small{font-size:9px}
-.fight-layer .a-cost{top:3px;right:4px}
-.fight-layer .a-cost b{font-size:12px}
-.fight-layer .track{--cw:34px}}
-@container fight (min-width:840px){.fight-layer .fight-body{grid-template-columns:minmax(0,1fr) minmax(330px,420px);gap:12px}
-.fight-layer .acts{grid-template-columns:repeat(5,1fr);gap:6px}
-.fight-layer .act{border-radius:14px;padding:6px 5px 5px;gap:2px}
-.fight-layer .act .a-ico svg{width:30px;height:30px}
-.fight-layer .a-name{font-size:11px}
-.fight-layer .act .eff b{font-size:15px}
-.fight-layer .act .eff small{font-size:10px}
-.fight-layer .a-cost{top:4px;right:6px}
-.fight-layer .a-cost b{font-size:14px}
-.fight-layer .track{--cw:40px}}
-@media(max-width:600px){.fight-layer .fight{gap:6px}
-.fight-layer .fighters{gap:5px}
-.fight-layer .fighter{flex-direction:column;align-items:stretch;gap:4px;padding:6px}
-.fight-layer .fighter.opp{flex-direction:column}
-.fight-layer .fighter .pf{width:34px;height:34px;position:absolute;top:6px}
-.fight-layer .fighter{position:relative}
-.fight-layer .fighter.you .pf{left:6px}
-.fight-layer .fighter.opp .pf{right:6px}
-.fight-layer .pf-eye{width:14px;height:14px}
-.fight-layer .pf-eye svg{width:9px;height:9px}
-.fight-layer .fname{min-height:34px;flex-wrap:wrap;align-content:center;column-gap:4px}
-.fight-layer .fighter.you .fname{padding-left:40px}
-.fight-layer .fighter.opp .fname{padding-right:40px}
-.fight-layer .fname b{font-size:14.5px}
-.fight-layer .fname small{font-size:9.5px}
-.fight-layer .bar{gap:4px}
-.fight-layer .bnum{min-width:0;font-size:16px}
-.fight-layer .bnum small{font-size:9px}
-.fight-layer .bk{display:none}
-.fight-layer .btrack{height:7px}
-.fight-layer .bflux,.fight-layer .bshield{font-size:9.5px;min-width:0}
-.fight-layer .bshield.none{display:none}
-.fight-layer .intent{padding:4px 7px;gap:7px}
-.fight-layer .tele-icon{width:28px;height:28px}
-.fight-layer .tele-icon svg{width:20px;height:20px}
-.fight-layer .intent b{font-size:12px}
-.fight-layer .intent small{font-size:10.5px}
-.fight-layer .intent .flavor{font-size:12.5px}
-.fight-layer .track{--cw:27px;--ch:24px;padding:3px 5px 5px}
-.fight-layer .track{--lw:42px}
-.fight-layer .tk-l{padding-right:3px}
-.fight-layer .tk-who{font-size:13px}
-.fight-layer .tk-head .tk-c>*{font-size:9.5px}
-.fight-layer .slot{width:22px;height:22px;border-radius:6px}
-.fight-layer .slot svg{width:15px;height:15px}
-.fight-layer .tk-act .past .mini-icon{width:22px;height:22px}
-.fight-layer .tk-act .past .mini-icon svg{width:16px;height:16px}
-.fight-layer .tl-hit{font-size:10px}
-.fight-layer .hl p{font-size:11.5px}
-.fight-layer .flavor{font-size:13px}
-.fight-layer .hfull{gap:3px;margin-top:3px;padding-top:4px}
-.fight-layer .acts{grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px}
-.fight-layer .act{border-radius:10px;padding:3px 2px 3px;gap:0}
-.fight-layer .a-ico svg{width:22px;height:22px}
-.fight-layer .a-name{display:none}
-.fight-layer .act .eff b{font-size:12.5px}
-.fight-layer .act .eff small{font-size:8.5px}
-.fight-layer .act .eff.has-v .lbl{display:none}
-.fight-layer .act .eff.has-v .lbl+.t::before{content:none}
-.fight-layer .act .eff:not(.has-v) .lbl.same{display:inline}
-.fight-layer .act .eff:not(.has-v) .lbl.same+.t::before{content:'· '}
-.fight-layer .a-cost{top:2px;right:3px}
-.fight-layer .a-cost b{font-size:11px}
-.fight-layer .c-mana::before{width:5px;height:5px}
-.fight-layer .c-hp::before{font-size:7px}
-.fight-layer .acts.forced .a-name{display:block;font-size:8.5px}
-.fight-layer .commit-bar{padding:5px 7px;gap:6px}
-.fight-layer .preview{font-size:11.5px}
-.fight-layer .preview p{font-size:10.5px;line-height:1.25}
-.fight-layer .fl-commit{min-width:64px;padding:8px 8px;font-size:12px}
-.fight-layer .result{padding:8px}
-.fight-layer .result h2{font-size:26px}
-.fight-layer .sheet{place-items:end center;padding:0}
-.fight-layer .sheet-card{border-radius:var(--radius) var(--radius) 0 0;max-height:82dvh;padding:12px}
-.fight-layer .sk{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px) and (max-height:700px){.fight-layer .hfull .flavor:not(.finish),.fight-layer .intent .flavor,.fight-layer .intent .it>small,.fight-layer .intent .eff small,.fight-layer .hx-full h4{display:none}
-.fight-layer .intent b{font-size:12px}}
-@media(max-width:600px) and (max-height:620px){.fight-layer .intent .it>small:not(.flavor){display:none}
-.fight-layer .fname small{display:none}
-.fight-layer .fname{min-height:24px}}
 /* The feedback bar would sit over the fight's corner: it waits until the fight is over. */
 body:has(.fight-layer) #fbBar { display: none; }
-/* The engine's analysis (the "engine analysis" setting, a cheat): its toggle, the eval bar beside the fighters, each
- * action's score, the best move outlined, and the panel of top lines. Ported from combat/web/style.css, in the game's tokens. */
-.fight-layer .eng-toggle{align-self:flex-start;padding:4px 10px;font-size:12px;font-weight:600;border-radius:999px;border-style:dashed;color:var(--muted);background:transparent}
-.fight-layer .eng-toggle[aria-pressed="true"]{border-style:solid;border-color:rgba(159,224,167,.6);color:#9fe0a7;background:rgba(159,224,167,.08)}
-.fight-layer .fighters.with-eval{grid-template-columns:14px 1fr 1fr}
-.fight-layer .evalbar{position:relative;width:14px;background:var(--night);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-.fight-layer .evalbar i{position:absolute;left:0;right:0;bottom:0;background:var(--parch);transition:height .5s ease}
-.fight-layer .evalbar span{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:8px;font-weight:700;color:var(--ink);writing-mode:vertical-rl;transform:rotate(180deg)}
-.fight-layer .engine{padding:8px 10px;background:var(--night-2);border:1px solid rgba(159,224,167,.3);border-radius:12px;font-size:12px}
-.fight-layer .engine-head{display:block;font-size:12px;font-weight:600;color:#9fe0a7}
-.fight-layer .lines{list-style:none;margin:6px 0 2px;padding:0}
-.fight-layer .lines li{display:flex;gap:8px;align-items:center;padding:4px 0;border-top:1px solid var(--line)}
-.fight-layer .lines .eval{flex:none;min-width:46px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;padding:2px 6px;border-radius:6px;background:var(--night-3)}
-.fight-layer .lines li.best .eval{background:var(--parch);color:var(--ink)}
-.fight-layer .lines .line{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
-.fight-layer .ply{display:inline-flex;align-items:center;gap:2px;padding:1px 6px 1px 2px;border-radius:10px;font-size:11px;background:var(--night-3)}
-.fight-layer .ply.you{box-shadow:inset 0 0 0 1px rgba(240,213,140,.55)}
-.fight-layer .ply.opp{box-shadow:inset 0 0 0 1px rgba(143,201,232,.55)}
-.fight-layer .ply.end{padding:1px 8px;background:#3a2a2a;color:#f3d3a8}
-.fight-layer .ply .mini-icon{width:18px;height:18px;display:inline-grid;place-items:center}
-.fight-layer .ply .mini-icon svg{width:16px;height:16px}
-.fight-layer .ply.you .mini-icon{color:var(--you)}
-.fight-layer .ply.opp .mini-icon{color:var(--opp)}
-.fight-layer .sep{color:var(--muted)}
-.fight-layer .engine .fine{margin:4px 0 0;font-size:10.5px}
-.fight-layer .act.best{outline:2px solid #9fe0a7;box-shadow:0 0 12px rgba(159,224,167,.45)}
-.fight-layer .a-eval{position:absolute;top:4px;left:6px;font-size:9.5px;font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
-.fight-layer .act.best .a-eval{color:#9fe0a7}
-@media(max-width:600px){.fight-layer .fighters.with-eval{grid-template-columns:10px 1fr 1fr}
-.fight-layer .evalbar{width:10px}
-.fight-layer .engine{padding:6px 8px;font-size:11px}
-.fight-layer .lines li:nth-child(n+2){display:none}
-.fight-layer .engine .fine{display:none}
-.fight-layer .a-eval{top:2px;left:4px;font-size:8.5px}}
-.fight-layer .engine-top{display:flex;align-items:center;gap:8px}
-.fight-layer .engine-top .engine-head{margin-right:auto}
-.fight-layer .eng-budget{width:auto;margin:0;padding:2px 6px;font-size:11px;background:var(--night);color:var(--text);border:1px solid var(--line);border-radius:6px}
-/* A spell's level in the kit, on its action button (beside the icon). */
-.fight-layer .a-lv{position:absolute;right:-12px;bottom:2px;padding:0 3px;border-radius:5px;font:700 9px/1.35 var(--serif);letter-spacing:.02em;color:var(--gold-2);background:var(--night);border:1px solid var(--line)}
-@media(max-width:600px){.fight-layer .a-lv{right:-10px;font-size:8px}}
 /* The entrance: for its first moments the fight lies over the card view (same place as in the flow: the stage's padding
  * plus the layer's margin) and its panels rise in one after another while the card and the choices recede; then
  * .fight-enter goes and the fight takes the card's place. Reduced motion skips it (src/combat-ui.js). */
@@ -408,13 +16,430 @@ body:has(.fight-layer) #fbBar { display: none; }
 .stage.fighting.fight-enter > .deck { display: block; animation: fight-deck-out .55s ease forwards; }
 .stage.fighting.fight-enter > .choices { animation: fight-fade-out .3s ease forwards; }
 .stage.fight-enter > .fight-layer { position: absolute; top: 10px; left: 16px; right: 16px; bottom: 18px; width: auto; z-index: 5; }
-.stage.fight-enter .fight-layer :is(.fight-note, .fighters > *, .fight-main > *, .controls > *) { animation: fight-rise .5s cubic-bezier(.2, .8, .25, 1) both; }
-.stage.fight-enter .fight-layer .fighters > :nth-child(2) { animation-delay: .06s; }
-.stage.fight-enter .fight-layer .fighters > :nth-child(3) { animation-delay: .12s; }
-.stage.fight-enter .fight-layer .fight-main > * { animation-delay: .16s; }
-.stage.fight-enter .fight-layer .controls > :nth-child(1) { animation-delay: .22s; }
-.stage.fight-enter .fight-layer .controls > :nth-child(2) { animation-delay: .29s; }
-.stage.fight-enter .fight-layer .controls > :nth-child(n+3) { animation-delay: .36s; }
+.stage.fight-enter .fight-layer :is(.ar-around, .ar-top > *, .ar-row, .ar-moves, [data-k="engine"]) { animation: fight-rise .5s cubic-bezier(.2, .8, .25, 1) both; }
+.stage.fight-enter .fight-layer .ar-top > :nth-child(2) { animation-delay: .06s; }
+.stage.fight-enter .fight-layer .ar-top > :nth-child(3) { animation-delay: .12s; }
+.stage.fight-enter .fight-layer .ar-row { animation-delay: .18s; }
+.stage.fight-enter .fight-layer .ar-moves { animation-delay: .25s; }
+.stage.fight-enter .fight-layer [data-k="engine"] { animation-delay: .32s; }
 @keyframes fight-rise { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
 @keyframes fight-deck-out { to { opacity: .12; transform: scale(.94); filter: blur(1.5px); } }
 @keyframes fight-fade-out { to { opacity: 0; } }
+
+/* ---- What every piece shares: tokens, buttons, bars, chips, sheets, the timeline, the moves ---- */
+.fight-layer {
+  --hp: #e06a6a; --mana: #5fa8e8; --flux: #8a7fd6; --you: #f0d58c; --opp: #8fc9e8;
+  --k-dmg: #ff9d90; --k-spell: #d68fff; --k-heal: #8fe39b; --k-mana: #8fc9f2; --k-guard: #e9d49c; --k-buff: #c9b9ff; --k-debuff: #f2a8d6; --k-gold: #f0d58c;
+  --good-chip: rgba(143, 227, 155, .14); --bad-chip: rgba(255, 140, 120, .16); --panel: rgba(20, 24, 48, .72);
+  position: relative; flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 6px; display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; overflow-y: auto; container: fight / inline-size; font: 14px/1.4 var(--sans); color: var(--text); -webkit-font-smoothing: antialiased;
+}
+.fight-layer, .fight-layer * { box-sizing: border-box; }
+.fight-layer [hidden] { display: none !important; }
+.fight-layer button, .fight-layer select { font: inherit; color: inherit; }
+.fight-layer button { cursor: pointer; border: 1px solid var(--line); border-radius: 12px; background: var(--night-3); padding: 8px 12px; font-weight: 600; transition: border-color .15s, background .15s, transform .08s; -webkit-tap-highlight-color: transparent; }
+.fight-layer button:active:not(:disabled) { transform: scale(.96); }
+.fight-layer button:disabled { cursor: default; opacity: .45; }
+.fight-layer :focus-visible { outline: 2px solid var(--gold-2); outline-offset: 2px; }
+.fs-wrap { width: min(720px, 100%); display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; }
+.fs-loading { padding: 18px; text-align: center; color: var(--muted); font: italic 16px var(--serif); }
+.fs-ico { display: inline-grid; place-items: center; width: 26px; height: 26px; flex: 0 0 auto; color: var(--gold-2); }
+.fs-ico svg, .fs-ico img { width: 100%; height: 100%; }
+.fs-ico .glyph { font-size: 18px; line-height: 1; }
+.fs-ico.big { width: 40px; height: 40px; }
+.fs-ico.good { color: var(--k-heal); } .fs-ico.bad { color: var(--k-debuff); }
+.fs-pf { width: 44px; height: 44px; border-radius: 10px; overflow: hidden; flex: 0 0 auto; display: block; }
+.fs-pf svg { width: 100%; height: 100%; display: block; }
+.k-dmg { color: var(--k-dmg); } .k-spell { color: var(--k-spell); } .k-heal { color: var(--k-heal); } .k-mana { color: var(--k-mana); }
+.k-guard { color: var(--k-guard); } .k-buff { color: var(--k-buff); } .k-debuff { color: var(--k-debuff); } .k-gold { color: var(--k-gold); } .k-hp { color: var(--hp); }
+
+/* A number's icon, its flux and the difference a change floats once (src/combat-ui.js num()) */
+.fs-k { margin-right: 3px; }
+.fs-flux { color: var(--flux); font-weight: 700; font-size: 11px; }
+.fs-delta { position: absolute; left: 100%; top: -14px; margin-left: 2px; font-weight: 800; font-size: 13px; animation: fs-float 1.1s ease forwards; pointer-events: none; white-space: nowrap; }
+.fs-delta.neg { color: #ff8a80; } .fs-delta.pos { color: var(--k-heal); }
+@keyframes fs-float { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 15% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+@keyframes fs-shake { 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-1px); } }
+
+/* A brief: its value coloured by kind */
+.fs-eff { display: inline-flex; align-items: baseline; gap: 3px; font-size: 11.5px; white-space: nowrap; }
+.fs-eff b { font-weight: 800; }
+.fs-eff small { color: var(--muted); }
+.fs-eff.k-dmg b { color: var(--k-dmg); } .fs-eff.k-spell b { color: var(--k-spell); } .fs-eff.k-heal b { color: var(--k-heal); } .fs-eff.k-mana b { color: var(--k-mana); }
+.fs-eff.k-guard small:first-child, .fs-eff.k-guard b { color: var(--k-guard); } .fs-eff.k-buff small:first-child { color: var(--k-buff); } .fs-eff.k-debuff small:first-child, .fs-eff.k-debuff b { color: var(--k-debuff); }
+
+/* Around the fight */
+.fs-setting { display: flex; flex-wrap: wrap; gap: 2px 10px; padding: 4px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 11.5px; }
+.fs-setting summary { cursor: pointer; list-style: none; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .fs-setting summary::-webkit-details-marker { display: none; }
+.fs-setting[open] summary { white-space: normal; } .fs-setting span { display: block; width: 100%; }
+.fs-setting b { color: var(--gold-2); }
+.fs-note { padding: 5px 10px; border-radius: 10px; border: 1px solid rgba(255, 138, 128, .4); background: rgba(60, 20, 30, .55); color: #f3c9c3; font-size: 12px; }
+.fs-coach { padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(240, 200, 120, .45); background: rgba(48, 40, 18, .6); color: #f3e2b8; font-size: 12.5px; }
+.fs-coach b { color: var(--gold-2); margin-right: 4px; }
+.fs-kit { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); font-size: 12px; color: var(--muted); }
+.fs-kit b { color: var(--gold-2); } .fs-kit label { display: flex; align-items: center; gap: 6px; }
+.fs-kit select { font-size: 12px; background: rgba(10, 12, 28, .8); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 46vw; }
+.fs-leave { align-self: center; background: none !important; color: var(--muted); border-radius: 999px !important; padding: 5px 14px !important; font-size: 12px; font-weight: 500 !important; }
+.fs-primary { background: linear-gradient(180deg, #e6c574, #c79a3e) !important; color: #1b1606 !important; border-color: #f0d58c !important; }
+
+/* Statuses: a chip per lasting thing, tap for its words */
+.fs-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.fight-layer .fs-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px 2px 3px; border-radius: 999px; font-size: 11.5px; font-weight: 600; border: 1px solid rgba(143, 227, 155, .35); background: var(--good-chip); color: #d8f5dc; cursor: pointer; line-height: 1.2; }
+.fs-chip .fs-ico { width: 18px; height: 18px; color: currentColor; }
+.fs-chip b { font-weight: 800; }
+
+/* The sheet: a foe, a status, an action */
+/* A sheet overlays the screen, not the fight's scrolled page (feedback 2026-10-29), as the live screen's: a bottom sheet on a
+ * narrow screen, a centred card on a wide one. */
+.fs-sheet { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center; background: rgba(6, 8, 20, .6); backdrop-filter: blur(3px); padding: 0; }
+.fs-sheet-card { width: min(560px, 100%); max-height: 82dvh; overflow: auto; border-radius: 16px 16px 0 0; border: 1px solid var(--line); background: var(--night-2); padding: 12px 14px 14px; box-shadow: 0 -10px 40px rgba(0, 0, 0, .5); animation: fs-up .2s ease both; }
+@media (min-width: 700px) { .fs-sheet { align-items: center; padding: 16px; } .fs-sheet-card { max-height: 88dvh; border-radius: 16px; } }
+@keyframes fs-up { from { transform: translateY(30px); opacity: 0; } }
+.fs-sh-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.fs-sh-head > div { flex: 1; min-width: 0; } .fs-sh-head b { display: block; font: 600 18px var(--serif); color: var(--gold-2); } .fs-sh-head small { color: var(--muted); font-size: 12px; }
+.fs-close { width: 32px; height: 32px; padding: 0 !important; border-radius: 50% !important; font-size: 18px; line-height: 1; }
+.fs-plain { margin: 4px 0; font-size: 14px; }
+.fs-full { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.fs-scales { margin: 4px 0 0; font-size: 11.5px; color: var(--muted); font-style: italic; }
+.fs-cx-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 6px; margin: 4px 0 8px; }
+.fs-cx-facts span { display: flex; flex-direction: column; align-items: center; padding: 6px 4px; border-radius: 10px; background: rgba(255, 255, 255, .05); }
+.fs-cx-facts b { font-size: 18px; font-weight: 800; } .fs-cx-facts small { color: var(--muted); font-size: 10.5px; text-align: center; }
+.fs-sk { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; margin: 0 0 8px; font-size: 11px; }
+.fs-sk span { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0 6px; }
+.fs-sk i { grid-column: 1 / -1; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--gold-2) var(--w), rgba(255, 255, 255, .1) var(--w)); }
+.fs-sheet-card h4 { margin: 10px 0 4px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.fs-kitlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.fs-kitlist li { display: flex; gap: 8px; align-items: flex-start; } .fs-kitlist li.off { opacity: .55; }
+.fs-kitlist p { margin: 2px 0 0; font-size: 12px; color: var(--muted); } .fs-kitlist em { color: #ffb4a8; font-size: 11px; }
+.fs-price { color: var(--muted); font-size: 11.5px; }
+.fs-hist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.fs-hist li > b { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.fs-hist p { display: flex; gap: 6px; align-items: flex-start; margin: 2px 0; font-size: 12.5px; } .fs-hist p.opp .fs-ico { color: var(--opp); }
+.fs-hist em { color: var(--muted); } .fs-hist .fs-ico { width: 20px; height: 20px; }
+
+/* The result */
+.fs-result { text-align: center; padding: 16px 12px; border-radius: 16px; border: 1px solid var(--line); background: var(--panel); }
+.fs-result h2 { margin: 0; font: 600 32px var(--display); color: var(--gold-2); } .fs-result.loss h2 { color: #ff9d90; }
+.fs-result p { margin: 4px 0 10px; color: var(--muted); }
+/* A mutual knockout, said plainly (feedback 2026-10-29) */
+.fs-result .fs-tb { margin: -2px auto 12px; max-width: 46ch; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(240, 213, 140, .45); background: rgba(240, 213, 140, .08); color: var(--text); font-size: 13px; line-height: 1.4; }
+.fs-result .fs-tb b { display: block; color: var(--gold-2); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.fs-net { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin-bottom: 12px; font-size: 13px; }
+.fs-net .neg { color: #ff8a80; } .fs-net .pos { color: var(--k-heal); }
+
+/* Outcome pills (what a move did) and recap extras (what else happened) */
+.fs-pill { display: inline-flex; align-items: center; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 800; background: rgba(255, 255, 255, .07); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fs-pill.dmg { color: #1d0a08; background: var(--k-dmg); } .fs-pill.spell { color: #1a0824; background: var(--k-spell); }
+.fs-pill.heal { color: #0b1d0e; background: var(--k-heal); } .fs-pill.mana { color: #08182a; background: var(--k-mana); }
+.fs-pill.def { color: var(--k-guard); background: rgba(233, 212, 156, .14); border: 1px solid rgba(233, 212, 156, .4); }
+.fs-pill.ok { color: var(--k-debuff); background: rgba(242, 168, 214, .14); border: 1px solid rgba(242, 168, 214, .4); }
+.fs-pill.none { color: var(--muted); font-weight: 600; }
+.fight-layer .fs-pill.void { border: 1px dashed rgba(255, 255, 255, .35); background: none; color: var(--muted); font-style: italic; }
+.fs-chip.inc { border-style: dashed; } .fs-chip.inc.now { animation: fs-pulse 1.2s ease-in-out infinite; }
+@keyframes fs-pulse { 50% { box-shadow: 0 0 0 3px rgba(255, 120, 90, .35); } }
+.fs-cost { display: inline-flex; gap: 4px; font-size: 11px; font-weight: 800; }
+.fs-cost .c-mana { color: var(--mana); } .fs-cost .c-mana::before { content: '✦'; margin-right: 1px; }
+.fs-cost .c-hp { color: var(--hp); } .fs-cost .c-hp::before { content: '♥'; margin-right: 1px; }
+
+/* ---- Iteration 2 (feedback 2026-10-29) ---- */
+/* Short vertical bars, numbers beside them */
+.fs-vbars { display: inline-flex; gap: 3px; height: 52px; flex: 0 0 auto; }
+.fs-vt { position: relative; width: 7px; height: 100%; border-radius: 999px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.fs-vt i { position: absolute; left: 0; right: 0; bottom: 0; border-radius: inherit; transition: height .35s ease, bottom .35s ease; }
+.fs-vt .trail { background: rgba(255, 255, 255, .3); transition: height .9s ease .35s; }
+.fs-vt.hp .fill { background: var(--hp); } .fs-vt.mana .fill { background: var(--mana); }
+.fs-vt .flux { background: repeating-linear-gradient(45deg, var(--flux) 0 3px, transparent 3px 5px); opacity: .85; }
+.fs-n { position: relative; display: block; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 1.35; }
+.fs-n small { color: var(--muted); font-weight: 500; } .fs-n .fs-flux { color: var(--flux); font-weight: 700; }
+.fs-n.hp .fs-k { color: var(--hp); } .fs-n.mana .fs-k { color: var(--mana); }
+.fs-n .fs-delta { top: -2px; }
+.fs-n.drop { animation: fs-shake .35s ease; }
+
+/* Outline lighting (feedback 2026-10-29): each status its own colour (--kc) and motion. The most pressing one draws the
+ * ring (.a-<key>: a masked ::before, so it can rotate, shimmer or flicker), the next adds its colour as an outer glow
+ * (.g-<key>: --gc). A blow landing on the panel this exchange pulses red over all of it. */
+@property --fs-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.fight-layer .s-frozen, .fight-layer .a-frozen { --kc: #cfefff; } .fight-layer .g-frozen { --gc: #cfefff80; }
+.fight-layer .s-bound, .fight-layer .a-bound { --kc: #b98cff; } .fight-layer .g-bound { --gc: #b98cff80; }
+.fight-layer .s-compelled, .fight-layer .a-compelled { --kc: #ff8fd0; } .fight-layer .g-compelled { --gc: #ff8fd080; }
+.fight-layer .s-torment, .fight-layer .a-torment { --kc: #ff5a5a; } .fight-layer .g-torment { --gc: #ff5a5a80; }
+.fight-layer .s-poison, .fight-layer .a-poison { --kc: #8be36b; } .fight-layer .g-poison { --gc: #8be36b80; }
+.fight-layer .s-heartprice, .fight-layer .a-heartprice { --kc: #ff4d6d; } .fight-layer .g-heartprice { --gc: #ff4d6d80; }
+.fight-layer .s-ward, .fight-layer .a-ward { --kc: #f0d58c; } .fight-layer .g-ward { --gc: #f0d58c80; }
+.fight-layer .s-guard, .fight-layer .a-guard { --kc: #ffe2a0; } .fight-layer .g-guard { --gc: #ffe2a080; }
+.fight-layer .s-reflect, .fight-layer .a-reflect { --kc: #e8eefc; } .fight-layer .g-reflect { --gc: #e8eefc80; }
+.fight-layer .s-shadowstep, .fight-layer .a-shadowstep { --kc: #9a8cff; } .fight-layer .g-shadowstep { --gc: #9a8cff80; }
+.fight-layer .s-brace, .fight-layer .a-brace { --kc: #e0a050; } .fight-layer .g-brace { --gc: #e0a05080; }
+.fight-layer .s-haste, .fight-layer .a-haste { --kc: #6fe3ff; } .fight-layer .g-haste { --gc: #6fe3ff80; }
+.fight-layer .s-tailwind, .fight-layer .a-tailwind { --kc: #7fffd4; } .fight-layer .g-tailwind { --gc: #7fffd480; }
+.fight-layer .s-eclipse, .fight-layer .a-eclipse { --kc: #a070ff; } .fight-layer .g-eclipse { --gc: #a070ff80; }
+.fight-layer .s-lodestar, .fight-layer .a-lodestar { --kc: #ffe680; } .fight-layer .g-lodestar { --gc: #ffe68080; }
+.fight-layer .s-channel, .fight-layer .a-channel { --kc: #d68fff; } .fight-layer .g-channel { --gc: #d68fff80; }
+.fight-layer .s-construct, .fight-layer .a-construct { --kc: #d68fff; } .fight-layer .g-construct { --gc: #d68fff80; }
+.fight-layer .s-foresight, .fight-layer .a-foresight { --kc: #8fc9e8; } .fight-layer .g-foresight { --gc: #8fc9e880; }
+.fight-layer .s-rime, .fight-layer .a-rime { --kc: #bfe9ff; } .fight-layer .g-rime { --gc: #bfe9ff80; }
+.fs-aura { position: relative; --kc: transparent; --gc: transparent; --ring-w: 2px; --ring-bg: var(--kc); box-shadow: 0 0 16px -3px var(--kc), 0 0 30px 1px var(--gc); transition: box-shadow .3s; }
+.fs-aura::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: var(--ring-w); background: var(--ring-bg); pointer-events: none; z-index: 1;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.fs-aura:not([class*=" a-"])::before { display: none; }
+/* Defences: steady light. Ward breathes gold, Parry flashes, Brace is thick amber, Reflect shimmers silver, Shadowstep flickers. */
+.fs-aura.a-ward::before, .fs-aura.a-lodestar::before, .fs-aura.a-foresight::before, .fs-aura.a-rime::before { animation: fs-breathe 1.8s ease-in-out infinite; }
+.fs-aura.a-guard::before { animation: fs-breathe .7s ease-in-out infinite; }
+.fs-aura.a-brace { --ring-w: 3.5px; }
+.fs-aura.a-reflect { --ring-bg: linear-gradient(110deg, #8d97b8 20%, #fff 45%, #8d97b8 70%) 0 0 / 300% 100%; } .fs-aura.a-reflect::before { animation: fs-sheen 1.4s linear infinite; }
+.fs-aura.a-shadowstep { --ring-bg: repeating-conic-gradient(from var(--fs-a), var(--kc) 0 14deg, transparent 14deg 26deg); } .fs-aura.a-shadowstep::before { animation: fs-spin-a 6s linear infinite, fs-flicker 1.1s steps(2) infinite; }
+.fs-aura.a-shadowstep > * { opacity: .82; }
+/* Momentum: a light runs round the edge. Haste fast, Tailwind in two streams, a channel or a summon slowly. */
+.fs-aura.a-haste { --ring-bg: conic-gradient(from var(--fs-a), transparent 0 50%, var(--kc) 78%, #fff 84%, transparent 90%); } .fs-aura.a-haste::before { animation: fs-spin-a .75s linear infinite; }
+.fs-aura.a-tailwind { --ring-bg: conic-gradient(from var(--fs-a), transparent 0 25%, var(--kc) 45%, transparent 50% 75%, var(--kc) 95%, transparent); } .fs-aura.a-tailwind::before { animation: fs-spin-a 1.6s linear infinite; }
+.fs-aura.a-channel, .fs-aura.a-construct { --ring-bg: conic-gradient(from var(--fs-a), color-mix(in srgb, var(--kc) 25%, transparent), var(--kc) 30%, color-mix(in srgb, var(--kc) 25%, transparent) 60%); } .fs-aura.a-channel::before, .fs-aura.a-construct::before { animation: fs-spin-a 3.2s linear infinite; }
+.fs-aura.a-eclipse { --ring-bg: conic-gradient(from var(--fs-a), #1a0d33, var(--kc), #1a0d33 50%, var(--kc), #1a0d33); box-shadow: 0 0 18px -2px #000, 0 0 26px 2px var(--gc); } .fs-aura.a-eclipse::before { animation: fs-spin-a 4s linear infinite; }
+.fs-aura.a-lodestar { box-shadow: 0 0 18px -1px var(--kc), 0 0 30px 1px var(--gc); }
+/* Harm: it throbs. Poison green, Torment a hard red beat, Compel pink; Bind is a thick static band; frozen is pale and still. */
+.fs-aura.a-poison::before { animation: fs-breathe 1.1s ease-in-out infinite; } .fs-aura.a-poison { animation: fs-sick 1.1s ease-in-out infinite; }
+.fs-aura.a-torment::before, .fs-aura.a-heartprice::before { animation: fs-beat .8s ease-in-out infinite; }
+.fs-aura.a-compelled::before { animation: fs-breathe .9s ease-in-out infinite; }
+.fs-aura.a-bound { --ring-w: 4px; --ring-bg: repeating-linear-gradient(45deg, var(--kc) 0 6px, #4a2f7a 6px 10px); }
+.fs-aura.a-frozen { --ring-w: 3px; background-image: linear-gradient(180deg, rgba(200, 235, 255, .12), transparent 60%); box-shadow: 0 0 20px -2px var(--kc), inset 0 0 18px rgba(200, 235, 255, .18); }
+.fs-aura.hit-now { animation: fs-alarm .9s ease-in-out infinite; }
+@keyframes fs-alarm { 50% { box-shadow: 0 0 0 2px rgba(255, 110, 80, .95), 0 0 24px rgba(255, 110, 80, .6); } }
+@keyframes fs-breathe { 50% { opacity: .45; } }
+@keyframes fs-beat { 0%, 100% { opacity: .55; } 15% { opacity: 1; } 30% { opacity: .6; } 45% { opacity: 1; } }
+@keyframes fs-flicker { 50% { opacity: .5; } }
+@keyframes fs-sheen { to { background-position: -300% 0; } }
+@keyframes fs-spin-a { to { --fs-a: 360deg; } }
+@keyframes fs-sick { 50% { box-shadow: 0 0 22px -1px var(--kc), 0 0 30px 1px var(--gc); } }
+
+/* Compact status chips: the icon and one number, in the status's colour */
+.fight-layer .fs-chip.mini { gap: 1px; padding: 1px 6px 1px 2px; border-color: color-mix(in srgb, var(--kc, #888) 70%, transparent); background: color-mix(in srgb, var(--kc, #888) 16%, transparent); color: var(--kc, var(--text)); }
+.fs-chip.mini .fs-ico { width: 18px; height: 18px; color: var(--kc, currentColor); } .fs-chip.mini b { font-size: 11.5px; color: #fff; }
+.fight-layer .fs-chip.mini.inc { --kc: #ff9a7a; border-style: dashed; } .fs-chip.mini.inc b { color: inherit; }
+
+/* What an exchange did to a fighter, while it is fresh: a shake and a flash by how hard, a gold flash for a blow kept off,
+ * a green one for a heal, and the number popping over the portrait. Fast: all of it inside ~0.6 s. */
+.fx-hit::after, .fx-block::after, .fx-heal::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; animation: fs-flash .38s ease-out both; }
+.fx-hit::after { background: radial-gradient(circle at 50% 45%, rgba(255, 90, 70, .7), rgba(255, 60, 60, .15) 70%); }
+.fx-block::after { background: radial-gradient(circle at 50% 50%, rgba(255, 225, 140, .6), transparent 70%); }
+.fx-heal::after { background: radial-gradient(circle at 50% 60%, rgba(140, 240, 160, .55), transparent 70%); }
+.fight-layer .fx-hit.fx-light { animation: fs-jolt .22s ease-out both; } .fight-layer .fx-hit.fx-hard { animation: fs-jolt-2 .3s ease-out both; } .fight-layer .fx-hit.fx-heavy { animation: fs-jolt-3 .4s ease-out both; }
+.fight-layer .fx-block:not(.fx-hit) { animation: fs-brace .25s ease-out both; }
+@keyframes fs-flash { from { opacity: 1; } to { opacity: 0; } }
+@keyframes fs-jolt { 30% { transform: translate(-2px, 1px); } 60% { transform: translate(2px, -1px); } }
+@keyframes fs-jolt-2 { 15% { transform: translate(-5px, 2px) rotate(-.6deg); } 35% { transform: translate(5px, -2px) rotate(.6deg); } 55% { transform: translate(-3px, 1px); } 80% { transform: translate(2px, 0); } }
+@keyframes fs-jolt-3 { 10% { transform: translate(-8px, 3px) rotate(-1.2deg) scale(.98); } 25% { transform: translate(8px, -3px) rotate(1deg); } 40% { transform: translate(-6px, 2px); } 60% { transform: translate(4px, -1px); } 80% { transform: translate(-2px, 0); } }
+@keyframes fs-brace { 40% { transform: scale(.97); } }
+.fs-pop { position: absolute; left: 50%; top: 30%; z-index: 3; transform: translate(-50%, -50%); font: 900 22px/1 var(--sans); white-space: nowrap; pointer-events: none; text-shadow: 0 2px 0 rgba(0, 0, 0, .6), 0 0 14px currentColor; animation: fs-pop .85s cubic-bezier(.2, 1.3, .4, 1) both; }
+.fs-pop.big { font-size: 30px; }
+.fs-pop.k-guard { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+@keyframes fs-pop { 0% { opacity: 0; transform: translate(-50%, -50%) scale(2.4); } 14% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 70% { opacity: 1; transform: translate(-50%, -80%); } 100% { opacity: 0; transform: translate(-50%, -150%) scale(.9); } }
+
+/* The ledger: what each side did, to whom */
+.fs-pill.up { color: var(--k-buff); background: rgba(201, 185, 255, .12); border: 1px solid rgba(201, 185, 255, .35); }
+.fs-li { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.fs-li .fs-ico { width: 16px; height: 16px; } .fs-li b { font-weight: 800; }
+.fs-flavor { margin: 0; font: italic 12.5px/1.35 var(--serif); color: #cfd3ea; }
+.fs-flavor.opp { color: #bcd9ea; } .fs-flavor.fin { color: var(--gold-2); }
+
+/* This exchange */
+.fs-now { display: flex; flex-direction: column; gap: 4px; }
+.fight-layer .fs-tg { position: relative; display: grid; grid-template-columns: auto auto minmax(0, auto) 1fr; grid-template-areas: 'k i b e' 'f f f f'; align-items: center; gap: 0 7px; width: 100%; padding: 5px 10px; border-radius: 12px; text-align: left; font-weight: 500; }
+.fs-tg-k { grid-area: k; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+.fs-tg > .fs-ico { grid-area: i; width: 24px; height: 24px; } .fs-tg > b { grid-area: b; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .fs-tg > .fs-eff { grid-area: e; } .fs-tg > em, .fs-tg > small { grid-area: f; font: italic 12px/1.3 var(--serif); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fs-tg-k { padding-right: 6px; border-right: 1px solid currentColor; opacity: .85; }
+.fight-layer .fs-tg.shown { border: 1.5px solid rgba(143, 201, 232, .75); background: linear-gradient(90deg, rgba(143, 201, 232, .16), rgba(143, 201, 232, .04)); color: var(--opp); }
+.fs-tg.shown .fs-tg-k::before { content: '◉ '; }
+.fight-layer .fs-tg.forced { border-color: rgba(242, 168, 214, .8); background: linear-gradient(90deg, rgba(242, 168, 214, .16), transparent); color: var(--k-debuff); }
+.fs-tg.hidden { border: 1.5px dashed rgba(255, 255, 255, .22); background: rgba(10, 12, 28, .45); color: var(--muted); }
+.fs-tg.hidden b { font-size: 12.5px; font-weight: 600; color: #d7dbef; white-space: normal; }
+.fs-tg.wait { border: 1.5px dashed rgba(143, 201, 232, .35); color: var(--opp); } .fs-tg.wait b { font-size: 13.5px; }
+.fs-ico.spin { animation: fs-spin 1.4s linear infinite; } @keyframes fs-spin { to { transform: rotate(180deg); } }
+.fight-layer .fs-tg-blow { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px 6px; width: 100%; padding: 4px 10px; border-radius: 12px; border: 1.5px solid rgba(255, 120, 90, .8); background: rgba(255, 120, 90, .12); color: #ffc28a; text-align: left; font-weight: 600; font-size: 13px; animation: fs-pulse 1.2s ease-in-out infinite; }
+.fs-tg-blow .fs-ico { width: 20px; height: 20px; color: #ffab8a; } .fs-tg-blow b { font-size: 14px; } .fs-tg-blow small { margin-left: auto; font-weight: 400; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+/* The timeline, compact as the live track (feedback 2026-10-29): fixed narrow columns, scrolled to now, names held. */
+.fs-tl { width: fit-content; max-width: 100%; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); overflow: hidden; }
+.fs-tl-scroll { overflow-x: auto; scrollbar-width: thin; padding: 2px 0 3px; }
+.fs-tl-grid { display: flex; flex-direction: column; width: max-content; min-width: 100%; }
+.fs-tl-row { display: grid; grid-template-columns: 46px repeat(var(--cols), 28px); align-items: center; }
+.fs-tl-row.head { min-height: 15px; }
+.fs-tl-side + .fs-tl-side { border-top: 1px dashed rgba(255, 255, 255, .08); }
+.fs-tl-w { position: sticky; left: 0; z-index: 2; align-self: stretch; display: flex; align-items: center; padding-left: 6px; font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: #191d3e; }
+.fs-tl-side.s1 .fs-tl-w { color: var(--opp); } .fs-tl-side.s0 .fs-tl-w { color: var(--you); }
+.fs-tl-h { text-align: center; font-size: 9.5px; font-weight: 700; color: var(--muted); line-height: 1.1; }
+.fs-tl-h.past { opacity: .55; cursor: pointer; } .fs-tl-h.now { color: var(--gold-2); }
+.fs-tl-h i { display: block; width: 12px; height: 2px; border-radius: 2px; margin: 1px auto 0; background: var(--you); } .fs-tl-h i.opp { background: var(--opp); }
+.fs-tl-c { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 26px; }
+.fs-tl-c.now { background: rgba(240, 213, 140, .08); box-shadow: inset 1px 0 rgba(240, 213, 140, .3), inset -1px 0 rgba(240, 213, 140, .3); }
+.fs-tl-c.past .fs-ico { width: 18px; height: 18px; opacity: .85; } .fs-tl-side.s1 .fs-tl-c.past .fs-ico { color: var(--opp); }
+.fs-tl-c .lost { position: absolute; right: 0; bottom: 0; font-size: 8.5px; font-weight: 800; color: #ff8a80; line-height: 1; }
+.fight-layer .fs-tok { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 20px; padding: 0 3px; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 12, 28, .5); font-size: 10px; font-weight: 800; }
+.fs-tok .fs-ico { width: 15px; height: 15px; } .fs-tok svg { width: 13px; height: 13px; }
+.fight-layer .fs-tok.move { border-color: rgba(143, 201, 232, .75); color: var(--opp); } .fs-tok.move .fs-ico { color: var(--opp); }
+.fight-layer .fs-tok.forced { border-color: rgba(242, 168, 214, .75); }
+.fs-tok.mine { border-color: rgba(240, 213, 140, .7); }
+.fight-layer .fs-tok.blow { border-style: dashed; border-color: rgba(255, 150, 120, .7); }
+.fight-layer .fs-tok.eye { color: var(--opp); opacity: .55; border-color: transparent; background: none; } .fs-tok.hid, .fs-tok.wait { color: var(--muted); }
+.fs-tl-row.span { min-height: 8px; cursor: pointer; }
+.fs-tl-s { position: relative; height: 8px; }
+.fs-tl-s i { position: absolute; left: 0; right: 0; top: 2px; height: 4px; background: var(--kc, var(--k-buff)); opacity: .85; }
+.fs-tl-s i.c-bad:not([class*=" s-"]) { --kc: var(--k-debuff); }
+.fs-tl-s i.first { left: 50%; border-radius: 3px 0 0 3px; } .fs-tl-s i.last { right: 50%; border-radius: 0 3px 3px 0; } .fs-tl-s i.first.last { left: 25%; right: 25%; border-radius: 3px; }
+.fs-tl-s i.open { right: 0; -webkit-mask: linear-gradient(90deg, #000 50%, transparent); mask: linear-gradient(90deg, #000 50%, transparent); }
+.fs-tl-s i .fs-ico { position: absolute; left: -6px; top: -4px; width: 12px; height: 12px; color: var(--kc); background: #191d3e; border-radius: 50%; }
+
+/* The engine's analysis */
+.fs-engine { border-radius: 12px; border: 1px solid rgba(159, 224, 167, .3); background: var(--night-2); padding: 4px 8px; font-size: 11.5px; }
+.fs-engine:not(.on) { border-color: transparent; background: none; padding: 0; }
+.fs-engine-top { display: flex; align-items: center; gap: 8px; }
+.fight-layer .fs-eng-toggle { padding: 3px 10px; font-size: 11px; border-radius: 999px; font-weight: 600; }
+.fs-eng-toggle[aria-pressed="true"] { border-color: #9fe0a7; color: #9fe0a7; }
+.fs-engine-head { flex: 1; font-weight: 600; color: #9fe0a7; font-size: 11px; }
+.fs-eng-budget { font-size: 11px; background: var(--night); border: 1px solid var(--line); border-radius: 6px; }
+.fs-engine-lines ol { list-style: none; margin: 4px 0 0; padding: 0; }
+.fs-engine-lines li { display: flex; gap: 6px; align-items: center; padding: 2px 0; border-top: 1px solid var(--line); }
+.fs-ev { flex: none; min-width: 42px; text-align: center; font-weight: 800; padding: 1px 5px; border-radius: 6px; background: var(--night-3); }
+.fs-engine-lines li.best .fs-ev { background: #9fe0a7; color: #0c1a10; }
+.fs-engine-lines li > span:last-child { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; } .fs-engine-lines i { color: var(--muted); font-style: normal; }
+.fs-ply { display: inline-flex; align-items: center; gap: 2px; padding: 0 6px 0 2px; border-radius: 9px; font-size: 10.5px; background: var(--night-3); }
+.fs-ply.you { box-shadow: inset 0 0 0 1px rgba(240, 213, 140, .55); } .fs-ply.opp { box-shadow: inset 0 0 0 1px rgba(143, 201, 232, .55); } .fs-ply.end { background: #3a2a2a; color: #f3d3a8; padding: 0 7px; }
+.fs-ply .fs-ico { width: 15px; height: 15px; } .fs-ply.opp .fs-ico { color: var(--opp); }
+.fs-eval { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); padding: 0 4px; border-radius: 5px; background: rgba(10, 12, 28, .7); font: 800 9.5px/14px var(--sans); font-style: normal; color: #9fe0a7; }
+.fs-eval:empty { display: none; }
+.fight-layer .fs-mv.best { border-color: #9fe0a7; box-shadow: 0 0 0 2px rgba(159, 224, 167, .35); }
+
+/* The moves: a compact grid */
+.fs-mvs { display: grid; grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: 4px; max-height: calc(4 * 58px + 3 * 4px + 2px); overflow-y: auto; scrollbar-width: thin; padding: 1px; }
+.fight-layer .fs-mv { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 0; min-height: 58px; padding: 4px 5px 4px; border-radius: 10px; text-align: left; font-weight: 600; background: linear-gradient(180deg, #252b58, #1b2046); }
+.fs-mv-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.fs-mv .fs-ico { width: 20px; height: 20px; }
+.fs-mv .fs-cost { font-size: 10px; } .fs-mv .fs-cost b::before { font-size: 9px; }
+.fs-mv-n { font-size: 11.5px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .fs-mv-n i { font-style: normal; font-size: 9px; color: var(--muted); margin-left: 2px; }
+.fs-mv .fs-eff { font-size: 10.5px; overflow: hidden; } .fs-mv .fs-eff small { overflow: hidden; text-overflow: ellipsis; }
+.fs-mv kbd { position: absolute; bottom: 2px; right: 4px; font: 700 8.5px var(--sans); color: rgba(255, 255, 255, .22); }
+.fight-layer .fs-mv.on { border-color: var(--gold-2); box-shadow: 0 0 0 2px rgba(240, 213, 140, .3); background: linear-gradient(180deg, #3a3a58, #26264a); }
+.fs-read { display: flex; gap: 10px; align-items: center; padding: 6px 10px; border-radius: 12px; background: var(--panel); border: 1px solid rgba(240, 213, 140, .3); }
+.fs-read > div { flex: 1; min-width: 0; cursor: pointer; } .fs-read b { font-size: 13.5px; }
+.fs-read p { margin: 1px 0 0; font-size: 12px; color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.fight-layer .fs-go { padding: 11px 18px; font-size: 15px; }
+.fs-state { margin: 0; padding: 5px 10px; border-radius: 10px; background: rgba(242, 168, 214, .1); color: var(--k-debuff); font-size: 12.5px; font-weight: 600; }
+
+/* ---- The Arena: the face-off, the exchange, the row under it ---- */
+.fight-layer .fs-wrap { gap: 6px; }
+.fight-layer .ar-around { display: flex; flex-direction: column; gap: 5px; }
+
+/* The face-off: you and them side by side, the exchange under them; on a wide stage, the exchange between them. */
+.fight-layer .ar-top { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: 'you opp' 'mid mid'; gap: 6px 8px; }
+.fight-layer .ar-side.you { grid-area: you; } .fight-layer .ar-side.opp { grid-area: opp; } .fight-layer .ar-stage { grid-area: mid; }
+@container fight (min-width: 600px) {
+  .fight-layer .ar-top { grid-template-columns: minmax(170px, 200px) minmax(0, 1fr) minmax(170px, 200px); grid-template-areas: 'you mid opp'; align-items: stretch; }
+}
+.fight-layer .ar-side { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 7px 8px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); min-width: 0; }
+.fight-layer .ar-id { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.fight-layer .ar-side.opp .ar-id { flex-direction: row-reverse; text-align: right; }
+.fight-layer .ar-pfw { position: relative; flex: 0 0 auto; }
+.fight-layer .ar-pf { display: block; width: 46px; height: 46px; padding: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.fight-layer .ar-pf svg { width: 100%; height: 100%; display: block; }
+.fight-layer .ar-meta { min-width: 0; display: flex; flex-direction: column; }
+.fight-layer .ar-meta > b { font: 600 14px/1.15 var(--serif); color: var(--gold-2); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.fight-layer .ar-side.opp .ar-meta > b { color: var(--opp); }
+.fight-layer .ar-meta > small { color: var(--muted); font-size: 10px; }
+.fight-layer .ar-side .fs-vbars { height: 46px; }
+.fight-layer .ar-side .fs-chips { gap: 3px; }
+.fight-layer .ar-side.opp .fs-chips { justify-content: flex-end; }
+.fight-layer .ar-side .fs-pop { top: 40%; }
+
+/* The exchange */
+.fight-layer .ar-stage { position: relative; padding: 6px 8px 7px; border-radius: 16px; background: radial-gradient(ellipse at 50% 35%, rgba(70, 80, 150, .38), rgba(20, 24, 48, .55) 70%); border: 1px solid rgba(255, 255, 255, .1); display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.fight-layer .ar-stage.empty { justify-content: center; gap: 6px; }
+.fight-layer .ar-kit { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; width: 100%; padding: 4px 8px; border-radius: 10px; border: 1px solid rgba(143, 201, 232, .3); background: rgba(10, 12, 28, .45); color: var(--opp); font-weight: 500; text-align: left; }
+.fight-layer .ar-kit small { flex-basis: 100%; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.fight-layer .ar-kit .fs-ico { width: 22px; height: 22px; color: var(--opp); } .fight-layer .ar-kit i { margin-left: auto; font-style: normal; color: var(--muted); } .fight-layer .ar-stage.empty .fs-setting { background: rgba(10, 12, 28, .45); }
+.fight-layer .ar-stage header { display: flex; align-items: baseline; gap: 6px; }
+.fight-layer .ar-stage header b { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.fight-layer .ar-stage header small { flex: 1; font-size: 10.5px; color: var(--muted); opacity: .75; }
+.fight-layer .ar-stage header button { padding: 1px 9px; font-size: 10.5px; border-radius: 999px; background: none; color: var(--muted); font-weight: 500; }
+.fight-layer .ar-meet { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: 6px; }
+.fight-layer .ar-tile { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 6px; padding: 4px 6px; border-radius: 12px; background: rgba(10, 12, 28, .55); border: 1px solid rgba(240, 213, 140, .4); text-align: center; }
+.fight-layer .ar-tile.opp { border-color: rgba(143, 201, 232, .45); } .fight-layer .ar-tile.opp .fs-ico { color: var(--opp); }
+.fight-layer .ar-tile .fs-ico { width: 24px; height: 24px; } .fight-layer .ar-tile b { font-size: 13px; }
+.fight-layer .ar-self { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+.fight-layer .ar-x { position: relative; align-self: center; font-size: 15px; color: var(--muted); }
+.fight-layer .ar-way { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 6px; margin: 0; padding: 3px 8px; border-radius: 10px; background: rgba(10, 12, 28, .38); font-size: 12px; }
+.fight-layer .ar-way.you { border-left: 3px solid var(--you); } .fight-layer .ar-way.opp { border-left: 3px solid var(--opp); }
+.fight-layer .ar-from, .fight-layer .ar-to { font-weight: 700; } .fight-layer .ar-way.you .ar-from, .fight-layer .ar-way.opp .ar-to { color: var(--you); } .fight-layer .ar-way.opp .ar-from, .fight-layer .ar-way.you .ar-to { color: var(--opp); }
+.fight-layer .ar-arrow { font-size: 9px; color: var(--muted); }
+.fight-layer .ar-items { display: flex; flex-wrap: wrap; gap: 3px 8px; margin-left: auto; align-items: center; }
+/* The fight's text: each move's line in its fighter's panel (wide), or all of it at the foot of the exchange (phone). */
+.fight-layer .ar-text { display: flex; flex-direction: column; gap: 2px; padding: 2px 4px 0; }
+.fight-layer .ar-say { margin: 0; padding: 5px 2px 0; border-top: 1px solid rgba(255, 255, 255, .07); font-size: 12px; }
+.fight-layer .ar-side.opp .ar-say { text-align: right; }
+.fight-layer .fs-flavor.idle { font: 500 12px/1.4 var(--sans); color: var(--muted); }
+.fight-layer .ar-side .ar-say { display: none; }
+@container fight (min-width: 600px) {
+  .fight-layer .ar-side .ar-say { display: block; }
+  .fight-layer .ar-stage .ar-text .own { display: none; }
+  .fight-layer .ar-stage .ar-text:not(:has(.fin)) { display: none; }
+}
+
+/* An exchange lands (all within ~0.6 s; the leader's move strikes first): the tiles slam in, a spark where they meet, each
+ * side's line wipes in from that side, the numbers pop, then the text. The fighters jolt and flash as the blows land
+ * (base.css .fx-*), the whole face-off on a heavy hit. */
+.fight-layer .ar-stage.fresh .ar-tile.you { animation: ar-slam-l .2s cubic-bezier(.2, 1.6, .4, 1) both; }
+.fight-layer .ar-stage.fresh .ar-tile.opp { animation: ar-slam-r .2s cubic-bezier(.2, 1.6, .4, 1) both; }
+.fight-layer .ar-stage.fresh.lead-0 .ar-tile.opp, .fight-layer .ar-stage.fresh.lead-1 .ar-tile.you { animation-delay: .07s; }
+.fight-layer .ar-stage.fresh .ar-x { animation: ar-spark .38s cubic-bezier(.2, 1.4, .4, 1) .15s both; color: #fff3c4; }
+.fight-layer .ar-stage.fresh .ar-x::before { content: ''; position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 236, 170, .9), rgba(255, 140, 80, .35) 40%, transparent 70%); animation: ar-burst .35s ease-out .15s both; pointer-events: none; }
+.fight-layer .ar-stage.fresh .ar-way.you { animation: ar-wipe-l .18s ease-out .22s both; } .fight-layer .ar-stage.fresh .ar-way.opp { animation: ar-wipe-r .18s ease-out .28s both; }
+.fight-layer .ar-stage.fresh .ar-way .fs-pill, .fight-layer .ar-stage.fresh .ar-way .fs-li b { animation: ar-num .26s cubic-bezier(.2, 1.8, .4, 1) .34s both; }
+.fight-layer .ar-stage.fresh .ar-self .fs-pill { animation: ar-num .26s cubic-bezier(.2, 1.8, .4, 1) .2s both; }
+.fight-layer .ar-stage.fresh .ar-text p, .fight-layer .ar-say.fresh { animation: ar-rise .25s ease-out .4s both; } .fight-layer .ar-stage.fresh .ar-text p + p, .fight-layer .ar-side.opp .ar-say.fresh { animation-delay: .48s; }
+.fight-layer .ar-side.fx-hit, .fight-layer .ar-side.fx-block { animation-delay: .17s; } .fight-layer .ar-side.fx-hit::after, .fight-layer .ar-side.fx-block::after, .fight-layer .ar-side.fx-heal::after { animation-delay: .17s; }
+.fight-layer .ar-side .fs-pop { animation-delay: .19s; }
+.fight-layer .ar-top.fx-quake { animation: ar-quake .32s ease-out .17s both; }
+@keyframes ar-slam-l { from { opacity: 0; transform: translateX(-70%) scale(1.25); } }
+@keyframes ar-slam-r { from { opacity: 0; transform: translateX(70%) scale(1.25); } }
+@keyframes ar-spark { 0% { transform: scale(0) rotate(-90deg); } 55% { transform: scale(2) rotate(10deg); } 100% { transform: scale(1); } }
+@keyframes ar-burst { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }
+@keyframes ar-wipe-l { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes ar-wipe-r { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+@keyframes ar-num { from { transform: scale(1.9); opacity: 0; } }
+@keyframes ar-rise { from { opacity: 0; transform: translateY(5px); } }
+@keyframes ar-quake { 20% { transform: translate(-4px, 2px); } 45% { transform: translate(4px, -2px); } 70% { transform: translate(-2px, 1px); } }
+
+/* Room held for what an exchange can bring (feedback 2026-10-29: picking or playing a move never shifts the layout): a
+ * row of chips under each fighter, the exchange at its usual tallest with its text, three status bars on the timeline and
+ * a telegraph with its flavour line. The room is filled from the start (the stakes and how the fight opens), so none of it
+ * stands empty; a rare, fuller exchange still grows. */
+.fight-layer .ar-side .fs-chips { min-height: 22px; }
+.fight-layer .ar-stage { min-height: 230px; }
+.fight-layer .fs-tl { min-height: 100px; }
+.fight-layer .ar-now { min-height: 53px; display: flex; flex-direction: column; justify-content: center; }
+@container fight (min-width: 600px) {
+  .fight-layer .ar-stage { min-height: 232px; }
+}
+
+/* The timeline and this exchange: one row on a wide stage, stacked on a phone. The timeline takes the whole width it is
+ * given: its columns widen to fill it, and stay 28px (scrolling sideways) once the fight outgrows it. */
+.fight-layer .ar-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.fight-layer .fs-tl { width: auto; }
+/* It keeps one height, and fills it (feedback 2026-10-29): each fighter's half shares the room, its move row centred over
+ * its status bars; only more bars than fit make it taller. */
+.fight-layer .fs-tl { display: flex; flex-direction: column; }
+.fight-layer .fs-tl-scroll { flex: 1; display: flex; }
+.fight-layer .fs-tl-grid { flex: 1 0 auto; }
+.fight-layer .fs-tl-side { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.fight-layer .fs-tl-side .fs-tl-row:not(.span) { flex: 1; }
+.fight-layer .fs-tl-row { grid-template-columns: 46px repeat(var(--cols), minmax(28px, 1fr)); }
+@container fight (min-width: 600px) {
+  .fight-layer .ar-row:has(.ar-now) { grid-template-columns: minmax(0, 1fr) minmax(260px, 45%); }
+  .fight-layer .ar-now .fs-now { flex: 1; }
+  .fight-layer .ar-now .fs-tg { flex: 1; align-content: center; }
+  .fight-layer .ar-now .fs-tg { grid-template-columns: auto minmax(0, auto) 1fr; grid-template-areas: 'k k k' 'i b e' 'f f f'; gap: 2px 7px; }
+  .fight-layer .ar-now .fs-tg-k { justify-self: start; border-right: 0; padding-right: 0; }
+  .fight-layer .ar-now .fs-tg > em, .fight-layer .ar-now .fs-tg > small { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}
+
+/* The moves */
+.fight-layer .ar-moves { display: flex; flex-direction: column; gap: 5px; }
+@container fight (max-width: 380px) { .fight-layer .ar-pf { width: 40px; height: 40px; } .fight-layer .ar-side .fs-vbars { height: 40px; } }
+@media (prefers-reduced-motion: reduce) { .fight-layer *, .fight-layer *::before, .fight-layer *::after, .fight-layer { animation: none !important; } }

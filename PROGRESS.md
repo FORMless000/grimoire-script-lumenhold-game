@@ -1,3 +1,13 @@
+## The fight screen becomes the Arena (October 30)
+
+The combat bench's fork B ("Arena", `experiments/combat-ui/b-arena` on `proto/`, iteration 3 of the 2026-10-29 feedback) replaces the live fight screen: `src/combat-ui.js` and `src/combat.css`, same `CombatUI.open` contract.
+- **What changes for the player:** a face-off in panels (the last exchange between the fighters on a wide stage, under them on a phone), short vertical bars, compact status chips that explain themselves, outlines lit by each status, the last exchange as a ledger (what each side did to the other and the defence that met it), a compact timeline beside "this exchange", a grid of small move tiles with the picked move's rules and Cast under it, and fast hit effects. A mutual knockout is said plainly when the core reports `tiebreak` (rules F5.11-plan.1b); without it nothing shows.
+- **Beyond the fork:** the Log sheet now carries the fight's setting (the fork dropped it after the first exchange; the old screen kept it in view), an open sheet no longer replays its entrance (and blanks) when the fight re-renders under it, a keyboard focus ring, and the fork's `pf-` classes are `fs-` here, so a fork loaded beside this sheet in the bench never picks these rules up.
+- **Strings:** 93 new `fight.*` strings in `UI_EN`, zh-CN complete. The old screen's `fight.*` strings stay: the bench's own screen reads them.
+- **Saves:** a fight saved on the old screen resumes; its earlier exchanges show their moves, without the numbers the old history didn't keep.
+- **Tests:** the e2e drives `#fightLayer [data-fs-act]`, then `[data-fs-commit]`, and `#fightDone`.
+- **Bench:** "Main game · the live screen" now shows the Arena; fork B stays in `experiments/combat-ui` for further iterations.
+
 ## Spell problems: the spell lessons reworked (October 29)
 
 The 34 spell lessons (one card per spell, dealt once after you learned it, both options assuming you knew it) are now **spell problems**: a trouble at a place, two ordinary ways through, and the spell as the third option, shown once you know it. Nothing else on the card assumes you know the spell, and the card comes up without it, much more rarely (`@cond spell_draw`: weight 3 before, 120 after). Measured: a known spell's card comes back about once a year or more (3.5–5 a game in all), an unknown one's rarely (2.5–4 a game across about 26 spells). Ids kept; zh-CN complete; the critic accepted both halves (rounds 2 and 3). Notes, retrieval and measurements: `build/batches/spell-problems.notes.md`.

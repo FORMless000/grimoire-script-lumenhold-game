@@ -75,8 +75,8 @@ async function playthrough(browser, lang) {
     }
     if (await p.$('#fightLayer')) {   // a fight: an open action each exchange, then back to the card
       if (await p.$('#fightDone')) { n.fight++; await p.click('#fightDone'); await p.waitForTimeout(300); continue; }
-      const a = await p.$$('#fightLayer .act:not([disabled])');
-      if (a.length) { await a[steps % a.length].click(); await p.click('#fightLayer .fl-commit'); }
+      const a = await p.$$('#fightLayer [data-fs-act]:not([disabled])');
+      if (a.length) { await a[steps % a.length].click(); await p.click('#fightLayer [data-fs-commit]'); }
       await p.waitForTimeout(150); continue;
     }
     if (await p.$('#contBtn')) { n.outcome++; await scan(); await p.keyboard.press('Enter'); await p.waitForTimeout(240); continue; }
