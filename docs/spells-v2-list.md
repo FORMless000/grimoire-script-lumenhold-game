@@ -353,7 +353,7 @@ Every chain follows the same shape:
   - Negotiation: none.
   - It overlaps Brace most, so it is the first to cut.
   - Comment:
-- **Toll** · cards and story only (Edmund's wand, the bell's note).
+- ~~**Toll**~~ · removed in threads 2 (2026-10-30): nothing taught it.
   - Comment:
 - Cut: Tide (clashes with Hoarfrost), Writ (banning actions), Waymark, Beast-speech (gone), Mirror (gone).
 

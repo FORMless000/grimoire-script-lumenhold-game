@@ -970,10 +970,10 @@ Spells v2 (2026-10-17; the list and its reasons: `docs/spells-v2-list.md`). The 
     Tailwind (Courier). A chain card that does its part pulls the next one into the same visit, once a visit (feedback
     2026-10-19, migration 0035): the start and a preparation on one visit, a preparation and the final on the next. The
     final comes a month after the start once two preparations are done, or at four months.
-  - The hidden pool (Rime, Reflect, Moonwell, Lodestar, Toll) and the forbidden pool (Torment, Extraction, Siphon,
+  - The hidden pool (Rime, Reflect, Moonwell, Lodestar) and the forbidden pool (Torment, Extraction, Siphon,
     Compel, Eclipse, Heartprice), marked `pool:`. Their sources (threads 1, 2026-10-29): the Whisperwood delve (Rime,
     Moonwell, Lodestar, Siphon, Compel), the Restricted Stacks heist (Torment, Reflect), the seventh tower heist
-    (Extraction), the Outcast in the Hush (Heartprice), and the main plot's man in grey (Eclipse). Toll has none yet.
+    (Extraction), the Outcast in the Hush (Heartprice), and the main plot's man in grey (Eclipse). Toll, which nothing taught, was removed (threads 2, 2026-10-30).
 
 ```
 @spell sleight

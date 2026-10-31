@@ -4,7 +4,7 @@
 #  skill: the skill it trains when learned and adds to on checks · verb: the one verb its cards use
 #  cost: Mana per level (three levels for a course spell, else one), the same in a card's up[] option and in a
 #  fight: the roster's SPELLS[id].cost (one Mana scale; test/combat-bridge.test.js keeps them equal)
-#  pool: hidden | forbidden, no source yet · alignment: taken off per cast.
+#  pool: hidden | forbidden (taught by places and the plot, not courses) · alignment: taken off per cast.
 # ============================================================
 
 # ---------------- Course spells (3 levels) and Ward ----------------
@@ -216,7 +216,7 @@ cost: 4
 art: spell_tailwind
 desc: Go fast, then faster. The wind gets behind you and keeps pushing as long as you don't stop.
 
-# ---------------- Hidden pool (no source yet) ----------------
+# ---------------- Hidden pool (taught in the Whisperwood and the Restricted Stacks) ----------------
 
 @spell rime
 name: Rime
@@ -254,15 +254,7 @@ pool: hidden
 art: spell_lodestar
 desc: Gather a guiding light around you, a little more each breath, until it is ready to stand between you and harm.
 
-@spell toll
-name: Toll
-verb: Toll
-cost: 0
-pool: hidden
-art: spell_toll
-desc: One low note, held, like a bell heard under water. Nobody teaches it.
-
-# ---------------- Forbidden pool (no source yet; alignment per cast) ----------------
+# ---------------- Forbidden pool (alignment per cast) ----------------
 
 @spell torment
 name: Torment

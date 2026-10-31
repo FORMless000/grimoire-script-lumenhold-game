@@ -149,7 +149,10 @@ test('spells v2: every spell outside a pool has a live source; ids match the com
   if (!fs.existsSync(roster)) return;
   const { SPELLS } = await import(roster);
   // Creature-only spells (`group: creature`, for monsters in fights) are the minigame's own; content has the rest.
-  assert.deepEqual(Object.keys(content.spells).sort(), Object.keys(SPELLS).filter((id) => SPELLS[id].group !== 'creature').sort());
+  // Toll was removed from content (threads 2, 2026-10-30); the minigame keeps it, uncastable, until its core drops it.
+  const DORMANT = ['toll'];
+  assert.deepEqual(Object.keys(content.spells).sort(), Object.keys(SPELLS).filter((id) => SPELLS[id].group !== 'creature' && !DORMANT.includes(id)).sort());
+  for (const id of DORMANT) assert.ok(!SPELLS[id] || SPELLS[id].castable === false, id + ' stays uncastable in the minigame');
 });
 
 test('spells v2: a course\'s spell is taught in the month the level starts (track start: card)', () => {
