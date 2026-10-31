@@ -384,6 +384,7 @@ function analyze(content) {
     if (e.order != null && e.order !== 'last') P('error', w, 'order: "' + e.order + '" (the only value is last)');
     if (e.order === 'last' && e.trigger && e.trigger !== 'random' && e.trigger !== 'social') P('warn', w, 'order: last orders drawn cards; a ' + e.trigger + ' card is pushed, so it has no effect');
     if (e.class) budgetCheck(e, content, (lvl, msg) => P(lvl, w, msg));
+    if (e.shop) shopCheck(e, content, (lvl, msg) => P(lvl, w, msg));
     crownCheck(e, content, (lvl, msg) => P(lvl, w, msg));
     for (const o of e.options) {
       const ow = e.file + ':' + o.line;
@@ -636,6 +637,16 @@ function parleyLint(content, P, loc) {
   for (const [what, list] of [['state', Object.values(content.states).flatMap((s) => ['tick', 'on_add', 'on_expire', 'on_remove'].map((k) => [s, s[k]]))], ['hook', Object.values(content.hooks).map((h) => [h, h.do])]])
     for (const [d, effs] of list) G.walkEffects(effs, (st) => { if (isParley(st)) P('error', loc(d), 'a ' + st.kind + ' challenge must be on an event\'s option, not in a ' + what); });
   for (const k of Object.keys(N.PARLEYS)) if (!used.has(k)) P('warn', 'src/negotiation.js', 'PARLEYS["' + k + '"] matches no negotiation in content');
+}
+// A shop (`type: shop`, threads 2): its options' roles, as the engine reads them (Engine.shopRole). The way out is
+// an option with no `when` that only speaks; every ware has a price (or pays) in `@game afford:`'s resource.
+function shopCheck(e, content, P) {
+  const eng = shopCheck.eng = shopCheck.eng || new Engine(content);
+  const roles = e.options.map((o) => [o, eng.shopRole(o)]);
+  if (!roles.some(([, r]) => r === 'leave')) P('error', 'shop has no way out (an option with no "when" that only has say:)');
+  if (roles.filter(([, r]) => r === 'leave').length > 1) P('warn', 'shop has more than one way out; the first is its Leave button: ' + roles.filter(([, r]) => r === 'leave').map(([o]) => o.key).join(', '));
+  if (!roles.some(([, r]) => r === 'ware')) P('warn', 'shop sells nothing: no option costs or pays ' + (content.game.afford || 'gold') + ' up front');
+  for (const [o, r] of roles) if (r === 'alone') P('info', 'shop option "' + o.key + '" is taken on its own (it costs nothing up front, or starts a challenge, a visit or a card now)');
 }
 function budgetCheck(e, content, P) {
   const bal = content.balance || {};

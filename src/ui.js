@@ -1124,6 +1124,7 @@
   }
   function showMenu(v, led) {
     if (!led) return showMenuLead(v);
+    if (v.shop && window.ShopView) return showShop(v);
     ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null; ui.sel = null; ui.lastPick = null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = ''; hideTip();
@@ -1147,6 +1148,14 @@
       b.onclick = () => pickMenu(o.key);
       attachTip(b, () => parts[o.key].tip, parts[o.key].extra);
     });
+  }
+  // A shop (`type: shop`, threads 2) is a menu with a basket: src/shop-ui.js.
+  function showShop(v) {
+    ui.mode = 'shop'; ui.view = v; ui.busy = false;
+    const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
+    document.getElementById('choices').innerHTML = ''; hideTip();
+    ui.shopCtl = ShopView.open(v, { t, esc, Art, openPanel, actorRow, attachTip, setPreview, parts: (o) => previewParts(v, o),
+      buy(k) { if (ui.busy || ui.mode !== 'shop') return; ui.busy = true; ui.shopCtl = null; closeOverlay(); setPreview(null); resolve(k); } });
   }
   // Said on the tile just picked (CSS shows it on .last-pick): how to confirm it.
   const againLine = () => '<small class="again">' + esc(t('menu.again')) + '</small>';
@@ -1288,6 +1297,7 @@
     if (e.key === 'Escape' && ui.sideOpen && document.getElementById('side')) { e.preventDefault(); setSide(false); return; }
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
     if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }
+    if (ui.mode === 'shop') { if (ui.shopCtl && ui.shopCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
       if (e.key === 'ArrowLeft') { e.preventDefault(); commitCard(story ? 'right' : 'left'); }
@@ -1612,7 +1622,7 @@
       a(CREDIT.repo + '/blob/main/LICENSE', t('credits.license')), a(CREDIT.repo, t('credits.source')), a(CREDIT.repo + '/issues', t('credits.issues'))]
       .filter(Boolean).map((x) => '<span>' + x + '</span>').join('') + '</footer>';
   }
-  function refreshCard() { if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true); }
+  function refreshCard() { if (ui.mode === 'card' && ui.view) showCard(ui.view); else if ((ui.mode === 'menu' || ui.mode === 'shop') && ui.view) showMenu(ui.view, true); }
   function closeSlots() { const w = document.getElementById('slotDialog'); if (w) w.remove(); }
   // Cloud saves: this browser's player code is also the sync code; the same code on another device shares the saves.
   function syncSection() {

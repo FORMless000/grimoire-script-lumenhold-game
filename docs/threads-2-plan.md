@@ -4,7 +4,7 @@ Approved 2026-10-30. This file holds the plan as approved, with a ledger, a batc
 
 ## Next up
 
-S1, the shop engine and its UI.
+M4, the Night Market (its stalls are the first new shop).
 
 ## Scope and decisions (2026-10-30)
 
@@ -54,5 +54,19 @@ Each batch goes through the full loop:
 
 | Batch | Planned | Written | Critic | zh-CN |
 |---|---:|---:|---|---|
+| A Toll removed | edits | done (c7506be) | — | 100% |
+| S1 shops | engine | done | — | 100% |
 
 ## Batch log
+
+- **A** (c7506be, 0.3.264): Toll's `@spell` removed, with its translations, its glossary entry and the design-doc mentions. The combat minigame keeps an uncastable `toll`: its Rust core panics without it, and there is no cargo here to rebuild it. `test/world2b.test.js` allows that one dormant id; the minigame's own label is translated (鸣钟).
+- **S1:**
+  - **Engine:** `type: shop` compiles to a menu with `shop: true`. `Engine.shopRole` reads each option's role: a ware has an up-front price or sale and starts nothing; options that start a challenge, a visit or a card now, or cost nothing, are taken alone; an option with no `when` that only speaks is the way out. `chooseMany` buys a basket whole, in shelf order, if it fits the purse. `chosen()` sees inside a shop's basket.
+  - **UI:** `src/shop-ui.js`, plus four lines in `src/ui.js`, styles, and UI strings in English and zh-CN.
+  - **Lint:** a shop needs exactly one way out and at least one ware; options taken alone are info.
+  - **Tests:** `test/shop.test.js`.
+  - **Content:** the six village counters are shops, each with a one-line change.
+  - **Checks:** all tests, the slow ones too; the golden diff is unchanged; `balance --quick` has 0 invariant failures and the same 5 alarms as before.
+  - **Browser:** checked headless. A two-ware basket (buns and the duelling coat) buys both, records `buns+coat`, and shows one receipt.
+  - **Deviation:** the basket shows its total against the purse, but not a summed meter preview. Each ware's own preview shows on hover.
+

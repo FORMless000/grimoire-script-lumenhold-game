@@ -717,6 +717,28 @@
       }
       return p;
     }
+    // What an option pays in `afford:`'s resource up front (a sale's top-level gain), as priceOf counts a cost.
+    incomeOf(o) {
+      const res = this.c.game.afford; if (!res) return 0;
+      let p = 0;
+      for (const st of o.effects || []) if (st.t === 'delta' && st.name === res) {
+        const v = st.tier ? st.sign * this.tierAmount(res, st.tier) : Math.min(st.min, st.max);
+        if (v > 0) p += v;
+      }
+      return p;
+    }
+    // A shop's options (`type: shop`, threads 2), read from what each one does: a ware costs or pays `afford:`'s
+    // resource up front and starts nothing (no challenge, no `queue … now`, no visit), so it can go in the basket with
+    // others; the option without a `when` that only speaks is the way out; anything else (the pawnbroker's "Sell
+    // something…", a test of skill) is chosen on its own, as on a menu.
+    shopRole(o) {
+      if (o.generated || o.spell || o.item) return 'alone';
+      let only = true, alone = false;
+      G.walkEffects(o.effects, (st) => { if (st.t !== 'say') only = false; if (st.t === 'challenge' || st.t === 'visit' || st.t === 'plan' || (st.t === 'queue' && st.now)) alone = true; });
+      if (only) return o.when ? 'alone' : 'leave';
+      if (alone) return 'alone';
+      return this.priceOf(o) > 0 || this.incomeOf(o) > 0 ? 'ware' : 'alone';
+    }
     // Options you can't pay for are locked, unless that would lock every option on the card (never soft-lock: then
     // you pay what you have). Returns the set of keys locked for want of money.
     poorKeys(e, opts, a) {
@@ -1334,7 +1356,8 @@
             case 'tagged': { const d = eng.c.npcs[a[0]]; return !!d && ((d.tags || []).includes(a[1]) || d.role === a[1]); }   // a character's role counts as a tag (student, prefect, professor, staff, outsider)
             case 'seen': return s.seen[a[0]] || 0;
             case 'since': return s.last[a[0]] != null ? s.turn - s.last[a[0]] : 999;
-            case 'chosen': return s.choices[a[0]] === a[1];
+            // A shop's basket is recorded as its keys joined by '+': any one of them was chosen.
+            case 'chosen': return s.choices[a[0]] === a[1] || (!!(eng.c.events[a[0]] || {}).shop && typeof s.choices[a[0]] === 'string' && s.choices[a[0]].split('+').includes(a[1]));
             case 'bonds': return Object.values(s.npcs).filter((x) => x.met && x.bond === a[0]).length;
             case 'bonds_around': return Object.entries(s.npcs).filter(([k, x]) => x.met && x.bond === a[0] && eng.c.npcs[k] && !eng.isAway(k)).length;
             case 'known': return Object.values(s.npcs).filter((x) => x.met).length;
@@ -2085,6 +2108,7 @@
         art: e.art || null, scene: e.scene ? this.interp(e.scene, a, e.id) : null, tags: e.tags || [],
         actor: npc ? { id: a, name: npc.name, title: npc.title, color: npc.color, house: npc.house, ...this.s.npcs[a] } : null,
         pick: this.pickCount(e),
+        shop: e.shop ? { purse: this.c.game.afford ? this.s.vals[this.c.game.afford] || 0 : null } : null,
         // Option visibility (M24): in a menu, an option whose `when` fails is hidden unless it names its `locked:`
         // reason (a stated prerequisite); then it shows, disabled, with the reason. Cards keep both sides.
         options: ((all) => { const poor = this.poorKeys(e, all, a); return all.map((o) => [o, poor.has(o.key)]); })(this.optionsOf(e).filter((o) => (!o.spell || (this.s.spells || {})[o.spell]) && (!o.item || this.hasItem(o.item)))
@@ -2103,6 +2127,9 @@
             course: (o.effects[0] && o.effects[0].t === 'enrol') ? this.courseOutlook(o.effects[0].track, o.effects[0].level) : null,
             job: (o.effects[0] && o.effects[0].t === 'join') ? this.jobOutlook(o.effects[0].track) : null,
             switching: o.switching || null,
+            role: e.shop ? this.shopRole(o) : undefined,
+            price: e.shop ? this.priceOf(o) : undefined,
+            income: e.shop ? this.incomeOf(o) : undefined,
             locked: o.locked && o.when && !this.test(o.when, a) ? this.interp(o.locked, a, e.id) : null,
           };
         }),
@@ -2164,20 +2191,29 @@
       this.stampJournal();
       return out;
     }
-    // A `pick: N` menu: several options at once (design §7.3 enrolment).
+    // A `pick: N` menu: several options at once (design §7.3 enrolment). A shop's basket (`type: shop`, threads 2):
+    // any number of its wares, each once, if their prices together fit the purse; they're bought in shelf order.
     chooseMany(keys) {
       const s = this.s, item = s.cur, e = this.c.events[item.id];
       const opts = this.withContext(item, () => this.optionsOf(e));
-      const n = this.pickCount(e);
+      const n = e.shop ? opts.length : this.pickCount(e);
       keys = [...new Set(keys)];
       if (keys.length < 1 || keys.length > n) throw new Error(e.id + ' takes 1 to ' + n + ' option(s)');
       const ctx = this.newCtx(item.actor, null, e.id);
       ctx.cast = item.cast || null; ctx.track = item.track || null;
       this._cast = ctx.cast; this._ctxTrack = ctx.track;
-      const chosen = keys.map((k) => { const o = opts.find((x) => x.key === k); if (!o) throw new Error('no option ' + k + ' on ' + e.id); if (o.when && !this.test(o.when, item.actor)) throw new Error('option ' + k + ' is not available'); return o; });
+      let chosen = keys.map((k) => { const o = opts.find((x) => x.key === k); if (!o) throw new Error('no option ' + k + ' on ' + e.id); if (o.when && !this.test(o.when, item.actor)) throw new Error('option ' + k + ' is not available'); return o; });
+      if (e.shop && chosen.length > 1) {
+        if (chosen.some((o) => this.shopRole(o) !== 'ware')) throw new Error('only wares go in ' + e.id + '\'s basket');
+        const res = this.c.game.afford, total = chosen.reduce((a, o) => a + this.priceOf(o), 0);
+        if (res && total > (s.vals[res] || 0)) throw new Error('the basket costs ' + total + ', more than you have');
+        chosen = opts.filter((o) => chosen.includes(o));
+        keys = chosen.map((o) => o.key);
+      }
+      if (e.shop) this._ctxPlace = item.place || null;
       for (const o of chosen) this.run(o.effects, ctx);
       this.handleZeroed(ctx);
-      this._cast = null; this._ctxTrack = null;
+      this._cast = null; this._ctxTrack = null; this._ctxPlace = null;
       if (this.noteContact) this.noteContact(item, ctx.contact || {}, keys);
       s.choices[e.id] = keys.join('+');
       s.cur = null;

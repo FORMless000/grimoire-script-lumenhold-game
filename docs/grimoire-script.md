@@ -95,6 +95,7 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 | `> left:` and `> right:` | `card` | Swipe left/right (the labels appear as the card tilts). |
 | exactly one (any key) | `story` | A single "continue"-style choice. With no options at all, a `> ok: Continue` is added. |
 | anything else, or `type: menu` | `menu` | A lead-in card (the title, text and scene, with one button saying a choice follows), then a modal with a tile per option (2–10 work well). Write the `text:` as the lead-in; every option needs a `say:` (lint). |
+| `type: shop` (threads 2) | `menu` (`shop: true`) | A menu shown as a counter (`src/shop-ui.js`): the player may put any number of **wares** in one basket, or buy just one. Nothing else is written: each option's role is read from what it does. A **ware** costs or pays `@game afford:`'s resource up front (`gold -small`, a sale's `gold +tiny`) and starts nothing; an option that starts a challenge, a visit or a card now (`queue … now`), or costs nothing, is taken **on its own**, as on a menu; the option with no `when` that only has `say:` is the **way out** (the Leave button; lint: exactly one). A basket is bought whole, in the order the options are written, if its prices together fit the purse, and as the basket fills, a ware that no longer fits locks. It is recorded as its keys joined by `+` (`bread+cake`); `chosen(event, key)` holds for any key in it. One ware alone is an ordinary choice. |
 
 Option lines under `> key: Label` (indented):
 

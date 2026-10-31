@@ -1313,7 +1313,10 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
       const keys = e.options.map((o) => o.key).sort().join(',');
       e.type = e.options.length === 1 ? 'story' : (keys === 'left,right' || keys === 'left,right,up') ? 'card' : 'menu';
     }
-    if (!['card', 'story', 'menu'].includes(e.type)) errors.push(new GrimError('type must be card, story or menu', e.file, e.line));
+    // `type: shop` (threads 2): a menu shown as a shop, where any number of wares go in one basket. It is a menu in
+    // every other way (`e.type` stays 'menu'); each option's role (ware, on its own, leave) is read from its effects.
+    if (e.type === 'shop') { e.type = 'menu'; e.shop = true; }
+    if (!['card', 'story', 'menu'].includes(e.type)) errors.push(new GrimError('type must be card, story, menu or shop', e.file, e.line));
     if (e.type === 'card') {
       const keys = e.options.map((o) => o.key).sort().join(',');
       if (keys !== 'left,right' && keys !== 'left,right,up') errors.push(new GrimError('card events need "> left:" and "> right:" options, and optionally "> up[spell]:" (got ' + keys + ')', e.file, e.line));

@@ -630,3 +630,12 @@ button.state.item.worn .left { color: #f0c878; }
 .choices.lean-left .choice.right, .choices.lean-left .choice.up, .choices.lean-right .choice.left, .choices.lean-right .choice.up { display: none; }
 .choices.lean-left .choice.left, .choices.lean-right .choice.right { border-color: var(--gold); background: var(--night-3); }
 .credits .version { font-weight: 600; letter-spacing: .02em; }
+
+/* The shop (`type: shop`, threads 2; src/shop-ui.js): a shelf of wares that go in one basket. */
+.shop .shop-item .price { font-size: 12.5px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.shop .shop-item .price.gain { color: var(--good, #8fd19e); }
+.shop .shop-item small.fit { display: none; }
+.shop .shop-item.wont-fit small.fit { display: block; color: var(--bad); }
+.shop .shop-alone { margin: 16px 0 0; font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.shop .shop-total { margin: 12px 0 0; min-height: 1.3em; font-size: 14px; color: var(--text); font-variant-numeric: tabular-nums; }
+.shop .shop-go { display: flex; gap: 10px; }

@@ -1,5 +1,6 @@
-# The village shops (world expansion 1, K3). Each shop's counter is its place's `always:` card: a menu of what it sells,
-# priced in tier words (an option you can't pay for is locked), and a way out with no `when`. Shops that are also job
+# The village shops (world expansion 1, K3). Each shop's counter is its place's `always:` card: a shop (`type: shop`,
+# threads 2) of what it sells, priced in tier words (an option you can't pay for is locked), where any number of wares
+# go in one basket, and a way out with no `when` that only speaks. Shops that are also job
 # places skip the counter on a shift (`not on_shift()`). Special pieces are offers (tag `offer`): cards in the shop's
 # pool that ask for more than money.
 #   The earlier buying cards (life_new_robes, ball_robes) stay as they are; the tailor takes those robes in exchange.
@@ -7,7 +8,7 @@
 @event shop_square
 title: Market Day
 place: village
-type: menu
+type: shop
 class: routine
 tone: light
 repeat: 1
@@ -70,7 +71,7 @@ text: {The square is all stalls today, with the bakery's trestle, the tailor's r
 title: The Pawnbroker's Counter
 place: village
 trigger: queued
-type: menu
+type: shop
 class: routine
 tone: tense
 repeat: 1
@@ -156,7 +157,7 @@ text: {The pawnbroker turns each thing over twice, as if it might be hiding a se
 @event shop_mabels
 title: Mabel's Counter
 place: mabels
-type: menu
+type: shop
 class: routine
 tone: warm
 repeat: 1
@@ -188,7 +189,7 @@ text: {Mabel looks at you once as you come in and is already reaching for a tin.
 @event shop_grimsbys
 title: Grimsby's Counter
 place: grimsbys_books
-type: menu
+type: shop
 class: routine
 tone: light
 repeat: 1
@@ -227,7 +228,7 @@ text: {Mr Grimsby is up a ladder, sniffing a spine. "Ah! Not that one," he says,
 @event shop_pell
 title: Pell's Counter
 place: pell_apothecary
-type: menu
+type: shop
 class: routine
 tone: light
 repeat: 1
@@ -254,7 +255,7 @@ text: {One of Pell's daughters is at the counter. Behind her, Old Pell counts dr
 @event shop_newt
 title: The Newt's Counter
 place: gilded_newt
-type: menu
+type: shop
 class: routine
 tone: warm
 repeat: 1
