@@ -1,0 +1,18 @@
+{
+  "batch": "M3-placeholders",
+  "round": 2,
+  "accept": true,
+  "summary": "Fixed. village_barge_scarf moves the parcel off the courier loft (no dead-letter echo; retrieval's nearest hits, xchg_farewell and spot_fan_charm, are different premises) and gives the second option a real trade with its own ending. headmistress_tower_dictation shows its study cost in every variant and drops the one-time claim. courier_loft_broom_pension and the four quiet-hour retirements stand as before. Two small time fixes remain on the new card.",
+  "issues": [
+    {
+      "event": "village_barge_scarf",
+      "problem": "Village cards are dealt on afternoon and evening visits, but the text and scene say 'The morning barge is tying up' and 'A village jetty in the morning'.",
+      "fix": "Write 'The barge is tying up at the village jetty' and drop 'in the morning' from the scene. The crew's line 'waves at us every morning' can stay."
+    },
+    {
+      "event": "village_barge_scarf",
+      "problem": "'We've been wondering about you for a year' can show in your first term, and the right option's 'wears the scarf all winter' can show in spring or summer.",
+      "fix": "Gate `turn >= 6` (or write 'all term'), and change 'all winter' to 'for the rest of the year', or to a `{season == …}` line."
+    }
+  ]
+}

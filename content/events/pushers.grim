@@ -1,0 +1,491 @@
+# ============================================================
+#  Pushers (threads 2, docs/threads-2-plan.md): people who come to you, not only when you go to them.
+#  Each is an appointment at the month's start with a chance word, dealing from its own pool of `trigger: queued`
+#  cards, so the cards never turn up in the day's ordinary draws.
+#    rival_provokes  a rival or a soured peer provokes you (one roll per person; Lyra and Bram have their own versions)
+#    grisk_dunning   Grisk keeps in touch while you owe him, in a month you paid (a missed one brings his reminder)
+#    ember_brings    Ember brings you things
+# ============================================================
+
+# ---------------- Rivals ----------------
+
+@cond provokes
+desc: Someone who would provoke you: a peer who is your rival or nemesis, or has soured on you, and is here.
+params: x
+is: tagged(x, peer) and around(x) and (bond(x) == "rival" or bond(x) == "nemesis" or rel(x) <= -12)
+
+@appointment rival_provokes
+desc: A rival, or a peer who has soured on you, doesn't wait to be met: now and then in term, they come and provoke you.
+at: month
+for: met
+when: term and provokes(npc)
+chance: slim
+deals: pool rival_provokes
+
+@pool rival_provokes
+trigger: queued
+class: routine
+per: npc
+repeat: 8
+tags: rival
+
+@event pr_rival_seat
+title: Somebody's in Your Seat
+pool: rival_provokes
+tone: tense
+cast:
+  npc: any where provokes(npc)
+art: book
+scene: A library table by a tall window, one student's books spread across all of it, another student standing over it with an armful of their own.
+text: {~Your table in the library, the good one by the window, is covered in {npc}'s books.|You come back from the shelves and {npc} has moved into your chair, and moved your books to the floor.} {They} look{s} up at you and turn{s} a page, slowly.
+> left: Sit down opposite and work
+  challenge appeal vs npc.charm:
+    win:
+      study +small
+      rel npc +tiny
+      say: {~You put your books on the one free corner and work as if {they} weren't there. After an hour {npc} pushes a dictionary across without a word. It's almost a truce.|You sit and you work, and you don't look up. {npc} gives up first, packs up with a great deal of noise and leaves you the table.}
+    lose:
+      mood -small
+      rel npc -tiny
+      say: {~{npc} sighs every time you turn a page, then reads your notes upside down and corrects them aloud. You last twenty minutes.|{They} hum{s}. {They} tap{s}. {They} sharpen{s} a quill for a quarter of an hour. You leave, and hear {them} spread out again behind you.}
+> right: Find another table
+  mood -tiny
+  study +tiny
+  rel npc -small
+  say: {~You take a table by the draughty door, which is worse, and get your reading done anyway. {npc} watches you go with the look of someone keeping score.|There's a desk in the stacks with no window and no {npc}. You work well there, and hate that {they} chose it for you.}
+
+@event pr_rival_book
+title: The Only Copy
+pool: rival_provokes
+slot: noon
+tone: tense
+cast:
+  npc: any where provokes(npc)
+art: book
+scene: A busy refectory at lunch, a student reading a thick library book very slowly at the end of a table, another student watching from across the room.
+text: {~The essay is due on Friday, and the library has one copy of the book it needs.|There's one copy of this week's set book in the whole library.} {npc} has it. {They} {are} reading it at lunch, at the end of your table, one page at a time, with a finger under every line. "Nearly done," {they} say{s}, without looking up. "Another week, perhaps."
+> left: Ask to share it
+  challenge appeal vs npc.charm:
+    win:
+      study +small
+      rel npc +small
+      say: {~You ask, properly, and don't make a joke of it. {npc} looks at you for a long moment, then turns the book sideways so you can both read. You finish the chapter together without a word, and {they} hand{s} it over on Thursday.|"Fine," says {npc}, as if it costs {them} something. It does: {they} let{s} you copy the chapter, and at the end {they} say{s}, "Your essay had better be worse than mine."}
+    lose:
+      mood -small
+      rel npc -tiny
+      say: {~"No," says {npc}, pleasantly, and turns a page. You write the essay from your lecture notes and a bad memory, and it shows.|{npc} pretends not to hear you, then reads a paragraph aloud to the table, very slowly. It's the paragraph you needed. You still don't have the book.}
+> right: Buy your own copy in the village
+  gold -small
+  study +tiny
+  rel npc -tiny
+  say: {~Grimsby has a copy, a little foxed, at a price that makes you wince. You finish the essay a day early. {npc} returns the library's copy that afternoon, unread past chapter two.|You walk down to the village and pay too much for a second-hand copy. On the way back you pass {npc} in the library, returning the book, done with it at last.}
+
+@event pr_rival_race
+title: To the Far Jetty
+pool: rival_provokes
+when: season != "winter"
+tone: tense
+cast:
+  npc: any where provokes(npc)
+art: wave
+scene: Two rowing boats side by side at a boathouse slip, a student already at the oars in one, a small crowd gathering on the boards.
+text: {npc} is at the boathouse slip with two boats out and a crowd on the boards. "To the far jetty and back," {they} say{s}, loud enough for all of them. "Loser carries the winner's books for a week." Somebody is already taking bets.
+> left: Take the other boat
+  challenge feat vs npc.vigor:
+    win:
+      renown +small
+      health -tiny
+      rel npc -tiny
+      say: {~You touch the far jetty first and turn so hard you nearly swamp. You come in a length ahead, soaked to the elbow. {npc} carries your books for a week, with enormous dignity.|You win by a boat's nose. The boards cheer. {npc} carries your books for a week and drops them, accidentally, every day.}
+    lose:
+      renown -small
+      health -tiny
+      rel npc +tiny
+      say: {~{npc} is back at the slip, shipping oars, before you've turned at the far jetty. You carry {their} books for a week. On the fourth day {they} take{s} half of them back without a word.|You catch a crab at the turn and go in backwards. For a week you carry two bags to every class, and {npc} finds the heaviest books {they} can.}
+> right: Watch from the boards
+  renown -tiny
+  mood +tiny
+  rel npc -tiny
+  say: {~You let {them} row against nobody. {npc} comes back flushed and wins nothing, and tells you so. The crowd thinks less of you, and you keep your feet dry.|"Scared," says {npc}, climbing out. "Dry," you say. Half the boards agree with each of you.}
+
+@event pr_rival_signed_up
+title: Volunteered
+pool: rival_provokes
+tone: tense
+cast:
+  npc: any where provokes(npc)
+art: wand
+scene: A notice pinned to a classroom door listing volunteers for a demonstration before the whole year, one name in different handwriting.
+text: There's a list on the classroom door: volunteers to demonstrate a spell in front of the whole year on Friday. Your name is on it, in handwriting that isn't yours. {npc}, passing, says, "Good luck," and means the opposite.
+> left: Go through with it
+  challenge spell apprentice+:
+    win:
+      renown +small
+      arcana +small
+      rel npc -small
+      say: {~You give the best demonstration of the week. The professor asks you to do it again, slower. {npc}, in the front row, claps three times, exactly.|It goes perfectly. Afterwards {npc} says it was "lucky", which is the closest {they}'ll ever come to saying "well done".}
+    lose:
+      renown -small
+      mood -small
+      rel npc +tiny
+      say: {~It goes wrong in front of everyone, and keeps going wrong. {npc} doesn't laugh, which is somehow worse. Later {they} say{s}, "I didn't think you'd actually do it."|The spell fizzles. A first-year in the front row says "oh" in a small, sad voice. {npc} looks almost sorry, for nearly a second.}
+> right: Cross your name off
+  renown -tiny
+  rel npc -tiny
+  mood +tiny
+  say: {~You strike the name out and write "NOT ME" next to it, and the whole corridor sees you do it. By Friday the list has three more names on it in {npc}'s handwriting, and they're all {their} friends'.|You cross it off in front of {them}. "Shame," says {npc}. "I was looking forward to it." You were not.}
+
+@event lyra_rival_seat
+title: The Table by the Window
+specializes: pr_rival_seat
+trigger: queued
+actor: lyra
+slot: night
+class: routine
+tone: tense
+art: book
+tags: rival
+scene: A library at night, a red-haired student alone at a table by the window with a stack of fire-theory books, a second chair pulled out and piled with them too.
+text: It's late, and Lyra has your table in the library: the one by the window, the one you've had all term. Her books are on both chairs. "It's a library," she says, without looking up. "Not a pew. Sit somewhere you can win."
+> left: Clear a chair and sit down
+  challenge appeal vs lyra.charm:
+    win:
+      study +small
+      rel lyra +tiny
+      say: {~You move her books, carefully, in order, and sit. She stares. Then she goes back to reading, and at midnight, without looking up, she slides you the one book on the table you needed.|You stack her books on the floor by size and open your own. She is speechless for a whole minute, which may be a record. You work until the lamps go out, side by side, not speaking.}
+    lose:
+      mood -small
+      rel lyra -tiny
+      say: {~You sit. She reads aloud from your notes, upside down, and corrects your fire-theory in a whisper the whole library can hear. You last until the second correction.|You sit down and she turns up her lamp until it's like reading next to the sun. "If I'm awake," she says, "I see no reason you should be able to think."}
+> right: Leave her the window
+  mood -tiny
+  study +tiny
+  rel lyra -small
+  say: {~You take the desk in the stacks. It's quiet, and you get your reading done. When you leave at midnight she's still at the window, alone with nine books, not reading any of them.|You go. Behind you she says, "Coward," to the page, and turns it too hard.}
+
+@event lyra_rival_signed_up
+title: Second on the List
+specializes: pr_rival_signed_up
+trigger: queued
+actor: lyra
+class: routine
+tone: tense
+art: flame
+tags: rival
+scene: A list of volunteers pinned to a classroom door, a name in tight upright capitals at the top and another name squeezed in directly beneath it.
+text: The list for Friday's demonstration before the whole year is up on the classroom door. At the top, in tight upright capitals: VANESHADE. Directly beneath it, in the same hand, is your name. Lyra, passing, doesn't stop. "Everyone should see the difference," she says.
+> left: Go on straight after her
+  challenge spell apprentice+:
+    win:
+      renown +small
+      arcana +small
+      rel lyra -tiny
+      say: {~She's brilliant, and the hall applauds, and then you're better. Not by much. Enough. On the way out she says, without turning round, "Again. Next term." It's the nearest she has to a compliment.|You match her flame for flame. The professor, confused, gives you both full marks. Lyra looks at the marks as if they'd insulted her family.}
+    lose:
+      renown -small
+      mood -small
+      rel lyra +tiny
+      say: {~After hers, yours looks like a candle at noon. Lyra doesn't smile. She seems, if anything, disappointed. "I thought you'd do better," she says, and it sounds like the truth.|It fizzles. Lyra, in the front row, is very still. Afterwards she stops beside you. "Wrist," she says. "You lead with the wrist." Then she's gone.}
+> right: Cross your name off
+  renown -tiny
+  rel lyra -small
+  mood +tiny
+  say: {~You strike yourself off. On Friday she demonstrates alone, perfectly, to polite applause, and looks once at the empty place on the list.|You cross it out. "Afraid of the comparison," she says. "Bored of it," you say. Neither of you believes the other.}
+
+@event bram_rival_race
+title: Prefect's Privilege
+specializes: pr_rival_race
+trigger: queued
+actor: bram
+class: routine
+tone: tense
+art: shield
+tags: rival
+scene: A courtyard at dawn, a broad prefect in a red sash at the start of a chalk line, a student beside him, first-years watching from the cloister.
+text: Bram is in the courtyard before breakfast with his sash on and his ledger out. "Three laps of the cloister," he says. "Lose, and it's a demerit for loitering. Win, and..." He thinks. "And nothing. Prefect's privilege." The first-years in the cloister are delighted.
+> left: Run the laps
+  challenge feat vs bram.vigor:
+    win:
+      renown +small
+      health -tiny
+      rel bram +tiny
+      say: {~You beat him by a step on the last turn. He's purple, and furious, and then, unexpectedly, he laughs. "Fine," he says. "No demerit." He writes something in the ledger anyway. Later you see it's your time.|You win. Bram stands with his hands on his knees and gives the first-years a demerit each for cheering. Not you, though.}
+    lose:
+      renown -small
+      health -tiny
+      rel bram -tiny
+      say: {~He's a lap ahead by the end, sash flying. "Loitering," he says, and writes it down, with the time. The first-years are less delighted now.|You lose, and get the demerit, and he reads it out to the cloister: "For loitering. At a run."}
+> right: "That's not a rule, Bram"
+  rel bram -small
+  lore +tiny
+  say: {~"It is now," he says. You quote him the actual rule on loitering, word for word, from the student handbook, and he goes red and lets you past. He'll remember it.|"Show me where it's written." He can't. He tells you he'll find it. Every morning for a week he's in the courtyard, reading the handbook.}
+
+@event bram_rival_signed_up
+title: The Duty Rota
+specializes: pr_rival_signed_up
+trigger: queued
+actor: bram
+class: routine
+tone: tense
+art: broom
+tags: rival
+scene: A prefects' rota pinned outside a common room, a student's name written in every Saturday slot in heavy capitals.
+text: The prefects' duty rota is up outside the common room. Someone has put your name down for every Saturday morning this month, scrubbing the east staircase, in heavy capitals. Bram is standing beside it with his arms folded. "Volunteered," he says. "Very public-spirited."
+> left: Scrub it, every Saturday
+  health -small
+  renown +tiny
+  rel bram +small
+  say: {~Four Saturdays on your knees on the east staircase. On the last one, Bram turns up with a second brush and does the top flight himself, without a word. "Missed a bit," he says.|You scrub it so well that it shines. By the third Saturday people are using another staircase so as not to spoil it, and Bram, passing, says, "Huh."}
+> right: Take it to the head prefect
+  challenge appeal journeyman-:
+    win:
+      mood +small
+      rel bram -small
+      say: {~The head prefect looks at the handwriting, then at Bram, and moves your name to his. Bram scrubs the east staircase every Saturday this month. He looks at you every Saturday too.|Struck off. Bram is put on the rota himself, "for public spirit". He doesn't speak to you, or to the head prefect, for a fortnight.}
+    lose:
+      health -small
+      rel bram -small
+      say: {~"He's a prefect," says the head prefect. "If he says you volunteered, you volunteered." You scrub the staircase. Bram inspects it every Saturday, with a white glove.|Your complaint goes on file next to the rota. You do the Saturdays anyway, and Bram adds one, for "complaining".}
+
+# ---------------- Grisk ----------------
+
+@appointment grisk_dunning
+desc: While you owe Grisk, he keeps in touch: now and then in a term month you've paid, he or his associates find you.
+at: month
+when: term and has(in_debt) and debt_missed == 0 and not flag(grisk_gone)
+chance: unlikely
+deals: pool grisk_dunning
+
+@pool grisk_dunning
+trigger: queued
+class: routine
+tags: money
+
+@event grisk_kind_month
+title: A Kind Month
+pool: grisk_dunning
+actor: grisk
+slot: evening
+when: not flag(owes_grisk)
+tone: tense
+art: pouch
+scene: A goblin in a velvet waistcoat at a tavern table, tearing one small square out of a ledger page with great care.
+text: Grisk waves you over at the Newt and slides this month's envelope back across the table to you, unopened. "You have been very regular," he purrs. "I like regular. So this month, as a friend, I'll take nothing at all." He holds up one square of ledger paper. "In return, you'll owe me one small kindness. When I ask. A friendship goes both ways."
+> left: Take the month off
+  gold +small
+  gold +tiny
+  flag owes_grisk
+  queue grisk_names_favour in 1
+  say: He tears the square out and folds it into his waistcoat pocket, next to his heart, if goblins keep them there. The envelope goes back in your purse. You can feel the folded paper all the way back up the hill.
+> right: Pay as usual
+  rel grisk -tiny
+  mood +tiny
+  say: "As you like," says Grisk, and takes the envelope back, and puts the square away, unfolded. "Kindness keeps." You leave lighter in the purse and somehow lighter everywhere else.
+
+@event grisk_settle_early
+title: Settling Up
+pool: grisk_dunning
+actor: grisk
+when: debt_paid >= 3 and debt_paid <= 4 and gold >= 30
+slot: afternoon
+tone: tense
+art: coin
+scene: A goblin moneylender's ledger open on a café table, a column of figures, a pen offered with a little bow.
+text: Grisk sits down across from you at Mabel's without asking and orders for you both. "I hear you've been fortunate," he says, with a glance at your purse. "So, a courtesy. Pay me most of what's left, today, and I'll close your page. You'll save a little. I'll save the bother of you."
+> left: Pay him off and close the page
+  if debt_paid >= 4:
+    gold -medium
+    gold -tiny
+  else:
+    gold -large
+  lose in_debt
+  mood +small
+  rel grisk +tiny
+  say: He counts the coins twice, then draws a neat line under your name and blots it. "A pleasure," he says, "and a loss." You walk out owing nobody anything, and the tea is on your bill.
+> right: Keep to the monthly plan
+  mood -tiny
+  say: "Of course," says Grisk. "Twelve a month is a lovely rhythm." He pays for the tea, which feels like an investment, and it is one.
+
+@event grisk_interest_in_kind
+title: Interest in Kind
+pool: grisk_dunning
+actor: grisk
+slot: afternoon
+tone: eerie
+art: chain
+scene: A goblin in pince-nez walking beside a student across a village square, a quill poised above an open ledger, the student looking away.
+text: "I don't need your crowns this month," Grisk says, in the square, falling into step. "I need to know things. Who in your year is short. Who has been to the pawnbroker. Who has a parent who'd pay to keep a little trouble quiet." He smiles. "One name, and a month comes off."
+> left: Give him a name
+  debt_paid += 1
+  if debt_paid >= 6:
+    lose in_debt
+  alignment -small
+  rel grisk +small
+  say: You give him a name, someone who's been asking around for a loan anyway. Grisk writes it down without a word and crosses a month off the end of your page. A week later you see them with Grisk at the Newt, laughing at something he's said.
+> right: "I don't know anybody's business"
+  alignment +tiny
+  rel grisk -tiny
+  say: "Admirable," says Grisk, "and rare," and leaves your page exactly as long as it was. "Do let me know if you ever start."
+
+@event grisk_troll_letter
+title: A Letter Home, for a Troll
+pool: grisk_dunning
+slot: evening
+tone: light
+art: letter
+scene: A very large troll in a tight waistcoat on a bench outside a tavern, holding a crumpled letter and a pencil in an enormous fist.
+text: A troll in a very tight waistcoat is sitting outside the Newt with a pencil in his fist and a letter he can't finish. "I collect for Mister Grisk," he rumbles, by way of introduction. "Politely. He says you're a scholar. It's to my mother. I want it to sound like I'm doing well."
+> left: Help him write it
+  mood +small
+  study -tiny
+  rel grisk +tiny
+  say: An hour on the bench, with your own reading left in your bag, and a letter in your best hand about a son in steady work in a respectable trade, in the village, with prospects. All true, if you squint. He reads it back with his lips moving and shakes your hand very gently, as if it might come off.
+> right: Say you've an essay to finish
+  study +tiny
+  mood -tiny
+  say: He nods slowly and goes back to the pencil. When you come past again at closing time, he's still there, on the first line.
+
+@event grisk_regards_friend
+title: Do Give My Regards
+pool: grisk_dunning
+tone: eerie
+art: chain
+cast:
+  friend: any where tagged(friend, peer) and rel(friend) >= 10
+scene: A goblin in a velvet waistcoat taking his receipt with a little bow, saying something pleasant, a student's smile frozen.
+text: Grisk takes this month's payment with a bow. "And do give my regards to {friend}," he adds. "Such a good friend to you. It would be a pity if {they} heard about our little friendship from anyone but you." He says it like a remark about the weather.
+> left: Tell {friend} yourself
+  rel friend +tiny
+  mood -small
+  alignment +tiny
+  say: You tell {friend} that evening, all of it. {They} {are} quiet, then angry, though not at you. "He said that? Pay him off and never go near him again." Grisk, next month, seems a little less pleased with himself.
+> right: Pay him a little extra to forget
+  gold -small
+  rel grisk +tiny
+  say: You add a few crowns to the envelope. Grisk weighs it in his palm and nods. "Forgotten," he says. "I have a terrible memory." He doesn't. He has a ledger.
+
+# ---------------- Ember ----------------
+
+@appointment ember_brings
+desc: Ember brings you things, and trouble: now and then, a month opens on something she's found, stolen or started.
+at: month
+when: has(familiar_fox)
+chance: slim
+deals: pool ember_brings
+
+@pool ember_brings
+trigger: queued
+class: routine
+art: fox
+tags: nature
+
+@event ember_and_footnote
+title: The Fox and the Cat
+pool: ember_brings
+when: term
+tone: light
+art: cat
+scene: A library aisle, a small fire-tailed fox and a large grey cat nose to nose on a reading table, every student in the room frozen mid-page, a librarian on the move.
+text: Ember has followed you into the library, which she has never done, and found Footnote, the library cat, on his table. They are nose to nose. Nobody in the room is breathing. Ember's tail has begun, very gently, to smoke. The librarian is coming down the aisle at speed.
+> left: Scoop her up and leave
+  study -tiny
+  mood -tiny
+  say: You get her under your arm before anything happens and walk out with your books abandoned on the table. Ember sulks all the way back to the tower. Footnote, the librarian tells you later, sat on your notes until closing, out of victory.
+> right: Let them settle it
+  chance even:
+    mood +small
+    renown +tiny
+    say: Footnote yawns, turns round twice and lies down. Ember considers this, then lies down beside him with her chin on his back. The whole library breathes out. The librarian stops, looks, and says, "Well, don't wake them."
+  else:
+    gold -small
+    mood -small
+    say: Footnote swats once and Ember's tail flares. A shelf of periodicals is singed before you can get her out, and the librarian sends you the bill for the bindings. Footnote is entirely unhurt and very pleased with himself.
+
+@event ember_ring
+title: The Ring in the Ashes
+pool: ember_brings
+when: not off_campus
+tone: light
+art: ring
+scene: A dormitory hearth in the morning, a small fox sitting proudly beside a tarnished gold ring in the cold ashes.
+text: There's a ring in your cold hearth this morning, a small tarnished gold one, engraved inside with two sets of initials, and Ember is sitting beside it, looking modest. She has brought it from somewhere. She will not say where.
+> left: Ask around the village for its owner
+  health -tiny
+  mood +small
+  renown +tiny
+  say: It takes two afternoons. In the end it belongs to the baker's mother, who lost it in her garden forty years ago and had stopped looking. She cries, and gives you a loaf every Saturday for a month, and a second, smaller one "for the fox".
+> right: Sell it at the pawnbroker's
+  gold +small
+  alignment -small
+  say: The pawnbroker gives you a fair price and doesn't ask. Ember watches you hand it over, and something in the set of her ears says she'd meant it for you to keep.
+
+@event ember_out_till_dawn
+title: Not Back by Dawn
+pool: ember_brings
+when: term
+tone: tense
+art: moon
+scene: An empty windowsill at dawn, a saucer of milk untouched, a student in a coat looking out towards a forest's edge.
+text: Ember went out of the window at midnight, as she does. She isn't back. It's dawn, the saucer is full, and there's a faint line of smoke above the trees at the forest's edge.
+> left: Go out to the forest's edge
+  health -small
+  study -tiny
+  mood +small
+  say: You find her in the bracken beside the smoke, which is only her, curled up and asleep with three wild foxes of her own colour, all of them smouldering gently. She wakes, looks at you and yawns, then walks home at your heels as if it had been your idea.
+> right: Wait, and go back to bed
+  health +tiny
+  mood -small
+  say: You go back to bed and doze, badly, until the bell, then go to your lecture and hear none of it. When you get back she's on your pillow, smelling of woodsmoke and very pleased with herself, and she won't explain.
+
+@event ember_mouse
+title: Somebody's Mouse
+pool: ember_brings
+when: term
+tone: light
+art: paw
+scene: A small fire-tailed fox sitting on a dormitory floor with a very much alive white mouse held gently between her paws, a lost-familiar notice pinned to the door beyond.
+text: Ember has brought you a mouse. It's alive, white, very clean and wearing a tiny green ribbon. On your way to breakfast you pass a notice on the corridor wall: LOST, ONE MOUSE (FAMILIAR), WHITE, GREEN RIBBON, FIRST-YEAR DORMITORY, PLEASE.
+> left: Take the mouse back
+  renown +tiny
+  mood -tiny
+  say: The first-year bursts into tears and hugs you, then the mouse, then you again. Ember, who had plans, sulks under the bed until supper and won't touch her milk.
+> right: Let Ember have her fun a day
+  mood +small
+  alignment -tiny
+  say: Ember and the mouse spend the day in the warm by your hearth, the fox watching it as if it were the finest thing ever made. You return it that night, quietly, through the door, and say nothing. The first-year spends a day in tears first.
+
+@event ember_old_coin
+title: From the Walls
+pool: ember_brings
+when: not off_campus
+tone: eerie
+art: coin
+scene: A small fox squeezing out of a gap behind a tapestry in a castle corridor, dust on her whiskers and a dark old coin in her teeth.
+text: Ember squeezes out from behind a corridor tapestry with dust on her whiskers and a coin in her teeth: thick, dark, worn almost smooth, with a face on it you don't know. Behind the tapestry there's a gap in the wall just wide enough for a fox.
+> left: Sell it in the village
+  gold +small
+  mood -tiny
+  say: Grimsby turns it over and says it's older than his oldest book, and sends you to the pawnbroker, who pays well and asks where you found it. You say a fox. He writes that down.
+> right: Keep it on the sill for luck
+  mood +small
+  lore +tiny
+  say: It sits on your windowsill, and Ember sleeps beside it as if guarding it. Some nights you could swear the face on it has turned to look at the lake.
+
+@event ember_cold_snap
+title: The Warmest Room in the Tower
+pool: ember_brings
+when: season == "winter" and term
+slot: night
+tone: warm
+art: snow
+scene: A frosted dormitory at night, a fox with a glowing tail asleep at the foot of a bed, a shivering student hovering in the doorway with a blanket round their shoulders.
+text: The cold has got into the dormitory. Frost on the inside of the glass, everyone's breath showing. Everyone's but yours: Ember is asleep across your feet with her tail glowing, and your room is warm. A student from down the corridor is in your doorway, coughing, in two blankets. "Could I borrow her," they ask, "just for tonight?"
+> left: Lend Ember for the night
+  health -small
+  alignment +tiny
+  renown +tiny
+  say: Ember goes, with a long look back. You spend a night shivering, and in the morning your neighbour's cough is better, and they tell the whole corridor. Ember comes back at dawn and sleeps on your face to make a point.
+> right: Keep her by you
+  health +small
+  alignment -tiny
+  say: "Sorry," you say. They nod, and go. You sleep warm. Through the wall you hear them coughing until dawn, and Ember, who heard it too, sleeps with one eye open.

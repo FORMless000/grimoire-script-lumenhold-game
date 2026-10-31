@@ -1,0 +1,204 @@
+# ============================================================
+#  Hints toward the special offers (threads 2, docs/threads-2-plan.md): once each, where the hint would come from,
+#  while the offer is open and its item not yet yours. The five shop offers' hints leave a Journal lead
+#  (`lead_offer_*`, content/world/clues.grim) whatever you choose. While you hold it, a visit to the offer's place
+#  is likely to open on the offer (its appointment below), and the counter's text mentions it. The two Whisperwood gifts already leave
+#  their leads when you get them; their cards here are reminders, a month or more later.
+# ============================================================
+
+@appointment offer_ashwood_hinted
+desc: While you hold the lead to Mir's ashwood wand, a visit to the square is likely to open on it.
+at: visit
+place: village
+when: clue(lead_offer_ashwood)
+chance: likely
+deals: card offer_ashwood_wand
+
+@appointment offer_ward_cloak_hinted
+desc: While you hold the lead to the ward-thread cloak, a visit to the square is likely to open on it.
+at: visit
+place: village
+when: clue(lead_offer_ward_cloak)
+chance: likely
+deals: card offer_ward_cloak
+
+@appointment offer_almanac_hinted
+desc: While you hold the lead to Grimsby's almanac, a visit to his shop is likely to open on it.
+at: visit
+place: grimsbys_books
+when: clue(lead_offer_almanac)
+chance: likely
+deals: card offer_pocket_almanac
+
+@appointment offer_spoon_hinted
+desc: While you hold the lead to Pell's spoon, a visit to the apothecary is likely to open on it.
+at: visit
+place: pell_apothecary
+when: clue(lead_offer_spoon)
+chance: likely
+deals: card offer_measuring_spoon
+
+@appointment offer_honey_hinted
+desc: While you hold the lead to Maud's silver honey, a visit to her cottage is likely to open on it.
+at: visit
+place: maud_cottage
+when: clue(lead_offer_honey)
+chance: likely
+deals: card offer_honey_tin
+
+@appointment offer_heartwood_hinted
+desc: While the elder oak's splinter waits to be carved (its lead), a visit to the square is likely to open on Mir's offer.
+at: visit
+place: village
+when: clue(lead_heartwood)
+chance: likely
+deals: card offer_heartwood_wand
+
+@appointment offer_spinner_silk_hinted
+desc: While the Spinner's silk waits to be made up (its lead), a visit to the square is likely to open on the tailor's offer.
+at: visit
+place: village
+when: clue(lead_spinner_silk)
+chance: likely
+deals: card offer_spinner_silk_robe
+
+@pool offer_hints
+desc: A hint toward a special offer: once each, while it is open.
+class: routine
+weight: 14
+tags: offer
+
+@event hint_ashwood_bite
+title: It Bit Me
+pool: offer_hints
+actor: mir
+when: met(mir) and year >= 2 and not has_item(ashwood_wand) and not clue(lead_offer_ashwood)
+tone: light
+art: wand
+scene: A castle courtyard, a young artificer sucking a burnt finger, a long shape wrapped in cloth under their other arm giving off a thin curl of smoke.
+text: Mir catches you in the courtyard sucking a finger, which is smoking slightly. Under their other arm is something long, wrapped in a cloth. "Don't touch that," they say, round the finger. "The ash one. It bit me. I made it and it bit me! It's the best thing I've ever made, probably. I'm not selling it to just anyone."
+> left: Find them the burn salve
+  find lead_offer_ashwood
+  rel mir +small
+  study -tiny
+  say: You run to the infirmary for salve and dress the finger on the fountain rim while Mir explains, at length, what an ashwood wand does to anything that tries to block it. "It's at the stall, under a cloth," they say. "If it likes you, it's yours." The next hour goes in bandages and exclamation marks.
+> right: Ask what makes it bite
+  find lead_offer_ashwood
+  lore +small
+  rel mir -tiny
+  say: Mir lifts a corner of the cloth, then thinks better of it. "Dense grain," they say. "Lightning in the heartwood, years ago, probably. It goes for whatever's in the way." They wrap it again, a little hurt you didn't ask about the finger. "It'll be at the stall. Under a cloth. If you can hold it."
+
+@event hint_ward_thread
+title: Thread That Shines
+pool: offer_hints
+actor: amaranth
+when: met(amaranth) and (rel(amaranth) >= 12 or spell_level(ward) >= 2) and not has_item(ward_cloak) and not clue(lead_offer_ward_cloak)
+tone: warm
+art: shield
+scene: A castle corridor, a healer stopping a student with a needle in her collar and a spool of thread in her hand that glimmers faintly from the corner of the eye.
+text: Sister Amaranth stops you in the corridor, a spool of thread in her hand. It shines, faintly, but only when you aren't looking straight at it. "Ward thread," she says, already turning to go. "Fire slides off it. Frost too. I've sent a spool down to the tailor. For you. Don't argue."
+> left: Thank her properly
+  find lead_offer_ward_cloak
+  rel amaranth +small
+  mood -tiny
+  say: "Don't," she says, which means she heard. "The tailor in the square. A cloak. You'll pay for the hemming; I won't." Then she sends you away with a list of things you're doing wrong with your sleep.
+> right: "Why me, Sister?"
+  find lead_offer_ward_cloak
+  lore +tiny
+  rel amaranth -tiny
+  say: "Because I'm tired of sewing you up," she says. "Square. The tailor. Pay for the hemming." She puts the spool in her pocket. That's all you get, and it's plainly all she means to give.
+
+@event hint_almanac_page
+title: Page Forty
+pool: offer_hints
+place: village
+when: not has_item(pocket_almanac) and not clue(lead_offer_almanac) and seen(shop_grimsbys) > 0
+tone: light
+art: book
+scene: A village jetty in the afternoon, a barge hand coiling rope and talking over his shoulder to a student, the bookshop's crooked sign behind them.
+text: A barge hand on the jetty, coiling rope, tells you there's a spring tide on Thursday. "Grimsby's almanac says so," he says. "Page forty. Fifty years of tides in that thing, in his own pencil. He'll not sell it, mind. Not to anyone who doesn't know what it's for."
+> left: Ask what it's for
+  find lead_offer_almanac
+  lore +tiny
+  mood -tiny
+  say: "Tides, moons, weather," says the barge hand. "And something else he won't say. You'd have to ask him." He gives the rope a last tug. "Talk to him about the right thing and he'll give you the shirt off his back. Trouble is knowing what the right thing is."
+> right: Help him with the rope
+  find lead_offer_almanac
+  health -tiny
+  mood +small
+  say: You take the other end and he talks all the way through it: about Grimsby, and his almanac, and how the old man keeps it in his waistcoat pocket and pats it like a cat. "Wouldn't sell it to the headmistress herself," he says, "unless she knew what it was for."
+
+@event hint_spoon_brass
+title: The Old Spoon
+pool: offer_hints
+place: village
+when: year >= 2 and not has_item(measuring_spoon) and not clue(lead_offer_spoon) and not member(apothecary_clerk)
+tone: light
+art: bottle
+scene: A village square, a young woman in an apothecary's apron rolling her eyes as she talks, a basket of corked bottles on her arm.
+text: One of Pell's daughters falls into step with you across the square, a basket of bottles on her arm. "He's retiring the spoon," she says. "His brass one. He says he's getting a new one, and he's been saying it for years. The old one can only go to someone who counts aloud, he says. Nobody counts aloud."
+> left: "I count aloud."
+  find lead_offer_spoon
+  alchemy +tiny
+  mood -tiny
+  say: She looks at you sideways, then makes you count the bottles in her basket aloud, twice, in the middle of the square. "Then go and do that in front of him," she says. "Bring money: he'll want it down first, and he'll give it back if you lose count." She sighs. "You won't lose count. He's never wrong about people."
+> right: Carry her basket for her
+  find lead_offer_spoon
+  health -tiny
+  mood +small
+  say: You carry the bottles to the jetty, which is heavier than it looks, while she tells you all about the spoon, and the drops, and her father. "Count aloud," she says at the barge. "In front of him. That's the whole secret. Don't tell him I told you."
+
+@event hint_silver_honey
+title: Bread and Silver
+pool: offer_hints
+place: greenhouses
+actor: maud
+slot: afternoon
+when: rel(maud) >= 12 and not has_item(honey_tin) and not clue(lead_offer_honey)
+tone: warm
+art: flower
+scene: A warm greenhouse in the afternoon, an old woman in a gardening apron holding out a slice of bread spread with honey that shines like poured silver.
+text: Old Maud is eating a late lunch on an upturned pot in the greenhouses, and holds out a second slice of bread without asking. The honey on it shines like poured silver. "Silver bees," she says. "Mine. They don't take to everyone, dearie. Come by the cottage when I'm doing the frames, and there's a tin in it."
+> left: Eat it there and then
+  find lead_offer_honey
+  mood +small
+  rel maud +tiny
+  say: It tastes of something you can't name: clover, and cold mornings, and a little of the lake. Maud watches you eat it with great satisfaction and tells you, at length, about a bee who once followed her to church.
+> right: Wrap it for later
+  find lead_offer_honey
+  health +tiny
+  rel maud -tiny
+  say: You wrap it in your handkerchief and eat it that evening, when you're flagging, and feel better at once. The handkerchief keeps a faint silver stain that never quite washes out. Maud, when you see her next, asks if you ate it, and looks a little hurt when you say you saved it.
+
+@event hint_heartwood_warm
+title: Warm in Your Bag
+pool: offer_hints
+when: flag(ww_heartwood) and not has_item(heartwood_wand) and met(mir) and since(ww3_elder_oak) >= 2
+tone: warm
+art: wand
+scene: A satchel open on a dormitory bed, a red-gold splinter of wood inside it glowing faintly warm among the books.
+text: The splinter of heartwood the elder oak gave you is still in your bag, months on, and still warm, like a hand that's just let go of yours. Your books have started to smell of the forest. Mir, at the market stall, would know what to do with it.
+> left: Take it to Mir
+  mood +small
+  say: You put it in your pocket for the next time you're in the village. It's warm against your leg all day, and you find yourself walking towards the square without quite deciding to.
+> right: Keep it a while longer
+  mood +tiny
+  lore +tiny
+  say: You put it on your windowsill instead. In the morning a sprig of green has come out of one end, very small. You decide it isn't in a hurry, and neither are you.
+
+@event hint_silk_light
+title: Light Goes In
+pool: offer_hints
+when: flag(ww_spinner_silk) and not has_item(spinner_silk_robe) and since(ww_spinner_hoard) >= 2
+slot: night
+tone: eerie
+art: spider
+scene: A dormitory trunk lid raised in candlelight, a bolt of grey silk inside, the candle beside it guttering as if in a draught that isn't there.
+text: The Spinner's silk is folded in the bottom of your trunk. When you open the lid tonight, the candle beside it bends towards the grey, and dims, as if the silk were drinking it. The village tailor would know what to do with something like this. Possibly she'd be frightened of it.
+> left: Take it to the tailor soon
+  mood -tiny
+  lore +tiny
+  say: You wrap it in a pillowcase for the walk down. Even through the cloth your hand feels cool where it holds it. The candle stands up straight again as soon as the trunk is shut.
+> right: Shut the trunk on it
+  mood +tiny
+  say: You shut the lid. The candle straightens. You sleep with your back to the trunk and dream of very fine threads, and of someone patient at the end of them.

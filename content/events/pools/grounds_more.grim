@@ -269,3 +269,43 @@ text: {The loft's message pigeons are on strike. They sit on the rafter in a row
   vigor +small
   health -tiny
   say: {You run the undelivered notes round the castle yourself, all seven towers, and come back with sore legs and the pigeons' quiet contempt.|You deliver the notes on foot. The pigeons watch you go, smug as landladies. Your feet ache by the last tower.|You run the round on foot again. You're faster than a pigeon on the stairs, if not in the air, and your calves know it.}
+
+# ---------------- Threads 2: more at the loft ----------------
+
+@event courier_loft_broom_pension
+title: Forty Years in the Rack
+pool: courier_loft_routine
+tone: warm
+art: broom
+tags: job social
+scene: A courier loft with couriers gathered round an old bald broom on two trestles like a coffin, a wreath of string and sealing wax on its handle.
+text: {seen(courier_loft_broom_pension) > 1: {~Pensioning off brooms has become a tradition: one is laid out on the trestles every term, and the couriers want a speech.|The trestles are up again. A broom that crashed into the bell tower one time too many is being pensioned off, and someone has to say something.|Another broom on the trestles, another wreath of string. The couriers look at you. You've done this before.}|The couriers are pensioning off a broom. It has flown the village run for forty years, it has nine bristles left and it is laid out on two trestles with a wreath of string round its handle. Nobody wants to give the speech, and you've just walked in.} {~The loft's oldest courier is pretending not to cry.|Someone has polished its handle.|A pigeon has perched on it, solemnly.}
+> left: Give the speech
+  challenge perform apprentice:
+    win:
+      renown +small
+      mood +small
+      say: {~You speak of the broom's first flight, its famous crash into the headmistress's laundry and the forty winters it never once refused. By the end the old courier is openly weeping, and the broom goes up on the wall with your speech pinned beneath it.|You give it a hero's farewell, with a minute's silence for the bristles lost in the line of duty. The couriers carry it to the rafters on their shoulders.|You keep it short: "It always came back." The loft goes quiet, then cheers, and somebody chalks those four words over the rack.}
+    lose:
+      mood -small
+      say: {~You start well and lose your way somewhere around the broom's childhood. The couriers clap kindly. The old courier gives the speech again, properly, after you.|You call the broom by the wrong name. Twice. The pigeon leaves.|You make a joke and it lands on the wrong side of the trestles. The loft winces, and the broom goes up to the rafters in an embarrassed silence.}
+> right: Hold the wreath and say nothing
+  mood +tiny
+  say: {~You hold the wreath while the old courier says a few gruff words. It's a better speech than you'd have made.|You stand at the back and bow your head with everyone else. It's oddly moving, for a broom.|You hold the string wreath. The pigeon holds the handle. The old courier does the talking.}
+
+@event village_barge_scarf
+title: To the One Who Always Waves
+pool: village_routine
+tone: warm
+when: seen(village_barge_scarf) == 0 and term
+art: letter
+tags: social
+scene: A village jetty, a barge hand leaning down from the deck to hold out a small paper parcel to a student on the boards.
+text: The barge is tying up at the village jetty when one of the crew leans down from the deck and holds out a small paper parcel. "You're the one," she says. "Waves at us every morning from the castle path. We've been wondering about you all term." The whole crew is watching from the rail.
+> left: Open it there on the jetty
+  mood +small
+  say: Inside is a knitted scarf in academy colours and a note in a careful round hand: "From the barge. We wave back. You never see." You wear it for the rest of the year, and from then on the barge's horn sounds twice when it passes you.
+> right: Give it to the first-year beside you
+  alignment +tiny
+  renown +tiny
+  say: There's a first-year on the jetty who waves at the barge every morning too, and has never once been waved back at. You put the parcel in her hands. She opens it, and goes pink, and wears the scarf for the rest of the year. The barge's horn sounds twice for her now, and once, a little later, for you.

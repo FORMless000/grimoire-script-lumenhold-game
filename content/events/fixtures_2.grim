@@ -1,0 +1,323 @@
+# ============================================================
+#  Fixtures, the middle rungs (threads 2, docs/threads-2-plan.md). The minor cast's ladders ran from an
+#  introduction straight to a milestone at rel 15–20 with little between, so their milestones were rarely
+#  reached. These are the cards in between: a few at their places, a few that come to you once you've been
+#  coming to them (`trigger: social`; fixtures `seeks: rarely`).
+# ============================================================
+
+# ---------------- Mabel ----------------
+
+@event mabel_closing_up
+title: Turning the Sign
+class: routine
+tone: warm
+trigger: social
+actor: mabel
+when: rel(mabel) >= 5
+weight: 10
+repeat: 3
+art: cup
+tags: social village
+scene: A small tea shop at closing time, chairs upturned on tables, a woman in an apron counting cups on hooks while a student holds a broom.
+text: {seen(mabel_closing_up) > 1: {~Closing time again, and Mabel hands you the broom before she's turned the sign. "Staff, near enough," she says.|The square's emptying, and Mabel is putting the chairs up one-handed with a cup of tea in the other. She nods you at the broom.|Mabel has the sign turned before you've finished your cup, and the broom leaning against your chair.}|It's nearly closing at Mabel's, and you're the last one in. She turns the sign without asking you to go. "Chairs up, petal," she says, "if you're stopping."}
+> left: Put the chairs up and sweep
+  health -tiny
+  rel mabel +small
+  say: {~You sweep while she counts the cups on the hooks, aloud, by name. Some of the names she says more quietly. She sends you home with a heel of cake wrapped in a napkin.|Chairs up, floor swept, the range banked. Mabel tells you who sat where today and what they were really worried about. You promise yourself you'll never tell anyone anything in here.|You put the last chair up and she pours two cups from the bottom of the pot, strong enough to stand a spoon in. "Never waste the last of it," she says. "That's the good part."}
+> right: Thank her and catch the barge
+  mood +tiny
+  say: {~"Go on, then," she says, and flaps her cloth at you. You make the barge with a minute to spare.|You leave her to it. Through the window, as the barge pulls out, you see her sit down with the last cup, alone, and look content.|"Mind the step," she says, as she always does. You do, for once.}
+
+@event mabel_wrong_pot
+title: The Wrong Pot
+place: mabels
+class: routine
+tone: warm
+actor: mabel
+when: met(mabel) and rel(mabel) >= 6 and year >= 2 and seen(mabel_wrong_pot) == 0
+weight: 8
+art: cup
+tags: social village
+scene: A tea shop counter, a woman in an apron frowning at a teapot as if it had betrayed her, a student holding a cup that isn't what they wanted.
+text: Mabel brings you a pot of the calm blend before you've sat down, as she always does. But you came in wanting ginger, the courage one, and for once she didn't see it. She looks at the pot, then at you, and her face goes very still. "Well," she says. "That's never happened."
+> left: Tell her she got it wrong
+  rel mabel +small
+  mood -tiny
+  say: She laughs, a little too long, and goes to make the ginger. When she brings it she sits down across from you. "You've changed, petal," she says. "I was reading last year's you." She doesn't charge for either pot, and she looks at you differently for the rest of the afternoon.
+> right: Drink it and say it's perfect
+  mood +small
+  rel mabel -tiny
+  say: It's a good pot, and it does calm you. Mabel watches you drink it with her head on one side. She doesn't believe you, quite, and she doesn't say so. When you leave she's still frowning at the tin.
+
+@event mabel_empty_hook
+title: An Empty Hook
+class: routine
+tone: tense
+trigger: social
+actor: mabel
+when: rel(mabel) >= 9 and term and seen(mabel_empty_hook) == 0
+weight: 10
+art: cup
+tags: social village
+scene: A row of cups on hooks behind a tea-shop counter, one hook empty, a woman in an apron looking at it instead of at the customers.
+text: Mabel stops you in the square. One of her regulars hasn't been in for a week: an old man who has had the same pot at the same table every afternoon for thirty years. His cup is still on its hook. "His cottage is up the hill past the mill," she says. "I can't leave the shop, petal. Would you look in on him?"
+> left: Walk up the hill and look in on him
+  health -tiny
+  rel mabel +small
+  mood +small
+  say: He's in bed with a cold and a bad temper, and very pleased to be found. You light his fire, fetch his post and stay for an hour of complaints about the weather. When you tell Mabel, she takes down his cup and fills it, and sends you back up the hill with it, wrapped in a cloth.
+> right: Say you've a lecture to get to
+  study +tiny
+  rel mabel -tiny
+  say: "Of course," says Mabel, too quickly. You make your lecture and take good notes. That evening, a barge hand tells you she shut the shop at three and walked up the hill herself. The next week the old man is back at his table, and Mabel is a little short with you over the change.
+
+# ---------------- Grimsby ----------------
+
+@event grimsby_lighthouse_walk
+title: Gone to Look at One
+place: grimsbys_books
+class: routine
+tone: warm
+actor: grimsby
+when: knows(grimsby.lighthouses) and rel(grimsby) >= 4 and seen(grimsby_lighthouse_walk) == 0
+weight: 8
+art: book
+tags: social village
+scene: A shut bookshop door with a handwritten sign, and beyond the village a long path out to a point where a small lighthouse stands against the sky.
+text: Grimsby's door is locked and the sign says BACK SOON (ISH). You know where he goes. Past the jetty the path runs out along the shore to the point, where the old harbour light stands, and there's a small figure in a long coat at the bottom of it, looking up.
+> left: Walk out to the point
+  health -tiny
+  rel grimsby +small
+  lore +tiny
+  say: He isn't surprised to see you. "Twelve-sided," he says, pointing. "The lamp room. Most are round." For an hour he tells you how the light was carried up in pieces in 1702, and who kept it, and why it went out. You don't buy a single book that day, and you walk back knowing more than you did.
+> right: Come back another day
+  mood +tiny
+  say: You leave him to his lighthouse. On the barge home you can still see him at the foot of it, small and very still, with his hat in his hand.
+
+@event grimsby_read_aloud
+title: The Small Print
+class: routine
+tone: warm
+trigger: social
+actor: grimsby
+when: rel(grimsby) >= 6
+weight: 10
+repeat: 3
+art: book
+tags: social village study
+scene: A cluttered bookshop at dusk, an old man in half-moon glasses holding a book at arm's length, a student in the chair opposite.
+text: {seen(grimsby_read_aloud) > 1: {~Grimsby has a book ready when you come in, and the chair pulled out. "This one smells of rain," he says. "Read me how it starts."|"My eyes," says Mr Grimsby, with dignity, "are on holiday." He hands you a book about the sea and settles back with his eyes closed.|Grimsby holds up a book and pulls out the chair in one movement. "Ten pages," he says. "I'll know by ten pages."}|Mr Grimsby is holding a book at the full length of his arm and squinting. "The print's got smaller," he says, "since 1960. Would you? Just the first chapter. I want to know if it smells as good as it reads."}
+> left: Read to him
+  study -tiny
+  rel grimsby +small
+  lore +tiny
+  say: {~You read until the lamp needs lighting, and your own reading waits. He stops you twice to argue with the author and once to fall asleep. When he wakes he lends you the book "until you've finished it for both of us".|Two chapters, a pot of tea and a long argument about whether the keeper should have married the cook. Your own reading waits another night.|He listens with his eyes shut and his fingers moving, as if turning pages. The evening you'd meant for your essay is gone. At the end he says, "Yes. That one smells right," and gives you the next one.}
+> right: Say you've your own reading
+  study +tiny
+  rel grimsby -tiny
+  say: {~"Of course," says Grimsby, a little lost. He reads the first page himself, very slowly, holding it almost at the window. You go back to your own books.|He nods and puts the book back on the shelf, a little slowly. Then he hands you one for your essay instead, the wrong one, which turns out to have exactly the chapter you needed.|"Next week, then," he says, as if it were a promise. You get your own reading done, and think about him squinting at the window.}
+
+# ---------------- Marisol ----------------
+
+@event marisol_exam_calm
+title: Holding the Lake Still
+class: routine
+tone: warm
+trigger: social
+actor: marisol
+when: rel(marisol) >= 5 and before_finals()
+weight: 10
+repeat: 2
+art: wave
+tags: social study
+scene: A grey dawn on a lake, a professor waist-deep with her arms out over the water, a student on the jetty with a lantern.
+text: {seen(marisol_exam_calm) > 1: {~Exams again, and Marisol at your window before dawn with the lantern. "The lake remembers you," she says. "Come and hold it."|The lantern is waiting on the jetty with your name chalked on it. Marisol is already in the water, arms out.|"It's in a mood again," says Marisol at the jetty, nodding at the grey water. She hands you the lantern without asking.}|Exams are coming, and Professor Marisol is out on the jetty before dawn. "Somebody always fails because the lake's in a mood," she says. "Not this year. Hold the lantern where the water can see it, and don't talk. The lake listens to everything."}
+> left: Hold the lantern up for her
+  health -small
+  arcana +small
+  rel marisol +small
+  say: {~An hour in the cold, the lantern up, your arms shaking. The waves go long and slow and then stop, like a sleeper turning over. Marisol whoops once, very quietly, as if the lake might mind.|You hold the light until you can't feel your fingers. Under it the water calms in rings, the way a cat settles. "It likes you," says Marisol. "Or it likes the lantern. Either will do."|The lake fights her for a while and then gives in all at once, flat as a plate to the far shore. Marisol is laughing. You are blue.}
+> right: Plead revision and go back to bed
+  study +tiny
+  say: {~"Of course," she says. "Somebody should pass." You hear her out there, through your window, singing to the water until the bell.|You go back to your notes. The lake on exam day is perfectly calm anyway, and you feel, for some reason, slightly left out.|She waves you off with a wet hand. "Go and learn something," she calls. "The lake and I will manage."}
+
+@event marisol_lost_satchel
+title: Ask, Don't Fetch
+place: lakeshore
+class: routine
+tone: light
+actor: marisol
+when: met(marisol) and rel(marisol) >= 3 and term and season != "winter"
+weight: 8
+repeat: 2
+art: wave
+tags: social study
+scene: A lakeshore, a first-year crying on the jetty, a professor up to her knees in the water, a satchel's strap just visible far below the surface.
+text: {seen(marisol_lost_satchel) > 1: {~Another satchel in the lake, another first-year in tears on the jetty. Marisol is wading out, shaking her head. "Ask it," she says to you. "You know how."|A boy's whole term of notes is under the jetty. Marisol hands you the job without a word, just a nod at the water.|Marisol is already waving you down to the jetty, where a third-year's satchel is sinking slowly into the reeds. "Yours," she says. "Ask nicely."}|A first-year has dropped her satchel off the jetty: all her notes for the term. Professor Marisol, already in the water, says, "Don't you dare dive. The lake gives back what it's asked for nicely." She looks at you. "Go on. Ask."}
+> left: Ask the lake for it
+  challenge spell apprentice:
+    win:
+      arcana +small
+      rel marisol +small
+      say: {~You ask, politely, the way she taught you. The water bulges and the satchel comes up into your hands, the notes inside barely damp. Marisol whoops. The first-year looks at you as if you'd walked on the lake.|The lake considers your request for a long, cold moment, then hands the satchel up as if it had been holding it for you. Marisol says, "Thank you," to the water, and makes you say it too.|It comes up slowly, turning, and every page inside is dry. "That," says Marisol, "is how you ask."}
+    lose:
+      mood -small
+      rel marisol +tiny
+      say: {~The lake gives you back a boot, a bottle and a very old fish. Marisol fetches the satchel herself, in two words. "It doesn't know you yet," she says, kindly.|The water rises, sulks and falls. Marisol takes over. "Too much demand in it," she says. "You'll get there."|The lake sends up the satchel's strap and keeps the satchel. Marisol sighs and gets it in one gesture. "Ask," she says. "Don't fetch."}
+> right: Leave it to her and go revise
+  study +tiny
+  rel marisol -tiny
+  say: {~Marisol gets it in one gesture and a whispered word. You hear about it at supper; you were in the library by then, your own notes open.|You don't stay to watch. By the time Marisol has asked the lake, you're at your desk with your own notes dry.|You leave her to it and go back to your revision. She mentions it later, mildly: "You'd have got it, you know."}
+
+# ---------------- Vey ----------------
+
+@event vey_lunch_dare
+title: Fool Me Once
+class: routine
+tone: light
+trigger: social
+actor: vey
+when: rel(vey) >= 5 and around(vey)
+weight: 10
+repeat: 3
+art: mask
+tags: social study
+scene: A long hall at lunch, a professor in a theatrical scarf leaning across a table towards a student, a salt cellar between them.
+text: {seen(vey_lunch_dare) > 1: {~Vey sits down across your lunch with the same smile as last time. "Shall we?" she says.|"Pudding's in five minutes," says Professor Vey, sitting down. "That's plenty of time to deceive a professor."|Vey drops into the seat opposite with her chin on her hands. "The pudding," she says, "is a custard tart. Probably. Fool me."}|Professor Vey sits down opposite you at lunch, which nobody does. "One trick," she says. "Any trick. Fool me before the pudding and I'll owe you one." She folds her hands and watches you with enormous interest.}
+> left: Try to fool her
+  challenge deceive vs vey.guile -3:
+    win:
+      rel vey +medium
+      charm +small
+      say: {~You glamour the salt cellar into a pepper pot and leave the pepper pot alone. She picks up the wrong one, tastes it and laughs out loud, and the whole table turns. "Owed," she says. "Owed."|You don't do any magic at all; you only say that you have. She spends the pudding checking everything on the table. "Oh," she says, when she realises. "Oh, that's good."|She smells the trick before she sees it, and you'd planned for that. She claps, once, delighted. "A student who knows about the nose," she says. "Come to my office hours. Bring that."}
+    lose:
+      rel vey +tiny
+      mood -tiny
+      say: {~She sniffs, smiles and taps the real salt cellar without looking. "Lavender," she says. "Your glamours always smell of lavender." She seems to like you more for trying, which stings a little.|"Nearly," she says, which is worse than "no". She takes your pudding as forfeit, and eats it slowly, in front of you.|She sees it at once and tells you why, in detail, over the pudding, with the whole table listening. Useful, and humiliating.}
+> right: Plead an empty head and eat
+  mood +tiny
+  rel vey -tiny
+  say: {~"A sensible answer," says Vey, "and a boring one." She steals a roll off your plate as she goes, or seems to. Later you find it still there.|She sighs theatrically and moves on to the next table, where a second-year is already sweating.|"Another time," she says. "I'll know when you're ready. You'll smell of lavender."}
+
+@event vey_rehearsal
+title: An Audience of Nobody
+place: lecture_tower
+class: routine
+tone: light
+actor: vey
+when: met(vey) and rel(vey) >= 6 and term
+weight: 8
+repeat: 2
+art: mask
+tags: social study
+scene: A lecture theatre in the afternoon, rows of glamoured students who flicker at the edges, a professor at the lectern, one real student in the doorway.
+text: {seen(vey_rehearsal) > 1: {~Vey's illusory students are back, all thirty of them, nodding at everything. "They agree with me," she says, disgusted. "Disagree with me. Loudly."|The ghostly class again. Vey points you to the back row. "Be the worst student I've ever had," she says. "You'll find it easy."|Vey's theatre is full of not-quite students once more. "Same rules," she says. "Ruin it."}|Through an open door in the lecture tower you see Professor Vey lecturing to a full theatre. Then you notice the students are all a little transparent at the edges. "Rehearsing," she says, without turning round. "They're too polite. Come and heckle."}
+> left: Take the back row and heckle
+  charm +small
+  study -tiny
+  rel vey +small
+  say: {~You ask the question everyone wants to ask and nobody does. Vey stops, thinks, and rewrites half her lecture on the spot, and the afternoon you'd meant for your reading goes with it. The illusory class applauds you, which is unnerving.|You heckle so well that one of the illusions turns round and glares at you. Vey is enchanted, and keeps you two hours. "Thursday," she says. "Same time. Bring worse questions."|An hour of interruptions and one genuinely good objection. "That one stays in," says Vey, writing it down. You leave with a sore throat and less of your own reading done.}
+> right: Close the door quietly and go
+  say: {~You leave her to her polite ghosts. Through the door, as you go, you hear thirty of them laugh at a joke at exactly the same moment.|You slip away. Behind you, Vey says, "Coward," quite cheerfully, without looking round.|You go. The illusions watch you leave, all of them, in perfect unison.}
+
+# ---------------- Brask ----------------
+
+@event brask_half_sentences
+title: Pliers. Not Those.
+place: stables
+class: routine
+tone: tense
+actor: brask
+when: met(brask) and rel(brask) >= 3
+weight: 8
+repeat: 2
+art: paw
+tags: social work
+scene: A stable stall, a professor holding a hippogriff's wing open with both arms, a splinter of fence in the feathers, a student by a tray of tools.
+text: {~Professor Brask has a hippogriff's wing pinned open with both arms and a splinter of fence rail in its feathers. "Pliers," she says. "Not those. The. Yes. No. Hold the." The hippogriff has opinions about all of it.|A griffin has a thorn deep in its forepaw and Brask has the paw in her lap. "Salve. Then the. Then hold. Not there." She doesn't look round. The tray holds eleven things.|An owl with a bent flight feather, and Brask's hands full of owl. "The splint. The little. Tape. No, the." The owl looks at you as if it, too, would like a whole sentence.}
+> left: Work out what she means
+  challenge research apprentice:
+    win:
+      vigor +small
+      rel brask +small
+      say: {~You read her the way she reads them: which hand is free, what she's looking at, what comes next. The splinter comes out clean. Brask nods once, which from her is a speech.|Salve, then the bandage, then you hold the paw where she was looking. It's done in a minute. "Huh," says Brask, and later you hear her tell the griffin about you, in a full sentence.|Splint, tape, the little scissors, in that order, before she's finished asking. The owl stops complaining. "Good," says Brask. "Most people hand me the big scissors."}
+    lose:
+      health -small
+      rel brask +tiny
+      say: {~You hand her the wrong pliers and the hippogriff takes the opportunity to bite you. Brask gets the splinter out one-handed and says, "Moral there."|You hold the paw where she wasn't looking. The griffin explains your mistake with its other paw. Brask finishes the job and binds your hand too, briskly.|The owl gets loose and spends ten minutes on the beams, and so do you. Brask fixes the feather when it comes down, and two words on you, both short.}
+> right: Ask her to say the whole sentence
+  rel brask +tiny
+  study -tiny
+  say: {~"Hm," says Brask, and tells you, slowly, all of it, with the history of every tool and the creature it was last used on. You never forget it. You are late for everything.|She says the whole sentence, and the next three, and the next thirty, and the splinter comes out while she's talking. Your afternoon goes with it. She doesn't think less of you for asking. She does remember that you asked.|"Oh," she says, surprised. "The splint. Obviously." Then she explains why it's obvious for half an hour.}
+
+@event brask_laugh
+title: A Bite and a Moral
+class: routine
+tone: light
+trigger: social
+actor: brask
+when: rel(brask) >= 6 and seen(brask_laugh) == 0
+weight: 10
+art: paw
+tags: social
+scene: A professor in a stained leather coat leaning on a fence by a paddock, a student beside her mid-story, a hippogriff listening.
+text: Professor Brask is leaning on the paddock fence beside you, which she doesn't do. "Heard you tell a story at lunch," she says. "Badly. Stories need a bite at the end. And a moral. Go on, then. One with both."
+> left: Tell her the one about the goose
+  challenge perform journeyman:
+    win:
+      rel brask +medium
+      mood +small
+      say: {~You tell her about the goose and the porter's hat, with the bite exactly where it should be and the moral last. Brask laughs, once, loudly, the whole term's laugh in one go. The hippogriff startles. "Well," she says, wiping her eyes. "That's the term done."|You get the bite right and the moral wrong, on purpose, and that's the joke. She laughs so suddenly that a pigeon falls off the stable roof. Nobody will believe you later.|It's a short story. The bite is a real one and the moral is "Don't." Brask laughs like a door slamming, then looks round to see who heard.}
+    lose:
+      rel brask +tiny
+      say: {~She listens all the way through and says, "No bite." Then she tells you the same story properly, with a bite, and it is much better, and she doesn't laugh at all.|"Moral's in the wrong place," says Brask. "Should be after the bite. Never before." She tells you three of hers to show you. You're both quite pleased by the end.|She doesn't laugh, but she nods, which is a start. "Practise on the goats," she says. "They're honest."}
+> right: Ask for one of hers instead
+  lore +small
+  say: {~She tells you about a student who fed a dragon a pear in 1971. The bite is at the end. So is the student. The moral is about pears.|Brask tells you the one about the griffin and the bishop. You'll never be able to look at a bishop again.|She tells you a story about the old barn owl that ends with a bite and no moral at all, then walks off before you can ask about it.}
+
+# ---------------- Amaranth ----------------
+
+@event amaranth_tea_break
+title: Five Minutes Sitting Down
+class: routine
+tone: warm
+trigger: social
+actor: amaranth
+when: rel(amaranth) >= 8
+weight: 10
+repeat: 2
+art: cup
+tags: social health
+scene: An empty infirmary in the evening, a healer sitting on the edge of a bed with a cup of tea, shoes off, a student in the doorway.
+text: {seen(amaranth_tea_break) > 1: {~Sister Amaranth is sitting down again, shoes off, and there's a second cup on the bed beside her already. "Five minutes," she says.|The infirmary in the evening, and Amaranth on the edge of an empty bed with her tea. She moves her feet to make room without a word.|"You again," says Amaranth, from the empty bed, cup in both hands. "Good. Sit."}|You go past the infirmary in the evening and Sister Amaranth is sitting down. Nobody has ever seen her sit down. She has her shoes off and a cup of tea in both hands, and she looks at you over it. "Five minutes," she says. "Sit. Don't talk about your health."}
+> left: Sit with her for the five minutes
+  mood +small
+  rel amaranth +small
+  study -tiny
+  say: {~You sit. She tells you about the first patient she ever lost, in four short sentences, and then about a cat she had as a girl, in a great many, and the evening you'd meant for your notes goes by. "Keep doing that," she says at last, and you're not sure what she means.|Five minutes stretch to forty, and your reading waits. She talks about her mother, who was a healer too and believed no excuse either. When the bell goes she stands, and is Sister Amaranth again, and sends you off with a list of things to eat.|You don't talk about your health. You talk about the weather, and the bread, and a book she read twice, for longer than you had. When you leave, she's asleep sitting up, with the cup still level in her hands. You take it gently and put it on the shelf.}
+> right: Leave her to rest
+  rel amaranth +tiny
+  say: {~"Wise," she says, and closes her eyes. You close the door very quietly.|You back out. In the morning, there's a note on your bedside table: "For not talking."|You leave. From the corridor you hear her sigh, a long one, the kind she never lets anyone hear.}
+
+# ---------------- Pell ----------------
+
+@event pell_castle_errand
+title: Forty Drops, Up the Hill
+class: routine
+tone: warm
+trigger: social
+actor: pell
+when: rel(pell) >= 4
+weight: 10
+repeat: 3
+art: bottle
+tags: social village work
+scene: An apothecary's back door at dusk, an old man pressing a corked bottle into a student's hand, the castle on its hill across the lake.
+text: {seen(pell_castle_errand) > 1: {~"Porter again," says Pell, handing you the bottle. "He'll want to argue about the dose. Don't let him."|Pell holds out the porter's bottle without a word, then, grudgingly: "Forty. He'll argue. Don't let him."|"The porter," says Pell, as if it were a disease, and puts the bottle in your hand. "Forty. Twice."}|Old Pell catches you in the square and puts a corked bottle in your hand. "The castle porter's chest," he says. "Forty drops at night, not forty-one. Tell him. Twice. He won't listen the first time."}
+> left: Carry it up and tell him twice
+  study -tiny
+  rel pell +small
+  say: {~It takes the evening, there and back. The porter argues for forty-five drops. You say forty, twice, the way Pell said it. He takes forty, grumbling. Next morning, he's stopped coughing, and Pell, hearing of it, corrects a label in your honour.|Up the hill with the bottle, and your evening's reading left behind. You deliver the bottle and the dose, twice. The porter says, "Pell's sent a trained one, then," and gives you a biscuit from his secret tin.|You give up an evening and count the forty drops out for him yourself, aloud, the way Pell would. The porter is astonished into silence, which hasn't happened in living memory.}
+> right: Say you're going the other way
+  mood +tiny
+  say: {~Pell grunts and gives it to one of his daughters, who rolls her eyes and goes. He doesn't mention it again. He doesn't need to.|"Hm," says Pell, which covers a great deal. He sends the bottle up on the barge with a note that says FORTY in large letters.|He nods and turns away. The porter gets his bottle anyway; Pell carries it up himself, at seventy-seven, in the rain.}

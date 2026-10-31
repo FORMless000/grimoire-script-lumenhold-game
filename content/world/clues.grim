@@ -340,3 +340,41 @@ kind: lead
 name: The stair inside the wall
 text: A servants' stair, one shoulder wide, climbs inside the seventh tower's wall from the cellars to the landing of candles. The Cartographers go at midnight.
 followed: flag(heist_tower_tried)
+
+# Threads 2, the special offers (content/events/offer_hints.grim): each hint leaves a lead, followed once the
+# item is yours. While you hold one, its offer is likelier at its counter.
+
+@clue lead_offer_ashwood
+thread: The wand that bites
+kind: lead
+name: The ash one
+text: Mir keeps an ashwood duelling wand under a cloth at the back of the market stall in the square. It bites whatever blocks it, and Mir won't sell it to anyone who can't hold it.
+followed: has_item(ashwood_wand)
+
+@clue lead_offer_ward_cloak
+thread: Ward thread
+kind: lead
+name: A spool for the tailor
+text: Sister Amaranth sent a spool of ward thread down to the tailor in the square, for a cloak for you. You pay for the hemming.
+followed: has_item(ward_cloak)
+
+@clue lead_offer_almanac
+thread: Grimsby's almanac
+kind: lead
+name: Fifty years of tides
+text: Mr Grimsby keeps a pocket almanac he won't sell to anyone who doesn't know what it's for. Talk to him about the right thing.
+followed: has_item(pocket_almanac)
+
+@clue lead_offer_spoon
+thread: Pell's spoon
+kind: lead
+name: Pell's old spoon
+text: Old Pell is retiring his brass measuring spoon, and will part with it only to someone who counts aloud in front of him. Go to the apothecary, not while you're working the counter, with money down.
+followed: has_item(measuring_spoon)
+
+@clue lead_offer_honey
+thread: The silver bees
+kind: lead
+name: A tin of silver
+text: Old Maud's silver bees have taken to you. Help her with the frames at her cottage and there's a tin of honey in it.
+followed: has_item(honey_tin)

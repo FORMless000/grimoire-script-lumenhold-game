@@ -196,9 +196,10 @@ weight: 10
 art: lantern
 tags: money mystery
 scene: A market that only appears after midnight, stalls lit with coloured flames, hooded sellers, a bottle that seems to contain a small thundercloud.
-text: A night market appears in a field outside the village — it wasn't there yesterday and won't be tomorrow. A hooded stall-keeper offers you a stoppered bottle with a tiny thundercloud inside. "Fifteen crowns. What it does is a surprise."
+text: A night market appears in a field outside the village — it wasn't there yesterday and won't be tomorrow, though a farmer at the stile tells you that in term it comes back every moonless night. A hooded stall-keeper offers you a stoppered bottle with a tiny thundercloud inside. "Fifteen crowns. What it does is a surprise."
 > left: Buy the bottle
   gold -medium
+  flag night_market_known
   chance even:
     gain inspired
     arcana +small
@@ -208,6 +209,7 @@ text: A night market appears in a field outside the village — it wasn't there 
     gain sick
     say: You uncork it in your room. The little storm rains on you. Just rain. For a fortnight. You catch a cold.
 > right: Just look around
+  flag night_market_known
   health -tiny
   mood +small
   lore +tiny

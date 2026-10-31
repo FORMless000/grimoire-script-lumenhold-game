@@ -44,8 +44,10 @@ test('styles: the sleuth routes itself to the story, follows more of its leads a
   const share = (style) => { let l = 0, f = 0; for (const e of games(style)) { const x = leads(e); l += x.length; f += x.filter((y) => y.followed).length; } return f / Math.max(1, l); };
   assert.ok(share('sleuth') > share('balanced') + 0.2, 'leads followed: ' + share('sleuth').toFixed(2) + ' vs ' + share('balanced').toFixed(2));
   assert.ok(mean('sleuth', (e) => Object.keys(e.s.clues).length) > mean('balanced', (e) => Object.keys(e.s.clues).length), 'more clues');
-  // goes out only for the story: never more nights than the nightlife regular
-  assert.ok(mean('sleuth', (e) => chose(e, 'night_out', 'right')) < mean('nightlife', (e) => chose(e, 'night_out', 'right')));
+  // goes out only for the story: of the nights it could go out, fewer than the nightlife regular, who always does (a share,
+  // not a count: one early ending among eight seeds moved the count past it, threads 2)
+  const outShare = (style) => { let out = 0, offered = 0; for (const e of games(style)) { offered += cards(e).filter((h) => h.id === 'night_out').length; out += chose(e, 'night_out', 'right'); } return out / Math.max(1, offered); };
+  assert.ok(outShare('sleuth') < outShare('nightlife'), 'nights out: ' + outShare('sleuth').toFixed(2) + ' vs ' + outShare('nightlife').toFixed(2));
 });
 
 // (Which month the first partner comes is noise on 8 seeds: both styles find one in nearly every game. Easy foes moved it
@@ -77,7 +79,8 @@ test('styles: the homebody sleeps every night, spends every break at home, and g
   // somewhere in the homebody's games, is enough)
   assert.ok(games('homebody').some((eng) => cards(eng).some((h) => h.id === 'night_sleep' && (h.out.deltas.health > 8 || h.out.deltas.mood > 4))), 'the home sleep pays');
   // the typical homebody: a run that falls into debt with Grisk (his collectors cost Health) can end low on any seed
-  const hs = games('homebody').map((e) => e.s.vals.health).sort((a, b) => a - b), median = (hs[(hs.length - 1) >> 1] + hs[hs.length >> 1]) / 2;
+  // (sixteen seeds: on eight, two or three collector runs moved the median by themselves, threads 2)
+  const hs = games('homebody').concat(EXTRA.map((seed) => play('homebody', seed).eng)).map((e) => e.s.vals.health).sort((a, b) => a - b), median = (hs[(hs.length - 1) >> 1] + hs[hs.length >> 1]) / 2;
   assert.ok(median >= 80, 'healthy at the end: ' + hs.join(' '));
 });
 

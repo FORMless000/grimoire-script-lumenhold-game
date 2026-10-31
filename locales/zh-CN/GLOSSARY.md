@@ -146,4 +146,6 @@ New threads 1 (detention, contraband): detention 禁闭 · the confiscation vaul
 
 New threads 1 (the Cartographers and the midnight heists): the Master Map 总图 · its Keeper 保管人 · a blank (on the map) 空白 · the chained shelf 锁链书架 · the deep stacks 深层书库 · the breathing shelves 会呼吸的书架 · the bindery's book-lift 装订室的书梯 · the wall stair (in the seventh tower) 墙中楼梯 · the landing of candles 蜡烛平台 · the old classrooms 旧教室 · the duelling master 决斗师 · the collector (who buys the loot) 收藏家 · a near thing / a slip 险些 · caught 被抓 · the way out 天亮前出来（卡名）. ⚠ 标记的步骤里“there's no near thing”译作“就没有险些这回事了”.
 
+Threads 2 (the Night Market): the Night Market 夜市 · the far field 远田 · the last stile 最后一道篱阶 · moonless nights 没有月亮的夜里 · hooded sellers 戴兜帽的卖家 · the wand-tuner 调杖师. Shops (`type: shop`): basket 篮子 · Buy 结账. Pushers and agents: Grisk's collectors (trolls) 巨魔收账人 · the families (the Northern families, in the man in grey's mouth) 世家 · ward thread 护界线 · the head prefect 学生会长 · the duty rota 值日表 · Mabel's "petal" 小可爱 · Maud's "dearie" 孩子. Alignment hints on agent cards start 空洞。/ 流明。 as in `chain_hollowstar.lang`. Offer leads use the item names in `world/items.lang` (袖珍年历, 白蜡木决斗魔杖, 护界绣斗篷).
+
 Spell problems (2026-10-29; `events/pools/spell_lessons.lang`): 每张卡的第三个选项 `opt.up.*` 就是施放那条咒语；标签用咒语自己的动作（“用手把它化开”“把它反照回去”“让一支羽毛笔全记下来”），咒语名照上表，正文和另外两个选项里不要提咒语。

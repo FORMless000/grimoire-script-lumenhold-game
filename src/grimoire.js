@@ -722,9 +722,12 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
   // The cards an appointment names (`deals: card a|b`, or a pool's or thread's cards): for the tools.
   function appointmentCards(content, a) {
     const d = a.deals || {};
-    if (d.card) return d.card.filter((id) => content.events[id]);
-    if (d.pool) return Object.values(content.events).filter((e) => (e.pools || []).includes(d.pool) || e.thread === d.pool).map((e) => e.id);
-    return [];
+    let ids = [];
+    if (d.card) ids = d.card.filter((id) => content.events[id]);
+    else if (d.pool) ids = Object.values(content.events).filter((e) => (e.pools || []).includes(d.pool) || e.thread === d.pool).map((e) => e.id);
+    // A character's own version of a card (`specializes:`) is dealt in its place, so the appointment deals it too.
+    const has = new Set(ids);
+    return ids.concat(Object.values(content.events).filter((e) => e.specializes && has.has(e.specializes)).map((e) => e.id));
   }
 
   function walkEffects(effects, visit) {

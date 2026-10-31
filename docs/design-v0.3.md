@@ -421,6 +421,18 @@ time_fit  = 3 in an event's `time:` slots, 0.3 elsewhere, 1 without one; 0 outsi
 
 **Appointments** (the card-wiring framework, 2026-10-25; `docs/grimoire-script.md` §9). Everything the game pushes, besides `queue`, is an `@appointment`: an occasion (the month's start, the course slot, a visit, or a notice such as term end, a failed course, low marks, renewal, promotion, a spark crossing its cooldown), its subjects (track kinds you're in, or everyone you've met), what it deals (a card, a pool, a trigger, the subject track's own cards), a `when`, a chance, and at the month's start a slot and the shared plot-card cap. `content/core/appointments.grim` declares the game's own, in the order they deal: at the month's start `forced` (auto cards), `beats` (one plot card a month, two in a beat month, §10.6) and `milestones` (ramps); `class` (the course morning); at a visit `festivals` (taking the visit, §4.4), `off_shift` and `fixed` (a place's `always:`); `letters` (off campus at night); and the notices `intro`, `start`, `exam`, `appeal`, `warning`, `review`, `promotion`, `spark_cooldown`. The older spellings (`trigger: auto`, `ramp:`, `beat:`, `replaces:`, `always:`, `@game exam:` …) are shorthands for them. A new recurring push (a market day, a tutoring hour, one character's shift) is a new appointment, with no director code. The day's slots themselves stay the `@game day_term` / `day_break` recipe (§4.2).
 
+**Pushers** (threads 2, 2026-10-31; `content/events/pushers.grim`, `content/events/hollowstar/agents.grim`). Some people come to you instead of waiting to be met. Each is an appointment at the month's start, with a chance word, dealing `trigger: queued` cards from its own pool:
+- **A rival** or a soured peer provokes you: `for: met`, `@cond provokes`, `slim`, one roll per person. Lyra and Bram have their own versions (`specializes:`).
+- **Grisk** keeps in touch while you owe him, only in a term month you paid, so he never doubles his own reminder and collectors (`unlikely`).
+- **Ember** brings you things (`slim`).
+- **The plot's two sides** court and watch the player who leans their way:
+  - the man in grey, once he has courted or tempted you and you lean Hollow;
+  - the Wardens, once the headmistress has noticed you and you lean Lumen.
+
+  These are hard-canon story cards with `arc: hollowstar` and `limit: plot`. They find no clue and move no clock.
+
+The target is one to three a year while each one's condition holds. Measured on the simulated styles, it's about 1.5 a year for rivals and the man in grey, and about 2 for Ember and the Wardens.
+
 ### 5.4 Radiant casting
 
 ```
@@ -1048,6 +1060,15 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 ### 9.3 Crafting policy
 
 Until §T2's crafting exists, alchemy is a skill and appears only in prose. Validators reject any mechanical reference to recipes or ingredients. **Items** exist since world expansion 1 (2026-10-20; `@item`, the kit): an owned item opens its own options on cards where it fits (`up[item:x]`, at most one per card, so owning more never stacks), and what you wear (one wand, one robe, one trinket) counts only in fights, as flat numbers. Ordinary checks never read items; tonics (`group: tonic` states) are the only check bonuses you can buy openly. **Deviation (threads 1):** Owl's Ink, a contraband elixir (`content/states/contraband.grim`), is a second and illicit one: `boost: exam:large` (`@balance boost_sizes`) for its two months, which takes an A from about 43% to about 69% of exams, so it is sold before finals. Every dose risks a search, and repeated doses risk a four-month craving.
+
+**Shops** (threads 2, 2026-10-30): a counter is `type: shop`. You may buy several wares at once, in a basket on a screen of its own (`src/shop-ui.js`). The engine reads each option's role from what it already does:
+- **a ware:** it has a price or a sale, and starts nothing;
+- **taken on its own:** a check, a visit or a card now;
+- **the way out:** only words.
+
+A counter therefore changes one line. The basket must fit the purse, and it is recorded as `a+b`; `chosen()` sees inside it.
+
+**The special offers** (cards tagged `offer`) each have a hint card that leaves a Journal lead (`lead_offer_*`). While you hold the lead, a visit appointment is likely to open on the offer at its place, and the counter's text mentions it (`content/events/offer_hints.grim`).
 
 ---
 

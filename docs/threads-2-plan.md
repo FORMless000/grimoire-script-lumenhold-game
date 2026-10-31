@@ -4,7 +4,10 @@ Approved 2026-10-30. This file holds the plan as approved, with a ledger, a batc
 
 ## Next up
 
-M4, the Night Market (its stalls are the first new shop).
+Everything planned is written and reviewed. What's left: commit and push, then a human playtest. In particular, the playtest should look at:
+- the pushers' pacing;
+- the Night Market;
+- whether the offer hints are found.
 
 ## Scope and decisions (2026-10-30)
 
@@ -37,11 +40,11 @@ Not chosen, kept for later:
 | S1 | the shop engine and UI, with tests | engine |
 | M4 | the Night Market (its stalls are a shop) | 12 |
 | M1 | minor cast, part 1 (Mabel, Grimsby, Marisol, Vey, Brask, Amaranth, Pell) | 20 |
-| M2 | minor cast, part 2 (Maud, Isolde, Ilse, Tamsin) | 12 |
-| M3 | placeholders | 18 |
-| M5 | pushers: rivals, Grisk, Ember | 22 |
+| M2 | minor cast, part 2 (Maud, Isolde, Ilse, Tamsin): dropped, see the log | 0 |
+| M3 | placeholders: top-ups and the retirements | 3 |
+| M5 | pushers: rivals, Grisk, Ember | 19 |
 | M6 | pushers: the arc's agents | 10 |
-| S2 | offer hints | 10 |
+| S2 | offer hints | 7 |
 
 Each batch goes through the full loop:
 - retrieval `search` before drafting and `related --draft` after;
@@ -56,6 +59,13 @@ Each batch goes through the full loop:
 |---|---:|---:|---|---|
 | A Toll removed | edits | done (c7506be) | — | 100% |
 | S1 shops | engine | done | — | 100% |
+| M4 Night Market | 12 | 9 and a place | accepted, round 2 | 100% |
+| M1 minor cast | 20 | 13 | accepted, round 2 | 100% |
+| M2 minor cast, part 2 | 12 | 0 (dropped) | — | — |
+| M3 placeholders | 18 | 3 and 4 retired | accepted, round 2 | 100% |
+| M5 pushers | 22 | 19 and 3 appointments | accepted, round 2 | 100% |
+| M6 arc agents | 10 | 10 and 2 appointments | accepted, round 2 | 100% |
+| S2 offer hints | 10 | 7, 5 leads and 7 appointments | accepted, round 2 | 100% |
 
 ## Batch log
 
@@ -69,4 +79,33 @@ Each batch goes through the full loop:
   - **Checks:** all tests, the slow ones too; the golden diff is unchanged; `balance --quick` has 0 invariant failures and the same 5 alarms as before.
   - **Browser:** checked headless. A two-ware basket (buns and the duelling coat) buys both, records `buns+coat`, and shows one receipt.
   - **Deviation:** the basket shows its total against the purse, but not a summed meter preview. Each ware's own preview shows on hover.
+- **M4, the Night Market:**
+  - A midnight place in the far field, open every term month (`closed_when: not term`), found through a rumour at the village or the Newt, or the summer card.
+  - Its stalls are a shop: a lantern, a candle, a dream and Owl's Ink.
+  - Six midnight cards.
+  - Lint and reach count slots opened by a `visit <slot>` statement as visit slots.
+  - Notes: `build/batches/M4-night-market.notes.md`.
+- **M1, the minor cast:** 13 middle-rung cards for Mabel, Grimsby, Marisol, Vey, Brask, Amaranth and Pell (`content/events/fixtures_2.grim`). Notes: `build/batches/M1-fixtures.notes.md`.
+- **M2, dropped:** Maud and Isolde already have about 15 cards each, Ilse 10, and Tamsin's ladder is her letters.
+- **M3, the placeholders:** the four places had filled up meanwhile, so it became three cards:
+  - the broom's pension;
+  - the barge's scarf, moved to the village jetty in review;
+  - the headmistress's letters home.
+
+  The four quiet-hour placeholders are retired (`when: false`).
+- **M5, pushers** (`content/events/pushers.grim`):
+  - **`rival_provokes`** (`@cond provokes`, Lyra and Bram's own versions), about 1.5 cards a year of rivalry.
+  - **`grisk_dunning`**, in paid term months only, about one a year of debt.
+  - **`ember_brings`**, about two a year. Before this batch her cards came 0.1–0.5 times a game.
+  - **Tooling:** `appointmentCards` also returns a dealt card's `specializes:` versions.
+- **M6, the arc's agents** (`content/events/hollowstar/agents.grim`):
+  - The man in grey for a Hollow player, the Wardens for a Lumen one.
+  - Hard canon, `arc: hollowstar`, `limit: plot`, no find or advance.
+  - About 1.5 and 2.3 a year while they hold.
+- **S2, offer hints** (`content/events/offer_hints.grim`):
+  - Five hints leave a lead.
+  - While you hold one, a visit appointment is likely to open on its offer.
+  - Three counters mention theirs.
+  - The ashwood wand goes from 0–2 to 1–8 of 15 games, honey and the spoon from 1–6 to 1–7.
+  - The almanac and the spoon stay below 10% for the styles that rarely shop.
 

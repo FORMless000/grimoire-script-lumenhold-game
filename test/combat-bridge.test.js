@@ -92,9 +92,14 @@ test('combat: outcomes map onto the card (win; draw or points loss → partial w
 
 test('combat: with real content no fight is ever rolled (every combat and duel check is a played fight)', () => {
   for (const style of ['balanced', 'aggressive', 'random']) {
-    const { eng } = quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed: 11, name: 'F', maxSteps: 9000 }));
-    const checks = eng.s.hist.filter((h) => h.t === 'card' && h.out).flatMap((h) => h.out.checks || []);
-    const fights = checks.filter((c) => c.challenge === 'combat' || c.challenge === 'duel');
+    // up to three seeds, so that a short random game with no fight in it doesn't make the check vacuous (threads 2)
+    let eng, fights = [];
+    for (const seed of [11, 12, 13]) {
+      eng = quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed, name: 'F', maxSteps: 9000 })).eng;
+      const checks = eng.s.hist.filter((h) => h.t === 'card' && h.out).flatMap((h) => h.out.checks || []);
+      fights = checks.filter((c) => c.challenge === 'combat' || c.challenge === 'duel');
+      if (fights.length) break;
+    }
     assert.ok(fights.length > 0, style + ' met a fight');
     for (const c of fights) assert.ok(c.fight, style + ': a rolled ' + c.challenge);
     assert.equal(eng.s.fights.length, fights.length);

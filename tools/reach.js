@@ -16,6 +16,8 @@ function reach(content) {
   const F = { flag: new Set(), state: new Set(), clue: new Set(), place: new Set(), track: new Set(), npc: new Set(), queued: new Set(), ending: new Set(), spell: new Set(), raised: new Set() };
   const why = {};                                         // event id → first missing fact (for the report)
   const visitSlots = new Set([...(c.game.day_term || []), ...(c.game.day_break || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
+  // A slot a card opens with `visit <slot>` (the midnight turn's "Go out") is a visit slot too (threads 2: the Night Market).
+  for (const e of Object.values(c.events)) for (const o of e.options || []) G.walkEffects(o.effects, (st) => { if (st.t === 'visit' && st.slot) visitSlots.add(st.slot); });
   const recipeSlots = new Set([...(c.game.day_term || []), ...(c.game.day_break || [])].map((r) => r.slot));
   const roles = (e) => new Set((e.cast || []).map((r) => r.role));
 

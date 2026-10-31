@@ -1,0 +1,45 @@
+{
+  "batch": "M4-night-market",
+  "round": 2,
+  "accept": true,
+  "summary": "Every blocking issue from round 1 is fixed. The Wardens and the Third Gargoyle are gone; the four random-mode 'again' lines now read as first meetings; the moon-scales win is a single honest act with a fitting check (guile); and the summer card now says where the market comes in term. Lint is clean for the batch, and the reworked compass card's premise is still unique (`retrieve related`: life_auction, flight_field_long_grass and corvin_between_witness all differ). What remains is small, mostly on nm_stolen_compass, whose rework into a sequence brought in two continuity slips that should be fixed before merging.",
+  "issues": [
+    {
+      "event": "nm_stolen_compass",
+      "severity": "small (fix before merge)",
+      "problem": "The rework introduced three problems. (a) Sequence mode makes the last step stick, so a fourth or later showing reads 'a signet ring you've seen on a fourth-year's hand' again: the same ring stolen from the same student twice. Nothing in the card develops, so a sequence isn't needed. (b) 'every day for three years' assumes the player is in their fourth year, but step 3 can show in year 2. (c) The left label 'Buy it back for her' is wrong for step 2, whose owner is a second-year boy.",
+      "fix": "(a) Switch every group back to random (`{~…}`); the three sets are self-contained. (b) Write 'every day since your first week' (or gate the line on {year >= 4: …}). (c) Relabel the option 'Buy it back for its owner'."
+    },
+    {
+      "event": "nm_memory_tuner",
+      "severity": "small",
+      "problem": "Not fixed from round 1: the right option gives mood +tiny, but variant 2 ends 'You find yourself agreeing, and hating that she's right', which reads as a mood loss.",
+      "fix": "End variant 2 on relief or quiet pride (for example 'You find yourself agreeing, and walk home whistling flat')."
+    },
+    {
+      "event": "nm_honesty_stall",
+      "severity": "small",
+      "problem": "Not fixed from round 1: left variant 3 says 'You pay, and take a loaf' under the label 'Pay for an apple, honestly'.",
+      "fix": "Relabel the left option 'Pay for what you take', or make variant 3 an apple."
+    },
+    {
+      "event": "nm_rumour",
+      "severity": "small",
+      "problem": "The scene line, shown on every showing, now says 'late in the day', but the village is open from morning. Left variant 1 also runs 'until the light's gone'.",
+      "fix": "Drop the time of day from the scene ('A village square, two old women at a well…'), and end variant 1 on '…at length, until your feet are cold'."
+    },
+    {
+      "event": "night_market_stalls",
+      "severity": "small",
+      "problem": "The dream's cost is mood -tiny, but variants 1 ('You wake tired') and 2 ('wake unrested') show tiredness, which is health. Only variant 3 (homesick) shows spirits.",
+      "fix": "Give variants 1 and 2 a line that shows unease ('you wake missing a harbour you've never seen', 'you wake lonely for an old man's library'), or change the cost to health -tiny to match the lines and the hint ('sleep a little worse')."
+    },
+    {
+      "event": "nm_rumour_newt",
+      "severity": "small",
+      "problem": "Text variant 1 has no man in it (only the landlady and 'somebody'), yet say variant 1 opens 'He drinks it'. Only the scene line has 'a regular grinning over his cider'.",
+      "fix": "End text variant 1 with the regular ('…paying me in these.' The regular at her elbow grins into his cider.), or open the say with 'The regular at the bar drinks it…'."
+    }
+  ],
+  "notes": "Round 2 checked: the whole of night_market.grim and sum_night_market re-read; `grim lint` shows nothing for the batch; `retrieve related --draft` on the reworked nm_stolen_compass (premise unique). The round-1 fixes I confirmed: the porter's list instead of the Wardens; the ten o'clock bell porter instead of the Third Gargoyle; first-meeting text in the stalls, tuner, honesty stall and moon scales; the Grisk mention removed; the lantern hint narrowed to 'whoever noticed you slip out'; moon scales now `appeal using guile journeyman` with one honest win and no refund echo; the boy's coin no longer changes hands; the summer card's farmer at the stile. nm_dawn_packing and nm_thornwick_shopper are clean. Reminder: the retrieval index is still unsynced for this batch; run `npm run grim -- retrieve index` at the end of the session."
+}

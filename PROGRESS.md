@@ -1,3 +1,45 @@
+## Threads 2: shops, the Night Market, the minor cast, pushers, offer hints (October 30–31)
+
+The plan, decisions, ledger and batch log: `docs/threads-2-plan.md`. 61 new cards and 12 appointments in seven batches, each through retrieval, the critic (every batch accepted, all on round two) and zh-CN (complete).
+
+- **Toll removed:** nothing taught it. The combat minigame keeps a dormant, uncastable `toll`, because its Rust core needs it.
+- **Shops (engine, schema v1 addition):**
+  - `type: shop`: a basket of wares on a screen of its own (`src/shop-ui.js`), each option's role read from what it does.
+  - The six village counters changed one line each.
+  - `chosen()` sees inside a basket (`a+b`).
+- **The Night Market:**
+  - A midnight place in the far field, open every term month, found by rumour.
+  - Its stalls are a shop.
+- **The minor cast:** 13 middle-rung cards for seven fixtures.
+- **The placeholder places:** 3 cards. The four quiet-hour placeholders are retired.
+- **Pushers** (design §5.3), appointments with no engine code:
+  - **Rivals provoking you:** `@cond provokes`, with Lyra and Bram's own versions via `specializes:`. About 1.5 a year of rivalry.
+  - **Grisk while you owe him:** about one a year of debt.
+  - **Ember bringing you things:** about two a year. Before, her cards came 0.1–0.5 times a game.
+  - **The plot's two sides:** the man in grey for a Hollow player, the Wardens for a Lumen one. Hard canon, `limit: plot`, no find or advance; about 1.5 and 2 a year while they hold.
+  - **Tooling:** `appointmentCards` also returns a dealt card's `specializes:` versions.
+- **Offer hints:**
+  - Five hint cards each leave a Journal lead. While you hold it, a visit appointment is likely to open on its offer, and its counter mentions it.
+  - The Whisperwood gifts' existing leads get the same appointment.
+  - The ashwood wand is now seen in 1–8 of 15 games per style, against 0–2 before.
+- **Balance:**
+  - `balance --quick`: 0 invariant failures, 4 alarms (5 before):
+    - truant's shadow headline at 37%;
+    - aggressive's mood and health;
+    - the never-seen list;
+    - balanced's incidents, now 3.0–3.3 a year against a ceiling of 3 (2.8 before). The rise is `grisk_reminder`: more missed debt payments, as players now spend on the offers they find.
+  - balanced's windfall alarm and social's still-searching alarm are gone.
+  - **Gold:** net per game within noise (balanced +17, social −22).
+  - **The plot funnel:** every act opens at the same median turn, in 100% of games.
+- **Tests made robust to seed luck**, with the same intent, each checked on HEAD too: three style and combat signatures had margins thin enough that the new cards' shift of the RNG tipped them.
+  - The sleuth's nights out compare as a share of the nights offered.
+  - The homebody's end-health median is taken over 16 seeds.
+  - The combat bridge's vacuity guard tries up to three seeds.
+- **Open:**
+  - A human playtest of the pushers' pacing, the Night Market and whether the hints are found.
+  - The almanac and spoon offers stay below 10% for styles that rarely shop.
+  - Several fixture milestones are still never seen by the bots: `marisol_storm`, `marisol_trust`, `grimsby_mind_the_shop`, `grimsby_lighthouse_walk`.
+
 ## Spell problems: the spell lessons reworked (October 29)
 
 The 34 spell lessons (one card per spell, dealt once after you learned it, both options assuming you knew it) are now **spell problems**: a trouble at a place, two ordinary ways through, and the spell as the third option, shown once you know it. Nothing else on the card assumes you know the spell, and the card comes up without it, much more rarely (`@cond spell_draw`: weight 3 before, 120 after). Measured: a known spell's card comes back about once a year or more (3.5–5 a game in all), an unknown one's rarely (2.5–4 a game across about 26 spells). Ids kept; zh-CN complete; the critic accepted both halves (rounds 2 and 3). Notes, retrieval and measurements: `build/batches/spell-problems.notes.md`.
@@ -11,7 +53,7 @@ The plan, decisions, ledger and batch log: `docs/threads-1-plan.md`. 67 new card
 - **Contraband elixirs:** Brightwater and Owl's Ink, two months a dose, a four-month craving with withdrawal cards, Grisk as the steady supplier, sold before finals. Owl's Ink is an illicit exam boost (an A in about 69% of exams against 43%): a recorded deviation from §9.3.
 - **The Midnight Cartographers:** the Master Map quest, whose lines open the heists, and six routine cards.
 - **Midnight heists** in the Restricted Stacks (to the confiscation vault) and the seventh tower (to the duelling master's study, never the star key). Guile only; they replace the old midnight cards there (retired with `when: false`).
-- **Spell sources:** Torment and Reflect from the stacks, Extraction from the tower, Heartprice alone from the Outcast, Eclipse from the man in grey. Toll still has no source (it had none before).
+- **Spell sources:** Torment and Reflect from the stacks, Extraction from the tower, Heartprice alone from the Outcast, Eclipse from the man in grey. Toll still has no source (it had none before; removed in threads 2).
 - **Balance (matched against the commit before threads 1):** the plot funnel is unchanged (every act in 100% of games). GPA and skills hold. Gold moves within noise (nightlife −7%, sleuth +12% from heists, about 21 gold a night). Alignment drifts Hollow by about 10 a game for styles that drink the elixirs (−tiny a dose), and about 24 for sleuths, who also steal: a consequence of choices, so no retune. Detention: 1–2 months in 48 for most styles, about 5 for a night-goer. `balance --quick`: 0 invariant failures; 4 alarms, all there before (social's still-searching headline, truant's archmage at 50% against 43%, aggressive's bars); balanced's tight-month alarm cleared. Cards no quick style sees rose from 104 to 158: the heists, the Cartographers' quest and the rarer elixir cards, which need the club or a night-going style.
 - **Open:** the bots rarely join the Cartographers, so heists are measured on sleuths only; a human playtest should judge heist pacing and how often a craving lands.
 
@@ -412,7 +454,7 @@ The plan was wide-but-thin to deep (the approved plan, rev. 4; `docs/world-expan
   - The lumen alchemist alarm predates the delve, but the delve feeds it a little (alchemy through the haul and the infirmary).
 - **Fixed after review** (feedback 2026-10-20): picking the Whisperwood at midnight before the Hush was known played nothing (its midnight edge waits for `ww_midnight_known`), and the empty midnight slot ended the month. The first midnight visit now has its own card (`ww_night_first`, grouped with `ww_edge_night`): it finds the silence (`ww_midnight_known`, the Hush lead) and can go straight down. The map now opens a place in an opened slot only if one of its cards there can play (`playsOpened` in `src/director.js`), so no midnight pick is ever empty.
 - **Critic pass** (`docs/reviews/new-cards-2026-10-20/`): an independent read of the 285 new cards found 46 problems. 45 are fixed, including the delve payout, which always said the bag was empty. #38 is declined, since a prank war moves no alignment (`life_prank_war`). The lint now errors on a skill used as a cost. It awaits a re-review.
-- **Gaps:** the negotiation minigame itself (the stub decides); the race HP and Mana numbers are placeholders for a simulator sweep; Toll has no source; the close milestones of Lyra, Bram and Ilse and the soured Corvin and Ilse cards are rare or unseen in simulation (covered by `test/bonds.test.js`); a browser pass over the intro, the Kit panel and a midnight delve is still to do by hand.
+- **Gaps:** the negotiation minigame itself (the stub decides); the race HP and Mana numbers are placeholders for a simulator sweep; the close milestones of Lyra, Bram and Ilse and the soured Corvin and Ilse cards are rare or unseen in simulation (covered by `test/bonds.test.js`); a browser pass over the intro, the Kit panel and a midnight delve is still to do by hand.
 
 ## Feedback notes (October 20)
 
@@ -651,7 +693,7 @@ October 19, 2026: every `challenge combat` and `challenge duel` is a fight in th
 ## Known gaps and deviations from the design
 
 - **Balance after L** (full `balance`, 100 games a style): random play ends early in about 31% of its runs, mostly by taking "the next barge" at its second despair crisis (the other styles never choose to leave); cautious 11%, social 4%, aggressive 15%, the rest 0–1%. Several milestones can ramp in the same month. The holiday versions of term jobs (X15) and the rank-3 pools (X2) need a job's top rank, which few simulated players reach, so the bots rarely see them (`test/world2b.test.js` deals each holiday gig directly). Scoring styles that ignore alignment drift Hollow (balanced p50 about −23, plot −60): the tempting options pay, which is the intended trade, but worth a look in playtests.
-- **Spells v2 chains:** of the club and job chains the bots take up, about a third finish in a club (meetings twice a term) and 70% in a job; the hidden and forbidden pools are taught in the Whisperwood (world expansion 1; Toll still has no source); the peer capstones are one-beat stubs (§F has chain ideas).
+- **Spells v2 chains:** of the club and job chains the bots take up, about a third finish in a club (meetings twice a term) and 70% in a job; the hidden and forbidden pools are taught in the Whisperwood (world expansion 1); the peer capstones are one-beat stubs (§F has chain ideas).
 - **Placeholder cards** (I7): the courier loft, the headmistress's tower, the ledger office and the flight field (now part of the stables, world expansion 1) have too few ordinary cards, so each has a quiet `placeholder` card (lint lists them) until X writes real ones. The internships' pick-6 menu keeps "Not this year" (decided: internships are optional).
 - **Finale allies** come by promise or standing (`kael_ally`, Ilse saved and rel ≥ 15, Edmund's wand, the Wardens' trial), not the design's friendship ≥ 50. Ilse, Isolde and Maud still have few personal events.
 - **Card text and crown amounts:** many cards name a crown amount ("fifteen crowns"). Lint checks them against the gold row (3 8 15 30 60); retuning gold means rewriting them (or a `{=…}` amount token).

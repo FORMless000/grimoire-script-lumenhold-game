@@ -744,6 +744,8 @@ function analyzeWorld(content, P, scanExpr, scanText, taught = new Set()) {
     if (slots) for (const sl of d.open || []) if (!slots.has(sl)) P('error', loc(d), 'open: unknown slot "' + sl + '"');
     // A place must open in a slot the day recipes visit, or nobody can ever go there (internship hosts use their own map).
     const visitSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
+    // A slot a card opens with `visit <slot>` (the midnight turn's "Go out") is a visit slot too (threads 2).
+    for (const e of Object.values(content.events)) for (const o of e.options || []) G.walkEffects(o.effects, (st) => { if (st.t === 'visit' && st.slot) visitSlots.add(st.slot); });
     if (d.open && d.kind !== 'internship' && visitSlots.size && !d.open.some((sl) => visitSlots.has(sl))) P('error', loc(d), 'open: ' + d.open.join(' ') + ' — never a visit slot (' + [...visitSlots].join(', ') + '), so the place can never be visited');
     scanExpr(d.discover, loc(d), false); scanExpr(d.closed_when, loc(d), false); scanExpr(d.hinted_when, loc(d), false);
     // `always:` (feedback 2026-10-15, -16): the place's fixed cards in order, each an event of this place; a group a|b.

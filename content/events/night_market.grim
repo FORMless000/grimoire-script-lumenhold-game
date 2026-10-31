@@ -1,0 +1,214 @@
+# ============================================================
+#  The Night Market (threads 2, docs/threads-2-plan.md): a midnight place in a field beyond the village, open on the
+#  new-moon night of every term month (lore night_market). Found by a rumour (`night_market_known`); its stalls are a
+#  shop (`type: shop`), its other cards a midnight pool. Going there is going out at midnight: the suspicion card's
+#  odds come with the door, and a risky stall adds its own.
+# ============================================================
+
+@pool night_market_routine
+place: night_market
+slot: midnight
+class: routine
+repeat: 4
+weight: 10
+
+# ---------------- Finding it ----------------
+
+@event nm_rumour
+title: A Field That Isn't Empty
+pool: village_routine
+tone: eerie
+when: term and not flag(night_market_known)
+repeat: 2
+weight: 10
+art: lantern
+tags: mystery money
+scene: A village square, two old women at a well, one pointing past the rooftops towards a dark field.
+text: {~At the well, two old women are arguing about the far field past the last stile. "No moon tonight," says one. "They'll be out after twelve." "There's nothing out there," says the other, "and don't you go buying from it."|The baker's girl, wrapping your bun, asks if you're going "out to the far field" after midnight, "with it being no moon". Seeing your face, she goes red and says she meant nothing.|A pedlar's cart rattles out of the square towards the far field, hung with unlit lanterns. A boy on the wall says it's the market, the one that comes after midnight on moonless nights.}
+> left: Ask what they sell out there
+  flag night_market_known
+  lore +tiny
+  mood -tiny
+  say: {~"Anything," says the first old woman. "Lanterns. Dreams. Bad bargains." The second one tells you about her nephew, who sold his singing voice there, at length, until you have to run for the barge.|"Candles that burn the wrong way," the baker's girl whispers, "and worse. My gran bought back a year once." She won't say any more, and you've missed the barge.|"Everything they shouldn't," says the boy. He tells you about a man who bought a door, asks you for a coin, and runs off before you can say no.}
+> right: Keep walking
+  flag night_market_known
+  mood +tiny
+  say: {~You fill your water and go. The far field, past the stile, after twelve: you put it away somewhere, in case.|You take your bun and don't ask. It stays with you anyway, all the way back across the lake.|You watch the cart go and turn back to the square. You'll remember the field, whether you mean to or not.}
+
+@event nm_rumour_newt
+title: Coin That Isn't From Here
+pool: gilded_newt_routine
+tone: eerie
+when: term and not flag(night_market_known)
+repeat: 2
+weight: 10
+art: coin
+tags: mystery money
+scene: A tavern bar at night, a landlady holding a strange coin up to the lamp, a regular grinning over his cider.
+text: {~The landlady holds a coin up to the lamp: square, with a hole in it and a moon on one side. "Third one this month," she says. "Every moonless night somebody goes out to the far field after twelve, and comes back paying me in these."|A regular slaps a square coin with a hole in it on the bar and asks if it's good for a cider. The landlady sighs. "Been out past the stile again, have you. Moonless nights, midnight, every month the school's in."|An old bargeman is telling the bar about the market in the far field, past the last stile, after midnight on a moonless night, and a woman there who sold him back a song he'd forgotten. Nobody laughs.}
+> left: Buy a round for the rest of it
+  flag night_market_known
+  gold -tiny
+  lore +tiny
+  say: {~The regulars drink to you and tell you the rest: hooded sellers, no prices until you ask, a stall nobody minds. "Take coin," one of them says, "and don't take anything else they offer you. Or do. I did."|For a cider you get the whole of it, down to the stall that sells lanterns lit from the seller's thumb. He won't say what he bought.|The landlady tells you the rest herself, to stop him telling it worse. "Mind your purse," she says, "and mind your name."}
+> right: Leave them to their stories
+  flag night_market_known
+  mood +tiny
+  say: {~You finish your drink. Every tavern has a field something happens in, but you remember where this one is.|The story gets taller as you leave. By the door it has a dragon in it. The stile and the midnight stay with you, though.|You let it go, and the square coin goes back in the till. You think about it on the barge.}
+
+# ---------------- The stalls (the place's counter) ----------------
+
+@event night_market_stalls
+title: The Night Market
+place: night_market
+slot: midnight
+type: shop
+class: routine
+tone: eerie
+repeat: 1
+weight: 10
+art: lantern
+tags: money shop magic
+scene: A field at midnight full of stalls lit by coloured flames, hooded sellers, and a candle on a cloth burning the wrong way up.
+text: {~Past the last stile, the far field is full of stalls, lit green and violet and a blue that has no business being a flame. Nobody calls out prices. You have to ask.|The far field is all stalls and smoke and the smell of cloves, hooded sellers behind every one, and not a price written anywhere.|No moon, and the far field is lit from end to end. A hooded seller lifts a hand to you as if you were expected.} {~On one cloth, a candle is burning upwards into itself.|A woman with no lantern at all sells lanterns.|Somebody is weighing a bag of moonlight on brass scales and arguing about the result.}
+> lantern: A lantern of blue flame
+  hint: It lights a way home nobody else can see: whoever noticed you slip out tonight forgets it.
+  gold -small
+  mood +tiny
+  unqueue night_suspicion
+  say: {~The lantern-woman lights it from her thumb. All the way back, the flame shows you doors that are open and stairs that are empty, and nothing else.|It burns blue and makes no shadow. You come in by a door you didn't know about and are in bed before the bell.|"Home," she tells the flame, and it goes, and you follow it. In the morning the lantern is a cold glass ball.}
+> candle: A candle that burns backwards
+  hint: It gives back the night it burns: you'll sleep as if you'd never gone out.
+  gold -small
+  health +small
+  say: {~You light it by your bed. It grows taller as it burns, and in the morning you've slept the whole night you spent in a field.|The flame burns down into the wick and the wax climbs back up. You wake rested and slightly unnerved.|It burns backwards for an hour, and your tiredness goes with it. The candle is new again by morning, and you can't bring yourself to light it twice.}
+> dream: A bottled dream (someone else's)
+  hint: A night in a stranger's dream: you'll know a little more, and sleep a little worse.
+  gold -small
+  lore +small
+  mood -tiny
+  say: {~You dream of a harbour you've never seen and a language you nearly understand. You wake low and far from home, with three words of it still on your tongue.|You dream an old man's dream of a library with no doors, and wake strangely sad. But you know where a book is kept that you've never read.|Someone else's dream, worn soft at the edges: a kitchen, a voice, a recipe. You wake homesick for a home that isn't yours.}
+> ink: The pedlar's black bottle
+  hint: Owl's Ink, the banned exam elixir: a sharp head for a while, and a habit if you let it.
+  when: not has(owls_ink_bottle)
+  gold -medium
+  alignment -tiny
+  gain owls_ink_bottle
+  say: {~The pedlar doesn't take it out from under his coat until your coin is in his hand. Black and bitter, and dearer than it should be.|"Exams coming?" says the pedlar, who can't possibly know. He wraps the black bottle in a page of an old almanac.|He sells it to you without a word, and you wrap it in your scarf and walk home faster than you came.}
+> walk: Walk the stalls and buy nothing
+  say: {~You walk the rows twice, slowly. Nobody minds. The smell of cloves stays in your robes for days.|You watch a woman buy a song and carry it away in her cupped hands. You don't buy anything. You'll think about it for a week.|You warm your hands at a green fire and walk home under no moon at all.}
+
+# ---------------- At the market ----------------
+
+@event nm_memory_tuner
+title: Payment in Kind
+pool: night_market_routine
+tone: eerie
+art: wand
+tags: magic
+scene: A hooded wand-tuner at a stall of tuning forks and wands, a small glass jar on the counter, empty and waiting.
+text: {~A wand-tuner holds out a hand for your wand, listens to it like a doctor listening to a chest, and hands it back. "Flat," she says. "I'll tune it. I don't take coin. I take one memory: a small one, your choice. The jar's for that."|A tuner's stall of forks and wands, and an empty jar. The woman behind it takes your wand without asking and holds it to her ear. "Flat," she says. "One memory, and it sings."|"Your wand's singing a quarter-note low," says the tuner. She taps the empty jar. "One small memory and it sings true. You'll never miss it. Mostly."}
+> left: Give her a small memory
+  arcana +medium
+  mood -small
+  say: {~You think of a summer afternoon, and it goes into the jar like smoke. Your wand rings true. You can't now remember what the afternoon was, only that it was nice.|You give her the taste of a pie your grandmother used to make. The wand sings like a bell. Later you sit in the refectory trying to remember why you're sad.|She takes the first time you rode a barge. The wand is wonderful. You feel, for a day or two, a little less like someone who has been somewhere.}
+> right: Keep your memories
+  mood +tiny
+  say: {~You take your flat wand home and your memories with you. On the way you go through them, one by one, to be sure they're all there.|"Suit yourself," says the tuner. "Flat's a kind of honest." You find yourself agreeing.|You walk away holding on to something, though you couldn't say what. It feels worth it.}
+
+@event nm_stolen_compass
+title: A Name You Know
+pool: night_market_routine
+tone: tense
+art: compass
+tags: money moral
+scene: A cloth spread with oddments at a night stall, one of them engraved with a name, beside a seller who won't meet your eye.
+text: {~On a cloth of oddments lies a little silver compass. The name engraved on the lid is a first-year's; you heard her crying about it in the refectory a week ago.|On a cloth of oddments lies a music box with a second-year's name scratched inside the lid. He's been asking the whole castle about it for a month.|Among the spoons and buckles on one cloth is a signet ring you've seen on a classmate's hand since your first week. She's been in tears about it since Tuesday.}
+> left: Buy it back for its owner
+  gold -small
+  alignment +tiny
+  renown +tiny
+  say: {~The seller wants more than it's worth and gets it. In the morning you hand it back at breakfast and say where you found it. Its owner tells the whole table.|You pay. The seller looks almost sorry. At breakfast its owner holds it as if it might vanish again, and by lunch half the castle knows who brought it back.|You buy it and give it back at breakfast. You get a hug you weren't ready for, and the story is round the refectory before the porridge is cold.}
+> right: Bluff him out of it
+  challenge deceive journeyman:
+    win:
+      guile +small
+      alignment +tiny
+      say: {~You tell him the castle porter keeps a list of everything stolen from the school, and you've seen this on it. He gives it to you for nothing and is gone before you look up.|You say, loudly, that its owner is a prefect's sibling. He pushes it into your hand and takes his cloth away.|You lie beautifully about a curse on stolen keepsakes. The seller can't get rid of it fast enough. Its owner never asks how you got it back.}
+    lose:
+      mood -small
+      queue night_suspicion chance unlikely
+      say: {~He doesn't believe a word and says so, loudly, and heads turn all down the row. You leave empty-handed and with your face burning.|The seller laughs, folds his cloth and moves three stalls down. You saw where, but it doesn't help.|"Prove it," he says. You can't, at midnight, in a field. He puts it in his pocket.}
+
+@event nm_thornwick_shopper
+title: Green Robes in the Dark
+pool: night_market_routine
+tone: light
+art: mask
+tags: rival social
+scene: A student in Thornwick green under a hood at a night-market stall, caught mid-bargain, staring at a Lumenhold student across the lanterns.
+text: {~Across the lanterns, a student in Thornwick green is haggling for a bag of something that glitters. She sees your robes. You see hers. You're both a very long way past curfew.|A Thornwick boy in a borrowed hood is buying the same blue lantern you were looking at. He freezes when he sees your Lumenhold cuffs.|Thornwick green, under a hood, at the sweet stall. She raises a toffee apple to you like a toast, and waits to see what you'll do.}
+> left: Swap a secret for a secret
+  lore +small
+  alignment -tiny
+  say: {~You tell her where the Lumenhold kitchens leave the door unlatched. She tells you which Thornwick tutor sets the exchange examinations, and what he always asks.|A trade, over toffee: your school's night porter's habits for the name of their best duellist's bad knee. Neither of you feels very good about it.|He tells you something useful about Thornwick's spring exams. You tell him which Lumenhold porter sleeps through the ten o'clock bell, and regret it on the walk home.}
+> right: Pretend you never saw each other
+  mood +small
+  say: {~You both look at the sky until the moment passes. When you look back she's gone, and the stallholder is laughing.|You nod. He nods. You walk off in opposite directions, both much more careful than you were a minute ago.|You raise a toffee apple back. Nobody says a word, and it's the friendliest thing that's happened between the two schools all year.}
+
+@event nm_honesty_stall
+title: Nobody Minding the Stall
+pool: night_market_routine
+tone: eerie
+art: candle
+tags: magic moral
+scene: An unattended night stall of apples and loaves by a single candle, with a wooden bowl for coins and no seller anywhere.
+text: {~One stall has no seller at all: apples, loaves, a candle and a wooden bowl for coins. Every time you look away, the candle seems to have moved.|At the end of a row, a stall with apples, loaves, a candle and a bowl, and nobody behind it. You look away and back, and the bowl is on the other side.|A stall with nobody minding it: bread, apples, a bowl for coins. People walk past it without looking, the way you'd walk past a dog that bites.}
+> left: Pay for an apple, honestly
+  gold -tiny
+  health +tiny
+  mood +tiny
+  say: {~You drop a coin in the bowl. The apple is the best you've ever eaten, and somewhere behind you someone says "thank you" who isn't there.|Your coin rings in the empty bowl. The candle flickers in a way that looks very much like a nod.|You pay, and take an apple. It's warm, as if it had been in the sun, at midnight.}
+> right: Take an apple and go
+  health +tiny
+  alignment -tiny
+  say: {~You take one. Nothing happens. All the way home you keep turning round, and nothing keeps happening.|You take an apple. It's sour, very sour, and you finish it out of stubbornness.|You take one and walk off quickly. When you look back the stall's gone, bowl and candle and all.}
+
+@event nm_dawn_packing
+title: Before the Light
+pool: night_market_routine
+tone: warm
+art: tent
+tags: money work
+scene: A night market folding itself away in the grey before dawn, stallholders packing crates, one old seller struggling with a canvas roof.
+text: {~Towards dawn the market packs up all at once, as if on a signal you didn't hear. An old seller is fighting a canvas roof that wants to stay up.|The sky is going grey and the stalls are coming down. One old woman with a cart of crates is a long way behind everyone else.|First light is an hour off and the market is leaving. A seller with a bad hand is trying to rope a crate one-handed.}
+> left: Help them pack
+  vigor +small
+  gold +tiny
+  health -tiny
+  queue night_suspicion chance unlikely
+  say: {~You wrestle the canvas down together and rope the crates. The seller presses a coin and a sugared plum on you. You run for the castle as the sky goes pink.|You load the cart while she tells you, in great detail, about a market in a country you've never heard of. She pays you in coin and gossip. You're late back.|You rope the crates. He watches, nods, and pays you a coin from a country that doesn't exist, and one from this one. The sun's nearly up when you climb in at the window.}
+> right: Slip home before the light
+  say: {~You leave them to it and slip back in the grey. Behind you, the field is already only a field.|You go while it's still dark enough to go. At the stile you look back: no stalls, no lanterns, no carts.|You're in bed before the light, and from the window the far field is empty grass, as if you'd dreamt it.}
+
+@event nm_moon_scales
+title: A Pound of Moonlight
+pool: night_market_routine
+tone: light
+art: scales
+tags: money magic
+scene: A night stall of brass scales weighing a pale glowing powder, the seller arguing with a customer over the weight.
+text: {~A seller is weighing moonlight on brass scales: a pale powder that glows and weighs slightly less than nothing. "From the last full moon," he says. "Good for spellwork. Or for lying about having done the spellwork."|A moonlight-seller is arguing with a customer about whether his scales are honest. They are not. Neither is the customer.|"Moonlight," says the man at the scales, "for a student who's behind." He looks at you meaningfully. You are, a little.}
+> left: Buy a pinch for your studies
+  gold -small
+  study +small
+  say: {~You dust it on your notes. For a week the hard parts glow, faintly, until you've learned them.|You sprinkle it in your inkwell. Everything you write that week sticks, the way moonlight sticks to water.|It smells of cold stone. You study by it for three nights and, to your surprise, remember all of it.}
+> right: Call out his crooked scales
+  challenge appeal using guile journeyman:
+    win:
+      guile +small
+      alignment +tiny
+      say: {~You show the customer the wax under the scale-pan. The seller scrapes it off with his thumbnail, weighs her moonlight again, and gives you a pinch of it for your trouble, scowling.|You point out the bent beam. He straightens it with a sigh, as if you'd taken a tooth, and the next three customers get honest weight.|"Sharp eyes," he says, and turns the scales so you can watch him make them true. "Come and work for me." You decline.}
+    lose:
+      mood -small
+      say: {~He tells you the scales are fine and your eyes are crooked. The customer agrees with him.|He weighs your accusation and finds it light. Everyone at the stall laughs.|"Prove it," he says, and you can't. You leave lighter by some pride.}

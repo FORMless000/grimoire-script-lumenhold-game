@@ -472,3 +472,24 @@ text: {Final-years run mock defences at the end of the lab. Three in borrowed go
   guile +small
   mood +tiny
   say: {You ask one question, quietly, and watch the defender's face as they see the hole. You feel like a cat. A kind cat.|You learn to find the weak joint in an argument by watching three of them crack. It's educational and a little shameful.|You're the committee's favourite examiner now: gentle voice, terrible questions.}
+
+# ---------------- Threads 2: more in the tower ----------------
+
+@event headmistress_tower_dictation
+title: Letters Home
+pool: headmistress_tower_routine
+tone: tense
+art: letter
+tags: study moral
+cast:
+  host: isolde
+scene: A headmistress's study, a calm woman dictating from her window seat, a student at the desk with a pen and a stack of letters to parents.
+text: {seen(headmistress_tower_dictation) > 1: {~{host}'s secretary is ill again, and the letters home are waiting. "You have a good hand," she says. "And discretion. Usually."|The letters home again. {host} pushes the pen towards you before you've sat down.|"Parents," says {host}, "write to me as if I had stolen their children. I write back as if I hadn't." She hands you the pen.}|{host}'s secretary has a cold, and there are twenty letters to parents to go by the morning barge. "You have a good hand," says {host}. "Sit. I'll dictate."} The last one is to the parents of a second-year who has failed everything this term, and {host} pauses before it, choosing each word like a chess piece.
+> left: Ask her to say something kind in it
+  rel host +small
+  study -tiny
+  say: {~She considers you for a long moment, then dictates, while your reading waits, a letter that tells the whole truth and ends on the one thing the second-year did well: a drawing of a heron she has kept. "Parents need a reason to keep paying," she says, "and a child needs a parent who has one."|"Kind," says {host}. "Or true?" You say both. She laughs, the short, delighted laugh, and spends the rest of your evening on a letter that manages both, which you would not have believed possible.|She lets you suggest a line, and you spend an hour finding the right one. She changes two words in it and keeps the rest, and seals the envelope herself.}
+> right: Write it down exactly as she says
+  lore +small
+  mood -tiny
+  say: {~You take it down word for word, and learn more about writing a hard letter than in a term of lectures. It's fair, it's clear and it will make someone cry at breakfast. {host} signs it without reading it back. She doesn't need to.|You write what she says. Every sentence is true. You feel, putting it in the envelope, as if you'd sealed a door.|Twenty letters, word for word, and your hand aches. On the barge in the morning the stack of them is the heaviest thing aboard.}

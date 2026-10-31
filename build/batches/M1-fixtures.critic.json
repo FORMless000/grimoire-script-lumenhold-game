@@ -1,0 +1,28 @@
+{
+  "batch": "M1-fixtures",
+  "round": 2,
+  "accept": true,
+  "summary": "Every round-1 issue is fixed. The one-time scenes play once, the repeat cards have neutral again-lines keyed on their own `seen()`, the decline options now gain something, every variant shows its cost, Vey's check is against Vey, and Pell is seventy-seven. One continuity slip is new: the satchel card's new right option sends you to a lecture at an afternoon or evening lakeshore visit, which can also fall on a break. That, and three polish items, are small fixes.",
+  "issues": [
+    {
+      "event": "marisol_lost_satchel",
+      "problem": "The new right option ('Leave it to her and get to class'; says: 'you were in your lecture', 'make your lecture') doesn't fit when the card can show. It is a lakeshore place card, dealt only on afternoon or evening visits, while courses are the morning slot. The gate is only `season != \"winter\"`, so it can also show on a break (months 5, 6, 11 and 12), when there are no lectures.",
+      "fix": "Add `term` to `when`. Recast the right option as going back to your own work rather than a lecture (e.g. 'Leave it to her and go and revise'; 'you're at your desk with your notes dry'), keeping `study +tiny`."
+    },
+    {
+      "event": "grimsby_read_aloud",
+      "problem": "Polish. Right say variant 2 (he hands you the wrong book, which has exactly the chapter you needed) reads as a gift and doesn't show the option's `rel grimsby -tiny`. Variants 1 ('a little lost') and 3 do show it.",
+      "fix": "Add a beat of his disappointment to variant 2 (e.g. '...and goes back to squinting at his own page, a little crestfallen')."
+    },
+    {
+      "event": "marisol_exam_calm",
+      "problem": "Polish. The left label 'Hold the lantern till the lake stills' is 37 characters.",
+      "fix": "Shorten it, e.g. 'Hold the lantern up for her'."
+    },
+    {
+      "event": "mabel_wrong_pot",
+      "problem": "Polish, wiring. The `seen(<own id>) == 0` added to `when` here and in `mabel_empty_hook`, `grimsby_lighthouse_walk` and `brask_laugh` is redundant: without `repeat:` a card already plays once per game.",
+      "fix": "Optionally drop the `seen(...) == 0` clause from those four `when` lines. It does no harm, so this is only tidying."
+    }
+  ]
+}

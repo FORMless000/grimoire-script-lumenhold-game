@@ -1,0 +1,227 @@
+# ============================================================
+#  The arc's agents (threads 2, docs/threads-2-plan.md): the two sides keep in touch with the player who leans
+#  their way. Hard-canon story cards of the Hollow Star, dealt by an appointment each, sharing the month's plot cap
+#  (`limit: plot`). They never find a clue or move the clock: they court and watch, and the plot's own beats do
+#  the telling.
+#    grey_courts    the man in grey, once he has courted or tempted you and you lean Hollow
+#    wardens_watch  the headmistress's circle, once she has noticed you (or you joined her) and you lean Lumen
+#  Thorne and Maud speak as Wardens only once their rings have been seen (hs_silver_rings, Act II).
+# ============================================================
+
+@appointment grey_courts
+desc: Once the man in grey has courted or tempted you, and while you lean Hollow, he keeps in touch.
+at: month
+when: seen(hs_grey_stranger) > 0 and (flag(hollow_courted) or flag(hollow_tempted)) and alignment <= -30 and not flag(grey_beaten) and not flag(sided_wardens)
+chance: unlikely
+limit: plot
+deals: pool grey_courts
+
+@pool grey_courts
+trigger: queued
+class: story
+arc: hollowstar
+tags: mystery hollowstar
+
+@event ga_grey_gloves
+title: Grey Gloves
+pool: grey_courts
+tone: eerie
+art: hand
+scene: A pair of grey kid gloves folded on a dormitory pillow, a rime of frost on the fingertips, a card beside them in a beautiful hand.
+text: There is a pair of grey kid gloves folded on your pillow, and the fingertips are white with frost. The card beside them says, in a beautiful hand: "For cold hands. They will need to be steady." The room is warm. The gloves are not.
+> left: Put them on
+  hint: Hollow. Your spells, his gloves.
+  arcana +small
+  health -small
+  alignment -small
+  say: They fit as if they'd been made for you, and perhaps they were. Spells come out of your fingers clean and cold and exactly where you meant. By the evening you can't feel your knuckles. In the morning the gloves are gone from the chair where you left them, and your hands are warm again, and you miss the cold.
+> right: Drop them in the lake
+  hint: Lumen. He'll know.
+  alignment +small
+  mood -small
+  say: You throw them off the end of the jetty. They don't sink. They float, palm up, for a long time, until the light goes, and you're fairly sure they're still there in the morning.
+
+@event ga_grey_board
+title: Paid by Family
+pool: grey_courts
+when: term and board_missed == 0
+tone: eerie
+art: coin
+scene: A bursar's window, a clerk holding out a small stack of coins and a receipt, a student staring at a signature in a beautiful hand.
+text: The bursar's clerk calls you back to the window and slides this month's board money across to you. "It's been paid," she says. "A gentleman in grey. He said he was family." The receipt isn't signed. Where the name should be there's a single thumbprint, white with frost.
+> left: Keep the money
+  hint: Hollow. Family looks after its own.
+  gold +small
+  gold +tiny
+  alignment -small
+  say: You put the coins in your purse. They're cold, and they stay cold all month, and you find you spend them last.
+> right: Have it sent back to him
+  hint: Lumen. You pay your own way.
+  alignment +small
+  mood -tiny
+  say: "Sent back where?" says the clerk. You don't know. In the end she puts the coins in an envelope marked RETURN TO SENDER and pins it to the board behind her. In the morning the envelope is gone, and the pin is white with frost.
+
+@event ga_grey_witness
+title: Children Talk
+pool: grey_courts
+tone: eerie
+art: snow
+scene: A frozen courtyard fountain at dusk, a tall man in a grey coat on its rim, a student standing in front of him, a first-year hurrying away across the flagstones behind them.
+text: The courtyard fountain freezes as you pass, and the man in grey is sitting on its rim. "A first-year has been telling people she saw us talking," he says pleasantly. "Children talk. It worries the families. What would you do about it, if it were yours to do?"
+> left: "Leave her alone."
+  hint: Lumen. He'll take it as an answer.
+  alignment +small
+  mood -small
+  say: "Of course," he says, as if you'd passed or failed something, and you can't tell which. He gets up and walks away through the gate. The fountain doesn't thaw until morning.
+> right: "I'll make sure she stops."
+  hint: Hollow. It works.
+  alignment -small
+  guile +small
+  renown -tiny
+  say: You find her after supper and tell her, quietly, what happens to people who talk about things they don't understand. You don't know where the words come from. She doesn't talk again. She doesn't look at you again, either.
+
+@event ga_grey_question
+title: At the End of the Table
+pool: grey_courts
+slot: evening
+tone: eerie
+art: mask
+scene: A long refectory table at supper, students talking and passing dishes, a tall man in a grey coat sitting at its far end whom nobody else seems to see, the water in every jug iced over.
+text: At supper the water in the jugs along your table has frozen solid, and nobody seems to notice. Nor do they notice the man in grey at the far end of the bench, his gloved hands folded. "One question," he says, quite quietly, and his voice carries to you and no one else. "What do you want, more than anything? The truth, please. I'll know."
+> left: Tell him the truth
+  hint: Hollow. He'll remember it.
+  alignment -small
+  mood +small
+  say: You tell him. It's easier than it should be, and you hear yourself say things you've never said aloud. He listens without interrupting, and nods once, as if writing it down. When you look up from your plate the end of the bench is empty, and the jugs are pouring water again.
+> right: Lie to him
+  hint: Lumen, a little. He may know.
+  guile +small
+  alignment +tiny
+  mood -tiny
+  say: You give him something plausible, and keep your face still. He smiles, very slightly. "Good," he says. "People who lie to me last longer." Then the student next to you asks you to pass the salt, and when you turn back there's no one there.
+
+@event ga_grey_ice_seat
+title: A Seat Kept Cold
+pool: grey_courts
+slot: morning
+tone: eerie
+art: snow
+scene: A courtyard fountain frozen into the shape of a high-backed chair, glittering in the morning, students walking a wide circle round it.
+text: This morning the courtyard fountain has frozen into the shape of a chair: high-backed, carved, glittering, facing the lake. Students give it a wide berth. There's no note, and there doesn't need to be.
+> left: Sit in it
+  hint: Hollow. It doesn't feel cold.
+  alignment -small
+  mood +small
+  renown -tiny
+  say: You sit down in front of half the courtyard. It isn't cold at all. It's like sitting in the sun. From the chair the lake looks very close, and very calm, and you stay longer than you mean to, while people stare.
+> right: Break it with your heel
+  hint: Lumen. It hurts.
+  alignment +small
+  health -tiny
+  say: It takes six kicks, and the last one hurts all the way up to your knee. The ice breaks into a thousand pieces that don't melt for a day. A first-year sweeps them up, and asks you, nervously, whether it was yours.
+
+# ---------------- The Wardens ----------------
+
+@appointment wardens_watch
+desc: Once the headmistress has noticed you, or you've joined her circle, and while you lean Lumen, her circle keeps an eye on you.
+at: month
+when: (flag(wardens_noticed) or flag(sided_wardens)) and alignment >= 30 and not flag(sided_dumonts) and not flag(hollow_courted)
+chance: unlikely
+limit: plot
+deals: pool wardens_watch
+
+@pool wardens_watch
+trigger: queued
+class: story
+arc: hollowstar
+tags: mystery hollowstar
+
+@event wa_tower_light
+title: A Light in the Tower
+pool: wardens_watch
+actor: isolde
+slot: night
+tone: warm
+art: tower
+scene: A dark courtyard at night, a student crossing it, one lit window high in a tower above with a tall figure standing at the glass.
+text: Crossing the courtyard late, you look up: there's one lit window at the top of the headmistress's tower, and someone standing at it, watching you all the way across. In the morning there's a card under your door, in a neat, unhurried hand: "Bed by midnight. The castle is not always kind after it. — I.M."
+> left: Keep to it
+  health +small
+  rel isolde +tiny
+  say: You're in bed by midnight for a month, which surprises everyone, you most. Once, coming back with a minute to spare, you look up and the window goes dark, as if someone had been waiting to see.
+> right: Wave at the window next time
+  mood +small
+  rel isolde +small
+  health -tiny
+  say: The next late night you stop in the middle of the courtyard and wave. After a moment, high up, a hand lifts in answer. Nobody mentions it, and you don't sleep any earlier.
+
+@event wa_lake_word
+title: Walk Elsewhere
+pool: wardens_watch
+actor: isolde
+when: term and not flag(sided_wardens) and seen(hs_isolde_summons) == 0
+tone: tense
+art: wave
+scene: A tall woman in dark robes stopping a student on the lakeshore path, one ringed hand raised, the lake behind them grey and very still.
+text: Headmistress Marrow meets you on the lakeshore path, alone, which she never is. "Walk elsewhere after dark this month," she says pleasantly. "The lake is cold this time of year." She waits, as if it were a move in a game, to see what you'll do with it.
+> left: Promise her
+  rel isolde +small
+  mood -tiny
+  say: "Thank you," she says, and seems to mean more than the words. You keep away from the water all month. Some nights you hear the lake through your window, and it sounds like something turning over in its sleep.
+> right: "Why this month?"
+  lore +tiny
+  mood -tiny
+  say: Her short, delighted laugh. "Because I asked you," she says, "and because you asked me why. Both good signs." She tells you nothing else. You walk the long way round for a month anyway.
+
+@event wa_isolde_list
+title: The List
+pool: wardens_watch
+actor: isolde
+tone: eerie
+art: scroll
+scene: A headmistress's study at dusk, a short handwritten list on the desk, one name near the bottom crossed through with a single neat line.
+text: Headmistress Marrow has sent for you, and keeps you waiting while she writes. On the desk, upside down, is a short list in her hand. You can read your own name on it. You can also read that the name above yours has been crossed through, recently, with a single neat line.
+> left: Ask whose name it was
+  lore +tiny
+  mood -small
+  say: She doesn't look up. "Someone who changed their mind," she says. "People do. It's allowed. Lists are not promises." Then she sets you an essay on the history of the castle's wards and sends you away, and the list goes into a drawer.
+> right: Say nothing, and wait
+  rel isolde +small
+  say: You wait. She finishes, blots, and folds the list away without a word. Then she asks after your marks, and your sleep, and your friends, by name, as if checking each off. "Good," she says. "Keep it that way."
+
+@event wa_thorne_note
+title: By Hand, Not by Owl
+pool: wardens_watch
+actor: thorne
+when: seen(hs_silver_rings) > 0 and term
+slot: evening
+tone: tense
+art: letter
+scene: A library stair in the evening, a stern professor with a silver ring holding out a small sealed note to a student, the window behind him dark over the lake.
+text: Professor Thorne stops you on the library stair after supper and holds out a small folded note, sealed with plain wax. "Old Maud," he says. "Tonight. By hand, not by owl." He doesn't explain. The silver ring on his hand catches the lamp. "Hm. And don't read it."
+> left: Take it down to her now
+  health -tiny
+  rel thorne +small
+  rel maud +tiny
+  say: It's a cold walk to the cottage in the dark. Maud reads the note on her doorstep by the light of her door, folds it once and puts it in the stove. Then she gives you a cup of something hot and sends you back up the hill. Next morning Thorne says nothing, which from Thorne is thanks.
+> right: Take it at first light instead
+  health +tiny
+  rel thorne -small
+  say: The lake path in the dark is no place to be, you tell yourself, and you sleep, and go at first light. Maud opens the door at dawn already dressed, reads the note on her step, and burns it in the stove. "He said tonight, dearie," she says. Thorne, at breakfast, doesn't look at you at all.
+
+@event wa_maud_lantern
+title: For Walking Near Water
+pool: wardens_watch
+actor: maud
+when: seen(hs_silver_rings) > 0
+slot: evening
+tone: warm
+art: lantern
+scene: A cottage doorway at dusk, an old woman with a silver ring on an earthy hand holding out a small brass lantern to a student.
+text: Old Maud is waiting at her gate as you pass, with a small brass lantern in her hand and a silver ring on the hand holding it. "There you are, dearie," she says. "Take this. For walking near water. It's old. It's seen worse nights than this one."
+> left: Take it and walk her in
+  rel maud +small
+  say: You walk her up her own path and she talks all the way about her beans, except once, at the bend where you can see the lake, where she stops talking altogether. You give her the lantern back at her door; she only wanted it carried. You think about that bend a fortnight later, on the lakeshore at dusk.
+> right: Thank her, and go
+  mood +small
+  say: "Mind it doesn't go out," she says, and shuts the gate. The lantern burns all night on your sill without being filled. In the morning it's cold, and when you take it back to her gate she takes it as if she'd expected to.

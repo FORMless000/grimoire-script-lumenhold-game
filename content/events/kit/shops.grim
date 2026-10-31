@@ -16,7 +16,7 @@ weight: 10
 art: house
 tags: money shop
 scene: A cobbled market square, a bakery stall steaming, a tailor's window full of robes, a pawnbroker's sign and a student's stall of odd wands.
-text: {The square is all stalls today, with the bakery's trestle, the tailor's rail of robes, the pawnbroker's sign creaking over his door.|Market day again. The baker's girl is shouting the price of buns as if it were news.|The tailor has put a new robe in the window and is standing behind it, watching people's faces.} {met(mir): {Mir has a stall by the well, under a sign that says WANDS, IMPROVED (PROBABLY).|Mir's stall has grown a canopy and a small, worried sign: PLEASE DO NOT TEST ON THE BAKERY.|Mir is at the stall, rewinding something that should not need rewinding.}|{A pigeon is eating the display.|Somebody is haggling over a cabbage with real feeling.|A barge horn sounds from the jetty.}}
+text: {The square is all stalls today, with the bakery's trestle, the tailor's rail of robes, the pawnbroker's sign creaking over his door.|Market day again. The baker's girl is shouting the price of buns as if it were news.|The tailor has put a new robe in the window and is standing behind it, watching people's faces.} {met(mir): {Mir has a stall by the well, under a sign that says WANDS, IMPROVED (PROBABLY).|Mir's stall has grown a canopy and a small, worried sign: PLEASE DO NOT TEST ON THE BAKERY.|Mir is at the stall, rewinding something that should not need rewinding.}|{A pigeon is eating the display.|Somebody is haggling over a cabbage with real feeling.|A barge horn sounds from the jetty.}} {clue(lead_offer_ashwood) and not has_item(ashwood_wand): Under a cloth at the back of Mir's stall lies something long and dark.|{clue(lead_offer_ward_cloak) and not has_item(ward_cloak): Through the tailor's back door, something on her table shines when you aren't looking at it.|}}
 > buns: A bag of warm buns
   hint: A little Health.
   gold -tiny
@@ -197,7 +197,7 @@ weight: 10
 art: book
 tags: money shop study
 scene: A bookshop crowded to the rafters, shelves leaning on each other, an old man in half-moon glasses sniffing the spine of a book.
-text: {Mr Grimsby is up a ladder, sniffing a spine. "Ah! Not that one," he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pipe smoke and one shelf, somewhere, of the sea.} {A stack of exam primers leans on the counter like a tired student.|A box by the door says BOOKS BOUGHT BACK, FAIR PRICES, NO QUESTIONS (SOME QUESTIONS).|A lighthouse print hangs crooked behind the till.}
+text: {Mr Grimsby is up a ladder, sniffing a spine. "Ah! Not that one," he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pipe smoke and one shelf, somewhere, of the sea.} {A stack of exam primers leans on the counter like a tired student.|A box by the door says BOOKS BOUGHT BACK, FAIR PRICES, NO QUESTIONS (SOME QUESTIONS).|A lighthouse print hangs crooked behind the till.} {clue(lead_offer_almanac) and not has_item(pocket_almanac): A battered pocket almanac pokes out of Grimsby's waistcoat pocket.|}
 > pick: Let him choose you a book
   hint: Skill XP, in whatever he thinks you need.
   gold -small
@@ -237,7 +237,7 @@ when: not on_shift()
 art: bottle
 tags: money shop
 scene: An apothecary of a thousand labelled drawers, a daughter behind the counter, an old man counting drops at the back.
-text: {One of Pell's daughters is at the counter. Behind her, Old Pell counts drops aloud and doesn't look up.|"Tonic or draught?" asks the daughter on the counter. "Dad will say draught. Dad always says draught."|The drawers rattle as you come in, as if they were sorting themselves.} {A card on the till reads MEASURED TWICE, SOLD ONCE.|Old Pell is arguing with a label.|The smell of mint and something sterner.}
+text: {One of Pell's daughters is at the counter. Behind her, Old Pell counts drops aloud and doesn't look up.|"Tonic or draught?" asks the daughter on the counter. "Dad will say draught. Dad always says draught."|The drawers rattle as you come in, as if they were sorting themselves.} {A card on the till reads MEASURED TWICE, SOLD ONCE.|Old Pell is arguing with a label.|The smell of mint and something sterner.} {clue(lead_offer_spoon) and not has_item(measuring_spoon): A brass spoon worn thin on one side lies on a folded cloth by the till.|}
 > tonic: Pell's tonic
   hint: A little Health.
   gold -small
