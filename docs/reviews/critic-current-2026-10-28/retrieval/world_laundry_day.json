@@ -1,0 +1,108 @@
+{
+  "query": "Laundry Day {The castle laundry has charmed tubs that wash by themselves, mostly. Your robes are due.|Laundry day. Last time the tubs returned your robes a gentle pink, and your friends haven't let you forget it.|The laundry. You know which tub shrinks things and which one sings while it spins.} {Someone's socks are trying to escape over the edge.|The steam is so thick you can barely see the lines.|{season == \"winter\": Everything on the lines is frozen stiff as boards.|The windows are open, and the shirts are trying to fly.}} Charm the tub yourself {You coax the tub into a perfect wash. Your robes come out clean, warm and smelling faintly of thunderstorms.|Your robes come out their own colour, which, after last time, feels like a victory parade.|You charm the singing tub, and it sings your favourite song while it spins. Everything comes out spotless.} {Your robes come out three sizes smaller. You buy a cheap replacement from the village tailor.|Your robes come out pink again. The tubs have a sense of humour. You pay for a dye to put it right.|The tub spins so hard your robes leave by the window. You find most of them. The rest cost you a crown at the tailor's.} Wash them by hand {You scrub everything at the sink till your knuckles are raw. Clean, at least, and still the right size.|You wash by hand, wring by hand, hang by hand. Your arms ache; your robes stay black.|You wash by hand again. It's slow and cold, and you've come to find it soothing, in a chapped sort of way.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_laundry_day",
+      "title": "Laundry Day",
+      "file": "content/events/pools/world_more.grim",
+      "line": 52,
+      "sourceHash": "63a96a7ff6572360dc091f6f2e36e154523fbbde8a42ba05f27c8b7bf04ce281",
+      "score": 0.9525735974311829,
+      "excerpt": "Laundry Day\n{The castle laundry has charmed tubs that wash by themselves, mostly. Your robes are due.|Laundry day. Last time the tubs returned your robes a gentle pink, and your friends haven't let you forget it.|The laundry. You know which tub shrinks things and which one sings "
+    },
+    {
+      "key": "event:ball_robes",
+      "title": "Something to Wear",
+      "file": "content/events/festivals.grim",
+      "line": 151,
+      "sourceHash": "524bbc063673a4088c75c8a577f28dcbb8f4639df5cdf8d982d328d3a936ba10",
+      "score": 0.45472368597984314,
+      "excerpt": "Something to Wear\n{year == 1: The Midwinter Ball is tonight, and you have nothing to wear that isn't a uniform or a nightshirt.|{final_year: The last ball of your life as a student. The old robes look very tired.|{~Ball night again, and last year's robes have shrunk, somehow, in "
+    },
+    {
+      "key": "event:inc_hiccuping_robe",
+      "title": "The Robe That Hiccups",
+      "file": "content/events/incidents.grim",
+      "line": 129,
+      "sourceHash": "67960f11555143e5c1c070aa4734066be30838a3b3bc7e66b2ab39693a6385f1",
+      "score": 0.4149644672870636,
+      "excerpt": "The Robe That Hiccups\nA cauldron two benches down boils over, and a whole batch of Draught of Unending Hiccups soaks your best robe. The stain fades by supper. The hiccups don't. Every few minutes, the robe jumps.\nBuy a new robe\nThe tailor in the village fits you in an afternoon "
+    },
+    {
+      "key": "event:item_robes_singed",
+      "title": "Singed",
+      "file": "content/events/kit/item_stories.grim",
+      "line": 98,
+      "sourceHash": "6e320e6bdac7cf61bdcbf80cb2e27b1877e1b7caebcaa42c47cd51576631e220",
+      "score": 0.37470895051956177,
+      "excerpt": "Singed\nA stray hex from the next circle catches your sleeve. There's a smell of hot wool and a small, sad hole. Somewhere in the village, a tailor feels a disturbance.\nTake it down to the tailor\nThe tailor tuts, darns it in five minutes, and charges you for ten. \"Duelling hall,\" "
+    },
+    {
+      "key": "event:shop_square",
+      "title": "Market Day",
+      "file": "content/events/kit/shops.grim",
+      "line": 7,
+      "sourceHash": "3e44d0febc9aa9f88c49c30a3dcecebc4fc5880bf607e95ca2a6646316e2b045",
+      "score": 0.36979836225509644,
+      "excerpt": "Market Day\n{The square is all stalls this morning, with the bakery's trestle, the tailor's rail of robes, the pawnbroker's sign creaking over his door.|Market day again. The baker's girl is shouting the price of buns as if it were news.|The tailor has put a new robe in the window"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "f68fb82c81207728051862a22434a2dee9a7aa9981631e4e1bde3e7f76410eab",
+      "at": "2026-10-28T23:50:51.586Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 353,
+        "total_tokens": 353,
+        "cost": 0.00000353,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000353,
+          "upstream_inference_prompt_cost": 0.00000353,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "f68fb82c81207728051862a22434a2dee9a7aa9981631e4e1bde3e7f76410eab",
+      "elapsedMs": 1407,
+      "at": "2026-10-28T23:50:52.993Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c8c2afe26d9288eb81e34d66e8925905d3f611ffd73a8ad60bd0f69b2b82afae",
+      "at": "2026-10-28T23:50:53.101Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54738,
+        "cost": 0.0027369
+      },
+      "requestHash": "c8c2afe26d9288eb81e34d66e8925905d3f611ffd73a8ad60bd0f69b2b82afae",
+      "elapsedMs": 542,
+      "at": "2026-10-28T23:50:53.643Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

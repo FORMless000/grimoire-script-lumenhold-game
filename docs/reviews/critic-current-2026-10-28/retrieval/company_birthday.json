@@ -1,0 +1,108 @@
+{
+  "query": "A Merchant's Birthday {A cloth merchant from the capital is sixty tonight and wants a room full of young people laughing at his stories.|The cloth merchant is back, a year older by his own count, and he remembers which stories you laughed at.|The merchant's birthday again. He has started inviting his rivals, so that they can watch him be adored.} The cake is shaped like one of his ships. Be the life of the party {You laugh, sing, and dance with his aunt. He tips like a man buying a ship. You get home with the dawn and a sore throat.|He tells the story about the storm off the southern coast again, and you gasp in the right place. The tip is heavy; so are your feet.|You toast him in front of his rivals and he nearly cries. The purse he presses on you is shaped, faintly, like a ship.} {You laugh a moment too late at the wrong story, and he notices. A thin tip, and a long walk home past the castle's lit windows.|You call his ship by his rival's ship's name. The room goes quiet. The landlady pays you off early.|His rivals are funnier than he is, and you show it. He doesn't forgive it, and the tip says so.} Keep the glasses full {You pour, smile and stay out of the stories. The pay is fair, and the floor is very hard.|You keep the glasses full and your mouth shut. The merchant never learns your name, which suits you.|You pour for him and his rivals alike. Nobody notices you, and you go home with honest money and sore feet.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_birthday",
+      "title": "A Merchant's Birthday",
+      "file": "content/events/pools/night.grim",
+      "line": 174,
+      "sourceHash": "e37a46fb126b202fc93a0d125bf064134f7743eb49eefd57f02795355744591f",
+      "score": 0.9472612142562866,
+      "excerpt": "A Merchant's Birthday\n{A cloth merchant from the capital is sixty tonight and wants a room full of young people laughing at his stories.|The cloth merchant is back, a year older by his own count, and he remembers which stories you laughed at.|The merchant's birthday again. He has"
+    },
+    {
+      "key": "event:company_wedding",
+      "title": "A Wedding Upstairs",
+      "file": "content/events/pools/night.grim",
+      "line": 426,
+      "sourceHash": "0dc784440dde136194c55124c28ffac1d9bb66cec39e1a5d4c0c5941e851292d",
+      "score": 0.43080681562423706,
+      "excerpt": "A Wedding Upstairs\n{A miller's daughter from the next valley married this afternoon, and the party has moved upstairs at the Newt to keep going.|Another wedding upstairs: a carter and a dressmaker, and both families determined to out-dance the other.|A wedding again, and the fidd"
+    },
+    {
+      "key": "event:tavern_eel_story",
+      "title": "The Eel Story",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 675,
+      "sourceHash": "5d924ad4bcb38f34195d8d1f30aefe1c321a220e60aa359d8090ce87c96a3d90",
+      "score": 0.4006659984588623,
+      "excerpt": "The Eel Story\nThe old barge-man's eel story is the most famous story at the Newt. Regulars mouth along. The landlady says if you can tell it as well as he does, the room will be half yours. He's willing to teach it, slowly, for an evening.\nLearn it and tell it back\nYou tell it ba"
+    },
+    {
+      "key": "event:gig_newt_rush",
+      "title": "The Holiday Rush",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 322,
+      "sourceHash": "13c9f7c544fd8f1a8ef8e5991e1f4bf2427e2d15f1b990e5339c2f3dc30d62a5",
+      "score": 0.39886927604675293,
+      "excerpt": "The Holiday Rush\n{The landlady hands you the keys over breakfast. Tonight, she warns, the Newt will be full to the rafters with farmers, barge crews and families home for the season.|Another holiday night ahead, and the Newt is already promised to a full house.|By morning, half t"
+    },
+    {
+      "key": "event:tavern_regulars_corner",
+      "title": "The Regulars' Corner",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 547,
+      "sourceHash": "a46cbfac9382d697dc1851d5cc48cd1bf258cf40c0d35a17f58eda61004621b0",
+      "score": 0.39797401428222656,
+      "excerpt": "The Regulars' Corner\n{The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c4a7b1b65073f727f8e4e5cc58619edd2c6b37c650e0a14657ef08de5e6a3c36",
+      "at": "2026-10-28T23:51:13.376Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 344,
+        "total_tokens": 344,
+        "cost": 0.00000344,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000344,
+          "upstream_inference_prompt_cost": 0.00000344,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c4a7b1b65073f727f8e4e5cc58619edd2c6b37c650e0a14657ef08de5e6a3c36",
+      "elapsedMs": 322,
+      "at": "2026-10-28T23:51:13.698Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "70501b3c8de1ce2fdd08bda7e57e663f36c2f489ac7e17ac9b7b936ae5aad3f5",
+      "at": "2026-10-28T23:51:13.765Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54101,
+        "cost": 0.00270505
+      },
+      "requestHash": "70501b3c8de1ce2fdd08bda7e57e663f36c2f489ac7e17ac9b7b936ae5aad3f5",
+      "elapsedMs": 925,
+      "at": "2026-10-28T23:51:14.690Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

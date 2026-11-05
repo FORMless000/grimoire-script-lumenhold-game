@@ -1,0 +1,107 @@
+{
+  "query": "A Lantern Washes Up Weeks after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous. Read it It's a wish about someone, a student who \"never notices anything\". You recognise the handwriting from the library sign-out book, and say nothing, ever. Send it back out unread You relight the stub with a snap of your fingers and push it out again. It wobbles off over the water, its secret intact, and you never find out.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:lantern_washed_up",
+      "title": "A Lantern Washes Up",
+      "file": "content/events/calendar_2b.grim",
+      "line": 871,
+      "sourceHash": "80e7b2970f4abe45692a2ce3cfad46a6d24548658f82c3af041edba9b241187c",
+      "score": 0.9472469687461853,
+      "excerpt": "A Lantern Washes Up\nWeeks after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.\nRead it\nIt's a wish about someone, a student who \"never notices anything\". You recognise the handwriting f"
+    },
+    {
+      "key": "event:lantern_night_v3",
+      "title": "Lantern Night",
+      "file": "content/events/calendar_2b.grim",
+      "line": 818,
+      "sourceHash": "66d90cd4715a1333d418b44de51ebb6b30ac990ad91003d7554ac59f3b664da4",
+      "score": 0.706311047077179,
+      "excerpt": "Lantern Night\nLantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|{final_year: Your last one, and you know it.|Another year, another wish.}}{flag(lantern_fine):  Yours i"
+    },
+    {
+      "key": "event:lantern_reeds",
+      "title": "Caught in the Reeds",
+      "file": "content/events/calendar_2b.grim",
+      "line": 851,
+      "sourceHash": "1e0524cbb57ecc8721d0f51f9a137bf901e7c25875e445349702410f3a8931fb",
+      "score": 0.548229455947876,
+      "excerpt": "Caught in the Reeds\nFurther along the shore a first-year is crying quietly. Their lantern caught in the reeds a few yards out, and it is guttering, wish and all.\nWade in and free it\nThe water is shockingly cold. You lift the lantern clear and push it out, and it catches the air a"
+    },
+    {
+      "key": "event:lantern_making",
+      "title": "A Lantern to Launch",
+      "file": "content/events/calendar_2b.grim",
+      "line": 778,
+      "sourceHash": "6ee220c9e2d9e8b42cf4112c036ecc7da8faed0f06220113d0deeb3e11d3d945",
+      "score": 0.5355015993118286,
+      "excerpt": "A Lantern to Launch\n{year == 1: Tonight is Lantern Night, and everyone else seems to have known for weeks. You need a lantern.|{final_year: Your last Lantern Night. The lantern should be a good one.|Lantern Night again, and last year's lantern did not survive the trunk.}} {~The v"
+    },
+    {
+      "key": "event:lantern_asked",
+      "title": "What Did You Wish For?",
+      "file": "content/events/calendar_2b.grim",
+      "line": 891,
+      "sourceHash": "126080b4b4062a48b46235a39cd469417916c994a27d00ff68b1d7454765084b",
+      "score": 0.5306181311607361,
+      "excerpt": "What Did You Wish For?\n{dear} drops onto the window seat beside you with two mugs of cocoa. \"So,\" {they} say{s}. \"Lantern Night. What did you wish for? You can tell me. I won't tell the lake.\"\nTell {them} the truth\nYou tell {them}. {dear} goes quiet for a moment, and then bumps {"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6e1130cf200965d67640d276e56b9f0b98765e4618ebcb0d709a565e47b3264c",
+      "at": "2026-10-28T23:47:30.264Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 114,
+        "total_tokens": 114,
+        "cost": 0.00000114,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000114,
+          "upstream_inference_prompt_cost": 0.00000114,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6e1130cf200965d67640d276e56b9f0b98765e4618ebcb0d709a565e47b3264c",
+      "elapsedMs": 636,
+      "at": "2026-10-28T23:47:30.900Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ee57550a0eb7cb5f6f4e33b719d44174efd389546c5ae3ebd8ca5f0c47b7cbd9",
+      "at": "2026-10-28T23:47:30.975Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40843,
+        "cost": 0.00204215
+      },
+      "requestHash": "ee57550a0eb7cb5f6f4e33b719d44174efd389546c5ae3ebd8ca5f0c47b7cbd9",
+      "elapsedMs": 576,
+      "at": "2026-10-28T23:47:31.551Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

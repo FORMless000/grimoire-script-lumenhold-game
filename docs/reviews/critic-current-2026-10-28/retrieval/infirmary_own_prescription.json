@@ -1,0 +1,107 @@
+{
+  "query": "Her Own Prescription Sister Amaranth is up a week too soon, grey at the edges, taking the tray out for the evening round as if nothing had happened. At bed two she sways and puts a hand on the rail. {flag(bed_six_truth): Four second-years sit up in their beds to watch.|The whole ward goes quiet.} Everyone looks at you. \"Bed.\" You take the tray out of her hands and say it the way she says it to everyone else. She looks at you for a long moment. Then she goes to bed. You do the round. In the morning there's a card on the tray, in her square hand: \"Bed four needs less.\" Walk the round beside her You don't argue. You carry the tray and have each bottle ready before she reaches for it. At the last bed she sits down on the end of it, and lets you measure out her own dose. \"Half a spoon,\" she says. \"I'm not a horse.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:infirmary_own_prescription",
+      "title": "Her Own Prescription",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 137,
+      "sourceHash": "7b3fac3f4b53c73b6e33b08826a8e1e9ee0287a28d8bd959255a65b05a018ae5",
+      "score": 0.9407358169555664,
+      "excerpt": "Her Own Prescription\nSister Amaranth is up a week too soon, grey at the edges, taking the tray out for the evening round as if nothing had happened. At bed two she sways and puts a hand on the rail. {flag(bed_six_truth): Four second-years sit up in their beds to watch.|The whole "
+    },
+    {
+      "key": "event:infirmary_sister_fevered",
+      "title": "The Healer's Own Fever",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 58,
+      "sourceHash": "4559bad6249be8e66ca435e5e9bcbd6b3e2d768c538135bfeb2c6afdc15bc06d",
+      "score": 0.7569276094436646,
+      "excerpt": "The Healer's Own Fever\nYou find her in the little office behind the ward, upright in her chair, a cold compress on her own neck and the patient list in her lap. Her face is grey. \"Lake Fever,\" she says. \"From bed six. It's nothing. Go to bed.\"\nFetch the Headmistress\nThe headmistr"
+    },
+    {
+      "key": "event:amaranth_rounds",
+      "title": "Evening Rounds",
+      "file": "content/events/fixtures.grim",
+      "line": 36,
+      "sourceHash": "f8f61ab6fdb40121ee28ce6f4c754c84265d5dcdae347a4c4ab7015a70d86899",
+      "score": 0.7395350337028503,
+      "excerpt": "Evening Rounds\n{Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's s"
+    },
+    {
+      "key": "event:infirmary_covering_rounds",
+      "title": "Eight Beds, One of You",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 79,
+      "sourceHash": "ad353ee1c3091daebaa06e2b5edac97bfa4c29af1925df93fe880aa1e95d6578",
+      "score": 0.6264403462409973,
+      "excerpt": "Eight Beds, One of You\n{flag(rounds_secret): Sister Amaranth still can't stand, and is still giving orders from her chair.|The village healers are run off their feet, and Sister Amaranth, propped up in her chair, is giving them orders too.} Eight beds, eight remedies, one of you."
+    },
+    {
+      "key": "event:amaranth_orders",
+      "title": "Doctor's Orders",
+      "file": "content/events/fixtures.grim",
+      "line": 62,
+      "sourceHash": "f4f8e4588c436f39820e1be774950d25347dbc5c76ce38493b47dc32113aa47a",
+      "score": 0.6231361627578735,
+      "excerpt": "Doctor's Orders\n{Sister Amaranth has come to find you, which has never happened to anyone. \"You look like a draught of bad decisions,\" she says. \"Bed.\"|Amaranth again, at your door, arms folded. \"I can hear you coughing from the infirmary.\"|\"Bed,\" says Amaranth, before you've ope"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "2f10afc9426c7679ea49f472fb595f27104a8206bd198901fb6ca0bb4cfa0fdd",
+      "at": "2026-10-28T23:23:59.879Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 206,
+        "total_tokens": 206,
+        "cost": 0.00000206,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000206,
+          "upstream_inference_prompt_cost": 0.00000206,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "2f10afc9426c7679ea49f472fb595f27104a8206bd198901fb6ca0bb4cfa0fdd",
+      "elapsedMs": 6453,
+      "at": "2026-10-28T23:24:06.332Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "9967fefbb7833799cd37cbf4dde705902a1e27a0184d1090737bb6f83c4be394",
+      "at": "2026-10-28T23:24:06.357Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43487,
+        "cost": 0.00217435
+      },
+      "requestHash": "9967fefbb7833799cd37cbf4dde705902a1e27a0184d1090737bb6f83c4be394",
+      "elapsedMs": 438,
+      "at": "2026-10-28T23:24:06.795Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

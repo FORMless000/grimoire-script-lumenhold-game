@@ -2,6 +2,8 @@
 
 Translators (human or LLM) must follow this table so names and terms stay consistent across files. Add new terms here when you introduce them.
 
+Crux（交涉）：crux 核心论点 · argument 论点 · Confront 回应 · Deflect 回避 · Push for crux 推进核心 · Patience 耐心 · Suspicion 猜疑 · Agreement 认同 · standing 声望 · bond 关系 · record 履历。场合动作：听证 作答／暂且搁置／结束陈述；权威 据理力争／不作争辩／提出请求；交易 讨价还价／摆手带过／报出价格；心事 宽慰／暂且放下／把话说清；众人面前 出言回应／一笑置之／赢得满堂；记录在案 纠正／无可奉告／讲清真相；荒野 回应／礼让一步／请求通行；阴影 稳住立场／退让一步／挣脱掌控。
+
 ## 风格
 
 - **语气**：温暖、诙谐、略带忧伤的奇幻小说腔，像一本温柔的学院故事书。幽默来自具体细节，不要网络流行语。

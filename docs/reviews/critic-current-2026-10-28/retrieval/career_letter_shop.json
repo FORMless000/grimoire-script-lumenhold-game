@@ -1,0 +1,107 @@
+{
+  "query": "A Lease by the Harbour The lease comes with a brass key and a letter from a harbour landlord whose wife swears by your hair tonic. A crooked little shop, two rooms and a still, yours from the autumn if you sign on the last day. Nobody has ever offered you a door of your own before. Keep the key on a string round your neck You wear the key under your robes for the rest of the year. It's warm when you touch it, which is probably the hair tonic's doing. Write back about the drains The landlord's reply is two pages about the drains, which you read twice. An alchemist's shop lives or dies by its drains. This one, apparently, will live.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_letter_shop",
+      "title": "A Lease by the Harbour",
+      "file": "content/events/careers.grim",
+      "line": 83,
+      "sourceHash": "b3749e2a4b927c37bbee400492741ca60fee49b4197eca4f51ccc6504c76fa1a",
+      "score": 0.9291980862617493,
+      "excerpt": "A Lease by the Harbour\nThe lease comes with a brass key and a letter from a harbour landlord whose wife swears by your hair tonic. A crooked little shop, two rooms and a still, yours from the autumn if you sign on the last day. Nobody has ever offered you a door of your own befor"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5007407069206238,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:career_letter_trading",
+      "title": "A Partnership Offered",
+      "file": "content/events/careers.grim",
+      "line": 119,
+      "sourceHash": "14a2579521ea0d8012760f39a33c4eeb5523ce09e356698b0c8abd94db6b30b1",
+      "score": 0.3469049334526062,
+      "excerpt": "A Partnership Offered\nA shipping house in the harbour has heard about your purse, or rather about how you filled it. Its old partner wants to retire, and offers you his desk and his share of the ledger from the autumn. \"Bring your crowns,\" he writes. \"Bring your nerve. Answer on "
+    },
+    {
+      "key": "event:career_return_guild",
+      "title": "The Works Write Again",
+      "file": "content/events/careers.grim",
+      "line": 175,
+      "sourceHash": "7ea549a8921385abe865d362bb4ee2a219a2f1bd6f6424b1c1a4542857b86f26",
+      "score": 0.34113651514053345,
+      "excerpt": "The Works Write Again\nThe Guild of Alchemists' works remember your summer and the batch you saved. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day.\nWrite back yes, in principle\nY"
+    },
+    {
+      "key": "event:shop_mabels",
+      "title": "Mabel's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 156,
+      "sourceHash": "f3d2cf554feef5baaac062e5f51d39e7a4cd632f89b1a24d15cb4e655bde7960",
+      "score": 0.31911611557006836,
+      "excerpt": "Mabel's Counter\n{Mabel looks at you once as you come in and is already reaching for a tin. \"Sit, petal. I know what you want; let's see if you do.\"|\"There's my petal,\" says Mabel. \"You've the look of someone who needs something steeped.\"|The bell over the door. Mabel doesn't turn"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e77f5ef703cd81a6541ff6972a41766ded6349d988b4362849199f12dd9a8319",
+      "at": "2026-10-28T23:17:46.492Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 146,
+        "total_tokens": 146,
+        "cost": 0.00000146,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000146,
+          "upstream_inference_prompt_cost": 0.00000146,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e77f5ef703cd81a6541ff6972a41766ded6349d988b4362849199f12dd9a8319",
+      "elapsedMs": 8747,
+      "at": "2026-10-28T23:17:55.239Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f89b5676ac485e2f4f50354a78232008ca57e4dd901437ef1196a553597f4e38",
+      "at": "2026-10-28T23:17:55.283Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 59588,
+        "cost": 0.0029794
+      },
+      "requestHash": "f89b5676ac485e2f4f50354a78232008ca57e4dd901437ef1196a553597f4e38",
+      "elapsedMs": 612,
+      "at": "2026-10-28T23:17:55.895Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

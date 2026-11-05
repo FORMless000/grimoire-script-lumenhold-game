@@ -1,11 +1,34 @@
-# LightRAG setup
+# Retrieval setup
+
+**Grim RAG is the default**, selected in `rag/authoring.json`. It uses contextual
+BM25 and cosine vector search (20 candidates each), reciprocal rank fusion, and
+reranks at most 40 candidates. Dependencies come from the `.grim` parser; no
+entity extraction, graph merging or Python environment is required.
+
+Install Node 24, copy `rag/.env.example` to ignored `rag/.env.local`, and fill in
+`OPENROUTER_API_KEY`. Then run `./rag/prepare.sh --build` (PowerShell:
+`.\rag\prepare.ps1 --build`). This initial build makes paid calls for event search
+descriptions and embeddings. Later `npm run grim -- retrieve index` updates only
+changed blocks and blocks whose referenced canon changed; unchanged descriptions
+and vectors are reused. `./rag/prepare.sh --check` checks coverage without API calls.
+
+The commands in [AUTHORING.md](AUTHORING.md) are unchanged. Search descriptions
+remain derived aids; reads return original blocks. Models and reranker fallbacks
+stay in `rag/src/models.json`. Query/reranker changes do not rebuild the index.
+Interrupted builds use `retrieve index --resume` with unchanged source inputs.
+Grim data live in ignored `rag/cache/grim/`; the existing LightRAG store is preserved.
+
+## Optional LightRAG backend
+
+The following installation and graph-maintenance details apply when LightRAG is
+explicitly selected in `rag/authoring.json` (or with `retrieve --backend lightrag`).
+Installing its Python environment alone is available with `./rag/setup.sh --python`.
 
 This project uses official `lightrag-hku==1.5.7` with local JSON, NetworkX and
 NanoVectorDB storage. The bridge supplies OpenRouter calls to native LightRAG
 extraction, gleaning, merging, document deletion, and retrieval-only `mix` search.
 Authoring stays in your chosen coding-agent harness/model. See
-[AUTHORING.md](AUTHORING.md) for the command guide and
-[EVALUATION.md](EVALUATION.md) for experiments.
+[AUTHORING.md](AUTHORING.md) for the command guide.
 
 ## Setup
 
@@ -65,8 +88,8 @@ receipts and experiment runs stay within `rag/` and are ignored by Git.
 The game server and committed gameplay bundles do not require a RAG installation
 or index. Deployment uses `git archive`, so ignored, untracked local artifacts
 are not deployed; the server's static-file allowlist also excludes `rag/`.
-Keep `rag/` source, tests, scripts, requirements, default model configuration,
-evaluation templates and documentation in Git. `rag/.gitignore` excludes venvs,
+Keep `rag/` source, tests, scripts, requirements, default model configuration
+and documentation in Git. `rag/.gitignore` excludes venvs,
 downloaded dependencies/weights, graph and vector caches, credentials, private
 receipts and experiment runs. It intentionally does not ignore the whole folder.
 Previously tracked files would need to be untracked separately; currently none

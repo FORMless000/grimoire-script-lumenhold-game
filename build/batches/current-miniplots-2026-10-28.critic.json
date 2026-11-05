@@ -1,0 +1,125 @@
+{
+  "batch": "current-miniplots-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "infirmary_missed_round",
+      "infirmary_sister_fevered",
+      "infirmary_covering_rounds",
+      "infirmary_bed_six",
+      "infirmary_own_prescription",
+      "lecture_tower_red_ink",
+      "lecture_tower_red_ink_reply",
+      "lecture_tower_red_ink_front_row",
+      "lecture_tower_red_ink_seminar",
+      "home_market_late_bloomer",
+      "home_fields_bloomer_lessons",
+      "home_cottage_bloomer_father",
+      "home_market_bloomer_charm",
+      "home_market_bloomer_ice",
+      "home_cottage_bloomer_letter"
+    ],
+    "files": [
+      "content/events/miniplots_2026_10.grim"
+    ]
+  },
+  "summary": "Rejected: failed red-ink outcomes become successful memories, campus follow-ups can occur while away, and several costs lack a matching scene. All 15 current cards and their thread journals were read; the author’s retrieval notes were consulted.",
+  "issues": [
+    {
+      "event": "infirmary_missed_round",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "Go and find her charges Health, while its outcome only walks to the open office behind the ward. No exertion, exposure, lost sleep or other bodily cost is shown.",
+      "fix": "Remove the unsupported Health charge or describe the actual physical cost of finding her.",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 37
+    },
+    {
+      "event": "lecture_tower_red_ink_reply",
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "The shared suffix sets red_ink_glimpse after both success and failure. Failure says the player slept through the collection, but the next card recognizes the robes from the stair and the journal says the player saw the first-year take the essay.",
+      "fix": "Record the visual glimpse only on success; use a separate progress condition to advance the thread after a failed stakeout.",
+      "evidence": [
+        "probes.json: red-ink-failed-surveillance"
+      ],
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 205
+    },
+    {
+      "event": "lecture_tower_red_ink_reply",
+      "priority": "P2",
+      "category": "check pitch",
+      "problem": "Hiding on a landing to identify an ordinary first-year collecting an essay is pitched at master-. Nothing in the scene supplies a faculty-level observer or ward; the actual obstacle is an unprepared peer.",
+      "fix": "Pitch the stealth attempt at the peer and stairwell, using only the difficulty and circumstance adjustments the scene supports.",
+      "evidence": [
+        "docs/authoring/checks.md: mundane/peer ladder and obstacle rule"
+      ],
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 205
+    },
+    {
+      "event": "lecture_tower_red_ink_seminar",
+      "priority": "P2",
+      "category": "journal continuity",
+      "problem": "The failed objection leaves the first-year seated without reading, then sets red_ink_finished. That flag stamps the journal line On Thursday she spoke, all the way to the end, reporting the opposite result.",
+      "fix": "Give the journal a result-sensitive line or separate completion from successful speaking.",
+      "evidence": [
+        "probes.json: red-ink-failed-seminar"
+      ],
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 254
+    },
+    {
+      "event": "infirmary_covering_rounds",
+      "priority": "P2",
+      "category": "off-campus continuity",
+      "related_events": [
+        "infirmary_bed_six",
+        "infirmary_own_prescription",
+        "lecture_tower_red_ink_reply",
+        "lecture_tower_red_ink_front_row",
+        "lecture_tower_red_ink_seminar"
+      ],
+      "problem": "The campus mini-plots queue later months without a term/presence deferral. Starting near a term end can put the player in the academy ward, stairwell or classroom during a break spent at home or on internship. Queue delivery does not infer those restrictions from the original start card.",
+      "fix": "Defer the campus steps while the player is away and require teaching months for actual class/seminar scenes; preserve the queued step instead of dropping it with a false when.",
+      "evidence": [
+        "src/engine.js: advance checks only each queued card’s own when/defer",
+        "home_cottage_bloomer_father and home_market_bloomer_charm show the existing defer pattern"
+      ],
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 79
+    },
+    {
+      "event": "home_cottage_bloomer_letter",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "Leaving the practice candle subtracts study even though the outcome only gives her a used candle and receives a drawing later. No missed work or revision is described.",
+      "fix": "Remove the study charge or show the revision time actually sacrificed; do not treat gifting a non-inventory keepsake as lost study.",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 441
+    },
+    {
+      "event": "home_market_bloomer_ice",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "The failed Talk her down route charges Health, but its outcome only says an hour, three kettles and a carter’s story. It shows delay and embarrassment without bodily exertion or injury.",
+      "fix": "Show the physical cost of carrying hot water or freeing the arm, or use the cost the outcome actually depicts.",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 407
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

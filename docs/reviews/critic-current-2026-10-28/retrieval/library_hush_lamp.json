@@ -1,0 +1,108 @@
+{
+  "query": "The Night Hush The overdue book will only be on the shelves the night hush sends it to. The head librarian lends you the old lamp. \"Walk the hush,\" she says, \"and listen to which shelf goes quiet last.\" Walk the hush and listen Three laps, and on the third, the shelves on the north side go quiet a heartbeat after the rest. You mark it on your map. The lamp seems pleased with you. Every shelf goes quiet at once, which is either very helpful or a joke at your expense. You walk until midnight and mark nothing. Ask the head librarian outright \"If I told you,\" she says, \"you wouldn't have found it.\" She gives you extra shelving for asking.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:library_hush_lamp",
+      "title": "The Night Hush",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 556,
+      "sourceHash": "e24d951b7e8565b761a10ca25224d6615d5d5ca28bb8084ae06e862a84c27d97",
+      "score": 0.9468164443969727,
+      "excerpt": "The Night Hush\nThe overdue book will only be on the shelves the night hush sends it to. The head librarian lends you the old lamp. \"Walk the hush,\" she says, \"and listen to which shelf goes quiet last.\"\nWalk the hush and listen\nThree laps, and on the third, the shelves on the nor"
+    },
+    {
+      "key": "event:library_overdue_book",
+      "title": "Eleven Years Overdue",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 598,
+      "sourceHash": "59dd3ec43e14ac015206f132570dfe491ad6c6942aace24053271c2c60c3e914",
+      "score": 0.6172378659248352,
+      "excerpt": "Eleven Years Overdue\nTonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.}\nFind the page\nYour hand "
+    },
+    {
+      "key": "event:library_assistant_hush_round",
+      "title": "The Hush Round",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 439,
+      "sourceHash": "308162cef62aee2ea7b67a3e93875b17901dc9f54fa9bd61f9159d107f89c00e",
+      "score": 0.5552789568901062,
+      "excerpt": "The Hush Round\n{Hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {A table of second-years is giggl"
+    },
+    {
+      "key": "event:ww_edge_night",
+      "title": "The Hush Is Awake",
+      "file": "content/events/whisperwood/delve.grim",
+      "line": 59,
+      "sourceHash": "95df486e56b2d9179bfa253e52f42332c489a523d2a984c8cb737ac55c3dcac1",
+      "score": 0.5340259671211243,
+      "excerpt": "The Hush Is Awake\n{flag(ww_hush_seen): The wood at midnight, and deep in it the Hush, awake and listening.|Midnight in the Whisperwood. You were told the deep part keeps the castle's hours. Somewhere ahead, the forest has gone quiet in a way it never is by day.} {flag(ww_mastery)"
+    },
+    {
+      "key": "event:gig_library_lost_shelf",
+      "title": "The Shelf That Wasn't There",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 277,
+      "sourceHash": "1fb7bd14f21918b3abefc9abe0f3cea1134c25b5b4364f32043e7927c365b3a8",
+      "score": 0.5244789123535156,
+      "excerpt": "The Shelf That Wasn't There\n{The stocktake finds a shelf that isn't in any ledger.|The extra shelf again. It has grown a book since yesterday.|The shelf is longer than the room it's in, now.} {The books on it have no titles.|One is warm.|One is labelled with the date of tomorrow."
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "873822506f0d883739ce7434cb2e7aacad59352f7cf46b9401167e55c7778364",
+      "at": "2026-10-28T23:51:35.891Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 150,
+        "total_tokens": 150,
+        "cost": 0.0000015,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000015,
+          "upstream_inference_prompt_cost": 0.0000015,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "873822506f0d883739ce7434cb2e7aacad59352f7cf46b9401167e55c7778364",
+      "elapsedMs": 873,
+      "at": "2026-10-28T23:51:36.764Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ccb920452754ebfc013b51d232751b50e745b3cb477b963d823c495c25a2048b",
+      "at": "2026-10-28T23:51:36.816Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 39498,
+        "cost": 0.0019749
+      },
+      "requestHash": "ccb920452754ebfc013b51d232751b50e745b3cb477b963d823c495c25a2048b",
+      "elapsedMs": 692,
+      "at": "2026-10-28T23:51:37.508Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,197 @@
+{
+  "batch": "current-plans-thesis-recheck-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "break_castle_one_fire",
+      "break_castle_kitchen_rota",
+      "break_castle_empty_library",
+      "break_castle_post_day",
+      "break_home_kitchen_table",
+      "break_home_the_box",
+      "break_home_family_debate",
+      "break_home_village_children",
+      "break_work_holiday_rush",
+      "break_work_opening_up",
+      "break_work_regular",
+      "break_work_new_hire",
+      "break_internship_lodgings",
+      "break_internship_briefing",
+      "break_internship_other_interns",
+      "break_internship_stipend",
+      "thesis_margin_notes",
+      "thesis_carrel_neighbour",
+      "thesis_is_it_good",
+      "thesis_lab_spare_carrel",
+      "thesis_lab_footnote_war",
+      "thesis_lab_borrowed_candle",
+      "intern_royal_library_slips",
+      "intern_royal_library_mending",
+      "intern_conclave_test_chamber",
+      "intern_conclave_minutes",
+      "intern_alchemists_vat_watch",
+      "intern_alchemists_no_flame",
+      "intern_expedition_thin_air",
+      "intern_expedition_chart_dispute",
+      "intern_field_station_count",
+      "intern_field_station_patient",
+      "intern_thornwick_pastries",
+      "intern_thornwick_rivalry",
+      "intern_unseen_office_coffee",
+      "intern_unseen_office_wrong_file"
+    ],
+    "files": [
+      "content/events/pools/plans_thesis.grim"
+    ]
+  },
+  "summary": "The thirteen findings in the saved round-two rejection have been repaired in current source, including linked-variant details and the candle sequence. Still rejected on this independent re-read: eight skill-sensitive actions remain pure chance, several sequences award unearned work history, and a test-chamber Health cost is unshown. All 36 current cards were read.",
+  "issues": [
+    {
+      "event": "break_home_family_debate",
+      "priority": "P2",
+      "category": "skill-sensitive checks",
+      "related_events": [
+        "break_internship_briefing",
+        "intern_conclave_minutes",
+        "intern_alchemists_no_flame",
+        "intern_expedition_chart_dispute",
+        "intern_field_station_count",
+        "intern_field_station_patient",
+        "intern_unseen_office_coffee"
+      ],
+      "problem": "These routes still use bare chance for demonstrating learned knowledge, interpreting a task, defending a research opinion, brewing a heating reaction, persuading an astronomer, estimating a creature count, feeding a hostile patient or reading covert social cues. Current checks.md requires a skill-sensitive check when the relevant expertise or relationship can plausibly change the outcome; none can affect these rolls.",
+      "fix": "Replace each bare chance with the appropriately pitched plain research/brew/appeal/soothe/deceive check (and a circumstance step where justified), retaining genuinely random environmental events as chance.",
+      "evidence": [
+        "docs/authoring/checks.md: pure luck versus skill-sensitive attempts"
+      ],
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 113
+    },
+    {
+      "event": "intern_royal_library_slips",
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "The second Take the near shelves outcome says everyone knows the player has never been below the third landing. The first showing can have successfully completed the deep request down four hundred steps. Choosing near shelves now cannot erase that earlier work.",
+      "fix": "Describe today’s easy requests without claiming the player has never done a deep one, or check actual previous choices.",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 465
+    },
+    {
+      "event": "intern_royal_library_mending",
+      "priority": "P2",
+      "category": "choice-dependent sequence and check pitch",
+      "problem": "The third setup awards the binder’s trust with older pages regardless of repeated failed repairs or always watching rather than mending. Its journeyman+ steady check also uses the low-rung repeat pattern that checks.md explicitly advises against because later expertise nearly removes its risk.",
+      "fix": "Gate earned repair trust on performance or successful work, and use normal swing unless the repeat is intentionally a documented measure the player outgrows.",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 489
+    },
+    {
+      "event": "intern_expedition_thin_air",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The third setup says the player has carried instruments up this ridge so often the goats ignore them. A player who always chose the sums in the tent never carried those instruments; the card’s show count advances anyway.",
+      "fix": "Anchor the sequence on the expedition’s routine or gate the carrying history on actual participation.",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 638
+    },
+    {
+      "event": "intern_field_station_count",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The third setup calls the player the station’s best counter because they stopped minding damp, even after always making the estimate by the stove or repeatedly giving inaccurate counts. No performance or successful count gate supports that reputation.",
+      "fix": "Condition the earned reputation on the work, or make the third setup about the station’s recurring dawn count rather than the player’s unearned proficiency.",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 693
+    },
+    {
+      "event": "intern_conclave_test_chamber",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "Every failed test spends Health, but the three outcomes only change the player’s fringe, robe folds or a scorch mark on the wall. The card does not show bodily harm or exposure corresponding to that cost.",
+      "fix": "Show the actual physical effect of the failed spell in each variant, or replace the Health charge with the consequence the scene depicts.",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 519
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  },
+  "previousVerdict": "build/batches/plans_thesis.critic.json",
+  "priorFindingsResolution": [
+    {
+      "finding": 1,
+      "event": "break_castle_one_fire",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 2,
+      "event": "break_home_village_children",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 3,
+      "event": "break_internship_briefing",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 4,
+      "event": "intern_royal_library_slips",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 5,
+      "event": "intern_conclave_test_chamber",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 6,
+      "event": "intern_alchemists_vat_watch",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 7,
+      "event": "intern_alchemists_no_flame",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 8,
+      "event": "intern_thornwick_rivalry",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 9,
+      "event": "intern_unseen_office_coffee",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 10,
+      "event": "intern_unseen_office_wrong_file",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 11,
+      "event": "thesis_lab_borrowed_candle",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 12,
+      "event": "thesis_lab_spare_carrel",
+      "status": "resolved in current source"
+    },
+    {
+      "finding": 13,
+      "event": "intern_expedition_chart_dispute",
+      "status": "resolved in current source"
+    }
+  ]
+}

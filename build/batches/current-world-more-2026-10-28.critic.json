@@ -1,0 +1,81 @@
+{
+  "batch": "current-world-more-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "world_stairs_ate_a_shoe",
+      "world_duchess_has_news",
+      "world_laundry_day",
+      "world_bridge_in_a_gale",
+      "world_common_room_kettle",
+      "world_the_mirror_asks",
+      "world_something_in_your_bag",
+      "world_study_group",
+      "world_weather_following_you",
+      "world_lamplighters_round",
+      "world_the_warm_flue",
+      "world_margin_argument",
+      "world_door_that_wasnt_there",
+      "world_paper_bird",
+      "world_practice_next_door"
+    ],
+    "files": [
+      "content/events/pools/world_more.grim"
+    ]
+  },
+  "summary": "Rejected: repeated outcomes assign earlier choices and failures the player may never have made, and two cards duplicate their existing ambient pool’s shared wiring. All fifteen cards were read; off-campus ambient filtering was checked in the director and is not reported as a defect.",
+  "issues": [
+    {
+      "event": "world_laundry_day",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The second setup and later outcomes remember the tubs turning the player’s robes pink last time. The first successful charm keeps the robes clean and the hand-washing route never risks discoloration. The remembered failure is not earned by either history.",
+      "fix": "Condition the pink-robe memory on an actual discoloration outcome, or describe the tubs’ reputation without assigning that failure to the player.",
+      "file": "content/events/pools/world_more.grim",
+      "line": 52
+    },
+    {
+      "event": "world_the_mirror_asks",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The second honest outcome gives the same true answer as last time, the third calls honesty a habit, and the third lie says the player lies again. The sequence advances after either choice, so switching sides produces false memories of earlier truth or deception.",
+      "fix": "Make each answer stand on its own, or read the actual earlier choice when describing the habit.",
+      "file": "content/events/pools/world_more.grim",
+      "line": 115
+    },
+    {
+      "event": "world_stairs_ate_a_shoe",
+      "priority": "P2",
+      "category": "effects and prose",
+      "problem": "The third Hop on outcome grants Lore, but only describes going shoeless and calling it a fashion. The earlier variants explicitly earn their Lore by notes or reading; that learning disappears from the sticky variant while its reward remains.",
+      "fix": "Show the lecture or reading in the third outcome too, or use a scene-supported gain for that variant.",
+      "file": "content/events/pools/world_more.grim",
+      "line": 14
+    },
+    {
+      "event": "world_the_mirror_asks",
+      "priority": "P2",
+      "category": "wiring",
+      "related_events": [
+        "world_study_group"
+      ],
+      "problem": "These two cards copy the ambient group’s class/repeat/weight setup instead of joining the world_more_routine pool already declared in their file. Their special repeat values can be intentional overrides, but the shared wiring is still duplicated.",
+      "fix": "Join world_more_routine and retain the different repeat values and their own gates/cast/slot as explicit overrides.",
+      "file": "content/events/pools/world_more.grim",
+      "line": 115
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

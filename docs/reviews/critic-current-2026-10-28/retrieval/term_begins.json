@@ -1,0 +1,107 @@
+{
+  "query": "The Spring Term {chosen(break_plan, home): You come back from home with a tin of something your family insists you'll need, and the castle feels enormous after a winter of small rooms.|{chosen(break_plan, work): Your holiday wages are in your purse and your feet still ache from earning them. The castle fills up around you, trunk by trunk.|After a winter of empty corridors, the castle fills up around you again, and the noise of it is almost too much.}} The spring term begins, and the registrar's hall is already queueing. Get a head start on the reading You find a window seat in the library before the term has properly started. By the time the others arrive, you have a list of questions and a crick in your neck. Catch up with everyone first You spend the first evening in the common room, then at the Newt, hearing everyone's winter. The reading can wait a day. It waits three.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:term_begins",
+      "title": "The Spring Term",
+      "file": "content/events/calendar.grim",
+      "line": 719,
+      "sourceHash": "4e3f493ee75d281e2908376dee41a64d7294b290b786180a9a0d5c197c9757e8",
+      "score": 0.9330040812492371,
+      "excerpt": "The Spring Term\n{chosen(break_plan, home): You come back from home with a tin of something your family insists you'll need, and the castle feels enormous after a winter of small rooms.|{chosen(break_plan, work): Your holiday wages are in your purse and your feet still ache from e"
+    },
+    {
+      "key": "event:break_plan",
+      "title": "The Break",
+      "file": "content/events/calendar_2b.grim",
+      "line": 100,
+      "sourceHash": "ac54b6810a90fa1ff03985f6fa32f9671d3608f396a40ef4418964888986b4d5",
+      "score": 0.6045652031898499,
+      "excerpt": "The Break\n{month == 5: The winter break.|The summer break.} Two months without lectures. The castle empties, mostly.\nStay at the castle\nThe castle in the holidays is a different building: louder echoes, kinder staff, doors you've never seen open.\nGo home\nThe barge, the coach, the"
+    },
+    {
+      "key": "event:enrolment",
+      "title": "Enrolment",
+      "file": "content/events/calendar_2b.grim",
+      "line": 9,
+      "sourceHash": "4510ee3901bebb8812585ab0f30a70959f0bbc75fb88ef22960dd2d100d1ffd5",
+      "score": 0.5639141201972961,
+      "excerpt": "Enrolment\n{term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} {member(thesis): Choose one; the thesis takes your other slot"
+    },
+    {
+      "key": "event:break_castle_empty_library",
+      "title": "The Library on Holiday",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 45,
+      "sourceHash": "8ec5d3aacd5fed918f5f13c96e2ee1ce6514cba8b4041cdf81d09ee37459d1c1",
+      "score": 0.537213921546936,
+      "excerpt": "The Library on Holiday\n{The librarians have gone home, and the library has been left to you and the cat.|Footnote has moved from the reference desk to your chair, and opens one eye.|Your break-morning library. One window seat is yours now.} {season == \"winter\": Frost has drawn fe"
+    },
+    {
+      "key": "event:letter_reading_list",
+      "title": "A Reading List",
+      "file": "content/events/pools/letters.grim",
+      "line": 82,
+      "sourceHash": "a213c77b6f7fe29ddf88a0a5a3e73b7bb83d18406e6f2ebd8f7db9bd212da060",
+      "score": 0.5194936990737915,
+      "excerpt": "A Reading List\nA professor has written over the break, as some of them do, with a reading list for next term: eleven titles, three of them underlined, one with \"(if you dare)\" beside it. {~The handwriting slopes like a staircase.|There's a coffee ring on the corner.}\nStart on the"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "46522c79536524d3b64092d351b0cece7fc296083472e7be96040d94921745f1",
+      "at": "2026-10-28T23:45:21.260Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 197,
+        "total_tokens": 197,
+        "cost": 0.00000197,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000197,
+          "upstream_inference_prompt_cost": 0.00000197,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "46522c79536524d3b64092d351b0cece7fc296083472e7be96040d94921745f1",
+      "elapsedMs": 59751,
+      "at": "2026-10-28T23:46:21.011Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f59af5ed3e4009fa97922f72de000b370ce33c0767e1e64d40f76e5f7344eee4",
+      "at": "2026-10-28T23:46:21.612Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46146,
+        "cost": 0.0023073
+      },
+      "requestHash": "f59af5ed3e4009fa97922f72de000b370ce33c0767e1e64d40f76e5f7344eee4",
+      "elapsedMs": 431,
+      "at": "2026-10-28T23:46:22.043Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

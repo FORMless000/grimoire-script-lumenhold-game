@@ -1,4 +1,4 @@
-import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,renderText,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,EVENTS,FOES,POOLS,fightSetting,levelRng,generateLoadout,COMBAT_TUNING,settle,GAME_TEXT,WORN_ITEMS,GAME_NPCS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,useText,tx,GAME_LOCALES,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,renderText,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,EVENTS,FOES,POOLS,fightSetting,levelRng,generateLoadout,COMBAT_TUNING,settle,GAME_TEXT,WORN_ITEMS,GAME_NPCS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition,FORKS} from './engine.mjs';
 import {brief} from './brief.mjs';
 import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
@@ -26,7 +26,18 @@ const COMBAT_RESOURCES=['health','mana','crowns','renown','alignment'];
 
 // ---- Setup (the bench's side panel) ----
 // The main game's English UI text (src/i18n.js, fight.* and kit.slot.*, read by tools/build.mjs), with the bench's own as fallback.
-const gt=(k,v={},fallback=k)=>Object.entries(v).reduce((t,[a,b])=>t.replaceAll('{'+a+'}',b),GAME_TEXT[k]??fallback);
+// The language (feedback 2026-10-25): the main game's translations (locales/<lang>/, read by tools/site.mjs) for the fight
+// itself, as src/ui.js hands them over: the core's, flavor and brief strings by key (useText), the fight's UI lines, and the
+// cast's and the worn items' names. The bench's own controls (setup, the Bench dock, the log, the result's ledgers) stay English.
+const params=new URLSearchParams(location.search);
+let LANG=params.get('lang')??store.get('lang',null)??(/^zh/i.test(navigator.language??'')?'zh-CN':'en');if(!GAME_LOCALES[LANG])LANG='en';
+const loc=()=>GAME_LOCALES[LANG]??null;
+let NPCS=GAME_NPCS;
+function setLang(lang){LANG=GAME_LOCALES[lang]?lang:'en';store.set('lang',LANG);const L=loc();useText(L?L.text:null);NPCS=L?{...GAME_NPCS,...L.npcs}:GAME_NPCS;
+ document.documentElement.lang=LANG;if(L&&/^zh/.test(LANG)&&!document.getElementById('cjk-fonts'))document.head.insertAdjacentHTML('beforeend','<link id="cjk-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&display=swap">');}
+setLang(LANG);
+const gt=(k,v={},fallback=k)=>Object.entries(v).reduce((t,[a,b])=>t.replaceAll('{'+a+'}',b),loc()?.ui[k]??GAME_TEXT[k]??fallback);
+const itemName=(id,en)=>loc()?.items[id]??en;
 // Special foes split as the main game sees them: creatures (race, "it", no healing) and humans outside the classes.
 const pick=f=>Object.fromEntries(Object.entries(SPECIAL_LOADOUTS).filter(([,d])=>f(d)));
 for(const id of ['player-loadout','opponent-loadout'])for(const [group,items]of Object.entries({General:LOADOUTS,Characters:NAMED_LOADOUTS,Creatures:pick(d=>d.creature),'Special foes':pick(d=>!d.creature)}))$(id).insertAdjacentHTML('beforeend',`<optgroup label="${group}">${Object.keys(items).map(name=>`<option>${esc(name)}</option>`).join('')}</optgroup>`);
@@ -52,7 +63,16 @@ function applyCard(){
 // The worn kit (content/world/items.grim, read by tools/build.mjs): one item a slot, summed as the main game's Engine#wornMods.
 const SLOTS=['wand','robe','trinket'];
 const wornText=w=>[w.hp?`HP +${w.hp}`:'',w.mana?`Mana +${w.mana}`:'',...Object.entries(w.cost??{}).map(([k,n])=>`${k} costs ${n>0?'+':'−'}${Math.abs(n)}`),...Object.entries(w.onCast??{}).map(([k,n])=>`${k} casts deal +${n}`),w.onDefend?`blocked blows shock ${w.onDefend}`:'',...(w.taken??[]).map(t=>`−${t.n} from ${t.from.join('/')}`)].filter(Boolean).join(', ');
-$('worn').innerHTML=Object.keys(WORN_ITEMS).length?SLOTS.map(slot=>`<label>Worn ${esc(gt('kit.slot.'+slot,{},slot).toLowerCase())}<select data-worn="${slot}"><option value="">Nothing with an effect</option>${Object.entries(WORN_ITEMS).filter(([,d])=>d.slot===slot&&d.worn).map(([id,d])=>`<option value="${id}">${esc(d.name)} · ${esc(wornText(d.worn))}</option>`).join('')}</select></label>`).join(''):'<p class="fine">No worn items: the bench was built without the main game\'s content.</p>';
+function renderWorn(){const kept=Object.fromEntries([...document.querySelectorAll('[data-worn]')].map(s=>[s.dataset.worn,s.value]));
+$('worn').innerHTML=Object.keys(WORN_ITEMS).length?SLOTS.map(slot=>`<label>Worn ${esc(gt('kit.slot.'+slot,{},slot).toLowerCase())}<select data-worn="${slot}"><option value="">Nothing with an effect</option>${Object.entries(WORN_ITEMS).filter(([,d])=>d.slot===slot&&d.worn).map(([id,d])=>`<option value="${id}">${esc(itemName(id,d.name))} · ${esc(wornText(d.worn))}</option>`).join('')}</select></label>`).join(''):'<p class="fine">No worn items: the bench was built without the main game\'s content.</p>';
+ for(const sel of document.querySelectorAll('[data-worn]'))if(kept[sel.dataset.worn])sel.value=kept[sel.dataset.worn];}
+renderWorn();
+// The fight's language: English or a main-game locale; switching mid-fight renames the fighters and redraws (lines already
+// told stay in the language they were told in).
+const LANGS=[['en','English'],...Object.entries(GAME_LOCALES).map(([k,v])=>[k,v.name])];
+const langOptions=()=>LANGS.map(([k,n])=>`<option value="${k}"${k===LANG?' selected':''}>${esc(n)}</option>`).join('');
+function switchLang(lang){setLang(lang);$('lang').innerHTML=langOptions();renderWorn();setup();if(game)names=opponentNames(game.config);render();}
+$('lang').innerHTML=langOptions();$('lang').onchange=e=>switchLang(e.target.value);
 function wornMods(){
  const m={hp:0,mana:0,cost:{},onCast:{},onDefend:0,taken:[]};let any=false;
  for(const sel of document.querySelectorAll('[data-worn]')){const w=WORN_ITEMS[sel.value]?.worn;if(!w)continue;any=true;
@@ -99,19 +119,94 @@ function config(){const same=!$('opponent-loadout').value,card=$('card').value||
  return c;}
 // Names in the fight text, as the main game gives them: a character by their short name and pronouns (content/world/cast.grim),
 // a special foe as its card's foe (FOES) calls it, anyone else by their loadout.
-function opponentNames(c){
- const l=game.actors[1].kit.loadout,n=GAME_NPCS[NAMED_LOADOUTS[l]?.npc];
+function opponentNames(c,g=game,shown){
+ const l=g.actors[1].kit.loadout,n=NPCS[NAMED_LOADOUTS[l]?.npc];
+ // In a translation, the name the header shows (a foe's translated card name), as the main game's fight text uses it.
+ if(!n&&LANG!=='en'){const f=Object.values(FOES).find(f=>f.loadout===l);return fighterNames({opponentName:shown??nameOf(1),opponentLoadout:l,opponentPronouns:f?.pronouns});}
  if(n)return fighterNames({opponentName:n.short??String(n.name).split(/[\s·]+/)[0],opponentLoadout:l,opponentPronouns:n.pronouns});
  const f=c.card&&cardFoe(c.card)?.loadout===l?cardFoe(c.card):SPECIAL_LOADOUTS[l]?Object.values(FOES).find(f=>f.loadout===l):null;
  return fighterNames({opponentName:f?.name,opponentLoadout:l,opponentPronouns:f?.pronouns});
 }
-function start(c){try{c??=config();const seed=c.ai?.[1]?.seed;if(seed!==undefined&&(!Number.isInteger(seed)||seed<0||seed>4294967295))throw Error('Choose an integer AI seed from 0 to 4294967295');token++;busy=false;game=createState(c);
+function start(c){try{c??=config();const seed=c.ai?.[1]?.seed;if(seed!==undefined&&(!Number.isInteger(seed)||seed<0||seed>4294967295))throw Error('Choose an integer AI seed from 0 to 4294967295');token++;busy=false;
+ if(screen!=='bench'){game=null;view='play';$('setup-error').textContent='';$('return').hidden=false;playInGame(c);render();window.scrollTo(0,0);return;}
+ framed?.close();framed=null;game=createState(c);
  // The card's lesson or free fight, and a foe that commits first in the open (rival_contest), as src/combat.js sets them.
  const e=c.card?EVENTS[c.card]:null,early=at(e?.foeCommitsFirst);if(early>0){game.earlyCommit[1]=early;game.leader=1;}
  // `tutorial` is the lesson's list of coach keys (combat/HANDOFF.md), not one value per challenge like the card's other fields.
  setting={tutorial:e?.tutorial?[].concat(e.tutorial):null,free:!!(e?.tutorial||at(e?.stakes)==='none'),left:null};
  names=opponentNames(c);history=[];stats=[];selected=null;moves++;bars={};seen={};analysis=null;sheet=null;focusEx=null;view='play';$('setup-error').textContent='';$('return').hidden=false;render();pump();window.scrollTo(0,0);}catch(e){$('setup-error').textContent=e.message;}}
 $('begin').onclick=()=>start();$('return').onclick=()=>{view='play';render();};setRebates();setup();
+
+// ---- The fight on the main game's own screen (feedback 2026-10-29) ----
+// The bench sets a fight up and the main game plays it: in its own page (index.html, as a card preview: ?event=), its stage
+// and its fight screen (src/combat-ui.js), or a fork of that screen (experiments/combat-ui, FORKS, loaded into the page in
+// its place), so what is tested is what ships. The page is handed the bench's fight by two hooks: the engine's fightAhead
+// (the card's option starts it) and the bridge's createFight (the fight is the bench's state, not one built from the preview
+// character). The card's outcome follows the fight as in a game. Framed beside the setup when the bench runs on its own
+// (out/site/server.mjs, which serves the game under game/); the game's server forbids framing (X-Frame-Options: DENY), so
+// from /bench/ the game opens in a tab of its own, driven the same way. "Bench screen" keeps the bench's own fight screen,
+// with its engine dock, search journal and log.
+const onGameServer=location.pathname.startsWith('/bench/');
+const GAME_URL=new URL(onGameServer?'../index.html':'game/index.html',location.href).href;
+const SCREENS=[['game','Main game · the live screen'],...FORKS.map(f=>[f.id,'Fork · '+f.name]),['bench','Bench screen · engine dock, journal, log']];
+let screen=params.get('screen')??store.get('screen','game');if(!SCREENS.some(([k])=>k===screen))screen='game';
+const FRAMES={phone:'Phone',tablet:'Tablet',fill:'Fill'};
+let frameSize=store.get('frameSize','phone');if(!FRAMES[frameSize])frameSize='phone';
+let framed=null;
+function screenNote(){const f=FORKS.find(f=>f.id===screen);return screen==='bench'?'The bench\'s own copy of the fight screen.':f?f.summary??'':'The fight screen the game ships (src/combat-ui.js), in the game\'s own page.';}
+function setScreen(k){screen=k;store.set('screen',k);for(const sel of document.querySelectorAll('[data-screen]'))sel.value=k;$('screen-note').textContent=screenNote();}
+$('screen').innerHTML=SCREENS.map(([k,n])=>`<option value="${k}"${k===screen?' selected':''}>${esc(n)}</option>`).join('');$('screen').onchange=e=>setScreen(e.target.value);$('screen-note').textContent=screenNote();
+// The card the game shows: the one picked, else a duel every game has; the option that fights is the card's own.
+const PREVIEW_CARD='duel_practice_bout/right';
+const until=(ok,ms=20000)=>new Promise((res,rej)=>{const t0=Date.now(),tick=()=>{let v=false;try{v=ok();}catch{}if(v)res(v);else if(Date.now()-t0>ms)rej(Error('The game page did not start'));else setTimeout(tick,80);};tick();});
+// The fight, built inside the game's page (its own core), as src/combat.js createFight would: the setting, the foe, the names.
+function benchFight(win,c,req){
+ const W=win.LumenholdCombat,state=W.createState(JSON.parse(JSON.stringify(c))),e=c.card?EVENTS[c.card]:null,early=at(e?.foeCommitsFirst);
+ if(early>0){state.earlyCommit[1]=early;state.leader=1;}
+ const l=state.actors[1].kit.loadout,npc=NAMED_LOADOUTS[l]?.npc??null,n=npc&&NPCS[npc],cf=c.card?cardFoe(c.card):null,f=cf?.loadout===l?cf:Object.entries(FOES).map(([id,f])=>({id,...f})).find(f=>f.loadout===l)??null;
+ const name=n?n.short??String(n.name).split(/[\s·]+/)[0]:f?W.tx('foe.'+f.id,f.name??l):l;
+ const list=v=>Array.isArray(v)&&Array.isArray(v[0])?v[0]:v;
+ const setting={context:c.context,observers:!!c.observers,witnesses:c.witnesses??!!c.observers};
+ if(e){for(const k of ['tutorial','script','loop'])if(list(e[k]))setting[k]=[].concat(list(e[k]));if(at(e.stakes)==='none')setting.stakes='none';}
+ const a=state.actors[0],m=c.mainGame??{};
+ const player={skills:a.kit.skills,spells:a.kit.spells,health:m.health??100,mana:m.mana??a.kit.capacity,maxMana:a.kit.capacity,mood:a.resources.mood,renown:a.resources.renown,gold:a.resources.crowns,alignment:a.resources.alignment};
+ const foe={id:f?.id??'bench',loadout:l,npc,name,pronouns:n?.pronouns??f?.pronouns??(SPECIAL_LOADOUTS[l]?.creature?'it':'they'),level:state.actors[1].kit.level,special:!!SPECIAL_LOADOUTS[l],creature:!!SPECIAL_LOADOUTS[l]?.creature,persona:f?.persona??null};
+ return {request:{...req,player},state,foe,setting,names:opponentNames(c,state,name),rules:W.RULES_VERSION};
+}
+function injectFork(win,id){
+ const d=win.document,base=new URL('forks/',location.href).href;
+ for(const f of ['proto/base.css',id+'/ui.css']){const l=d.createElement('link');l.rel='stylesheet';l.href=base+f;d.head.appendChild(l);}
+ const js=f=>new Promise((ok,no)=>{const s=d.createElement('script');s.src=base+f;s.onload=ok;s.onerror=()=>no(Error('Could not load the fork '+f));d.head.appendChild(s);});
+ return js('proto/base.js').then(()=>js(id+'/ui.js'));
+}
+async function hook(win,c,{event,option}){
+ await until(()=>win.lumen?.eng&&win.CombatBridge&&win.CombatUI&&win.document.querySelector('.choice'));
+ if(screen!=='game')await injectFork(win,screen);
+ const B=win.CombatBridge,make=B.createFight.bind(B);
+ B.createFight=(req,o)=>req?.bench?benchFight(win,c,req):make(req,o);
+ win.lumen.eng.fightAhead=key=>typeof key==='string'?{id:`${event}/${key}#0`,event,option:key,index:0,kind:'duel',dc:0,odds:'even',seed:c.encounterSeed>>>0,met:[],allies:[],variantHash:0,bench:true,player:null}:null;
+ // The bench is a test: the engine's analysis is offered (its toggle starts it as the bench's own does).
+ const UI=win.CombatUI,open=UI.open;UI.open=o=>open.call(UI,{...o,engineHelp:true,engineShown:engineOn});
+ const d=win.document,b=[d.querySelector(`.choice[data-k="${option}"]`),...d.querySelectorAll('.choice')].find(x=>x&&!x.disabled);
+ if(!b)throw Error('The card has no option to choose');
+ b.click();
+}
+function playInGame(c){
+ const key=c.card&&EVENTS[c.card]?c.card:PREVIEW_CARD,[event,option]=key.split('/'),url=`${GAME_URL}?event=${encodeURIComponent(event)}&lang=${encodeURIComponent(LANG)}`;
+ framed?.close();
+ const bar=`<div class="gh-bar"><button data-gh="setup">← Setup</button><button data-gh="replay" class="primary">Replay</button><label>Screen<select data-screen>${SCREENS.map(([k,n])=>`<option value="${k}"${k===screen?' selected':''}>${esc(n)}</option>`).join('')}</select></label>`+
+  (onGameServer?'':`<span class="gh-sizes">${Object.entries(FRAMES).map(([k,n])=>`<button data-size="${k}" class="${k===frameSize?'on':''}">${n}</button>`).join('')}</span>`)+`<a href="${esc(url)}" target="_blank" rel="noopener" title="The bare card preview, without the bench's fight">Card ↗</a><span class="gh-status" id="gh-status"></span></div>`;
+ $('play').innerHTML=`<div class="game-host">${bar}${onGameServer?'<p class="gh-tab">The fight is played in the game\'s own tab (the game\'s server allows no framing). Replay reopens it there.</p>':`<div class="gh-frame ${frameSize}"><iframe id="gh-frame" title="The main game" src="about:blank"></iframe></div>`}</div>`;
+ const status=t=>{const el=$('gh-status');if(el)el.textContent=t;};
+ let win=null,frame=null;
+ const go=()=>{status('Loading the game…');hook(win,c,{event,option}).then(()=>status('')).catch(e=>{status(e.message);$('setup-error').textContent=e.message;});};
+ if(onGameServer){win=window.open(url,'lumenhold-bench-fight');if(!win){status('The browser blocked the game tab: allow pop-ups for this page.');}else{win.focus();go();}}
+ else{frame=$('gh-frame');frame.onload=()=>{if(frame.src==='about:blank')return;win=frame.contentWindow;go();};frame.src=url;}
+ framed={c,close:()=>{if(frame)frame.onload=null;}};
+ for(const b of document.querySelectorAll('[data-gh]'))b.onclick=()=>{if(b.dataset.gh==='setup'){view='setup';render();}else start(c);};
+ for(const sel of document.querySelectorAll('#play [data-screen]'))sel.onchange=e=>{setScreen(e.target.value);start(c);};
+ for(const b of document.querySelectorAll('[data-size]'))b.onclick=()=>{frameSize=b.dataset.size;store.set('frameSize',frameSize);document.querySelector('.gh-frame').className='gh-frame '+frameSize;for(const x of document.querySelectorAll('[data-size]'))x.classList.toggle('on',x===b);};
+}
 
 // ---- Playing ----
 function submit(id,ai){const channels=game.actors.map(a=>a.channel?.id),mover=actorToMove(game),commits=game.pending.map((p,i)=>i===mover?id:p),descs=commits.map((c,i)=>{try{return c?describe(game,i,c):'';}catch{return '';}}),before=structuredClone(game),r=applyChoice(game,id);moves++;if(ai)stats.push({round:r.round??game.round,side:1,...ai});if(r.resolved){r.pair.forEach((id,i)=>{if(r.committed?.[i]!==id&&!['hold','release','cancel','frozen'].includes(id)){try{descs[i]=describe(game,i,id);}catch{}}});   // a compelled side: describe what it actually did
@@ -141,7 +236,7 @@ function incoming(){
  const os=[];for(const o of game.actors[1].omens.filter(o=>o.due>=game.round).sort((a,b)=>a.due-b.due)){const g=os.find(x=>x.id===(o.id??'omen')&&x.due===o.due);if(g)g.parts.push(o);else os.push({id:o.id??'omen',due:o.due,parts:[o]});}
  if(!os.length)return '';
  return os.map(o=>{const id=o.id,now=o.due===game.round,n=Math.round(o.parts.reduce((a,p)=>a+p.power,0)),d=describeData(game,1,id),stops=d?.stops?renderText(d.stops):id==='omen'?describe(game,1,id):'';
-  const split=o.parts.length>1?' '+gt('fight.incomingSplit',{parts:o.parts.map(p=>`<span class="split-${p.impact?'impact':'spell'}">${Math.round(p.power)} ${p.impact?'Impact':'spell'}</span>`).join(' + ')},'({parts})'):'';
+  const split=o.parts.length>1?' '+gt('fight.incomingSplit',{parts:o.parts.map(p=>`<span class="split-${p.impact?'impact':'spell'}">${Math.round(p.power)} ${esc(gt(p.impact?'fight.impactNote':'fight.spellNote',{},p.impact?'Impact':'spell'))}</span>`).join(' + ')},'({parts})'):'';
   const k=o.due-game.round,when=k===1?gt('fight.whenNext',{},'next exchange'):gt('fight.whenIn',{k},'in {k} exchanges');
   const head=(now?gt('fight.incomingNow',{move:label(id),n},'{move} lands this exchange: {n} damage before defences.'):gt('fight.incomingLater',{move:label(id),n,ex:o.due,when},'{move} lands {when} (exchange {ex}): {n} damage before defences.'));
   return `<div class="intent incoming${now?' now':''}"><span class="tele-icon">${actionIcon(id,1)}</span><div class="it"><b>${esc(head)}${split}</b>${stops?`<small>${esc(stops)}</small>`:''}</div></div>`;}).join('');
@@ -149,10 +244,12 @@ function incoming(){
 const briefOf=(side,id)=>{let d=null;try{d=describeData(game,side,id);}catch{}return brief(id,d,game.actors[side].channel?.id);};
 // same: the label repeats the action's name, which the button already shows (hidden there unless the name is).
 const effHtml=(b,name)=>{const v=b.value!==''&&b.value!==null&&b.value!==undefined;return `<span class="eff k-${b.kind}${v?' has-v':''}">${v?`<b>${esc(b.value)}</b>`:''}${b.label?`<small class="lbl${name&&name.toLowerCase()===b.label.toLowerCase()?' same':''}">${esc(b.label)}</small>`:''}${b.turns?`<small class="t">${b.turns}t</small>`:''}</span>`;};
-function price(side,id){const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return [m?fmt(m)+' Mana':'',h?fmt(h)+' HP':''].filter(Boolean).join(' + ')||'Free';}
-const costHtml=(side,id)=>{const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return `<span class="a-cost">${m?`<b class="c-mana" aria-label="${fmt(m)} Mana">${fmt(m)}</b>`:''}${h?`<b class="c-hp" aria-label="${fmt(h)} HP">${fmt(h)}</b>`:''}</span>`;};
+function price(side,id){const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return [m?gt('fight.mana',{n:fmt(m)},'{n} Mana'):'',h?gt('fight.hp',{n:fmt(h)},'{n} HP'):''].filter(Boolean).join(' + ')||gt('fight.free',{},'Free');}
+const costHtml=(side,id)=>{const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return `<span class="a-cost">${m?`<b class="c-mana" aria-label="${esc(gt('fight.mana',{n:fmt(m)},'{n} Mana'))}">${fmt(m)}</b>`:''}${h?`<b class="c-hp" aria-label="${esc(gt('fight.hp',{n:fmt(h)},'{n} HP'))}">${fmt(h)}</b>`:''}</span>`;};
 const npcOf=a=>NAMED_LOADOUTS[a.kit.loadout]?.npc;
-const nameOf=i=>i===0?'You':NAMED_LOADOUTS[game.actors[1].kit.loadout]?game.actors[1].kit.loadout:game.actors[1].kit.loadout==='custom'?'Opponent':game.actors[1].kit.loadout;
+// The opponent's name: a character's short name, a foe as its card calls it (foe.<id>, translated), else its loadout.
+const nameOf=i=>{if(i===0)return gt('fight.you',{},'You');const l=game.actors[1].kit.loadout,n=NPCS[NAMED_LOADOUTS[l]?.npc];if(n&&LANG!=='en')return n.short??String(n.name).split(/[\s·]+/)[0];
+ if(NAMED_LOADOUTS[l])return l;if(l==='custom')return 'Opponent';const f=Object.entries(FOES).find(([,f])=>f.loadout===l);return f&&LANG!=='en'?tx('foe.'+f[0],l):l;};
 const portraitOf=i=>{const a=game.actors[i];return i===0?BLANK:portrait({npc:npcOf(a),loadout:a.kit.loadout,creature:!!SPECIAL_LOADOUTS[a.kit.loadout],underground:a.kit.underground,portraits:PORTRAITS});};
 
 // Horizontal bars: layers start at their last shown width and move on the next frame (fill quickly, the pale trail after
@@ -163,20 +260,20 @@ function bar(side,kind,value,max,flux=0,shield=0){
  let delta='';if(prev&&prev.v!==value&&prev.at!==moves){seen[k]={v:value,at:moves,d:value-prev.v,fresh:true};}else if(!prev)seen[k]={v:value,at:-1,d:0};
  // A change animates on the first render that shows it only: re-renders (a click on the track, a sheet) don't replay it.
  const s=seen[k],fresh=s.fresh;s.fresh=false;if(fresh&&Math.abs(s.d)>=.5)delta=`<span class="delta ${s.d<0?'neg':'pos'}">${s.d<0?'−':'+'}${fmt(Math.abs(s.d))}</span>`;
- return `<div class="bar ${kind} ${fresh&&s.d?s.d<0?'drop':'rise':''}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)}: Refocus restores up to ${fmt(Math.min(flux,max-value))}`:''}">
+ return `<div class="bar ${kind} ${fresh&&s.d?s.d<0?'drop':'rise':''}" title="${esc(kind==='hp'?gt('fight.hpBar',{v:fmt(value),max:fmt(max)},'HP {v} / {max}'):gt('fight.manaBar',{v:fmt(value),max:fmt(max),flux:fmt(flux)},'Mana {v} / {max} · flux {flux}: Refocus turns flux back into Mana'))}">
   <span class="bnum"><span class="bk">${kind==='hp'?'♥':'✦'}</span>${Math.round(value)}<small>/${Math.round(max)}</small>${delta}</span>
   <span class="btrack">${layer('trail',k+'trail',now)}${kind==='mana'?layer('flux',k+'flux',pct(fluxShown),now):''}${layer('fill',k+'fill',now)}${kind==='hp'?layer('shield',k+'shield',pct(shield),Math.max(0,Math.min(now,100-pct(shield)))):''}</span>
-  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="Flux: Refocus turns it back into Mana">↻${fmt(flux)}</span>`:`<span class="bshield${shield>0?'':' none'}" title="Shield: absorbs damage before HP">${shield>0?'◈'+Math.round(shield):''}</span>`}</div>`;
+  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="${esc(gt('fight.flux',{},'Flux: Refocus turns it back into Mana'))}">↻${fmt(flux)}</span>`:`<span class="bshield${shield>0?'':' none'}" title="${esc(gt('fight.shield',{},'Shield: absorbs damage before HP'))}">${shield>0?'◈'+Math.round(shield):''}</span>`}</div>`;
 }
 function snapshotBars(){for(const el of document.querySelectorAll('[data-bar]')){const t=el.parentElement.clientWidth;if(!t)continue;bars[el.dataset.bar]=100*el.offsetWidth/t;if(el.dataset.left!==undefined)bars[el.dataset.bar+'@']=100*el.offsetLeft/t;}}
 function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const el of document.querySelectorAll('[data-bar]')){el.style.width=el.dataset.to+'%';bars[el.dataset.bar]=Number(el.dataset.to);if(el.dataset.left!==undefined){el.style.left=el.dataset.left+'%';bars[el.dataset.bar+'@']=Number(el.dataset.left);}}}));}
 
 // Constructs standing for a side, each with the HP it has left before it breaks.
-const constructChips=(a,i)=>a.constructs.map(c=>{const left=Math.round(Math.max(0,c.threshold-c.taken));return `<span class="cx" title="${esc(sideLabel(c.id,i))}: ${left} of ${Math.round(c.threshold)} HP left, until exchange ${c.expires}"><span class="mini-icon">${actionIcon(c.id,i)}</span>♥${left}</span>`;}).join('');
+const constructChips=(a,i)=>a.constructs.map(c=>{const left=Math.round(Math.max(0,c.threshold-c.taken));return `<span class="cx" title="${esc(gt('fight.construct',{name:sideLabel(c.id,i),left,of:Math.round(c.threshold),until:c.expires},'{name}: {left} of {of} HP left, until exchange {until}'))}"><span class="mini-icon">${actionIcon(c.id,i)}</span>♥${left}</span>`;}).join('');
 function fighter(i){const a=game.actors[i],purse=[game.config.observers?`★${fmt(a.resources.renown)}${a.pendingRenown?`<em>+${fmt(a.pendingRenown)}</em>`:''}`:'',a.resources.crowns!==a.entry.crowns?`◎${fmt(a.resources.crowns)}`:'',a.resources.alignment!==a.entry.alignment?`☾${fmt(a.resources.alignment)}`:''].filter(Boolean).join(' ');
- return `<article class="fighter ${i?'opp':'you'}"${i?' data-sheet="inspect" role="button" tabindex="0" title="Inspect the opponent"':''}>
+ return `<article class="fighter ${i?'opp':'you'}"${i?` data-sheet="inspect" role="button" tabindex="0" title="${esc(gt('fight.inspect',{},'Inspect the opponent'))}"`:''}>
   <div class="pf${i?'':' blank'}">${portraitOf(i)}${i?`<span class="pf-eye">${EYE}</span>`:''}</div>
-  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}</b><small>${i&&game.actors[1].kit.loadout==='custom'?'':'Lv '+a.kit.level}${purse?' · '+purse:''}</small>${constructChips(a,i)}</div>
+  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}</b><small>${i&&game.actors[1].kit.loadout==='custom'?'':esc(gt('fight.lv',{n:a.kit.level},'Lv {n}'))}${purse?' · '+purse:''}</small>${constructChips(a,i)}</div>
   ${bar(i,'hp',a.hp,a.maxHP,0,0)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
 
 function intent(){
@@ -185,10 +282,10 @@ function intent(){
 }
 function move(){
  const opponent=game.pending[1],forced=isCompelled(game,1)?(opponent??legalActions(game,1)[0]):null,shown=forced??opponent;
- if(busy)return `<div class="intent wait"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(nameOf(1))} is choosing…</b><small>Their move appears when they commit.</small></div></div>`;
+ if(busy)return `<div class="intent wait"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(gt('fight.choosing',{name:nameOf(1)},'{name} is choosing…'))}</b><small>${esc(gt('fight.choosingHint',{},'Their move appears when they commit.'))}</small></div></div>`;
  if(shown){const b=briefOf(1,shown),fl=forced?compelledLine(sideLabel(shown,1),{names,side:1}):flavorLine(shown,{channel:game.actors[1].channel?.id,round:game.round,names,side:1,labels:labelsOf(1)});
-  return `<div class="intent shown${forced?' forced':''}" data-sheet="intent" role="button" tabindex="0" title="What their move does"><span class="tele-icon">${actionIcon(shown,1)}</span><div class="it"><b>${forced?'Compelled: ':'They commit: '}${esc(actionName(shown,1))} ${effHtml(b)}</b>${fl?`<small class="flavor">${esc(fl)}</small>`:''}</div><span class="it-more">${EYE}</span></div>`;}
- return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small title="Initiative breaks a double knockout.">Their reply stays hidden until you do.</small></div></div>`;
+  return `<div class="intent shown${forced?' forced':''}" data-sheet="intent" role="button" tabindex="0" title="${esc(gt('fight.theirMove',{},'What their move does'))}"><span class="tele-icon">${actionIcon(shown,1)}</span><div class="it"><b>${esc(forced?gt('fight.compelled',{},'Compelled:'):gt('fight.theyCommit',{},'They commit:'))} ${esc(actionName(shown,1))} ${effHtml(b)}</b>${fl?`<small class="flavor">${esc(fl)}</small>`:''}</div><span class="it-more">${EYE}</span></div>`;}
+ return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(gt('fight.youFirst',{},'You commit first'))}</b><small title="Initiative breaks a double knockout.">${esc(gt('fight.youFirstHint',{},'Their reply stays hidden until you do.'))}</small></div></div>`;
 }
 
 // The exchange track: one axis through the past (both moves, as icons), this exchange and the next few (who commits first,
@@ -209,59 +306,61 @@ function effectRows(){
   // Every line is a spell's duration in its caster's colour: Compel, Torment and Foresight sit on the other side.
   for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;
    // A Lodestar is forecast like a blow on its way: its icon and its heal, in green, on the exchange it matures.
-   if(k==='lodestar'){rows.push({side,icon:'lodestar',name:label('lodestar'),due:e.from,heal:true,note:'+'+Math.round(e.value),tip:`matures: all damage negated, then heals ${Math.round(e.value)}`});continue;}
+   if(k==='lodestar'){rows.push({side,icon:'lodestar',name:label('lodestar'),due:e.from,heal:true,note:'+'+Math.round(e.value),tip:gt('fight.lodestarUp',{n:Math.round(e.value)},'matures: all damage negated, then heals {n}')});continue;}
    const by=k==='bound'||k==='poison'?appliedBy(k,side):null;
-   if(by){rows.push({side:by.side,icon:by.id,name:sideLabel(by.id,by.side),on:by.side===side?null:side,from:e.from??e.born??r,until:e.until??Infinity,note:k==='bound'?'bound: Breaking Free':`${fmt(e.value)} a tick`});continue;}
-   const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):sideLabel(k,on?1-side:side),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='tailwind'?`chain ${Math.round(e.value)}`:k==='compelled'&&a.compelAction?sideLabel(a.compelAction,side):''});}
-  if(a.channel)rows.push({side,icon:a.channel.id,name:sideLabel(a.channel.id,side),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}${a.channel.id==='wildfire'?' · next burn '+2*(a.channel.holds+2):''}`});
-  for(const c of a.constructs)rows.push({side,icon:c.id,name:sideLabel(c.id,side),from:castAt(side,c.id)??r,until:c.expires,note:`${Math.round(Math.max(0,c.threshold-c.taken))} of ${Math.round(c.threshold)} HP`});
-  if(game.earlyCommit[side]>0)rows.push({side:1-side,on:side,icon:'foresight',name:label('foresight'),from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:side?'they commit first':'you commit first'});
-  if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:a.freezeUntil,until:a.freezeUntil,note:''});
-  if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:castAt(side,'rime')??r,until:Infinity,note:''});
-  for(const o of a.omens)rows.push({side,icon:o.id??'omen',name:label(o.id??'omen'),due:o.due,spell:!o.impact,note:fmt(o.power)+(o.impact?' Impact':' spell')});
+   if(by){rows.push({side:by.side,icon:by.id,name:sideLabel(by.id,by.side),on:by.side===side?null:side,from:e.from??e.born??r,until:e.until??Infinity,note:''});continue;}
+   const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):sideLabel(k,on?1-side:side),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='tailwind'?gt('fight.tailwindChain',{n:Math.round(e.value)},'chain {n}'):k==='compelled'&&a.compelAction?sideLabel(a.compelAction,side):''});}
+  if(a.channel)rows.push({side,icon:a.channel.id,name:sideLabel(a.channel.id,side),from:castAt(side,a.channel.id)??r,until:Infinity,note:gt('fight.holds',{n:a.channel.holds},'held {n}×')+(a.channel.bank?' · '+gt('fight.banked',{n:Math.round(a.channel.bank)},'{n} banked'):'')+(a.channel.id==='wildfire'?' · '+gt('fight.nextBurn',{n:2*(a.channel.holds+2)},'next burn {n}'):'')});
+  for(const c of a.constructs)rows.push({side,icon:c.id,name:sideLabel(c.id,side),from:castAt(side,c.id)??r,until:c.expires,note:gt('fight.hpOf',{left:Math.round(Math.max(0,c.threshold-c.taken)),of:Math.round(c.threshold)},'{left} of {of} HP')});
+  if(game.earlyCommit[side]>0)rows.push({side:1-side,on:side,icon:'foresight',name:label('foresight'),from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:side?gt('fight.theyFirst',{},'they commit first'):gt('fight.youFirst',{},'You commit first')});
+  if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:gt('fight.frozenName',{},'Frozen'),from:a.freezeUntil,until:a.freezeUntil,note:''});
+  if(a.rimeReady)rows.push({side,icon:'rime',name:gt('fight.rimeReady',{},'Rime ready'),from:castAt(side,'rime')??r,until:Infinity,note:''});
+  for(const o of a.omens)rows.push({side,icon:o.id??'omen',name:label(o.id??'omen'),due:o.due,spell:!o.impact,num:fmt(o.power),note:fmt(o.power)+' '+gt(o.impact?'fight.impactNote':'fight.spellNote',{},o.impact?'Impact':'spell')});
  });
  return rows;
 }
-const who=i=>i?esc(nameOf(1)):'You';
+const who=i=>esc(nameOf(i));
 // A future slot: lost to a freeze, forced by Bind (Breaking Free) or Compel (the captured move), or open; the leader's move
 // shows first.
 function futureSlot(side,c){
  const ex=game.round+c,a=game.actors[side],lead=leaderAt(c)===side,last=a.compelAction,comp=a.effects.compelled,bound=a.effects.bound;
- if(a.freezeUntil>=ex)return `<span class="slot lost" title="Exchange ${ex}: ${who(side)} ${side?'is':'are'} frozen">${actionIcon('frozen',side)}</span>`;
- if(bound&&bound.from<=ex&&bound.until!==null&&bound.until>=ex)return `<span class="slot forced${lead?' lead':''}" title="Exchange ${ex}: ${who(side)} ${side?'is':'are'} bound: Breaking Free">${actionIcon('break_free',side)}</span>`;
+ if(a.freezeUntil>=ex)return `<span class="slot lost" title="${esc(gt('fight.slotFrozen',{n:ex,who:nameOf(side)},'Exchange {n}: {who} frozen'))}">${actionIcon('frozen',side)}</span>`;
+ if(bound&&bound.from<=ex&&bound.until!==null&&bound.until>=ex)return `<span class="slot forced${lead?' lead':''}" title="${esc(gt('fight.exchange',{n:ex},'Exchange {n}')+': '+gt('fight.bound',{},'Bound · Breaking Free is your only move'))}">${actionIcon('break_free',side)}</span>`;
  if(comp&&comp.until!==null&&comp.until>=ex&&last){const lost=last==='cancel'||!!available(game,side,last);
   return `<span class="slot forced${lead?' lead':''}" title="${esc(gt(lost?'fight.slotCompelledLost':'fight.slotCompelled',{n:ex,action:sideLabel(last,side)}))}">${actionIcon(lost?'cancel':last,side)}</span>`;}
- if(side)return lead?`<span class="slot shows lead" title="Exchange ${ex}: they commit first, so you see their move">${EYE}</span>`:`<span class="slot hid" title="Exchange ${ex}: you commit first; their move stays hidden">?</span>`;
- return lead?`<span class="slot lead mine" title="Exchange ${ex}: you commit first and they see your move">1st</span>`:'<span class="slot open"></span>';
+ if(side)return lead?`<span class="slot shows lead" title="${esc(gt('fight.slotTheyLead',{n:ex},'Exchange {n}: they commit first, so you see their move'))}">${EYE}</span>`:`<span class="slot hid" title="${esc(gt('fight.slotYouLead',{n:ex},'Exchange {n}: you commit first; their move stays hidden'))}">?</span>`;
+ return lead?`<span class="slot lead mine" title="${esc(gt('fight.slotYouLead',{n:ex},'Exchange {n}: you commit first; their move stays hidden'))}">${esc(gt('fight.first',{},'1st'))}</span>`:'<span class="slot open"></span>';
 }
 function nowSlot(side){
- if(side===0)return `<span class="slot now-you${leaderAt(0)===0?' lead':''}" id="tk-you-now" title="Your move this exchange">${selected?actionIcon(selected):leaderAt(0)===0?'1st':''}</span>`;
+ if(side===0)return `<span class="slot now-you${leaderAt(0)===0?' lead':''}" id="tk-you-now" title="${esc(gt('fight.yourMove',{},'Your move this exchange'))}">${selected?actionIcon(selected):leaderAt(0)===0?esc(gt('fight.first',{},'1st')):''}</span>`;
  const forced=isCompelled(game,1)?(game.pending[1]??legalActions(game,1)[0]):null,shown=forced??game.pending[1];
- if(busy)return '<span class="slot hid wait" title="They are choosing">…</span>';
- if(shown)return `<button class="slot shows lead${forced?' forced':''}" data-sheet="intent" title="${forced?'Compelled':'They commit'}: ${esc(actionName(shown,1))}">${actionIcon(shown,1)}</button>`;
- return '<span class="slot hid" title="Their move stays hidden until you commit">?</span>';
+ if(busy)return `<span class="slot hid wait" title="${esc(gt('fight.choosing',{name:nameOf(1)},'{name} is choosing…'))}">…</span>`;
+ if(shown)return `<button class="slot shows lead${forced?' forced':''}" data-sheet="intent" title="${esc((forced?gt('fight.compelled',{},'Compelled:'):gt('fight.theyCommit',{},'They commit:'))+' '+actionName(shown,1))}">${actionIcon(shown,1)}</button>`;
+ return `<span class="slot hid" title="${esc(gt('fight.youFirstHint',{},'Their reply stays hidden until you do.'))}">?</span>`;
 }
 function track(){
  const r=game.round,shown=focusEx??history.length-1,rows=effectRows(),done=!!game.result;
  const pastCells=f=>history.map((h,k)=>`<span class="tk-c past${k===shown?' on':''}${k===history.length-1?' last':''}">${f(h,k)}</span>`).join('');
  const ahead=f=>done?'':Array.from({length:AHEAD+1},(_,c)=>`<span class="tk-c ${c?'fut':'now'}">${f(c)}</span>`).join('');
- const head=`<div class="tk-row tk-head"><span class="tk-l"></span>${pastCells((h,k)=>`<button data-ex="${k}" title="Exchange ${h.round}: show it in full">${h.round}</button>`)}${ahead(c=>`<b title="${c?'Exchange '+(r+c):'This exchange'}: ${leaderAt(c)?'they lead':'you lead'}">${r+c}</b>`)}</div>`;
- const moves=side=>`<div class="tk-row tk-act s${side}"><span class="tk-l"><span class="tk-who">${who(side)}</span></span>${pastCells((h,k)=>`<button class="mini-icon" data-ex="${k}" title="Exchange ${h.round}: ${who(side)} · ${esc(h.actionNames[side])}">${actionIcon(h.pair[side],side,h.channels?.[side])}</button>`)}${ahead(c=>c?futureSlot(side,c):nowSlot(side))}</div>`;
+ const head=`<div class="tk-row tk-head"><span class="tk-l"></span>${pastCells((h,k)=>`<button data-ex="${k}" title="${esc(gt('fight.exchangeShow',{n:h.round},'Exchange {n}: show it in full'))}">${h.round}</button>`)}${ahead(c=>`<b title="${esc(gt('fight.exchange',{n:r+c},'Exchange {n}')+': '+(leaderAt(c)?gt('fight.theyLead',{},'they lead'):gt('fight.youLead',{},'you lead')))}">${r+c}</b>`)}</div>`;
+ const moves=side=>`<div class="tk-row tk-act s${side}"><span class="tk-l"><span class="tk-who">${who(side)}</span></span>${pastCells((h,k)=>`<button class="mini-icon" data-ex="${k}" title="${esc(gt('fight.exchange',{n:h.round},'Exchange {n}')+': '+nameOf(side)+' · '+h.actionNames[side])}">${actionIcon(h.pair[side],side,h.channels?.[side])}</button>`)}${ahead(c=>c?futureSlot(side,c):nowSlot(side))}</div>`;
  // A lasting effect: a thin line from the exchange it starts, with its icon at the start; name and numbers on hover.
- const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${who(row.side)} · ${row.name}${row.on!=null?' on '+(row.on?nameOf(1):'you'):''}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
+ const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${nameOf(row.side)} · ${row.name}${row.on!=null?' → '+nameOf(row.on):''}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
   // Due past the window: shown in the last column, with an arrow and its exchange.
-  if(row.due!==undefined&&!past&&c===AHEAD&&row.due>ex)return `<i class="tl-hit later${row.heal?' heal':row.spell?' spell':''}" title="${esc(`${who(row.side)} · ${row.name} · ${row.heal?row.tip:row.note+' damage'}, exchange ${row.due}`)}">${ico}${row.note}<small>›${row.due}</small></i>`;
-  if(row.due!==undefined)return row.due===ex?(row.heal?`<i class="tl-hit heal" title="${esc(`${who(row.side)} · ${row.name} · ${row.tip}, exchange ${ex}`)}">${ico}${row.note}</i>`:`<i class="tl-hit${row.spell?' spell':''}" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`):'';
+  if(row.due!==undefined&&!past&&c===AHEAD&&row.due>ex)return `<i class="tl-hit later${row.heal?' heal':row.spell?' spell':''}" title="${row.heal?esc(`${nameOf(row.side)} · ${row.name} · ${row.tip}`):tip} · ${esc(gt('fight.exchange',{n:row.due},'Exchange {n}'))}">${ico}${row.num??row.note}<small>›${row.due}</small></i>`;
+  if(row.due!==undefined)return row.due===ex?(row.heal?`<i class="tl-hit heal" title="${esc(`${nameOf(row.side)} · ${row.name} · ${row.tip}`)}">${ico}${row.note}</i>`:`<i class="tl-hit${row.spell?' spell':''}" title="${tip}">${ico}${row.num??row.note}</i>`):'';
   if(ex<row.from||ex>row.until)return '';const first=ex===row.from,open=row.until===Infinity&&c===AHEAD;
-  return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':` · until exchange ${row.until}`}">${first?ico:''}</i>`;};
- const effects=done?'':rows.map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(h=>cell(row,h))}${ahead(c=>cell(row,c))}</div>`).join('');
+  return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':' · '+esc(gt('fight.until',{n:row.until},'until exchange {n}'))}">${first?ico:''}</i>`;};
+ // Each side's effects sit under its own moves (feedback 2026-10-26): whoever the effect is on, or whoever takes the blow.
+ const affects=row=>row.on??(row.due!==undefined&&!row.heal?1-row.side:row.side);
+ const effects=side=>done?'':rows.filter(row=>affects(row)===side).map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(h=>cell(row,h))}${ahead(c=>cell(row,c))}</div>`).join('');
  const full=history[shown];
- return `<section class="track" aria-label="Exchanges: the past, this one and the next ones"><div class="tk-scroll" id="tk-scroll">${head}${moves(1)}${moves(0)}${effects}</div>${full?`<div class="hfull">${exchangeFull(full)}${focusEx!==null?'<button class="link" data-ex="latest">Back to the latest</button>':''}</div>`:''}</section>`;
+ return `<section class="track" aria-label="${esc(gt('fight.trackLabel',{},'Exchanges: the past, this one and the next ones'))}"><div class="tk-scroll" id="tk-scroll">${head}${moves(1)}${effects(1)}${moves(0)}${effects(0)}</div>${full?`<div class="hfull">${exchangeFull(full)}${focusEx!==null?`<button class="link" data-ex="latest">${esc(gt('fight.latest',{},'Back to the latest'))}</button>`:''}</div>`:''}</section>`;
 }
 
 // The exchange picked on the track (the latest by default), in full.
 function exchangeFull(r){
- return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${who(i)}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(sideLabel(r.committed[i],i))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
+ return `<article class="hx-full"><h4>${esc(gt('fight.exchange',{n:r.round},'Exchange {n}'))} <small>· ${esc(r.leader===0?gt('fight.youLed',{},'you led'):gt('fight.theyLed',{},'they led'))}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${who(i)}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(${esc(gt('fight.committed',{action:sideLabel(r.committed[i],i)},'committed {action}'))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
 
 // A compelled turn that can't be paid is a cancel: legal, though `available` (a menu check) refuses it (as src/combat-ui.js).
 const forcedLegal=id=>(id==='cancel'||id==='break_free')&&legalActions(game,0).includes(id);
@@ -273,16 +372,16 @@ function incomingCompel(){
 }
 function actionButton(id){const reason=forcedLegal(id)?null:available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);
  return `<button class="act k-${b.kind}${selected===id?' selected':''}" data-action="${id}" aria-label="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" aria-pressed="${selected===id}" title="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" ${disabled?'disabled':''}><span class="a-ico" aria-hidden="true">${actionIcon(id)}</span>${id.startsWith('bundle:')?'':`<span class="a-name">${esc(['hold','release'].includes(id)?label(id):name)}</span>`}${effHtml(b,name)}${costHtml(0,id)}<em class="card-eval" data-eval="${id}"></em></button>`;}
-function preview(){if(!selected)return `<div class="preview hint">${busy||actorToMove(game)!==0?'Waiting for the opponent…':'Pick an action to see what it does. Pick it again to act.'}</div><button id="commit" class="primary" disabled>Commit</button>`;
- return `<div class="preview"><b>${esc(actionName(selected,0))}</b> <span class="price">${price(0,selected)}</span><p>${esc(describe(game,0,selected))}</p></div><button id="commit" class="primary" ${busy||actorToMove(game)!==0?'disabled':''}>${SPELLS[selected]?`<span class="control-icon" aria-hidden="true">${ACTION_ICONS.cast}</span>Cast`:'Commit'}</button>`;}
+function preview(){if(!selected)return `<div class="preview hint">${esc(busy||actorToMove(game)!==0?gt('fight.waiting',{},'Waiting for the opponent…'):gt('fight.pickHint',{},'Pick an action to see what it does. Pick it again to act.'))}</div><button id="commit" class="primary" disabled>${esc(gt('fight.commit',{},'Commit'))}</button>`;
+ return `<div class="preview"><b>${esc(actionName(selected,0))}</b> <span class="price">${price(0,selected)}</span><p>${esc(describe(game,0,selected))}</p></div><button id="commit" class="primary" ${busy||actorToMove(game)!==0?'disabled':''}>${SPELLS[selected]?`<span class="control-icon" aria-hidden="true">${ACTION_ICONS.cast}</span>${esc(gt('fight.cast',{},'Cast'))}`:esc(gt('fight.commit',{},'Commit'))}</button>`;}
 function actions(){
  const a=game.actors[0],frozen=a.freezeUntil>=game.round,bound=!frozen&&has(game,0,'bound'),compelled=!frozen&&!bound&&isCompelled(game,0),forced=frozen||bound||compelled||a.channel;
  const ids=forced?legalActions(game,0):['strike','guard','reclaim',...Object.keys(a.kit.spells)];
  // Compelled: the only move is the captured one, or a lost turn when it can't be played (the core cancels it either way).
  const prev=a.compelAction&&a.compelAction!=='cancel'?a.compelAction:null;
  const haste=has(game,0,'haste')?gt('fight.haste',{},'Haste · a spell without damage of its own also throws an Impulse'):'';
- const state=frozen?'Frozen · you thaw after this exchange':bound?gt('fight.bound',{},'Bound · Breaking Free is your only move'):compelled?(ids[0]!=='cancel'?gt('fight.compelledYou',{action:actionName(ids[0],0)}):prev?gt('fight.compelledLost',{action:label(prev)}):gt('fight.compelledNone'))
-  :a.channel?sideLabel(a.channel.id,0)+' · Hold or Release':incomingCompel()||haste;
+ const state=frozen?gt('fight.frozen',{},'Frozen · you thaw after this exchange'):bound?gt('fight.bound',{},'Bound · Breaking Free is your only move'):compelled?(ids[0]!=='cancel'?gt('fight.compelledYou',{action:actionName(ids[0],0)}):prev?gt('fight.compelledLost',{action:label(prev)}):gt('fight.compelledNone'))
+  :a.channel?gt('fight.channel',{spell:sideLabel(a.channel.id,0)},'{spell} · Hold or Release'):incomingCompel()||haste;
  return `${state?`<div class="action-state">${esc(state)}</div>`:''}<div class="acts${forced?' forced':''}">${ids.map(actionButton).join('')}</div><div class="commit-bar">${preview()}</div>`;
 }
 function commit(id=selected){if(!id||busy||actorToMove(game)!==0||(!forcedLegal(id)&&available(game,0,id)))return;try{submit(id);pump();}catch(e){$('setup-error').textContent=e.message;}}
@@ -293,12 +392,12 @@ function selectAction(id){selected=id;for(const b of document.querySelectorAll('
 function inspectSheet(){const a=game.actors[1],forced=a.channel||a.freezeUntil>=game.round||has(game,1,'bound')||isCompelled(game,1);
  const ids=forced?legalActions(game,1):['strike','guard','reclaim',...Object.keys(a.kit.spells)],recent=history.slice(-6).reverse();
  const sk=['arcana','lore','alchemy','charm','vigor','guile'];
- return `<header class="sh-head"><div class="pf">${portraitOf(1)}</div><div><b>${esc(nameOf(1))}</b><small>${NAMED_LOADOUTS[a.kit.loadout]?'':esc(a.kit.loadout)+' · '}Level ${a.kit.level} · HP ${fmt(a.hp)}/${fmt(a.maxHP)} · Mana ${fmt(a.resources.mana)}/${a.kit.capacity}${a.flux?` (+${fmt(a.flux)} flux)`:''}</small></div><button class="close" data-close aria-label="Close">×</button></header>
+ return `<header class="sh-head"><div class="pf">${portraitOf(1)}</div><div><b>${esc(nameOf(1))}</b><small>${NAMED_LOADOUTS[a.kit.loadout]?'':esc(a.kit.loadout)+' · '}${esc(gt('fight.sheetLine',{level:a.kit.level,hp:fmt(a.hp),maxHp:fmt(a.maxHP),mana:fmt(a.resources.mana),maxMana:a.kit.capacity},'Level {level} · HP {hp}/{maxHp} · Mana {mana}/{maxMana}'))}${a.flux?' '+esc(gt('fight.plusFlux',{n:fmt(a.flux)},'(+{n} flux)')):''}</small></div><button class="close" data-close aria-label="${esc(gt('fight.close',{},'Close'))}">×</button></header>
   <div class="sk">${sk.map(k=>`<span><small>${k}</small><i style="--w:${a.kit.skills[k]}%"></i><b>${a.kit.skills[k]}</b></span>`).join('')}</div>
-  <h4>What they can do${forced?' now':''}</h4><ul class="kit">${ids.map(id=>{const reason=available(game,1,id),b=briefOf(1,id);let d='';try{d=describe(game,1,id);}catch{}return `<li class="${reason?'off':''}"><span class="mini-icon">${actionIcon(id,1)}</span><div><b>${esc(actionName(id,1))}</b> ${effHtml(b)} <span class="price">${price(1,id)}</span>${reason?` <em>${esc(reason)}</em>`:''}<p>${esc(d)}</p></div></li>`;}).join('')}</ul>
-  ${recent.length?`<h4>Their last moves</h4><div class="recent">${recent.map(r=>`<span class="ply opp" title="Exchange ${r.round}"><span class="mini-icon">${actionIcon(r.pair[1],1,r.channels?.[1])}</span>${esc(r.actionNames[1])}</span>`).join('')}</div>`:''}`;}
+  <h4>${esc(forced?gt('fight.canDoNow',{},'What they can do now'):gt('fight.canDo',{},'What they can do'))}</h4><ul class="kit">${ids.map(id=>{const reason=available(game,1,id),b=briefOf(1,id);let d='';try{d=describe(game,1,id);}catch{}return `<li class="${reason?'off':''}"><span class="mini-icon">${actionIcon(id,1)}</span><div><b>${esc(actionName(id,1))}</b> ${effHtml(b)} <span class="price">${price(1,id)}</span>${reason?` <em>${esc(reason)}</em>`:''}<p>${esc(d)}</p></div></li>`;}).join('')}</ul>
+  ${recent.length?`<h4>${esc(gt('fight.lastMoves',{},'Their last moves'))}</h4><div class="recent">${recent.map(r=>`<span class="ply opp" title="${esc(gt('fight.exchange',{n:r.round},'Exchange {n}'))}"><span class="mini-icon">${actionIcon(r.pair[1],1,r.channels?.[1])}</span>${esc(r.actionNames[1])}</span>`).join('')}</div>`:''}`;}
 function intentSheet(){const id=isCompelled(game,1)?(game.pending[1]??legalActions(game,1)[0]):game.pending[1];if(!id)return inspectSheet();
- return `<header class="sh-head"><span class="tele-icon">${actionIcon(id,1)}</span><div><b>${esc(nameOf(1))}: ${esc(actionName(id,1))}</b><small>${price(1,id)}</small></div><button class="close" data-close aria-label="Close">×</button></header><p>${esc(describe(game,1,id))}</p><button class="link" data-sheet="inspect">Everything they can do →</button>`;}
+ return `<header class="sh-head"><span class="tele-icon">${actionIcon(id,1)}</span><div><b>${esc(nameOf(1))}: ${esc(actionName(id,1))}</b><small>${price(1,id)}</small></div><button class="close" data-close aria-label="${esc(gt('fight.close',{},'Close'))}">×</button></header><p>${esc(describe(game,1,id))}</p><button class="link" data-sheet="inspect">${esc(gt('fight.everything',{},'Everything they can do →'))}</button>`;}
 function logSheet(){
  const rows=history.map(r=>`<article><h3>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h3>${[r.leader,1-r.leader].map(i=>`<div class="log-act ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><div><b>${i?esc(nameOf(1)):'You'}</b> ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(sideLabel(r.committed[i],i))})</small>`:''}${r.lines?.[i]?`<p class="flavor">${esc(r.lines[i])}</p>`:''}${r.descs?.[i]?`<p>${esc(r.descs[i])}</p>`:''}</div></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}<ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')||'<li>No damage or resource events.</li>'}</ul><small class="after">HP ${r.hp.map(fmt).join(' / ')} · Mana ${r.ready.map(fmt).join(' / ')} · flux ${r.flux.map(fmt).join(' / ')}</small></article>`);
  return `<header class="sh-head"><div><b>Fight log</b><small>${history.length} exchange${history.length===1?'':'s'}</small></div><button class="close" data-close aria-label="Close">×</button></header><div class="log">${rows.join('')||'<p class="fine">No exchanges yet.</p>'}</div>`;}
@@ -328,6 +427,7 @@ function renderBench(){const el=$('bench'),on=!!game&&view!=='setup';el.hidden=!
  el.classList.toggle('open',benchOpen);
  el.innerHTML=`<button class="bench-tab" data-bench title="Test bench controls" aria-expanded="${benchOpen}">Bench</button>${benchOpen?`<div class="bench-pop" role="dialog" aria-label="Test bench controls"><header><b>Test bench</b><button class="bench-x" data-bench aria-label="Close">×</button></header>
   <label>Opponent difficulty<select id="bench-difficulty">${[...$('ai-difficulty').options].map(o=>`<option value="${o.value}"${o.value===(game.config.ai[1]?.preset??$('ai-difficulty').value)?' selected':''}>${esc(o.textContent)}</option>`).join('')}</select></label>
+  <label>Fight language<select id="bench-lang">${langOptions()}</select></label>
   <label class="check"><input type="checkbox" id="engine-toggle"${engineOn?' checked':''}> Engine analysis</label>
   <fieldset><legend>Main game around the fight</legend>${[['top','Top bar'],['meters','Meters'],['side','Side panel'],['card','Card behind']].map(([k,t])=>`<label class="check"><input type="checkbox" data-bench-chrome="${k}"${chrome[k]?' checked':''}> ${t}</label>`).join('')}</fieldset>
   <div class="bench-row"><button data-bench-view="setup">Setup…</button><button data-bench-view="debug">Search journal</button></div>
@@ -335,6 +435,7 @@ function renderBench(){const el=$('bench'),on=!!game&&view!=='setup';el.hidden=!
  for(const b of document.querySelectorAll('[data-bench]'))b.onclick=()=>{benchOpen=!benchOpen;renderBench();};
  if(!benchOpen)return;
  $('bench-difficulty').onchange=e=>setDifficulty(e.target.value);
+ $('bench-lang').onchange=e=>{benchOpen=false;switchLang(e.target.value);};
  $('engine-toggle').onchange=e=>setEngine(e.target.checked);
  for(const box of el.querySelectorAll('[data-bench-chrome]'))box.onchange=()=>{const k=box.dataset.benchChrome;chrome[k]=box.checked;store.set('chrome.'+k,box.checked?'1':'0');const twin=document.querySelector(`#setup [data-chrome="${k}"]`);if(twin)twin.checked=box.checked;render();};
  for(const b of el.querySelectorAll('[data-bench-view]'))b.onclick=()=>{view=b.dataset.benchView;benchOpen=false;render();window.scrollTo(0,0);};
@@ -348,12 +449,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&benchOpen&&!sheet){
 const evalText=v=>v===undefined?'…':v>=9000?'KO':v<=-9000?'−KO':(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(1);
 const evalShare=v=>v>=9000?100:v<=-9000?0:100/(1+Math.exp(-v/12));
 function evalBar(){const v=analysis?.scores?.[analysis.best];return `<i style="height:${v===undefined?50:evalShare(v)}%"></i><span>${v===undefined?'':evalText(v)}</span>`;}
-function plyChip(p){if(p.end)return `<span class="ply end">${p.end==='win'?'KO · you win':p.end==='loss'?'KO · you lose':'draw'}</span>`;
- return `<span class="ply ${p.side?'opp':'you'}" title="${p.side?'Opponent':'You'} · exchange ${p.round}"><span class="mini-icon">${actionIcon(p.id,p.side,p.channel)}</span>${esc(sideLabel(p.id,p.side))}</span>`;}
+function plyChip(p){if(p.end)return `<span class="ply end">${esc(gt(p.end==='win'?'fight.lineWin':p.end==='loss'?'fight.lineLoss':'fight.lineDraw',{},p.end==='win'?'KO · you win':p.end==='loss'?'KO · you lose':'draw'))}</span>`;
+ return `<span class="ply ${p.side?'opp':'you'}" title="${esc(nameOf(p.side)+' · '+gt('fight.exchange',{n:p.round},'Exchange {n}'))}"><span class="mini-icon">${actionIcon(p.id,p.side,p.channel)}</span>${esc(sideLabel(p.id,p.side))}</span>`;}
 function lineHtml(line){let out='',round=null;for(const p of line){if(!p.end&&round!==null&&p.round!==round)out+='<span class="sep">|</span>';if(!p.end)round=p.round;out+=plyChip(p);}return out;}
 function enginePanel(){
- const mine=!game.result&&actorToMove(game)===0,head=!analysis?(mine?'Engine · starting…':'Engine · waits for your turn'):`Engine · depth ${analysis.depth}${analysisRunning?'…':''} · ${(analysis.nodes/1000).toFixed(0)}k nodes · ${(analysis.ms/1000).toFixed(1)} s`;
- return `<div class="engine-head"><b>${head}</b><select id="engine-budget" aria-label="Engine time">${[[500,'0.5 s'],[1500,'1.5 s'],[4000,'4 s']].map(([v,t])=>`<option value="${v}" ${v===engineBudget?'selected':''}>${t}</option>`).join('')}</select></div>${analysis?.lines?`<ol class="lines">${analysis.lines.map((l,k)=>`<li class="${k===0?'best':''}"><span class="eval">${evalText(l.value)}</span><span class="line">${lineHtml(l.line)}</span></li>`).join('')}</ol>`:''}<p class="fine">Values are in HP from your side: + is good for you. The line is each side's best reply as the engine sees it: gold chips are your moves, blue chips the opponent's, and | separates exchanges.</p>`;
+ const mine=!game.result&&actorToMove(game)===0,head=!analysis?(mine?gt('fight.engineThinking',{},'Engine · starting…'):gt('fight.engineWaits',{},'Engine · waits for your turn')):gt('fight.engineHead',{depth:analysis.depth,nodes:(analysis.nodes/1000).toFixed(0),s:(analysis.ms/1000).toFixed(1)},'Engine · depth {depth} · {nodes}k nodes · {s} s')+(analysisRunning?' · '+gt('fight.engineDeeper',{},'…'):'');
+ return `<div class="engine-head"><b>${head}</b><select id="engine-budget" aria-label="Engine time">${[[500,'0.5 s'],[1500,'1.5 s'],[4000,'4 s']].map(([v,t])=>`<option value="${v}" ${v===engineBudget?'selected':''}>${t}</option>`).join('')}</select></div>${analysis?.lines?`<ol class="lines">${analysis.lines.map((l,k)=>`<li class="${k===0?'best':''}"><span class="eval">${evalText(l.value)}</span><span class="line">${lineHtml(l.line)}</span></li>`).join('')}</ol>`:''}<p class="fine">${esc(gt('fight.engineNote',{},"Values are in HP from your side: + is good for you. The line is each side's best reply as the engine sees it: gold chips are your moves, blue chips the opponent's, and | separates exchanges."))}</p>`;
 }
 function paintEngine(){
  const panel=$('engine');if(panel&&engineOn){panel.innerHTML=enginePanel();$('engine-budget').onchange=e=>{engineBudget=Number(e.target.value);store.set('engineBudget',engineBudget);analysisFor=-1;analysis=null;requestAnalysis();paintEngine();};}
@@ -380,7 +481,7 @@ const MAIN_BARS=[['health','Health'],['mana','Mana'],['mood','Mood'],['renown','
 function mainResult(){const m=game.config.mainGame??{},a=game.actors[0],st=settle(game,{health:m.health??a.entry.health,mana:m.mana??m.maxMana??a.kit.capacity});
  return {...st,...(setting.left==='lesson'?{outcome:'draw',reason:'conceded'}:{}),...(setting.free?{deltas:{},followUps:[]}:{})};}
 function result(){const r=game.result,main=mainResult(),won=main.outcome==='win',lost=main.outcome==='lose',ds=MAIN_BARS.filter(([k])=>main.deltas[k]).map(([k,n])=>{const d=main.deltas[k];return `<span>${n} <b class="${d<0?'neg':'pos'}">${d<0?'−':'+'}${fmt(Math.abs(d))}</b></span>`;}).join('');
- return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${won?'Victory':lost?'Defeat':'Draw'}</h2><p>${esc(setting.left==='lesson'?'lesson skipped':setting.left==='walk'?'walked away':r.reason)}${r.tiebreak?' · the telegraphed initiative wins':''}</p>
+ return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${esc(gt(won?'fight.win':lost?'fight.lose':'fight.draw',{},won?'Victory':lost?'Defeat':'Draw'))}</h2><p>${esc(setting.left==='lesson'?'lesson skipped':setting.left==='walk'?'walked away':gt('fight.reason.'+r.reason,{},r.reason))}${r.tiebreak?' · the telegraphed initiative wins':''}</p>
  <h4 class="res-h">In the main game</h4><div class="net-costs">${ds||'<span class="none">nothing changes</span>'}</div>
  <h4 class="res-h">The fight's ledger</h4><div class="net-costs">${COMBAT_RESOURCES.map(k=>{const n=game.settlement[0][k].netLoss;return `<span>${k} <b class="${n>0?'neg':n<0?'pos':''}">${n<0?'+':n>0?'−':'±'}${fmt(Math.abs(n))}</b></span>`;}).join('')}</div>
  <p class="fine">Flux is collected; rebates cover net losses only. Crowns and alignment are never rebated. The main game loses Health only below ${COMBAT_TUNING.settle.healthFreeAbove} HP, and never past 1.${main.followUps.length?` Witnesses reported ${game.reports.length} forbidden cast${game.reports.length===1?'':'s'}.`:''}</p><div class="result-actions"><button id="replay" class="primary">Replay same setup</button><button id="carry" title="Apply the main game's changes to the entry fields and fight again">Next bout · carry the bars</button><button id="export">Export log</button></div></div>`;}
@@ -408,9 +509,10 @@ function carry(){const main=mainResult(),d=main.deltas,a=game.actors[0],m=game.c
  set('entry-health',m.health??a.entry.health,d.health,0,100);set('entry-mana',m.mana??m.maxMana,d.mana,0,99999);set('entry-mood',a.entry.mood,d.mood,0,100);
  set('entry-renown',a.entry.renown,d.renown,0,100);set('player-crowns',a.entry.crowns,d.gold,0,99999);set('entry-alignment',a.entry.alignment,d.alignment,-100,100);
  start();}
-function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${settingLine()}${unfitNote()}${coach()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}${leaveButton()}</div></div></section></div>`;}
+function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${settingLine()}${unfitNote()}${coach()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="${esc(gt('fight.evalBar',{},'Engine evaluation for you, in HP'))}">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}${leaveButton()}</div></div></section></div>`;}
 function debug(){return `<div class="debug"><nav><button data-view="play">← Back to the fight</button></nav><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
 function render(){
+ if(framed&&!game){document.body.classList.add('playing');document.body.classList.toggle('setup-open',view==='setup');$('setup').hidden=view!=='setup';$('play').hidden=view==='setup';renderChrome();renderBench();return;}
  document.body.classList.toggle('playing',!!game);document.body.classList.toggle('setup-open',!game||view==='setup');
  $('setup').hidden=!!game&&view!=='setup';$('play').hidden=!!game&&view==='setup';
  renderChrome();renderBench();if(!game)return;
@@ -434,5 +536,5 @@ function exportLog(){{const url=URL.createObjectURL(new Blob([JSON.stringify({ru
 // Version shown in the setup panel and the tab title, straight from the engine build.
 if($('version'))$('version').textContent=RULES_VERSION;document.title='Lumenhold · Combat '+RULES_VERSION;
 render();
-const params=new URLSearchParams(location.search);if(params.has('quickstart')){const n=Number(params.get('quickstart'));if([20,45,70].includes(n)){$('player-level').value=n;setup();start();}}
+if(params.has('quickstart')){const n=Number(params.get('quickstart'));if([20,45,70].includes(n)){$('player-level').value=n;setup();start();}}
 }

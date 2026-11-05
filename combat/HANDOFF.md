@@ -45,6 +45,14 @@ Creatures, the worn kit and lessons. Tests: `setup/expansion.test.mjs`; the desi
 - **Foes:** `FOES[id].pronouns` (`she`, `he`); creatures are "it" by default.
 - **Card decisions** (`EVENTS` in `setup/foes.mjs`): `tutorial: [coach keys]` (a lesson: coach marks from `fight.coach.<key>`, "Skip the lesson" settles as a draw) and `stakes: 'none'` ("Walk away"). Either zeroes the result's deltas and follow-ups (`src/combat.js` `fightResult`).
 
+## The fight screen is the Arena (2026-11-02)
+
+`src/combat-ui.js` and `src/combat.css` are now the Arena, the design iterated in `experiments/combat-ui/b-arena` (its README has the reasons, feedback by feedback). The contract is unchanged (`CombatUI.open`, `autoResolve`, `foeAI` / `playerAI`), and so are the layer's id `#fightLayer` and the result's `#fightDone`; classes are `fl-*` (shared pieces) and `ar-*` (the Arena's own). §5 below is the original porting plan, kept for its reasons. The combat bench's Fight screen menu still offers the prototypes (`experiments/combat-ui/*`), injected over the game's page.
+
+## A mutual knockout keeps the winner's HP (2026-10-29; rules F5.11-plan.1b)
+
+When both sides fall in the same exchange, the side that committed first still wins, and now the loser's blows that exchange never land: `terminal()` in `rust/core/src/rules.rs` gives the winner back the HP and Health they took (its own prices stay paid), so the main game charges the winner nothing for them. The result carries `tiebreak`; the fight text ends with `ending.tiebreak`, and the loser's line says `line.tooLate` instead of the damage (`setup/flavor.mjs`, translated in `locales/zh-CN/combat.lang`). Fixtures: `setup/tiebreak.test.mjs`. The combat-ui prototypes (`experiments/combat-ui/`) mark it on the result and the last exchange.
+
 ## F5.11-plan.1: duel terms and the spell redesign (2026-10-21): carry over to the main game
 
 The plan is `docs/minigame-combat-f5.11-plan.1-2026-10-21.md`. Rules version `spells-v2 F5.11-plan.1`. The rules, the AI
@@ -222,6 +230,25 @@ The rules and the AI live in the core and reach the game through the bundle; thi
   foe in the main game: `grim diff` moves, and the combat goldens with it.
 - **Idle** (the intro's practice dummy, for the World Expansion session's lesson script): a kit with `idle: true` may commit
   `cancel` as a normal move. It does nothing, and the dummy still takes hits.
+- **The track by side** (2026-10-26, both screens): each side's effect rows sit under its own moves (the side an effect is
+  on, or the side a blow on its way lands on: `affects(row)`), so blows read as whose they are; a pending blow's cell is
+  its number alone, coloured spell (violet) or Impact (coral), with the word kept in the tooltip (`row.num`).
+- **The bench plays fights on the main game's own screen** (2026-10-29): Begin opens the game's page (`index.html` as a card
+  preview: `?event=<card>`, or `duel_practice_bout` for a hand-made setup) and hands it the bench's fight through two hooks,
+  `eng.fightAhead` (the card's option starts it) and `CombatBridge.createFight` (the bench's state, built by the page's own
+  core, with its setting, foe and names). So the header, meters, stage and fight screen are the game's, and nothing in
+  `src/` changed. The setup's **Fight screen** picks the live screen, a fork from `experiments/combat-ui` (`FORKS`, loaded
+  into the page in its place; local only, so a deploy has none), or the bench's own screen (`?screen=bench`, which the
+  browser smoke test now uses). Served on its own, the bench frames the page at Phone / Tablet / Fill size: `siteFiles({game:
+  true})` copies the game under `game/` and `web/server.mjs` serves it. The game's server sends `X-Frame-Options: DENY`, so
+  from `/bench/` the page opens in its own tab, driven the same way. The tab path is unverified here, because the embedded
+  browser replaces the page instead of opening a tab.
+- **The bench speaks the main game's languages** (2026-10-25): `tools/site.mjs` embeds `GAME_LOCALES` (each locale's
+  combat.lang strings with the translated spell names, its `fight.*` / `kit.slot.*` UI lines, and the cast's and worn
+  items' names), and `web/app.mjs` hands them to `useText()` as `src/ui.js` does; the fight screen's own strings use the
+  same `fight.*` keys as `src/combat-ui.js`. "Fight language" in the setup panel and the Bench dock (or `?lang=`); the
+  title screen's bench button passes the game's language. The bench's own controls stay English. A new fight-screen
+  string: give it a `fight.*` key in `UI_EN` and use it in both screens.
 - **The lesson's drill** (2026-10-25, main game only; the bench plays no lessons): EVENTS `loop` repeats after `script`
   (`src/combat.js` `scriptedMove`): Flame, Refocus, Strike, with a seen Impulse Parried in place of a Strike, an
   unaffordable spell played as a Strike and a Refocus without flux as a Parry. The mannequin's `mana:.7` (capacity 20)

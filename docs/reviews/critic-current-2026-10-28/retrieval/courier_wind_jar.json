@@ -1,0 +1,108 @@
+{
+  "query": "Wind in a Jar On the dead-letter shelf, behind a parcel addressed to nobody, is a stoppered jar with a wind in it, going round and round. The label says FOR WHOEVER IS FAST ENOUGH. The loft master says someone flew with it once, before her time. Take the jar down The jar hums in your hands, and every broom in the loft leans toward you. The loft master writes your name on the jar's label, under a name too faded to read. Leave it on the shelf You leave it for whoever is fast enough. You fly your round. The jar's wind stirs the dead letters as you go.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:courier_wind_jar",
+      "title": "Wind in a Jar",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 929,
+      "sourceHash": "eb7cb4cb5c708aec795522687d85cb58c26fc5d29d4008b249eb3a3cc90641ed",
+      "score": 0.9433891773223877,
+      "excerpt": "Wind in a Jar\nOn the dead-letter shelf, behind a parcel addressed to nobody, is a stoppered jar with a wind in it, going round and round. The label says FOR WHOEVER IS FAST ENOUGH. The loft master says someone flew with it once, before her time.\nTake the jar down\nThe jar hums in "
+    },
+    {
+      "key": "event:nudge_wind_jar",
+      "title": "The Jar Is Bored",
+      "file": "content/events/journal_cards.grim",
+      "line": 154,
+      "sourceHash": "ca93d294b253b06333cf40acb1767c8da51376427ac66386690c158ecb6ba8fe",
+      "score": 0.8228581547737122,
+      "excerpt": "The Jar Is Bored\nThe jar of wind has moved. It was on the dead-letter shelf; this morning it's on your peg, going round and round, and every broom in the loft is leaning toward it. The loft master doesn't look up from her ledger. \"It does that,\" she says, \"when it's bored of wait"
+    },
+    {
+      "key": "event:courier_race_gulls",
+      "title": "Racing the Gulls",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 973,
+      "sourceHash": "2628fe7114596547776583dacb6a5be393410518da175e9ddb63cb06df136344",
+      "score": 0.6561264395713806,
+      "excerpt": "Racing the Gulls\nThe gulls over the lake race couriers for fun. The fisherman says the jar's wind won't follow you until you've beaten them once, flat out, from the jetty to the far bank.\nRace them flat out\nYou hit the far bank a beak ahead of the lead gull. The wind in the jar t"
+    },
+    {
+      "key": "event:courier_storm_delivery",
+      "title": "The Storm Run",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 1014,
+      "sourceHash": "062e3c6c668268058946f358f23fa1e0128dc3577547ff100823a67c33ce105a",
+      "score": 0.6404644250869751,
+      "excerpt": "The Storm Run\nA storm is down on the lake, and a parcel must cross it tonight. The loft master looks at the jar at your belt, then at you. \"Nobody else will go,\" she says. {flag(tailwind_fisherman) and flag(tailwind_gulls) and flag(tailwind_broom): You know how to let the wind ge"
+    },
+    {
+      "key": "event:courier_fisherman_waves",
+      "title": "The Fisherman Waves",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 950,
+      "sourceHash": "0f360d268fb1f14193eac0c5aff050b9047bca64cd4e07543ee7308aad2f70e8",
+      "score": 0.5872727036476135,
+      "excerpt": "The Fisherman Waves\nThe old fisherman in the reed beds has never waved at a courier. Today, seeing the jar strapped to your broom, he waves, and beckons you down. \"That jar,\" he says. \"I flew it once. Fastest year of my life.\"\nLand and ask him about it\nHe tells you, slowly, betwe"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "31c9afbde71085b26122c6481d3246d715fae2993b10d3f589536ac624b7ca7b",
+      "at": "2026-10-28T23:51:40.477Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 134,
+        "total_tokens": 134,
+        "cost": 0.00000134,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000134,
+          "upstream_inference_prompt_cost": 0.00000134,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "31c9afbde71085b26122c6481d3246d715fae2993b10d3f589536ac624b7ca7b",
+      "elapsedMs": 330,
+      "at": "2026-10-28T23:51:40.807Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "300caebb97d8c22c7cf3be1c44cd9f65ac4ed88c432a5d13a7241a65dd370415",
+      "at": "2026-10-28T23:51:40.863Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40501,
+        "cost": 0.00202505
+      },
+      "requestHash": "300caebb97d8c22c7cf3be1c44cd9f65ac4ed88c432a5d13a7241a65dd370415",
+      "elapsedMs": 459,
+      "at": "2026-10-28T23:51:41.322Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

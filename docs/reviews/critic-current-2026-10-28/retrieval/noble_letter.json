@@ -1,0 +1,76 @@
+{
+  "query": "A Letter from Home {month == 6: Before the spring term|Before the new year} a letter comes with your family's seal and a draft on the family bank. {flag(family_gift): {&Folded inside is a smaller note from your grandmother, and a little more money \"for something nice\".|There's an extra sum this time, marked \"a gift\", which in your family means it will be mentioned at dinner for a year.|Your father has added something on top, with a line about how proud he would be of better marks.}|{&The allowance, to the crown, and three pages about cousins who are doing very well.|The usual sum, and a reminder that the family name goes wherever you go.|The allowance, and a postscript asking whether you have met anyone suitable.}} Fold the letter away {&You read it twice: once for the money, once for what it wants from you.|You put the draft in your purse and the letter in a drawer, and the letter is heavier.|You write back the same night: thank you, yes, of course, you'll try.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:noble_letter",
+      "title": "A Letter from Home",
+      "file": "content/events/origin_funding.grim",
+      "line": 14,
+      "sourceHash": "9c9292649f288adbdc0fa56cacac72df4c07a01b0ffd382e6ca8a74fc54381fd",
+      "score": 0.9426923394203186,
+      "excerpt": "A Letter from Home\n{month == 6: Before the spring term|Before the new year} a letter comes with your family's seal and a draft on the family bank. {flag(family_gift): {&Folded inside is a smaller note from your grandmother, and a little more money \"for something nice\".|There's an"
+    },
+    {
+      "key": "event:summer_letter",
+      "title": "A Letter From Home",
+      "file": "content/events/calendar.grim",
+      "line": 621,
+      "sourceHash": "51cdbb8b265cc02eb10bfa497939219572b6cd0d15684cb24234ad5036f6348d",
+      "score": 0.5945186614990234,
+      "excerpt": "A Letter From Home\nA letter arrives in the last month of summer, the handwriting so familiar it hurts. They want to know how you are doing. Really doing.\nWrite back honestly\nYou tell them about your grades. Their reply is kind, which is worse.\nYou write six pages. It feels like s"
+    },
+    {
+      "key": "event:courier_loft_letter_home",
+      "title": "A Letter Home",
+      "file": "content/events/pools/grounds.grim",
+      "line": 625,
+      "sourceHash": "42fe8db1ac67e07287f264061f34d26a921e147c52d75ef0b2f0ff56c392b9b4",
+      "score": 0.5286624431610107,
+      "excerpt": "A Letter Home\n{The courier loft will take a letter home for next to nothing. You've meant to write for weeks.|This time the letter has been half-written in your head since breakfast.|Writing home is a habit now, and the loft knows your handwriting.} {final_year: There aren't many"
+    },
+    {
+      "key": "event:inc_letter_home",
+      "title": "Bad Weather at Home",
+      "file": "content/events/incidents.grim",
+      "line": 86,
+      "sourceHash": "ca4214fadcffc0b12818fb1979bcf569282f404546931ac7c78d7980e62c501c",
+      "score": 0.5057005882263184,
+      "excerpt": "Bad Weather at Home\nA letter from home, written in a hurry. A storm took half the roof, and the repairs will cost more than anyone has. Nobody asks you for anything. That's how you know it's bad.\nSend crowns home\nYou send everything you can spare and a little you can't. The reply"
+    },
+    {
+      "key": "event:scholarship_award",
+      "title": "The Bursary List",
+      "file": "content/events/origin_funding.grim",
+      "line": 33,
+      "sourceHash": "0a59a75eceabba87007a6e397aeebe464abe74a2bd5f163bd89e9e37744ea3da",
+      "score": 0.4906637370586395,
+      "excerpt": "The Bursary List\nThe bursary list {month == 6: for the spring term|for the new year} goes up outside the registrar's office. {term_gpa >= 3.5: {&Your name is near the top with a small star beside it: the full stipend, and a merit bonus.|The clerk hands you the envelope herself. T"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "requestHash": "62feba2ed9e929075cbe8ceb6e3fd383ff8f42242726f34fc43b4ab3a63de594",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:55.950Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "cached",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "requestHash": "6ff54b952beb2c730c0fdfd8c15b3a086d61f84ffc3be9833ba7c79d3f860a56",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:56.037Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

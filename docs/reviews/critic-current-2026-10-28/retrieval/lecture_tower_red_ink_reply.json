@@ -1,0 +1,107 @@
+{
+  "query": "A Question in the Margin The essay is back on the stair, bleeding red. Most of it is about your argument. At the bottom, smaller: \"Why do you want to be good at this?\" It's the first question the ink has asked. Answer it honestly in the margin You write three lines you'd never say aloud, and leave the essay on the stair. It's gone by noon. You spend the afternoon wishing you'd written two. Wait on the stair to see who takes it You hide on the landing above. A first-year in robes two sizes too big gathers up the pages, reads the first line right there on the step, and makes a small, furious noise. You fall asleep on the stair. When you wake the essay is gone, and there's a note on your chest in red: \"Paragraph six. Also, you snore.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:lecture_tower_red_ink_reply",
+      "title": "A Question in the Margin",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 205,
+      "sourceHash": "4ce4dd1df48ab15bd8930feb101d7131f8347fb96c09dc9bd8f611af4fb937a1",
+      "score": 0.9201725721359253,
+      "excerpt": "A Question in the Margin\nThe essay is back on the stair, bleeding red. Most of it is about your argument. At the bottom, smaller: \"Why do you want to be good at this?\" It's the first question the ink has asked.\nAnswer it honestly in the margin\nYou write three lines you'd never sa"
+    },
+    {
+      "key": "event:lecture_tower_red_ink",
+      "title": "Two Sets of Marks",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 182,
+      "sourceHash": "be12352b0bbd0ace3b924df87e936fc6704f308ee71dbf14137841de280d4bc8",
+      "score": 0.6195791363716125,
+      "excerpt": "Two Sets of Marks\nYour returned essay has two sets of marks. The marker's, in polite pencil: \"Good.\" And another, in red ink and unsigned, in a small round hand, savaging every paragraph and fixing three of them. The last line reads: \"You can do better than good. Paragraph four p"
+    },
+    {
+      "key": "event:nudge_red_ink",
+      "title": "Still Waiting",
+      "file": "content/events/journal_cards.grim",
+      "line": 139,
+      "sourceHash": "81ea901f0a90b09a6aa6ba9598d7d9d941bc6cd5bc44c65d1b0e79e7ef836d36",
+      "score": 0.5483518838882446,
+      "excerpt": "Still Waiting\nThere's a note in red ink tucked into the crack in the lecture tower stair, in the small round hand you know. It says only: \"Still waiting for the next draft. Paragraph four is still the best thing you've written. Don't make it the last.\"\nWrite the next draft tonigh"
+    },
+    {
+      "key": "event:lecture_tower_red_ink_front_row",
+      "title": "The Front Row",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 231,
+      "sourceHash": "0c7afac2b351512064596a64948d31eb70a51a976f6a7811030e846984116949",
+      "score": 0.49004894495010376,
+      "excerpt": "The Front Row\nYou cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor"
+    },
+    {
+      "key": "event:thesis_margin_notes",
+      "title": "Notes in the Margin",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 319,
+      "sourceHash": "bd1e962880a59584d6df87beb9952c68c805ea2679d80380346644530158bfac",
+      "score": 0.4761897921562195,
+      "excerpt": "Notes in the Margin\n{Professor Thorne returns your chapter. In the margin of page one he has written \"No.\"|Another chapter back. The margins say \"Why?\", \"Source?\" and, once, \"Hm.\"|Thorne's notes are getting shorter. You can't decide whether that's good.} {Page six has a single wo"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6090c94573a312969519bc6fb25bab1270dac8ec3f6fef62018010e27fa05267",
+      "at": "2026-10-28T23:24:26.403Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 176,
+        "total_tokens": 176,
+        "cost": 0.00000176,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000176,
+          "upstream_inference_prompt_cost": 0.00000176,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6090c94573a312969519bc6fb25bab1270dac8ec3f6fef62018010e27fa05267",
+      "elapsedMs": 4840,
+      "at": "2026-10-28T23:24:31.242Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b15af50179456dc1c41cac1a397f91f33c57f24331cd03dda19bb1cd1a1a998c",
+      "at": "2026-10-28T23:24:31.270Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 37679,
+        "cost": 0.00188395
+      },
+      "requestHash": "b15af50179456dc1c41cac1a397f91f33c57f24331cd03dda19bb1cd1a1a998c",
+      "elapsedMs": 363,
+      "at": "2026-10-28T23:24:31.633Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "A Room That Was Turning Two tables in the refectory are on the edge of a food fight, and every head is turning. It's the Newt all over again, with worse gravy. Step in and turn it One joke about the gravy, at exactly the right moment, and both tables laugh instead of throwing it. The prefects look relieved and slightly suspicious. Your heart doesn't slow down until bed. Let it happen You let it go, and the food fight is magnificent. You watch from under the table, laughing. Nobody remembers it was nearly stopped.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_rapport",
+      "title": "A Room That Was Turning",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 524,
+      "sourceHash": "ae4b83e3b4b89252799c1021ebda268841f08bbc6634ffb653f8348b4b2e4501",
+      "score": 0.9411132335662842,
+      "excerpt": "A Room That Was Turning\nTwo tables in the refectory are on the edge of a food fight, and every head is turning. It's the Newt all over again, with worse gravy.\nStep in and turn it\nOne joke about the gravy, at exactly the right moment, and both tables laugh instead of throwing it."
+    },
+    {
+      "key": "event:ref_food_fight",
+      "title": "Pudding Diplomacy",
+      "file": "content/events/slice_2b.grim",
+      "line": 448,
+      "sourceHash": "ef8c9e8b2fdf62c01b3d3c3a6f696ea0ff6e56f6b6cf3553e4472e226f4475f0",
+      "score": 0.6902417540550232,
+      "excerpt": "Pudding Diplomacy\nA pudding sails across the refectory and lands in Bram's lap. The hall goes silent. Every eye turns to the table it came from, which is yours.\nOwn up\nBram writes you a demerit, then pauses. \"Good throw,\" he says, almost without wanting to.\nThrow another\nThe seco"
+    },
+    {
+      "key": "event:between_two_seats",
+      "title": "Two Saved Seats",
+      "file": "content/events/between.grim",
+      "line": 28,
+      "sourceHash": "c866d804ac98974f7d24e700fe4caeb92e34ccc237319a32a4cae21af6d309a1",
+      "score": 0.5376312732696533,
+      "excerpt": "Two Saved Seats\n{~{a} has put a bag on the bench beside {them}, and at the far end {b} has put a book on the bench too. Both are for you.|{a} waves you over to a saved place. So, from the other end of the table, does {b}. They have not looked at each other once.|There are two pla"
+    },
+    {
+      "key": "event:soc_argument",
+      "title": "Words Exchanged",
+      "file": "content/events/social.grim",
+      "line": 160,
+      "sourceHash": "e2c55d6cbfef2dd05b049d89788ad965b99428e1d0b4cd4438068d2d8c15672c",
+      "score": 0.4431473910808563,
+      "excerpt": "Words Exchanged\nIt starts with something small — {~a borrowed book, a joke that landed wrong|whose turn it was to fetch the tea|a seat someone saved and someone else took} — and suddenly you and {npc} are arguing {~in the corridor|on the stairs|in the middle of the refectory}, lo"
+    },
+    {
+      "key": "event:refectory_house_tables",
+      "title": "Where to Sit",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 199,
+      "sourceHash": "cd4c35a0de6ede40c6bb0ab0b8d75915b8f34360ef0e6cdb358b0f567fc0b8b6",
+      "score": 0.43934428691864014,
+      "excerpt": "Where to Sit\n{Supper, and the question of where to sit.|Your house table has started saving a gap on the bench, roughly your width.|The gap is a named seat now, and the quiet table nods at you too.} Your house table is {loud with a story about a goat|in the middle of a pudding tr"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "017a6fb1de2c174ba022fb6e85105256f1809064db17b4e99e2f07e1bb24d1f5",
+      "at": "2026-10-28T23:51:47.971Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 116,
+        "total_tokens": 116,
+        "cost": 0.00000116,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000116,
+          "upstream_inference_prompt_cost": 0.00000116,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "017a6fb1de2c174ba022fb6e85105256f1809064db17b4e99e2f07e1bb24d1f5",
+      "elapsedMs": 359,
+      "at": "2026-10-28T23:51:48.330Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "359fcc4b54898a46c86837104bc1678addf621dbb63e81370853e03c85742725",
+      "at": "2026-10-28T23:51:48.378Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45273,
+        "cost": 0.00226365
+      },
+      "requestHash": "359fcc4b54898a46c86837104bc1678addf621dbb63e81370853e03c85742725",
+      "elapsedMs": 384,
+      "at": "2026-10-28T23:51:48.762Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

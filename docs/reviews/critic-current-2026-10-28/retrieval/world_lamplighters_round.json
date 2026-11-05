@@ -1,0 +1,108 @@
+{
+  "query": "The Lamplighter's Round {At dusk the old porter makes his round with a long brass pole, lighting the corridor lamps one by one. He's slow these days, and the west corridor is long.|The lamplighter again, at dusk. He nods at the spare pole leaning by the door, as if it had been left there for someone.|The lamplighter's round. The spare pole has a notch carved in it now, about where your hand goes.} {He hums an old song as he goes.|His knees click on every stair.|{season == \"winter\": It's been dark for an hour already, and every lamp matters.|The evening is long and gold, and he's in no hurry.}} Light the west corridor for him {You light them with a flick of fire, one after another, all the way to the end, and feel each one in your fingertips. The porter says the corridor has never looked so cheerful, and he's been doing it forty years.|You take the far end with the spare pole and a little flame. He takes the near end and tells you about the castle when he was a boy. You're drained, and lit up.|You light the west corridor in a single walk now, a flame at every lamp, and you're light-headed by the end. The porter lights his pipe off the last one.} Walk with him and listen {He tells you which lamps never stay lit and why, and which ghost likes the dark. You walk the whole round and forget you had anywhere to be.|He tells you about a headmistress, long ago, who lit every lamp in the castle with one snap of her fingers. \"Showing off,\" he says fondly.|He tells you a story for every lamp. You've heard some before. You don't mind.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_lamplighters_round",
+      "title": "The Lamplighter's Round",
+      "file": "content/events/pools/world_more.grim",
+      "line": 197,
+      "sourceHash": "76800870eca00c86950ed6db48803c3b7a2cdd201ea052af71cc857b3f01edd0",
+      "score": 0.9647591710090637,
+      "excerpt": "The Lamplighter's Round\n{At dusk the old porter makes his round with a long brass pole, lighting the corridor lamps one by one. He's slow these days, and the west corridor is long.|The lamplighter again, at dusk. He nods at the spare pole leaning by the door, as if it had been le"
+    },
+    {
+      "key": "event:break_castle_night_rounds",
+      "title": "The Lone Prefect",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 86,
+      "sourceHash": "1afe185d718c75372348f062c73f2678c9f2b43029ea442215af0b457ed9a7aa",
+      "score": 0.4693997800350189,
+      "excerpt": "The Lone Prefect\n{Only one prefect has stayed for the break, and at breakfast they sigh that seven towers are a lot to patrol tonight.|The lone prefect is pinning tonight's rounds to the noticeboard again.|You know the lone prefect's rounds by now, to the quarter-hour, and tonigh"
+    },
+    {
+      "key": "event:umbral_corridor_step",
+      "title": "Across the Corridor",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 567,
+      "sourceHash": "19394440fe8606983237940c30694b0c6d727f084364eb7d06892b30aae7e81f",
+      "score": 0.4431360960006714,
+      "excerpt": "Across the Corridor\n{Advanced Umbral Theory. Shadowstep across the corridor, door to door, the farthest the professor allows. \"Short distances only,\" the professor says. \"This is as short as long gets.\"|The corridor. The cold in between is colder than last time.|You stand at the "
+    },
+    {
+      "key": "event:seventh_tower_candle_landing",
+      "title": "Other People's Candles",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 358,
+      "sourceHash": "db3e6a06129d8aa82372d699a619a2da9f601ca3073932a99aad78eee304d8c4",
+      "score": 0.4385177493095398,
+      "excerpt": "Other People's Candles\n{Halfway up the seventh tower is a landing crowded with candle stubs, a century of them, with initials scratched in the wall above. Whoever climbed here, climbed with a light.|The candle landing. You recognise some of the initials now, the way you recognise"
+    },
+    {
+      "key": "event:hs_shadow_late",
+      "title": "A Moment Late",
+      "file": "content/events/hollowstar/escalation.grim",
+      "line": 9,
+      "sourceHash": "a10923d0a0695db484f5ba421c134aca0e7851213a598c94c906142a2108a699",
+      "score": 0.4281296133995056,
+      "excerpt": "A Moment Late\nOn the stairs by lamplight you wave to a friend and drop your hand, and your shadow on the wall goes on waving a moment longer. Then it lowers its hand, slowly, as if it had only just noticed you were watching. You stand on the stair for a long time. It doesn't move"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "9ba0a5e742cb47a0ce8366a3c928d099fcdcb5654d5baa3ba876b1608b30292c",
+      "at": "2026-10-28T23:50:53.756Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 375,
+        "total_tokens": 375,
+        "cost": 0.00000375,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000375,
+          "upstream_inference_prompt_cost": 0.00000375,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "9ba0a5e742cb47a0ce8366a3c928d099fcdcb5654d5baa3ba876b1608b30292c",
+      "elapsedMs": 425,
+      "at": "2026-10-28T23:50:54.181Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "fbe4db972e4f41569c13189258a98f0dd41d595adb346650ac343d812c325324",
+      "at": "2026-10-28T23:50:54.415Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 56351,
+        "cost": 0.00281755
+      },
+      "requestHash": "fbe4db972e4f41569c13189258a98f0dd41d595adb346650ac343d812c325324",
+      "elapsedMs": 1075,
+      "at": "2026-10-28T23:50:55.490Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

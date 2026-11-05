@@ -1,0 +1,108 @@
+{
+  "query": "Watch the Other Hand At the Gilded Newt, Corvin rolls a coin across his knuckles, and then it's in your pocket, and then it's back in his. \"Grandfather's trick,\" he says. \"I'd teach it to a saint, if the saint promised to only use it on people who deserve it.\" The jokes stop. \"Do you promise?\" Promise, and learn it You promise. He teaches you over three drinks you don't pay for, and by the last one you lift his coin without him feeling it. He looks at you for a long moment. \"Don't make me sorry,\" he says, quietly. \"Not that one, Corvin.\" \"Saint,\" he says, fondly, and the coin goes back in his own pocket. He buys the next round anyway. You suspect he's relieved.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:corvin_teaches_sleight",
+      "title": "Watch the Other Hand",
+      "file": "content/events/spell_sources.grim",
+      "line": 277,
+      "sourceHash": "10cd51adaf957a5763e8c32821786c5bc2620ac32c191fa43dd784b422d8fef1",
+      "score": 0.9521697759628296,
+      "excerpt": "Watch the Other Hand\nAt the Gilded Newt, Corvin rolls a coin across his knuckles, and then it's in your pocket, and then it's back in his. \"Grandfather's trick,\" he says. \"I'd teach it to a saint, if the saint promised to only use it on people who deserve it.\" The jokes stop. \"Do"
+    },
+    {
+      "key": "event:lesson_sleight",
+      "title": "Pockets and Decks",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 373,
+      "sourceHash": "22b8c4c79b817bd6b52cded7db581e226cca4ebcf031b800ac690e73e57837d1",
+      "score": 0.6610968708992004,
+      "excerpt": "Pockets and Decks\nCorvin is teaching you to keep your hand in. \"Decks are practice,\" he says, shuffling. \"Pockets are performance.\" Bram is asleep in an armchair nearby, his whistle on a ribbon round his neck.\nPractise on the deck\nTwo hours of coins and cards until your fingers c"
+    },
+    {
+      "key": "event:corvin_intro",
+      "title": "Light Fingers",
+      "file": "content/events/people_students.grim",
+      "line": 569,
+      "sourceHash": "076cbbb0609ec86a2a64ef50636c865f4809089d9d35c1e302b87f4f128c4518",
+      "score": 0.6460297107696533,
+      "excerpt": "Light Fingers\nSomeone bumps you in the crowd. A moment later a dark-haired boy is bowing and holding up your purse. \"You dropped this,\" he says. \"Into my pocket. Terrible habit of yours. Corvin Ashby.\"\nSnatch it back and report him\nHe's gone before the prefect arrives. Your purse"
+    },
+    {
+      "key": "event:corvin_honest_once",
+      "title": "Honest for Once",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 326,
+      "sourceHash": "81d0ae49e3e26d4d95248131114537d2f013337a3342fad02fdf717f855bd585",
+      "score": 0.5685083866119385,
+      "excerpt": "Honest for Once\nCorvin has been joking all evening, and it's getting thin. Something's wrong. Every time you ask, he makes another joke, quicker. \"It's nothing, saint,\" he says. \"Nothing's ever anything. That's the trick.\"\nMake him tell you\nYou don't let him off. Eventually the j"
+    },
+    {
+      "key": "event:corvin_lucky_deck",
+      "title": "The Lucky Deck",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 210,
+      "sourceHash": "c1aa07a3cfe8e75e23d819782f1886dedd95e5e3a8e81106a4c5a26e34f044bc",
+      "score": 0.5474866032600403,
+      "excerpt": "The Lucky Deck\nCorvin deals you a hand from an old deck, soft at the corners and smelling of pipe smoke. {~\"Grandfather's,\" he says. \"It really is lucky. Watch.\"|\"Cut,\" he says. \"Any card. It'll be the queen. It's always the queen.\"} You win, which shouldn't be possible against C"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c5eaa06444a7df0127760034542e7e8e0f1e7c9b1df8dcd3fb7bf713522e496b",
+      "at": "2026-10-28T23:51:50.998Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 174,
+        "total_tokens": 174,
+        "cost": 0.00000174,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000174,
+          "upstream_inference_prompt_cost": 0.00000174,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c5eaa06444a7df0127760034542e7e8e0f1e7c9b1df8dcd3fb7bf713522e496b",
+      "elapsedMs": 376,
+      "at": "2026-10-28T23:51:51.374Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "3341bae649cb7301f24a494f53d5ad70eee76bd5b6b117d4f8e299d23b96a4d0",
+      "at": "2026-10-28T23:51:51.412Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40782,
+        "cost": 0.0020391
+      },
+      "requestHash": "3341bae649cb7301f24a494f53d5ad70eee76bd5b6b117d4f8e299d23b96a4d0",
+      "elapsedMs": 439,
+      "at": "2026-10-28T23:51:51.851Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Crates for the Porter {The porter needs crates carried up from the barge, a great many of them, up a great many stairs.|Crates again, the porter says, pointing at the barge. More of them than last time.|You hear the barge bell and the porter waves before you're even down the stairs. Crates.} Carry them all {Forty crates up seventy stairs. The porter pays you and a little extra for not dropping the one that clinked.|Your back will remember every crate. The pay is good.|You carry the lot and don't count them any more. Paid, and sore.} Carry what you can, and train with it {You take them slowly, two steps at a time, and count it as exercise. The porter pays for the crates you managed.|Half the crates, carried properly. Your legs are stronger and your purse a little lighter than it could be.|You carry what you can and stop before your back does. Paid for half, and stronger for it.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_porters_crates",
+      "title": "Crates for the Porter",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 756,
+      "sourceHash": "b96f43a1b69c3d4aafe38f3bfabce5620a8530644806880147a72c5b6616a6ce",
+      "score": 0.9493966698646545,
+      "excerpt": "Crates for the Porter\n{The porter needs crates carried up from the barge, a great many of them, up a great many stairs.|Crates again, the porter says, pointing at the barge. More of them than last time.|You hear the barge bell and the porter waves before you're even down the stai"
+    },
+    {
+      "key": "event:job_board_odd_job",
+      "title": "One Evening's Work",
+      "file": "content/events/calendar_2b.grim",
+      "line": 78,
+      "sourceHash": "5359e034857785f3ba0abac28401067c62637d158cb750afe19a7515d41fc434",
+      "score": 0.47330164909362793,
+      "excerpt": "One Evening's Work\nEvery notice says \"from next term\", except one, pinned low and crooked: {~the refectory wants hands for the end-of-term clear-out|the porters want someone to carry exam desks back to the store rooms|a professor wants her rooms boxed up before the break}. One ev"
+    },
+    {
+      "key": "event:job_board_lost_property",
+      "title": "The Lost-Property Box",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 719,
+      "sourceHash": "a8a1124a138d763d9472bee704917408e986143998e0b6bfb0b1fb1a91465640",
+      "score": 0.4227607548236847,
+      "excerpt": "The Lost-Property Box\n{The porter wants the lost-property box sorted before it starts to smell, and pays by the hour.|The lost-property box is full again, the porter says, mostly of the same gloves.|The porter slides the box across without a word. You know where the odd boot goes"
+    },
+    {
+      "key": "event:grisk_names_favour",
+      "title": "The Favour, Named",
+      "file": "content/events/pools/night.grim",
+      "line": 137,
+      "sourceHash": "44a75aaba798fd730f38a3c9156929232cc3f99a45acc5a494b67591add2cd1d",
+      "score": 0.41831067204475403,
+      "excerpt": "The Favour, Named\nGrisk is waiting in the library alcove with your promise between two fingers. \"The favour,\" he says. \"A small one. A crate goes from the boathouse to the village. Tonight. Or, if you prefer, the price of the crate.\" He smiles. \"I always offer a choice.\"\nMove the"
+    },
+    {
+      "key": "event:upper_year_errands",
+      "title": "Errands for Upper-Years",
+      "file": "content/events/pools/money.grim",
+      "line": 122,
+      "sourceHash": "9496430d05bfb83a4d25db742f48adde2a1b14f5a388c3c63bc503ff4c37ecf9",
+      "score": 0.41680261492729187,
+      "excerpt": "Errands for Upper-Years\n{Upper-years pay for errands, a book fetched or a queue stood in or a letter carried to the owlery.|An upper-year waves a list and a coin at you. Word has got round.|\"You again,\" says the upper-year, pleased. \"Good. The usual, plus my laundry.\"} {The list "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e63b43cc055e392fa2cea4e9efb3b7139479ff4af9b84e0b9888c95afe7d4d7e",
+      "at": "2026-10-28T23:51:09.713Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 212,
+        "total_tokens": 212,
+        "cost": 0.00000212,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000212,
+          "upstream_inference_prompt_cost": 0.00000212,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e63b43cc055e392fa2cea4e9efb3b7139479ff4af9b84e0b9888c95afe7d4d7e",
+      "elapsedMs": 339,
+      "at": "2026-10-28T23:51:10.052Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a718f84871b1faa3bc4ddba3a0f6c4be41987453c185e0d6f728a2efa14819b6",
+      "at": "2026-10-28T23:51:10.246Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49341,
+        "cost": 0.00246705
+      },
+      "requestHash": "a718f84871b1faa3bc4ddba3a0f6c4be41987453c185e0d6f728a2efa14819b6",
+      "elapsedMs": 758,
+      "at": "2026-10-28T23:51:11.004Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

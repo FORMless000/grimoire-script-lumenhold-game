@@ -1,0 +1,89 @@
+{
+  "query": "Whatever You're Having Whatever you order at the Gilded Newt, half the bar orders next, and the landlady has noticed. She leans over the counter. \"Do me a favour, love. Order the elderflower fizz. I've forty bottles of it in the cellar and nobody's touched one since midsummer. There's a cut in it for you.\" The whole bar is waiting to see what you'll have. \"One elderflower fizz, please.\" The fizz has been in the cellar since midsummer for a reason. Half the bar orders one after you, and half the bar spends the rest of the evening outside. The landlady gives you your cut anyway. By morning everyone knows whose idea it was. You raise a glass of fizz to the bar, and the bar raises forty back. It is far too sweet. For the rest of the term it's what people drink at the Newt, and every few weeks the landlady presses a small purse of coppers into your hand. Order what you always have You order your usual. So does half the bar. The landlady sighs, says \"Traitor\" quite fondly, and goes down to the cellar for more of it. The fizz stays where it is.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:spot_newt_drink",
+      "title": "Whatever You're Having",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 168,
+      "sourceHash": "691526f87e73c16d35ee4cb1004c900ba8853ca7e110613577ea5f842a532dca",
+      "score": 0.94097501039505,
+      "excerpt": "Whatever You're Having\nWhatever you order at the Gilded Newt, half the bar orders next, and the landlady has noticed. She leans over the counter. \"Do me a favour, love. Order the elderflower fizz. I've forty bottles of it in the cellar and nobody's touched one since midsummer. Th"
+    },
+    {
+      "key": "event:shop_newt",
+      "title": "The Newt's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 254,
+      "sourceHash": "48725023698773413358951f61d55a2bb498c8fe13e63fe860bb87ecb3d51fa0",
+      "score": 0.5275551080703735,
+      "excerpt": "The Newt's Counter\n{{slot == \"afternoon\": By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|At this hour the Gilded Newt is all elbows and cider, and the landlady works the bar with a cloth over her shoulder.}|{slot == \""
+    },
+    {
+      "key": "event:gilded_newt_ballad",
+      "title": "The Newt's Ballad",
+      "file": "content/events/pools/village_more.grim",
+      "line": 11,
+      "sourceHash": "bd6a7949c57dca3f3404643e03583a88f9e2dd15921e8f81be6e883cfb62ff3e",
+      "score": 0.4620929956436157,
+      "excerpt": "The Newt's Ballad\n{An old regular is standing on a bench singing the ballad of the Newt, about the fire that never goes out. It has forty verses. He knows most of them.|The ballad again. Tonight it has forty-one verses; the new one is about a student who fell into the cellar.|The"
+    },
+    {
+      "key": "event:tavern_regulars_round",
+      "title": "The Regulars' Corner",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 699,
+      "sourceHash": "1f0294353525f9a9fd3a9bfdef7ebf2f548bcc7c9be68240651cf54278b8a59f",
+      "score": 0.4469953179359436,
+      "excerpt": "The Regulars' Corner\nThe regulars' corner has never had a round bought by staff. The landlady says that's exactly why you should. \"Nobody listens to a story from someone who's never stood them a drink.\"\nStand the corner a round\nThe corner raises the mugs to you, by name, which yo"
+    },
+    {
+      "key": "event:gilded_newt_fireside",
+      "title": "By the Newt's Fire",
+      "file": "content/events/pools/village_home.grim",
+      "line": 90,
+      "sourceHash": "613b24d65223846d9d2a254327fad976da93a37c8f93dd28ceabc886d9bfa602",
+      "score": 0.44333258271217346,
+      "excerpt": "By the Newt's Fire\n{The Gilded Newt's fire has never gone out, and the landlady says it never will while she lives.|The landlady chalks your name on her slate before you've ordered.|Your corner by the fire is free. The regulars leave it for you now.} {season == \"winter\": Snow his"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "requestHash": "dbea352db505f4df74c0cd86c05c1dd58003d7a60e73a15d32bacf189948049c",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:52.648Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "eb466f0fc8ce54db212bed017b77ebae84cad4afe713dd41f8332dd561ab6690",
+      "at": "2026-10-28T23:51:52.689Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43284,
+        "cost": 0.0021642
+      },
+      "requestHash": "eb466f0fc8ce54db212bed017b77ebae84cad4afe713dd41f8332dd561ab6690",
+      "elapsedMs": 680,
+      "at": "2026-10-28T23:51:53.369Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Cold Hands Kael holds his hand over a brazier in the courtyard, and the coals grey over with frost until the fire gives up. \"Where I come from, everyone learns this before they learn to read,\" he says. A pause. \"It's for putting fires out. Mostly. I could teach you, if you wanted it.\" \"I want it.\" He seems startled that you said it out loud. He takes your hands to show you, and his are as cold as ever. By the end your fingers ache and the brazier is frosted grey. \"Good,\" he says, and doesn't let go at once. Warm his hands instead You take his hands and hold them over the last of the fire. He doesn't say anything for a long time. \"Another night,\" he says, eventually, about the spell or the hands.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:kael_teaches_hoarfrost",
+      "title": "Cold Hands",
+      "file": "content/events/spell_sources.grim",
+      "line": 321,
+      "sourceHash": "9085218968023864f759dfc2166783db15b6e0ac933a2e71683421a233a8c80a",
+      "score": 0.9533155560493469,
+      "excerpt": "Cold Hands\nKael holds his hand over a brazier in the courtyard, and the coals grey over with frost until the fire gives up. \"Where I come from, everyone learns this before they learn to read,\" he says. A pause. \"It's for putting fires out. Mostly. I could teach you, if you wanted"
+    },
+    {
+      "key": "event:kael_cold_hands",
+      "title": "Cold Hands",
+      "file": "content/events/people_others.grim",
+      "line": 32,
+      "sourceHash": "75960152403c23f842ec5585159b9932d58cade974ba0b9383664c18e18f4426",
+      "score": 0.8264119029045105,
+      "excerpt": "Cold Hands\nKael's hands are always cold. In the library tonight they're so cold the ink in his pen has frozen. He's trying to thaw it with his breath, embarrassed.\nLend him your gloves\nHe wears them for the rest of the term. They're far too small. He doesn't care. Your own finger"
+    },
+    {
+      "key": "event:lesson_hoarfrost",
+      "title": "Putting Out Fires",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 413,
+      "sourceHash": "28e292e64af322f8df1c6933fbb90303c360ead455c0f02fc7154f5de720cf0e",
+      "score": 0.7286399602890015,
+      "excerpt": "Putting Out Fires\n\"It's for putting fires out,\" Kael says again, and nods across the duel hall to where Lyra is practising, very loudly, with a very large flame. He waits to see whether you'll take the hint.\nPut out Lyra's flame\nYour frost meets her flame and they cancel with a h"
+    },
+    {
+      "key": "event:lesson_rime",
+      "title": "Cold Enough",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 626,
+      "sourceHash": "19618f63ebd28d174e7d717261d571f30090c8ba622ded4929fff1b715bf04b7",
+      "score": 0.7243139147758484,
+      "excerpt": "Cold Enough\nKael sees the frost at your collar and goes still. \"Rime,\" he says. \"Where did you... no. Don't tell me.\" He looks at {season == \"winter\": the snow|the courtyard, and frost runs out from his boots across the flagstones}. \"In the North we learn it as children. You don'"
+    },
+    {
+      "key": "event:kael_warm_enough",
+      "title": "Warm Enough",
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 8,
+      "sourceHash": "7d197297931312885bf8d025147c9080b5d4338a36f32bec446756995502d70c",
+      "score": 0.7175547480583191,
+      "excerpt": "Warm Enough\nKael sits down beside you on the cold bench outside the library. {~Frost creeps from his sleeves onto the stone.|Your tea steams; his breath doesn't.} He holds his bare hands near your mug, not quite touching it, the way you'd hold them near a fire you weren't sure yo"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "39f0ffb3a013d538cdfb3a3de0fc59f2774821043edd03c79eee2fa7a1868994",
+      "at": "2026-10-28T23:51:51.803Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 175,
+        "total_tokens": 175,
+        "cost": 0.00000175,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000175,
+          "upstream_inference_prompt_cost": 0.00000175,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "39f0ffb3a013d538cdfb3a3de0fc59f2774821043edd03c79eee2fa7a1868994",
+      "elapsedMs": 472,
+      "at": "2026-10-28T23:51:52.275Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6e85df7b72fd45f8ddf0e50d8bc7b8ebb4b77f81eeba18efcf7b0c335e03aa18",
+      "at": "2026-10-28T23:51:52.326Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49784,
+        "cost": 0.0024892
+      },
+      "requestHash": "6e85df7b72fd45f8ddf0e50d8bc7b8ebb4b77f81eeba18efcf7b0c335e03aa18",
+      "elapsedMs": 865,
+      "at": "2026-10-28T23:51:53.191Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

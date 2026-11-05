@@ -1,0 +1,107 @@
+{
+  "query": "Thursday's Seminar Thursday. The first-year stands at the seminar lectern with her paper in both hands and no voice at all. A dozen students wait. The lecturer looks at the clock. Her eyes find you at the back of the room. Stand up and argue with her paper You stand and say her fourth paragraph is wrong. It isn't, and she knows it, and she's so annoyed she forgets to be frightened. She takes your objection apart for ten minutes. The room applauds, mostly for her. You stand and object, and your objection is bad, and she's too polite to say so out loud. She sits down without reading. Your essay comes back that week with one line of red: \"Good try. Bad argument.\" Offer to read it for her You walk to the front and hold out your hand. She shakes her head, then gives you the first page. You read the first paragraph aloud. She takes the second page back, and reads the rest herself, quietly, all the way to the end.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:lecture_tower_red_ink_seminar",
+      "title": "Thursday's Seminar",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 254,
+      "sourceHash": "a6b22263656a59d213f9f2e0641e06a48e9f78c73b30f895f1800be84e66d12b",
+      "score": 0.9397661089897156,
+      "excerpt": "Thursday's Seminar\nThursday. The first-year stands at the seminar lectern with her paper in both hands and no voice at all. A dozen students wait. The lecturer looks at the clock. Her eyes find you at the back of the room.\nStand up and argue with her paper\nYou stand and say her f"
+    },
+    {
+      "key": "event:lecture_tower_red_ink_front_row",
+      "title": "The Front Row",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 231,
+      "sourceHash": "0c7afac2b351512064596a64948d31eb70a51a976f6a7811030e846984116949",
+      "score": 0.6470150947570801,
+      "excerpt": "The Front Row\nYou cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor"
+    },
+    {
+      "key": "event:thorne_between_hard",
+      "title": "Hm.",
+      "file": "content/events/between_known_2.grim",
+      "line": 205,
+      "sourceHash": "32cc93d2ee2ca3e344b83e7e0a28a4cb6c668c707d68c3f8fb33ba58a15ffd07",
+      "score": 0.5014902353286743,
+      "excerpt": "Hm.\nThorne has handed {o}'s essay back for the third week running, more red ink than black. \"Hm,\" he said, which is all he said. {o} is close to tears in the corridor. \"He hates me. He doesn't do this to anyone else. Will you talk to him? He listens to you.\"\nTalk to Thorne\nThorne"
+    },
+    {
+      "key": "event:spot_higher_bar",
+      "title": "Because It's You",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 122,
+      "sourceHash": "909521fa1ef2434600cd89cc1949219fa57c9f12eb3d10687e58fe7146960949",
+      "score": 0.48335570096969604,
+      "excerpt": "Because It's You\nYour essay comes back covered in red, with a mark lower than your neighbour's, though your neighbour's essay was, honestly, not as good. At the bottom the lecturer has written: \"From anyone else, excellent. From you, I expect more. Everybody is watching what you "
+    },
+    {
+      "key": "event:lecture_tower_red_ink",
+      "title": "Two Sets of Marks",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 182,
+      "sourceHash": "be12352b0bbd0ace3b924df87e936fc6704f308ee71dbf14137841de280d4bc8",
+      "score": 0.47859808802604675,
+      "excerpt": "Two Sets of Marks\nYour returned essay has two sets of marks. The marker's, in polite pencil: \"Good.\" And another, in red ink and unsigned, in a small round hand, savaging every paragraph and fixing three of them. The last line reads: \"You can do better than good. Paragraph four p"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "171e79953b2d5a3b0a35d6797a21e2e2df2cf4ccf784ffb4ae8e81af78151ffd",
+      "at": "2026-10-28T23:24:53.756Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 211,
+        "total_tokens": 211,
+        "cost": 0.00000211,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000211,
+          "upstream_inference_prompt_cost": 0.00000211,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "171e79953b2d5a3b0a35d6797a21e2e2df2cf4ccf784ffb4ae8e81af78151ffd",
+      "elapsedMs": 5569,
+      "at": "2026-10-28T23:24:59.325Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a3949cd3cabc1f1131dba1a19f35dbd85354077fef31f88498aa5a10275b9b9c",
+      "at": "2026-10-28T23:24:59.366Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 48546,
+        "cost": 0.0024273
+      },
+      "requestHash": "a3949cd3cabc1f1131dba1a19f35dbd85354077fef31f88498aa5a10275b9b9c",
+      "elapsedMs": 464,
+      "at": "2026-10-28T23:24:59.830Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

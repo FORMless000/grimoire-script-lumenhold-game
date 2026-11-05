@@ -1,0 +1,108 @@
+{
+  "query": "The Chair That Follows The Artifice homework is to animate something and live with it for a day. You pick a chair, which follows you to every lecture. The teapot is the other option. It has opinions about being carried. Live with the chair The chair follows you everywhere and offers itself whenever you stop, including on the stairs, at speed. By evening you have bruised shins and a very loyal chair. Animate the teapot instead The teapot waddles after you all day, pouring when you sit. It takes more out of you than the chair would, but your friends have never been so well looked after.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_animate",
+      "title": "The Chair That Follows",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 278,
+      "sourceHash": "3a1f277a4a4bbec0a9aef748c8d99414f0d00a313d59ab285f9d733875477494",
+      "score": 0.9491026997566223,
+      "excerpt": "The Chair That Follows\nThe Artifice homework is to animate something and live with it for a day. You pick a chair, which follows you to every lecture. The teapot is the other option. It has opinions about being carried.\nLive with the chair\nThe chair follows you everywhere and off"
+    },
+    {
+      "key": "event:art_first_animate",
+      "title": "Make It Want One Thing",
+      "file": "content/events/spell_sources.grim",
+      "line": 141,
+      "sourceHash": "88db502b91a6491ae2f64be58a7a4cfb02b9acca55444a180657755965dff719",
+      "score": 0.45045310258865356,
+      "excerpt": "Make It Want One Thing\nArtifice begins with a broom. The lecturer says one word and the broom sweeps the workshop by itself, badly and with enthusiasm. \"Animate,\" the lecturer says. \"Give a made thing one want, and only one. Yours next.\"\nGive your broom its want\nYour broom wants "
+    },
+    {
+      "key": "event:break_home_mending_chair",
+      "title": "The Mending Chair",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 159,
+      "sourceHash": "775eba28b219e9f845d93a068fb4ceae68b2a9b267415c4637cfab065e5ae421",
+      "score": 0.41787639260292053,
+      "excerpt": "The Mending Chair\n{Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == \"winter\": Today it's a stove door that won't stay shut.|"
+    },
+    {
+      "key": "event:art_fair_entry",
+      "title": "Something for the Fair",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 173,
+      "sourceHash": "120df88733c1963bc5ae86caa63c5f08eab7bbd9c146d154a43113dd3f21cfad",
+      "score": 0.40163448452949524,
+      "excerpt": "Something for the Fair\n{Every Artifice student is expected to have something for the Artificers' Fair. Yours is a clockwork wren that sings a little flat.|Fair entries again. Your wren now sings on key, mostly, and has started to hop.|Your fair entry has a name, a shelf and a tem"
+    },
+    {
+      "key": "event:art_golem_helper",
+      "title": "The Little Golem",
+      "file": "content/events/expansion_classes.grim",
+      "line": 162,
+      "sourceHash": "079e99116c3db5828a0e303731b76186610ada8bb37abbb96072cb59b3367d0a",
+      "score": 0.39871689677238464,
+      "excerpt": "The Little Golem\nYour term project: a knee-high clay golem that carries books. It works! It works so well that it has started carrying everyone's books, whether they want it to or not.\nAdd a \"stop\" command\nThe golem stops. It also waits politely. The professor asks if she can bor"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "22461f28fe01259723a3e5498234c472502a0714672791307e5f32af2fb0df08",
+      "at": "2026-10-28T23:51:43.026Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 131,
+        "total_tokens": 131,
+        "cost": 0.00000131,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000131,
+          "upstream_inference_prompt_cost": 0.00000131,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "22461f28fe01259723a3e5498234c472502a0714672791307e5f32af2fb0df08",
+      "elapsedMs": 408,
+      "at": "2026-10-28T23:51:43.434Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "36319469166528fd8e7e8e7c0628018cc6fd45ee3a8f300252ac0023c341e3d7",
+      "at": "2026-10-28T23:51:43.489Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 41059,
+        "cost": 0.00205295
+      },
+      "requestHash": "36319469166528fd8e7e8e7c0628018cc6fd45ee3a8f300252ac0023c341e3d7",
+      "elapsedMs": 332,
+      "at": "2026-10-28T23:51:43.821Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

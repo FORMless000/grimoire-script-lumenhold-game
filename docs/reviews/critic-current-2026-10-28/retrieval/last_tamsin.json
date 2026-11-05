@@ -1,0 +1,107 @@
+{
+  "query": "A Page for Thornwick There's a space in the corner of your yearbook page where a friend's message should go, and a green-sealed letter on your desk that came this morning: \"Four years of rivalry, four hundred letters. Leave me the corner. Insufferable to the end, T.\" Leave Tamsin the corner You send the page over the hills by the evening owl. It comes back by morning, a green seal pressed into the corner, which is not allowed, and two lines you'll know by heart for the rest of your life. Save it for the spring meeting You write back that the corner can wait: you'll fill it in person, at the town halfway between, in the spring, with biscuits. Tamsin's reply says \"Coward\" and \"Yes\" in the same line.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:last_tamsin",
+      "title": "A Page for Thornwick",
+      "file": "content/events/last_day.grim",
+      "line": 309,
+      "sourceHash": "af565835b60b886517d0a6d8bba04219b16e84f0f9a500247840db44d6bc574c",
+      "score": 0.9419383406639099,
+      "excerpt": "A Page for Thornwick\nThere's a space in the corner of your yearbook page where a friend's message should go, and a green-sealed letter on your desk that came this morning: \"Four years of rivalry, four hundred letters. Leave me the corner. Insufferable to the end, T.\"\nLeave Tamsin"
+    },
+    {
+      "key": "event:tamsin_letter_after",
+      "title": "After Graduation",
+      "file": "content/events/chain_thornwick.grim",
+      "line": 169,
+      "sourceHash": "1a9595d1172de1d50b657d81277dfdbfe3f1d19641e1de517d1f89b937aa659d",
+      "score": 0.7315102219581604,
+      "excerpt": "After Graduation\nTamsin's letter has a map on the back with two towns circled: Lumenhold and Thornwick, and a line between them. \"After graduation, there'll be no school to be rivals for. What are we, then?\" Under it, smaller: \"Don't answer that. Answer it.\"\n\"Friends. Obviously.\""
+    },
+    {
+      "key": "event:life_pen_pal",
+      "title": "A Letter From Thornwick",
+      "file": "content/events/expansion_life.grim",
+      "line": 312,
+      "sourceHash": "7d2560db6cd95bd69f952b7f10db7212907b79d3809400f4154650d18c9c0904",
+      "score": 0.7106654047966003,
+      "excerpt": "A Letter From Thornwick\nA letter arrives from a stranger at Thornwick Academy, the rival school. \"Dear Lumenhold student chosen at random,\" it begins. \"I'm told you're all insufferable. Prove me wrong? T. Reed (illusion, first year, not insufferable).\"\nWrite back\nYour reply is fo"
+    },
+    {
+      "key": "event:tamsin_second_letter",
+      "title": "Insufferable AND Rude",
+      "file": "content/events/chain_thornwick.grim",
+      "line": 15,
+      "sourceHash": "39512e547dcea73226a513026160d8c8946cf4a9bd0be40be91bbe22064abc8e",
+      "score": 0.6130070090293884,
+      "excerpt": "Insufferable AND Rude\nA second letter from Thornwick, in the same quick hand. \"Insufferable AND rude. Noted. I'm giving you one more chance, because I'm a generous person and because my roommate bet me you'd never answer. Prove her wrong. T. Reed.\"\nWrite back, finally\nYou write b"
+    },
+    {
+      "key": "event:letter_from_a_friend",
+      "title": "A Letter From {friend}",
+      "file": "content/events/pools/letters.grim",
+      "line": 5,
+      "sourceHash": "2762f1d28e197d6402fd72dfffc6c084dab130cd081340e1a99537a0a6ebdba6",
+      "score": 0.6068384051322937,
+      "excerpt": "A Letter From {friend}\n{friend} has written. {~Three pages, mostly about nothing, which is the best kind.|Half of it is crossed out and the other half underlined.|There's a drawing in the margin that is probably meant to be you.} {off_campus: The castle, they say, is too quiet wi"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "aed6c33518ddeede6ed38f32be8646e53fcfd91a815d981ca7395f3d2d3a2003",
+      "at": "2026-10-28T23:22:27.547Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 170,
+        "total_tokens": 170,
+        "cost": 0.0000017,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000017,
+          "upstream_inference_prompt_cost": 0.0000017,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "aed6c33518ddeede6ed38f32be8646e53fcfd91a815d981ca7395f3d2d3a2003",
+      "elapsedMs": 9010,
+      "at": "2026-10-28T23:22:36.557Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b2977159cb2363f71d4d3631dd725917b60176b91a98c4944792f8c58b0d5ada",
+      "at": "2026-10-28T23:22:36.593Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 36377,
+        "cost": 0.00181885
+      },
+      "requestHash": "b2977159cb2363f71d4d3631dd725917b60176b91a98c4944792f8c58b0d5ada",
+      "elapsedMs": 1863,
+      "at": "2026-10-28T23:22:38.456Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Frost in the Chalk The cellar goes cold. The lanterns shrink. A girl in white furs steps into the chalk and frost creeps out from her boots across the flagstones: Ilse Dumont. \"They said the academy's best come down here,\" she says. She looks you over. \"They lied. But you'll do.\" Fight her She slips on her own ice and your spell catches her before she's up. She stays down a moment, then laughs, a short Northern sound. \"Again,\" she says. \"Not tonight. But again.\" She takes her purse and leaves the cellar colder. Rime closes over your wand hand and you can't feel it to cast. She stands over you, unimpressed. \"You fight like someone taught you,\" she says. \"Find someone who didn't.\" Your fingers ache till morning. Ask her why she's down here She doesn't answer. Instead she tells you your stance is wrong, then fixes it, roughly, with her boot. \"Southerners,\" she says, as if that explained everything. The crowd boos you both, and she doesn't seem to hear.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ring_cameo_ilse",
+      "title": "Frost in the Chalk",
+      "file": "content/events/pools/night.grim",
+      "line": 761,
+      "sourceHash": "e74e190357764a296c5a5f21313ebc45bb4a60b9f6409ff13a949e4be9234de1",
+      "score": 0.9456295371055603,
+      "excerpt": "Frost in the Chalk\nThe cellar goes cold. The lanterns shrink. A girl in white furs steps into the chalk and frost creeps out from her boots across the flagstones: Ilse Dumont. \"They said the academy's best come down here,\" she says. She looks you over. \"They lied. But you'll do.\""
+    },
+    {
+      "key": "event:hs_night_ilse",
+      "title": "Ilse in the Dark",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 157,
+      "sourceHash": "452013575c89a6c955cd4859813d43c49895dfb0fb53fade319bc244cdbee6b0",
+      "score": 0.6606951355934143,
+      "excerpt": "Ilse in the Dark\nWhere the tunnel opens into the dark, Ilse is standing in the way. Her eyes are on nothing, and frost is falling from her hands like flour. \"Go back,\" she says, in the man in grey's pleasant voice, not her own. \"This is my door. I was raised for it.\" {flag(night_"
+    },
+    {
+      "key": "event:ilse_frost_lessons",
+      "title": "A Trade in Winter",
+      "file": "content/events/chain_ilse.grim",
+      "line": 50,
+      "sourceHash": "1823b93e2a1d95480daa63c32074518e7f1e46cd38c5b57241f83b05b8272460",
+      "score": 0.5826372504234314,
+      "excerpt": "A Trade in Winter\nIlse finds you by the frozen pond. \"My brother won't talk to me. You will. Tell me how he really is, and I'll teach you Northern frost-craft. It's better than anything your professors know.\"\nTell her the truth about Kael\nYou tell her about the cold hands, {seen("
+    },
+    {
+      "key": "event:ilse_frost_door",
+      "title": "Frost on the Door",
+      "file": "content/events/bonds/rivals.grim",
+      "line": 459,
+      "sourceHash": "afe175d96a5997c1f81e30479b9480080f9f7a9880198caceaa98290d1b86723",
+      "score": 0.5818175077438354,
+      "excerpt": "Frost on the Door\nYour door is sealed in ice, a hand thick, clear as glass. Someone has scratched a word into the frost: a Northern word you don't know. It doesn't sound kind. In the village, they say, a girl in white furs bought nothing today, and smiled.\nThaw it the slow way\nKe"
+    },
+    {
+      "key": "event:know_ilse_frost",
+      "title": "Frost on the Inside",
+      "file": "content/events/knowing_2.grim",
+      "line": 288,
+      "sourceHash": "e942679a13e40a168f33eec20f4e2e6b32f29930ffe8f09649f6a41e34c99986",
+      "score": 0.572811484336853,
+      "excerpt": "Frost on the Inside\nWinter has got into the dormitories. The windows frost over on the inside every night, and the warming ward the professors put up keeps cracking. Everyone is sleeping in their coats, and the porters say it will be mended next week, as they said last week.\nPatc"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "619e83484c01752eeb158b427e34c97c0f9b68f89cc7f610a61123738c3e1fb1",
+      "at": "2026-10-28T23:51:02.990Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 237,
+        "total_tokens": 237,
+        "cost": 0.00000237,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000237,
+          "upstream_inference_prompt_cost": 0.00000237,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "619e83484c01752eeb158b427e34c97c0f9b68f89cc7f610a61123738c3e1fb1",
+      "elapsedMs": 303,
+      "at": "2026-10-28T23:51:03.293Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f7a6f8551f1c6f57fb8acb04d2de99ce47ccb597b2b01c3584f32101a139c31f",
+      "at": "2026-10-28T23:51:03.349Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58022,
+        "cost": 0.0029011
+      },
+      "requestHash": "f7a6f8551f1c6f57fb8acb04d2de99ce47ccb597b2b01c3584f32101a139c31f",
+      "elapsedMs": 474,
+      "at": "2026-10-28T23:51:03.823Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

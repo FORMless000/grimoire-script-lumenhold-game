@@ -1,0 +1,108 @@
+{
+  "query": "The Breakfast Engine Mir slides a breakfast tray across to you. \"Practice! Make it do breakfast. Toast, butter, tea. It's the hardest machine there is, probably.\" Half the refectory has already turned to watch. Build the breakfast engine Your engine butters four slices, pours one cup and singes your eyebrow before it falls apart in a shower of crumbs. The refectory applauds. Mir writes something down, beaming. Build it with Mir, slowly You build it together, Mir explaining every joint. It makes one perfect slice of toast and then retires. Mir says it's the best machine of the year, probably.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_contraption",
+      "title": "The Breakfast Engine",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 393,
+      "sourceHash": "05a70c44cfc4a7c75c356e1720ac82f0119b7296bb76e751e01750b450e8ea03",
+      "score": 0.9494442939758301,
+      "excerpt": "The Breakfast Engine\nMir slides a breakfast tray across to you. \"Practice! Make it do breakfast. Toast, butter, tea. It's the hardest machine there is, probably.\" Half the refectory has already turned to watch.\nBuild the breakfast engine\nYour engine butters four slices, pours one"
+    },
+    {
+      "key": "event:mir_teaches_contraption",
+      "title": "It Probably Works",
+      "file": "content/events/spell_sources.grim",
+      "line": 298,
+      "sourceHash": "62860b51800ba6604e52d9b929ec645a072976cab246e48e5cb4c5c824da8289",
+      "score": 0.6042022109031677,
+      "excerpt": "It Probably Works\nMir sweeps a bench clear with one arm. \"Watch!\" A kettle, a mantel clock and a spoon jump together into a whirring thing that pours tea, mostly into the cup. \"No plans, no drawings, just ask the bits what they want to be! It's my own. It probably won't explode. "
+    },
+    {
+      "key": "event:mir_fair",
+      "title": "The Artificers' Fair",
+      "file": "content/events/people_students.grim",
+      "line": 823,
+      "sourceHash": "8a2998a789e6091d4630f73a7c113b8fb59b8e487fb9011980661dab14f662f0",
+      "score": 0.48554885387420654,
+      "excerpt": "The Artificers' Fair\nThe Artificers' Fair. Mir's entry is under a sheet and occasionally growls. \"I need an assistant to stand next to it and look confident,\" they say. \"And possibly run.\"\nWatch from a safe distance\nThe machine turns out to be a mechanical bear that bakes bread. "
+    },
+    {
+      "key": "event:mir_blueprints",
+      "title": "Blueprints",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 492,
+      "sourceHash": "fce53a4b2e3ef8e272311e2a86d866e971f75e749a66927470f220f859473a17",
+      "score": 0.46935003995895386,
+      "excerpt": "Blueprints\nMir has drawn a blueprint for something for you. {~\"A lamp that turns itself off when you fall asleep reading,\" they say. \"Probably.\"|\"A pocket that's bigger inside,\" they say. \"In theory. In practice, it eats keys.\"} They don't say why they keep making things for you."
+    },
+    {
+      "key": "event:art_mir_collab",
+      "title": "A Joint Project",
+      "file": "content/events/classes.grim",
+      "line": 420,
+      "sourceHash": "d11b4ba0fc3a4e1209b524a7ba26b47d4cb454727835e42b3a300c43a0282460",
+      "score": 0.4605821371078491,
+      "excerpt": "A Joint Project\nMir Ten drops onto the bench beside you with a sketch of something that is either a self-stirring cauldron or a small war machine. \"Partners? Your hands, my brain. Or the other way round. Both, actually.\"\nWork alone\n\"Fair,\" says Mir, with no hard feelings, and is "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "7befac699e33df461a8dddcecbf0f492232022ae60ed32437b0149f45f5b7d3a",
+      "at": "2026-10-28T23:51:45.883Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 133,
+        "total_tokens": 133,
+        "cost": 0.00000133,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000133,
+          "upstream_inference_prompt_cost": 0.00000133,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "7befac699e33df461a8dddcecbf0f492232022ae60ed32437b0149f45f5b7d3a",
+      "elapsedMs": 587,
+      "at": "2026-10-28T23:51:46.470Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "773885726de843ae511acc3d7d3ccdb9023b16168fb7c6faf07052a38a69ec21",
+      "at": "2026-10-28T23:51:46.512Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44552,
+        "cost": 0.0022276
+      },
+      "requestHash": "773885726de843ae511acc3d7d3ccdb9023b16168fb7c6faf07052a38a69ec21",
+      "elapsedMs": 547,
+      "at": "2026-10-28T23:51:47.059Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

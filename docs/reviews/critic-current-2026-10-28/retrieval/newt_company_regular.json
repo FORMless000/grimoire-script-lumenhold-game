@@ -1,0 +1,108 @@
+{
+  "query": "The Upstairs Room {The woman who runs the upstairs room knows your face now. \"There's a party tonight,\" she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. \"Your table's waiting,\" she says.|\"Your regulars asked after you,\" says the landlady, which is either flattering or a warning. Upstairs the lamps are lit.} Work the room {You button the jacket and go up. It fits a little better than last time.|You take your jacket from its peg and climb the stair into the lamplight.|Your regulars wave you over before you've reached the top of the stair.} Not tonight {\"Next week, then,\" she says, and the jacket goes back on its peg.|She shrugs and chalks a line through tonight beside your name.|\"They'll miss you,\" she says, and it sounds like the truth and the bill at once.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:newt_company_regular",
+      "title": "The Upstairs Room",
+      "file": "content/events/pools/night.grim",
+      "line": 34,
+      "sourceHash": "8b4131d78d56b576167bffa78adc1d451af677325e873c31bccb222ca40b81a6",
+      "score": 0.9428365230560303,
+      "excerpt": "The Upstairs Room\n{The woman who runs the upstairs room knows your face now. \"There's a party tonight,\" she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. \"Your table's waiting,\" she says.|\"Your regulars asked after yo"
+    },
+    {
+      "key": "event:newt_company",
+      "title": "Company for the Evening",
+      "file": "content/events/pools/night.grim",
+      "line": 8,
+      "sourceHash": "f822064ccd7f35ff30f97fdf420d490bd7f52e6480c69fe05d3b8072c6e3ade2",
+      "score": 0.6896274089813232,
+      "excerpt": "Company for the Evening\nThe woman who runs the upstairs room looks you over. \"The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more: guests who want more are shown the stair. Every night is a different party, and every par"
+    },
+    {
+      "key": "event:company_late_hour",
+      "title": "The Second Party",
+      "file": "content/events/pools/night.grim",
+      "line": 405,
+      "sourceHash": "f6b4cc262e44212fd7b4c2cb6db0bce0442b25bae728aec635e5f3bc1bc80b59",
+      "score": 0.6265311241149902,
+      "excerpt": "The Second Party\n{Past two, the landlady catches your sleeve on the stair. \"Another party's just come up, and I'm a pair of hands short. Same pay again.\"|A second party is coming up the stair as yours goes down it. The landlady looks at you and raises an eyebrow.|\"One more,\" says"
+    },
+    {
+      "key": "event:company_wants_more",
+      "title": "A Guest Who Wants More",
+      "file": "content/events/pools/night.grim",
+      "line": 311,
+      "sourceHash": "fe4de4e7a319f821f58ddfd0c77313cd9244ad0a544768b2e8d681e2bf996cd5",
+      "score": 0.4465497136116028,
+      "excerpt": "A Guest Who Wants More\n{A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. \"Come back to my inn,\" he says. \"Just to talk.\" The house rule is clear.|Another guest, another heavy purse, another invitation \"just to talk\". T"
+    },
+    {
+      "key": "event:tavern_regulars_corner",
+      "title": "The Regulars' Corner",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 547,
+      "sourceHash": "a46cbfac9382d697dc1851d5cc48cd1bf258cf40c0d35a17f58eda61004621b0",
+      "score": 0.44494694471359253,
+      "excerpt": "The Regulars' Corner\n{The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "455d5c5a59834b74849730a9f1e11eabb173fc558feffe44d84d7bf219277b67",
+      "at": "2026-10-28T23:51:13.124Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 202,
+        "total_tokens": 202,
+        "cost": 0.00000202,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000202,
+          "upstream_inference_prompt_cost": 0.00000202,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "455d5c5a59834b74849730a9f1e11eabb173fc558feffe44d84d7bf219277b67",
+      "elapsedMs": 288,
+      "at": "2026-10-28T23:51:13.412Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b43351601bfdd8848e3ce91d91a8bce4b2891824c25cf5cda59a8ffa5fe634b8",
+      "at": "2026-10-28T23:51:13.470Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50731,
+        "cost": 0.00253655
+      },
+      "requestHash": "b43351601bfdd8848e3ce91d91a8bce4b2891824c25cf5cda59a8ffa5fe634b8",
+      "elapsedMs": 570,
+      "at": "2026-10-28T23:51:14.040Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -575,11 +575,13 @@ function choiceFor(eng, style, v) {
 function play(eng, style, opts = {}) {
   // Every fight is played (the combat minigame's AI on both sides, tools/combat-sim.js), unless the caller set its own.
   if (!eng.fights && opts.fights !== false) eng.fights = require('./combat-sim.js').resolver({ style: style.name || 'balanced', content: eng.c });
+  if (!eng.parleys && opts.parleys !== false) eng.parleys = require('./parley-sim.js').resolver({ style: style.name || 'balanced' });
   let r = newGame(eng, style, opts);
   const record = opts.record ? { seed: eng.s.seed, name: eng.s.name, origin: eng.s.origin || null, steps: [] } : null;
   // A record keeps each choice's fight results, as the UI hands them to choose(): a replay plays no fights.
-  let played = null;
+  let played = null, parleyPlayed = null;
   if (record && eng.fights) { const resolve = eng.fights; eng.fights = (req) => { const res = resolve(req); if (played) played.push(res); return res; }; }
+  if (record && eng.parleys) { const resolve = eng.parleys; eng.parleys = (req) => { const res = resolve(req); if (parleyPlayed) parleyPlayed.push(res); return res; }; }
   if (opts.setup) opts.setup(eng);
   let steps = 0, stopped = false;
   for (const max = opts.maxSteps || 8000; steps++ < max && r.kind !== 'ending';) {
@@ -594,10 +596,10 @@ function play(eng, style, opts = {}) {
     if (!v.options.some((o) => !o.disabled)) { if (opts.strict) throw new Error('soft-lock: no available options on ' + v.id); break; }
     const key = choiceFor(eng, style, v);
     const st = opts.before ? opts.before(eng, v, key) : null;
-    played = [];
+    played = []; parleyPlayed = [];
     const out = eng.choose(key);
-    if (record) record.steps.push(played.length ? ['choose', key, played] : ['choose', key]);
-    played = null;
+    if (record) record.steps.push(parleyPlayed.length ? ['choose', key, played, parleyPlayed] : played.length ? ['choose', key, played] : ['choose', key]);
+    played = null; parleyPlayed = null;
     if (opts.after) opts.after(eng, v, key, out, st);
     r = eng.advance();
   }
@@ -614,7 +616,7 @@ function replay(eng, record) {
     if (!step) break;
     const want = r.kind === 'map' ? 'pick' : 'choose';
     if (step[0] !== want) throw new Error('replay left the record at step ' + i + ': expected ' + step[0] + ', got ' + r.kind + (r.view && r.view.id ? ' ' + r.view.id : ''));
-    if (want === 'pick') eng.pickPlaces(step[1]); else eng.choose(step[1], step[2] ? { fights: step[2] } : {});
+    if (want === 'pick') eng.pickPlaces(step[1]); else eng.choose(step[1], { fights: step[2] || [], parleys: step[3] || [] });
     r = eng.advance();
   }
   return { eng, r };

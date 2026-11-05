@@ -1,0 +1,108 @@
+{
+  "query": "Off the Record Nessa puts her quill down, says \"off the record\", and it goes still. \"Here's the real trick of interviews,\" she says. \"Ask the question they want to answer. And then this.\" She says a word, and you find yourself telling her the truth about your exams. \"That's Candour. Want it?\" Learn it from her She practises on you until you've told her three embarrassing things, then lets you practise on her. She tells you one true thing, quietly, and asks you never to print it. You won't. Ask it on the record She laughs, picks up the quill and interviews you about why you won't learn it. It runs on page four. \"Another night,\" she says. \"Off the record.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:nessa_teaches_candour",
+      "title": "Off the Record",
+      "file": "content/events/spell_sources.grim",
+      "line": 344,
+      "sourceHash": "665494e86e73e3a215315873b0dee69828e3edc2768eef617cafda331ad87e0a",
+      "score": 0.9303593039512634,
+      "excerpt": "Off the Record\nNessa puts her quill down, says \"off the record\", and it goes still. \"Here's the real trick of interviews,\" she says. \"Ask the question they want to answer. And then this.\" She says a word, and you find yourself telling her the truth about your exams. \"That's Cando"
+    },
+    {
+      "key": "event:nessa_date_off_record",
+      "title": "Off the Record",
+      "file": "content/events/pools/dating.grim",
+      "line": 351,
+      "sourceHash": "d1c2dbdcc415d71810a33dccaa94bffcc5da99e0c810136e0ab2a3ad5bb4595f",
+      "score": 0.8166701793670654,
+      "excerpt": "Off the Record\n{Nessa locks the Ledger office, puts her quill in a drawer and says, \"Off the record. For as long as you like.\"|Another hour off the record. The quill sulks in its drawer.|Nessa has started saying \"off the record\" when she means \"I love you\". You've noticed.} {Ther"
+    },
+    {
+      "key": "event:nessa_confession",
+      "title": "Off the Record",
+      "file": "content/events/people_students.grim",
+      "line": 1084,
+      "sourceHash": "f1541f0e628e23d82c27222227e7e6c2a100fcb9fef866fd3c4f6d14470b45db",
+      "score": 0.7408707141876221,
+      "excerpt": "Off the Record\nNessa puts down her quill. Then she tells it to stop writing. It's the first time you've seen it still. \"This is off the record,\" she says. \"Completely. I like you. I've drafted this eleven times. None of the drafts were good enough.\"\nGently say no\n\"Noted,\" she say"
+    },
+    {
+      "key": "event:know_nessa_off_record",
+      "title": "Asking About a Friend",
+      "file": "content/events/knowing.grim",
+      "line": 112,
+      "sourceHash": "b6bd8c2084438f07bfcd05b0a4aff01d1b9392f899d928d60efd68c8acec563e",
+      "score": 0.7187665104866028,
+      "excerpt": "Asking About a Friend\nNessa wants to ask you about a friend of yours, who's in trouble with the prefects and who you'd rather nobody wrote about. \"I'll print it either way,\" she says. \"I'd rather print it right.\" Her quill is already moving, taking down everything you say, includ"
+    },
+    {
+      "key": "event:nessa_the_one_phrase",
+      "title": "The One Phrase",
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 209,
+      "sourceHash": "8cc739a6f016c32322a004da278572885015abed7410862d7dafd4fc9c27faf5",
+      "score": 0.6994174122810364,
+      "excerpt": "The One Phrase\nYou tell Nessa something about your day and her quill writes it down. {~It always does.|You're used to it by now.} \"Sorry,\" she says. \"It takes everything. There's one phrase that stops it, you know. I've never used it.\" She doesn't say what it is. She looks at you"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "800a8b57ab342096e5f94ad70e82318d1c14539da00fc1f4e7d5ac14bcc1e414",
+      "at": "2026-10-28T23:51:51.939Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 162,
+        "total_tokens": 162,
+        "cost": 0.00000162,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000162,
+          "upstream_inference_prompt_cost": 0.00000162,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "800a8b57ab342096e5f94ad70e82318d1c14539da00fc1f4e7d5ac14bcc1e414",
+      "elapsedMs": 465,
+      "at": "2026-10-28T23:51:52.404Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ade2da20c04f092e98c0ab447ac7da9ba039cfe12e94d48fa94d2e3c68841894",
+      "at": "2026-10-28T23:51:52.455Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 37081,
+        "cost": 0.00185405
+      },
+      "requestHash": "ade2da20c04f092e98c0ab447ac7da9ba039cfe12e94d48fa94d2e3c68841894",
+      "elapsedMs": 570,
+      "at": "2026-10-28T23:51:53.025Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

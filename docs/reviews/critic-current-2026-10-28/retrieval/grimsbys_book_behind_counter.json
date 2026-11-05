@@ -1,0 +1,107 @@
+{
+  "query": "The Book Behind the Counter {Behind Mr Grimsby's counter there's a book wrapped in brown paper, kept apart. \"For someone who'll need it,\" he says vaguely. \"Not you. Or not yet.\"|The wrapped book is still there. Mr Grimsby moves it a little further from you when you come in.|The brown-paper book has a name pencilled on it now, but he keeps his thumb over the name.} Wait to be the someone {You browse for an hour in plain sight, being the sort of person who'd need a book. Mr Grimsby sells you a history of lighthouses instead.|You come back twice in the week. On the second visit he lets you hold it, then takes it back. \"Soon,\" he says.|You don't ask. Mr Grimsby notices you not asking, and approves, and doesn't give you the book.} Buy what he recommends instead {He hands you something about tides that smells of seaweed. Chapter two is exactly what your essay needed, as usual, annoyingly.|You buy his recommendation without arguing. He looks almost disappointed you didn't fight for the other one.|A slim book on candle-making, for reasons he won't explain. You'll need it on Thursday.} Charm the parcel out of him {You smile at him with a little more charm than you own, and he finds himself handing you the parcel. \"Ah,\" he says, puzzled. \"It was you all along. Was it?\"|Glamour, and a compliment about his shelving. He unwraps the book for you himself. It's the one you came in for last month and couldn't find.|He beams, decides you've been a customer for years, and wraps the parcel again for you, more nicely, with string.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:grimsbys_book_behind_counter",
+      "title": "The Book Behind the Counter",
+      "file": "content/events/spell_uses.grim",
+      "line": 326,
+      "sourceHash": "8d5219d729e7c436b33eb25e9eba414c70817721649f3aec5aa8fffe5fedaf2e",
+      "score": 0.9668266773223877,
+      "excerpt": "The Book Behind the Counter\n{Behind Mr Grimsby's counter there's a book wrapped in brown paper, kept apart. \"For someone who'll need it,\" he says vaguely. \"Not you. Or not yet.\"|The wrapped book is still there. Mr Grimsby moves it a little further from you when you come in.|The b"
+    },
+    {
+      "key": "event:shop_grimsbys",
+      "title": "Grimsby's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 188,
+      "sourceHash": "a5e0e87ffda72b399e3dbbeb887f532d020419f578445acc105ef2b8e86101ff",
+      "score": 0.7984210252761841,
+      "excerpt": "Grimsby's Counter\n{Mr Grimsby is up a ladder, sniffing a spine. \"Ah! Not that one,\" he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pi"
+    },
+    {
+      "key": "event:grimsbys_right_book",
+      "title": "The Right Book, First Time",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 372,
+      "sourceHash": "624f1c5833556a7ba16b3ceb377808dc281b40b5e3b52772fdc96e24df61b8a7",
+      "score": 0.7876128554344177,
+      "excerpt": "The Right Book, First Time\nYou step into Grimsby's and open your mouth, and Mr Grimsby is already holding out a book. It is exactly the one you came for. He looks as astonished as you are. \"Must be getting to know you,\" he says, and then, worried, \"Don't tell anyone.\"\nBuy it befo"
+    },
+    {
+      "key": "event:grimsby_intro",
+      "title": "Not That One",
+      "file": "content/events/fixtures.grim",
+      "line": 442,
+      "sourceHash": "c8e7eea748e522e959168917713f0069d6d7064973ebf80cc2055cfc145b6a11",
+      "score": 0.7869345545768738,
+      "excerpt": "Not That One\nYou ask for a textbook. An elderly man on a ladder says \"Ah!\" with enormous enthusiasm and hands you a history of lighthouses. \"Not what you asked for,\" says Mr Grimsby. \"What you'll need. You'll see.\"\nBuy the lighthouse book\nYou read it on the barge home. Chapter fo"
+    },
+    {
+      "key": "event:know_grimsby_upper_floor",
+      "title": "Out of Print",
+      "file": "content/events/knowing_2.grim",
+      "line": 246,
+      "sourceHash": "38555c079b9e4ddc4b5eaa51ffa0ec47549f67c6a1f5693b0d1bd50d77e2d777",
+      "score": 0.7657744288444519,
+      "excerpt": "Out of Print\nYou need a book for an essay: the one every reading list cites and nobody has seen in thirty years. The library's copy went missing before you arrived. Grimsby, asked, gives you a book about lighthouses instead and says it's the next best thing. He may even be right."
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "5843a05b2234d35db56cb3c7267c416a64501dbef12dadcffc6aac38de86dc47",
+      "at": "2026-10-28T23:29:15.464Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 376,
+        "total_tokens": 376,
+        "cost": 0.00000376,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000376,
+          "upstream_inference_prompt_cost": 0.00000376,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "5843a05b2234d35db56cb3c7267c416a64501dbef12dadcffc6aac38de86dc47",
+      "elapsedMs": 705,
+      "at": "2026-10-28T23:29:16.168Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b6ab009314beb553c1a9616850c0207cb188f8810c8cb5fcc15c1351acc77c9b",
+      "at": "2026-10-28T23:29:16.283Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45602,
+        "cost": 0.0022801
+      },
+      "requestHash": "b6ab009314beb553c1a9616850c0207cb188f8810c8cb5fcc15c1351acc77c9b",
+      "elapsedMs": 418,
+      "at": "2026-10-28T23:29:16.701Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

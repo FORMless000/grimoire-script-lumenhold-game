@@ -65,7 +65,9 @@ pub type Hits = Small<Hit, 40>;
 /// Scratch for one resolve (the former module-level hurtNow/mendNow and s.bursts).
 /// tried / dealt: whether each side aimed damage at the other this exchange, and whether any landed (the urge, F5.9d).
 /// paid: the ready Mana each side paid for its move this exchange (Torment's toll).
-struct Ctx<'p> { hurt_now: [bool; 2], mend_now: [f64; 2], bursts: Hits, public: Option<&'p mut Public>, tried: [bool; 2], dealt: [bool; 2], paid: [f64; 2] }
+// foe_hp/foe_health: what the other side's blows took from each side this exchange (HP, and the Health resource behind it),
+// handed back to the winner of a mutual knockout (terminal()).
+struct Ctx<'p> { hurt_now: [bool; 2], mend_now: [f64; 2], bursts: Hits, public: Option<&'p mut Public>, tried: [bool; 2], dealt: [bool; 2], paid: [f64; 2], foe_hp: [f64; 2], foe_health: [f64; 2] }
 impl Ctx<'_> {
     fn event(&mut self, e: impl FnOnce() -> Event) { if let Some(p) = self.public.as_mut() { p.events.push(e()); } }
 }
@@ -392,7 +394,9 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
                     if off > EPS { n = 0f64.max(n - off); }
                 }
             }
+            let health = s.actors[t].res[R_HEALTH];
             let actual = reduce_hp(enc, s, ctx, t, 0f64.max((n - EPS).ceil()), true);
+            if h.source as usize != t { ctx.foe_hp[t] += actual; ctx.foe_health[t] += 0f64.max(health - s.actors[t].res[R_HEALTH]); }
             if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: actual, target: htgt, source: hsrc, by, reflected: hrefl }); }
             if actual > EPS {
                 if opposing { if !h.inevitable { expose[h.source as usize] = true; } ctx.dealt[h.source as usize] = true; }
@@ -602,6 +606,14 @@ fn terminal(enc: &Encounter, s: &mut State, ctx: &mut Ctx) -> bool {
     let alive = [s.actors[0].hp > EPS, s.actors[1].hp > EPS];
     if alive[0] && alive[1] { return false; }
     let winner = if alive[0] { 0 } else if alive[1] { 1 } else { s.leader };
+    // A mutual knockout goes to the side that committed first (the telegraphed actor), whose blow lands first: the loser's
+    // blows this exchange never land, so the winner gets back what they took (feedback 2026-10-29). Its own prices stay paid.
+    if !alive[0] && !alive[1] {
+        let w = winner as usize;
+        let (hp, health) = (ctx.foe_hp[w], ctx.foe_health[w]);
+        let x = &mut s.actors[w];
+        x.hp += hp; x.res[R_HEALTH] += health; x.spent[R_HEALTH] = 0f64.max(x.spent[R_HEALTH] - health);
+    }
     finish(enc, s, ctx.public.as_deref_mut(), if winner == 0 { Outcome::Win } else { Outcome::Lose }, Reason::Knockout, Some(winner as usize), !alive[0] && !alive[1]);
     true
 }
@@ -684,7 +696,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     let d = data();
     let k = &d.acts;
     let ids = &d.ids;
-    let mut ctx = Ctx { hurt_now: [false; 2], mend_now: [0.0; 2], bursts: Hits::default(), public, tried: [false; 2], dealt: [false; 2], paid: [0.0; 2] };
+    let mut ctx = Ctx { hurt_now: [false; 2], mend_now: [0.0; 2], bursts: Hits::default(), public, tried: [false; 2], dealt: [false; 2], paid: [0.0; 2], foe_hp: [0.0; 2], foe_health: [0.0; 2] };
     if let Some(p) = ctx.public.as_mut() { p.events.clear(); }
     let hp_before = [s.actors[0].hp, s.actors[1].hp];
     let spent_before = [s.actors[0].spent[R_MANA], s.actors[1].spent[R_MANA]];

@@ -1,0 +1,108 @@
+{
+  "query": "The Far Bed Answers The far bed answers back today: every vine in it turns to follow you. On the way out you find a seed in your coat pocket that wasn't there this morning, and it has already put out a shoot. Keep it and grow it You cup it in your palm. The shoot curls round your finger, firmly. Tobias, when you show him, goes pale and then delighted. \"That's a hedge-seed,\" he says. \"They choose people.\" Give it to Tobias Tobias takes it gently and puts it in a pot by the door. \"It'll want you back,\" he says. \"They usually do.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:verdant_far_bed",
+      "title": "The Far Bed Answers",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 325,
+      "sourceHash": "75953555a783b260fac2f443864bdf03e64f49f63fb5a465c24243ce570f3a8d",
+      "score": 0.9491927027702332,
+      "excerpt": "The Far Bed Answers\nThe far bed answers back today: every vine in it turns to follow you. On the way out you find a seed in your coat pocket that wasn't there this morning, and it has already put out a shoot.\nKeep it and grow it\nYou cup it in your palm. The shoot curls round your"
+    },
+    {
+      "key": "event:verdant_plant_seed",
+      "title": "Somewhere to Grow",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 350,
+      "sourceHash": "7eb140c73006918e7e9af4f66d37040322deb7e68de06dfd90d5c092f592763b",
+      "score": 0.7492332458496094,
+      "excerpt": "Somewhere to Grow\nThe seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, \"if you can keep a secret, dearie.\"\nPlant it with Tobias\nYou plant it together"
+    },
+    {
+      "key": "event:verdant_bramble_bolts",
+      "title": "The Night It Bolts",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 455,
+      "sourceHash": "a533980e2c0e20433a0a4e81683345b859ec987528810d31a9836633140493b4",
+      "score": 0.6227385401725769,
+      "excerpt": "The Night It Bolts\nTobias wakes you at midnight. Your plant has bolted: a hedge of thorns is surging across the greenhouse toward the moonflower beds, and it is not stopping for anyone but you. {flag(bramble_fed) and flag(bramble_choir): It knows your voice.|You're not sure it kn"
+    },
+    {
+      "key": "event:tobias_seed_month",
+      "title": "A Seed a Month",
+      "file": "content/events/romance/lyra_tobias.grim",
+      "line": 292,
+      "sourceHash": "82c872a81451741d10e53f74c52ec27eb2f860fecce3ba94da6d9dd609fc04ae",
+      "score": 0.6225906014442444,
+      "excerpt": "A Seed a Month\nTobias gives you one seed a month, every month, in a twist of paper with its name on it. Your windowsill is crowded now. {~This month's is a sunflower. \"For when it's grey,\" he says.|This month's is a herb you've never heard of. \"For your cough,\" he says. You don't"
+    },
+    {
+      "key": "event:tobias_plants_vote",
+      "title": "The Greenhouse Votes",
+      "file": "content/events/bonds/friends.grim",
+      "line": 152,
+      "sourceHash": "76bec98959054413beb0622d2fa894c1c902364b68229af011d6f98b13f9b0cf",
+      "score": 0.577347993850708,
+      "excerpt": "The Greenhouse Votes\nYou've got a decision to make, and Tobias offers to ask the greenhouse. \"They're good judges,\" he says. \"Plants don't lie. They just turn towards what's good for them.\" He holds a seedling up to your face. {~It leans toward you, slowly.|It leans away, very sl"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "355321484fc63b06d2e4adbce81803ede2a3569e8f52231361d51609d5036cab",
+      "at": "2026-10-28T23:51:33.508Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 132,
+        "total_tokens": 132,
+        "cost": 0.00000132,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000132,
+          "upstream_inference_prompt_cost": 0.00000132,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "355321484fc63b06d2e4adbce81803ede2a3569e8f52231361d51609d5036cab",
+      "elapsedMs": 424,
+      "at": "2026-10-28T23:51:33.932Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b01596d5e638b3efaf71b4f261b68123038544be1555417ec02d3734924509ae",
+      "at": "2026-10-28T23:51:33.983Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43928,
+        "cost": 0.0021964
+      },
+      "requestHash": "b01596d5e638b3efaf71b4f261b68123038544be1555417ec02d3734924509ae",
+      "elapsedMs": 942,
+      "at": "2026-10-28T23:51:34.925Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

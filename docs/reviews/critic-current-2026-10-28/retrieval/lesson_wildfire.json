@@ -1,0 +1,108 @@
+{
+  "query": "Longer Each Night Lyra wants you in the duel hall after hours. \"You let it go too early,\" she says, and lights her own. \"Hold it. Longer each night. It will bite you; let it.\" Hold it until it bites You hold it until the heat is in your teeth and then a breath longer. When you let it go it runs to the rafters. Lyra looks at your blistered palm and says nothing, which is approval. Ask her how she stands it She doesn't answer at first. Then she shows you her palms, scarred and old, and tells you about the first time, and her mother. You don't practise much. It's still the right night.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_wildfire",
+      "title": "Longer Each Night",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 314,
+      "sourceHash": "292d77267e294377f7e0bcb722f43228ef7be1e168a3ac657c381eeea947e8ab",
+      "score": 0.9399277567863464,
+      "excerpt": "Longer Each Night\nLyra wants you in the duel hall after hours. \"You let it go too early,\" she says, and lights her own. \"Hold it. Longer each night. It will bite you; let it.\"\nHold it until it bites\nYou hold it until the heat is in your teeth and then a breath longer. When you le"
+    },
+    {
+      "key": "event:lyra_teaches_wildfire",
+      "title": "Let It Run",
+      "file": "content/events/spell_sources.grim",
+      "line": 208,
+      "sourceHash": "a9f874059ffbbd75e31dfe0768914ce29c9f6e7af1bd21d8a01922b5e8e73f9e",
+      "score": 0.730434238910675,
+      "excerpt": "Let It Run\nLyra lets you into the duel hall after it has closed. She cups her hands and the fire in them grows, and grows, until it lights the rafters. \"They taught me to keep it small,\" she says. \"This is what it does when I stop. I've never shown anyone.\"\nAsk her to teach you\nS"
+    },
+    {
+      "key": "event:lyra_after_hours",
+      "title": "After the Torches",
+      "file": "content/events/romance/lyra_tobias.grim",
+      "line": 55,
+      "sourceHash": "e52bae516687ca97dc3677eb4813a9026919282695a7a478efd3ae00a6a20b59",
+      "score": 0.7147751450538635,
+      "excerpt": "After the Torches\n{~The duelling hall's torches go out at ten. Lyra lights one flame in her palm and keeps practising.|Lyra is still in the practice hall after the torches are out, working one form over and over.|The torches are out again. Lyra's palm flame is the only light, and"
+    },
+    {
+      "key": "event:lyra_become_close",
+      "title": "Let It Run",
+      "file": "content/events/bonds/friends.grim",
+      "line": 81,
+      "sourceHash": "32d603e7547493eb862ab831be1e5a56c117397fb1b674ea7141a76c8e4acc63",
+      "score": 0.5582922697067261,
+      "excerpt": "Let It Run\nIt's 3am. You find Lyra on the battlements, making a small flame walk across her knuckles. \"I can't sleep,\" she says. \"I've never told anyone that. Vaneshades sleep exactly eight hours.\" The flame wavers. \"My grandmother had a spell she only taught to people she truste"
+    },
+    {
+      "key": "event:y3_last_duel",
+      "title": "One Last Duel",
+      "file": "content/events/expansion_y3.grim",
+      "line": 419,
+      "sourceHash": "06990b404c72e5bded9bb00f698528f0235450dca01f88c16a40d73cd8fec6c9",
+      "score": 0.5290219783782959,
+      "excerpt": "One Last Duel\nDawn, the empty dueling ring, no crowd. Lyra is waiting. \"No referee,\" she says. \"No points. Just one last duel, for us. So we know.\"\nDuel her with everything\nIt lasts eleven minutes. Nobody wins. You both end up flat on your backs, laughing at the sky. \"Now we know"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "707342252830ce2f2896acd44f161148077ce552fdd10419e6c083b197189e01",
+      "at": "2026-10-28T23:51:43.792Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 147,
+        "total_tokens": 147,
+        "cost": 0.00000147,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000147,
+          "upstream_inference_prompt_cost": 0.00000147,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "707342252830ce2f2896acd44f161148077ce552fdd10419e6c083b197189e01",
+      "elapsedMs": 1219,
+      "at": "2026-10-28T23:51:45.011Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "98ad3aac6d2b56101b63c136d09de92d7901d51a75c84a932fd9c1ae46511870",
+      "at": "2026-10-28T23:51:45.056Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47825,
+        "cost": 0.00239125
+      },
+      "requestHash": "98ad3aac6d2b56101b63c136d09de92d7901d51a75c84a932fd9c1ae46511870",
+      "elapsedMs": 755,
+      "at": "2026-10-28T23:51:45.811Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

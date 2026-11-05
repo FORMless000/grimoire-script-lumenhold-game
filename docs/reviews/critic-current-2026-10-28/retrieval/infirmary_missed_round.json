@@ -1,0 +1,107 @@
+{
+  "query": "The Lamp That Went Out The fever charm over the far bed has burned down to a red glow. It should have been turned an hour ago. Sister Amaranth does every round herself, and has never once missed one. Her lamp is dark. Go and find her The evening tray is still on the ward table, every bottle full. Her office door, at the back, is open a crack, and dark. It isn't your ward You tell yourself she's only late. On your way out, the patient in the far bed is still awake, watching the dark.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:infirmary_missed_round",
+      "title": "The Lamp That Went Out",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 37,
+      "sourceHash": "ff9512034211127b02e62aa20708534bd39f423f3e93065fa62e2f2064075f30",
+      "score": 0.9485800266265869,
+      "excerpt": "The Lamp That Went Out\nThe fever charm over the far bed has burned down to a red glow. It should have been turned an hour ago. Sister Amaranth does every round herself, and has never once missed one. Her lamp is dark.\nGo and find her\nThe evening tray is still on the ward table, e"
+    },
+    {
+      "key": "event:infirmary_sister_fevered",
+      "title": "The Healer's Own Fever",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 58,
+      "sourceHash": "4559bad6249be8e66ca435e5e9bcbd6b3e2d768c538135bfeb2c6afdc15bc06d",
+      "score": 0.7184838056564331,
+      "excerpt": "The Healer's Own Fever\nYou find her in the little office behind the ward, upright in her chair, a cold compress on her own neck and the patient list in her lap. Her face is grey. \"Lake Fever,\" she says. \"From bed six. It's nothing. Go to bed.\"\nFetch the Headmistress\nThe headmistr"
+    },
+    {
+      "key": "event:infirmary_night_watch",
+      "title": "Turning the Fever Charm",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 151,
+      "sourceHash": "c1607e34499554201d4a48616a4707f7fb9b64fa3eb92b3fc3da70123da609f3",
+      "score": 0.7114859819412231,
+      "excerpt": "Turning the Fever Charm\n{A first-year in the end bed has a fever, and the cooling charm over the bed has to be turned by hand every hour until dawn. Sister Amaranth looks at you, then at the chair.|Another fever, another chair. The cooling charm's brass ring is worn smooth where "
+    },
+    {
+      "key": "event:know_amaranth_rounds",
+      "title": "Who Comes at Night",
+      "file": "content/events/knowing_2.grim",
+      "line": 96,
+      "sourceHash": "76bc5916efed0a5f45dff4bd57c2ecd8afeae664a8df203918150bb871ff3a62",
+      "score": 0.6666162610054016,
+      "excerpt": "Who Comes at Night\n{x} is in the infirmary overnight with a fever, and frightened, the way people are when they're ill and it's getting dark. \"What if something happens,\" {they} say{s}, \"and nobody comes?\" Visiting hours are nearly over.\nStay until they send you out\nYou stay, tal"
+    },
+    {
+      "key": "event:infirmary_own_prescription",
+      "title": "Her Own Prescription",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 137,
+      "sourceHash": "7b3fac3f4b53c73b6e33b08826a8e1e9ee0287a28d8bd959255a65b05a018ae5",
+      "score": 0.6049361228942871,
+      "excerpt": "Her Own Prescription\nSister Amaranth is up a week too soon, grey at the edges, taking the tray out for the evening round as if nothing had happened. At bed two she sways and puts a hand on the rail. {flag(bed_six_truth): Four second-years sit up in their beds to watch.|The whole "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "3855099fbfc3f6cc0982800bee4f40ce004f976c8b6d3e5aa90e77a3123063a5",
+      "at": "2026-10-28T23:23:00.873Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 117,
+        "total_tokens": 117,
+        "cost": 0.00000117,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000117,
+          "upstream_inference_prompt_cost": 0.00000117,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "3855099fbfc3f6cc0982800bee4f40ce004f976c8b6d3e5aa90e77a3123063a5",
+      "elapsedMs": 8058,
+      "at": "2026-10-28T23:23:08.931Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ec04b6d85c265e59f25c495429264270e721c7a90db27a5bcc40e913b86acedc",
+      "at": "2026-10-28T23:23:08.985Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 36295,
+        "cost": 0.00181475
+      },
+      "requestHash": "ec04b6d85c265e59f25c495429264270e721c7a90db27a5bcc40e913b86acedc",
+      "elapsedMs": 1147,
+      "at": "2026-10-28T23:23:10.132Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

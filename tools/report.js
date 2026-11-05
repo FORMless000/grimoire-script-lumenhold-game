@@ -3,17 +3,13 @@
  * grim report: what the content needs next (design §11.1–11.2).
  *
  *   gaps(content, runs)   per draw source (places, course levels, club/job ranks, plans, slots):
- *                         pool size, repeatable events (the floor counts these), how often a draw came up empty in `runs`,
- *                         and the floor (phase 3 baseline) and depth target (§7.4)
+ *                         pool size, repeatable events, and how often a visit there drew none of the place's own
+ *                         cards in `runs`; a source with nothing repeatable runs dry (once-only events get used up)
  *   pacing(runs)          cards per term day / break day, empty visits overall
  *
  * `runs` are run records ({hist}) from sim (`playGame`) or run logs (tools/runlog.js).
  */
 const Engine = require('../src/engine.js');
-
-// Floors are the phase 3 baseline (every source has something to draw); targets are §7.4's depth.
-const FLOOR = { place: 3, course: 2, club: 3, job: 3, plan: 4, thesis: 3, internship: 2, slot: 3 };
-const TARGET = { place: 8, course: 15, club: 30, job: 30, plan: 12, thesis: 8, internship: 6, slot: 10 };
 
 const repeatable = (e) => !!e.repeat;
 
@@ -60,7 +56,6 @@ function pools(content) {
     const evs = ix.slotBound.filter((e) => e.slot === sl);
     rows.push({ kind: 'slot', id: sl + ' (special)', events: evs.length, repeatable: evs.filter(repeatable).length, compat: 0 });
   }
-  for (const r of rows) { r.floor = FLOOR[r.kind] || 0; r.target = TARGET[r.kind] || 0; }
   return rows;
 }
 
@@ -110,9 +105,8 @@ function gaps(content, runs) {
   const rows = pools(content);
   const u = usage(content, runs || []);
   for (const r of rows) if (r.kind === 'place' && u.places[r.id]) { r.visits = u.places[r.id].visits; r.emptyShare = u.places[r.id].empty / u.places[r.id].visits; }
-  // Baseline pools must keep repeating, so the floor counts repeatable events (once-only ones get used up).
-  for (const r of rows) r.short = Math.max(0, r.floor - r.repeatable);
+  for (const r of rows) r.dry = r.repeatable === 0;
   return { rows, usage: u };
 }
 
-module.exports = { FLOOR, TARGET, pools, usage, gaps };
+module.exports = { pools, usage, gaps };

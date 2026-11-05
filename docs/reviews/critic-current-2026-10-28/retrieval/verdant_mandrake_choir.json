@@ -1,0 +1,108 @@
+{
+  "query": "The Mandrake Choir The mandrakes in the next bed have taken against your seedling and scream at it in chorus every evening. It's wilting from the noise. Gerald is conducting. Quiet the choir A drop of valerian in each pot and a firm word with Gerald, and the choir settles into a low hum. Your seedling straightens up and puts out a vine. The choir screams at you instead. Your ears ring till supper. Gerald looks unrepentant in his hat. Move the seedling's pot You move it to the quiet end. It perks up, but it's away from the warm pipes now, and it isn't growing.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:verdant_mandrake_choir",
+      "title": "The Mandrake Choir",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 420,
+      "sourceHash": "0c5a29bdf9953753a135bc9bbf5372a4f12be3b975e2f057fbdbbdce33a02012",
+      "score": 0.94957435131073,
+      "excerpt": "The Mandrake Choir\nThe mandrakes in the next bed have taken against your seedling and scream at it in chorus every evening. It's wilting from the noise. Gerald is conducting.\nQuiet the choir\nA drop of valerian in each pot and a firm word with Gerald, and the choir settles into a "
+    },
+    {
+      "key": "event:garden_mandrakes",
+      "title": "The Mandrake Choir",
+      "file": "content/events/clubs.grim",
+      "line": 348,
+      "sourceHash": "15e30a81ebc8e01437a7ea9bb2e1824e82c8b1c3b0188eb1d44b119269f36670",
+      "score": 0.7107530832290649,
+      "excerpt": "The Mandrake Choir\nThe greenhouse mandrakes have started singing again. Off-key and enthusiastic. The earmuffs are on the hook by the door. Tobias isn't wearing his; he's harmonising.\nEarmuffs on\nYou repot six mandrakes in blissful silence. Good honest work.\nSing along\nYou sing a"
+    },
+    {
+      "key": "event:green_mandrake_choir",
+      "title": "The Mandrake Choir",
+      "file": "content/events/slice_2b.grim",
+      "line": 534,
+      "sourceHash": "16dc63e1ca362d96159d43861dbb15f3c681c9ba68340c6d677e1254deb593cc",
+      "score": 0.6761534214019775,
+      "excerpt": "The Mandrake Choir\nTobias has taught the greenhouse mandrakes to scream in harmony. He would like your opinion. The mandrakes would like an audience.\nConduct a verse\nYou conduct one verse. Your ears ring for a day. Tobias says it's the best performance they've given.\nWear earmuff"
+    },
+    {
+      "key": "event:verdant_repotting_day",
+      "title": "Repotting Day",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 244,
+      "sourceHash": "b5c782d0df6c8b009deb4508ec94f98e9c9a9d4e5e0812311bfd5f9d055aca62",
+      "score": 0.5746527314186096,
+      "excerpt": "Repotting Day\n{Repotting day. The mandrakes have outgrown their pots and have opinions about it.|Someone always takes the good earmuffs, so you bring your own now.|You know which mandrakes kick, and which only pretend to.} {Tobias's own mandrake watches from a shelf in a knitted "
+    },
+    {
+      "key": "event:greenhouses_gerald_is_out",
+      "title": "Gerald Is Out",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 61,
+      "sourceHash": "c97fb60b867e583bb7be4edcc5e720c61db39389eb14ae44cce473f3707a9ab5",
+      "score": 0.5101979970932007,
+      "excerpt": "Gerald Is Out\n{Gerald, Tobias's mandrake, has escaped his pot again and planted himself among the seedlings. His knitted hat has come unravelled.|Gerald is out again. This time he's in a teacup, screaming softly at a watering can.|Gerald has moved into the pot of the tallest fern"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "be3cd16b662f444b81c1d6697449a34072e23a9a8e0a2e5be2a54f24db3c23a7",
+      "at": "2026-10-28T23:51:34.912Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 138,
+        "total_tokens": 138,
+        "cost": 0.00000138,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000138,
+          "upstream_inference_prompt_cost": 0.00000138,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "be3cd16b662f444b81c1d6697449a34072e23a9a8e0a2e5be2a54f24db3c23a7",
+      "elapsedMs": 385,
+      "at": "2026-10-28T23:51:35.297Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c4bae1f287f7caa64a083a0b0fd9e37946f2f328072b7d88c27601d7ebe5e530",
+      "at": "2026-10-28T23:51:35.419Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 34740,
+        "cost": 0.001737
+      },
+      "requestHash": "c4bae1f287f7caa64a083a0b0fd9e37946f2f328072b7d88c27601d7ebe5e530",
+      "elapsedMs": 413,
+      "at": "2026-10-28T23:51:35.832Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

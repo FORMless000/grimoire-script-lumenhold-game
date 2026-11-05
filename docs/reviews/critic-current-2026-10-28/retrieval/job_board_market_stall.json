@@ -1,0 +1,108 @@
+{
+  "query": "Mind the Stall {A villager with a bad knee wants someone to mind her market stall on Saturday morning, for a share of the takings.|The stall again: jars, woollens, the bad knee and the share of the takings.|The stall owner pins the notice up with your name already on it, and a question mark, to be polite.} Mind it as she asked {You sell three jars and a scarf and count the tin twice. She pays you a fair share and a jar.|A slow morning, honestly counted. She is pleased with the tin and gives you your share.|You know the prices by heart now. She hands you your share without counting it, which is a kind of compliment.} Talk up the wares {You sell like a pedlar and the takings are up. Most of the extra goes back to her, as it should, and you've learned a patter.|You talk a farmer into two scarves he didn't know he needed. Your share is small and your voice is gone.|You could sell her jars to anyone now. She jokes about leaving you the stall.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_market_stall",
+      "title": "Mind the Stall",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 702,
+      "sourceHash": "c5da940ee2c436306c431e43f892bbf751429040d828af719edd3d90e6891c59",
+      "score": 0.9439666867256165,
+      "excerpt": "Mind the Stall\n{A villager with a bad knee wants someone to mind her market stall on Saturday morning, for a share of the takings.|The stall again: jars, woollens, the bad knee and the share of the takings.|The stall owner pins the notice up with your name already on it, and a qu"
+    },
+    {
+      "key": "event:grimsby_mind_the_shop",
+      "title": "Mind the Shop",
+      "file": "content/events/fixtures.grim",
+      "line": 487,
+      "sourceHash": "7072a2a05e0f9204e0f1811e0b9269f0b47f5849bfdf881ce1975a42211e4e25",
+      "score": 0.4481934905052185,
+      "excerpt": "Mind the Shop\nMr Grimsby has a ladder accident (a mild one; he lands on the poetry) and needs someone to mind the shop for a week. \"You know where everything is,\" he says, which is untrue. \"Better than me,\" he adds, which is.\nMind the shop\nYou sell eleven books, all of them the w"
+    },
+    {
+      "key": "event:slice_market_haggle",
+      "title": "The Spice Stall",
+      "file": "content/events/slice_2a.grim",
+      "line": 177,
+      "sourceHash": "2cc26decc7b97c5eb9f661ea7aeb86c77729c8b225ae6b7adf87b0812ab8cc06",
+      "score": 0.4337044954299927,
+      "excerpt": "The Spice Stall\nThe stall-holder in the village market wants thirty crowns for {~a jar of starpepper|a twist of dragon-chilli|a pot of cliff-bee honey}. Mabel swears by it for colds. The stall-holder swears by his prices.\nHaggle\nEight crowns and a compliment on your persistence. "
+    },
+    {
+      "key": "event:shop_square",
+      "title": "Market Day",
+      "file": "content/events/kit/shops.grim",
+      "line": 7,
+      "sourceHash": "3e44d0febc9aa9f88c49c30a3dcecebc4fc5880bf607e95ca2a6646316e2b045",
+      "score": 0.43247273564338684,
+      "excerpt": "Market Day\n{The square is all stalls this morning, with the bakery's trestle, the tailor's rail of robes, the pawnbroker's sign creaking over his door.|Market day again. The baker's girl is shouting the price of buns as if it were news.|The tailor has put a new robe in the window"
+    },
+    {
+      "key": "event:date_market_day",
+      "title": "Market Day",
+      "file": "content/events/pools/dating.grim",
+      "line": 7,
+      "sourceHash": "c17a9581e4d63a8707d0f7182114109447b338ba5c37ede2f780a1038e10066d",
+      "score": 0.4233418107032776,
+      "excerpt": "Market Day\n{Market day in the village, and {partner} has decided you're going together.|Market day again. {partner} knows which stall has the good pies now.|{partner} has a list for the market, and you're on it.} {A stall sells hats nobody should wear.|There's a juggler with one "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "f67ce2646ca419c6f385cd6bbd48a708cd00163c0753a65a9a59003202d8f550",
+      "at": "2026-10-28T23:51:07.285Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 231,
+        "total_tokens": 231,
+        "cost": 0.00000231,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000231,
+          "upstream_inference_prompt_cost": 0.00000231,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "f67ce2646ca419c6f385cd6bbd48a708cd00163c0753a65a9a59003202d8f550",
+      "elapsedMs": 399,
+      "at": "2026-10-28T23:51:07.684Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "851d3104c67de984b907938b7f14c240b82aafae76a1e5cb215de31643add4df",
+      "at": "2026-10-28T23:51:07.722Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49211,
+        "cost": 0.00246055
+      },
+      "requestHash": "851d3104c67de984b907938b7f14c240b82aafae76a1e5cb215de31643add4df",
+      "elapsedMs": 469,
+      "at": "2026-10-28T23:51:08.191Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

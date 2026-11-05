@@ -1,0 +1,108 @@
+{
+  "query": "A Wedding Upstairs {A miller's daughter from the next valley married this afternoon, and the party has moved upstairs at the Newt to keep going.|Another wedding upstairs: a carter and a dressmaker, and both families determined to out-dance the other.|A wedding again, and the fiddler from last time, who waves at you with his bow.} The landlady wants the dancing kept going and the families kept apart. Keep everyone dancing {You dance with every aunt, two uncles and the bride. By midnight the families are singing the same song. Both fathers tip you.|You get the two grandmothers dancing together, and after that nobody can remember the feud. The tips are enormous; your feet are not.|The fiddler and you keep it going until the candles go out. You walk home with a pocket of coins and a flower in your hair.} {You ask the wrong cousin to dance, and the families end up on opposite sides of the room. A thin tip, and a long night.|The groom's brother picks a fight with the bride's, and you're the one standing between them. The landlady pays you off early.|Nobody wants to dance with the hired help tonight. You stand by the wall for four hours.} Mind the food and the fire {You keep the platters full and the fire fed. Nobody notices you, which at a wedding is a kind of success.|You carry cake until your arms ache. The bride kisses your cheek on her way out, and you go home sticky and paid.|You mind the fire and watch the dancing. It's honest money, and the music is good.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_wedding",
+      "title": "A Wedding Upstairs",
+      "file": "content/events/pools/night.grim",
+      "line": 426,
+      "sourceHash": "0dc784440dde136194c55124c28ffac1d9bb66cec39e1a5d4c0c5941e851292d",
+      "score": 0.9506656527519226,
+      "excerpt": "A Wedding Upstairs\n{A miller's daughter from the next valley married this afternoon, and the party has moved upstairs at the Newt to keep going.|Another wedding upstairs: a carter and a dressmaker, and both families determined to out-dance the other.|A wedding again, and the fidd"
+    },
+    {
+      "key": "event:gig_newt_rush",
+      "title": "The Holiday Rush",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 322,
+      "sourceHash": "13c9f7c544fd8f1a8ef8e5991e1f4bf2427e2d15f1b990e5339c2f3dc30d62a5",
+      "score": 0.5591127276420593,
+      "excerpt": "The Holiday Rush\n{The landlady hands you the keys over breakfast. Tonight, she warns, the Newt will be full to the rafters with farmers, barge crews and families home for the season.|Another holiday night ahead, and the Newt is already promised to a full house.|By morning, half t"
+    },
+    {
+      "key": "event:newt_company_regular",
+      "title": "The Upstairs Room",
+      "file": "content/events/pools/night.grim",
+      "line": 34,
+      "sourceHash": "8b4131d78d56b576167bffa78adc1d451af677325e873c31bccb222ca40b81a6",
+      "score": 0.5229182839393616,
+      "excerpt": "The Upstairs Room\n{The woman who runs the upstairs room knows your face now. \"There's a party tonight,\" she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. \"Your table's waiting,\" she says.|\"Your regulars asked after yo"
+    },
+    {
+      "key": "event:gig_newt_brawl",
+      "title": "A Fight Over a Song",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 341,
+      "sourceHash": "2ee29743cfc7885da83dd3085a9de68939fe447d04fc3e95d01be5cde7532336",
+      "score": 0.5095649361610413,
+      "excerpt": "A Fight Over a Song\n{Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {A chair is already in the air.|Somebody has taken their"
+    },
+    {
+      "key": "event:newt_company",
+      "title": "Company for the Evening",
+      "file": "content/events/pools/night.grim",
+      "line": 8,
+      "sourceHash": "f822064ccd7f35ff30f97fdf420d490bd7f52e6480c69fe05d3b8072c6e3ade2",
+      "score": 0.5092766880989075,
+      "excerpt": "Company for the Evening\nThe woman who runs the upstairs room looks you over. \"The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more: guests who want more are shown the stair. Every night is a different party, and every par"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e236f1040ed9a4f11d6d72c8e8430d8efb65f4df935256692fe39d8ac5c06b92",
+      "at": "2026-10-28T23:51:19.368Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 344,
+        "total_tokens": 344,
+        "cost": 0.00000344,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000344,
+          "upstream_inference_prompt_cost": 0.00000344,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e236f1040ed9a4f11d6d72c8e8430d8efb65f4df935256692fe39d8ac5c06b92",
+      "elapsedMs": 419,
+      "at": "2026-10-28T23:51:19.787Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "bee2f13875ca43bad41c0653996580aa772bdf6ab3187b5960bdf9340444e41f",
+      "at": "2026-10-28T23:51:19.844Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50609,
+        "cost": 0.00253045
+      },
+      "requestHash": "bee2f13875ca43bad41c0653996580aa772bdf6ab3187b5960bdf9340444e41f",
+      "elapsedMs": 401,
+      "at": "2026-10-28T23:51:20.245Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

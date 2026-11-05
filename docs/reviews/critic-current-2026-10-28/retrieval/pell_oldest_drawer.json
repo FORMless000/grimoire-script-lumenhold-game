@@ -1,0 +1,108 @@
+{
+  "query": "The Oldest Drawer Restocking, you open the oldest drawer at the bottom of Pell's wall. Inside is one yellowed card: a draught \"of your own strength\", in a hand older than Pell's. Pell sees it and counts to three under his breath. \"That one costs the brewer,\" he says. \"Measure twice.\" Copy the recipe You copy it out carefully. Pell watches you do it and says nothing, then corrects one of your measures in your copy. That is the closest he comes to permission. Close the drawer You close it. Pell nods once and goes back to his scales. Later you notice he has relabelled the drawer, clearly, \"Not yet.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:pell_oldest_drawer",
+      "title": "The Oldest Drawer",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 793,
+      "sourceHash": "0714859a742da270d5ce96222b83c892c33ab65d868930af73b45faa99411d03",
+      "score": 0.946793794631958,
+      "excerpt": "The Oldest Drawer\nRestocking, you open the oldest drawer at the bottom of Pell's wall. Inside is one yellowed card: a draught \"of your own strength\", in a hand older than Pell's. Pell sees it and counts to three under his breath. \"That one costs the brewer,\" he says. \"Measure twi"
+    },
+    {
+      "key": "event:know_pell_not_yet",
+      "title": "Not Yet",
+      "file": "content/events/knowing_2.grim",
+      "line": 118,
+      "sourceHash": "a3954d665f2ec68b39bd499f2557cbf75a68780e403736c30a4d2a40b5d8f8ae",
+      "score": 0.8753266334533691,
+      "excerpt": "Not Yet\nPell is restocking the bottom of the wall when you come in, and his oldest drawer is open beside him, the one with the yellowed card in it. He looks at you over the drawer for longer than usual, as if measuring something twice.\nWait for him to finish\nHe finishes, shuts th"
+    },
+    {
+      "key": "event:pell_draught",
+      "title": "Of Your Own Strength",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 874,
+      "sourceHash": "4cf1cd9141f2a906dbd4b59b3e053521124740f2df4deceaf46ded46ffc2dd39",
+      "score": 0.8075740337371826,
+      "excerpt": "Of Your Own Strength\nPell closes the shop early, sets the old still on the bench and holds the lamp himself. \"Brew it,\" he says. \"I'll count.\" The recipe card lies beside you. {flag(distil_drops) and flag(distil_moonwort) and flag(distil_shortcut): You know every step of it.|Ther"
+    },
+    {
+      "key": "event:pell_apothecary_drawers",
+      "title": "A Thousand Drawers",
+      "file": "content/events/pools/village_home.grim",
+      "line": 302,
+      "sourceHash": "1d19e3aa776dd415aa625942a10f58f59c24d28812fd21e567138e4cce709307",
+      "score": 0.5760708451271057,
+      "excerpt": "A Thousand Drawers\n{Pell & Daughters has a thousand drawers, each labelled in a different hand.|You find a drawer you'd swear wasn't there last time.|You've read half the labels in the shop. The other half seem to be reading you.} Today it's {\"Moonwort. Do not hum near.\"|\"Dried c"
+    },
+    {
+      "key": "event:shop_pell",
+      "title": "Pell's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 227,
+      "sourceHash": "554e54c5db7f2c8b1b687c8e539db653b4ef82fad43979a9cae0db84b700b9c4",
+      "score": 0.5707835555076599,
+      "excerpt": "Pell's Counter\n{One of Pell's daughters is at the counter. Behind her, Old Pell counts drops aloud and doesn't look up.|\"Tonic or draught?\" asks the daughter on the counter. \"Dad will say draught. Dad always says draught.\"|The drawers rattle as you come in, as if they were sortin"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "9f9ecd94551d46be09b10742fa49272208dc1f718489d06f5ba5734d00f9fa73",
+      "at": "2026-10-28T23:51:38.122Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 143,
+        "total_tokens": 143,
+        "cost": 0.00000143,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000143,
+          "upstream_inference_prompt_cost": 0.00000143,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "9f9ecd94551d46be09b10742fa49272208dc1f718489d06f5ba5734d00f9fa73",
+      "elapsedMs": 459,
+      "at": "2026-10-28T23:51:38.581Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6daeacc7214b5f66c6888518fbf6f9fefa57b09bc2b83db19f80eb182da053d4",
+      "at": "2026-10-28T23:51:38.632Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 36019,
+        "cost": 0.00180095
+      },
+      "requestHash": "6daeacc7214b5f66c6888518fbf6f9fefa57b09bc2b83db19f80eb182da053d4",
+      "elapsedMs": 382,
+      "at": "2026-10-28T23:51:39.014Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

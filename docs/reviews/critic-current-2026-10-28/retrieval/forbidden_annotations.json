@@ -1,0 +1,107 @@
+{
+  "query": "Three Colours of Ink You read Odile's notebook properly at last, at a desk within sight of the locked door. Black ink for the shelves, green for the prefects' rounds, red for warnings. Half the red is underlined twice. Learn the prefects' rounds Green ink: the prefect on library duty walks the east stacks at nine and the west at ten, and stops for tea in between. You learn it like a timetable. Learn the shelf marks Black ink and red: which shelves are safe, which books are bound in something that isn't leather, and, underlined twice, \"never with bare hands\".",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:forbidden_annotations",
+      "title": "Three Colours of Ink",
+      "file": "content/events/chains_minor.grim",
+      "line": 35,
+      "sourceHash": "6647a5a9262eec4b3d12dbed32c2e064868193afc4d182540226eeef12989702",
+      "score": 0.9510669112205505,
+      "excerpt": "Three Colours of Ink\nYou read Odile's notebook properly at last, at a desk within sight of the locked door. Black ink for the shelves, green for the prefects' rounds, red for warnings. Half the red is underlined twice.\nLearn the prefects' rounds\nGreen ink: the prefect on library "
+    },
+    {
+      "key": "event:umbral_forbidden_notes",
+      "title": "Forbidden Notes",
+      "file": "content/events/classes.grim",
+      "line": 726,
+      "sourceHash": "1a539b2cb6a16ac4f592ddc5fd70e6ebd7b308931ba21eb95ce87d53bd48167f",
+      "score": 0.6851885318756104,
+      "excerpt": "Forbidden Notes\nA fourth-year, Odile Varn, slides a battered notebook across the table. \"My notes on the Restricted Section. I'm graduating. You look like you'd use them.\" A silver key is tucked in the spine.\nDecline\nThe fourth-year shrugs and slides the notebook to the next stud"
+    },
+    {
+      "key": "event:forbidden_fourth_year",
+      "title": "Odile's Last Week",
+      "file": "content/events/chains_minor.grim",
+      "line": 150,
+      "sourceHash": "e06bca57fa3552457bf44eafcc6d3d63cd0b2294438c34118b13ea148e777790",
+      "score": 0.504056990146637,
+      "excerpt": "Odile's Last Week\nOdile Varn finds you between the stacks with her satchel already packed. She leaves at the end of term. \"You used the key,\" she says. It isn't a question. \"I won't ask what you found. Unless you want to tell me.\"\nTell her what you've seen\nShe listens to all of i"
+    },
+    {
+      "key": "event:hollow_reading_the_blank",
+      "title": "Reading the Blank Page",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 138,
+      "sourceHash": "5793b7a9f901cdf19dcd191891017179b48860a303924915c1f39c1cf67e7799",
+      "score": 0.4372714161872864,
+      "excerpt": "Reading the Blank Page\n{\"Most things that are hidden are not gone,\" the headmistress says, and gives you a blank page. \"Find what was written. Gently.\"|A new blank page today. It feels warmer than paper should.|You know the weight of hidden writing in a page by now, like a pocket"
+    },
+    {
+      "key": "event:forbidden_bram_watch",
+      "title": "The Prefect at the Door",
+      "file": "content/events/chains_minor.grim",
+      "line": 89,
+      "sourceHash": "73f53049c57bc726c6dc98e7dbf233a70a9ac1d06278f3c220c301d206871a4e",
+      "score": 0.43710508942604065,
+      "excerpt": "The Prefect at the Door\n{Bram Hollis is leaning on the Restricted Section door, lantern at his feet, as if he has all night. Somebody has told him about the key, or he has guessed.|Bram is at the door again. He has brought a sandwich this time.|Bram's watch on the door has become"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "b873be1a64ff6e8b5932867b5a9afc0a5d483e964f11542672331d820aeef396",
+      "at": "2026-10-28T23:48:26.952Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 129,
+        "total_tokens": 129,
+        "cost": 0.00000129,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000129,
+          "upstream_inference_prompt_cost": 0.00000129,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "b873be1a64ff6e8b5932867b5a9afc0a5d483e964f11542672331d820aeef396",
+      "elapsedMs": 721,
+      "at": "2026-10-28T23:48:27.673Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b776112235e9cb7b364e17b93610e511b89d5a98034c0b1f567f51fe5b67003f",
+      "at": "2026-10-28T23:48:27.791Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 41276,
+        "cost": 0.0020638
+      },
+      "requestHash": "b776112235e9cb7b364e17b93610e511b89d5a98034c0b1f567f51fe5b67003f",
+      "elapsedMs": 456,
+      "at": "2026-10-28T23:48:28.247Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,107 @@
+{
+  "query": "Sweets on the Step Her father is at the door with a paper bag of the sweets you liked when you were small. He doesn't come in. \"They take them young, at the castle, don't they,\" he says. \"She's past it. So what is it for, all that fire, in a sweet shop?\" Tell him the truth \"I don't know what it's for,\" you tell him. \"I don't think anyone does, at her age.\" He thanks you for not lying, and leaves the sweets on the step. Promise to ask at the castle His face does something complicated. \"Would you,\" he says, not quite a question. You hear yourself promise. The sweets taste exactly as they used to.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:home_cottage_bloomer_father",
+      "title": "Sweets on the Step",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 354,
+      "sourceHash": "1840641eb0a1a93fb445956a28afdbdc015c69b2f175e79d7e7e88c7745131d3",
+      "score": 0.9527422785758972,
+      "excerpt": "Sweets on the Step\nHer father is at the door with a paper bag of the sweets you liked when you were small. He doesn't come in. \"They take them young, at the castle, don't they,\" he says. \"She's past it. So what is it for, all that fire, in a sweet shop?\"\nTell him the truth\n\"I don"
+    },
+    {
+      "key": "event:home_market_late_bloomer",
+      "title": "The Cold Stove",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 308,
+      "sourceHash": "a02128ab6d5ffc733a6314123204ba62055d0d51f6c899b630e43e263f383ddc",
+      "score": 0.5121492147445679,
+      "excerpt": "The Cold Stove\nThe sweet shop is the one thing in town that hasn't changed. Then the owner's daughter, a year or two older than you, bangs down a ladle and swears, and the sugar pan on the cold stove boils over into caramel. There is no fire under it. Her father looks at you, the"
+    },
+    {
+      "key": "event:home_cottage_bloomer_letter",
+      "title": "A Flame That Stays",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 441,
+      "sourceHash": "e1c8a75cd34e42b8824bdd7e670300f1fa410d352cd66e5b440ce6d0f96071a3",
+      "score": 0.4631066918373108,
+      "excerpt": "A Flame That Stays\n{flag(bloomer_damped): She comes by one evening, the grey bead on its cord. \"I know it's only glass,\" she says. \"I keep it in my pocket anyway.\" She lights a candle with her finger, small and steady, to show you.|She comes by one evening with a candle she lit a"
+    },
+    {
+      "key": "event:kael_bakery_window",
+      "title": "Wanting",
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 74,
+      "sourceHash": "4ced0f07375c59163f23b87fddde35ecde53ae57270ea9ae7caa96f61e02d70f",
+      "score": 0.3788730204105377,
+      "excerpt": "Wanting\nYou find Kael standing outside the bakery window in the village, looking at the iced buns. He's been there, by the {season == \"winter\": snow on his shoulders|rain on his collar}, a while. \"I'm not hungry,\" he says, before you ask. He doesn't move.\nBuy him one\n{~You buy tw"
+    },
+    {
+      "key": "event:bakery_oldest_baker",
+      "title": "The Oldest Baker",
+      "file": "content/events/pools/village_home.grim",
+      "line": 379,
+      "sourceHash": "ac9a72fa1ed514671f943026e0118ab09cc8c0dc649000c6115359aadcbdc129",
+      "score": 0.37492111325263977,
+      "excerpt": "The Oldest Baker\nThe oldest of the bakers sits by the ovens, too old to knead and too stubborn to leave. {She asks, as she asks every student, whether the post at the castle is reliable these days.|She asks about the castle post. Her daughter gives you a look that says: just answ"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "f92f52427a1effa82dfc161553a68acb438b5cfd23d232bb1bd3f5bb8773af6d",
+      "at": "2026-10-28T23:25:29.990Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 153,
+        "total_tokens": 153,
+        "cost": 0.00000153,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000153,
+          "upstream_inference_prompt_cost": 0.00000153,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "f92f52427a1effa82dfc161553a68acb438b5cfd23d232bb1bd3f5bb8773af6d",
+      "elapsedMs": 5884,
+      "at": "2026-10-28T23:25:35.874Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "1fb5c9705e46d18ee596dad002da33183060b2145eeea14a3a384b85c2f408a9",
+      "at": "2026-10-28T23:25:35.908Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 48265,
+        "cost": 0.00241325
+      },
+      "requestHash": "1fb5c9705e46d18ee596dad002da33183060b2145eeea14a3a384b85c2f408a9",
+      "elapsedMs": 547,
+      "at": "2026-10-28T23:25:36.454Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

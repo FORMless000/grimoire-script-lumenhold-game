@@ -1,0 +1,216 @@
+{
+  "batch": "current-expansion-romance-recheck-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "kael_warm_enough",
+      "kael_frost_drawings",
+      "kael_until_the_thaw",
+      "kael_bakery_window",
+      "kael_lets_himself_want",
+      "kael_dont_protect_me",
+      "kael_proud_of_you",
+      "kael_ex",
+      "kael_gift_given",
+      "nessa_the_one_phrase",
+      "nessa_quill_draft",
+      "nessa_deadline_night",
+      "nessa_shared_byline",
+      "nessa_corrections_column",
+      "nessa_not_a_story",
+      "nessa_press_breaks",
+      "nessa_ex",
+      "nessa_argument",
+      "lyra_second_place",
+      "lyra_glove",
+      "lyra_after_hours",
+      "lyra_partner_watch",
+      "lyra_not_second",
+      "lyra_empty_chair",
+      "lyra_ex",
+      "lyra_partner_neglect",
+      "lyra_lends",
+      "tobias_gerald_approves",
+      "tobias_letter_aloud",
+      "tobias_umbrella",
+      "tobias_seed_month",
+      "tobias_home_or_here",
+      "tobias_gerald_wilts",
+      "tobias_ex",
+      "tobias_dance_specialized",
+      "tobias_friend_sick",
+      "lyra_teach_spell",
+      "seraphine_stand_next",
+      "seraphine_tomorrow_answer",
+      "seraphine_dark_room",
+      "seraphine_already_happened",
+      "seraphine_dont_look",
+      "seraphine_vision_hurt",
+      "seraphine_ex",
+      "seraphine_partner_neglect",
+      "seraphine_confess_generic",
+      "corvin_lucky_deck",
+      "corvin_last_warning",
+      "corvin_route_named",
+      "corvin_goat_clause",
+      "corvin_lock_left_open",
+      "corvin_honest_once",
+      "corvin_brother_again",
+      "corvin_ex",
+      "corvin_partner_date",
+      "corvin_saint_jibe",
+      "mir_owl_remembers",
+      "mir_notebooks",
+      "mir_blueprints",
+      "mir_tinkering_evenings",
+      "mir_not_a_hobby",
+      "mir_family_summons",
+      "mir_ex",
+      "mir_gift_given",
+      "mir_birthday"
+    ],
+    "files": [
+      "content/events/romance/kael_nessa.grim",
+      "content/events/romance/lyra_tobias.grim",
+      "content/events/romance/seraphine_corvin_mir.grim"
+    ]
+  },
+  "summary": "Rejected on the still-unresolved lucky-deck retrieval gate and additional remembered-choice, effect and repeat defects. The earlier Seraphine self-vision wording and dark-room premise, Mir’s family and notebook gates and object variants, Tobias’s ex plant, Lyra’s matched dialogue and spell check, Nessa’s pronouns/check, and the loan repayment queue are repaired in current source. All 65 scoped romance cards were read.",
+  "issues": [
+    {
+      "event": "corvin_lucky_deck",
+      "priority": "P2",
+      "category": "unresolved canon finding",
+      "problem": "Finding 7 is only partly repaired. The new seen(corvin_confiscation_vault)>0 gate proves a vault visit, but Keep lookout can fail with the alarm and detention and never retrieve the deck. The new card still places the grandfather’s deck in Corvin’s hands after that failed recovery.",
+      "fix": "Require evidence of an actual retrieval, or use an ordinary deck until it exists. Do not treat seeing the vault or learning its fact as proof of the successful outcome.",
+      "evidence": [
+        "build/batches/new-cards-2026-10-20.critic.json: finding 7",
+        "content/events/people_students.grim: corvin_confiscation_vault left lose"
+      ],
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 210
+    },
+    {
+      "event": "corvin_brother_again",
+      "priority": "P2",
+      "category": "choice memory",
+      "related_events": [
+        "corvin_honest_once"
+      ],
+      "problem": "Stand beside Corvin says nobody has ever stood next to him, although corvin_brother can already have ended with the player literally standing beside him to face the brother down. Honest for Once likewise calls the brother/money admission the first time he has told anyone, although the earlier gates scene explicitly tells the player all of it.",
+      "fix": "Acknowledge the earlier disclosure and support when known/chosen, keeping first-time lines only for histories where they are true.",
+      "evidence": [
+        "content/events/people_students.grim: corvin_brother text and left win",
+        "content/world/facts/corvin.grim: corvin.brother"
+      ],
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 353
+    },
+    {
+      "event": "corvin_brother_again",
+      "priority": "P2",
+      "category": "resource continuity",
+      "problem": "Pay him to go says the player gives everything in their purse, but always subtracts gold -large. A player with more than that retains money; one with less cannot choose the option, rather than giving what they have.",
+      "fix": "Describe paying the demanded amount instead of emptying the purse, or implement an actual whole-purse payment if intended.",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 353
+    },
+    {
+      "event": "corvin_brother_again",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Paying the threatening brother to leave moves the player Hollow. The scene shows a costly attempt to protect someone from an extorter; it does not show greed, cheating, exploitation or another moral wrong by the payer. Corvin disliking the method is already a relationship issue and does not establish a Hollow act.",
+      "fix": "Remove the unsupported moral penalty, or show the harmful bargain the player is knowingly choosing.",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 353
+    },
+    {
+      "event": "seraphine_already_happened",
+      "priority": "P2",
+      "category": "repeatable first-time claims",
+      "related_events": [
+        "tobias_gerald_approves",
+        "lyra_after_hours"
+      ],
+      "problem": "Random repeat outcomes repeatedly claim a unique first: Seraphine is glad to be wrong for the first time, Gerald has never patted a nose even Tobias’s, and Lyra lets the player walk her back for the first time. The same random branch can recur next showing and deny the earlier occurrence.",
+      "fix": "Put first-time discoveries in a true sequence/state gate, and write later outcomes as established intimacy rather than repeating the milestone.",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 74
+    },
+    {
+      "event": "tobias_umbrella",
+      "priority": "P2",
+      "category": "unshown bodily cost",
+      "problem": "Walking close under the enormous umbrella always costs Health, but neither outcome describes getting wet, cold, exerted or hurt. The contrasting race explicitly gets the player drenched and has no Health cost, making the supposed protection the unexplained bodily loss.",
+      "fix": "Remove the unsupported Health loss or show the actual exposure paid under the umbrella.",
+      "file": "content/events/romance/lyra_tobias.grim",
+      "line": 270
+    },
+    {
+      "event": "mir_blueprints",
+      "priority": "P2",
+      "category": "unshown study gain",
+      "problem": "Pin it up, for later grants study readiness, but both outcomes only hang up an invention plan and discuss building it later. No revision, coursework or exam practice is done.",
+      "fix": "Show using the saved time for coursework, or remove the unrelated study gain while retaining the relationship payoff.",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 492
+    },
+    {
+      "event": "lyra_partner_watch",
+      "priority": "P3",
+      "category": "time continuity",
+      "problem": "The setup starts the visit at midnight, but the first Stay and finish outcome says both are asleep by eleven. The short continuation runs backward in clock time.",
+      "fix": "Use a time after midnight or avoid the hour.",
+      "file": "content/events/romance/lyra_tobias.grim",
+      "line": 79
+    },
+    {
+      "event": "corvin_lock_left_open",
+      "priority": "P3",
+      "category": "choice memory",
+      "problem": "The first Leave a lock open outcome calls this the player’s first lock. The earlier corvin_lock_lesson can already have taught and successfully completed one, as can several other lock scenes.",
+      "fix": "Say a lock rather than your first lock, or test the established history.",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 303
+    },
+    {
+      "event": "kael_gift_given",
+      "priority": "P2",
+      "category": "repeat variation",
+      "related_events": [
+        "kael_ex",
+        "nessa_ex",
+        "lyra_ex",
+        "tobias_ex",
+        "seraphine_ex",
+        "corvin_ex",
+        "mir_ex",
+        "nessa_argument",
+        "lyra_lends",
+        "tobias_dance_specialized",
+        "mir_gift_given"
+      ],
+      "problem": "These fixed-character cards repeat every four to seven months but have no changing text/say variants. The ex cards restage the same canvas, retraction or lock encounter after the player already chose or failed it; the gift and lesson jokes likewise replay unchanged. They miss the repeat requirement for several variation points and outcomes that remain fresh at the fourth showing.",
+      "fix": "Add matched repeat variants that respect previous outcomes, or make genuinely singular gifts/apologies/lessons one-time scenes while retaining a separate recurring situation.",
+      "evidence": [
+        "docs/authoring/pools.md: Making repeats read differently",
+        "docs/authoring/checklist.md: Repeats"
+      ],
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 185
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "query": "The Regulars' Table {The big round table at Mabel's belongs to the village regulars, four old friends, a box of dominoes and fifty years of arguments. They wave you over. \"Settle something for us.\"|The regulars wave you over again. Today's dispute is about the academy in their day, when, they say, the stairs moved twice as often.|The regulars have saved you a chair. They've started calling you \"the referee\".} {The dominoes are clicking.|One of them was a student at the castle sixty years ago, and won't let anyone forget it.|{season == \"winter\": The window behind them is fogged from the teapots.|Mabel brings them more tea without being asked.}} Join the domino game {You win a whole crown off a retired miller who swears he let you. He didn't.|You win, and the old student declares that the academy has gone soft and been lucky. You'll take it.|You win, and the regulars demand a rematch next time. \"The referee's been practising.\"} {The retired miller cleans you out with a smile like a closing door.|You lose to a woman of ninety who plays with her eyes shut.|You lose, and the regulars toast your generosity. Mabel brings you a consolation biscuit.} Listen to their stories {You hear about the year a professor turned the refectory into a pond by accident, and the year someone taught the stairs to waltz. Half of it might be true.|The old student describes the castle as it was: the same stairs, different shoes. It's strange to hear your life told back sixty years early.|You referee three arguments and hear four stories. Your tea goes cold. It's worth it.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:mabels_regulars_table",
+      "title": "The Regulars' Table",
+      "file": "content/events/pools/village_more.grim",
+      "line": 58,
+      "sourceHash": "048744cb74cbbd6054af5ad3067844d4049123f26c4c5dc65403d9c62fea5648",
+      "score": 0.9493438005447388,
+      "excerpt": "The Regulars' Table\n{The big round table at Mabel's belongs to the village regulars, four old friends, a box of dominoes and fifty years of arguments. They wave you over. \"Settle something for us.\"|The regulars wave you over again. Today's dispute is about the academy in their da"
+    },
+    {
+      "key": "event:mabel_cup",
+      "title": "Your Cup on the Hook",
+      "file": "content/events/fixtures.grim",
+      "line": 419,
+      "sourceHash": "3ea1849061ef7860659d889fd0b11b6890daae759e8222cfc359dafa00be436c",
+      "score": 0.4850521385669708,
+      "excerpt": "Your Cup on the Hook\nBehind Mabel's counter is a row of hooks with cups on them, each painted with a letter. You've never asked whose they are. Today, while you watch, Mabel hangs a new one with your initial on it. \"Regulars,\" she says, as if that settled it.\nAsk whose the others"
+    },
+    {
+      "key": "event:home_market_schoolmistress",
+      "title": "The Old Schoolmistress",
+      "file": "content/events/pools/village_more.grim",
+      "line": 186,
+      "sourceHash": "918a955daf198dc558885696a9c15867f01aaa47557c92e36bdefe9e81b98563",
+      "score": 0.4826200306415558,
+      "excerpt": "The Old Schoolmistress\n{In the market you're stopped by the old schoolmistress who taught half the town its letters. \"Come and tell my little ones about the academy,\" she says. \"They won't believe me.\"|The schoolmistress again, with her satchel of slates. \"They've talked of nothi"
+    },
+    {
+      "key": "event:break_home_family_debate",
+      "title": "The Family Debate",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 113,
+      "sourceHash": "b44ba3c26250162bea29f1f37889370e714d53bc61271b8cea877b2a5470b67e",
+      "score": 0.464932918548584,
+      "excerpt": "The Family Debate\n{At breakfast the family is arguing, and someone says, \"Ask the scholar.\"|The argument has started without you. Everyone turns as you come down the stairs.|\"The scholar is up,\" someone announces. They've saved today's argument for you.} {season == \"winter\": {Is "
+    },
+    {
+      "key": "event:shop_mabels",
+      "title": "Mabel's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 156,
+      "sourceHash": "f3d2cf554feef5baaac062e5f51d39e7a4cd632f89b1a24d15cb4e655bde7960",
+      "score": 0.456163614988327,
+      "excerpt": "Mabel's Counter\n{Mabel looks at you once as you come in and is already reaching for a tin. \"Sit, petal. I know what you want; let's see if you do.\"|\"There's my petal,\" says Mabel. \"You've the look of someone who needs something steeped.\"|The bell over the door. Mabel doesn't turn"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "1c3d7c9cba521463ee0d8799a4d63eb55c037cbf0e03d15f0f0ad80047ffaed4",
+      "at": "2026-10-28T23:50:39.689Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 375,
+        "total_tokens": 375,
+        "cost": 0.00000375,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000375,
+          "upstream_inference_prompt_cost": 0.00000375,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "1c3d7c9cba521463ee0d8799a4d63eb55c037cbf0e03d15f0f0ad80047ffaed4",
+      "elapsedMs": 700,
+      "at": "2026-10-28T23:50:40.389Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c1ecfa4ab7f4248610a5b1e1d7f2df7f4068a7a91ee04f1b0958d0e20f22dcc7",
+      "at": "2026-10-28T23:50:40.552Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 57360,
+        "cost": 0.002868
+      },
+      "requestHash": "c1ecfa4ab7f4248610a5b1e1d7f2df7f4068a7a91ee04f1b0958d0e20f22dcc7",
+      "elapsedMs": 730,
+      "at": "2026-10-28T23:50:41.282Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

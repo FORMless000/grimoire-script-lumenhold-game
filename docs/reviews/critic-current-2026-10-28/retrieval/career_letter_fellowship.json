@@ -1,0 +1,107 @@
+{
+  "query": "A Fellowship at the Spire The note is inside a book you returned last week, which is how the Spire Library's fellows do things. They have a junior fellowship free, a carrel with your name already chalked on it, and a question: would you like to spend your life among books that bite? Answer by the last day. Chalk \"yes\" under your name You go down to the carrel that evening and chalk a small \"yes\" under your name. In the morning someone has underlined it. Ask how many fellows the books have eaten \"Three,\" the reply says, \"in two hundred years, and all of them were careless.\" You are not entirely reassured. The carrel waits.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_letter_fellowship",
+      "title": "A Fellowship at the Spire",
+      "file": "content/events/careers.grim",
+      "line": 65,
+      "sourceHash": "2fb389a22c20e31927cb6e44b7e8268f811d9f78455f9c8fb566cb3a32439307",
+      "score": 0.9223082065582275,
+      "excerpt": "A Fellowship at the Spire\nThe note is inside a book you returned last week, which is how the Spire Library's fellows do things. They have a junior fellowship free, a carrel with your name already chalked on it, and a question: would you like to spend your life among books that bi"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5403081774711609,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:career_job_spire",
+      "title": "The Stacks Want You Back",
+      "file": "content/events/careers.grim",
+      "line": 267,
+      "sourceHash": "3dc5cf6faa17b933c021846a80cdfd25c9e9431c2562fbfcdd9cd185ad50152c",
+      "score": 0.48200738430023193,
+      "excerpt": "The Stacks Want You Back\nA note under the bell on the reference desk, after your shift. The head librarian wants to keep you on after graduation, full time, as a keeper of the stacks. \"Footnote has stopped biting you,\" it says. \"That is a qualification.\" Answer by the last day.\nL"
+    },
+    {
+      "key": "event:restricted_section_breathing_shelves",
+      "title": "The Breathing Shelves",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 360,
+      "sourceHash": "fbf549d47474b2c771f4b0df8251d9479b513a6127869b0ba2f1a4a1582c1866",
+      "score": 0.3889099061489105,
+      "excerpt": "The Breathing Shelves\n{The black-bound books breathe in the dark, slow as sleepers. You find a chair and light a candle.|You've learned to breathe with the shelves; it helps.|Your chair is where you left it. The books shift, as if making room.} {One spine is warm to the touch.|So"
+    },
+    {
+      "key": "event:library_senior_banned_book",
+      "title": "A Request for a Banned Book",
+      "file": "content/events/pools/upper_ranks.grim",
+      "line": 173,
+      "sourceHash": "d623a588da922da2865c4cb929f859bb22ee1715e7a63bc7f513deee963b9091",
+      "score": 0.3875207006931305,
+      "excerpt": "A Request for a Banned Book\n{A first-year brings you a request slip for a chained book. Senior clerks hold the keys, and the rules say no.|Another request for a chained book, from a student who looks desperate.|They've heard you hold the keys. The slips keep coming.} {The first-y"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "edb2ec2b68fadc6b10db7b5824cc12b6beeb5a0cc9a3efe0847a571a189c9bd4",
+      "at": "2026-10-28T23:17:09.828Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 148,
+        "total_tokens": 148,
+        "cost": 0.00000148,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000148,
+          "upstream_inference_prompt_cost": 0.00000148,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "edb2ec2b68fadc6b10db7b5824cc12b6beeb5a0cc9a3efe0847a571a189c9bd4",
+      "elapsedMs": 11517,
+      "at": "2026-10-28T23:17:21.345Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "1662342d564553e3b1998ab15d7e2bbc90c28e73f7bb4f084f9eebef2fcec752",
+      "at": "2026-10-28T23:17:21.389Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50148,
+        "cost": 0.0025074
+      },
+      "requestHash": "1662342d564553e3b1998ab15d7e2bbc90c28e73f7bb4f084f9eebef2fcec752",
+      "elapsedMs": 528,
+      "at": "2026-10-28T23:17:21.917Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

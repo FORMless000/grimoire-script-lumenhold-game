@@ -1,0 +1,107 @@
+{
+  "query": "Two Pale Heads {flag(dumont_reunited): The photographer is herding the year onto the great hall steps. At the end of a row, two pale heads lean together, Kael and Ilse, who was raised to open the door he refused. Kael sees you and moves up, which leaves a space between them and the edge.|The photographer is herding the year onto the great hall steps. At the end of a row Kael stands beside a space nobody is allowed to fill. Ilse should be in it. The man in grey took her north, and no letter has come.} {flag(dumont_reunited): Squeeze into the photograph with them|Leave the space empty with him} You squeeze in beside them, and Ilse elbows you, and Kael, for once, laughs out loud just as the shutter goes. It's the only photograph of the three of you, and it hangs in two houses for the rest of your lives. You stand at the edge of the space, so it stays a space, and Kael's hand finds your shoulder for a moment. In the photograph there's a gap in the row the size of a girl in white furs. {flag(dumont_reunited): Take the photograph yourself|Talk Kael into closing the gap} You take the camera from the photographer and make them stand still for once. Two Dumonts, squinting at the sun, in nobody's photograph but yours. \"She'd hate being a gap,\" you tell him, and he almost smiles, and moves up. In the photograph the row closes. Neither of you forgets why it was open.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:last_dumonts",
+      "title": "Two Pale Heads",
+      "file": "content/events/last_day.grim",
+      "line": 280,
+      "sourceHash": "130797ebde1e772741d858f75c0a4710541e9c0f83f1bd05e8f1690559ad2c72",
+      "score": 0.9522631764411926,
+      "excerpt": "Two Pale Heads\n{flag(dumont_reunited): The photographer is herding the year onto the great hall steps. At the end of a row, two pale heads lean together, Kael and Ilse, who was raised to open the door he refused. Kael sees you and moves up, which leaves a space between them and t"
+    },
+    {
+      "key": "event:ilse_grey_returns",
+      "title": "The Man in Grey Comes for Ilse",
+      "file": "content/events/chain_ilse.grim",
+      "line": 72,
+      "sourceHash": "49f2c030ea98636d58991cc18fbc88c4085a3301e7073b00619cc6545edb0952",
+      "score": 0.565575897693634,
+      "excerpt": "The Man in Grey Comes for Ilse\nA lane behind the bakery, after dark, every window on it frosted over. The man in grey has a hand on Ilse's shoulder and is talking to her softly: \"Home. Your mother is waiting. The door is waiting.\" Ilse's jaw is set and her eyes are wet. She sees "
+    },
+    {
+      "key": "event:hs_night_ilse",
+      "title": "Ilse in the Dark",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 157,
+      "sourceHash": "452013575c89a6c955cd4859813d43c49895dfb0fb53fade319bc244cdbee6b0",
+      "score": 0.5612401366233826,
+      "excerpt": "Ilse in the Dark\nWhere the tunnel opens into the dark, Ilse is standing in the way. Her eyes are on nothing, and frost is falling from her hands like flour. \"Go back,\" she says, in the man in grey's pleasant voice, not her own. \"This is my door. I was raised for it.\" {flag(night_"
+    },
+    {
+      "key": "event:hs_kael_sister",
+      "title": "The Sister",
+      "file": "content/events/chain_hollowstar.grim",
+      "line": 746,
+      "sourceHash": "c9708eb8f4c24b967855af7bfdfcca14367c9d0d6df405b3ef4a260979d41cd6",
+      "score": 0.5544524788856506,
+      "excerpt": "The Sister\nA girl in white furs is waiting at the gates in a private snowstorm. Kael's younger sister, Ilse. \"If my brother won't open it,\" she says, \"I will. Unless you can give me a reason not to.\"\nConvince her\nYou talk for an hour. Then she's crying, and Kael is holding her, a"
+    },
+    {
+      "key": "event:ilse_kael_reunion",
+      "title": "Brother and Sister",
+      "file": "content/events/chain_ilse.grim",
+      "line": 138,
+      "sourceHash": "80b1a562beb22f33cb3beade46389e8ece486cc189600e267d1bf0b0c4b374ab",
+      "score": 0.544968843460083,
+      "excerpt": "Brother and Sister\nKael and Ilse have been in the same village for weeks and have spoken eleven words to each other. You have three cups of tea, a frozen jetty and a very bad idea.\nSit them both down\nIt takes an hour and two cups of tea are frozen solid. Then Ilse says \"I was sca"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "a8e7484e4a087e1ac23b1fe4633e6fbd655cc04631ca268b6b5b6f92d735e91b",
+      "at": "2026-10-28T23:22:03.591Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 340,
+        "total_tokens": 340,
+        "cost": 0.0000034,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000034,
+          "upstream_inference_prompt_cost": 0.0000034,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "a8e7484e4a087e1ac23b1fe4633e6fbd655cc04631ca268b6b5b6f92d735e91b",
+      "elapsedMs": 9239,
+      "at": "2026-10-28T23:22:12.829Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ae0cc641606ac42ced4a507a027a3d0af2bde5aae86ffda12d1ad951c6f60d71",
+      "at": "2026-10-28T23:22:12.871Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 59725,
+        "cost": 0.00298625
+      },
+      "requestHash": "ae0cc641606ac42ced4a507a027a3d0af2bde5aae86ffda12d1ad951c6f60d71",
+      "elapsedMs": 495,
+      "at": "2026-10-28T23:22:13.366Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "A Guest Who Wants More {A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. \"Come back to my inn,\" he says. \"Just to talk.\" The house rule is clear.|Another guest, another heavy purse, another invitation \"just to talk\". The landlady is busy across the room.|You know the look now: the generous hour, then the purse, then the invitation. Tonight it comes from a woman in pearls.} Call the landlady {The landlady has the guest down the stair in a minute, purse and all. You're paid for the hours, and shaky for the rest of the night.|\"The stair,\" says the landlady, and the guest takes it. You keep your wage and lose the tip, and your hands won't stop shaking.|The guest is shown out. The landlady pours you something strong and pays you for the night. It doesn't feel like enough.} Keep the purse, promise nothing {You let him believe tomorrow, and then the day after. He leaves the purse. You feel like a pickpocket with good manners.|You laugh, and keep the purse, and see the guest into a carriage, alone. It's the most you've earned in a night. You don't sleep.|You promise nothing in a way that sounds like something. She leaves happy and you leave rich, and a little ashamed.} {He sees through you, and takes his purse back with a hand that grips too hard. The landlady throws him out, too late.|The guest makes a scene on the stair, loudly calling you a cheat. A prefect on the stair hears every word.|She wants the purse back, loudly, and the landlady gives it to her. You go home with nothing but a bruise on your wrist.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_wants_more",
+      "title": "A Guest Who Wants More",
+      "file": "content/events/pools/night.grim",
+      "line": 311,
+      "sourceHash": "fe4de4e7a319f821f58ddfd0c77313cd9244ad0a544768b2e8d681e2bf996cd5",
+      "score": 0.951916515827179,
+      "excerpt": "A Guest Who Wants More\n{A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. \"Come back to my inn,\" he says. \"Just to talk.\" The house rule is clear.|Another guest, another heavy purse, another invitation \"just to talk\". T"
+    },
+    {
+      "key": "event:company_card_widow",
+      "title": "The Widow's Game",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 82,
+      "sourceHash": "714a510f83131972dfb67e723eb7b3c9985b95a53f800c2bc9b86f19b6a309aa",
+      "score": 0.4648701548576355,
+      "excerpt": "The Widow's Game\n{Tonight's guest is a widow in black lace who has come up from the river towns to play cards with somebody young. She deals before you've sat down.|The widow is back, and asked for you by description: \"the one who loses nicely.\"|The widow again. She has brought h"
+    },
+    {
+      "key": "event:company_castle",
+      "title": "Someone from the Castle",
+      "file": "content/events/pools/night.grim",
+      "line": 281,
+      "sourceHash": "fb7121b93dcaa6a0422d2998abb2951994d39a2060fbd79f7dac5dbd950b8fd2",
+      "score": 0.4631303548812866,
+      "excerpt": "Someone from the Castle\n{Halfway up the stair you see {guest} at the corner table, out of robes, with a glass of wine and the air of someone who would rather not be seen either.|{guest} is at the corner table tonight. You both pretend this is a coincidence.|Tonight it is {guest} "
+    },
+    {
+      "key": "event:company_patron",
+      "title": "A Guest Who Offers Patronage",
+      "file": "content/events/pools/night.grim",
+      "line": 260,
+      "sourceHash": "442bde8d6eea4766b0482be5294aafab7b09426f75e0f869e82c0f51b09fb54e",
+      "score": 0.44544294476509094,
+      "excerpt": "A Guest Who Offers Patronage\n{An old collector of books has asked for \"the student who reads\". He wants company and argument, and he says he funds promising young minds.|The old collector is back with a new pile of books and a new argument. He has been thinking about what you sai"
+    },
+    {
+      "key": "event:company_magistrate",
+      "title": "The Magistrate's Card Party",
+      "file": "content/events/pools/night.grim",
+      "line": 202,
+      "sourceHash": "5da88fe0abf6509459664a2792548b8bd56b89cb139a71242ad44ebdb485902b",
+      "score": 0.43722838163375854,
+      "excerpt": "The Magistrate's Card Party\n{A magistrate from the county court is holding a card party, and she likes to win, but not too easily.|The magistrate again. She deals you in without asking, and her eyes say she hasn't forgotten the last game.|The magistrate's party, and a new rule: w"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "41d8af192712c25940e735c957207390d016d46c297cb5d78d0c111d4ce0d26d",
+      "at": "2026-10-28T23:51:17.174Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 385,
+        "total_tokens": 385,
+        "cost": 0.00000385,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000385,
+          "upstream_inference_prompt_cost": 0.00000385,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "41d8af192712c25940e735c957207390d016d46c297cb5d78d0c111d4ce0d26d",
+      "elapsedMs": 288,
+      "at": "2026-10-28T23:51:17.462Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "1b086efe417645711b11ee65628783ca9c3fcdee3ad98731f83fb0dce24acf3e",
+      "at": "2026-10-28T23:51:17.549Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50055,
+        "cost": 0.00250275
+      },
+      "requestHash": "1b086efe417645711b11ee65628783ca9c3fcdee3ad98731f83fb0dce24acf3e",
+      "elapsedMs": 374,
+      "at": "2026-10-28T23:51:17.923Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

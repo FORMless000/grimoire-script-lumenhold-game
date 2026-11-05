@@ -1,0 +1,89 @@
+{
+  "query": "The First Supper The first supper is twelve courses in a town house with a ceiling painted with clouds. You're seated between a retired magistrate and a woman who owns half the orchards in the valley. Both of them have read about you. Both of them want to see whether you're as interesting as the Ledger said. The magistrate has an opinion on every course, and is plainly waiting for somebody to disagree with him. Argue with the magistrate You tell the magistrate he's wrong about the soup, and then about a famous old trial, and he's delighted: nobody has disagreed with him since he retired. By the ninth course the whole table is listening to the two of you. Someone at the far end asks your name twice, to remember it. You take the magistrate on over an old case, and turn out to have the facts backwards, in front of the man who heard it. The orchard woman changes the subject, kindly, which is worse. You spend the last three courses very interested in your soup. Ask about her orchards You leave the magistrate to the soup. You ask the orchard woman about her orchards, and she talks for an hour, delighted, about apple blight. The table thinks you're a little dull. She thinks you're the best guest she's had in years.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:season_first_supper",
+      "title": "The First Supper",
+      "file": "content/events/society.grim",
+      "line": 54,
+      "sourceHash": "9158a198f89296b12df6597e3873463816b51c394b150893fee2668198db0242",
+      "score": 0.9405539631843567,
+      "excerpt": "The First Supper\nThe first supper is twelve courses in a town house with a ceiling painted with clouds. You're seated between a retired magistrate and a woman who owns half the orchards in the valley. Both of them have read about you. Both of them want to see whether you're as in"
+    },
+    {
+      "key": "event:between_setup_supper",
+      "title": "The Long Supper",
+      "file": "content/events/between_hearts.grim",
+      "line": 109,
+      "sourceHash": "8df4ef1ac3611304ac6539e1de83b20237d26c617e16e4feab7382edecc4f0dd",
+      "score": 0.4551701247692108,
+      "excerpt": "The Long Supper\nIt was your idea that {a} and {b} share the little table by the window at supper. Twenty minutes in they have covered the weather, the soup, and the weather again. {a} keeps looking at you across the hall like someone going under for the third time.\nGo over and re"
+    },
+    {
+      "key": "event:date_meet_friends",
+      "title": "Meeting the Friends",
+      "file": "content/events/pools/dating.grim",
+      "line": 76,
+      "sourceHash": "912a289a7c62d9adc08711ded93634a227789b119c2a4a532567366aacc78eb9",
+      "score": 0.43267330527305603,
+      "excerpt": "Meeting the Friends\n{friend} and {partner} have heard a great deal about each other, all from you, and now they're at the same supper table. {friend} is being very polite. {partner} is being very polite back. You are dying.\nSteer the talk to something they share\nYou find it on th"
+    },
+    {
+      "key": "event:refectory_house_tables",
+      "title": "Where to Sit",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 199,
+      "sourceHash": "cd4c35a0de6ede40c6bb0ab0b8d75915b8f34360ef0e6cdb358b0f567fc0b8b6",
+      "score": 0.4016997814178467,
+      "excerpt": "Where to Sit\n{Supper, and the question of where to sit.|Your house table has started saving a gap on the bench, roughly your width.|The gap is a named seat now, and the quiet table nods at you too.} Your house table is {loud with a story about a goat|in the middle of a pudding tr"
+    },
+    {
+      "key": "event:brk_one_long_table",
+      "title": "One Long Table",
+      "file": "content/events/breaks.grim",
+      "line": 11,
+      "sourceHash": "445d04647e7f18e8c8c8d55f2e5acfb7a888bfdfb6380f872836f69b8858717d",
+      "score": 0.40045416355133057,
+      "excerpt": "One Long Table\n{season == \"winter\": The Great Hall has given up on house tables for the break. Everyone left eats at one long table by the fire: a handful of students, two professors and a cook who sits down with you, which nobody has ever seen.|Half the candles are out for the s"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "requestHash": "df68c7b9bea99cfed9a6886a1969247982227068e6f3543da9737c3eb6a85cdf",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:53.303Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d4f30804910d213c9669c6274ac6eb79e698cf1c194c09fef7c47ff6dc2ad74c",
+      "at": "2026-10-28T23:51:53.338Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 59517,
+        "cost": 0.00297585
+      },
+      "requestHash": "d4f30804910d213c9669c6274ac6eb79e698cf1c194c09fef7c47ff6dc2ad74c",
+      "elapsedMs": 404,
+      "at": "2026-10-28T23:51:53.742Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

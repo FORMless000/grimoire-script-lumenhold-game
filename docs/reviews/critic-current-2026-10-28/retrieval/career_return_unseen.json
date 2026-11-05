@@ -1,0 +1,294 @@
+{
+  "query": "The Office Writes Again A blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and the file you didn't open. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day. Burn it, as they'd want You burn it over the candle and grind the ash into the grate. It feels like the first day of something. Keep it, and read it again You keep it, which they'll know, and read it by candle every few nights. There's a second line you missed the first time: \"We'd have kept it too.\"",
+  "backend": "grim",
+  "profile": "full",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "total": 36,
+  "results": [
+    {
+      "key": "event:career_return_unseen",
+      "score": 0.03278688524590164,
+      "reasons": [
+        "BM25: the, office, writes, again, a, blank, page, until, you, hold, it, to, candle, of, unseen, affairs, remembers, your, summer, and, file, didn't, open, desk, is, yours, from, autumn, no, reply, needed, they, will, know, answer, on, last, day, burn, as, they'd, want, over, grind, ash, into, grate, feels, like, first, something, keep, read, which, they'll, by, every, few, nights, there's, second, line, missed, time, we'd, have, kept, too",
+        "Dense similarity"
+      ],
+      "reason": "BM25: the, office, writes, again, a, blank, page, until, you, hold, it, to, candle, of, unseen, affairs, remembers, your, summer, and, file, didn't, open, desk, is, yours, from, autumn, no, reply, needed, they, will, know, answer, on, last, day, burn, as, they'd, want, over, grind, ash, into, grate, feels, like, first, something, keep, read, which, they'll, by, every, few, nights, there's, second, line, missed, time, we'd, have, kept, too; Dense similarity",
+      "rerankScore": 0.9066572785377502,
+      "title": "The Office Writes Again",
+      "file": "content/events/careers.grim",
+      "line": 247,
+      "sourceHash": "aa1fe3711bd1619e698c8edffed954700fe13b0fbe8dc021ccc070568d0e2bed",
+      "authority": "conditional-event",
+      "metadata": {
+        "chain": "careers",
+        "class": "milestone",
+        "trigger": "auto",
+        "tags": [
+          "job",
+          "story"
+        ],
+        "pool": "career_letter",
+        "pools": [
+          "career_letter"
+        ],
+        "when": "(final_year and month >= 3 and month <= 11 and career_letter_turn < turn) and (flag(return_unseen) and not flag(offer_unseen))"
+      },
+      "excerpt": "The Office Writes Again\nA blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and the file you didn't open. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day.\nBurn it, as they'd want\nYou bu"
+    },
+    {
+      "key": "event:career_letter_unseen",
+      "score": 0.028958333333333336,
+      "reasons": [
+        "BM25: the, office, a, you, it, to, of, unseen, affairs, your, and, desk, is, from, autumn, no, reply, they, know, answer, on, last, day, want, they'll, by, line",
+        "Dense similarity"
+      ],
+      "reason": "BM25: the, office, a, you, it, to, of, unseen, affairs, your, and, desk, is, from, autumn, no, reply, they, know, answer, on, last, day, want, they'll, by, line; Dense similarity",
+      "rerankScore": 0.5491810441017151,
+      "title": "A Letter That Wasn't Posted",
+      "file": "content/events/careers.grim",
+      "line": 101,
+      "sourceHash": "0914dde1cce2820c693a40216da707ea403c7e821dd9527ed21ffca8b86dd084",
+      "authority": "conditional-event",
+      "metadata": {
+        "chain": "careers",
+        "class": "milestone",
+        "trigger": "auto",
+        "tags": [
+          "job",
+          "story"
+        ],
+        "pool": "career_letter",
+        "pools": [
+          "career_letter"
+        ],
+        "when": "(final_year and month >= 3 and month <= 11 and career_letter_turn < turn) and (guile >= 75 and not flag(offer_unseen))"
+      },
+      "excerpt": "A Letter That Wasn't Posted\nThe envelope is on your pillow, though the door was locked and the window shut. Inside, a single line: the Crown's Office of Unseen Affairs has a desk for you, if you want it, from the autumn. There is no address to reply to. They'll know your answer o"
+    },
+    {
+      "key": "event:intern_unseen_office_file",
+      "score": 0.031746031746031744,
+      "reasons": [
+        "BM25: the, office, a, page, you, it, to, of, unseen, affairs, your, summer, and, file, didn't, open, is, they, know, on, last, first, something, read, which, time, too",
+        "Dense similarity"
+      ],
+      "reason": "BM25: the, office, a, page, you, it, to, of, unseen, affairs, your, summer, and, file, didn't, open, is, they, know, on, last, first, something, read, which, time, too; Dense similarity",
+      "rerankScore": 0.531157910823822,
+      "title": "The File With Your Name",
+      "file": "content/events/pools/internships.grim",
+      "line": 231,
+      "sourceHash": "aee924847fbf7c26891834a4e61852f42614045d2ddafbca1c48e01ec5ca2085",
+      "authority": "conditional-event",
+      "metadata": {
+        "track": "intern_unseen_office",
+        "class": "milestone",
+        "trigger": "random",
+        "tags": [
+          "mystery"
+        ],
+        "when": "not closed(hollowstar)"
+      },
+      "excerpt": "The File With Your Name\nSorting files for the Office, you find one with your name on it. It's thin. The clerk has gone to lunch. The last page is about Lumenhold, and the lake, and a tower nobody has opened in a century.\nRead it all\nThey know where you sleep and what you eat, whi"
+    },
+    {
+      "key": "event:hollow_reading_the_blank",
+      "score": 0.012987012987012988,
+      "reasons": [
+        "Dense similarity"
+      ],
+      "reason": "Dense similarity",
+      "rerankScore": 0.46016421914100647,
+      "title": "Reading the Blank Page",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 138,
+      "sourceHash": "5793b7a9f901cdf19dcd191891017179b48860a303924915c1f39c1cf67e7799",
+      "authority": "conditional-event",
+      "metadata": {
+        "track": "hollow_studies",
+        "class": "routine",
+        "trigger": "random",
+        "level": 1,
+        "tags": [
+          "class",
+          "mystery"
+        ]
+      },
+      "excerpt": "Reading the Blank Page\n{\"Most things that are hidden are not gone,\" the headmistress says, and gives you a blank page. \"Find what was written. Gently.\"|A new blank page today. It feels warmer than paper should.|You know the weight of hidden writing in a page by now, like a pocket"
+    },
+    {
+      "key": "event:night_lead_in",
+      "score": 0.0125,
+      "reasons": [
+        "Dense similarity"
+      ],
+      "reason": "Dense similarity",
+      "rerankScore": 0.44205141067504883,
+      "title": "An Unsigned Note",
+      "file": "content/events/night.grim",
+      "line": 7,
+      "sourceHash": "f291876c6d7d7751d62e9a6c3afdc6b26b56a0f19724345828394f4c212110e2",
+      "authority": "conditional-event",
+      "metadata": {
+        "class": "story",
+        "trigger": "auto",
+        "tags": [
+          "mystery"
+        ],
+        "when": "year == 1 and month == 7 and not off_campus"
+      },
+      "excerpt": "An Unsigned Note\nA note under your door, unsigned: \"The castle has a second timetable. It starts at midnight. Curfew is a suggestion made by people who go to bed early.\" In the corner, a map no bigger than a thumbnail, showing six doors that are open when they shouldn't be.\nBurn "
+    }
+  ],
+  "stages": [
+    {
+      "stage": "lexical",
+      "enabled": true,
+      "ids": [
+        "event:career_return_unseen",
+        "event:last_career",
+        "event:intern_unseen_office_file",
+        "event:career_letter_unseen",
+        "event:intern_unseen_office_wrong_file",
+        "event:slice_late_lamps",
+        "event:know_tamsin_failed",
+        "event:career_return_observatory",
+        "event:umbral_errand",
+        "event:restricted_section_chained_book",
+        "event:recap_year_one",
+        "event:career_return_thornwick",
+        "event:recap_year_three",
+        "event:evo_fog_to_the_line",
+        "event:letter_from_a_friend",
+        "event:spot_petition",
+        "event:hs_aftermath_freed",
+        "event:y3_career_fair",
+        "event:lumen_ledger_editor_scoop",
+        "event:career_return_guild"
+      ]
+    },
+    {
+      "stage": "dense",
+      "enabled": true,
+      "ids": [
+        "event:career_return_unseen",
+        "event:thesis_lab_borrowed_candle",
+        "event:intern_unseen_office_file",
+        "event:intern_unseen_office_wrong_file",
+        "event:nudge_red_ink",
+        "event:lantern_washed_up",
+        "event:ledger_office_unprintable",
+        "event:ledger_office_drying_line",
+        "event:workshop_after_the_bang",
+        "event:home_market_post_office",
+        "event:y3_letter_to_self",
+        "event:lecture_tower_red_ink_reply",
+        "event:marisol_trust",
+        "event:ledger_spare_quill",
+        "event:career_letter_unseen",
+        "event:tamsin_farewell",
+        "event:hollow_reading_the_blank",
+        "event:restricted_section_breathing_shelves",
+        "event:detention_lines",
+        "event:night_lead_in"
+      ],
+      "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986"
+    },
+    {
+      "stage": "rerank",
+      "enabled": true,
+      "ids": [
+        "event:career_return_unseen",
+        "event:career_letter_unseen",
+        "event:intern_unseen_office_file",
+        "event:hollow_reading_the_blank",
+        "event:night_lead_in",
+        "event:last_career",
+        "event:intern_unseen_office_wrong_file",
+        "event:career_return_observatory",
+        "event:career_return_thornwick",
+        "event:career_return_guild",
+        "event:hs_aftermath_freed",
+        "event:restricted_section_chained_book",
+        "event:recap_year_one",
+        "event:recap_year_three",
+        "event:y3_letter_to_self",
+        "event:ledger_office_drying_line",
+        "event:ledger_office_unprintable",
+        "event:marisol_trust",
+        "event:slice_late_lamps",
+        "event:letter_from_a_friend",
+        "event:nudge_red_ink",
+        "event:y3_career_fair",
+        "event:lecture_tower_red_ink_reply",
+        "event:thesis_lab_borrowed_candle",
+        "event:restricted_section_breathing_shelves",
+        "event:tamsin_farewell",
+        "event:ledger_spare_quill",
+        "event:lantern_washed_up",
+        "event:lumen_ledger_editor_scoop",
+        "event:detention_lines",
+        "event:home_market_post_office",
+        "event:know_tamsin_failed",
+        "event:spot_petition",
+        "event:umbral_errand",
+        "event:workshop_after_the_bang",
+        "event:evo_fog_to_the_line"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "03885edcafead340ff15d457096698f251d01b2f2cc171a386dc57f865e2f099",
+      "at": "2026-10-28T23:16:00.019Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 132,
+        "total_tokens": 132,
+        "cost": 0.00000132,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000132,
+          "upstream_inference_prompt_cost": 0.00000132,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "03885edcafead340ff15d457096698f251d01b2f2cc171a386dc57f865e2f099",
+      "elapsedMs": 8936,
+      "at": "2026-10-28T23:16:08.955Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7f574c6a1a2b517ede92a4341a85be1da55bb72e9bb5505e42e0531f98013150",
+      "at": "2026-10-28T23:16:08.979Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43338,
+        "cost": 0.0021669
+      },
+      "requestHash": "7f574c6a1a2b517ede92a4341a85be1da55bb72e9bb5505e42e0531f98013150",
+      "elapsedMs": 481,
+      "at": "2026-10-28T23:16:09.460Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

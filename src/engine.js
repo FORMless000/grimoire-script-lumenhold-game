@@ -42,7 +42,7 @@
   const invPhi = (p) => { let lo = -8, hi = 8; for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; } return (lo + hi) / 2; };
   // Which skill a challenge rolls (design §9.2); `using <skill>` overrides.
   const CHALLENGE_SKILLS = G.CHALLENGE_KINDS;
-  // Kinds played as a minigame (M2): fight (combat, duel) and parley (negotiate; the stub until its minigame).
+  // Kinds played as a minigame (M2): fight (combat, duel) and parley (negotiate).
   const MINIGAME_KINDS = G.MINIGAME_KINDS;
   class SaveVersionError extends Error { constructor(v) { super('This save is from an older version of the game (save version ' + v + ', now ' + SAVE_VERSION + ') and can no longer be loaded.'); this.code = 'SAVE_VERSION'; this.saveVersion = v; } }
   const now = () => Date.now();
@@ -245,7 +245,7 @@
       }
     }
     // Locked while a minigame is under way: from a fight's first exchange (the UI keeps it as s.fightInProgress) to its end.
-    kitLocked() { return !!(this.s && (this.s.minigame || this.s.fightInProgress)); }
+    kitLocked() { return !!(this.s && (this.s.minigame || this.s.fightInProgress || this.s.parleyInProgress)); }
     // Wear an item you own in its slot (or `null` to clear the slot). Refused while the kit is locked.
     equip(slot, id) {
       const s = this.s;
@@ -625,7 +625,15 @@
     fightRequest(st, ctx) { return this.minigameRequest(st, ctx, 'fight'); }
     // A negotiation's request (E8), the same shape: for the minigame's resolver (`eng.parleys`), the registry
     // (src/negotiation.js) keys it by event/option.
-    parleyRequest(st, ctx) { return this.minigameRequest(st, ctx, 'parley'); }
+    parleyRequest(st, ctx) {
+      const req = this.minigameRequest(st, ctx, 'parley');
+      return Object.assign(req, { using: st.using || null, track: ctx.track || this._ctxTrack || null,
+        relationships: Object.fromEntries(Object.entries(this.s.npcs).map(([id, n]) => [id, n.rel])),
+        tracks: JSON.parse(JSON.stringify(this.s.tracks || {})),
+        trackKinds: Object.fromEntries(Object.entries(this.c.tracks).map(([id, t]) => [id, t.kind])),
+        facts: (st.steps || []).filter((x) => x.n > 0 && this.test(x.cond, ctx.actor)).flatMap((x) => Array.from({ length: x.n }, () => ({ condition: x.cond.src }))),
+        resourceScale: (this.c.balance || {}).parley_scale == null ? 0.6 : this.c.balance.parley_scale });
+    }
     minigameRequest(st, ctx, mg) {
       const s = this.s, e = this.c.events[ctx.key] || {}, key = this._optKey || 'show';
       const list = []; G.walkEffects(this._optEffects || e.on_show || [], (x) => { if (x.t === 'challenge' && MINIGAME_KINDS[x.kind] === mg) list.push(x); });
@@ -672,19 +680,28 @@
       const req = this.parleyRequest(st, ctx);
       const res = this._parleyQueue && this._parleyQueue.length ? this._parleyQueue.shift() : this.parleys(req);
       if (!res || !['win', 'partial', 'lose'].includes(res.outcome)) throw new Error('negotiation ' + req.id + ': no result');
+      if (res.request && res.request !== req.id) throw new Error('negotiation result for ' + res.request + ' handed to ' + req.id);
       (ctx.parleys = ctx.parleys || []).push(res);
       const result = res.outcome === 'partial' && !(st.partial && st.partial.length) ? 'lose' : res.outcome;
       for (const [k, v] of Object.entries(res.deltas || {})) if (v && (this.c.resources[k] || this.c.skills[k])) this.change(k, v, ctx);
-      ctx.checks.push({ challenge: st.kind, parley: true, played: true, result, ok: result !== 'lose' });
+      ctx.checks.push({ challenge: st.kind, parley: true, played: true, result, ok: result !== 'lose', reason: res.reason || null });
+      (this.s.parleys = this.s.parleys || []).push({ id: req.id, turn: this.s.turn, outcome: res.outcome, rules: res.rules });
+      if (this.s.parleys.length > 300) this.s.parleys.shift();
+      for (const f of res.followUps || []) {
+        const id = f === 'forbidden_cast_report' ? this.c.game.forbidden_report : null;
+        if (id && this.c.events[id]) this.s.deck.push({ id, actor: null, src: 'queued' });
+      }
       this.run(st[result], ctx);
     }
     // The fight choosing `key` would start, before anything happens: the option is played on a copy of the run (same random
     // state) up to its first fight. null when the option starts none on this path.
-    fightAhead(key) {
+    fightAhead(key) { const r = this.minigameAhead(key); return r && r.kind !== 'negotiate' ? r : null; }
+    parleyAhead(key) { const r = this.minigameAhead(key); return r && r.kind === 'negotiate' ? r : null; }
+    minigameAhead(key) {
       if (!this.s.cur) return null;
       const twin = new this.constructor(this.c).load(JSON.parse(this.save()));
       const STOP = {}; let found = null;
-      twin.fights = (req) => { found = req; throw STOP; };
+      twin.fights = twin.parleys = (req) => { found = req; throw STOP; };
       try { twin.choose(key); } catch (err) { if (err !== STOP) throw err; }
       return found;
     }
@@ -1684,6 +1701,7 @@
             const played = fight ? !!(this.fights || (this._fightQueue && this._fightQueue.length)) : parley ? !!(this.parleys || (this._parleyQueue && this._parleyQueue.length)) : false;
             if (played && !this._oracle) { if (fight) this.playFight(st, ctx); else this.playParley(st, ctx); break; }
             if (fight && this._oracle) this._oracle.fight = true;
+            if (parley && this._oracle) this._oracle.parley = true;
             // The stub's entry cost (Mana) only where fights are still rolled: unit-test fixtures with no resolver.
             if (st.kind === 'combat' && !played) this.change(this.spellResource, -this.combatCost(), ctx);
             const o = this.challengeOdds(st, ctx.actor, ctx.key);
@@ -1692,7 +1710,7 @@
             if (played) for (let i = 0; i < 3; i++) if ((i !== 1 || st.partial) && probs[i] <= 0) { probs[i] = 1; probs[probs.indexOf(Math.max(...probs))]--; }
             const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
             ctx.checks.push(Object.assign({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose', swing: st.swing || null }, parley ? { parley: true } : {}));
-            const was = this._fightOutcome; if (played) this._fightOutcome = true;
+            const was = this._fightOutcome; if (played && fight) this._fightOutcome = true;
             try { this.run(st[result], ctx); } finally { this._fightOutcome = was; }
             break;
           }
@@ -2161,8 +2179,8 @@
         if ((s.vals[this.spellResource] || 0) < cost) throw new Error('not enough ' + this.spellResource + ' for ' + opt.spell);
         this.chargeCast(opt.spell, cost, ctx);
       }
-      this._fightQueue = opts.fights ? opts.fights.slice() : null; this._optKey = key; this._optEffects = opt.effects;
-      try { this.run(opt.effects, ctx); } finally { this._fightQueue = null; this._optKey = null; this._optEffects = null; }
+      this._fightQueue = opts.fights ? opts.fights.slice() : null; this._parleyQueue = opts.parleys ? opts.parleys.slice() : null; this._optKey = key; this._optEffects = opt.effects;
+      try { this.run(opt.effects, ctx); } finally { this._fightQueue = null; this._parleyQueue = null; this._optKey = null; this._optEffects = null; }
       if (item.track) { this.courseworkFor(item.track, ctx); this.classCheckPrep(item.track, ctx); }
       this.handleZeroed(ctx);
       this._variant = null;
@@ -2185,7 +2203,7 @@
       const h = item.n != null ? this.histEntry(item.n) : null;
       // Titles and labels in the card's own context (its cast, track and place), so a log names people, not {friend}.
       const said = (x) => this.withContext(item, () => this.interp(x, item.actor, e.id));
-      if (h) Object.assign(h, { choice: key, label: said(opt.label), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() }, ctx.fights ? { fights: ctx.fights } : {});
+      if (h) Object.assign(h, { choice: key, label: said(opt.label), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() }, ctx.fights ? { fights: ctx.fights } : {}, ctx.parleys ? { parleys: ctx.parleys } : {});
       s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: said(e.title), choice: said(opt.label), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0, ...this.logContext(item) });
       if (s.log.length > 400) s.log.shift();
       this.stampJournal();
@@ -2284,7 +2302,7 @@
             ends: !!s.ended && !saved.ended };
           this._oracle = null; this._variant = null; this._cast = null; this._ctxTrack = null;
           for (const k of KEYS) s[k] = saved[k];
-          runOnce.last = { decisions, deltas: ctx.deltas, follows, what, fight: !!fightSeen.fight, over: Object.keys(ctx.over || {}) };
+          runOnce.last = { decisions, deltas: ctx.deltas, follows, what, fight: !!fightSeen.fight, parley: !!fightSeen.parley, over: Object.keys(ctx.over || {}) };
         }
         return runOnce.last;
       };
@@ -2302,7 +2320,7 @@
         for (const k of new Set([...Object.keys(lo.deltas), ...Object.keys(hi.deltas)])) { const a = lo.deltas[k] || 0, b = hi.deltas[k] || 0; deltas[k] = [Math.min(a, b), Math.max(a, b)]; }
         let p = 1;
         lo.decisions.forEach((d) => { p *= (d.probs[d.choice] || 0) / 100; });
-        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, what: mergeWhat(lo.what, hi.what), fight: lo.fight || hi.fight, over: [...new Set(lo.over.concat(hi.over))] });
+        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, what: mergeWhat(lo.what, hi.what), fight: lo.fight || hi.fight, parley: lo.parley || hi.parley, over: [...new Set(lo.over.concat(hi.over))] });
         for (let i = prefix.length; i < lo.decisions.length; i++) {
           lo.decisions[i].probs.forEach((x, a) => { if (x > 0 && a !== lo.decisions[i].choice) queue.push(lo.decisions.slice(0, i).map((d) => d.choice).concat([a])); });
         }
@@ -2313,8 +2331,8 @@
         const head = pth.decisions.slice(0, 2);
         const k = head.map((d) => d.kind + d.choice).join('/');
         const m = merged.get(k);
-        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, what: pth.what, fight: pth.fight, over: pth.over.slice() }); continue; }
-        m.p += pth.p; m.follows = m.follows || pth.follows; m.what = mergeWhat(m.what, pth.what); m.fight = m.fight || pth.fight; m.over = [...new Set(m.over.concat(pth.over))];
+        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, what: pth.what, fight: pth.fight, parley: pth.parley, over: pth.over.slice() }); continue; }
+        m.p += pth.p; m.follows = m.follows || pth.follows; m.what = mergeWhat(m.what, pth.what); m.fight = m.fight || pth.fight; m.parley = m.parley || pth.parley; m.over = [...new Set(m.over.concat(pth.over))];
         for (const key2 of new Set([...Object.keys(m.deltas), ...Object.keys(pth.deltas)])) {
           const a = m.deltas[key2] || [0, 0], b = pth.deltas[key2] || [0, 0];
           m.deltas[key2] = [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
@@ -2325,7 +2343,7 @@
       for (const pth of out) for (const [k, [a, b]] of Object.entries(pth.deltas)) { const cur = envelope[k] || [Infinity, -Infinity]; envelope[k] = [Math.min(cur[0], a), Math.max(cur[1], b)]; }
       for (const pth of out) for (const k of Object.keys(envelope)) if (!pth.deltas[k]) { envelope[k] = [Math.min(envelope[k][0], 0), Math.max(envelope[k][1], 0)]; }
       // `fight`: the option plays a fight; its odds are the stub's estimate, and the fight settles its own bars (FIGHT_BARS).
-      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), what: out.reduce((w, x) => mergeWhat(w, x.what), null), cost, spell: opt.spell || null, fight: out.some((x) => x.fight) };
+      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), what: out.reduce((w, x) => mergeWhat(w, x.what), null), cost, spell: opt.spell || null, fight: out.some((x) => x.fight), parley: out.some((x) => x.parley) };
     }
     // Does a real outcome fit one of the preview's paths? (The preview property test, design §8.3.)
     // A path through a played fight doesn't predict the bars the fight settles (FIGHT_BARS).
@@ -2333,7 +2351,7 @@
       const keys = (d) => Object.keys(d).filter((k) => d[k]);
       return preview.paths.some((pth) => {
         for (const k of new Set([...keys(deltas), ...Object.keys(pth.deltas)])) {
-          if (pth.fight && FIGHT_BARS.includes(k)) continue;
+          if ((pth.fight || pth.parley) && FIGHT_BARS.includes(k)) continue;
           const v = deltas[k] || 0, r = pth.deltas[k] || [0, 0];
           // A preview shows the amounts as written; where one met a cap or floor (`over`), the real change differs.
           if (pth.over && pth.over.includes(k)) continue;

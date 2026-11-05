@@ -1,0 +1,108 @@
+{
+  "query": "The Paper-Bird Jam {Somebody's routing charm has gone wrong, and every paper bird in your tower is turning in at your window instead of its own. There are eleven on the sill, and more coming.|The paper-bird jam again. Someone has pinned a sign to your door that says SORTING OFFICE.|The birds know your window now. They queue on the sill like regulars at a counter.} {One is pecking at the glass with real urgency.|Two of them are fighting over the latch.|{season == \"winter\": They're dusted with frost and shivering.|Rain has smudged half the names on their wings.}} Sort them and send them on {You read wings, untangle a knot of six and send every bird to its proper window. An hour gone, and your eyes ache from the handwriting.|You sort them by tower and floor on your bed and launch them in order. It's dull work, and every one of them arrives.|You sort the queue at speed now, like a postmaster. It's still an hour you meant to spend on something else.} Open the window and shoo them {You fling the window wide and wave your arms. The birds scatter like startled pigeons, and half of them land at the wrong doors. By supper it's been traced to you.|You shoo them out in a great flapping cloud. It's glorious. Two notes end up in the headmistress's tower, and people know whose window they came from.|You open the window and let the flock go where it likes. Wrong doors all over the tower, and a reputation as the leak.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_paper_bird",
+      "title": "The Paper-Bird Jam",
+      "file": "content/events/pools/world_more.grim",
+      "line": 272,
+      "sourceHash": "b2f594b118e3027727bf54596fd0a35993dbd85fdb2e91cf8c50d043a279c861",
+      "score": 0.9590319991111755,
+      "excerpt": "The Paper-Bird Jam\n{Somebody's routing charm has gone wrong, and every paper bird in your tower is turning in at your window instead of its own. There are eleven on the sill, and more coming.|The paper-bird jam again. Someone has pinned a sign to your door that says SORTING OFFIC"
+    },
+    {
+      "key": "event:courier_loft_pigeon_strike",
+      "title": "The Pigeons Are on Strike",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 250,
+      "sourceHash": "c24b33c151b7b18ae7bad61409f9eb6e3f1fda6f0816b9621c7bcaf9686c1828",
+      "score": 0.5216483473777771,
+      "excerpt": "The Pigeons Are on Strike\n{The loft's message pigeons are on strike. They sit on the rafter in a row, puffed and silent, beside a list of demands scratched in claw-marks.|The pigeons have struck again. The demands have grown: better grain, a window that shuts, and the removal of "
+    },
+    {
+      "key": "event:stables_owl_loft",
+      "title": "The Owl Loft",
+      "file": "content/events/pools/grounds.grim",
+      "line": 292,
+      "sourceHash": "a3903962b18480b0f74ba8c2c49b5363408ffe99af88746a581ad4d5fbd4de33",
+      "score": 0.40173354744911194,
+      "excerpt": "The Owl Loft\n{Up the ladder, above the hippogriffs, is a hay loft full of owls and quiet.|The owls open one eye each, decide you're furniture, and go back to sleep.|The owls have stopped opening their eyes for you. You've been accepted.} {season == \"winter\": The warmth of the ani"
+    },
+    {
+      "key": "event:break_castle_post_day",
+      "title": "Post for the Stay-Behinds",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 63,
+      "sourceHash": "2be202f0839d88702536a799455187263b73a901124f0c7f851adf0f33099443",
+      "score": 0.3914647698402405,
+      "excerpt": "Post for the Stay-Behinds\n{Post day. The porter lays the letters out on one table in the Great Hall.|The porter now sorts the stay-behinds' letters into a pile of their own.|The porter nods to you. He keeps your letters on top now.} {season == \"winter\": {Most of it is Midwinter c"
+    },
+    {
+      "key": "event:spot_owl_mail",
+      "title": "Letters From Strangers",
+      "file": "content/events/spotlight.grim",
+      "line": 382,
+      "sourceHash": "c541eeacbf26911dd28cb36e6545a2ac54dcae65427df65f797c5ec76e30e689",
+      "score": 0.38492006063461304,
+      "excerpt": "Letters From Strangers\n{~The owls have started bringing you letters from people you've never met: a farmer's child who wants to come to Lumenhold, a retired professor with opinions, someone who wants to know if you're single.|There are eleven letters on your windowsill this morni"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c8509a05c057af847ef441382fe17ae67f65ba0b6a1780119beb8bfa47ced888",
+      "at": "2026-10-28T23:50:55.476Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 342,
+        "total_tokens": 342,
+        "cost": 0.00000342,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000342,
+          "upstream_inference_prompt_cost": 0.00000342,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c8509a05c057af847ef441382fe17ae67f65ba0b6a1780119beb8bfa47ced888",
+      "elapsedMs": 374,
+      "at": "2026-10-28T23:50:55.850Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "8dc15f05fef0b34c80cf88bc7efa7b7d568b5737ad5ada957d4a9ca12c12dfc0",
+      "at": "2026-10-28T23:50:55.914Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 57886,
+        "cost": 0.0028943
+      },
+      "requestHash": "8dc15f05fef0b34c80cf88bc7efa7b7d568b5737ad5ada957d4a9ca12c12dfc0",
+      "elapsedMs": 401,
+      "at": "2026-10-28T23:50:56.315Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Maud's Teacups In Maud's cottage the teacups on the dresser are chiming against each other, all together, though nobody has touched them. Maud pours your tea as if she can't hear a thing. \"Biscuit, dearie?\" Ask her about the cups \"Old cups,\" says Maud. \"Old lake.\" She looks at the window a long time. \"They've done that since I was a girl, on the nights it rings. You get used to it. You don't.\" Help her wrap them in cloth You wrap every cup in an old tea towel. The chiming stops, and Maud's shoulders come down an inch. \"There,\" she says. \"Now we can hear ourselves think.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:bell_echo_cottage",
+      "title": "Maud's Teacups",
+      "file": "content/events/slice_2b.grim",
+      "line": 976,
+      "sourceHash": "1ba175c31ef87cff0e95d66d016cd66fa6f638615b125cb4bfbd6b568084958f",
+      "score": 0.9498885273933411,
+      "excerpt": "Maud's Teacups\nIn Maud's cottage the teacups on the dresser are chiming against each other, all together, though nobody has touched them. Maud pours your tea as if she can't hear a thing. \"Biscuit, dearie?\"\nAsk her about the cups\n\"Old cups,\" says Maud. \"Old lake.\" She looks at th"
+    },
+    {
+      "key": "event:maud_cottage_kettle",
+      "title": "Tea at Maud's",
+      "file": "content/events/pools/grounds.grim",
+      "line": 490,
+      "sourceHash": "892f84b4cf1ad947ba13a628a588cfc246de2a3aba955146661c30a69040c15e",
+      "score": 0.6596247553825378,
+      "excerpt": "Tea at Maud's\n{Old Maud's kettle is nearly boiling, as it always is. \"Sit down, dearie,\" she says. \"You look like a puddle with a worry.\"|The kettle is nearly boiling. Maud has already put out your cup, the chipped one.|Your chipped cup is waiting. Maud says it's been asking afte"
+    },
+    {
+      "key": "event:maud_tea_tells",
+      "title": "Over Many Cups of Tea",
+      "file": "content/events/people_others.grim",
+      "line": 458,
+      "sourceHash": "051fdd7748ab9c40d8db2c55d3cbaf366ff6f1f918c03dd07dd982fcd9fe91df",
+      "score": 0.6480389833450317,
+      "excerpt": "Over Many Cups of Tea\nMaud keeps her word, a little at a time. Over a month of afternoons and more tea than is good for anyone, the story of that spring comes out in pieces: the boathouse, the cold, the friend who didn't come back.\nListen to the end\n\"The founders built this place"
+    },
+    {
+      "key": "event:picture_maud",
+      "title": "Over Tea, Dearie",
+      "file": "content/events/full_picture.grim",
+      "line": 124,
+      "sourceHash": "0251e04fc2ca154a2c700e3516e7caf5aaa4e8735fac0edd0912427e5b5c7dd6",
+      "score": 0.5907066464424133,
+      "excerpt": "Over Tea, Dearie\nMaud pours two cups and doesn't sit. \"You know about Edmund,\" she says. \"And the garden, and Tuppence, and my knees, and the soup. You've heard all my sad stories, dearie, and you've never once looked sorry for me.\" She sits, finally. \"Sixty years since anyone kn"
+    },
+    {
+      "key": "event:secret_garden_two_cups",
+      "title": "Two Cups on the Bench",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 177,
+      "sourceHash": "1723293fe8a1c8a098794b07db40c59c5516af644ae6e2613c2aa266aec3ab40",
+      "score": 0.5508245825767517,
+      "excerpt": "Two Cups on the Bench\n{On the bench by the humming pear there's a flask and two chipped cups, and a note in Old Maud's hand. \"One for you, dearie, one for whoever comes.\"|The flask on the bench again, still warm, still with two cups. Maud is never here when you are; the tea alway"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "918ca632f0283db7f7d57c4cbfcae253d2ff42d2068b3ddd8db41bcfb10588b5",
+      "at": "2026-10-28T23:51:25.250Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "SiliconFlow",
+      "usage": {
+        "prompt_tokens": 155,
+        "total_tokens": 155,
+        "cost": 0.0000062,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000062,
+          "upstream_inference_prompt_cost": 0.0000062,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "918ca632f0283db7f7d57c4cbfcae253d2ff42d2068b3ddd8db41bcfb10588b5",
+      "elapsedMs": 424,
+      "at": "2026-10-28T23:51:25.674Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "080d2e4c04ca8bae9dd2c7827a9e77cbf7d1a84eb60f0436c5246d81f1ffc243",
+      "at": "2026-10-28T23:51:25.719Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 37925,
+        "cost": 0.00189625
+      },
+      "requestHash": "080d2e4c04ca8bae9dd2c7827a9e77cbf7d1a84eb60f0436c5246d81f1ffc243",
+      "elapsedMs": 499,
+      "at": "2026-10-28T23:51:26.218Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

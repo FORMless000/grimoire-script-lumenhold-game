@@ -1,8 +1,6 @@
-# Baseline pools (phase 3, step 1b)
+# Pools and wiring
 
-Every draw source must have something to draw, so that no visit, class morning, practice, shift or break morning comes up empty. Pool events are **repeatable routine events**. Each one turns up 3–6 times in a run, so it has to read freshly every time. `node tools/grim.js report --gaps` shows what each source holds; the floors are in `tools/report.js` (`FLOOR`).
-
-This page is the spec for pool writers. It adds to `skills/write-academy-events/SKILL.md`, `style.md` and `classes.md`; read those first.
+Every draw source must have something to draw, so that no visit, class morning, practice, shift or break morning comes up empty. Pool events are **repeatable routine events** (`class: routine`, with a `repeat:` cooldown). Each turns up several times in a run, so it must read freshly every time. `node tools/grim.js report --gaps` shows what each source holds, the thinnest first.
 
 ## Shape of a pool event
 
@@ -28,23 +26,22 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
   say: {You spend the minute reading the old runes on the rim instead.|A second-year tells you the runes say "No refunds". They probably do.|You know the runes by heart now. You still don't know what the hum is.}
 ```
 
-- **Required:** `title`, `text`, `art` (see `src/art.js`), `tags`, `scene`, `class: routine`, `tone:` (light, warm, tense, grim, eerie) and `repeat:` (4–6, the cooldown in months), written on the card or given by its `pool:` (below, "Where a card lives"). Then one draw field:
+- **Required:** `title`, `text`, `art` (see `src/art.js`), `tags`, `scene`, `class: routine`, `tone:` (light, warm, tense, grim, eerie) and `repeat:` (the cooldown in months), written on the card or given by its `pool:` (below, "Where a card lives"). Then one draw field:
   - `place:` for a map visit;
   - `track:` with `level:` for course mornings;
   - `track:` with `rank:` for club practice and job shifts;
   - `plan:` for break mornings.
-- **Effects:** only tiers and presets (`mood -small`, `grind lore`, `rest`, `work`, `social friend`). For courses use `study <track> ±tier`; for clubs and jobs use `perform <track> ±tier` and `rank_xp <track> ±tier`; for the thesis use `progress thesis ±tier`. Use `challenge` (never `check`) and `spark` (never `love`). Never use raw numbers or `grades`.
-- **Budget:** `routine` means no option is obviously best (`costs.md`), and each stays within ±1.5 medium-equivalents (lint checks both). Options trade by giving different things, or by a cost or risk the `say:` shows; a free option is honest when it gives up what the other offers. Typical shape: a small gain against a tiny or small cost the scene shows, or two different gains.
+- **Effects:** tiers and presets (`mood -small`, `grind lore`, `rest`, `work`, `social friend`); courses `study <track> ±tier`; clubs and jobs `perform <track> ±tier` and `rank_xp <track> ±tier`; the thesis `progress thesis ±tier`. The trade and its budget: `costs.md` (lint checks both).
 - **Cast:** optional. If an event needs a character, use `cast:` roles:
   - `here: present(place)`: someone whose schedule puts them here now;
   - `friend: any where tagged(friend, peer) and rel(friend) >= 10` (cast by premise: `peer` to spend time with, `(tagged(x, student) or tagged(x, prefect))` for a classmate, `tagged(x, teacher)` for a professor; never just `not tagged(x, faculty)`, which also admits shopkeepers);
   - a fixed npc.
 
-  An event whose cast can't be filled is skipped. So **at least two of each source's events have no cast**, or the pool comes up empty.
+  An event whose cast can't be filled is skipped. So **every source keeps events with no cast**, or the pool can come up empty.
 
 ## Where a card lives
 
-Wiring is said once, where a group of cards shares it, not on every card (`docs/grimoire-script.md` §9). Before writing a card, find its group: `node tools/grim.js brief --place <id>` / `--track <id>` lists the cards there, and `grim show <id>` prints where each of a card's properties comes from. A card's own line always wins over its pool's.
+Wiring is said once, where a group of cards shares it, not on every card (`docs/grimoire-script.md` §9); never copy a group's lines onto its cards. Before writing a card, find its group: `node tools/grim.js brief --place <id>` / `--track <id>` lists the cards there, and `grim show <id>` prints where each of a card's properties comes from. A card's own line always wins over its pool's.
 
 | The card is… | It says | Where the rest lives |
 |---|---|---|
@@ -66,11 +63,11 @@ Wiring is said once, where a group of cards shares it, not on every card (`docs/
 | the main plot | `thread: hollowstar` (an arc) | `@arc`: its `beat:` cards are dealt by `beats`, one plot card a month |
 | a follow-up | `trigger: queued` | the card that queues it (`queue x in 2`, `queue x now`) |
 
-A new storyline of a shape that already exists takes the template: an eighth capstone is a `@thread … from: quest` block and five cards of prose. A shape that comes up three times is worth a template of its own in `templates.grim`.
+A new storyline of a shape that already exists takes the template (`content/core/templates.grim`): an eighth capstone is a `@thread … from: quest` block and five cards of prose. A shape that comes up three times is worth a template of its own. For a **chain**, sketch the graph first: every queued event must be queued by something, every flag tested set somewhere; give it a `@thread` (with `clues:` for the leads it leaves).
 
 ## Making repeats read differently (required)
 
-Each event will be seen several times. Use at least three variation points across `text` and `say:` lines. Every option the player will pick repeatedly needs varied `say:` lines too; that includes spell (`up[…]`) options, which a player who knows the spell picks every time. A `say:` must never claim rarity ("which never happens") or a one-time milestone unless it sits in a sequence.
+Each event will be seen several times. Use at least three variation points across `text` and `say:` lines, plus `{season=…}` or `{final_year: …|…}` lines where they fit. Every option the player will pick repeatedly needs varied `say:` lines too; that includes spell (`up[…]`) options, which a player who knows the spell picks every time. A `say:` must never claim rarity ("which never happens") or a one-time milestone unless it sits in a sequence.
 
 **One mode per card, one count.** Every variation group in a card (title, text, scene, labels, hints, `locked:`, every `say:` and override, nested groups too) uses the same mode and the same number of parts; a field may have none. All groups then pick the same position, so variant *k* of the text always meets variant *k* of each `say:`. Write the variants as matched sets, and pad a short group rather than leave it short. `grim lint` checks this (`variants`); `grim show <id>` prints each field's groups.
 - `{first time|second time|third and after}` (no prefix) is a **sequence**: showing *k* reads variant *k* everywhere, and the last one sticks. It's the usual mode for a pool card: familiarity, and a detail that *develops* (the chipped jar you always get, the cook who now saves your seat). Incidental detail rides along with the step. Avoid stock ladders like "X again." / "X, as usual.": they read the same across every event.
@@ -88,35 +85,35 @@ Don't build a repeatable on a one-time surprise (a secret door, a confession). T
 
 ## Character pools (people come by two tracks)
 
-An event with a fixed `actor: <npc>` and no `place:`, `track:`, `plan:` or `slot:` is that character's own card. The director draws it from the shared pools *and* from the character's own track: when you visit where their schedule puts them, at lunch, and when they come to find you (their monthly roll grows with **warmth**: contact the player chose to warm to). See `docs/grimoire-script.md` §5 and design §5.5.
+An event with a fixed `actor: <npc>` and no `place:`, `track:`, `plan:` or `slot:` is that character's own card. The director draws it from the shared pools *and* from the character's own track: when you visit where their schedule puts them, at lunch, and when they come to find you (their monthly roll grows with **warmth**: contact the player chose to warm to; `docs/grimoire-script.md` §5, design §5.5).
 
-- **Give every character a ladder from `rel 0`**: at least two repeatable personal events (`repeat: 4–6`) open at `rel(npc) > -10` or lower, then milestones at 10, 20, 40… A character whose events all start at `rel >= 10` stalls after the intro, because there is nothing for them to bring.
+- **Give every character a ladder from `rel 0`**: repeatable personal events open at `rel(npc) > -10` or lower, then milestones at 10, 20, 40… A character whose events all start at `rel >= 10` stalls after the intro, because there is nothing for them to bring.
 - **One option should warm to them** (`rel` or `spark` up, at a cost) and one should not; the player's pick decides whether they come back more often.
 - A rival's ladder can start negative (`rel(lyra) > -24`): contact with a rival counts as engagement whichever way it goes.
-- **Fixtures** (`seeks: rarely`: professors, staff, shopkeepers) need less: an introduction at their `place:` (or none, if a course or job `lead:` introduces them), two or three repeatable cards from `rel 0`, and one milestone at about `rel 25–30` (a spell they teach, a key, a cup on the hook). No romance.
+- **Fixtures** (`seeks: rarely`: professors, staff, shopkeepers) need less: an introduction at their `place:` (or none, if a course or job `lead:` introduces them), repeatable cards from `rel 0`, and a milestone at about `rel 25–30` (a spell they teach, a key, a cup on the hook). No romance.
 
 ## What a source's pool should cover
 
-- **Places (3 each):**
-  - one quiet or solitary scene (study, rest, a small discovery);
-  - one social or ambient scene (other students, staff, a `present(place)` cast);
-  - one with a small risk or temptation (a challenge, a chance, a rule to bend).
-  - At romantic spots (lakeshore, boathouse, orchard) one event may cast `date: any where romanceable(date) and rel(date) >= 20` and offer `spark date +small` against a cost.
-- **Course levels (level I: 3, levels II and III: 2 each):**
+- **Places:** a mix of
+  - quiet or solitary scenes (study, rest, a small discovery);
+  - social or ambient scenes (other students, staff, a `present(place)` cast);
+  - scenes with a small risk or temptation (a challenge, a chance, a rule to bend).
+  - At romantic spots (lakeshore, boathouse, orchard) an event may cast `date: any where romanceable(date) and rel(date) >= 20` and offer `spark date +small` against a cost.
+- **Course levels:**
   - Mornings in class, at the right level: first principles at I, real technique at II, dangerous or original work at III.
   - Options trade effort for `study <track> +small` or skill XP (`<skill> +small`) against mood, health or mana.
   - Use the course's `level_names` and `teaches` from `content/world/tracks.grim`.
   - The professor, if named, comes from the brief.
-- **Clubs and jobs (3 repeatable each, plus 1 milestone):**
+- **Clubs and jobs (repeatables, plus a milestone):**
   - Practice and shifts, with good and bad outcomes moving `perform <track> ±tier`. Jobs may pay a little (`gold +tiny`) on top of the per-visit pay. Use `rank: 1` for events any member can get, `rank: 2` or `3` for officer- or senior-level situations.
-  - Plus one `class: milestone` event at `rank: 2`, no `repeat`: the moment the role changes (first time running practice, first keys to the stockroom).
-- **Break plans (4 each):** `plan: castle | home | work | internship`. Use mornings of the break: the castle half-empty, home and family (the player's home is in the brief: `home_cottage`, `home_fields`, `home_market`), a seasonal job, a host's lab.
-- **Thesis (3):** `track: thesis`, effects `progress thesis ±tier`. Use the thesis lab, the advisor and late nights.
-- **Internships (2 each):** `track: intern_<host>`. Use the host's place from `tracks.grim`, the work, a colleague, a mistake.
-- **Hidden-course hints (1 each for artifice, starcalling, hollow_studies):**
+  - Plus a `class: milestone` event at `rank: 2`, no `repeat`: the moment the role changes (first time running practice, first keys to the stockroom).
+- **Break plans:** `plan: castle | home | work | internship`. Use mornings of the break: the castle half-empty, home and family (the player's home is in the brief: `home_cottage`, `home_fields`, `home_market`), a seasonal job, a host's lab.
+- **Thesis:** `track: thesis`, effects `progress thesis ±tier`. Use the thesis lab, the advisor and late nights.
+- **Internships:** `track: intern_<host>`. Use the host's place from `tracks.grim`, the work, a colleague, a mistake.
+- **Hidden-course hints (artifice, starcalling, hollow_studies):**
   - A `place:` event at that course's place, gated with `when: not enrolled(<track>) and not passed(<track>, 1)`.
   - It points the player at the prerequisite (read `prereq:` in `tracks.grim`).
-  - It is still repeatable, but rare (`weight: 6`, `repeat: 8`).
+  - It is still repeatable, but rarer than the place's other cards (a lower `weight:`, a longer `repeat:`).
 
 ## Ids, files, canon
 
@@ -130,5 +127,5 @@ An event with a fixed `actor: <npc>` and no `place:`, `track:`, `plan:` or `slot
 ```bash
 node tools/grim.js fmt content/events/pools/<group>.grim
 node tools/grim.js batch <group> --files content/events/pools/<group>.grim   # all validators pass (zh included)
-node tools/grim.js report --gaps                                              # your sources are no longer short
+node tools/grim.js report --gaps                                              # where your sources stand among the thinnest
 ```

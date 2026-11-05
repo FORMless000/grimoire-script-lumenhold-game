@@ -1,0 +1,108 @@
+{
+  "query": "Rings on Still Water The lake is flat calm, and still rings spread from its middle, slow and even, like the ripples from a bell that nobody hears. A heron on the shallows lifts its head at each one. Count the rings Seven, then a pause, then seven. The heron counts them too, you'd swear. You walk back up the lawn with the number stuck in your head. Skim a stone across them Your stone skips four times and sinks in the middle of a ring. For a moment the rings stop. Then they start again, patient as anything.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:bell_echo_lakeshore",
+      "title": "Rings on Still Water",
+      "file": "content/events/slice_2b.grim",
+      "line": 940,
+      "sourceHash": "d1e6e0b8bc213b430f241c7041b62d6ef4584b2a356712dd4f97558d93cdb959",
+      "score": 0.9480392932891846,
+      "excerpt": "Rings on Still Water\nThe lake is flat calm, and still rings spread from its middle, slow and even, like the ripples from a bell that nobody hears. A heron on the shallows lifts its head at each one.\nCount the rings\nSeven, then a pause, then seven. The heron counts them too, you'd"
+    },
+    {
+      "key": "event:lake_skimming",
+      "title": "Skimming Stones",
+      "file": "content/events/slice_2b.grim",
+      "line": 402,
+      "sourceHash": "cbad4b0f6eaaa56203988e82518cc7a560938a16e4e18c39a0f4541dad5e1977",
+      "score": 0.7576431632041931,
+      "excerpt": "Skimming Stones\n{friend} is skimming stones on the Mirror Lake. The water is so still each stone leaves rings that go on forever. \"Seven,\" {they} say{s}. \"Beat that.\"\nTry to beat it\nNine skips. {friend} demands a rematch and gets one. The afternoon disappears into stones.\nYour st"
+    },
+    {
+      "key": "event:bell_first_ring",
+      "title": "A Bell Under the Water",
+      "file": "content/events/slice_2b.grim",
+      "line": 774,
+      "sourceHash": "7df243caba7fdb22ca7d602493df4d1f903aa19dced89c6aabe2766e00123382",
+      "score": 0.7195496559143066,
+      "excerpt": "A Bell Under the Water\nIn the middle of the night you hear a bell, low and slow, from the middle of the lake. Nobody else in your dormitory wakes up.\nGo down to the shore\nThe water is perfectly still. Then, once, a ring spreads out from the centre, as if the lake had been struck "
+    },
+    {
+      "key": "event:bell_silence",
+      "title": "The Bell Calls",
+      "file": "content/events/slice_2b.grim",
+      "line": 863,
+      "sourceHash": "667d6840cf44526453ba2decb28b1b02d4926d6a7e08a7c9afab5c7cb05e8da6",
+      "score": 0.6593133211135864,
+      "excerpt": "The Bell Calls\nThe bell is ringing every night now, louder, and tonight it rings your way: you can feel it in your teeth. {clue(bell_name): You have the name from its rim.|You have Maud's rope.} You know, the way you know your own handwriting, that it wants you at the lakeshore a"
+    },
+    {
+      "key": "event:last_lake",
+      "title": "The Lake, One Last Time",
+      "file": "content/events/last_day.grim",
+      "line": 166,
+      "sourceHash": "97ca9dc855119b37bb1cc99d2ea953543612dd9821206305984083cd1f87507b",
+      "score": 0.5901073813438416,
+      "excerpt": "The Lake, One Last Time\nYou walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "38782095812a3e8b28c9a7a7a4a265f1f0bf4cf6d6a4515dcf9df786c45d6043",
+      "at": "2026-10-28T23:51:24.441Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 122,
+        "total_tokens": 122,
+        "cost": 0.00000122,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000122,
+          "upstream_inference_prompt_cost": 0.00000122,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "38782095812a3e8b28c9a7a7a4a265f1f0bf4cf6d6a4515dcf9df786c45d6043",
+      "elapsedMs": 311,
+      "at": "2026-10-28T23:51:24.752Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a4810c18dd09bb9475ebcbf2c461c84f8f7ebbb0142029b43c8ac76533a86483",
+      "at": "2026-10-28T23:51:24.808Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 35939,
+        "cost": 0.00179695
+      },
+      "requestHash": "a4810c18dd09bb9475ebcbf2c461c84f8f7ebbb0142029b43c8ac76533a86483",
+      "elapsedMs": 391,
+      "at": "2026-10-28T23:51:25.199Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

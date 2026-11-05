@@ -7,8 +7,9 @@ function invoke(bin,args,options={}){const r=spawnSync(bin,args,{cwd:ROOT,stdio:
 function pythonExecutable(explicit,execute=invoke){for(const bin of explicit?[explicit]:['python3.12','python3.11','python3.13','python3','python']){try{const v=JSON.parse(execute(bin,['-c','import sys,json; print(json.dumps(list(sys.version_info[:2])))'],{stdio:['ignore','pipe','pipe'],encoding:'utf8'}));if(v[0]===3&&v[1]>=10)return bin;}catch{}}throw new Error('Python >=3.10 required; install Python 3.12 or pass --python-bin PATH');}
 function setup(opts={},execute=invoke){
  for(const key of Object.keys(opts))if(!['python','python-bin','directory','help'].includes(key))throw new Error('Unknown setup option: --'+key);
- if(opts.help)return {usage:'./rag/setup.sh [--python-bin PATH] [--directory PATH]',indexBuilt:false};
+ if(opts.help)return {usage:'./rag/setup.sh [--python] [--python-bin PATH] [--directory PATH]',indexBuilt:false};
  if(Number(process.versions.node.split('.')[0])!==24)throw new Error('Node 24 required');
+ if(require('./src/authoring.js').selection().backend==='grim'&&!opts.python&&!opts['python-bin'])return {backend:'grim',node:process.version,pythonRequired:false,indexBuilt:false};
  const directory=path.resolve(opts.directory||path.join(ROOT,'rag/envs')),venv=path.join(directory,'lightrag'),python=path.join(venv,process.platform==='win32'?'Scripts/python.exe':'bin/python');
  fs.mkdirSync(directory,{recursive:true});
  if(!fs.existsSync(python))execute(pythonExecutable(opts['python-bin'],execute),['-m','venv',venv]);

@@ -1,0 +1,107 @@
+{
+  "query": "The Prefect at the Door {Bram Hollis is leaning on the Restricted Section door, lantern at his feet, as if he has all night. Somebody has told him about the key, or he has guessed.|Bram is at the door again. He has brought a sandwich this time.|Bram's watch on the door has become a habit. He hums while he waits, badly.} Wait him out in the stacks {You crouch behind the history shelves for an hour, reading by the light of his lantern, until he gives up and goes to bed.|You wait him out, and he eats the whole sandwich first. Your knees will never forgive you.|You know his humming now. When it stops, he's asleep on his feet, and you slip past.} Bluff your way past {You tell him a professor is looking for him in the east tower. He goes. You are inside before his lantern reaches the stair.|\"Thorne wants you,\" you say, and Bram's face goes pale. Nobody checks whether Thorne wants them.|You tell him there's a fight in the courtyard. There isn't. He's gone before you finish the sentence.} {\"Nice try,\" says Bram, and writes your name in his little book with great pleasure.|He laughs, actually laughs, and walks you back to your dormitory by the ear.|Bram has heard that one before, from you. He takes your name, and his time over it.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:forbidden_bram_watch",
+      "title": "The Prefect at the Door",
+      "file": "content/events/chains_minor.grim",
+      "line": 89,
+      "sourceHash": "73f53049c57bc726c6dc98e7dbf233a70a9ac1d06278f3c220c301d206871a4e",
+      "score": 0.9608175754547119,
+      "excerpt": "The Prefect at the Door\n{Bram Hollis is leaning on the Restricted Section door, lantern at his feet, as if he has all night. Somebody has told him about the key, or he has guessed.|Bram is at the door again. He has brought a sandwich this time.|Bram's watch on the door has become"
+    },
+    {
+      "key": "event:forbidden_section_1",
+      "title": "The Silver Key",
+      "file": "content/events/chains_minor.grim",
+      "line": 58,
+      "sourceHash": "26a2df27c9ef572fb9e7f285260368793c0ce6c7b16a883d34fe83bef933f0dd",
+      "score": 0.7411789894104004,
+      "excerpt": "The Silver Key\nAfter hours. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.\nTurn back\nYou lock the door again and hang the key on a nail in your wardrobe. Some nights "
+    },
+    {
+      "key": "event:bram_between_writes_up",
+      "title": "Name in the Ledger",
+      "file": "content/events/between_known.grim",
+      "line": 137,
+      "sourceHash": "3d03b11cea77e0a796c1a21ddb3f394d17ca255f6d56929997198449a846b0d6",
+      "score": 0.6447998881340027,
+      "excerpt": "Name in the Ledger\n{~Bram has {o} by the sleeve for \"loitering with intent\", which turns out to mean waiting for you.|Bram is writing {o} up for \"an insolent hat\". {o}'s hat is a perfectly ordinary hat.|Bram has caught {o} running on the stairs, and is reading out the rule number"
+    },
+    {
+      "key": "event:bram_after_curfew",
+      "title": "Caught After Curfew",
+      "file": "content/events/bonds/rivals.grim",
+      "line": 310,
+      "sourceHash": "2fbbda6f244330b897367a78341a676839a0ea86b01f334f9b330bc055d27997",
+      "score": 0.6251344680786133,
+      "excerpt": "Caught After Curfew\nBram's lantern catches you halfway up the north stairs, an hour after curfew. He smiles, slowly. He's been waiting all year for this. \"Well,\" he says. \"Well, well, well.\"\nTake the detention\n\"Fair,\" you say. It throws him; he'd prepared a speech. He writes you "
+    },
+    {
+      "key": "event:courtyard_prefects_notebook",
+      "title": "The Prefect's Notebook",
+      "file": "content/events/spell_uses.grim",
+      "line": 300,
+      "sourceHash": "23a484a28349a609fc05a5c0eff3dc50deab9280b05c5dffd91b214a6b238dfc",
+      "score": 0.6161049008369446,
+      "excerpt": "The Prefect's Notebook\n{You have, it turns out, been walking on the lawn, which is for looking at. Bram Hollis has his notebook open and his pencil licked. \"Rule nine,\" he says. \"Demerit.\"|Bram again, and the notebook again, and the lawn again. \"Rule nine,\" he says, with real joy"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "dd6844387dc529bdcdbd3aff0c26ee8f85b37394aeea8a3c62ec1deee5d9b304",
+      "at": "2026-10-28T23:49:04.445Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 303,
+        "total_tokens": 303,
+        "cost": 0.00000303,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000303,
+          "upstream_inference_prompt_cost": 0.00000303,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "dd6844387dc529bdcdbd3aff0c26ee8f85b37394aeea8a3c62ec1deee5d9b304",
+      "elapsedMs": 488,
+      "at": "2026-10-28T23:49:04.933Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "db31bcc41d7bf5357f84cf11c6d4226f702ce34215885e4515b78bc3d33daff3",
+      "at": "2026-10-28T23:49:04.995Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 53143,
+        "cost": 0.00265715
+      },
+      "requestHash": "db31bcc41d7bf5357f84cf11c6d4226f702ce34215885e4515b78bc3d33daff3",
+      "elapsedMs": 516,
+      "at": "2026-10-28T23:49:05.511Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

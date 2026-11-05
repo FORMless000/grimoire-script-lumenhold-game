@@ -1,0 +1,108 @@
+{
+  "query": "A Sick Familiar {A student going home for a funeral needs someone to sit up with their sick familiar for two nights. They will pay.|Another notice for a night sitter, for a sick toad this time, and the pay is better.|The familiars' night-sitter: that's you, apparently. A cat this time, and a worried owner.} Sit up with it, both nights {Two nights of tonic every hour and very little sleep. It recovers. So, eventually, do you.|The toad recovers and you nearly don't. The owner pays double and calls you a saint.|The cat is ungrateful and lives. You're paid, and spend the next day asleep in lectures.} Sit up one night, and find a second sitter {You take the first night and talk a friend into the second. The pay splits; the sleep doesn't.|One night each, you and a sleepy first-year. The familiar is fine. Half the pay is still pay.|You know who will sit up for a little money now. You split the nights and the pay, and sleep.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_sick_familiar",
+      "title": "A Sick Familiar",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 739,
+      "sourceHash": "4f42c4c1ba03afdb1df31610d9ce31587172a705ba4a71c61280044ff19aa236",
+      "score": 0.9515944719314575,
+      "excerpt": "A Sick Familiar\n{A student going home for a funeral needs someone to sit up with their sick familiar for two nights. They will pay.|Another notice for a night sitter, for a sick toad this time, and the pay is better.|The familiars' night-sitter: that's you, apparently. A cat this"
+    },
+    {
+      "key": "event:beast_night_stable",
+      "title": "Sitting Up With the Sick",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 479,
+      "sourceHash": "f66fa8983e49ae12dc089e2b4a13d0da83c7e0f0938fcffe7d9c03ddf37ee26e",
+      "score": 0.5802310705184937,
+      "excerpt": "Sitting Up With the Sick\n{Advanced students take turns sitting up in the stables when a creature is ill. At the morning lecture Brask hands you a lantern, a blanket and a list for tonight.|Your name is on Brask's night-watch list again, and the list is shorter.|Night watch again "
+    },
+    {
+      "key": "event:stables_night_shift",
+      "title": "The Sick Pegasus",
+      "file": "content/events/jobs.grim",
+      "line": 339,
+      "sourceHash": "4df1540b85a50bb0baec015e99a8a146b1b58c1146f16d31ce8b2cc1e354d4ef",
+      "score": 0.5015043020248413,
+      "excerpt": "The Sick Pegasus\nThe oldest pegasus in the stables is sick. Someone has to sit with her overnight, keep her warm, and make sure she drinks. It's unpaid. Old Maud says she'll do it if no one else will. Maud is eighty.\nLet Maud do it\nYou sleep well. Maud is a little slower the next"
+    },
+    {
+      "key": "event:favour_amaranth_shift",
+      "title": "The Night Shift",
+      "file": "content/events/pools/money.grim",
+      "line": 98,
+      "sourceHash": "e25f7f8986f6d9474001d08d1ca4d8ee2e9302418d94799930956d352f48ce32",
+      "score": 0.49370965361595154,
+      "excerpt": "The Night Shift\nSister Amaranth needs a pair of hands for the infirmary's night shift. \"Basins, bandages, and sitting with whoever can't sleep. Eight crowns. Don't faint. If you faint, you're a patient, and patients don't get paid.\"\nTake the shift\nA first-year with a fever, a pre"
+    },
+    {
+      "key": "event:brask_night_owl",
+      "title": "The Sick Owl",
+      "file": "content/events/fixtures.grim",
+      "line": 134,
+      "sourceHash": "9c27c97401728681757ab5b856889b04ef54e437bc7e0ebb327b169f1010214b",
+      "score": 0.47247689962387085,
+      "excerpt": "The Sick Owl\nBrask stops you in the corridor and falls into step without asking, which is a first. \"The old barn owl won't eat,\" she says. \"Somebody should sit with her tonight. Somebody quiet.\" She is looking at you.\nSit up with the owl\nYou sit in the loft till dawn, dripping wa"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "19cb0ecddb434024b88cda840aa4497e09e421f65d5fa29db63f47117d35652d",
+      "at": "2026-10-28T23:51:08.696Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 233,
+        "total_tokens": 233,
+        "cost": 0.00000233,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000233,
+          "upstream_inference_prompt_cost": 0.00000233,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "19cb0ecddb434024b88cda840aa4497e09e421f65d5fa29db63f47117d35652d",
+      "elapsedMs": 514,
+      "at": "2026-10-28T23:51:09.210Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "20c6c9f4722ca48cfa5e2f85acf5ad01111a7987a8b1fb25b494a368a6645b70",
+      "at": "2026-10-28T23:51:09.390Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42248,
+        "cost": 0.0021124
+      },
+      "requestHash": "20c6c9f4722ca48cfa5e2f85acf5ad01111a7987a8b1fb25b494a368a6645b70",
+      "elapsedMs": 387,
+      "at": "2026-10-28T23:51:09.777Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Side Bets {You find a place on the cellar steps. The bookmaker works his way along them, slate in hand.|From the steps you can see the fighters' wand hands, which tell you more than their faces. The bookmaker is coming round.|You know the regulars on the steps now, and who bets with their heart. The bookmaker holds out his slate.} Back the favourite {Your fighter wins. You collect quietly and leave before anyone remembers your face.|You read the wand hands right. The bookmaker pays you as if it hurt.|The favourite wins, as favourites do. You pocket a small, sensible profit.} {Your fighter goes down in the first exchange. So does your stake.|You picked the wand hand, not the wizard. The bookmaker smiles.|The favourite slips on the wet stone, and your crowns slip with them.} Back the underdog {The underdog wins, and you're the only one on the steps who backed them. The bookmaker counts it out very slowly.|Your long shot lands one spell, and it's enough. The steps turn round to look at you.|You saw what nobody else did, the limp in the favourite's step. You walk home heavy with silver.} {The underdog is an underdog for a reason. Your stake is gone in a minute.|A brave fight, a long fall, and your crowns go with it.|You backed your heart. Your purse pays for it.} Go home {You watch one bout and go home with your purse unopened.|You leave before the bookmaker reaches you.|You climb the steps into the cold and leave the ring to its noise.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ring_side_bets",
+      "title": "Side Bets",
+      "file": "content/events/pools/night.grim",
+      "line": 630,
+      "sourceHash": "5096c7138435620f28c8044851c334a9a858d580da9b5ee236806ff080e82f7f",
+      "score": 0.9516187906265259,
+      "excerpt": "Side Bets\n{You find a place on the cellar steps. The bookmaker works his way along them, slate in hand.|From the steps you can see the fighters' wand hands, which tell you more than their faces. The bookmaker is coming round.|You know the regulars on the steps now, and who bets w"
+    },
+    {
+      "key": "event:midnight_boathouse_ring",
+      "title": "The Ring Under the Boathouse",
+      "file": "content/events/night.grim",
+      "line": 139,
+      "sourceHash": "acade914100c1ee6ad3d198ce9e4fcf118c789b1b848840f7e6195ec5bbae7cd",
+      "score": 0.6565892696380615,
+      "excerpt": "The Ring Under the Boathouse\n{Under the boathouse someone has chalked a ring on the flagstones. Inside it, wands out, anything goes, and nobody here reports a forbidden spell. What it does to you is your own affair.|The chalk ring under the boathouse again, scorched from last tim"
+    },
+    {
+      "key": "event:ring_on_yourself",
+      "title": "Bet on Yourself",
+      "file": "content/events/pools/night.grim",
+      "line": 483,
+      "sourceHash": "918c267016d8aa11816e61bb75bd00fbb93952aa50eac21cb6a22100f7309569",
+      "score": 0.6050911545753479,
+      "excerpt": "Bet on Yourself\n{The ring under the boathouse has a bookmaker now, with a slate. \"Fancy yourself?\" he says. \"Put your money where your wand is. Cast what you like. Nobody down here tells.\"|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the sla"
+    },
+    {
+      "key": "event:ring_bout_4",
+      "title": "The Last Bout",
+      "file": "content/events/pools/night.grim",
+      "line": 597,
+      "sourceHash": "dfdfda1702dc08c034e6cca1951bc18e6de158bb2bc5a2c8a8fcc409e2d8a5ef",
+      "score": 0.5985690355300903,
+      "excerpt": "The Last Bout\nThree down, and the cellar has gone quiet. {~The ring's own champion steps in: a duellist the academy expelled, who hasn't lost down here in a year.|The bookmaker himself takes off his coat. His wand was in it all along, and the old hands step back from the chalk.|A"
+    },
+    {
+      "key": "event:ring_bout_2",
+      "title": "The Second Bout",
+      "file": "content/events/pools/night.grim",
+      "line": 538,
+      "sourceHash": "ca96534bfaec0bdcdff3496bdcfe53ffb9d5d39ad23c6ecfba2f4d5141663954",
+      "score": 0.5923178791999817,
+      "excerpt": "The Second Bout\nThe money-holder points at the chalk again. {~A lanky girl steps in who quit the academy last spring. She kept the wand, and the duelling stance.|A fairground conjurer steps in, still in spangles, rolling a spark across his knuckles. The crowd knows him.|A hedge-h"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "b2e81207be5eb07be78dc9acbeba24e02292873236700bdc235ce8f72203f754",
+      "at": "2026-10-28T23:51:21.941Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 345,
+        "total_tokens": 345,
+        "cost": 0.00000345,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000345,
+          "upstream_inference_prompt_cost": 0.00000345,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "b2e81207be5eb07be78dc9acbeba24e02292873236700bdc235ce8f72203f754",
+      "elapsedMs": 527,
+      "at": "2026-10-28T23:51:22.468Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "80185a5c0b6104c939bdd23b183c0c588f1ba68bd20122726bced116114e9f12",
+      "at": "2026-10-28T23:51:22.599Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58782,
+        "cost": 0.0029391
+      },
+      "requestHash": "80185a5c0b6104c939bdd23b183c0c588f1ba68bd20122726bced116114e9f12",
+      "elapsedMs": 823,
+      "at": "2026-10-28T23:51:23.422Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

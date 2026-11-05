@@ -1,0 +1,53 @@
+/* Fork C · Feed */
+.fork-c .fd-top { display: flex; flex-direction: column; gap: 4px; }
+.fork-c .fd-f { display: grid; grid-template-columns: 34px minmax(60px, auto) 1fr; align-items: center; gap: 4px 8px; padding: 5px 8px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); }
+.fork-c .fd-f.you { border-color: rgba(240, 213, 140, .3); }
+.fork-c .fd-pf { width: 34px; height: 34px; padding: 0; border-radius: 9px; overflow: hidden; border: 1px solid var(--line); }
+.fork-c .fd-pf svg { width: 100%; height: 100%; display: block; }
+.fork-c .fd-n { font: 600 14px var(--serif); color: var(--gold-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .fork-c .fd-f.opp .fd-n { color: var(--opp); }
+.fork-c .fd-bars { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-width: 0; }
+.fork-c .fd-f .pf-chips { grid-column: 2 / -1; }
+.fork-c .pf-num { min-width: 46px; }
+
+.fork-c .fd-feed { border-radius: 14px; border: 1px solid var(--line); background: rgba(12, 14, 32, .55); overflow: hidden; }
+.fork-c .fd-feed header { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid rgba(255, 255, 255, .06); }
+.fork-c .fd-feed header button { padding: 1px 8px; font-size: 10.5px; border-radius: 999px; background: none; color: var(--muted); letter-spacing: 0; text-transform: none; }
+.fork-c .fd-feed ol { list-style: none; margin: 0; padding: 4px 8px; max-height: 150px; overflow-y: auto; scrollbar-width: thin; }
+.fork-c .fd-e { display: grid; grid-template-columns: 22px 1fr; gap: 6px; padding: 4px 0; opacity: .55; }
+.fork-c .fd-e + .fd-e { border-top: 1px solid rgba(255, 255, 255, .05); }
+.fork-c .fd-e.last, .fork-c .fd-e.now, .fork-c .fd-e.empty { opacity: 1; }
+.fork-c .fd-e.empty p { margin: 2px 0; color: var(--muted); font-style: italic; font-size: 12.5px; }
+.fork-c .fd-r { font-size: 10.5px; font-weight: 800; color: var(--muted); text-align: center; padding-top: 4px; }
+.fork-c .fd-l { display: flex; align-items: center; gap: 5px; margin: 1px 0; font-size: 13px; flex-wrap: wrap; }
+.fork-c .fd-l .pf-ico { width: 20px; height: 20px; } .fork-c .fd-l.opp .pf-ico { color: var(--opp); }
+.fork-c .fd-w { font-size: 11px; color: var(--muted); }
+.fork-c .fd-m { font-weight: 700; } .fork-c .fd-m.wait, .fork-c .fd-m.hid { font-weight: 500; color: var(--muted); font-style: italic; }
+.fork-c .fd-mine { font-size: 11.5px; color: var(--you); }
+.fork-c .fd-xs { display: flex; flex-wrap: wrap; gap: 1px 12px; margin: 1px 0 0 25px; }
+.fork-c .fd-e.now { border-top: 1px dashed rgba(143, 201, 232, .35) !important; margin-top: 2px; }
+.fork-c .fd-e.now .fd-r { color: var(--gold-2); }
+.fork-c .fd-their { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px 2px 4px; border-radius: 999px; border-color: rgba(143, 201, 232, .5); background: rgba(143, 201, 232, .1); color: var(--opp); font-weight: 600; }
+.fork-c .fd-their .pf-ico { width: 20px; height: 20px; color: var(--opp); } .fork-c .fd-their.forced { border-color: rgba(242, 168, 214, .6); color: var(--k-debuff); }
+.fork-c .fd-l.blow { color: #ffc28a; } .fork-c .fd-l.blow small { color: var(--muted); }
+.fork-c .fd-e.fresh { animation: fd-in .4s ease both; } .fork-c .fd-e.fresh .pf-pill { animation: fd-pop .3s ease .25s both; }
+@keyframes fd-in { from { opacity: 0; transform: translateY(8px); background: rgba(240, 213, 140, .1); } } @keyframes fd-pop { from { opacity: 0; transform: scale(.6); } }
+
+.fork-c .fd-state { margin: 0; padding: 5px 10px; border-radius: 10px; background: rgba(242, 168, 214, .1); color: var(--k-debuff); font-size: 12.5px; font-weight: 600; }
+.fork-c .fd-acts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 5px; transition: opacity .2s; }
+.fork-c .fd-acts.waiting { opacity: .6; }
+.fork-c .fd-a { display: flex; gap: 0; border-radius: 12px; }
+.fork-c .fd-go { position: relative; flex: 1; min-width: 0; display: grid; grid-template-columns: 26px 1fr auto auto; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 12px 0 0 12px; text-align: left; }
+.fork-c .fd-go:hover:not(:disabled) { border-color: var(--gold-2); background: #2b3266; }
+.fork-c .fd-an { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .fork-c .fd-an i { font-style: normal; font-size: 10px; color: var(--muted); }
+.fork-c .fd-go kbd { position: absolute; top: 2px; left: 4px; font: 700 8.5px var(--sans); color: rgba(255, 255, 255, .28); }
+.fork-c .fd-i { width: 36px; padding: 0 !important; border-left: 0 !important; border-radius: 0 12px 12px 0 !important; display: grid; place-items: center; color: var(--muted); }
+.fork-c .fd-i svg { width: 16px; height: 16px; }
+.fork-c .fd-a.off .fd-i { opacity: .6; }
+@container fight (max-width: 420px) {
+  .fork-c .fd-acts { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .fork-c .fd-go { grid-template-columns: 18px 1fr; gap: 4px; padding: 6px 4px 6px 5px; }
+  .fork-c .fd-go .pf-ico { width: 18px; height: 18px; } .fork-c .fd-go .pf-eff { display: none; }
+  .fork-c .fd-go .pf-cost { position: absolute; top: 1px; right: 3px; font-size: 9.5px; } .fork-c .fd-go kbd { display: none; }
+  .fork-c .fd-an { font-size: 12px; } .fork-c .fd-i { width: 22px; } .fork-c .fd-i svg { width: 13px; height: 13px; }
+  .fork-c .fd-bars { grid-template-columns: 1fr; gap: 1px; } .fork-c .fd-feed ol { max-height: 132px; }
+}

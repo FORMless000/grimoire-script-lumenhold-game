@@ -1,0 +1,108 @@
+{
+  "query": "Putting Out Fires \"It's for putting fires out,\" Kael says again, and nods across the duel hall to where Lyra is practising, very loudly, with a very large flame. He waits to see whether you'll take the hint. Put out Lyra's flame Your frost meets her flame and they cancel with a hiss and a cloud of steam. Lyra's face, when it clears, is magnificent. Kael makes a sound you think is a laugh. Practise on the braziers instead You frost the braziers one by one. It's useful, and dull, and Kael stays with you for all of it without saying anything. You suspect that was the point.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_hoarfrost",
+      "title": "Putting Out Fires",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 413,
+      "sourceHash": "28e292e64af322f8df1c6933fbb90303c360ead455c0f02fc7154f5de720cf0e",
+      "score": 0.9623226523399353,
+      "excerpt": "Putting Out Fires\n\"It's for putting fires out,\" Kael says again, and nods across the duel hall to where Lyra is practising, very loudly, with a very large flame. He waits to see whether you'll take the hint.\nPut out Lyra's flame\nYour frost meets her flame and they cancel with a h"
+    },
+    {
+      "key": "event:lesson_flame",
+      "title": "Putting Fire Out",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 4,
+      "sourceHash": "edaeae3b13757d3042fd980504c25679f986ce864702f22eb78c735567961002",
+      "score": 0.7429670691490173,
+      "excerpt": "Putting Fire Out\nFlame is yours now. Professor Thorne gathers the year's new Flame casters in the stone practice room and lights a brazier. \"Any fool can start a fire,\" he says. \"You are here to learn to stop one.\" There is a bucket of water at his feet, and he forbids you to tou"
+    },
+    {
+      "key": "event:kael_teaches_hoarfrost",
+      "title": "Cold Hands",
+      "file": "content/events/spell_sources.grim",
+      "line": 321,
+      "sourceHash": "9085218968023864f759dfc2166783db15b6e0ac933a2e71683421a233a8c80a",
+      "score": 0.73870849609375,
+      "excerpt": "Cold Hands\nKael holds his hand over a brazier in the courtyard, and the coals grey over with frost until the fire gives up. \"Where I come from, everyone learns this before they learn to read,\" he says. A pause. \"It's for putting fires out. Mostly. I could teach you, if you wanted"
+    },
+    {
+      "key": "event:slice_frost_duel",
+      "title": "Frost Against Fire",
+      "file": "content/events/slice_2a.grim",
+      "line": 229,
+      "sourceHash": "a8bfde718569b63bf03f13b86eaf9e94117352de469a8e564dd21359e7e0967d",
+      "score": 0.6854252219200134,
+      "excerpt": "Frost Against Fire\nKael asks for a practice duel, which for him is an astonishing number of words. \"Not to win,\" he adds. \"I want to see what you do when it's cold.\"\nDuel him straight\nYou win by a whisker, breathing steam. Kael bows, and his hands, for once, are warm when he shak"
+    },
+    {
+      "key": "event:lyra_after_hours",
+      "title": "After the Torches",
+      "file": "content/events/romance/lyra_tobias.grim",
+      "line": 55,
+      "sourceHash": "e52bae516687ca97dc3677eb4813a9026919282695a7a478efd3ae00a6a20b59",
+      "score": 0.6040629148483276,
+      "excerpt": "After the Torches\n{~The duelling hall's torches go out at ten. Lyra lights one flame in her palm and keeps practising.|Lyra is still in the practice hall after the torches are out, working one form over and over.|The torches are out again. Lyra's palm flame is the only light, and"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "067a0416b1c4dd5ccf4e78448ee865ba36d1b0c5f80efe5d68bb6fdf2e0e43c9",
+      "at": "2026-10-28T23:51:46.210Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 142,
+        "total_tokens": 142,
+        "cost": 0.00000142,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000142,
+          "upstream_inference_prompt_cost": 0.00000142,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "067a0416b1c4dd5ccf4e78448ee865ba36d1b0c5f80efe5d68bb6fdf2e0e43c9",
+      "elapsedMs": 1342,
+      "at": "2026-10-28T23:51:47.552Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d45e33054363347de015e8e1278524580cfdb15466435065f0f1e275e6b65bf3",
+      "at": "2026-10-28T23:51:47.585Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47666,
+        "cost": 0.0023833
+      },
+      "requestHash": "d45e33054363347de015e8e1278524580cfdb15466435065f0f1e275e6b65bf3",
+      "elapsedMs": 416,
+      "at": "2026-10-28T23:51:48.001Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

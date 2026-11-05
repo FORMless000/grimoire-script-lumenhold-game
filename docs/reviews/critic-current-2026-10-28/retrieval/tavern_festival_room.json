@@ -1,0 +1,108 @@
+{
+  "query": "The Room Is Yours The landlady is away for the night and the Newt is packed to the rafters, two barges in and a fight brewing by the fire. It's yours to hold. {flag(rapport_eel) and flag(rapport_round) and flag(rapport_shift): You know this room now.|You know some of this room.} Tap the bar twice You tap the bar twice, say one sentence about an eel, and the room laughs. The fight by the fire turns into a song. When the landlady comes back, she knows at once. She just nods. The tap comes out as a knock and the laugh never comes. A chair breaks, and so do some glasses, and the fine comes out of your wages. Next festival night, she says, you can try again. Buy the first round, then talk A round on the house first, then a story while they drink it. By the time the mugs are empty, nobody remembers wanting to fight. The landlady hears about it before she's through the door. They drink the round and fight anyway. You mop up with the rest of the staff. Next festival night, the landlady says.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:tavern_festival_room",
+      "title": "The Room Is Yours",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 737,
+      "sourceHash": "15a848f489dc12355cb5ae3bdb706ac6ee292b3f9ac6e4a77baa73bc03f13bab",
+      "score": 0.9330512881278992,
+      "excerpt": "The Room Is Yours\nThe landlady is away for the night and the Newt is packed to the rafters, two barges in and a fight brewing by the fire. It's yours to hold. {flag(rapport_eel) and flag(rapport_round) and flag(rapport_shift): You know this room now.|You know some of this room.}\n"
+    },
+    {
+      "key": "event:tavern_two_taps",
+      "title": "Two Taps on the Bar",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 653,
+      "sourceHash": "c61d02f2265ea7ca701ab2745b6da3cc3749b630785a66691a07a12c20f4462f",
+      "score": 0.7564791440963745,
+      "excerpt": "Two Taps on the Bar\nTwo barge-men are halfway out of their chairs when the landlady taps the bar twice, says one sentence you don't catch, and the whole room laughs instead. The fight is over before it began. She catches you staring. \"Want to know how?\"\n\"Yes. Teach me.\"\n\"Can't te"
+    },
+    {
+      "key": "event:gig_newt_brawl",
+      "title": "A Fight Over a Song",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 341,
+      "sourceHash": "2ee29743cfc7885da83dd3085a9de68939fe447d04fc3e95d01be5cde7532336",
+      "score": 0.7237284779548645,
+      "excerpt": "A Fight Over a Song\n{Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {A chair is already in the air.|Somebody has taken their"
+    },
+    {
+      "key": "event:tavern_brawl",
+      "title": "Brawl at the Newt",
+      "file": "content/events/jobs.grim",
+      "line": 85,
+      "sourceHash": "5fd9490fbc973c40652221d1f5e24b7d6adeb7c6bb640cda99bcf0ea98fdf300",
+      "score": 0.6928701996803284,
+      "excerpt": "Brawl at the Newt\nA dwarf and a troll disagree about the price of turnips, and the Gilded Newt erupts. A chair flies past your head. The owner is hiding behind the bar, gesturing at you to do something.\nDuck behind the bar too\nYou crouch beside the owner and share a bag of crisps"
+    },
+    {
+      "key": "event:tavern_eel_story",
+      "title": "The Eel Story",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 675,
+      "sourceHash": "5d924ad4bcb38f34195d8d1f30aefe1c321a220e60aa359d8090ce87c96a3d90",
+      "score": 0.6388034820556641,
+      "excerpt": "The Eel Story\nThe old barge-man's eel story is the most famous story at the Newt. Regulars mouth along. The landlady says if you can tell it as well as he does, the room will be half yours. He's willing to teach it, slowly, for an evening.\nLearn it and tell it back\nYou tell it ba"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "147d8f17f00f9afe324fa08f9cd6c04313771d642379d47664ac49967a1c20ae",
+      "at": "2026-10-28T23:51:37.853Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 252,
+        "total_tokens": 252,
+        "cost": 0.00000252,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000252,
+          "upstream_inference_prompt_cost": 0.00000252,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "147d8f17f00f9afe324fa08f9cd6c04313771d642379d47664ac49967a1c20ae",
+      "elapsedMs": 330,
+      "at": "2026-10-28T23:51:38.183Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "0088db4bfff615292920c9debb7212b24ec2edbd93983cdd4bb256b30b888e1c",
+      "at": "2026-10-28T23:51:38.364Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43280,
+        "cost": 0.002164
+      },
+      "requestHash": "0088db4bfff615292920c9debb7212b24ec2edbd93983cdd4bb256b30b888e1c",
+      "elapsedMs": 309,
+      "at": "2026-10-28T23:51:38.673Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

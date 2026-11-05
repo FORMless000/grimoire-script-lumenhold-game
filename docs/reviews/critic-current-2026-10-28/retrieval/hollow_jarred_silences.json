@@ -1,0 +1,134 @@
+{
+  "query": "Silences in Jars {Today the headmistress hands you an empty jar. \"Seal a silence in it. Not quiet; silence. You will know the difference by the end.\"|Another empty jar. Behind the headmistress, a shelf of stoppered jars, all apparently empty, all labelled in faded hands.|Silence jars. You know the weight of a well-sealed one now, heavier than it looks.} {The lamp hisses.|The books on the shelves have stopped breathing, as if to help.|{final_year: She asks what silence you'd keep, if you could keep only one.|She works at her own jar, unhurried, while you work at yours.}} Seal the room's silence {You draw the room's silence into the jar a breath at a time and stopper it. When you shake it, nothing happens, very heavily. She nods.|The silence fights the stopper like a cat fights a bath. You win, eventually, emptied out.|You seal a silence so clean that the lamp seems louder when you're done. The headmistress takes the jar and shelves it with the old ones.} Unseal one of the old jars {You unstopper a jar dated a century ago. Out comes the silence of a room just after someone laughed. It's unbearably sad, and you don't know why.|You open an old jar and the room fills with the silence of a held breath before a goodbye. You close it again quickly. She says nothing, kindly.|You open one more old jar. A silence after snow. You sit in it a long while before you can speak.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:hollow_jarred_silences",
+      "title": "Silences in Jars",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 232,
+      "sourceHash": "48417471b257e946f8c2d06a36a2efee02b9d3519b4c2a79b7ec97452e8245b0",
+      "score": 0.9548367261886597,
+      "excerpt": "Silences in Jars\n{Today the headmistress hands you an empty jar. \"Seal a silence in it. Not quiet; silence. You will know the difference by the end.\"|Another empty jar. Behind the headmistress, a shelf of stoppered jars, all apparently empty, all labelled in faded hands.|Silence "
+    },
+    {
+      "key": "event:hollow_first_seal",
+      "title": "Closed, Even to Me",
+      "file": "content/events/spell_sources.grim",
+      "line": 183,
+      "sourceHash": "b42af27b9677c8809966e055e931258748fd7ea8a8c38b4bd37cfe339f2d7059",
+      "score": 0.5446495413780212,
+      "excerpt": "Closed, Even to Me\nThe headmistress sets a small wooden box on the table and opens it. It is empty. \"Close it,\" she says, \"so that it stays closed. To anyone. Even to me.\" She sits down across from you with her hands folded. \"That is Seal.\"\nSeal it as tight as you can\nIt takes ev"
+    },
+    {
+      "key": "event:hollow_sealed_boxes",
+      "title": "How It Was Sealed",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 112,
+      "sourceHash": "25bc3b6ce55230d56095502b29ea6ed745c5cf62fb7102275a674383178a4f6c",
+      "score": 0.5351681709289551,
+      "excerpt": "How It Was Sealed\n{Each lesson, the headmistress sets a sealed thing in front of you. \"Tell me how it was closed,\" she says. \"Not what is inside. How.\"|Another sealed thing on the table. Today it is {a letter with a wax seal|a small lacquered box|a jar with its lid charmed shut}."
+    },
+    {
+      "key": "event:maud_cottage_top_shelf",
+      "title": "The Top Shelf",
+      "file": "content/events/pools/grounds.grim",
+      "line": 533,
+      "sourceHash": "4ce1d3a65e75fbdadccd830ab8c80d8f5ab1cbab56c67aa9c867360d3a86004c",
+      "score": 0.46949753165245056,
+      "excerpt": "The Top Shelf\n{{slot == \"evening\": Maud has stepped out to the hens.|Maud is up at the greenhouses.} The top shelf of jars is right there, every label in her spidery hand.|Maud has stepped out, and the top shelf has gained a jar since you were last here.|You know the top shelf by"
+    },
+    {
+      "key": "event:lesson_seal",
+      "title": "Only for the Addressee",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 296,
+      "sourceHash": "bd5f094db68eca9dcd553cd27042ee1b4d8b8e36f27dae317dc88c4811793698",
+      "score": 0.44314074516296387,
+      "excerpt": "Only for the Addressee\nToday's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. \"If I can,\" she says mildly, \"you haven't.\"\nSeal it against her\nShe tries the letter for a long minute with one"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "cc4edf0445cc31226115b4a908fad36d2d993311f246cb5aa6a58ab80ba200bb",
+      "at": "2026-10-28T23:43:18.371Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 342,
+        "total_tokens": 342,
+        "cost": 0.00000342,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000342,
+          "upstream_inference_prompt_cost": 0.00000342,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "cc4edf0445cc31226115b4a908fad36d2d993311f246cb5aa6a58ab80ba200bb",
+      "elapsedMs": 10759,
+      "at": "2026-10-28T23:43:29.130Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6a82a54e20ef886fdabab153600fdc4147b4f7733c8ff2e3473ac402d5a76b05",
+      "at": "2026-10-28T23:43:29.157Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "failed",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6a82a54e20ef886fdabab153600fdc4147b4f7733c8ff2e3473ac402d5a76b05",
+      "httpStatus": 429,
+      "error": "OpenRouter /rerank failed (HTTP 429)",
+      "elapsedMs": 309,
+      "at": "2026-10-28T23:43:29.466Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "requestHash": "cc4edf0445cc31226115b4a908fad36d2d993311f246cb5aa6a58ab80ba200bb",
+      "localCost": 0,
+      "at": "2026-10-28T23:43:45.744Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6a82a54e20ef886fdabab153600fdc4147b4f7733c8ff2e3473ac402d5a76b05",
+      "at": "2026-10-28T23:43:45.771Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 55059,
+        "cost": 0.00275295
+      },
+      "requestHash": "6a82a54e20ef886fdabab153600fdc4147b4f7733c8ff2e3473ac402d5a76b05",
+      "elapsedMs": 754,
+      "at": "2026-10-28T23:43:46.525Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

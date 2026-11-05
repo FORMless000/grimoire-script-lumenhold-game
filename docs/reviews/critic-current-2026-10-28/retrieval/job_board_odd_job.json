@@ -1,0 +1,107 @@
+{
+  "query": "One Evening's Work Every notice says \"from next term\", except one, pinned low and crooked: {~the refectory wants hands for the end-of-term clear-out|the porters want someone to carry exam desks back to the store rooms|a professor wants her rooms boxed up before the break}. One evening, paid on the night. Take the evening's work {~You scrub, carry and stack until the lamps go out. The pay is counted into your hand, coin by coin, by someone too tired to talk.|It is heavier work than the card let on. Your arms ache all the next day, and your purse is heavier for it.|You finish late, sore and paid. Nobody remembers your name, which is the restful part.} Leave it for someone else {~You leave the card where it is. Somebody poorer will want it more, and you want your evening.|You read it twice and walk on. The term is nearly over; so is your patience for work.|You let the card be. The evening goes on a long walk instead, which pays nothing and feels like a lot.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:job_board_odd_job",
+      "title": "One Evening's Work",
+      "file": "content/events/calendar_2b.grim",
+      "line": 78,
+      "sourceHash": "5359e034857785f3ba0abac28401067c62637d158cb750afe19a7515d41fc434",
+      "score": 0.9484615921974182,
+      "excerpt": "One Evening's Work\nEvery notice says \"from next term\", except one, pinned low and crooked: {~the refectory wants hands for the end-of-term clear-out|the porters want someone to carry exam desks back to the store rooms|a professor wants her rooms boxed up before the break}. One ev"
+    },
+    {
+      "key": "event:holiday_notices",
+      "title": "Notices by the Gate",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 46,
+      "sourceHash": "065ec8d64d38dbe52a3f3f1dfc0c4843975b98c4de7f889bc900599de9dd03a3",
+      "score": 0.5635151267051697,
+      "excerpt": "Notices by the Gate\n{Holiday work notices are going up by the gates, for the grounds and the kitchens, both paying better than any term job.|The holiday notices again, the same two, in fresher ink.|The notices by the gate. You know them by heart.} {rank(library_assistant) >= 3 or"
+    },
+    {
+      "key": "event:holiday_gigs",
+      "title": "Holiday Work",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 6,
+      "sourceHash": "870008d949ea70a87610e9813d37a6552d17abedb27bc08bdeb0acabccb68deb",
+      "score": 0.5475872159004211,
+      "excerpt": "Holiday Work\nTwo notices are still pinned by the gates. {season == \"winter\": The snow has got under one of them.|The sun has curled the corners of both.} Old Maud wants hands for the grounds. The Refectory kitchens want someone who can peel fast and not complain about it. {rank(l"
+    },
+    {
+      "key": "event:job_board_visit",
+      "title": "The Job Board",
+      "file": "content/events/calendar_2b.grim",
+      "line": 55,
+      "sourceHash": "dc83d7c1673fa08b1af074704046d796dabc39891da11ec56f5fd05ddfba6062",
+      "score": 0.5290042161941528,
+      "excerpt": "The Job Board\nNotices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.{term and (month == 4 or month == 10):  This week every notice ends the same way: new staff start next term.|}\nJust"
+    },
+    {
+      "key": "event:job_board_notice",
+      "title": "Hands Wanted",
+      "file": "content/events/calendar_2b.grim",
+      "line": 985,
+      "sourceHash": "b946ab027a74307720b16cd48e71cccc9f8fc10d055e1b97d6118480ab096446",
+      "score": 0.5226305723190308,
+      "excerpt": "Hands Wanted\nPinned to the refectory door: \"Hands wanted. See the Job Board, entrance hall.\" Under it, in pencil: \"The Newt pays best. The library is warmest.\" Under that, in a third hand: \"Pell counts.\"\nMake a note of it\nOne job at a time, a few shifts a term, paid by the shift."
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6000b7d7336fe9536ceecfdb783680fe5593234d68c1e1448458ddbab3a88163",
+      "at": "2026-10-28T23:45:22.585Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 231,
+        "total_tokens": 231,
+        "cost": 0.00000231,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000231,
+          "upstream_inference_prompt_cost": 0.00000231,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6000b7d7336fe9536ceecfdb783680fe5593234d68c1e1448458ddbab3a88163",
+      "elapsedMs": 9539,
+      "at": "2026-10-28T23:45:32.124Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "1988fb51980ddbb1573df083d9111943ac8460b84b4d073a56a583b89e0e065c",
+      "at": "2026-10-28T23:45:32.203Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46435,
+        "cost": 0.00232175
+      },
+      "requestHash": "1988fb51980ddbb1573df083d9111943ac8460b84b4d073a56a583b89e0e065c",
+      "elapsedMs": 409,
+      "at": "2026-10-28T23:45:32.612Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

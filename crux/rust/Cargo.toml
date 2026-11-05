@@ -1,0 +1,20 @@
+[workspace]
+members = ["core", "cli", "wasm"]
+# The wasm crate imports its clock from JS: build it with build.mjs (--target wasm32-unknown-unknown --profile wasm).
+default-members = ["core", "cli"]
+resolver = "2"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+debug = false
+
+[profile.wasm]
+inherits = "release"
+strip = true
+
+# The golden test replays thousands of searches: optimise it.
+[profile.test]
+opt-level = 3

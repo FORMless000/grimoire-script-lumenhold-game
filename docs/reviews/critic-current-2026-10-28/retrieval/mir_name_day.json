@@ -1,0 +1,107 @@
+{
+  "query": "Mir's Name Day It's Mir's name day. They mention it casually, as if it doesn't matter. It clearly matters. Nobody else seems to know. Throw a surprise party Six friends, one cake and a banner you painted badly. Mir walks in, stops, and has to sit down. \"Nobody's ever...\" they start, and can't finish. Give them a handmade gift A little brass key that fits nothing. \"For whatever you build next,\" you say. Mir wears it on a chain, every day, for years.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:mir_name_day",
+      "title": "Mir's Name Day",
+      "file": "content/events/expansion_people.grim",
+      "line": 390,
+      "sourceHash": "b3978ed5ce368d5dda2116a4f9a8f47eaec95fbc5a1475a1736c7fb25381e5c7",
+      "score": 0.9583695530891418,
+      "excerpt": "Mir's Name Day\nIt's Mir's name day. They mention it casually, as if it doesn't matter. It clearly matters. Nobody else seems to know.\nThrow a surprise party\nSix friends, one cake and a banner you painted badly. Mir walks in, stops, and has to sit down. \"Nobody's ever...\" they sta"
+    },
+    {
+      "key": "event:mir_birthday",
+      "title": "Not a Birthday",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 627,
+      "sourceHash": "3e94c60249246ca965936afb84ff5a45fd1d4c0f20de753ded6294094034c1dd",
+      "score": 0.7565944790840149,
+      "excerpt": "Not a Birthday\nYou find out it's Mir's birthday, and turn up at the workshop with a cake. Mir looks at the candle, puzzled. \"We don't do birthdays at home,\" they say. \"We do name days. Nobody does mine, but that's the one we do.\"\nLight the candle anyway\n\"Two in a year,\" Mir says,"
+    },
+    {
+      "key": "event:mir_gift_given",
+      "title": "A Gift With Gears",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 605,
+      "sourceHash": "2950544d6db8fd2a5269bf5d6528acb762f04de09efcd55bf69f66b3980e2fc4",
+      "score": 0.6706308126449585,
+      "excerpt": "A Gift With Gears\nYou give Mir a gift. They turn it over three times, then hold it to their ear, then take their goggles off to look at it properly. \"It doesn't do anything,\" they say, wondering. \"It's just... for me?\"\n\"It's just for you.\"\nThey hold it very carefully for the rest"
+    },
+    {
+      "key": "event:mir_date_invention",
+      "title": "They Built You Something",
+      "file": "content/events/pools/dating.grim",
+      "line": 301,
+      "sourceHash": "2adbb43cc79551e30432a9954b175d9d63ee9ed3346de34a377f1d6d6689a8d3",
+      "score": 0.593159019947052,
+      "excerpt": "They Built You Something\n{Mir has built you a present, a brass bird that sings your name, mostly.|Another present from Mir's bench, ticking ominously.|Mir presents their newest invention with a flourish and a fire bucket.} {It's warm to the touch.|It has seven moving parts and on"
+    },
+    {
+      "key": "event:mir_owl_gift",
+      "title": "A Present With Gears",
+      "file": "content/events/people_students.grim",
+      "line": 801,
+      "sourceHash": "e6569f9667e178571bf1dca4f9d6382f2b82f9d1c54298250e3ad517d51fe017",
+      "score": 0.563860297203064,
+      "excerpt": "A Present With Gears\nMir presents a brass owl with amber glass eyes. It blinks, hoots the hour and says \"HOMEWORK\" in a tinny voice. \"Made it for you. It remembers deadlines. And birthdays. And grudges, slightly.\"\nIt's too much\nMir looks crushed, then rallies. \"I'll give it to Th"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e6b436295129b0edbbce4fc3316ee59c1dd943bcae7d95189614694b69067b2d",
+      "at": "2026-10-28T23:50:37.243Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 111,
+        "total_tokens": 111,
+        "cost": 0.00000111,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000111,
+          "upstream_inference_prompt_cost": 0.00000111,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e6b436295129b0edbbce4fc3316ee59c1dd943bcae7d95189614694b69067b2d",
+      "elapsedMs": 688,
+      "at": "2026-10-28T23:50:37.931Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7e66f461a384a4c4ed004084295b8a466b4e62bf62e58960ac2cc0e8f1625654",
+      "at": "2026-10-28T23:50:38.299Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40987,
+        "cost": 0.00204935
+      },
+      "requestHash": "7e66f461a384a4c4ed004084295b8a466b4e62bf62e58960ac2cc0e8f1625654",
+      "elapsedMs": 534,
+      "at": "2026-10-28T23:50:38.833Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

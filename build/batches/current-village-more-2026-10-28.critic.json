@@ -1,0 +1,63 @@
+{
+  "batch": "current-village-more-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "gilded_newt_ballad",
+      "mabels_fourth_cake",
+      "mabels_regulars_table",
+      "grimsbys_by_the_nose",
+      "grimsbys_upper_floor",
+      "pell_apothecary_back_door",
+      "pell_apothecary_humming_drawer",
+      "home_cottage_neighbour_calls",
+      "home_market_schoolmistress"
+    ],
+    "files": [
+      "content/events/pools/village_more.grim"
+    ]
+  },
+  "summary": "Rejected: the school and cake sequences assume unchosen visits/tastings, and the domino wager treats a skill-sensitive game as pure chance. All nine cards were read with shop/place canon.",
+  "issues": [
+    {
+      "event": "home_market_schoolmistress",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The second setup says the children have talked of nothing else since last time and asks the player to come back. The third brings children in paper wizard hats. A player who always bought the schoolmistress tea never visited her class, so the second showing invents the visit whose payoff it celebrates.",
+      "fix": "Gate the remembered classroom visit on actually choosing it, or make each request the schoolmistress’s continuing invitation.",
+      "file": "content/events/pools/village_more.grim",
+      "line": 186
+    },
+    {
+      "event": "mabels_fourth_cake",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "On later showings Mabel treats the player as the brave experimental-cake tester and serves it unasked even when every earlier choice was Stick with your usual. Showing the card does not earn the trial reputation.",
+      "fix": "Let Mabel remember the actual tasting choice, or retain her recurring attempt to recruit a reluctant tester without claiming an earned reputation.",
+      "file": "content/events/pools/village_more.grim",
+      "line": 37
+    },
+    {
+      "event": "mabels_regulars_table",
+      "priority": "P2",
+      "category": "check kind",
+      "problem": "Playing the regulars’ domino game is a bare chance even roll. Unlike the knucklebones card, this is a game where reading the board, remembering played tiles and opponents’ habits plausibly matter; the player’s skills cannot affect it.",
+      "fix": "Use a suitably pitched skill-sensitive wager with luck swing, preserving the pot and loss as outcomes.",
+      "file": "content/events/pools/village_more.grim",
+      "line": 58
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

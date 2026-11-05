@@ -1,0 +1,108 @@
+{
+  "query": "It Wants to Be Used You wake at night with the thorn wand in your hand and no memory of picking it up. It's warm. It's telling you, in the way wands tell you things, how much stronger you could be by morning. There's a potted fern on the windowsill. Put it away in a drawer You shut it in the drawer and lie awake listening to it not be quiet. In the morning the fern is fine. You're not, quite. Just the fern The fern greys. You feel wonderful, and then you look at the fern. The thorn wand is cool again, satisfied, for now.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:item_thorn_wants",
+      "title": "It Wants to Be Used",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 521,
+      "sourceHash": "bf0b5d68ff6894fd029540b7085178d8d46ba7a1c8ffc09f70668c4bf2c84126",
+      "score": 0.9522873759269714,
+      "excerpt": "It Wants to Be Used\nYou wake at night with the thorn wand in your hand and no memory of picking it up. It's warm. It's telling you, in the way wands tell you things, how much stronger you could be by morning. There's a potted fern on the windowsill.\nPut it away in a drawer\nYou sh"
+    },
+    {
+      "key": "event:lesson_siphon",
+      "title": "The Fern on the Sill",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 648,
+      "sourceHash": "f5af01aa71e96fb0bae63f43a2cc4aec21b856da65e5b808c33d8ca0dc28660e",
+      "score": 0.7488052845001221,
+      "excerpt": "The Fern on the Sill\nYou're tired, and there are lectures at eight, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.\nJust a little\nThe fern greys from the tips inward. You feel "
+    },
+    {
+      "key": "event:item_thorn_snap",
+      "title": "Snap It",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 562,
+      "sourceHash": "1c920690873fea403566ffaf58a8ec7968d0181598817d84b14f39552fca5de9",
+      "score": 0.6704983711242676,
+      "excerpt": "Snap It\nAlone on the ramparts, at midnight, you take out the thorn wand and look at it. It knows what you're thinking. It's very still, the way a cat is still.\nSnap it\nIt takes both hands. It doesn't want to go, and then it goes, with a crack like ice. You drop the pieces over th"
+    },
+    {
+      "key": "event:ww2_thornwitch_offer",
+      "title": "Her Lesson",
+      "file": "content/events/whisperwood/delve.grim",
+      "line": 829,
+      "sourceHash": "d50d4ce155e2e4d7355cb848e11b92a8c7bb4903204718dc68d12a7f80a9de6f",
+      "score": 0.5784804821014404,
+      "excerpt": "Her Lesson\n\"You have nerve,\" the thornwitch says. \"I could use an apprentice with nerve.\" She holds out a wand of blackthorn, still bristling. \"I'll teach you Siphon. It's only life. There's so much of it about.\" Behind her the birch is grey to the root.\nTell her to go\n{~\"Go,\" yo"
+    },
+    {
+      "key": "event:secret_garden_glowing_ferns",
+      "title": "The Glowing Ferns",
+      "file": "content/events/pools/grounds.grim",
+      "line": 597,
+      "sourceHash": "4b6f611c1b2de200fc836432331c2ff2fed5dd5a5ffd4a12009d753e0f03aacd",
+      "score": 0.5164324641227722,
+      "excerpt": "The Glowing Ferns\n{The ferns in the secret garden glow when the light goes. One frond would light your dormitory for a week. Maud said not to pick them.|Since your last visit a new fern has unfurled by the gate, already glowing.|The ferns glow. You know exactly what a frond is wo"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "909a268ea55fb458973793d016cf82252b02cdbe224b17576283f70650782365",
+      "at": "2026-10-28T23:51:53.408Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 133,
+        "total_tokens": 133,
+        "cost": 0.00000133,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000133,
+          "upstream_inference_prompt_cost": 0.00000133,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "909a268ea55fb458973793d016cf82252b02cdbe224b17576283f70650782365",
+      "elapsedMs": 1005,
+      "at": "2026-10-28T23:51:54.413Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "0f9ccc3e2599efb760b332b96895af17fa7665697912212f0cb069e9501b3b02",
+      "at": "2026-10-28T23:51:54.484Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45211,
+        "cost": 0.00226055
+      },
+      "requestHash": "0f9ccc3e2599efb760b332b96895af17fa7665697912212f0cb069e9501b3b02",
+      "elapsedMs": 338,
+      "at": "2026-10-28T23:51:54.822Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

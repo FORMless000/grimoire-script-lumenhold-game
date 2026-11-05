@@ -1,0 +1,107 @@
+{
+  "query": "Turning the Fever Charm {A first-year in the end bed has a fever, and the cooling charm over the bed has to be turned by hand every hour until dawn. Sister Amaranth looks at you, then at the chair.|Another fever, another chair. The cooling charm's brass ring is worn smooth where hands turn it.|The chair by the end bed. Sister Amaranth has left a cushion on it, which is as close as she comes to asking.} {The ward is quiet except for the clock.|Rain is drumming on the infirmary roof.|{season == \"winter\": Frost feathers the window behind the bed.|Moths keep the lamp company.}} Take the night watch {You turn the ring every hour and watch the fever ebb by inches. At dawn Sister Amaranth says \"Keep doing that,\" and takes the chair.|You doze between turns and wake on the hour, every hour, as if the ring calls you. The patient wakes clear-eyed. You don't.|You know the charm's weight now and turn it half asleep. At dawn the patient asks your name. You're too tired to remember it.} Promise next time, and sleep {Sister Amaranth turns the charm herself, without comment, and that's worse than a comment.|You go to bed and lie awake a while, counting hours you're not turning.|You leave the cushion on the chair for someone else. You sleep, mostly.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:infirmary_night_watch",
+      "title": "Turning the Fever Charm",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 151,
+      "sourceHash": "c1607e34499554201d4a48616a4707f7fb9b64fa3eb92b3fc3da70123da609f3",
+      "score": 0.960206925868988,
+      "excerpt": "Turning the Fever Charm\n{A first-year in the end bed has a fever, and the cooling charm over the bed has to be turned by hand every hour until dawn. Sister Amaranth looks at you, then at the chair.|Another fever, another chair. The cooling charm's brass ring is worn smooth where "
+    },
+    {
+      "key": "event:infirmary_missed_round",
+      "title": "The Lamp That Went Out",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 37,
+      "sourceHash": "ff9512034211127b02e62aa20708534bd39f423f3e93065fa62e2f2064075f30",
+      "score": 0.6015914678573608,
+      "excerpt": "The Lamp That Went Out\nThe fever charm over the far bed has burned down to a red glow. It should have been turned an hour ago. Sister Amaranth does every round herself, and has never once missed one. Her lamp is dark.\nGo and find her\nThe evening tray is still on the ward table, e"
+    },
+    {
+      "key": "event:favour_amaranth_shift",
+      "title": "The Night Shift",
+      "file": "content/events/pools/money.grim",
+      "line": 98,
+      "sourceHash": "e25f7f8986f6d9474001d08d1ca4d8ee2e9302418d94799930956d352f48ce32",
+      "score": 0.5988472700119019,
+      "excerpt": "The Night Shift\nSister Amaranth needs a pair of hands for the infirmary's night shift. \"Basins, bandages, and sitting with whoever can't sleep. Eight crowns. Don't faint. If you faint, you're a patient, and patients don't get paid.\"\nTake the shift\nA first-year with a fever, a pre"
+    },
+    {
+      "key": "event:infirmary_sister_fevered",
+      "title": "The Healer's Own Fever",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 58,
+      "sourceHash": "4559bad6249be8e66ca435e5e9bcbd6b3e2d768c538135bfeb2c6afdc15bc06d",
+      "score": 0.588299036026001,
+      "excerpt": "The Healer's Own Fever\nYou find her in the little office behind the ward, upright in her chair, a cold compress on her own neck and the patient list in her lap. Her face is grey. \"Lake Fever,\" she says. \"From bed six. It's nothing. Go to bed.\"\nFetch the Headmistress\nThe headmistr"
+    },
+    {
+      "key": "event:know_amaranth_rounds",
+      "title": "Who Comes at Night",
+      "file": "content/events/knowing_2.grim",
+      "line": 96,
+      "sourceHash": "76bc5916efed0a5f45dff4bd57c2ecd8afeae664a8df203918150bb871ff3a62",
+      "score": 0.5630196928977966,
+      "excerpt": "Who Comes at Night\n{x} is in the infirmary overnight with a fever, and frightened, the way people are when they're ill and it's getting dark. \"What if something happens,\" {they} say{s}, \"and nobody comes?\" Visiting hours are nearly over.\nStay until they send you out\nYou stay, tal"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c294e6af9c2c7754cf91554542e0c5e40ce644ea932fa1f79ff87ed76758ecde",
+      "at": "2026-10-28T23:34:58.363Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 301,
+        "total_tokens": 301,
+        "cost": 0.00000301,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000301,
+          "upstream_inference_prompt_cost": 0.00000301,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c294e6af9c2c7754cf91554542e0c5e40ce644ea932fa1f79ff87ed76758ecde",
+      "elapsedMs": 2904,
+      "at": "2026-10-28T23:35:01.267Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "5bfaed0fd41d3b17a4f8e97b9f892afcd2e7a197597e6ad7cc01795471a9b46f",
+      "at": "2026-10-28T23:35:01.353Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43113,
+        "cost": 0.00215565
+      },
+      "requestHash": "5bfaed0fd41d3b17a4f8e97b9f892afcd2e7a197597e6ad7cc01795471a9b46f",
+      "elapsedMs": 512,
+      "at": "2026-10-28T23:35:01.865Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

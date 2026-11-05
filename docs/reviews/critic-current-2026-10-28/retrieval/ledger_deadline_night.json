@@ -1,0 +1,108 @@
+{
+  "query": "Deadline Night Deadline night. The front page fell through at nine and Nessa is pacing. \"We need eight hundred words by four,\" she says. \"Anybody with a quill that writes fast, now is the time.\" Sit it out with the quill You and the quill write until four. By the end it finishes your sentences only when you want it to. You are both too tired to argue. Nessa puts your name on the page, small. Go to bed You sleep. In the morning the front page is late and Nessa is hoarse, and the quill has written a bitter little poem about you on the pillowcase.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ledger_deadline_night",
+      "title": "Deadline Night",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 262,
+      "sourceHash": "3b7079900a0e99b72813158990aa60ba13f949cc6724a64dd5fafb3f7f5fc581",
+      "score": 0.9352644681930542,
+      "excerpt": "Deadline Night\nDeadline night. The front page fell through at nine and Nessa is pacing. \"We need eight hundred words by four,\" she says. \"Anybody with a quill that writes fast, now is the time.\"\nSit it out with the quill\nYou and the quill write until four. By the end it finishes "
+    },
+    {
+      "key": "event:nessa_deadline_night",
+      "title": "Deadline Night",
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 256,
+      "sourceHash": "67fdad1f3ec43ccd571985a92d89cad5d6f26f76cbc1430e287cf69fdada09fb",
+      "score": 0.7950599789619446,
+      "excerpt": "Deadline Night\nThe Ledger goes to the printer at midnight and Nessa is three columns short. {~Ink on her face, ink in her hair.|The press is waiting under its dust sheet.} \"I don't need help,\" she says. \"I need a miracle, or a typesetter who doesn't sleep.\"\nSet type until midnigh"
+    },
+    {
+      "key": "event:ledger_deadline",
+      "title": "Deadline Night",
+      "file": "content/events/clubs.grim",
+      "line": 322,
+      "sourceHash": "a130f575c91141726292363c6fd0c32e694d9ce71d69a34f4066298f45d393e6",
+      "score": 0.7924980521202087,
+      "excerpt": "Deadline Night\nThe press runs at dawn and half the paper is blank. Nessa is chewing her quill. \"I need you tonight. All night. I'll owe you.\"\nSay you have revision to do\nYou sleep. The paper comes out with a large drawing of a duck on page four. Nessa doesn't speak to you for a d"
+    },
+    {
+      "key": "event:ledger_office_deadline_night",
+      "title": "Deadline Night",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 236,
+      "sourceHash": "7cba38b6fcf77dfe59f0993079f7c07d4b000d570e8db7de69ba56e108b3abc6",
+      "score": 0.7199505567550659,
+      "excerpt": "Deadline Night\n{The press is groaning like a dragon on deadline, and {here} eyes you like a captain eyes a spare oar.|{here} hands you a stack before you've said hello, and a rag for your fingers.|You take a stack and start folding. {here} doesn't look up, which is a compliment.}"
+    },
+    {
+      "key": "event:nessa_burnout",
+      "title": "The Editor Sleeps",
+      "file": "content/events/expansion_people.grim",
+      "line": 467,
+      "sourceHash": "bf25cfc0f05bd1c11763411d04b4f523728c8542b83fb41302ecc6278378cc3b",
+      "score": 0.6280147433280945,
+      "excerpt": "The Editor Sleeps\nNessa hasn't slept properly in a week. She's asleep at her desk now, and her quill — unsupervised — is still writing next week's paper. It has started inventing news.\nPut her to bed and run the paper yourself\nYou edit, typeset and print one issue, and miss a day"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "d04ba27a2f7d5361fb970af8d00a4e923efb65f14b306b2be517866d2dcff865",
+      "at": "2026-10-28T23:51:31.960Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 134,
+        "total_tokens": 134,
+        "cost": 0.00000134,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000134,
+          "upstream_inference_prompt_cost": 0.00000134,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "d04ba27a2f7d5361fb970af8d00a4e923efb65f14b306b2be517866d2dcff865",
+      "elapsedMs": 930,
+      "at": "2026-10-28T23:51:32.890Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d6cad25ed43b407042a24f6117007741457317fc1e4b67db37575d7c2a18d078",
+      "at": "2026-10-28T23:51:32.990Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 39305,
+        "cost": 0.00196525
+      },
+      "requestHash": "d6cad25ed43b407042a24f6117007741457317fc1e4b67db37575d7c2a18d078",
+      "elapsedMs": 642,
+      "at": "2026-10-28T23:51:33.632Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

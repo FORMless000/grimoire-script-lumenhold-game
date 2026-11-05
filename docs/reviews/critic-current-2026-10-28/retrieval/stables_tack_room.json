@@ -1,0 +1,108 @@
+{
+  "query": "The Tack Room {The tack room is a mess of harnesses, and the oil pot is out. Someone has to do the straps before Beastcraft tomorrow.|The tack room again. The griffon chick has been at the buckles.|The tack room has your bucket in it now, the one you sit on.} {season == \"winter\": It's the warmest room in the stables, and it smells of leather and oil.|{One strap has teeth marks all along it.|A saddle is missing; nobody wants to say whose.|There is a nest in the old harness, and it is occupied.}} Oil and mend the straps {You oil straps until your hands are black and the room smells like a cobbler's. Every buckle works. Nobody thanks you, which is how you know it's done.|You mend the bitten strap and replace the buckle the chick swallowed. It will reappear, Brask says darkly.|You do the straps by touch now, talking to the nest in the old harness. Its owner answers.} Slip out before anyone hands you the pot {You leave the straps for the morning. In the morning Brask hands you the pot, and a look.|You're out of the door before the oil pot is. Behind you the griffon chick starts on another buckle.|You slip away. You hear Brask say your name to the hippogriffs, in a tone.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:stables_tack_room",
+      "title": "The Tack Room",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 19,
+      "sourceHash": "f22eb5ceebf733e5a0487d34317a1b5766e591ea7cd6830b42015f55d06fa6c3",
+      "score": 0.9608611464500427,
+      "excerpt": "The Tack Room\n{The tack room is a mess of harnesses, and the oil pot is out. Someone has to do the straps before Beastcraft tomorrow.|The tack room again. The griffon chick has been at the buckles.|The tack room has your bucket in it now, the one you sit on.} {season == \"winter\":"
+    },
+    {
+      "key": "event:beast_griffon_chick",
+      "title": "Hatching Day",
+      "file": "content/events/classes.grim",
+      "line": 478,
+      "sourceHash": "fd326434b706b376dc5dd30852b55134d526d8264736054aa2f1354aae2b9086",
+      "score": 0.49995100498199463,
+      "excerpt": "Hatching Day\nThe griffon egg is cracking. Professor Brask whispers that the first face a chick sees, it trusts forever — or attacks forever. Hard to predict.\nHang back\nThe chick sees Brask first and bites her. She seems delighted.\nOffer your hand\nThe chick peeps, nuzzles your pal"
+    },
+    {
+      "key": "event:brask_shovel",
+      "title": "Hands Wanted",
+      "file": "content/events/fixtures.grim",
+      "line": 108,
+      "sourceHash": "4e115361cf0064dbde0562a313d58312001911278c80384d1cb1010438bf68b2",
+      "score": 0.49273809790611267,
+      "excerpt": "Hands Wanted\n{Professor Brask holds out a shovel as you pass the stables. She doesn't say anything. The hippogriff behind her does, loudly.|Brask hands you the shovel before you're through the door.|\"Ah,\" says Brask, and the shovel is already in your hands.} {The griffon chick is"
+    },
+    {
+      "key": "event:beast_night_stable",
+      "title": "Sitting Up With the Sick",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 479,
+      "sourceHash": "f66fa8983e49ae12dc089e2b4a13d0da83c7e0f0938fcffe7d9c03ddf37ee26e",
+      "score": 0.4819049537181854,
+      "excerpt": "Sitting Up With the Sick\n{Advanced students take turns sitting up in the stables when a creature is ill. At the morning lecture Brask hands you a lantern, a blanket and a list for tonight.|Your name is on Brask's night-watch list again, and the list is shorter.|Night watch again "
+    },
+    {
+      "key": "event:stables_brask_rounds",
+      "title": "Brask's Rounds",
+      "file": "content/events/pools/grounds.grim",
+      "line": 306,
+      "sourceHash": "4be8dbb60c62cac0467acfc23da70755e0aa58f7261f3ddfb1bc68403c1b36c9",
+      "score": 0.47983890771865845,
+      "excerpt": "Brask's Rounds\n{Professor Brask is on her rounds, telling each hippogriff she's a very good girl. She tells you to mind the bucket.|Brask is on her rounds. She nods at you, which is more than most get.|Brask greets you by name now, somewhere after the owls.} {season == \"spring\": "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "2f5ffabdc21405e6d892b76ca4cb7ed656287c38e7a84d81d2c693082cf7f490",
+      "at": "2026-10-28T23:50:56.743Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 294,
+        "total_tokens": 294,
+        "cost": 0.00000294,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000294,
+          "upstream_inference_prompt_cost": 0.00000294,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "2f5ffabdc21405e6d892b76ca4cb7ed656287c38e7a84d81d2c693082cf7f490",
+      "elapsedMs": 1057,
+      "at": "2026-10-28T23:50:57.799Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "8ce752177ce7d3793646c3e005071743a81049f186bae3e78913c2457f50f90f",
+      "at": "2026-10-28T23:50:57.844Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40665,
+        "cost": 0.00203325
+      },
+      "requestHash": "8ce752177ce7d3793646c3e005071743a81049f186bae3e78913c2457f50f90f",
+      "elapsedMs": 631,
+      "at": "2026-10-28T23:50:58.475Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,6 +1,6 @@
 # Presets and size tiers
 
-> Tiers, presets and weights are defined in `content/core/balance.grim`; all content uses tier words and presets, never raw numbers (lint reports a new one as legacy). The tables below are generated from that file by `node tools/grim.js docs` (`docs --check` fails when they drift), so retune there, not here. What each value stands for, and which cost fits which scene, is in `costs.md`.
+> Tiers, presets and weights are defined in `content/core/balance.grim`; content uses tier words and presets, never raw numbers (lint reports a new one as legacy). The tables below are generated from it by `node tools/grim.js docs` (`docs --check` fails when they drift): retune there, not here.
 
 <!-- BEGIN GENERATED: tiers (node tools/grim.js docs) -->
 ## Size tiers
@@ -18,7 +18,7 @@
 | rel | 1 | 2 | 4 | 6 | 9 |
 | spark | 4 | 8 | 13 | 20 | 30 |
 
-## Check ladder (`checks.md`)
+## Check ladder
 
 | rank | − | (plain) | + |
 |---|---|---|---|

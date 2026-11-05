@@ -1,0 +1,66 @@
+{
+  "batch": "current-grounds-more-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "duel_hall_reading_the_floor",
+      "duel_hall_second_wanted",
+      "greenhouses_gerald_is_out",
+      "greenhouses_grafting_bench",
+      "greenhouses_seed_tin",
+      "flight_field_kite_day",
+      "flight_field_mowing_day",
+      "secret_garden_two_cups",
+      "secret_garden_remembering_moss",
+      "secret_garden_snail_post",
+      "courier_loft_record_board",
+      "courier_loft_pigeon_strike"
+    ],
+    "files": [
+      "content/events/pools/grounds_more.grim"
+    ]
+  },
+  "summary": "Rejected: three of twelve cards have concrete cost, remembered-choice or alignment defects. Other scenes retain distinct trades and place-specific repeat premises.",
+  "issues": [
+    {
+      "event": "duel_hall_reading_the_floor",
+      "priority": "P2",
+      "category": "cost meaning",
+      "problem": "Tracing the old duel loses Mood, but every outcome describes a bodily cost: aching knees, tiring footwork, or standing up stiff. None shows boredom, humiliation, worry or another loss of spirits.",
+      "fix": "Use the shown exertion cost, or show the emotional cost consistently if Mood is intended.",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 10
+    },
+    {
+      "event": "secret_garden_two_cups",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The third setup says the player has started leaving both cups washed and Maud has rewarded that habit with a biscuit. A player who always weeds the beds instead leaves the tea untouched and has never chosen the tea-and-cup-washing outcome.",
+      "fix": "Record actual cup washing before claiming the habit, or anchor the third setup on Maud’s preparations rather than an unchosen action.",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 177
+    },
+    {
+      "event": "secret_garden_snail_post",
+      "priority": "P2",
+      "category": "alignment and matched premise",
+      "problem": "The first setup explicitly addresses the available note for whoever’s next, inviting a reader. Reading it nonetheless always moves Hollow and describes guilty snooping. The moral trespass is absent from that variant’s open invitation.",
+      "fix": "Distinguish a public invitation from private correspondence in the choice and effects, or make every variant clearly private before assigning the Hollow cost.",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 210
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

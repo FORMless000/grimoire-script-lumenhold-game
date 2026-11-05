@@ -1,0 +1,113 @@
+{
+  "batch": "current-expansion-bonds-recheck-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "lyra_who_beat_her",
+      "lyra_well_done",
+      "lyra_study_hall_truce",
+      "lyra_become_close",
+      "tobias_moonflower_vigil",
+      "tobias_moonflower_bloom",
+      "tobias_plants_vote",
+      "tobias_scholarship_review",
+      "seraphine_oracle_letter",
+      "seraphine_what_you_want_to_hear",
+      "seraphine_too_loud",
+      "corvin_lock_lesson",
+      "corvin_takes_the_blame",
+      "corvin_cartographer_hint",
+      "mir_small_fire",
+      "mir_padlock",
+      "mir_family_clocks",
+      "kael_northern_supper",
+      "kael_gloves",
+      "kael_frost_fern",
+      "nessa_interview_prep",
+      "nessa_fact_check",
+      "nessa_quill_loose",
+      "bram_portrait",
+      "bram_owns_up",
+      "bram_become_close",
+      "ilse_frozen_coins",
+      "ilse_private_storm",
+      "ilse_frost_craft_trade",
+      "ilse_become_close",
+      "lyra_rankings_war",
+      "lyra_sabotage_returned",
+      "lyra_glove_thrown",
+      "lyra_allies_thornwick",
+      "lyra_mother_watches",
+      "lyra_rival_letter",
+      "lyra_last_match",
+      "bram_marked",
+      "bram_demerit_ledger",
+      "bram_inspection",
+      "bram_rumour",
+      "bram_hall_tax_escalated",
+      "bram_after_curfew",
+      "bram_rematch",
+      "bram_steps_in",
+      "bram_fathers_shadow",
+      "corvin_locked_out",
+      "corvin_bad_odds",
+      "ilse_frost_door",
+      "ilse_contempt"
+    ],
+    "files": [
+      "content/events/bonds/friends.grim",
+      "content/events/bonds/rivals.grim"
+    ]
+  },
+  "summary": "The earlier fixes to Mir’s padlock and family follow-ups, Corvin’s wager payout, the forbidden skill decrements, the Thornwick costs, Bram’s protective cost and alignment, and Nessa’s dishonest headline are present. Rejected on three remaining/current continuity or check defects across the 50 scoped cards. The declined harmless-prank alignment finding is not reinstated: its reciprocal prank-war context matches life_prank_war.",
+  "issues": [
+    {
+      "event": "bram_rematch",
+      "priority": "P2",
+      "category": "canon and choice memory",
+      "problem": "The gate only requires seeing bram_duel, but that earlier card permits declining and can end in Bram winning. The rematch assumes a previous defeat drove his month of practice, and its loss says Now we’re even. Both claims can follow an earlier refusal or an earlier loss by the player.",
+      "fix": "Require the actual prior victory for this rematch, or branch its setup and result on the earlier fight outcome.",
+      "evidence": [
+        "content/events/people_students.grim: bram_duel left Decline and right lose",
+        "content/world/facts/bram.grim: bram.rematch describes what follows his losses"
+      ],
+      "file": "content/events/bonds/rivals.grim",
+      "line": 334
+    },
+    {
+      "event": "tobias_scholarship_review",
+      "priority": "P2",
+      "category": "fact versus witnessed history",
+      "problem": "The knows(tobias.moonflowers) branch writes that Tobias held the greenhouse door shut with his whole body in a storm. That fact unlocks from relationship >=12 and only says he would stand in a storm for the flowers. Knowing it neither witnesses nor records that specific rescue.",
+      "fix": "Write the recommendation from the known fact as a disposition, or gate the claimed storm scene on its actual event/choice evidence.",
+      "file": "content/events/bonds/friends.grim",
+      "line": 172
+    },
+    {
+      "event": "corvin_takes_the_blame",
+      "priority": "P2",
+      "category": "partially resolved prior finding",
+      "problem": "The final-warning continuity problem from finding 32 is repaired: failure now confiscates the picks instead of giving the expulsion-triggering detention. The skill/relationship problem remains: a bare coin toss decides whether a coached-sounding deception wins over Vey. No tracked ability or relationship can affect it.",
+      "fix": "If this is a player-assisted escape, explicitly let the player help the story and use the matching check; if it is solely Vey’s independent disposition, make that independent uncertainty the stated reason for the chance rather than presenting the roll as Corvin’s skill.",
+      "evidence": [
+        "build/batches/new-cards-2026-10-20.critic.json: finding 32, resolution.partial",
+        "docs/authoring/checks.md: skill-sensitive actions are not bare chance"
+      ],
+      "file": "content/events/bonds/friends.grim",
+      "line": 298
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

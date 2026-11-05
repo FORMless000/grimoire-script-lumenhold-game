@@ -1,0 +1,107 @@
+{
+  "query": "A Satchel of Your Own There's a new satchel on your peg at the loft, with your name stitched on the flap. The chief wants to keep you on after graduation, full time, flying the lake in all weathers. \"The broom still pulls left,\" she says. \"You don't.\" Answer by the last day. Sling the satchel over your shoulder It fits. You fly a lap of the lake that evening for no reason at all, and the loft cheers you down. Ask about the winter routes The chief shows you the map of the winter routes, with the crosses where couriers came down. There are not many. There are some.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_job_courier",
+      "title": "A Satchel of Your Own",
+      "file": "content/events/careers.grim",
+      "line": 321,
+      "sourceHash": "d04d5093d88eb70316daf8fa0791f893e4889c6e8469a2bb64438922dff20a8f",
+      "score": 0.9186163544654846,
+      "excerpt": "A Satchel of Your Own\nThere's a new satchel on your peg at the loft, with your name stitched on the flap. The chief wants to keep you on after graduation, full time, flying the lake in all weathers. \"The broom still pulls left,\" she says. \"You don't.\" Answer by the last day.\nSlin"
+    },
+    {
+      "key": "event:courier_fix_broom",
+      "title": "The Broom That Pulls Left",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 996,
+      "sourceHash": "eec289852249498f0b631637b18234e2b2285b774d4f9f16d96bdedc017eaf69",
+      "score": 0.6348874568939209,
+      "excerpt": "The Broom That Pulls Left\nYour loft broom pulls left, always has. With the jar's wind behind it, it would pull you into the lake. The broom-maker in the village can true it, for a price.\nPay to have it trued\nThe broom-maker sights along it, tuts, and spends an afternoon on it. It"
+    },
+    {
+      "key": "event:broom_courier_morning_crossing",
+      "title": "The Lake Crossing",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 738,
+      "sourceHash": "a8750da0ccd08b6220ec41acc327b03284bcc666c55a5983eeaae89308d18131",
+      "score": 0.5494818091392517,
+      "excerpt": "The Lake Crossing\n{The dispatch bell rings. The village sack is ready, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == \"winter\": Ice fog sits on the water like a lid.|{season == \"summer\": Th"
+    },
+    {
+      "key": "event:broom_courier_own_pigeonhole",
+      "title": "Your Own Pigeonhole",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 818,
+      "sourceHash": "3ff7623a6916a0c53d0c50c616a3a9abd33b2f68d9050bf1f7c743ee75551d6a",
+      "score": 0.5289527773857117,
+      "excerpt": "Your Own Pigeonhole\nThe dispatcher has painted your name over a pigeonhole, in letters that will outlast the loft's roof. \"Your route from now on,\" the dispatcher says. \"Village, barge landing, the high towers. When the bell rings for you, you answer.\" The dispatch bell rings. It"
+    },
+    {
+      "key": "event:broom_courier_broom_scramble",
+      "title": "The Broom Scramble",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 766,
+      "sourceHash": "8459fa401378507b58f2842086710ad12d1d7c3d6bebefb451976a4d0999766d",
+      "score": 0.5277135372161865,
+      "excerpt": "The Broom Scramble\n{Only one loft broom is in a good state, and every courier on shift wants it.|You have started arriving early for the brooms, and so has everyone else.|You could pick the good broom blindfold, by the smell of its varnish.} {What's left is one that pulls left.|W"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "41aaaffc4940acab5297cc5f4d2f29398855ce013f079221447dbaede7c8ada5",
+      "at": "2026-10-28T23:21:22.119Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 141,
+        "total_tokens": 141,
+        "cost": 0.00000141,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000141,
+          "upstream_inference_prompt_cost": 0.00000141,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "41aaaffc4940acab5297cc5f4d2f29398855ce013f079221447dbaede7c8ada5",
+      "elapsedMs": 11584,
+      "at": "2026-10-28T23:21:33.703Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7bd8e8633bad4fa01313210457cf7cc0f32bea7ca497ba4ab5ae01171667c786",
+      "at": "2026-10-28T23:21:33.761Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 48053,
+        "cost": 0.00240265
+      },
+      "requestHash": "7bd8e8633bad4fa01313210457cf7cc0f32bea7ca497ba4ab5ae01171667c786",
+      "elapsedMs": 497,
+      "at": "2026-10-28T23:21:34.258Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

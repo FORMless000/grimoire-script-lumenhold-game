@@ -24,6 +24,7 @@ const size = (p) => {
 
 // What to delete under <cache>/lightrag for the active configuration: [{ path, why }].
 function plan(cache, cfg) {
+  if (cfg.backend === 'grim') return require('./grim-retrieve.js').prunePlan(cache, cfg);
   const base = path.join(cache, 'lightrag'), active = R.extractionIdentity(cfg), out = [];
   if (!fs.existsSync(base)) return out;
   for (const id of fs.readdirSync(base)) {

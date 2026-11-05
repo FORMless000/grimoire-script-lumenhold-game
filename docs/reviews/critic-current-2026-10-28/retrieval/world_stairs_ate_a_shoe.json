@@ -1,0 +1,108 @@
+{
+  "query": "The Stairs Ate a Shoe {Halfway down the east stair the steps shift, and when they settle you are one shoe lighter. Everyone knows where the stairs put shoes, in a heap under the east wing.|The stairs have taken another shoe. You suspect they like the taste of yours.|Shoe gone again. You've come to think of the heap under the east wing as a kind of shoe library.} {You have somewhere to be.|It's raining, and the castle floors are cold.|{season == \"winter\": Your sock is soaked through in a minute.|The stairs grind smugly behind you.}} Go and dig through the heap {You dig through three centuries of shoes and find yours under a buckled pair that must be older than the towers. You're filthy, late and oddly triumphant.|You find your shoe, and a slipper with a name sewn into it from fifty years ago. You leave the slipper on top, in case.|You know the heap's layers now, like a geologist. Your shoe is on top, almost politely. You stub your toe on the way out anyway.} Hop on, one shoe down {You hop to your next lecture and spend it with one foot in your bag. You take excellent notes, out of spite.|You go about your day in one shoe and one sock. People stare; you make the most of it by reading on the move.|You wear one shoe all day, as is becoming your custom. A first-year asks if it's a fashion. You say yes.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_stairs_ate_a_shoe",
+      "title": "The Stairs Ate a Shoe",
+      "file": "content/events/pools/world_more.grim",
+      "line": 14,
+      "sourceHash": "0cf21cef2c3502a2997f4ca1f81e539b5c5a8a9b8056a552656a802073d7fb73",
+      "score": 0.9546319842338562,
+      "excerpt": "The Stairs Ate a Shoe\n{Halfway down the east stair the steps shift, and when they settle you are one shoe lighter. Everyone knows where the stairs put shoes, in a heap under the east wing.|The stairs have taken another shoe. You suspect they like the taste of yours.|Shoe gone aga"
+    },
+    {
+      "key": "event:seraphine_intro",
+      "title": "Your Left Shoe",
+      "file": "content/events/people_students.grim",
+      "line": 422,
+      "sourceHash": "316c35516f255b453e79dcf7f8639c49128eb84604061de42233daeacbf52594",
+      "score": 0.6762080788612366,
+      "excerpt": "Your Left Shoe\nA girl drifts past you in the corridor and says, without stopping, \"You're going to lose your left shoe today. Don't worry, it's under the stairs in the east wing.\"\nIgnore her\nThat afternoon a staircase moves and eats your left shoe. It is, eventually, under the st"
+    },
+    {
+      "key": "event:break_castle_bored_stairs",
+      "title": "The Bored Staircases",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 64,
+      "sourceHash": "8610c06cd11122317500b8c5c6a28a970443860b9c4ae53532caec9aabe0a8b2",
+      "score": 0.5295154452323914,
+      "excerpt": "The Bored Staircases\n{With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == \"winter\": The st"
+    },
+    {
+      "key": "event:life_staircase",
+      "title": "The Staircase Moves",
+      "file": "content/events/life.grim",
+      "line": 9,
+      "sourceHash": "08ef340eee47f3ebbacde798ebada403043a46ac54a971be856d64656e4e8200",
+      "score": 0.4844033718109131,
+      "excerpt": "The Staircase Moves\nHalfway up the west staircase, it decides to be somewhere else. You're now heading toward a floor you've never seen, at speed, and you're late for class.\nHold on and see where it goes\nIt deposits you in a dusty forgotten classroom. In a desk: eight old crowns "
+    },
+    {
+      "key": "event:life_injury_stairs",
+      "title": "The Trick Step",
+      "file": "content/events/life.grim",
+      "line": 702,
+      "sourceHash": "aaba5e6940d9d94662325790676769434a35b24f8256dc3cf28cde0f27923a8a",
+      "score": 0.47725826501846313,
+      "excerpt": "The Trick Step\nThe ninth step on the north stair is a trick step. Everyone knows. You forgot. Your leg sinks to the knee and the stair holds on.\nWait for someone to help\nForty minutes later, a first-year pulls you out. You're late for everything.\nWrench yourself free\nYou pull fre"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "d83ec032993192a79bb952039179d4ac7f196d9546986efa7e6cf48f78f79c58",
+      "at": "2026-10-28T23:50:51.046Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 321,
+        "total_tokens": 321,
+        "cost": 0.00000321,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000321,
+          "upstream_inference_prompt_cost": 0.00000321,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "d83ec032993192a79bb952039179d4ac7f196d9546986efa7e6cf48f78f79c58",
+      "elapsedMs": 363,
+      "at": "2026-10-28T23:50:51.409Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "5dddb93caaf78b75f907840f8d97449b1e362b0f0bbcbf41f0c8a0ad81389857",
+      "at": "2026-10-28T23:50:51.477Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49255,
+        "cost": 0.00246275
+      },
+      "requestHash": "5dddb93caaf78b75f907840f8d97449b1e362b0f0bbcbf41f0c8a0ad81389857",
+      "elapsedMs": 512,
+      "at": "2026-10-28T23:50:51.989Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

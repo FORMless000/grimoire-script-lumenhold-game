@@ -37,8 +37,10 @@ test('retirement deletes discovery input; missing adapters and retired switches 
  const log=[];await R.create(dir,cfg,{execute:execute(log)}).index({rebuild:true,mode:'sync'});
  fs.writeFileSync(path.join(dir,'content/a.grim'),event('a').replace('title: Fixture','tags: retired\ntitle: Fixture'));
  const result=await R.create(dir,cfg,{execute:execute(log)}).index();assert.deepEqual(result.changes.deleted,['event:a']);assert.deepEqual(log.at(-1).deleted,['event:a']);
- for(const name of ['grim','qmd']){assert.throws(()=>R.config({backend:name}),/Only LightRAG/);assert.ok(!fs.existsSync(path.join(__dirname,'../src/adapters',name+'.js')));assert.ok(!fs.existsSync(path.join(__dirname,'../dependencies',name)));}
- assert.throws(()=>R.config({profile:'no-dense'}),/Only the full/);
+ assert.throws(()=>R.config({backend:'grim'}),/Only LightRAG/); // This module remains the dedicated LightRAG engine.
+ assert.equal(require('../src/retrieval.js').config({backend:'grim'}).backend,'grim');
+ assert.throws(()=>R.config({backend:'qmd'}),/Only LightRAG/);assert.ok(!fs.existsSync(path.join(__dirname,'../src/adapters/qmd.js')));
+ assert.throws(()=>R.config({value:{},profile:'no-dense'}),/Only the full/);
 });
 test('setup entry points prepare LightRAG only and support read-only help',()=>{
  const root=path.resolve(__dirname,'../..'),shell=path.join(root,'rag/setup.sh');
@@ -103,4 +105,10 @@ test('prune keeps the manifest, the build log and the active revision; deletes o
  // An unfinished update keeps everything in its folder.
  put(path.join(active,'revisions/staged/x.json'));put(path.join(active,'pending.json'),'{}');
  assert.deepEqual(P.plan(cache,cfg).map(x=>path.basename(x.path)),[]);
+});
+
+test('LightRAG recovery uses the native retry fence without reenqueuing existing documents',t=>{
+ const result=spawnSync(process.platform==='win32'?'python':'python3',[path.join(__dirname,'lightrag_retry_test.py')],{encoding:'utf8'});
+ if(result.error?.code==='ENOENT'){t.skip('Optional Python interpreter unavailable');return;}
+ assert.equal(result.status,0,(result.stdout||'')+(result.stderr||''));
 });

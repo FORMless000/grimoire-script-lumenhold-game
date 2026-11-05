@@ -1,0 +1,107 @@
+{
+  "query": "The Shelf of Old Theses {Along the back wall run three centuries of finished theses, bound in cloth that has faded to the same brown.|The thesis shelf. You've started a list of the best titles. Today's find: a study of the emotional lives of doorknobs.|The old theses. You can find the good ones by feel now: the spines are worn where people keep taking them down.} {One near the end has a pressed flower for a bookmark.|One has a note on the flyleaf: \"Passed. Barely. Worth it.\"|{season == \"spring\": Blossom drifts in through the open window and settles on the spines.|A spider has made its home between two famous ones.}} Read a famous one {It's brilliant, and it was written by someone younger than you. You put it back very carefully and go and sit somewhere quiet.|It's the one everybody cites. Reading it in full is like seeing a mountain from the bottom.|You read the most-worn one cover to cover. It's so good it hurts, which you suppose is the point.} Read a gloriously bad one {It argues for forty pages that rain is a kind of apology. It passed. You feel enormously better about everything.|You read the doorknob one. It is three hundred pages long and completely serious, and you laugh until the carrels shush you.|You find one with footnotes longer than its chapters, and footnotes to the footnotes. Your own thesis suddenly seems sane.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:thesis_lab_old_theses",
+      "title": "The Shelf of Old Theses",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 437,
+      "sourceHash": "f0f53da54e4257300c9c134b9447026d09bc4ae5d9aaf6cf4c0b3362dcff42ca",
+      "score": 0.9284172058105469,
+      "excerpt": "The Shelf of Old Theses\n{Along the back wall run three centuries of finished theses, bound in cloth that has faded to the same brown.|The thesis shelf. You've started a list of the best titles. Today's find: a study of the emotional lives of doorknobs.|The old theses. You can fin"
+    },
+    {
+      "key": "event:thesis_lab_footnote_war",
+      "title": "The Footnote War",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 417,
+      "sourceHash": "750ceb474b156761e89073a56e8870eda827be8b4d4dfe26dbc9df5b43d12624",
+      "score": 0.5331672430038452,
+      "excerpt": "The Footnote War\n{Two advisors are arguing about a footnote across three carrels, and every final-year in the room has stopped pretending to work.|The footnote war has broken out again. Someone has drawn up sides on a scrap of paper.|By now the footnote war has rules, a referee a"
+    },
+    {
+      "key": "event:thesis_is_it_good",
+      "title": "Is It Any Good?",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 371,
+      "sourceHash": "f31fde890786fe0181954513947fcdb64320845efc26c8bcfe8cf744688db085",
+      "score": 0.4767386317253113,
+      "excerpt": "Is It Any Good?\n{Halfway through rereading your thesis, you can't tell if it's brilliant or obvious.|The doubt has learned your timetable. It comes the morning after good work.|You know this doubt now. It reaches your carrel first.} {progress(thesis) >= 60: Most of it is written,"
+    },
+    {
+      "key": "event:thesis_lab_spare_carrel",
+      "title": "The Spare Carrel",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 394,
+      "sourceHash": "a01ef65cd6318ae6671227cd56b5085eabd2bce0c844310613d6d53ab175ea92",
+      "score": 0.46307799220085144,
+      "excerpt": "The Spare Carrel\n{There's an empty carrel at the end of the row, with a candle stub and nobody's name on it.|The spare carrel is still unclaimed. You've started thinking of its candle stub as yours.|You know the carrels by their scratches now. The spare one has a new scratch, and"
+    },
+    {
+      "key": "event:y3_thesis",
+      "title": "The Last Chapter",
+      "file": "content/events/expansion_y3.grim",
+      "line": 335,
+      "sourceHash": "5c9cb6a6d233dffb445139d74eee834ede5e30419c3b896a6f286c4e662ca482",
+      "score": 0.46131646633148193,
+      "excerpt": "The Last Chapter\nYour thesis needs one more chapter. You could write something safe and solid, or chase the question your sources keep circling and nobody has answered in three hundred years: why the academy was built above a lake.\nSafe and solid\nForty pages on the thermodynamics"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "a04fa09f2e435ab934183df8d1a24e6f68d32cab167f7da467f00188a09b4bdc",
+      "at": "2026-10-28T23:39:40.898Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 319,
+        "total_tokens": 319,
+        "cost": 0.00000319,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000319,
+          "upstream_inference_prompt_cost": 0.00000319,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "a04fa09f2e435ab934183df8d1a24e6f68d32cab167f7da467f00188a09b4bdc",
+      "elapsedMs": 558,
+      "at": "2026-10-28T23:39:41.456Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2fbc6f4504005e68b0da707427261de2e3474416838e692ddde3b72372accbc0",
+      "at": "2026-10-28T23:39:41.592Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45505,
+        "cost": 0.00227525
+      },
+      "requestHash": "2fbc6f4504005e68b0da707427261de2e3474416838e692ddde3b72372accbc0",
+      "elapsedMs": 433,
+      "at": "2026-10-28T23:39:42.025Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

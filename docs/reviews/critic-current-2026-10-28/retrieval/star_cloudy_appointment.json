@@ -1,0 +1,107 @@
+{
+  "query": "A Cloudy Appointment {Tonight's appointment, says this morning's note, will go ahead \"whatever the sky thinks\". The sky thinks clouds, wall to wall.|Another clouded appointment tonight. The note is unbothered. \"Starlight comes through cloud. It simply has to want to.\"|Cloud again tonight. You know the dome's cold corners and which way the gaps will drift.} {Somewhere behind the murk, the star you know best will be up.|The note says a thin gap may open in the west.|{season == \"winter\": It will be snow-cloud, heavy and low; your breath will freeze on the rail.|It will be warm cloud, with rain coming.}} Call through the cloud {The starlight comes down through the cloud like a rope through water, slow and then all at once. Your palms glow till dawn.|You call, and the cloud thins over your hands alone, a little round window in the sky. The lecturer writes for a long time.|You call the star by name and it answers, cloud or no cloud. You walk back down the stairs with light still in your fingers.} {You call until your hands shake. The cloud doesn't care. You go to bed drained and dark.|A thread of light comes halfway and frays in the murk. It takes something out of you as it goes.|You reach up for an hour into nothing. The lecturer says even nothing is a lesson. It doesn't feel like one.} Chart the gaps in the cloud {You sit by the rail all night logging the gaps, when and where and which stars peeked through. Cold to the bone; good data.|You chart the drift of the cloud like a sailor and predict the next gap to the minute. It comes; you're too frozen to cheer.|Your cloud log is pages long now. You know the sky's habits even when you can't see it, and your chest aches with cold.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:star_cloudy_appointment",
+      "title": "A Cloudy Appointment",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 203,
+      "sourceHash": "28da7d49e972001bee179f6e6701b6a45b1bf01d464e8e0f053c831dd7bcc7fa",
+      "score": 0.9557936191558838,
+      "excerpt": "A Cloudy Appointment\n{Tonight's appointment, says this morning's note, will go ahead \"whatever the sky thinks\". The sky thinks clouds, wall to wall.|Another clouded appointment tonight. The note is unbothered. \"Starlight comes through cloud. It simply has to want to.\"|Cloud again"
+    },
+    {
+      "key": "event:star_thread_of_light",
+      "title": "A Thread of Light",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 87,
+      "sourceHash": "ecf7ea8d9bd172936a0f983a2399e38fbc34b1e4cb8d713f148d3995b3e7241f",
+      "score": 0.7146838903427124,
+      "excerpt": "A Thread of Light\n{Tonight's lesson, says the morning note, is to call down a single thread of a named star's light, no thicker than a hair.|Tonight's lesson is the same as ever: one thread, one star, held as long as you can bear it.|You've called down threads before. The morning"
+    },
+    {
+      "key": "event:star_first_starlight",
+      "title": "A Name to Call",
+      "file": "content/events/spell_sources.grim",
+      "line": 162,
+      "sourceHash": "6e0e61704b42d42e7fa98a632e316fac80195915a2045fbd591ca99b3235d7cc",
+      "score": 0.6058949828147888,
+      "excerpt": "A Name to Call\nThe first appointment is under the open dome, past midnight. Your tutor says a star's name aloud, the old name, the one on no chart, and points. \"Ask it for a thread of its light,\" the tutor says. \"Ask properly. It has been asked rudely before.\"\nCall until it answe"
+    },
+    {
+      "key": "event:star_names_in_the_dark",
+      "title": "Names in the Dark",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 61,
+      "sourceHash": "a35563fda62b6091ecbc4a363451b2aeae6471b41da8bcdc3e4b5f030f330156",
+      "score": 0.5933252573013306,
+      "excerpt": "Names in the Dark\n{Starcalling is taught by appointment, at night, and this morning's note gives you tonight's hour. It begins with names. \"You cannot call what you cannot name.\"|Another note at breakfast, another night appointment under the dome. The list of names is longer than"
+    },
+    {
+      "key": "event:observatory_night_log",
+      "title": "The Night Log",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 18,
+      "sourceHash": "ebeadd8b00613aeba4bedd7ec5555385ad537eb895fabab1e35bd5981e1db20a",
+      "score": 0.5764905214309692,
+      "excerpt": "The Night Log\n{The observatory keeps a night log, and anyone may write in it.|{flag(wrote_night_log): Since your last entry|Since you were last here}, someone has drawn a moustache on the moon.|You know the log's hands by now: the careful one, the frantic one, the one who only ev"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "7ec2656825a471cd65daff905beedbe26a17f4a515ec16393442afcc70800503",
+      "at": "2026-10-28T23:43:04.997Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 405,
+        "total_tokens": 405,
+        "cost": 0.00000405,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000405,
+          "upstream_inference_prompt_cost": 0.00000405,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "7ec2656825a471cd65daff905beedbe26a17f4a515ec16393442afcc70800503",
+      "elapsedMs": 60441,
+      "at": "2026-10-28T23:44:05.438Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a261f2c5d20cf8c62229eb66b20c44acab983224f088ca9d6bf69b973fb1632d",
+      "at": "2026-10-28T23:44:05.507Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49534,
+        "cost": 0.0024767
+      },
+      "requestHash": "a261f2c5d20cf8c62229eb66b20c44acab983224f088ca9d6bf69b973fb1632d",
+      "elapsedMs": 739,
+      "at": "2026-10-28T23:44:06.246Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

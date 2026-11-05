@@ -1,0 +1,107 @@
+{
+  "query": "The Front Row You cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor. {flag(red_ink_glimpse): The robes are the ones from the stair, two sizes too big.|Her notes, you can see from the aisle, are perfect.} Sit by her afterwards, and write You sit down beside her after the hall empties and slide your last essay across, without a word. She writes on it for twenty minutes without looking up. At the bottom: \"Seminar on Thursday. I have to speak. I can't.\" Leave her the secret You walk on, and leave your next essay on the stair as usual. It comes back with the usual red, and one line more at the bottom: \"Seminar on Thursday. I have to speak. Please don't come.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:lecture_tower_red_ink_front_row",
+      "title": "The Front Row",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 231,
+      "sourceHash": "0c7afac2b351512064596a64948d31eb70a51a976f6a7811030e846984116949",
+      "score": 0.9524892568588257,
+      "excerpt": "The Front Row\nYou cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor"
+    },
+    {
+      "key": "event:lecture_tower_red_ink_seminar",
+      "title": "Thursday's Seminar",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 254,
+      "sourceHash": "a6b22263656a59d213f9f2e0641e06a48e9f78c73b30f895f1800be84e66d12b",
+      "score": 0.7759923338890076,
+      "excerpt": "Thursday's Seminar\nThursday. The first-year stands at the seminar lectern with her paper in both hands and no voice at all. A dozen students wait. The lecturer looks at the clock. Her eyes find you at the back of the room.\nStand up and argue with her paper\nYou stand and say her f"
+    },
+    {
+      "key": "event:lecture_tower_red_ink_reply",
+      "title": "A Question in the Margin",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 205,
+      "sourceHash": "4ce4dd1df48ab15bd8930feb101d7131f8347fb96c09dc9bd8f611af4fb937a1",
+      "score": 0.6320364475250244,
+      "excerpt": "A Question in the Margin\nThe essay is back on the stair, bleeding red. Most of it is about your argument. At the bottom, smaller: \"Why do you want to be good at this?\" It's the first question the ink has asked.\nAnswer it honestly in the margin\nYou write three lines you'd never sa"
+    },
+    {
+      "key": "event:lecture_tower_red_ink",
+      "title": "Two Sets of Marks",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 182,
+      "sourceHash": "be12352b0bbd0ace3b924df87e936fc6704f308ee71dbf14137841de280d4bc8",
+      "score": 0.5265374183654785,
+      "excerpt": "Two Sets of Marks\nYour returned essay has two sets of marks. The marker's, in polite pencil: \"Good.\" And another, in red ink and unsigned, in a small round hand, savaging every paragraph and fixing three of them. The last line reads: \"You can do better than good. Paragraph four p"
+    },
+    {
+      "key": "event:nudge_red_ink",
+      "title": "Still Waiting",
+      "file": "content/events/journal_cards.grim",
+      "line": 139,
+      "sourceHash": "81ea901f0a90b09a6aa6ba9598d7d9d941bc6cd5bc44c65d1b0e79e7ef836d36",
+      "score": 0.49143391847610474,
+      "excerpt": "Still Waiting\nThere's a note in red ink tucked into the crack in the lecture tower stair, in the small round hand you know. It says only: \"Still waiting for the next draft. Paragraph four is still the best thing you've written. Don't make it the last.\"\nWrite the next draft tonigh"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c8d27705b50d21ddfc71a9637e77b843625e4eaf828fa0d54fd1b0778c1d7c35",
+      "at": "2026-10-28T23:24:31.617Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 211,
+        "total_tokens": 211,
+        "cost": 0.00000211,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000211,
+          "upstream_inference_prompt_cost": 0.00000211,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c8d27705b50d21ddfc71a9637e77b843625e4eaf828fa0d54fd1b0778c1d7c35",
+      "elapsedMs": 9411,
+      "at": "2026-10-28T23:24:41.028Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "e2a59256b9db31efedffed8279c857a58f352d1e1e76a809a2f5cf7b7b8c5ead",
+      "at": "2026-10-28T23:24:41.100Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50801,
+        "cost": 0.00254005
+      },
+      "requestHash": "e2a59256b9db31efedffed8279c857a58f352d1e1e76a809a2f5cf7b7b8c5ead",
+      "elapsedMs": 526,
+      "at": "2026-10-28T23:24:41.626Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

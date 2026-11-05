@@ -1,0 +1,108 @@
+{
+  "query": "The Bell Falls Silent The shore is empty and the lake is glass. Then the bell begins, slow and low, from the very middle. {clue(bell_name) and clue(bell_rope): You have the name from its rim and Maud's rope in your hands.|{clue(bell_name): You have the name from its rim.|You have Maud's rope, cut sixty years ago.}} Say the name over the water You say the name from the bell's rim out loud. The bell rings once more, as if answering to it, and then the lake is just a lake. Somewhere in her cottage, you think, Maud sleeps through the night. Give the rope back to the lake You wade in to your knees and let the rope sink. It goes down straight, as if something below were pulling it home. The bell rings one last time, muffled, and stops. The cold stays in your legs all night. Not tonight You stand at the shore until the ringing stops on its own, and go back up the lawn. It will ring again tomorrow.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:bell_laid_to_rest",
+      "title": "The Bell Falls Silent",
+      "file": "content/events/slice_2b.grim",
+      "line": 881,
+      "sourceHash": "f24a57d1e15de5ab70f6b4802a500cd88e03bf35699e08b17ba6b3452c3ff7bd",
+      "score": 0.9448218941688538,
+      "excerpt": "The Bell Falls Silent\nThe shore is empty and the lake is glass. Then the bell begins, slow and low, from the very middle. {clue(bell_name) and clue(bell_rope): You have the name from its rim and Maud's rope in your hands.|{clue(bell_name): You have the name from its rim.|You have"
+    },
+    {
+      "key": "event:bell_silence",
+      "title": "The Bell Calls",
+      "file": "content/events/slice_2b.grim",
+      "line": 863,
+      "sourceHash": "667d6840cf44526453ba2decb28b1b02d4926d6a7e08a7c9afab5c7cb05e8da6",
+      "score": 0.7914590239524841,
+      "excerpt": "The Bell Calls\nThe bell is ringing every night now, louder, and tonight it rings your way: you can feel it in your teeth. {clue(bell_name): You have the name from its rim.|You have Maud's rope.} You know, the way you know your own handwriting, that it wants you at the lakeshore a"
+    },
+    {
+      "key": "event:bell_maud_rope",
+      "title": "Maud's Rope",
+      "file": "content/events/slice_2b.grim",
+      "line": 794,
+      "sourceHash": "98c413d72e37ef2b5c55fc340a0467790033576f9b76e27581a79fe55ad27d01",
+      "score": 0.7145984172821045,
+      "excerpt": "Maud's Rope\n{keeper} shows you a rope, frayed and black with lake water, that she's kept in her shed for sixty years. \"From the bell,\" she says. \"It came up the night the lake froze. Someone cut it.\"\nAsk who cut it\n\"That,\" says {keeper}, \"is the question I've been asking for sixt"
+    },
+    {
+      "key": "event:bell_drowned",
+      "title": "The Diving Bell",
+      "file": "content/events/slice_2b.grim",
+      "line": 836,
+      "sourceHash": "33e5fda66d2b3eb83d8906786343eac970fc143d1061fb67a8cf02359d88bc1a",
+      "score": 0.6852326989173889,
+      "excerpt": "The Diving Bell\nThe bell has rung every night for a week. The boathouse has an old diving helmet and a rope. The lake is very dark and very still.\nDive\nFar down, the bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the n"
+    },
+    {
+      "key": "event:bell_answer",
+      "title": "What Maud Remembers",
+      "file": "content/events/slice_2b.grim",
+      "line": 818,
+      "sourceHash": "7fa937670989fe8f1081152fffe67de10bf0db92df9d773fd599a640c743370f",
+      "score": 0.662025511264801,
+      "excerpt": "What Maud Remembers\n{npc} has the kettle on before you knock. \"The rope,\" she says, once the tea is poured. \"Edmund cut it. To stop the bell ringing the thing awake. It went on ringing anyway.\"\nListen\nShe talks until the light goes. When she's finished, she seems lighter, and you"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "ce1c0d4096bf4015e823ed29cd985d53ae3c24cf8d753cda54838e470793eafe",
+      "at": "2026-10-28T23:51:23.379Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 226,
+        "total_tokens": 226,
+        "cost": 0.00000226,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000226,
+          "upstream_inference_prompt_cost": 0.00000226,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "ce1c0d4096bf4015e823ed29cd985d53ae3c24cf8d753cda54838e470793eafe",
+      "elapsedMs": 432,
+      "at": "2026-10-28T23:51:23.811Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b9c92aafc37f818dbea5d8d4a1296cec1431cec053acd5c9793de88e9754becf",
+      "at": "2026-10-28T23:51:23.900Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42437,
+        "cost": 0.00212185
+      },
+      "requestHash": "b9c92aafc37f818dbea5d8d4a1296cec1431cec053acd5c9793de88e9754becf",
+      "elapsedMs": 424,
+      "at": "2026-10-28T23:51:24.324Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

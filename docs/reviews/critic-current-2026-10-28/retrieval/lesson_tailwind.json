@@ -1,0 +1,108 @@
+{
+  "query": "Never Stop The fisherman's rule for the wind is \"never stop\". You take the long way round the lake on your free afternoon to practise it, and the wind gets behind you as soon as you're off the jetty. Never stop You go round the lake three times without stopping, faster each lap, until your hands are numb on the handle. The fisherman waves every lap now. Land and talk to him You land by his boat and tell him about the storm run. He listens, nods, and says, \"Never stop,\" again, and hands you a fish to take home.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_tailwind",
+      "title": "Never Stop",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 542,
+      "sourceHash": "c7459e4dd57a79890d9d1355e7ca83f944101127fefebb2d943a65ccede45ae7",
+      "score": 0.9386969208717346,
+      "excerpt": "Never Stop\nThe fisherman's rule for the wind is \"never stop\". You take the long way round the lake on your free afternoon to practise it, and the wind gets behind you as soon as you're off the jetty.\nNever stop\nYou go round the lake three times without stopping, faster each lap, "
+    },
+    {
+      "key": "event:courier_fisherman_waves",
+      "title": "The Fisherman Waves",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 950,
+      "sourceHash": "0f360d268fb1f14193eac0c5aff050b9047bca64cd4e07543ee7308aad2f70e8",
+      "score": 0.7493177056312561,
+      "excerpt": "The Fisherman Waves\nThe old fisherman in the reed beds has never waved at a courier. Today, seeing the jar strapped to your broom, he waves, and beckons you down. \"That jar,\" he says. \"I flew it once. Fastest year of my life.\"\nLand and ask him about it\nHe tells you, slowly, betwe"
+    },
+    {
+      "key": "event:courier_storm_delivery",
+      "title": "The Storm Run",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 1014,
+      "sourceHash": "062e3c6c668268058946f358f23fa1e0128dc3577547ff100823a67c33ce105a",
+      "score": 0.6035840511322021,
+      "excerpt": "The Storm Run\nA storm is down on the lake, and a parcel must cross it tonight. The loft master looks at the jar at your belt, then at you. \"Nobody else will go,\" she says. {flag(tailwind_fisherman) and flag(tailwind_gulls) and flag(tailwind_broom): You know how to let the wind ge"
+    },
+    {
+      "key": "event:lakeshore_shore_walk",
+      "title": "The Long Way Round",
+      "file": "content/events/pools/grounds.grim",
+      "line": 17,
+      "sourceHash": "eaaf1758ee9d2c6d7e6649b162c96810a22816ea66d7aa2fd8e308cf8e6abe2d",
+      "score": 0.45313575863838196,
+      "excerpt": "The Long Way Round\n{You came out to walk alone. {date} finds you on the shore path and falls into step without asking.|The shore path is where you go to think. Today {date} has the same idea.|You know every stone of the shore path by now. Today {date} walks it with you.} {season "
+    },
+    {
+      "key": "event:sky_tryouts",
+      "title": "Tryouts",
+      "file": "content/events/clubs.grim",
+      "line": 171,
+      "sourceHash": "c8323f06ee7a940b97dc79b4de0deb0486442fc1c2e723702eef7c268abc466a",
+      "score": 0.4486561417579651,
+      "excerpt": "Tryouts\nSkyrace tryouts: three laps around the towers, through the hoops, without dying. The captain has a stopwatch and no visible sense of humour.\nFly clean and steady\nYou're not the fastest, but you hit every hoop. \"Reserve,\" says the captain. Then: \"...no. Team.\"\nYou miss two"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "a80380805ec2461edcc2bf51dd8dcb70e1448c951de13a69e4bdcd237b9ba3f3",
+      "at": "2026-10-28T23:51:48.048Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 122,
+        "total_tokens": 122,
+        "cost": 0.00000122,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000122,
+          "upstream_inference_prompt_cost": 0.00000122,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "a80380805ec2461edcc2bf51dd8dcb70e1448c951de13a69e4bdcd237b9ba3f3",
+      "elapsedMs": 341,
+      "at": "2026-10-28T23:51:48.389Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "bab93eccae592aae2774a066f999cb3d6706c71f0885b9a446be6c604c2d157e",
+      "at": "2026-10-28T23:51:48.434Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 51232,
+        "cost": 0.0025616
+      },
+      "requestHash": "bab93eccae592aae2774a066f999cb3d6706c71f0885b9a446be6c604c2d157e",
+      "elapsedMs": 474,
+      "at": "2026-10-28T23:51:48.908Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

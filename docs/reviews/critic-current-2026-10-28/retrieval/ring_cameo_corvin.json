@@ -1,0 +1,108 @@
+{
+  "query": "A Familiar Grin Before the next bout someone vaults the rope into the chalk: Corvin, sleeves rolled, wand spinning. He sees you and his grin slips. \"Saint. Of course it's you.\" Then, low: \"I owe three people money, and one of them has started describing what happens next. The house pays double for a grudge match. So hate me. Loudly.\" Fight him for real You knock his wand into the crowd on the fifth exchange. \"Rude,\" he says from the flagstones, and laughs, but his eyes go to the bookmaker's slate and stay there a moment too long. He was never where your spell landed. He hauls you up by the collar, collects his purse, and presses a few coins of it into your hand. \"Your cut, for the hating. You were very convincing.\" Put on a show, and let him win You shout, he shouts, sparks fly everywhere but at each other, and you go down with a groan the back row will talk about all week. The bettors who backed you never know. Corvin does. \"I owe you,\" he says on the steps. \"Add it to the list.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ring_cameo_corvin",
+      "title": "A Familiar Grin",
+      "file": "content/events/pools/night.grim",
+      "line": 675,
+      "sourceHash": "52369884b5b5cf67a18d620a4fa8da7d765cc6adacafaafac50fb1f19f716da0",
+      "score": 0.9398894309997559,
+      "excerpt": "A Familiar Grin\nBefore the next bout someone vaults the rope into the chalk: Corvin, sleeves rolled, wand spinning. He sees you and his grin slips. \"Saint. Of course it's you.\" Then, low: \"I owe three people money, and one of them has started describing what happens next. The hou"
+    },
+    {
+      "key": "event:corvin_between_odds",
+      "title": "Corvin Makes a Book",
+      "file": "content/events/between_known.grim",
+      "line": 218,
+      "sourceHash": "0f9299031b751f6b99320d1a4e0aa004e18bf932e51ccea599c5b5ba1ec43041",
+      "score": 0.6654347777366638,
+      "excerpt": "Corvin Makes a Book\n{o} and {p} are going to settle it with wands in the courtyard at sunset, and Corvin is making a book. \"Seven to four on {o}, saint,\" he says, chalking it on the back of a door. \"Want in? It's practically charity. I'm charity.\"\nPut a crown on {o}\n{o} wins in a"
+    },
+    {
+      "key": "event:corvin_between_debt",
+      "title": "Corvin Owes {o}",
+      "file": "content/events/between_known.grim",
+      "line": 247,
+      "sourceHash": "5c6b5f3a50a92bccb05bc032b7a34ffe18bd26d389a7db42ff7caff6064875b3",
+      "score": 0.6390354633331299,
+      "excerpt": "Corvin Owes {o}\nCorvin owes {o} eight crowns, and has owed it since the leaves turned. {o} has an IOU in Corvin's handwriting, with a small drawing of a goat on it. {o} would like you, as Corvin's friend, to collect.\nPay it yourself\nYou pay {o} and tell Corvin he owes you now. \"S"
+    },
+    {
+      "key": "event:ring_bout_2",
+      "title": "The Second Bout",
+      "file": "content/events/pools/night.grim",
+      "line": 538,
+      "sourceHash": "ca96534bfaec0bdcdff3496bdcfe53ffb9d5d39ad23c6ecfba2f4d5141663954",
+      "score": 0.580655038356781,
+      "excerpt": "The Second Bout\nThe money-holder points at the chalk again. {~A lanky girl steps in who quit the academy last spring. She kept the wand, and the duelling stance.|A fairground conjurer steps in, still in spangles, rolling a spark across his knuckles. The crowd knows him.|A hedge-h"
+    },
+    {
+      "key": "event:ring_bout_3",
+      "title": "The Third Bout",
+      "file": "content/events/pools/night.grim",
+      "line": 567,
+      "sourceHash": "02cb5a39b44b6f409dcecce4f2536586e581d7a1e9bc65fa71efc0614cbb2d31",
+      "score": 0.5676473379135132,
+      "excerpt": "The Third Bout\nTwo down. The cellar is packed now and the betting is loud. {~The house sends in a Conclave clerk in ink-stained cuffs, moonlighting for the purse. He reads your stance like a form.|The house sends in a prefect who lost the sash last year, and has been angry about "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "cbaeda602a10a2add96a1ba5f6d55d9219e589b5696be5c6c10d9588c800fb97",
+      "at": "2026-10-28T23:51:00.024Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 249,
+        "total_tokens": 249,
+        "cost": 0.00000249,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000249,
+          "upstream_inference_prompt_cost": 0.00000249,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "cbaeda602a10a2add96a1ba5f6d55d9219e589b5696be5c6c10d9588c800fb97",
+      "elapsedMs": 309,
+      "at": "2026-10-28T23:51:00.333Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2a986b931b36022b8b8a6f7bf8f83c134da26303aae7e88360f6f02f88faa764",
+      "at": "2026-10-28T23:51:00.388Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50666,
+        "cost": 0.0025333
+      },
+      "requestHash": "2a986b931b36022b8b8a6f7bf8f83c134da26303aae7e88360f6f02f88faa764",
+      "elapsedMs": 422,
+      "at": "2026-10-28T23:51:00.810Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,107 @@
+{
+  "query": "Ice in the Square Not ten minutes later, a shout from the square. The horse trough has frozen solid, with a carter's arm in it to the elbow, and she's standing beside it white with panic. Frost is creeping across the cobbles from her feet. Break the ice by hand You hammer at the ice with a cobble until it gives with a crack like a door. The carter pulls his arm free, swearing, mostly at the trough. You get him free in the end, but the ice takes the skin off your knuckles doing it. You'll feel that trough for days. Talk her down so it melts \"Four in. Hold. Four out.\" Her breath slows, and the ice goes grey, then soft, then water. The carter stares at his arm, and then at her. It takes an hour, three kettles from the inn and a carter who will tell this story for years.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:home_market_bloomer_ice",
+      "title": "Ice in the Square",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 407,
+      "sourceHash": "5c1a37ccd9752d0c435274e28d574df97f43af7d470820a75279eb39896c4edd",
+      "score": 0.9489412307739258,
+      "excerpt": "Ice in the Square\nNot ten minutes later, a shout from the square. The horse trough has frozen solid, with a carter's arm in it to the elbow, and she's standing beside it white with panic. Frost is creeping across the cobbles from her feet.\nBreak the ice by hand\nYou hammer at the "
+    },
+    {
+      "key": "event:court_fountain_freeze",
+      "title": "The Frozen Fountain",
+      "file": "content/events/slice_2b.grim",
+      "line": 350,
+      "sourceHash": "27e74da0eb186750f998b57352e87ef950b0483e9ed02808bc0545e162ce1bd5",
+      "score": 0.5189625024795532,
+      "excerpt": "The Frozen Fountain\nThe courtyard fountain has frozen in the middle of a splash. The water hangs in the air like glass. A first-year is trying to lick it.\nStop the first-year\nYou pull the first-year away just as the ice cracks. For a moment you'd swear you saw a black star reflec"
+    },
+    {
+      "key": "event:renown_ice_rescue",
+      "title": "A First-Year on the Ice",
+      "file": "content/events/pools/renown.grim",
+      "line": 112,
+      "sourceHash": "4148b8f2c27e66ba7729029691297add0e36db826b0623d0b7f3b4ebffeb6df3",
+      "score": 0.4907141327857971,
+      "excerpt": "A First-Year on the Ice\nA first-year has gone through the ice on the lake. A crowd is shouting on the shore, and nobody is moving. You're nearest.\nGo out on the ice\nYou crawl out flat on the ice and pull them free. By supper the whole school knows your name, and the first-year's "
+    },
+    {
+      "key": "event:ilse_frost_door",
+      "title": "Frost on the Door",
+      "file": "content/events/bonds/rivals.grim",
+      "line": 459,
+      "sourceHash": "afe175d96a5997c1f81e30479b9480080f9f7a9880198caceaa98290d1b86723",
+      "score": 0.44283267855644226,
+      "excerpt": "Frost on the Door\nYour door is sealed in ice, a hand thick, clear as glass. Someone has scratched a word into the frost: a Northern word you don't know. It doesn't sound kind. In the village, they say, a girl in white furs bought nothing today, and smiled.\nThaw it the slow way\nKe"
+    },
+    {
+      "key": "event:ring_cameo_ilse",
+      "title": "Frost in the Chalk",
+      "file": "content/events/pools/night.grim",
+      "line": 761,
+      "sourceHash": "e74e190357764a296c5a5f21313ebc45bb4a60b9f6409ff13a949e4be9234de1",
+      "score": 0.4089984893798828,
+      "excerpt": "Frost in the Chalk\nThe cellar goes cold. The lanterns shrink. A girl in white furs steps into the chalk and frost creeps out from her boots across the flagstones: Ilse Dumont. \"They said the academy's best come down here,\" she says. She looks you over. \"They lied. But you'll do.\""
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "9912abbc4036bdd8fa2b0a718db14cbd493d4fde8b05d7af781701f8ec9234d9",
+      "at": "2026-10-28T23:25:57.059Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 193,
+        "total_tokens": 193,
+        "cost": 0.00000193,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000193,
+          "upstream_inference_prompt_cost": 0.00000193,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "9912abbc4036bdd8fa2b0a718db14cbd493d4fde8b05d7af781701f8ec9234d9",
+      "elapsedMs": 5574,
+      "at": "2026-10-28T23:26:02.633Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "dd8e1da8e86cc7d1da049c7c648e328a677444cb33f3874a0c0d45df9d8b702b",
+      "at": "2026-10-28T23:26:02.715Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 62941,
+        "cost": 0.00314705
+      },
+      "requestHash": "dd8e1da8e86cc7d1da049c7c648e328a677444cb33f3874a0c0d45df9d8b702b",
+      "elapsedMs": 494,
+      "at": "2026-10-28T23:26:03.209Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

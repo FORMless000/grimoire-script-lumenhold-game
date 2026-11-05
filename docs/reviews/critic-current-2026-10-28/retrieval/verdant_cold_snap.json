@@ -1,0 +1,108 @@
+{
+  "query": "The Cold Snap A hard frost is coming tonight, the first of the season. Your seedling is too young for it. Somebody would have to sit with it till dawn, feeding it warmth. Sit up with it all night You sit wrapped round the lantern till dawn, feeding it what warmth you have. By morning you're stiff and coughing, and the seedling has grown a thorn, which it seems proud of. Cover it and hope You cover it with sacking and go to bed. It survives, sulking, and loses a leaf. It is noticeably cooler towards you.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:verdant_cold_snap",
+      "title": "The Cold Snap",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 389,
+      "sourceHash": "9eb1fb56cb7f7df1c7a08bcb818087acea8b57724336dd177138887ce13fd6ad",
+      "score": 0.9503850936889648,
+      "excerpt": "The Cold Snap\nA hard frost is coming tonight, the first of the season. Your seedling is too young for it. Somebody would have to sit with it till dawn, feeding it warmth.\nSit up with it all night\nYou sit wrapped round the lantern till dawn, feeding it what warmth you have. By mor"
+    },
+    {
+      "key": "event:secret_garden_late_frost",
+      "title": "A Hard Frost",
+      "file": "content/events/spell_uses.grim",
+      "line": 73,
+      "sourceHash": "284c1f556a1afd0ddeb82ff5c7e6f7c2eccdf5b650f668a71d0e0267f77eaee8",
+      "score": 0.5662268400192261,
+      "excerpt": "A Hard Frost\n{A hard frost is coming down out of a clear sky. Old Maud is going along the row of clay smudge pots under the humming pear with a tinderbox that won't strike. \"Every one, dearie,\" she says, \"or the old pear sulks for a month.\"|Frost again. The pear has gone quiet, w"
+    },
+    {
+      "key": "event:verdant_plant_seed",
+      "title": "Somewhere to Grow",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 350,
+      "sourceHash": "7eb140c73006918e7e9af4f66d37040322deb7e68de06dfd90d5c092f592763b",
+      "score": 0.49792376160621643,
+      "excerpt": "Somewhere to Grow\nThe seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, \"if you can keep a secret, dearie.\"\nPlant it with Tobias\nYou plant it together"
+    },
+    {
+      "key": "event:beast_night_stable",
+      "title": "Sitting Up With the Sick",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 479,
+      "sourceHash": "f66fa8983e49ae12dc089e2b4a13d0da83c7e0f0938fcffe7d9c03ddf37ee26e",
+      "score": 0.4906441569328308,
+      "excerpt": "Sitting Up With the Sick\n{Advanced students take turns sitting up in the stables when a creature is ill. At the morning lecture Brask hands you a lantern, a blanket and a list for tonight.|Your name is on Brask's night-watch list again, and the list is shorter.|Night watch again "
+    },
+    {
+      "key": "event:item_frost_ward_cold",
+      "title": "Cold Things Think Twice",
+      "file": "content/events/kit/item_stories.grim",
+      "line": 174,
+      "sourceHash": "19b8bed3fd6caf5e4f979f29cdd5fbab020363e71fdfe1c9cfe5456bab72e3c5",
+      "score": 0.4611431062221527,
+      "excerpt": "Cold Things Think Twice\nThe cold comes into the castle tonight like something looking for someone. Frost runs along the corridor windows ahead of you, then stops at your feet and goes round, as if it had remembered its manners. Your collar, where Ilse's ward is sewn, is warm.\nWal"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "529ef90bfef2acd9039539ae548d41f6b9686e202b88402f0bbf7abee898fcf2",
+      "at": "2026-10-28T23:51:33.912Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 120,
+        "total_tokens": 120,
+        "cost": 0.0000012,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000012,
+          "upstream_inference_prompt_cost": 0.0000012,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "529ef90bfef2acd9039539ae548d41f6b9686e202b88402f0bbf7abee898fcf2",
+      "elapsedMs": 424,
+      "at": "2026-10-28T23:51:34.336Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "708798a071946f57244f9827f63262d14173678ba41ce4f2ed9628b3eed38d2b",
+      "at": "2026-10-28T23:51:34.614Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44589,
+        "cost": 0.00222945
+      },
+      "requestHash": "708798a071946f57244f9827f63262d14173678ba41ce4f2ed9628b3eed38d2b",
+      "elapsedMs": 591,
+      "at": "2026-10-28T23:51:35.205Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

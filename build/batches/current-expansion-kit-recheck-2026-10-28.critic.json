@@ -1,0 +1,71 @@
+{
+  "batch": "current-expansion-kit-recheck-2026-10-28",
+  "accept": true,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "item_borrowed_initials",
+      "item_borrowed_sideways",
+      "item_hazel_tuned",
+      "item_hazel_water",
+      "item_robes_singed",
+      "item_robes_copied",
+      "item_ashwood_lyra",
+      "item_frost_ward_cold",
+      "item_frost_ward_thread",
+      "item_star_coin_turning",
+      "item_star_coin_kael",
+      "item_almanac_lighthouse",
+      "item_spoon_daughters",
+      "item_honey_bees",
+      "shop_square",
+      "shop_pawn",
+      "shop_mabels",
+      "shop_grimsbys",
+      "shop_pell",
+      "shop_newt",
+      "offer_ashwood_wand",
+      "offer_ward_cloak",
+      "offer_pocket_almanac",
+      "offer_measuring_spoon",
+      "offer_honey_tin"
+    ],
+    "files": [
+      "content/events/kit/item_stories.grim",
+      "content/events/kit/shops.grim"
+    ]
+  },
+  "summary": "Accepted with two small calendar-context fixes after re-reading all 25 current kit/shop cards. All six earlier kit findings are repaired, including the spoon promise, visible tuning cost, valuation trade, compliment alignment and both shop setups.",
+  "issues": [
+    {
+      "event": "shop_square",
+      "priority": "P3",
+      "category": "time continuity",
+      "problem": "The first market setup always says the square is all stalls this morning, but the place card has no time/slot gate and can first be drawn on an afternoon or evening village visit.",
+      "fix": "Use slot-neutral wording for the recurring market, or restrict this specifically morning version and preserve an appropriate counter for later visits.",
+      "file": "content/events/kit/shops.grim",
+      "line": 7
+    },
+    {
+      "event": "item_honey_bees",
+      "priority": "P3",
+      "category": "teaching-month continuity",
+      "problem": "Let them come to lectures always puts the silver bees through a live Astromancy lecture. The ownership/season gate excludes winter but not summer breaks spent at the castle, when the ambient card can still be dealt and ordinary classes are suspended.",
+      "fix": "Require term for the lecture version, or give the break version an activity the player can actually attend.",
+      "file": "content/events/kit/item_stories.grim",
+      "line": 294
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

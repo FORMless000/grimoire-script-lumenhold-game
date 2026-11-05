@@ -1,0 +1,108 @@
+{
+  "query": "The Spare Quill A spare quill on the drying line has been finishing your sentences. Today it started inventing them: your proof now says the refectory serves dragon. \"Oh, it's woken up,\" says Nessa, delighted. \"Tame it and it's yours. Nobody's tamed one since I've been editor.\" Take the quill home You wrap it in a handkerchief. It writes \"kidnapped\" on the handkerchief. Nessa writes your name on the office board under QUILL, with a question mark. Peg it back on the line You peg it back. It writes a small, hurt editorial about you on the next proof, which Nessa cuts, laughing.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ledger_spare_quill",
+      "title": "The Spare Quill",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 200,
+      "sourceHash": "15c724987ec21683b33de36fdbc1323a23a0f0184f3f25cdaf72905bcea97044",
+      "score": 0.9301097989082336,
+      "excerpt": "The Spare Quill\nA spare quill on the drying line has been finishing your sentences. Today it started inventing them: your proof now says the refectory serves dragon. \"Oh, it's woken up,\" says Nessa, delighted. \"Tame it and it's yours. Nobody's tamed one since I've been editor.\"\nT"
+    },
+    {
+      "key": "event:nessa_quill_loose",
+      "title": "The Quill Gets Loose",
+      "file": "content/events/bonds/friends.grim",
+      "line": 542,
+      "sourceHash": "39ee012411e9948afed6c5ac3ddeca3d3b96461ddfed2b35baa20e0d80efb95d",
+      "score": 0.7271005511283875,
+      "excerpt": "The Quill Gets Loose\nNessa's quill has escaped. It's loose in the castle, writing news. You've seen three of its headlines on the walls already: \"PROFESSOR'S CAT IS SECRETLY A PROFESSOR\", \"LAKE: TOO WET?\", and one about you that isn't true but is, you have to admit, flattering.\nH"
+    },
+    {
+      "key": "event:nudge_quickquill",
+      "title": "How's My Quill?",
+      "file": "content/events/journal_cards.grim",
+      "line": 71,
+      "sourceHash": "400f8e468477494ccf2ec09f114075ad3b8235cacab41a0aa89dc60e2985cc44",
+      "score": 0.7079607844352722,
+      "excerpt": "How's My Quill?\n\"How's my quill?\" says Nessa, reading over your shoulder. On Tuesday the spare quill announced the engagement of two of the gargoyles and slipped it into a proof. \"You took it home half a year ago. Have you tamed it yet, or has it tamed you?\"\n\"I'm working on it.\"\n"
+    },
+    {
+      "key": "event:nessa_quill_draft",
+      "title": "The Quill's Draft",
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 237,
+      "sourceHash": "c0431d88452317db852c11cfc3f8ca925f21982444d24536b93d584d0abddf82",
+      "score": 0.6560553908348083,
+      "excerpt": "The Quill's Draft\nThere's a draft on Nessa's desk in the quill's handwriting, headed \"EXCLUSIVE: THE EDITOR AND THE SOURCE.\" It's about you. And her. And a great many moonlit walks that never happened. Nessa comes in, sees you reading it, and turns the colour of red ink.\nHand it "
+    },
+    {
+      "key": "event:item_quill_nessa",
+      "title": "The Quill Writes Back",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 413,
+      "sourceHash": "66b5c0652bc02aa6464008c12a32638fddf65a7e9d171578466fdfed7b1ee9d6",
+      "score": 0.6222910284996033,
+      "excerpt": "The Quill Writes Back\nYou leave your owl quill on Nessa's desk for one minute. When you come back, her enchanted quill and yours are writing at each other on a sheet of foolscap: hers in headlines, yours in very tidy footnotes. It is, as far as you can tell, an argument about acc"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "8eb75089f5e828ae1326586f07f45e9a8ca41b613ed1abf00cdac7b7e34bd4d9",
+      "at": "2026-10-28T23:51:28.842Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "SiliconFlow",
+      "usage": {
+        "prompt_tokens": 149,
+        "total_tokens": 149,
+        "cost": 0.00000596,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000596,
+          "upstream_inference_prompt_cost": 0.00000596,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "8eb75089f5e828ae1326586f07f45e9a8ca41b613ed1abf00cdac7b7e34bd4d9",
+      "elapsedMs": 2427,
+      "at": "2026-10-28T23:51:31.269Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "07bf461f955ac351d27b1734e923b330918cb284eb09f97f6d4e4c6887bd0fbe",
+      "at": "2026-10-28T23:51:31.423Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 38271,
+        "cost": 0.00191355
+      },
+      "requestHash": "07bf461f955ac351d27b1734e923b330918cb284eb09f97f6d4e4c6887bd0fbe",
+      "elapsedMs": 860,
+      "at": "2026-10-28T23:51:32.283Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

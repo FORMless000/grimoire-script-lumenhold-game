@@ -1,0 +1,107 @@
+{
+  "query": "The Expedition Writes Again The Observatory Expedition remembers your summer on the plateau. Its leader writes that next year's survey needs a chartmaker who can stay awake till dawn, and a salaried place is yours from the autumn. Answer by the last day. Write back yes, in principle You write back under the star chart, adding one they'd missed. The leader's reply circles it twice. Ask how cold the plateau gets Very, is the answer, with a list of the frostbite remedies they carry. The stars, the letter adds, are worth it. You remember that they are.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_return_observatory",
+      "title": "The Expedition Writes Again",
+      "file": "content/events/careers.grim",
+      "line": 193,
+      "sourceHash": "bdcea142e5f05b423793325137d100031b86d8dec0234b25e3f214f21b14bd73",
+      "score": 0.9330140352249146,
+      "excerpt": "The Expedition Writes Again\nThe Observatory Expedition remembers your summer on the plateau. Its leader writes that next year's survey needs a chartmaker who can stay awake till dawn, and a salaried place is yours from the autumn. Answer by the last day.\nWrite back yes, in princi"
+    },
+    {
+      "key": "event:intern_expedition_new_star",
+      "title": "A Star Nobody Charted",
+      "file": "content/events/pools/internships.grim",
+      "line": 160,
+      "sourceHash": "0a5392858639fe0bb1325c54d1634e81b2b460eb391d4dbf938bd2e93ec73ac4",
+      "score": 0.5468398928642273,
+      "excerpt": "A Star Nobody Charted\nThe lead gives you tonight's watch at the eyepiece, alone. At three in the morning there's a star in it that isn't on any chart: small, steady, blue. The expedition lead is asleep. By custom, whoever records a new star first may name it.\nWake the lead and sh"
+    },
+    {
+      "key": "event:intern_asked_back",
+      "title": "Asked Back",
+      "file": "content/events/calendar_2b.grim",
+      "line": 570,
+      "sourceHash": "55ff6e98647098163acdbc87bc019f7a24096f52203f76dd3dc36c494821884e",
+      "score": 0.52027827501297,
+      "excerpt": "Asked Back\nA letter from {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): th"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5111474394798279,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:observatory_night_log",
+      "title": "The Night Log",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 18,
+      "sourceHash": "ebeadd8b00613aeba4bedd7ec5555385ad537eb895fabab1e35bd5981e1db20a",
+      "score": 0.5010861158370972,
+      "excerpt": "The Night Log\n{The observatory keeps a night log, and anyone may write in it.|{flag(wrote_night_log): Since your last entry|Since you were last here}, someone has drawn a moustache on the moon.|You know the log's hands by now: the careful one, the frantic one, the one who only ev"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e0330da8de96693e1f7a65cb8b847ede4cad2c920f102bcb08e944686d198390",
+      "at": "2026-10-28T23:19:37.100Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 120,
+        "total_tokens": 120,
+        "cost": 0.0000012,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000012,
+          "upstream_inference_prompt_cost": 0.0000012,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e0330da8de96693e1f7a65cb8b847ede4cad2c920f102bcb08e944686d198390",
+      "elapsedMs": 10288,
+      "at": "2026-10-28T23:19:47.387Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b5083e14fe9ead3d440ffe3df063ca87dbe0c9fec91bd1aa6104db760692329b",
+      "at": "2026-10-28T23:19:47.431Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 37933,
+        "cost": 0.00189665
+      },
+      "requestHash": "b5083e14fe9ead3d440ffe3df063ca87dbe0c9fec91bd1aa6104db760692329b",
+      "elapsedMs": 414,
+      "at": "2026-10-28T23:19:47.845Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

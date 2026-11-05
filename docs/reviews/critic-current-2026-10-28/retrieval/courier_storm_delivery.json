@@ -1,0 +1,108 @@
+{
+  "query": "The Storm Run A storm is down on the lake, and a parcel must cross it tonight. The loft master looks at the jar at your belt, then at you. \"Nobody else will go,\" she says. {flag(tailwind_fisherman) and flag(tailwind_gulls) and flag(tailwind_broom): You know how to let the wind get behind you.|You've never flown it in weather.} Open the jar and go You pull the stopper and the wind gets behind you and doesn't stop. You cross the lake faster than the lightning can find you. The parcel arrives dry. The wind stays with you after, when you call it. Halfway across, a gust takes you and you ditch in the shallows. The parcel survives. You barely do. The next storm season, the loft master says, you can try again. Wait for the lull, then go You wait, nerves screaming, for the gap in the storm, then open the jar and go. The wind gets behind you and stays. The parcel arrives an hour late and dry, and the wind is yours. The lull never comes, and you go anyway and ditch in the shallows. The next storm season, the loft master says.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:courier_storm_delivery",
+      "title": "The Storm Run",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 1014,
+      "sourceHash": "062e3c6c668268058946f358f23fa1e0128dc3577547ff100823a67c33ce105a",
+      "score": 0.9476699829101562,
+      "excerpt": "The Storm Run\nA storm is down on the lake, and a parcel must cross it tonight. The loft master looks at the jar at your belt, then at you. \"Nobody else will go,\" she says. {flag(tailwind_fisherman) and flag(tailwind_gulls) and flag(tailwind_broom): You know how to let the wind ge"
+    },
+    {
+      "key": "event:courier_storm",
+      "title": "Delivery in a Storm",
+      "file": "content/events/jobs.grim",
+      "line": 436,
+      "sourceHash": "3f3fb74006459c4f51d7580f1bd44d356f5130dac24ee293d20819556a7c939f",
+      "score": 0.796156644821167,
+      "excerpt": "Delivery in a Storm\nAn urgent parcel needs to cross the lake tonight. There's a storm. The dispatcher offers double pay to whoever's fool enough. Everyone looks at you.\nWait for the storm to pass\nThe parcel arrives late. The client deducts it from your wages. Rude, but survivable"
+    },
+    {
+      "key": "event:gig_post_storm_run",
+      "title": "The Storm Run",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 444,
+      "sourceHash": "b923beb933c7e5b90a01eb69a7549730c4d88c53fe5f7b6f42ef2e217310a704",
+      "score": 0.7441423535346985,
+      "excerpt": "The Storm Run\n{The holiday post doesn't wait for weather. Tonight's route crosses the ridge in a storm.|The ridge again, and the wind again.|You've flown this route so often the farm dogs know your broom.} {The sack is heavier than the broom likes.|One parcel is labelled \"fragile"
+    },
+    {
+      "key": "event:courier_chief_urgent_crossing",
+      "title": "The Urgent Crossing",
+      "file": "content/events/pools/upper_ranks.grim",
+      "line": 350,
+      "sourceHash": "0f18e919eb2d1f4c6ba0998251f61e3ee6e3bc50854ccbc0f888f7bf94b3234c",
+      "score": 0.6359776854515076,
+      "excerpt": "The Urgent Crossing\n{A red-sealed package for the far side of the mountains, by tomorrow, and only the chief courier flies red seals.|Another red seal, another gale over the pass.|The red seals come to you by name now.} {The pass is in cloud.|A storm is coming in from the west.|T"
+    },
+    {
+      "key": "event:courier_wind_jar",
+      "title": "Wind in a Jar",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 929,
+      "sourceHash": "eb7cb4cb5c708aec795522687d85cb58c26fc5d29d4008b249eb3a3cc90641ed",
+      "score": 0.6132619976997375,
+      "excerpt": "Wind in a Jar\nOn the dead-letter shelf, behind a parcel addressed to nobody, is a stoppered jar with a wind in it, going round and round. The label says FOR WHOEVER IS FAST ENOUGH. The loft master says someone flew with it once, before her time.\nTake the jar down\nThe jar hums in "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "be99abe496a4b5e713fd5395da31a2b33f124fdd246d3054fa3d2d24535f06ba",
+      "at": "2026-10-28T23:51:42.606Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 256,
+        "total_tokens": 256,
+        "cost": 0.00000256,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000256,
+          "upstream_inference_prompt_cost": 0.00000256,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "be99abe496a4b5e713fd5395da31a2b33f124fdd246d3054fa3d2d24535f06ba",
+      "elapsedMs": 524,
+      "at": "2026-10-28T23:51:43.130Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "80cd941a7b663c23eca4ed2962bd33ce67d2ce539267965848818b2a3b2f02b8",
+      "at": "2026-10-28T23:51:43.285Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49131,
+        "cost": 0.00245655
+      },
+      "requestHash": "80cd941a7b663c23eca4ed2962bd33ce67d2ce539267965848818b2a3b2f02b8",
+      "elapsedMs": 310,
+      "at": "2026-10-28T23:51:43.595Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

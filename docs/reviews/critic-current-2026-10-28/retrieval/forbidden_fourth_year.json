@@ -1,0 +1,107 @@
+{
+  "query": "Odile's Last Week Odile Varn finds you between the stacks with her satchel already packed. She leaves at the end of term. \"You used the key,\" she says. It isn't a question. \"I won't ask what you found. Unless you want to tell me.\" Tell her what you've seen She listens to all of it, then puts a hand on your notebook. \"Some books want readers,\" she says. \"If one falls open at your feet, don't let it choose you.\" Then she hugs you, briefly, and is gone. Keep it to yourself She smiles, as if that were the right answer. \"Good,\" she says. \"That's how I kept it too.\" She leaves you her spare candle-stubs and a list of the quietest desks.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:forbidden_fourth_year",
+      "title": "Odile's Last Week",
+      "file": "content/events/chains_minor.grim",
+      "line": 150,
+      "sourceHash": "e06bca57fa3552457bf44eafcc6d3d63cd0b2294438c34118b13ea148e777790",
+      "score": 0.9431642889976501,
+      "excerpt": "Odile's Last Week\nOdile Varn finds you between the stacks with her satchel already packed. She leaves at the end of term. \"You used the key,\" she says. It isn't a question. \"I won't ask what you found. Unless you want to tell me.\"\nTell her what you've seen\nShe listens to all of i"
+    },
+    {
+      "key": "event:umbral_forbidden_notes",
+      "title": "Forbidden Notes",
+      "file": "content/events/classes.grim",
+      "line": 726,
+      "sourceHash": "1a539b2cb6a16ac4f592ddc5fd70e6ebd7b308931ba21eb95ce87d53bd48167f",
+      "score": 0.6446012258529663,
+      "excerpt": "Forbidden Notes\nA fourth-year, Odile Varn, slides a battered notebook across the table. \"My notes on the Restricted Section. I'm graduating. You look like you'd use them.\" A silver key is tucked in the spine.\nDecline\nThe fourth-year shrugs and slides the notebook to the next stud"
+    },
+    {
+      "key": "event:forbidden_section_2",
+      "title": "The Codex of Hollow Names",
+      "file": "content/events/chains_minor.grim",
+      "line": 120,
+      "sourceHash": "7985305d42d53ddcb65604976deee32725eafc84ea276a93984bc830d3c6ca98",
+      "score": 0.6089789867401123,
+      "excerpt": "The Codex of Hollow Names\nYou keep going back. One night, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.{flag(forbidden_warned):  Odile's warn"
+    },
+    {
+      "key": "event:forbidden_annotations",
+      "title": "Three Colours of Ink",
+      "file": "content/events/chains_minor.grim",
+      "line": 35,
+      "sourceHash": "6647a5a9262eec4b3d12dbed32c2e064868193afc4d182540226eeef12989702",
+      "score": 0.6039549708366394,
+      "excerpt": "Three Colours of Ink\nYou read Odile's notebook properly at last, at a desk within sight of the locked door. Black ink for the shelves, green for the prefects' rounds, red for warnings. Half the red is underlined twice.\nLearn the prefects' rounds\nGreen ink: the prefect on library "
+    },
+    {
+      "key": "event:brk_library_alone",
+      "title": "The Library to Yourself",
+      "file": "content/events/breaks.grim",
+      "line": 94,
+      "sourceHash": "b2369b390c7f41f8ad05c85f543dccbd4f482944b64a2de8eec6b4206792d7ce",
+      "score": 0.5053205490112305,
+      "excerpt": "The Library to Yourself\nThe library is yours. No queue for the good desk, no whispering, no one shelving loudly in the next row. Even the librarian's cat has gone off duty, and is asleep on the returns cart.\nRead for the exams\n{~You work through the term's reading list in a week."
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "608fc5d6833d429e26c58d4dae9c50020d3f90b7620dbcff3f4618605d2b6d49",
+      "at": "2026-10-28T23:49:05.599Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 166,
+        "total_tokens": 166,
+        "cost": 0.00000166,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000166,
+          "upstream_inference_prompt_cost": 0.00000166,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "608fc5d6833d429e26c58d4dae9c50020d3f90b7620dbcff3f4618605d2b6d49",
+      "elapsedMs": 476,
+      "at": "2026-10-28T23:49:06.075Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7d48f36ff7d7d82765577f90a73b4f5d35d34c0458c4c8156c4b64cb9c3847c3",
+      "at": "2026-10-28T23:49:06.127Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46006,
+        "cost": 0.0023003
+      },
+      "requestHash": "7d48f36ff7d7d82765577f90a73b4f5d35d34c0458c4c8156c4b64cb9c3847c3",
+      "elapsedMs": 708,
+      "at": "2026-10-28T23:49:06.835Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

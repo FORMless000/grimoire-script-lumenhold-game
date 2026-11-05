@@ -1,0 +1,107 @@
+{
+  "query": "The Whispering Dome {Under the dome on the sixth floor the echoes are wrong in a useful way. A whisper anywhere in the library arrives here, clear as a bell.|The dome is carrying voices again. Someone has chalked a small ear on the railing.|You know the dome's geography now: by the pillar you hear the front desk; by the window, the stacks.} {Two voices below are discussing a test that hasn't been set yet.|Someone below is rehearsing a proposal of marriage, badly.|{season == \"winter\": The radiators hiss over half of it.|A prefect is reading out demerits to himself, with relish.}} Lean on the rail and listen {You learn the third question of next week's test, probably. Eavesdroppers, it turns out, don't feel as clever as they'd hoped.|The proposal ends in a yes, and you weren't invited. You feel like a thief who has stolen a wedding.|You learn exactly what the front desk thinks of you. It's fair, which is worse.} Cough loudly, and read {Your cough rolls down the dome like thunder. Seven floors stop whispering at once, and you read in a silence you made.|You cough. Somewhere below, the proposal stops mid-sentence. You read a whole chapter before you stop wondering how it ended.|You cough on purpose now. Below, every whisper stops, and the dome is yours, and so is the chapter.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:library_whispering_dome",
+      "title": "The Whispering Dome",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 12,
+      "sourceHash": "450db8ecb0bfbdc968b57215a59d00bca949397ed2dc6db52344d00b138cca70",
+      "score": 0.950618326663971,
+      "excerpt": "The Whispering Dome\n{Under the dome on the sixth floor the echoes are wrong in a useful way. A whisper anywhere in the library arrives here, clear as a bell.|The dome is carrying voices again. Someone has chalked a small ear on the railing.|You know the dome's geography now: by t"
+    },
+    {
+      "key": "event:library_after_closing",
+      "title": "After the Closing Bell",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 28,
+      "sourceHash": "bf6a3b7fa5a74826386ba78c7bfa6c71b84f2db84722c467e83b45d2cb1b2798",
+      "score": 0.4642406702041626,
+      "excerpt": "After the Closing Bell\n{The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the"
+    },
+    {
+      "key": "event:boathouse_overheard",
+      "title": "Things Said Outside",
+      "file": "content/events/pools/grounds.grim",
+      "line": 394,
+      "sourceHash": "79b74af25387fb1b5e981644438cb8cc4c043b3dc15e3bf46060d0c5b8258efa",
+      "score": 0.4446394145488739,
+      "excerpt": "Things Said Outside\n{Two voices out on the jetty, low and urgent. People come to the boathouse to say what they can't say indoors.|You've found the gap in the boathouse planks where every word on the jetty comes through.|Another quiet conversation on the jetty. You're starting to"
+    },
+    {
+      "key": "event:library_assistant_hush_round",
+      "title": "The Hush Round",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 439,
+      "sourceHash": "308162cef62aee2ea7b67a3e93875b17901dc9f54fa9bd61f9159d107f89c00e",
+      "score": 0.4391859471797943,
+      "excerpt": "The Hush Round\n{Hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {A table of second-years is giggl"
+    },
+    {
+      "key": "event:library_shared_table",
+      "title": "The Last Free Chair",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 115,
+      "sourceHash": "69ae728a1f6d4324c9a6f079369482956ba5b1e2087377d78ade393d237c406c",
+      "score": 0.43381625413894653,
+      "excerpt": "The Last Free Chair\n{The library is full. The only free chair is opposite {here}.|The only free chair is opposite {here}. A shelf has leaned over it, as if keeping it for you.|The library knows your habits now. The free chair, opposite {here}, has a book you wanted waiting on it."
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "59c05df93939e78e0035e78d4e579cdabbfbd6f61336774471277d2c9a9879f0",
+      "at": "2026-10-28T23:33:32.325Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 306,
+        "total_tokens": 306,
+        "cost": 0.00000306,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000306,
+          "upstream_inference_prompt_cost": 0.00000306,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "59c05df93939e78e0035e78d4e579cdabbfbd6f61336774471277d2c9a9879f0",
+      "elapsedMs": 1126,
+      "at": "2026-10-28T23:33:33.451Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "adfc99689caf40a95c8e47b58b3f1373da074623a23d00ecd34f42776e120749",
+      "at": "2026-10-28T23:33:33.484Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46683,
+        "cost": 0.00233415
+      },
+      "requestHash": "adfc99689caf40a95c8e47b58b3f1373da074623a23d00ecd34f42776e120749",
+      "elapsedMs": 778,
+      "at": "2026-10-28T23:33:34.262Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

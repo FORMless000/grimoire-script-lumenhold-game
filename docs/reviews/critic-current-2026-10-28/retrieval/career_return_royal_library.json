@@ -1,0 +1,107 @@
+{
+  "query": "The Archives Write Again The Royal Library Archives remember your summer. The keeper writes that a cataloguer's post is free from the autumn, \"for someone who reads the footnotes\", and that your name was the only one proposed. Answer by the last day. Write back in your best copperplate It takes an evening and four nibs. The keeper replies with a catalogue card made out in your name, under \"Staff\". Ask which room you'd be given \"The cold one,\" the keeper writes, \"with the folios that object to being opened.\" You will need gloves. You will also, you suspect, love it.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_return_royal_library",
+      "title": "The Archives Write Again",
+      "file": "content/events/careers.grim",
+      "line": 139,
+      "sourceHash": "068e0457e018f68fe0938d7f8345e4e611182cb1627082ffb776e3b4a16487f8",
+      "score": 0.9366453289985657,
+      "excerpt": "The Archives Write Again\nThe Royal Library Archives remember your summer. The keeper writes that a cataloguer's post is free from the autumn, \"for someone who reads the footnotes\", and that your name was the only one proposed. Answer by the last day.\nWrite back in your best coppe"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.6047096252441406,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:career_job_spire",
+      "title": "The Stacks Want You Back",
+      "file": "content/events/careers.grim",
+      "line": 267,
+      "sourceHash": "3dc5cf6faa17b933c021846a80cdfd25c9e9431c2562fbfcdd9cd185ad50152c",
+      "score": 0.5351701974868774,
+      "excerpt": "The Stacks Want You Back\nA note under the bell on the reference desk, after your shift. The head librarian wants to keep you on after graduation, full time, as a keeper of the stacks. \"Footnote has stopped biting you,\" it says. \"That is a qualification.\" Answer by the last day.\nL"
+    },
+    {
+      "key": "event:intern_asked_back",
+      "title": "Asked Back",
+      "file": "content/events/calendar_2b.grim",
+      "line": 570,
+      "sourceHash": "55ff6e98647098163acdbc87bc019f7a24096f52203f76dd3dc36c494821884e",
+      "score": 0.5144996643066406,
+      "excerpt": "Asked Back\nA letter from {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): th"
+    },
+    {
+      "key": "event:intern_royal_library_slips",
+      "title": "Request Slips",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 465,
+      "sourceHash": "5b50b64c4cefac20131cc44816f5120f235fe8b3441ba99e4f4f65eaaa24553f",
+      "score": 0.45146942138671875,
+      "excerpt": "Request Slips\n{Scholars upstairs send their requests down a brass chute. Your job is to fetch them from the stacks, which go down for miles.|You've worn a path in the dust of the third landing.|You can read the chute's rattle now. A long rattle means someone wants something from "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "95d93c3b277a986417572d9f8481fc49c2ed78cb8f55b389e22d8be80440985c",
+      "at": "2026-10-28T23:18:24.577Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 128,
+        "total_tokens": 128,
+        "cost": 0.00000128,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000128,
+          "upstream_inference_prompt_cost": 0.00000128,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "95d93c3b277a986417572d9f8481fc49c2ed78cb8f55b389e22d8be80440985c",
+      "elapsedMs": 11656,
+      "at": "2026-10-28T23:18:36.233Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "0eb213d3a88518a3f3ed5f9b2098c27d24e9e646f306cf1d6bb66c2968602d59",
+      "at": "2026-10-28T23:18:36.339Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45499,
+        "cost": 0.00227495
+      },
+      "requestHash": "0eb213d3a88518a3f3ed5f9b2098c27d24e9e646f306cf1d6bb66c2968602d59",
+      "elapsedMs": 467,
+      "at": "2026-10-28T23:18:36.806Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

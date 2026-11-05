@@ -1,0 +1,107 @@
+{
+  "query": "A Volunteer {\"I need a volunteer,\" says the lecturer, holding up a charm that crackles, \"for a hex that is only mildly unpleasant.\" Their eyes are travelling along the back row towards you.|The volunteer again. The back row has learned to look at its shoes; the lecturer has learned to look at the back row.|\"Volunteer,\" says the lecturer, and you can feel the word coming for you like weather.} Put your hand up {You volunteer. The hex is exactly as mildly unpleasant as promised, and your hair stays upright until supper. You learn more than anyone else in the room.|You go down and take it on the chin, literally. The class applauds; your chin doesn't.|You volunteer before they ask. The lecturer, delighted, gives you the slightly worse hex, \"as a treat\".} Sink into your seat {You sink. The lecturer picks the student beside you, who gives you a look you'll be paying for until the end of term.|You become very interested in your notes. It works; the person in front is less lucky and less interested in theirs.|You sink until you're more desk than student. The lecturer says, \"I can see you,\" and picks someone else anyway.} Step into the pillar's shadow {You step into the shadow of the pillar and out of the shadow by the door, and spend the demonstration watching from the corridor, very innocently.|A step into the dark under your desk and out under the window. When the lecturer's eyes reach your seat, your seat is empty, and they look puzzled for the rest of the hour.|You're gone before the word \"volunteer\" lands. From the doorway you watch someone else's hair stand on end, and feel only slightly guilty.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:lecture_tower_volunteer",
+      "title": "A Volunteer",
+      "file": "content/events/spell_uses.grim",
+      "line": 452,
+      "sourceHash": "f17033d972251f29ae9d67109f2d32939ef09a1a8a2d1dbf4628f775971bb76e",
+      "score": 0.9535359144210815,
+      "excerpt": "A Volunteer\n{\"I need a volunteer,\" says the lecturer, holding up a charm that crackles, \"for a hex that is only mildly unpleasant.\" Their eyes are travelling along the back row towards you.|The volunteer again. The back row has learned to look at its shoes; the lecturer has learn"
+    },
+    {
+      "key": "event:umbral_first_shadowstep",
+      "title": "The Shadows in Between",
+      "file": "content/events/spell_sources.grim",
+      "line": 118,
+      "sourceHash": "03ed10f25bd0117365acb9f27dd8be698a87f75cfdd25c157bade5c29b0156e3",
+      "score": 0.5286534428596497,
+      "excerpt": "The Shadows in Between\n{level(umbral) == 0: Umbral Theory I. The lecturer snuffs every lamp but two and stands in the dark between them. \"Shadowstep,\" says the voice. \"In at one shadow, out at another. Don't stop in the middle.\"|{level(umbral) == 1: Umbral Theory II: Shadowstep u"
+    },
+    {
+      "key": "event:lesson_shadowstep",
+      "title": "Where the Voice Was",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 258,
+      "sourceHash": "4bea2c329024c902fc509c056a32c7d8e638bfde92fca719ae1c4f7dba79121c",
+      "score": 0.48974883556365967,
+      "excerpt": "Where the Voice Was\nShadowstep is taught in the dark. The umbral lecturer puts out the last dim lamp and calls your name from somewhere else in the room. You have to arrive where the voice was before it moves. Somewhere, a chair is waiting for your shins.\nStep into the dark\nYou s"
+    },
+    {
+      "key": "event:umbral_corridor_step",
+      "title": "Across the Corridor",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 567,
+      "sourceHash": "19394440fe8606983237940c30694b0c6d727f084364eb7d06892b30aae7e81f",
+      "score": 0.4868954122066498,
+      "excerpt": "Across the Corridor\n{Advanced Umbral Theory. Shadowstep across the corridor, door to door, the farthest the professor allows. \"Short distances only,\" the professor says. \"This is as short as long gets.\"|The corridor. The cold in between is colder than last time.|You stand at the "
+    },
+    {
+      "key": "event:umbral_shadow_witness",
+      "title": "The Shadow Witness",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 148,
+      "sourceHash": "f0d45e5d544c52da8f8b1143befa7b5da06ced8ca76031e7de5ab3f8b26ebb57",
+      "score": 0.4515950679779053,
+      "excerpt": "The Shadow Witness\n{An inkpot has been taken from the professor's desk, on purpose, for the lesson. \"The shadows in this room saw who took it,\" the professor says. \"Ask them.\"|Another staged theft, a quill this time. The professor turns the lamps down. \"Shadows remember. They jus"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "bf2e0a0ad73eb0b3b3bb9d0a5a3a387d2f14f4da7657e359fd5986956e4986e3",
+      "at": "2026-10-28T23:30:24.080Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 362,
+        "total_tokens": 362,
+        "cost": 0.00000362,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000362,
+          "upstream_inference_prompt_cost": 0.00000362,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "bf2e0a0ad73eb0b3b3bb9d0a5a3a387d2f14f4da7657e359fd5986956e4986e3",
+      "elapsedMs": 49163,
+      "at": "2026-10-28T23:31:13.243Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2ff40ae320b9e9060b3e94cd60d02012c7353f3c915732e9d4d1bb7428f945f8",
+      "at": "2026-10-28T23:31:13.338Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 55919,
+        "cost": 0.00279595
+      },
+      "requestHash": "2ff40ae320b9e9060b3e94cd60d02012c7353f3c915732e9d4d1bb7428f945f8",
+      "elapsedMs": 506,
+      "at": "2026-10-28T23:31:13.844Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

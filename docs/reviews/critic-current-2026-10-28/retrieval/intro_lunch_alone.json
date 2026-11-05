@@ -1,0 +1,108 @@
+{
+  "query": "The Lunch Table Lunch in the Great Hall, under the gallery where the refectory tables run. You can sit anywhere, and you don't know anyone yet. At noon people find you, or you find them; either way, who you sit with tends to become who you know. Eat with whoever's there You squeeze in between two strangers who are arguing about soup. By pudding they're not strangers, quite. Sit at the end and listen You take the end of a bench and listen. By the end of the meal you know who runs the Ledger, who duels, who talks to plants, and that the girl with the floating quill will find you whether you like it or not.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:intro_lunch_alone",
+      "title": "The Lunch Table",
+      "file": "content/events/intro.grim",
+      "line": 153,
+      "sourceHash": "18f05c4b1177f29cf8d4dc86c453e624985ebe84993550cd2c85a0b4a71599b3",
+      "score": 0.9276158213615417,
+      "excerpt": "The Lunch Table\nLunch in the Great Hall, under the gallery where the refectory tables run. You can sit anywhere, and you don't know anyone yet. At noon people find you, or you find them; either way, who you sit with tends to become who you know.\nEat with whoever's there\nYou squee"
+    },
+    {
+      "key": "event:intro_lunch",
+      "title": "The Lunch Table",
+      "file": "content/events/intro.grim",
+      "line": 131,
+      "sourceHash": "fa527db0586a96de1ffdb4d2ed78a306f779033760527cbe674e064fc3e582be",
+      "score": 0.8705186247825623,
+      "excerpt": "The Lunch Table\nLunch in the Great Hall, under the gallery where the refectory tables run. You can sit anywhere. At noon people find you, or you find them; either way, who you sit with tends to become who you know.\nEat with whoever's there\nYou squeeze in between two strangers who"
+    },
+    {
+      "key": "event:between_two_seats",
+      "title": "Two Saved Seats",
+      "file": "content/events/between.grim",
+      "line": 28,
+      "sourceHash": "c866d804ac98974f7d24e700fe4caeb92e34ccc237319a32a4cae21af6d309a1",
+      "score": 0.6456774473190308,
+      "excerpt": "Two Saved Seats\n{~{a} has put a bag on the bench beside {them}, and at the far end {b} has put a book on the bench too. Both are for you.|{a} waves you over to a saved place. So, from the other end of the table, does {b}. They have not looked at each other once.|There are two pla"
+    },
+    {
+      "key": "event:brk_one_long_table",
+      "title": "One Long Table",
+      "file": "content/events/breaks.grim",
+      "line": 11,
+      "sourceHash": "445d04647e7f18e8c8c8d55f2e5acfb7a888bfdfb6380f872836f69b8858717d",
+      "score": 0.6265712380409241,
+      "excerpt": "One Long Table\n{season == \"winter\": The Great Hall has given up on house tables for the break. Everyone left eats at one long table by the fire: a handful of students, two professors and a cook who sits down with you, which nobody has ever seen.|Half the candles are out for the s"
+    },
+    {
+      "key": "event:refectory_house_tables",
+      "title": "Where to Sit",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 199,
+      "sourceHash": "cd4c35a0de6ede40c6bb0ab0b8d75915b8f34360ef0e6cdb358b0f567fc0b8b6",
+      "score": 0.5828799605369568,
+      "excerpt": "Where to Sit\n{Supper, and the question of where to sit.|Your house table has started saving a gap on the bench, roughly your width.|The gap is a named seat now, and the quiet table nods at you too.} Your house table is {loud with a story about a goat|in the middle of a pudding tr"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "5fa72d155f8ad88a6190d851c4f00cd8bbedeedf7abb03ab32c1f457406b8b78",
+      "at": "2026-10-28T23:50:59.919Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "SiliconFlow",
+      "usage": {
+        "prompt_tokens": 142,
+        "total_tokens": 142,
+        "cost": 0.00000568,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000568,
+          "upstream_inference_prompt_cost": 0.00000568,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "5fa72d155f8ad88a6190d851c4f00cd8bbedeedf7abb03ab32c1f457406b8b78",
+      "elapsedMs": 492,
+      "at": "2026-10-28T23:51:00.411Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "85f6e03c34031588f6d3162d4f1f06f56cde652bd4aa41c6b326553e7a24879d",
+      "at": "2026-10-28T23:51:00.488Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 36698,
+        "cost": 0.0018349
+      },
+      "requestHash": "85f6e03c34031588f6d3162d4f1f06f56cde652bd4aa41c6b326553e7a24879d",
+      "elapsedMs": 1157,
+      "at": "2026-10-28T23:51:01.645Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

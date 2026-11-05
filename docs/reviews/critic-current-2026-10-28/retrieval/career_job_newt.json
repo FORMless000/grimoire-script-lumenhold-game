@@ -1,0 +1,107 @@
+{
+  "query": "The Landlady's Offer After closing, the landlady counts the till, then counts you in. She wants to keep you on after graduation, full time, behind the bar and, in a year or two, in charge of it. \"You remember who ordered the spiced cider,\" she says. \"That's rarer than magic.\" Answer by the last day. Shake on it, in principle You shake on it over the bar. She pours you a cider on the house, which has never happened to anyone before. Ask about the card games upstairs \"You'd look the other way,\" she says, \"and so would I.\" The offer stands. So does the question of what you'd be looking away from.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_job_newt",
+      "title": "The Landlady's Offer",
+      "file": "content/events/careers.grim",
+      "line": 285,
+      "sourceHash": "6e2d0abe06e84bf3b8b07744c695b6c796e5b670563a0adc03adedf9ac675146",
+      "score": 0.9421120285987854,
+      "excerpt": "The Landlady's Offer\nAfter closing, the landlady counts the till, then counts you in. She wants to keep you on after graduation, full time, behind the bar and, in a year or two, in charge of it. \"You remember who ordered the spiced cider,\" she says. \"That's rarer than magic.\" Ans"
+    },
+    {
+      "key": "event:newt_company",
+      "title": "Company for the Evening",
+      "file": "content/events/pools/night.grim",
+      "line": 8,
+      "sourceHash": "f822064ccd7f35ff30f97fdf420d490bd7f52e6480c69fe05d3b8072c6e3ade2",
+      "score": 0.5687628984451294,
+      "excerpt": "Company for the Evening\nThe woman who runs the upstairs room looks you over. \"The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more: guests who want more are shown the stair. Every night is a different party, and every par"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5512081980705261,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:tavern_behind_the_bar",
+      "title": "Behind the Bar",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 598,
+      "sourceHash": "83339dc920e266aeaa36c921e12dccb02a91941319eb0a2a0d46e0d5da31bde2",
+      "score": 0.4931451380252838,
+      "excerpt": "Behind the Bar\nThe landlady sets the cellar key on the bar between you. \"You pour from tonight,\" she says. \"Barkeeps feed the fire, too. It hasn't gone out in my lifetime, nor my mother's. Don't be the one.\" The hearth crackles, as if listening.\nBank the fire at closing\nYou stay "
+    },
+    {
+      "key": "event:shop_newt",
+      "title": "The Newt's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 254,
+      "sourceHash": "48725023698773413358951f61d55a2bb498c8fe13e63fe860bb87ecb3d51fa0",
+      "score": 0.4910258948802948,
+      "excerpt": "The Newt's Counter\n{{slot == \"afternoon\": By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|At this hour the Gilded Newt is all elbows and cider, and the landlady works the bar with a cloth over her shoulder.}|{slot == \""
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "9dcf56e189e72633a9fd96d71fc93ab6d659c63a5953478beef3607d9c3399a3",
+      "at": "2026-10-28T23:20:48.868Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 149,
+        "total_tokens": 149,
+        "cost": 0.00000149,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000149,
+          "upstream_inference_prompt_cost": 0.00000149,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "9dcf56e189e72633a9fd96d71fc93ab6d659c63a5953478beef3607d9c3399a3",
+      "elapsedMs": 9652,
+      "at": "2026-10-28T23:20:58.520Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "45df0e67b9e9a0cc238eaed86ee180d8c5139e1a9a5c2e7ca8562c36ae070e9b",
+      "at": "2026-10-28T23:20:58.637Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47315,
+        "cost": 0.00236575
+      },
+      "requestHash": "45df0e67b9e9a0cc238eaed86ee180d8c5139e1a9a5c2e7ca8562c36ae070e9b",
+      "elapsedMs": 533,
+      "at": "2026-10-28T23:20:59.170Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

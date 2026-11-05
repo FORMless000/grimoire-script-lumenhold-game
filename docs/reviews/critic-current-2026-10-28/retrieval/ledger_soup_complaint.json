@@ -1,0 +1,108 @@
+{
+  "query": "The Soup Complaint Forty furious letters about the refectory soup have arrived. Nessa wants one calm reply, printed. You decide to dictate it to the quill, which wants very badly to make it more exciting. Keep the quill to the facts Every time it reaches for a flourish, you catch it. The reply comes out calm, true and very dull. Nessa prints it. The quill sulks, and then, grudgingly, writes the next one straight. You blink and the quill has written that the soup contains a mild curse. It prints. You spend Thursday apologising to the cooks. Write the reply by hand You write it yourself, slowly. It's a good reply. The quill watches from the inkwell, offended at being left out.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ledger_soup_complaint",
+      "title": "The Soup Complaint",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 221,
+      "sourceHash": "a5f98a521e1406ccf2ad64950d282364653fd34d89421bd3162547a9d8fa877d",
+      "score": 0.9258874654769897,
+      "excerpt": "The Soup Complaint\nForty furious letters about the refectory soup have arrived. Nessa wants one calm reply, printed. You decide to dictate it to the quill, which wants very badly to make it more exciting.\nKeep the quill to the facts\nEvery time it reaches for a flourish, you catch"
+    },
+    {
+      "key": "event:item_quill_nessa",
+      "title": "The Quill Writes Back",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 413,
+      "sourceHash": "66b5c0652bc02aa6464008c12a32638fddf65a7e9d171578466fdfed7b1ee9d6",
+      "score": 0.521350622177124,
+      "excerpt": "The Quill Writes Back\nYou leave your owl quill on Nessa's desk for one minute. When you come back, her enchanted quill and yours are writing at each other on a sheet of foolscap: hers in headlines, yours in very tidy footnotes. It is, as far as you can tell, an argument about acc"
+    },
+    {
+      "key": "event:lumen_ledger_letters_box",
+      "title": "The Letters Box",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 114,
+      "sourceHash": "74dbaa3bbe39375a72305159aa61e864ec4b065176f363b2938f4af56d2d5a0f",
+      "score": 0.5155695080757141,
+      "excerpt": "The Letters Box\n{The letters box is full. Stringers sort it, Nessa says, having no dignity yet to lose.|Sorting day. A regular correspondent has started numbering their letters.|Under the stairs the box has burst its lid. You know the regulars by their handwriting now.} {Porridge"
+    },
+    {
+      "key": "event:ledger_office_unprintable",
+      "title": "Letters We Will Not Print",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 215,
+      "sourceHash": "e1011acf740a9df94f50504ad0d94b9b33dcd19843b9639157fba67e24565921",
+      "score": 0.5004801750183105,
+      "excerpt": "Letters We Will Not Print\n{By the Ledger's door sits a basket marked LETTERS WE WILL NOT PRINT. Visitors may read them.|The unprintable basket has overflowed into a second basket, which is also full.|You are a connoisseur of the unprintable basket now.} {On top is a complaint abo"
+    },
+    {
+      "key": "event:ledger_quill_interview",
+      "title": "Deny Everything",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 281,
+      "sourceHash": "aac6de1e9670645fd5e8ddfeaec0b1eed748893bdc1a00630e5cdae442fa1e7c",
+      "score": 0.4784891605377197,
+      "excerpt": "Deny Everything\nNessa sends you to interview the chair of the refectory committee, who will deny everything, including the soup. \"Get it word for word,\" she says. \"Every word. They'll deny the words too.\" {flag(quickquill_soup) and flag(quickquill_ink) and flag(quickquill_deadlin"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "865c01e918360e52e9c1727e17efd6fa4c7f1fd4913d2a4b47d5d9d6190edaa7",
+      "at": "2026-10-28T23:51:30.033Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 160,
+        "total_tokens": 160,
+        "cost": 0.0000016,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000016,
+          "upstream_inference_prompt_cost": 0.0000016,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "865c01e918360e52e9c1727e17efd6fa4c7f1fd4913d2a4b47d5d9d6190edaa7",
+      "elapsedMs": 309,
+      "at": "2026-10-28T23:51:30.342Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "53437f583a178812dfffedfdcdb776cd3e9422bc4fa95377727daf5f836849fd",
+      "at": "2026-10-28T23:51:30.567Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44597,
+        "cost": 0.00222985
+      },
+      "requestHash": "53437f583a178812dfffedfdcdb776cd3e9422bc4fa95377727daf5f836849fd",
+      "elapsedMs": 945,
+      "at": "2026-10-28T23:51:31.512Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

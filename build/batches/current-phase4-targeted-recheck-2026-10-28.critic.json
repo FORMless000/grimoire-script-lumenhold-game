@@ -1,0 +1,53 @@
+{
+  "batch": "current-phase4-targeted-recheck-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "scandal_credit_taken",
+      "spot_newt_drink",
+      "between_love_note",
+      "fame_lend_your_name",
+      "season_first_supper"
+    ],
+    "files": [
+      "content/events/scandals.grim",
+      "content/events/spotlight_famous.grim",
+      "content/events/between_hearts.grim",
+      "content/events/society.grim"
+    ]
+  },
+  "summary": "The five post-review edits are present, including skill checks and off-campus deferral. The credit denial still omits its moral consequence; the letter delivery has a small unshown study cost.",
+  "issues": [
+    {
+      "event": "scandal_credit_taken",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Say you’d had it too knowingly fabricates nearly supporting notes to retain credit and avoid reputational loss. The new Deceive check correctly makes it skill-sensitive, but still grants no Hollow consequence; the more aggressive smear option does.",
+      "fix": "Add the modest Hollow consequence to the dishonest denial before its check.",
+      "file": "content/events/scandals.grim",
+      "line": 405
+    },
+    {
+      "event": "between_love_note",
+      "priority": "P3",
+      "category": "cost fiction",
+      "problem": "Deliver it as asked charges Study but only shows finding the recipient in the library and carrying a short reply. The revised writing-help route shows the time spent; the delivery route does not show any displaced coursework.",
+      "fix": "Add the missed reading/essay time to the delivery outcome, or use a trade that the errand actually shows.",
+      "file": "content/events/between_hearts.grim",
+      "line": 42
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

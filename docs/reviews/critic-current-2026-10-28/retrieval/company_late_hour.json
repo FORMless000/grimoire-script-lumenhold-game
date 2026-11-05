@@ -1,0 +1,108 @@
+{
+  "query": "The Second Party {Past two, the landlady catches your sleeve on the stair. \"Another party's just come up, and I'm a pair of hands short. Same pay again.\"|A second party is coming up the stair as yours goes down it. The landlady looks at you and raises an eyebrow.|\"One more,\" says the landlady, \"and I'll owe you.\" The castle will be waking in four hours.} Stay till dawn {You take your jacket back off the peg. The second party is louder than the first.|You splash cold water on your face and go back up. The lamps are still lit, and so are the guests.|You stay. It will be light when you get home, and the castle's early risers will see you come in.} Go home to bed {You hand back the jacket and walk home under the last of the stars. Your bed has never been so welcome.|\"Next time,\" you tell the landlady. You're asleep before the castle clock strikes three.|You leave the second party to someone else and sleep the four hours you have left like a stone.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_late_hour",
+      "title": "The Second Party",
+      "file": "content/events/pools/night.grim",
+      "line": 405,
+      "sourceHash": "f6b4cc262e44212fd7b4c2cb6db0bce0442b25bae728aec635e5f3bc1bc80b59",
+      "score": 0.9434986710548401,
+      "excerpt": "The Second Party\n{Past two, the landlady catches your sleeve on the stair. \"Another party's just come up, and I'm a pair of hands short. Same pay again.\"|A second party is coming up the stair as yours goes down it. The landlady looks at you and raises an eyebrow.|\"One more,\" says"
+    },
+    {
+      "key": "event:newt_company_regular",
+      "title": "The Upstairs Room",
+      "file": "content/events/pools/night.grim",
+      "line": 34,
+      "sourceHash": "8b4131d78d56b576167bffa78adc1d451af677325e873c31bccb222ca40b81a6",
+      "score": 0.5761632919311523,
+      "excerpt": "The Upstairs Room\n{The woman who runs the upstairs room knows your face now. \"There's a party tonight,\" she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. \"Your table's waiting,\" she says.|\"Your regulars asked after yo"
+    },
+    {
+      "key": "event:newt_company",
+      "title": "Company for the Evening",
+      "file": "content/events/pools/night.grim",
+      "line": 8,
+      "sourceHash": "f822064ccd7f35ff30f97fdf420d490bd7f52e6480c69fe05d3b8072c6e3ade2",
+      "score": 0.5094621777534485,
+      "excerpt": "Company for the Evening\nThe woman who runs the upstairs room looks you over. \"The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more: guests who want more are shown the stair. Every night is a different party, and every par"
+    },
+    {
+      "key": "event:night_sleep",
+      "title": "Lights Out",
+      "file": "content/events/night.grim",
+      "line": 54,
+      "sourceHash": "56ab65ad9b9e555f34c18182abd71537aca38dd781db57c5600bd9a9205297d4",
+      "score": 0.49917998909950256,
+      "excerpt": "Lights Out\n{has(locked_out): {~The lock on your door turns at curfew now, from the outside. The castle has decided where you sleep.|Bram's boots go past your door twice before midnight. There's nowhere to go, so you go to bed.|Locked in for the night. You can hear the castle's se"
+    },
+    {
+      "key": "event:midnight_roof_partner",
+      "title": "The Roof, Together",
+      "file": "content/events/pools/night.grim",
+      "line": 968,
+      "sourceHash": "b787afb77ada057612727a5960c8e7d0cab2081de554e629e683c4ad8d05787c",
+      "score": 0.48281925916671753,
+      "excerpt": "The Roof, Together\n{You've brought {partner} up to the observatory roof, with a stolen blanket and two cups of cocoa going cold.|{partner} knows the way up now, and goes first.|{partner} has brought the blanket this time.} {The stars are very close.|A meteor, then another.|The ca"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "746b0016bf9862b0b8b9b42f2ef7b2b048aa117c866db5028f103df773e55474",
+      "at": "2026-10-28T23:51:18.823Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 236,
+        "total_tokens": 236,
+        "cost": 0.00000236,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000236,
+          "upstream_inference_prompt_cost": 0.00000236,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "746b0016bf9862b0b8b9b42f2ef7b2b048aa117c866db5028f103df773e55474",
+      "elapsedMs": 307,
+      "at": "2026-10-28T23:51:19.130Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6c1f6a4a8f9a4794ed7d8f8297bb56f6483587cae1f702b4d737159cd2220a69",
+      "at": "2026-10-28T23:51:19.186Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42364,
+        "cost": 0.0021182
+      },
+      "requestHash": "6c1f6a4a8f9a4794ed7d8f8297bb56f6483587cae1f702b4d737159cd2220a69",
+      "elapsedMs": 355,
+      "at": "2026-10-28T23:51:19.541Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

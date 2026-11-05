@@ -1,0 +1,108 @@
+{
+  "query": "What Is Just? Headmistress Marrow stops in front of you, notebook open, as if she'd been looking for you in particular. \"One question before the prefects have you,\" she says. \"I ask it of everyone. Very few remember. What do you think is just?\" \"Mercy.\" \"Mercy,\" she repeats, and writes it down. \"Expensive. Most people who say it haven't been asked to pay for it yet.\" She closes the notebook on her finger. \"Ask me again in four years.\" \"Fairness.\" \"Fairness,\" she repeats, and writes it down. \"The same rule for the duke and the pickpocket. Harder than it sounds, when you know one of them.\" She closes the notebook on her finger. \"Ask me again in four years.\" \"Keeping your own safe.\" \"Keeping your own safe,\" she repeats, and writes it down. \"An honest answer. Most people dress it up.\" She closes the notebook on her finger. \"Ask me again in four years. I'd like to know who you decided was yours.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:intro_what_is_just",
+      "title": "What Is Just?",
+      "file": "content/events/intro.grim",
+      "line": 38,
+      "sourceHash": "1094622fdcde657d60477fa1142ad215a5558d460708f0d2e515087cbce86bdc",
+      "score": 0.9363991022109985,
+      "excerpt": "What Is Just?\nHeadmistress Marrow stops in front of you, notebook open, as if she'd been looking for you in particular. \"One question before the prefects have you,\" she says. \"I ask it of everyone. Very few remember. What do you think is just?\"\n\"Mercy.\"\n\"Mercy,\" she repeats, and "
+    },
+    {
+      "key": "event:isolde_asks_again",
+      "title": "Ask Me Again",
+      "file": "content/events/calendar.grim",
+      "line": 759,
+      "sourceHash": "5e73073158447123e2707552e6d4caf839d21d74a752c285d12c40084e44f505",
+      "score": 0.848243236541748,
+      "excerpt": "Ask Me Again\nHeadmistress Marrow finds you in the cloister, the same small notebook under her arm, four years more worn. \"I asked you what was just,\" she says, and reads it back: {flag(just_mercy): \"Mercy.\"|{flag(just_fair): \"Fairness.\"|\"Keeping your own safe.\"}} She looks at you"
+    },
+    {
+      "key": "event:intro_welcome",
+      "title": "The Welcome",
+      "file": "content/events/intro.grim",
+      "line": 18,
+      "sourceHash": "40610bf0fc69a8ae37a87a31239d6550a4e16838b90d264665685e043894512d",
+      "score": 0.6963604092597961,
+      "excerpt": "The Welcome\nFloating candles, two hundred first-years trying not to look up. Headmistress Marrow speaks for four minutes: four years of twelve moons, a name that travels, and a castle that remembers who you were in it. \"Before you choose your courses,\" she ends, \"the prefects wil"
+    },
+    {
+      "key": "event:year_three",
+      "title": "Third Year",
+      "file": "content/events/calendar.grim",
+      "line": 740,
+      "sourceHash": "2200d0de010ca220a1e41607eff0ba00fc2b8288e5ca44bb7572c71b619d564b",
+      "score": 0.6784873008728027,
+      "excerpt": "Third Year\n\"Third years,\" the headmistress says, \"you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it.\" She looks, for a moment, directly at you.{chosen(break_plan, home):  You came straight from home"
+    },
+    {
+      "key": "event:isolde_judgement",
+      "title": "A Question of Mercy",
+      "file": "content/events/expansion_faculty.grim",
+      "line": 207,
+      "sourceHash": "59e527a66e947c05b25f6ab901105b6400c7f2d639f0823fb2e51bb5e710378d",
+      "score": 0.6420706510543823,
+      "excerpt": "A Question of Mercy\nThe headmistress slides a file across her desk. A second-year stole from the apothecary to pay for a sick mother's medicine. The rules say expulsion. \"You're a student,\" she says. \"Tell me what a student thinks is just.\"\nArgue for mercy\nYou argue for an hour. "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4bf21ec1e41b371750d9b573a337a12af974c3b3af95b2d787d252bd6b4d31bd",
+      "at": "2026-10-28T23:50:59.055Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 228,
+        "total_tokens": 228,
+        "cost": 0.00000228,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000228,
+          "upstream_inference_prompt_cost": 0.00000228,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4bf21ec1e41b371750d9b573a337a12af974c3b3af95b2d787d252bd6b4d31bd",
+      "elapsedMs": 377,
+      "at": "2026-10-28T23:50:59.432Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b3e48be4c3327c8b903864d122b1a9937d8e10d763540a80d4ce093f7e556e78",
+      "at": "2026-10-28T23:50:59.484Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40859,
+        "cost": 0.00204295
+      },
+      "requestHash": "b3e48be4c3327c8b903864d122b1a9937d8e10d763540a80d4ce093f7e556e78",
+      "elapsedMs": 440,
+      "at": "2026-10-28T23:50:59.924Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

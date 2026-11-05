@@ -1,0 +1,108 @@
+{
+  "query": "Footnote on the Wall {Footnote, the library cat, is sitting on top of the courtyard wall and refusing to come down. A small crowd has gathered.|Footnote is on the courtyard wall again, being worshipped.|Footnote is on the wall. The crowd parts for you, as the expert.} {season == \"spring\": Blossom is blowing over the wall onto his head.|{The library will not reopen until he is found, apparently.|Someone has a sardine. Someone else has a ladder.|A first-year is trying to bribe him with a sock.}} Climb up after him {You climb the ivy, take the cat and come down to applause. Footnote looks as if he arranged the whole thing.|You get him on the second try. He purrs, for the crowd only.|You're up the wall before the crowd can offer the ladder. Footnote walks into your arms as if he's been waiting all afternoon.} {The ivy gives. You land in the flowerbed. Footnote walks down the ladder someone else brought.|You get halfway, and Footnote jumps down past you and walks off. The crowd's sympathy is mostly laughter.|You slip at the top. He watches you fall with professional interest, then comes down by himself.} Wait him out with the crowd {You stand with the crowd and trade news while Footnote ignores you all. He comes down when he's bored, which takes an hour.|You chat with the others until the cat gives up. Someone shares a pastry. Footnote takes half.|You spend the hour in good company under the wall. Footnote comes down and sits on your foot, to make a point.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:courtyard_lost_cat",
+      "title": "Footnote on the Wall",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 59,
+      "sourceHash": "bee83c90a41b5d02fb709ec233e6119434bcefc9fbfc95a3ffc6a19898ffa3f2",
+      "score": 0.9572371244430542,
+      "excerpt": "Footnote on the Wall\n{Footnote, the library cat, is sitting on top of the courtyard wall and refusing to come down. A small crowd has gathered.|Footnote is on the courtyard wall again, being worshipped.|Footnote is on the wall. The crowd parts for you, as the expert.} {season == "
+    },
+    {
+      "key": "event:life_library_cat",
+      "title": "The Library Cat",
+      "file": "content/events/expansion_life.grim",
+      "line": 196,
+      "sourceHash": "0ac9918ada0ca3abf9bc4a007870b84e12885e57cd0a28e3518a12fd9ab25484",
+      "score": 0.6228264570236206,
+      "excerpt": "The Library Cat\nThe library cat — a vast, ancient beast called Footnote — is asleep on the only copy of the book you need. You have an essay due tomorrow. Footnote has no deadlines.\nMove the cat\nYou lift Footnote like a sack of warm flour. He allows it, with contempt. You get the"
+    },
+    {
+      "key": "event:library_fish_footnote",
+      "title": "Bribing the Cat",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 538,
+      "sourceHash": "47cfc0f74f4bfe3417e249fccff7cdbeea221b85215d4da6f55c4b3927f6cd99",
+      "score": 0.5725622773170471,
+      "excerpt": "Bribing the Cat\nFootnote won't move from the drawer for less than fish. Good fish, from the village, not the refectory's. The head librarian says this is \"between you and the cat\".\nBuy him a proper herring\nFootnote eats the herring slowly, looking at you the whole time, then step"
+    },
+    {
+      "key": "event:lib_footnote_strike",
+      "title": "Footnote Goes on Strike",
+      "file": "content/events/slice_2b.grim",
+      "line": 328,
+      "sourceHash": "38001d4cd6865f53e4163d194b76eedd9abfb2e73c0f434de8ed6207000055a7",
+      "score": 0.5631953477859497,
+      "excerpt": "Footnote Goes on Strike\nFootnote has lain down across the reference desk and will not move. Students are queueing. The cat has made its demands clear: none.\nBribe him with fish\nFootnote accepts the fish, the apology and the chair you bring him. The queue resumes.\nWork around him\n"
+    },
+    {
+      "key": "event:library_footnote_bag",
+      "title": "Footnote's Approval",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 313,
+      "sourceHash": "b3a83b5a6da15ba189f3fc0e689cd5b3f51fdb3e5b1ec9d5aea65ae3384a62d4",
+      "score": 0.5198549628257751,
+      "excerpt": "Footnote's Approval\nYou come back from the shelves to find Footnote asleep on your bag, curled tight, one paw over the strap. Footnote sleeps on the reference desk, as a rule, and almost never on anyone's belongings; everybody knows that. A passing librarian stops, looks from the"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "dc36ee0cf8bbb585d358ad6407701075e039e76baebbe55e4dd60d7dee4536ed",
+      "at": "2026-10-28T23:50:58.000Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 350,
+        "total_tokens": 350,
+        "cost": 0.0000035,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000035,
+          "upstream_inference_prompt_cost": 0.0000035,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "dc36ee0cf8bbb585d358ad6407701075e039e76baebbe55e4dd60d7dee4536ed",
+      "elapsedMs": 308,
+      "at": "2026-10-28T23:50:58.308Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "e7069a9483ba602b3d686a46f6a3ef70c9644013bb5565b044a621ba94801baa",
+      "at": "2026-10-28T23:50:58.374Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 56650,
+        "cost": 0.0028325
+      },
+      "requestHash": "e7069a9483ba602b3d686a46f6a3ef70c9644013bb5565b044a621ba94801baa",
+      "elapsedMs": 692,
+      "at": "2026-10-28T23:50:59.066Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "The Spoon Will Fall At breakfast Seraphine says, without looking up, \"Practise on small things. Spoons. Doors. The weather. Never people, not yet.\" Then she looks at you, quite clearly, for once. Foretell small things all day The spoon falls. The door sticks. It rains at four. By evening it unnerves you how well it works, and you catch yourself foretelling the soup. Ask what \"not yet\" means \"Later,\" she says, then, \"I mean that exactly.\" She doesn't explain. She does pass you the salt before you've asked for it.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_omen",
+      "title": "The Spoon Will Fall",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 354,
+      "sourceHash": "687d5ffbf0e308b09f57e26455f9efce1f76f120e6f6fc8d757edd5ccaea4a81",
+      "score": 0.9523249864578247,
+      "excerpt": "The Spoon Will Fall\nAt breakfast Seraphine says, without looking up, \"Practise on small things. Spoons. Doors. The weather. Never people, not yet.\" Then she looks at you, quite clearly, for once.\nForetell small things all day\nThe spoon falls. The door sticks. It rains at four. By"
+    },
+    {
+      "key": "event:seraphine_teaches_omen",
+      "title": "Say It So It Lands",
+      "file": "content/events/spell_sources.grim",
+      "line": 254,
+      "sourceHash": "b2ea082b3bb4668f74a0c07ba3999999048cd3d9f2dd3d98e6897dfd88f93b1c",
+      "score": 0.6814926862716675,
+      "excerpt": "Say It So It Lands\nSeraphine stops halfway through a sentence and looks at the candle across the observatory. \"That will go out,\" she says, quite clearly, \"when I've finished the next word.\" It does. \"Saying it is the spell. Seeing it is just… I can teach you the saying part.\"\nLe"
+    },
+    {
+      "key": "event:seraphine_between_sentences",
+      "title": "The Other Half",
+      "file": "content/events/between_known_2.grim",
+      "line": 31,
+      "sourceHash": "fe37f8c37f5079a51f1937965cfaf81be128ff4ef165a62209b225fe55bbc2ab",
+      "score": 0.5266452431678772,
+      "excerpt": "The Other Half\n{~{o} has started a sentence three times today, and Seraphine has finished it three times, correctly, half a second early.|Seraphine answered a question {o} hadn't asked yet. {o} asked it anyway, to be sure. It was the right answer.|{o} told a joke at supper, and S"
+    },
+    {
+      "key": "event:seraphine_lost_day",
+      "title": "Seraphine Is Tomorrow",
+      "file": "content/events/expansion_people.grim",
+      "line": 162,
+      "sourceHash": "c4e95da1de34a9731feb6c01b5e1dc54cf102cdd808a6dcdc61c6398d9c09023",
+      "score": 0.5049251317977905,
+      "excerpt": "Seraphine Is Tomorrow\nSeraphine is sitting in an empty classroom, waiting for a lesson that's happening tomorrow. \"I've slipped,\" she says calmly. \"I'm a day ahead. It happens. I need someone to remind me what today is.\"\nTalk her back into today\nYou tell her what you had for brea"
+    },
+    {
+      "key": "event:seraphine_tomorrow_answer",
+      "title": "Tomorrow's Answer",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 30,
+      "sourceHash": "20f53b423ba71e95eafc75c3a04da147abab5e0a2cf76aa62448a104e4cc0c27",
+      "score": 0.5033770203590393,
+      "excerpt": "Tomorrow's Answer\n\"Yes,\" Seraphine says, as you pass her in the corridor. You haven't said anything. \"Oh,\" she says. \"You haven't asked yet. Tomorrow, then.\" She looks embarrassed, which is rare. \"I slip, sometimes. A day ahead. Someone has to tell me what today is.\"\nTell her wha"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4eb5ea29c04c64820708a2d0aff91083aaf9c50487560196385f2a4aad0e0658",
+      "at": "2026-10-28T23:51:45.189Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 129,
+        "total_tokens": 129,
+        "cost": 0.00000129,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000129,
+          "upstream_inference_prompt_cost": 0.00000129,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4eb5ea29c04c64820708a2d0aff91083aaf9c50487560196385f2a4aad0e0658",
+      "elapsedMs": 474,
+      "at": "2026-10-28T23:51:45.663Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "18d4b3af63a05fd52d113a9bfbf70f8c16bed30cef59d1a64cfc7223fca79e8e",
+      "at": "2026-10-28T23:51:45.772Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44198,
+        "cost": 0.0022099
+      },
+      "requestHash": "18d4b3af63a05fd52d113a9bfbf70f8c16bed30cef59d1a64cfc7223fca79e8e",
+      "elapsedMs": 350,
+      "at": "2026-10-28T23:51:46.122Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

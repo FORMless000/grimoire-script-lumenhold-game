@@ -1,0 +1,108 @@
+{
+  "query": "A Stowaway in Your Satchel {~A hedge-sprite has moved into your bag and is lining it with your notes.|A small cave newt, glowing faintly orange, is asleep in your inkwell.|A baby owl, still mostly fluff, has climbed into your hood and refuses to leave.} {~Unregistered creatures are tolerated, so long as nobody notices them.|It looks at you as though this was your idea.|It has clearly been there since breakfast.} Keep it quiet a while {~You feed it crumbs and hide it from the prefects all day. By evening it's built a nest out of your essay, and you don't mind.|You keep it warm in your pocket all day. Nobody notices; it glows when you laugh.|You carry it about in your hood all day. It hoots once in the middle of a lecture, and you cough to cover it, heroically.} Take it to the stables {~You walk it down to the stables. Professor Brask tells it, very kindly, where hedge-sprites belong, and tells you, less kindly, to check your bag.|Professor Brask takes the newt in her palm and tells you three things about cave newts you'll never forget. You miss it a bit on the walk back.|Professor Brask tucks the owlet into a nest box and tells you where its mother is likely to be. You find yourself checking your hood all week.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_something_in_your_bag",
+      "title": "A Stowaway in Your Satchel",
+      "file": "content/events/pools/world_more.grim",
+      "line": 134,
+      "sourceHash": "5ca54b206e84b60499c9a9667fdad08f8f401be00b90e1eabfd5bf2b33091a2d",
+      "score": 0.9601067304611206,
+      "excerpt": "A Stowaway in Your Satchel\n{~A hedge-sprite has moved into your bag and is lining it with your notes.|A small cave newt, glowing faintly orange, is asleep in your inkwell.|A baby owl, still mostly fluff, has climbed into your hood and refuses to leave.} {~Unregistered creatures a"
+    },
+    {
+      "key": "event:picture_brask",
+      "title": "Half a Sentence More",
+      "file": "content/events/full_picture.grim",
+      "line": 160,
+      "sourceHash": "a743a17cd01e854f001830453e0cd6a547357f2c7ceaab165ce26d15d3566e50",
+      "score": 0.515981912612915,
+      "excerpt": "Half a Sentence More\nIn the loft, Brask feeds the old owl and, for once, talks to you in a whole sentence. \"You know about the owl, and the feather, and the woman with the blackthorn, and that I bow to the wood.\" She feeds the owl another mouse. \"Students don't usually stay long "
+    },
+    {
+      "key": "event:item_quill_brask",
+      "title": "Brask Knows That Owl",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 393,
+      "sourceHash": "a83d7fd055c20fff121236e7cacb87288206e20603902a7a4a5f4e4838541384",
+      "score": 0.4997963011264801,
+      "excerpt": "Brask Knows That Owl\nProfessor Brask sees your quill and takes it out of your hand without asking. She turns it to the light. Above you, in the rafters, the old barn owl shifts. \"That's hers,\" says Brask. \"From the winter she moulted in the wood. I looked for that feather for a m"
+    },
+    {
+      "key": "event:stables_owl_loft",
+      "title": "The Owl Loft",
+      "file": "content/events/pools/grounds.grim",
+      "line": 292,
+      "sourceHash": "a3903962b18480b0f74ba8c2c49b5363408ffe99af88746a581ad4d5fbd4de33",
+      "score": 0.49228817224502563,
+      "excerpt": "The Owl Loft\n{Up the ladder, above the hippogriffs, is a hay loft full of owls and quiet.|The owls open one eye each, decide you're furniture, and go back to sleep.|The owls have stopped opening their eyes for you. You've been accepted.} {season == \"winter\": The warmth of the ani"
+    },
+    {
+      "key": "event:brask_deep_hours",
+      "title": "Midnight Hours",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 211,
+      "sourceHash": "f943bc806403738e2ca7219d2171272e487f1611442e66a854a823cafd597799",
+      "score": 0.47642454504966736,
+      "excerpt": "Midnight Hours\nProfessor Brask is feeding the old barn owl in the loft. \"You've been in the wood,\" she says, without turning round. \"By day, I hope. The deep things keep midnight hours. Most of them would rather you didn't.\"\nAsk her what deep things\n\"Old ones,\" says Brask. \"In th"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "7bf5d20a31dbbe23ce4efb929983d4a1ddfb05896b549f99a6ab13a9afb184de",
+      "at": "2026-10-28T23:50:52.877Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 305,
+        "total_tokens": 305,
+        "cost": 0.00000305,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000305,
+          "upstream_inference_prompt_cost": 0.00000305,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "7bf5d20a31dbbe23ce4efb929983d4a1ddfb05896b549f99a6ab13a9afb184de",
+      "elapsedMs": 457,
+      "at": "2026-10-28T23:50:53.334Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6509ddc62619d485e92024c8ba4aa95cc65b9e796c24a27fdfe63bd89d0c2f40",
+      "at": "2026-10-28T23:50:53.419Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46192,
+        "cost": 0.0023096
+      },
+      "requestHash": "6509ddc62619d485e92024c8ba4aa95cc65b9e796c24a27fdfe63bd89d0c2f40",
+      "elapsedMs": 342,
+      "at": "2026-10-28T23:50:53.761Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

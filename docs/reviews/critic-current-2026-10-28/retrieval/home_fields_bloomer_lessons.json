@@ -1,0 +1,107 @@
+{
+  "query": "Where Nothing Can Catch She's waiting past the last of the long rows, where the ground is all stones and nothing can catch, with a candle stub in each pocket. \"Teach me something,\" she says. \"Properly. Before you go back.\" Teach her to keep a flame small By sunset she can hold a flame the size of a fingernail for ten breaths. She counts every one of them out loud. The candle goes off like a firework. You both lie in the grass laughing until the farmer shouts. \"Next time,\" she says. Spend the afternoon at home You promise her next time. She shrugs, the way people do when they've stopped expecting things.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:home_fields_bloomer_lessons",
+      "title": "Where Nothing Can Catch",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 328,
+      "sourceHash": "83a3826b7427bfeadafb3a21780a386df4f190e5ec32e128d1a772a65f8ae567",
+      "score": 0.9303073287010193,
+      "excerpt": "Where Nothing Can Catch\nShe's waiting past the last of the long rows, where the ground is all stones and nothing can catch, with a candle stub in each pocket. \"Teach me something,\" she says. \"Properly. Before you go back.\"\nTeach her to keep a flame small\nBy sunset she can hold a "
+    },
+    {
+      "key": "event:home_cottage_bloomer_letter",
+      "title": "A Flame That Stays",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 441,
+      "sourceHash": "e1c8a75cd34e42b8824bdd7e670300f1fa410d352cd66e5b440ce6d0f96071a3",
+      "score": 0.5486143827438354,
+      "excerpt": "A Flame That Stays\n{flag(bloomer_damped): She comes by one evening, the grey bead on its cord. \"I know it's only glass,\" she says. \"I keep it in my pocket anyway.\" She lights a candle with her finger, small and steady, to show you.|She comes by one evening with a candle she lit a"
+    },
+    {
+      "key": "event:slice_candle_flame",
+      "title": "Borrowed Fire",
+      "file": "content/events/slice_2a.grim",
+      "line": 33,
+      "sourceHash": "a886fc5f73ae5ee4c82679c01ad31b609adbf4e278a85b28c6d5537f44807682",
+      "score": 0.5037965178489685,
+      "excerpt": "Borrowed Fire\nLyra watches you fail to light a candle for the third time. \"You're asking it,\" she says. \"Fire doesn't want to be asked. {rel(lyra) >= 12: Here — watch my hand.|Watch, if you can keep up.}\"\nWatch her hand\nShe doesn't explain. She just does it, slowly, twice. On the"
+    },
+    {
+      "key": "event:illu_candle_drill",
+      "title": "The Candle Drill",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 13,
+      "sourceHash": "f0ecd866ea8355963d5f72923e1e449f556b245aca2be4461277140a7f22d735",
+      "score": 0.4734806716442108,
+      "excerpt": "The Candle Drill\n{Illusion I opens with a row of cold candles. Make them burn, Professor Vey says, without burning.|Vey's drawer of candles is open. Every one is older than you.|The candle drill. Some mornings you could do it asleep.} {Vey passes her hand through each flame and s"
+    },
+    {
+      "key": "event:lyra_teaches_wildfire",
+      "title": "Let It Run",
+      "file": "content/events/spell_sources.grim",
+      "line": 208,
+      "sourceHash": "a9f874059ffbbd75e31dfe0768914ce29c9f6e7af1bd21d8a01922b5e8e73f9e",
+      "score": 0.45644986629486084,
+      "excerpt": "Let It Run\nLyra lets you into the duel hall after it has closed. She cups her hands and the fire in them grows, and grows, until it lights the rafters. \"They taught me to keep it small,\" she says. \"This is what it does when I stop. I've never shown anyone.\"\nAsk her to teach you\nS"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c793acf6247fce1fc619a21c44274e6356684763fc220594b6d05a2860d63ab0",
+      "at": "2026-10-28T23:25:19.808Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 143,
+        "total_tokens": 143,
+        "cost": 0.00000143,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000143,
+          "upstream_inference_prompt_cost": 0.00000143,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c793acf6247fce1fc619a21c44274e6356684763fc220594b6d05a2860d63ab0",
+      "elapsedMs": 4438,
+      "at": "2026-10-28T23:25:24.246Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "52eb0141d34e879155edd0fcf715c550f494ea35d0b17544bd26c3399b46882d",
+      "at": "2026-10-28T23:25:24.333Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45517,
+        "cost": 0.00227585
+      },
+      "requestHash": "52eb0141d34e879155edd0fcf715c550f494ea35d0b17544bd26c3399b46882d",
+      "elapsedMs": 445,
+      "at": "2026-10-28T23:25:24.778Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

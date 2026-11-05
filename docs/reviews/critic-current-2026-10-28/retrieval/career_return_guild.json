@@ -1,0 +1,107 @@
+{
+  "query": "The Works Write Again The Guild of Alchemists' works remember your summer and the batch you saved. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day. Write back yes, in principle You write back yes. The foreman's reply is a list of protective clothing you will need to buy yourself, which you take as a welcome. Ask about the explosions \"Two a month,\" he writes, \"and none fatal since my father's day.\" You read it three times. The bench is still yours.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_return_guild",
+      "title": "The Works Write Again",
+      "file": "content/events/careers.grim",
+      "line": 175,
+      "sourceHash": "7ea549a8921385abe865d362bb4ee2a219a2f1bd6f6424b1c1a4542857b86f26",
+      "score": 0.9329904913902283,
+      "excerpt": "The Works Write Again\nThe Guild of Alchemists' works remember your summer and the batch you saved. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day.\nWrite back yes, in principle\nY"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.569627583026886,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:intern_asked_back",
+      "title": "Asked Back",
+      "file": "content/events/calendar_2b.grim",
+      "line": 570,
+      "sourceHash": "55ff6e98647098163acdbc87bc019f7a24096f52203f76dd3dc36c494821884e",
+      "score": 0.5230502486228943,
+      "excerpt": "Asked Back\nA letter from {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): th"
+    },
+    {
+      "key": "event:career_return_conclave",
+      "title": "The Laboratory Writes Again",
+      "file": "content/events/careers.grim",
+      "line": 157,
+      "sourceHash": "c115b97c4b052c266b8ff30e85f560d2495e4b9810831ecdc9d4c52994ad1a1b",
+      "score": 0.512427568435669,
+      "excerpt": "The Laboratory Writes Again\nThe Conclave Laboratory remembers your summer, and especially the ward that held. Your old supervisor writes that a place as a junior researcher is yours from the autumn if you'll take it. \"Don't make me ask twice,\" she adds. Answer by the last day.\nWr"
+    },
+    {
+      "key": "event:intern_alchemists_safety",
+      "title": "The Cracked Vat",
+      "file": "content/events/pools/internships.grim",
+      "line": 132,
+      "sourceHash": "72ae78b558056b8fd6a42dfe21bd17a4bf3ef76d158210f6e572103e5e6d2165",
+      "score": 0.4864039421081543,
+      "excerpt": "The Cracked Vat\nThe seventh vat at the Guild works has a crack in it. Everyone knows. The foreman says it'll last the season, and the season's quota depends on it. Workers walk past it without looking. You've seen what the steam does to brass.\nReport it to the Guild masters\nThe m"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "512744656cb955a75bf10a1c15000e3c055aecc1a2c95a6cdeaac488fe4585e8",
+      "at": "2026-10-28T23:19:14.112Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 127,
+        "total_tokens": 127,
+        "cost": 0.00000127,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000127,
+          "upstream_inference_prompt_cost": 0.00000127,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "512744656cb955a75bf10a1c15000e3c055aecc1a2c95a6cdeaac488fe4585e8",
+      "elapsedMs": 12466,
+      "at": "2026-10-28T23:19:26.578Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c3a565b8871db58f3f37fd4d4f363adce2c0f7cec8e00ddd83d11a19ff7b4d55",
+      "at": "2026-10-28T23:19:26.694Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54539,
+        "cost": 0.00272695
+      },
+      "requestHash": "c3a565b8871db58f3f37fd4d4f363adce2c0f7cec8e00ddd83d11a19ff7b4d55",
+      "elapsedMs": 555,
+      "at": "2026-10-28T23:19:27.249Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

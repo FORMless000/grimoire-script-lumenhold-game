@@ -1,0 +1,325 @@
+/* Combat UI prototypes: what every fork shares (proto/base.js). The game's tokens (--night*, --line, --gold*, --muted,
+ * --text, --good, --bad, --radius, the fonts) come from src/style.css; the fight's own are here. Scoped under .pf-layer, so
+ * the live screen's src/combat.css (loaded beside it) never applies. */
+.pf-layer {
+  --hp: #e06a6a; --mana: #5fa8e8; --flux: #8a7fd6; --you: #f0d58c; --opp: #8fc9e8;
+  --k-dmg: #ff9d90; --k-spell: #d68fff; --k-heal: #8fe39b; --k-mana: #8fc9f2; --k-guard: #e9d49c; --k-buff: #c9b9ff; --k-debuff: #f2a8d6; --k-gold: #f0d58c;
+  --good-chip: rgba(143, 227, 155, .14); --bad-chip: rgba(255, 140, 120, .16); --panel: rgba(20, 24, 48, .72);
+  position: relative; flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 6px; display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; overflow-y: auto; container: fight / inline-size; font: 14px/1.4 var(--sans); color: var(--text); -webkit-font-smoothing: antialiased;
+  animation: pf-in .35s ease backwards; /* not 'both': a transform left applied would pin the sheet (fixed) to the layer */
+}
+@keyframes pf-in { from { opacity: 0; transform: translateY(10px); } }
+.pf-layer, .pf-layer * { box-sizing: border-box; }
+.pf-layer [hidden] { display: none !important; }
+.pf-layer button, .pf-layer select { font: inherit; color: inherit; }
+.pf-layer button { cursor: pointer; border: 1px solid var(--line); border-radius: 12px; background: var(--night-3); padding: 8px 12px; font-weight: 600; transition: border-color .15s, background .15s, transform .08s; -webkit-tap-highlight-color: transparent; }
+.pf-layer button:active:not(:disabled) { transform: scale(.96); }
+.pf-layer button:disabled { cursor: default; opacity: .45; }
+.pf-wrap { width: min(720px, 100%); display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; }
+.pf-loading { padding: 18px; text-align: center; color: var(--muted); font: italic 16px var(--serif); }
+.pf-ico { display: inline-grid; place-items: center; width: 26px; height: 26px; flex: 0 0 auto; color: var(--gold-2); }
+.pf-ico svg, .pf-ico img { width: 100%; height: 100%; }
+.pf-ico .glyph { font-size: 18px; line-height: 1; }
+.pf-ico.big { width: 40px; height: 40px; }
+.pf-ico.good { color: var(--k-heal); } .pf-ico.bad { color: var(--k-debuff); }
+.pf-pf { width: 44px; height: 44px; border-radius: 10px; overflow: hidden; flex: 0 0 auto; display: block; }
+.pf-pf svg { width: 100%; height: 100%; display: block; }
+.k-dmg { color: var(--k-dmg); } .k-spell { color: var(--k-spell); } .k-heal { color: var(--k-heal); } .k-mana { color: var(--k-mana); }
+.k-guard { color: var(--k-guard); } .k-buff { color: var(--k-buff); } .k-debuff { color: var(--k-debuff); } .k-gold { color: var(--k-gold); } .k-hp { color: var(--hp); }
+
+/* Bars */
+.pf-bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.pf-num { position: relative; min-width: 58px; font-weight: 700; }
+.pf-num small { color: var(--muted); font-weight: 500; }
+.pf-k { margin-right: 3px; }
+.pf-bar.hp .pf-k { color: var(--hp); } .pf-bar.mana .pf-k { color: var(--mana); }
+.pf-track { position: relative; height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.pf-track i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: inherit; transition: width .35s ease, left .35s ease; }
+.pf-track .trail { background: rgba(255, 255, 255, .28); transition: width .9s ease .35s; }
+.pf-bar.hp .fill { background: var(--hp); } .pf-bar.mana .fill { background: var(--mana); }
+.pf-track .flux { background: repeating-linear-gradient(135deg, var(--flux) 0 4px, transparent 4px 7px); opacity: .8; }
+.pf-flux { color: var(--flux); font-weight: 700; font-size: 11px; }
+.pf-delta { position: absolute; left: 100%; top: -14px; margin-left: 2px; font-weight: 800; font-size: 13px; animation: pf-float 1.1s ease forwards; pointer-events: none; white-space: nowrap; }
+.pf-delta.neg { color: #ff8a80; } .pf-delta.pos { color: var(--k-heal); }
+@keyframes pf-float { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 15% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+.pf-bar.drop .pf-track { animation: pf-shake .35s ease; }
+@keyframes pf-shake { 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-1px); } }
+
+/* A brief: its value coloured by kind */
+.pf-eff { display: inline-flex; align-items: baseline; gap: 3px; font-size: 11.5px; white-space: nowrap; }
+.pf-eff b { font-weight: 800; }
+.pf-eff small { color: var(--muted); }
+.pf-eff.k-dmg b { color: var(--k-dmg); } .pf-eff.k-spell b { color: var(--k-spell); } .pf-eff.k-heal b { color: var(--k-heal); } .pf-eff.k-mana b { color: var(--k-mana); }
+.pf-eff.k-guard small:first-child, .pf-eff.k-guard b { color: var(--k-guard); } .pf-eff.k-buff small:first-child { color: var(--k-buff); } .pf-eff.k-debuff small:first-child, .pf-eff.k-debuff b { color: var(--k-debuff); }
+
+/* Around the fight */
+.pf-setting { display: flex; flex-wrap: wrap; gap: 2px 10px; padding: 4px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 11.5px; }
+.pf-setting summary { cursor: pointer; list-style: none; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .pf-setting summary::-webkit-details-marker { display: none; }
+.pf-setting[open] summary { white-space: normal; } .pf-setting span { display: block; width: 100%; }
+.pf-setting b { color: var(--gold-2); }
+.pf-note { padding: 5px 10px; border-radius: 10px; border: 1px solid rgba(255, 138, 128, .4); background: rgba(60, 20, 30, .55); color: #f3c9c3; font-size: 12px; }
+.pf-coach { padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(240, 200, 120, .45); background: rgba(48, 40, 18, .6); color: #f3e2b8; font-size: 12.5px; }
+.pf-coach b { color: var(--gold-2); margin-right: 4px; }
+.pf-kit { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); font-size: 12px; color: var(--muted); }
+.pf-kit b { color: var(--gold-2); } .pf-kit label { display: flex; align-items: center; gap: 6px; }
+.pf-kit select { font-size: 12px; background: rgba(10, 12, 28, .8); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 46vw; }
+.pf-leave { align-self: center; background: none !important; color: var(--muted); border-radius: 999px !important; padding: 5px 14px !important; font-size: 12px; font-weight: 500 !important; }
+.pf-primary { background: linear-gradient(180deg, #e6c574, #c79a3e) !important; color: #1b1606 !important; border-color: #f0d58c !important; }
+
+/* Statuses: a chip per lasting thing, tap for its words */
+.pf-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.pf-layer .pf-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px 2px 3px; border-radius: 999px; font-size: 11.5px; font-weight: 600; border: 1px solid rgba(143, 227, 155, .35); background: var(--good-chip); color: #d8f5dc; cursor: pointer; line-height: 1.2; }
+.pf-layer .pf-chip.bad { border-color: rgba(255, 150, 130, .45); background: var(--bad-chip); color: #ffd9d2; }
+.pf-layer .pf-chip.summon { border-color: rgba(214, 143, 255, .5); background: rgba(150, 90, 220, .16); color: #f0dcff; }
+.pf-chip .pf-ico { width: 18px; height: 18px; color: currentColor; }
+.pf-chip b { font-weight: 800; }
+.pf-chip .t { font-size: 10px; opacity: .8; font-weight: 700; padding: 0 4px; border-radius: 999px; background: rgba(0, 0, 0, .25); }
+
+/* The sheet: a foe, a status, an action */
+/* A sheet overlays the screen, not the fight's scrolled page (feedback 2026-10-29), as the live screen's: a bottom sheet on a
+ * narrow screen, a centred card on a wide one. */
+.pf-sheet { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center; background: rgba(6, 8, 20, .6); backdrop-filter: blur(3px); padding: 0; }
+.pf-sheet-card { width: min(560px, 100%); max-height: 82dvh; overflow: auto; border-radius: 16px 16px 0 0; border: 1px solid var(--line); background: var(--night-2); padding: 12px 14px 14px; box-shadow: 0 -10px 40px rgba(0, 0, 0, .5); animation: pf-up .2s ease both; }
+@media (min-width: 700px) { .pf-sheet { align-items: center; padding: 16px; } .pf-sheet-card { max-height: 88dvh; border-radius: 16px; } }
+@keyframes pf-up { from { transform: translateY(30px); opacity: 0; } }
+.pf-sh-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.pf-sh-head > div { flex: 1; min-width: 0; } .pf-sh-head b { display: block; font: 600 18px var(--serif); color: var(--gold-2); } .pf-sh-head small { color: var(--muted); font-size: 12px; }
+.pf-close { width: 32px; height: 32px; padding: 0 !important; border-radius: 50% !important; font-size: 18px; line-height: 1; }
+.pf-plain { margin: 4px 0; font-size: 14px; }
+.pf-full { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.pf-scales { margin: 4px 0 0; font-size: 11.5px; color: var(--muted); font-style: italic; }
+.pf-cx-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 6px; margin: 4px 0 8px; }
+.pf-cx-facts span { display: flex; flex-direction: column; align-items: center; padding: 6px 4px; border-radius: 10px; background: rgba(255, 255, 255, .05); }
+.pf-cx-facts b { font-size: 18px; font-weight: 800; } .pf-cx-facts small { color: var(--muted); font-size: 10.5px; text-align: center; }
+.pf-sk { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; margin: 0 0 8px; font-size: 11px; }
+.pf-sk span { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0 6px; }
+.pf-sk i { grid-column: 1 / -1; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--gold-2) var(--w), rgba(255, 255, 255, .1) var(--w)); }
+.pf-sheet-card h4 { margin: 10px 0 4px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.pf-kitlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.pf-kitlist li { display: flex; gap: 8px; align-items: flex-start; } .pf-kitlist li.off { opacity: .55; }
+.pf-kitlist p { margin: 2px 0 0; font-size: 12px; color: var(--muted); } .pf-kitlist em { color: #ffb4a8; font-size: 11px; }
+.pf-price { color: var(--muted); font-size: 11.5px; }
+.pf-hist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pf-hist li > b { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.pf-hist p { display: flex; gap: 6px; align-items: flex-start; margin: 2px 0; font-size: 12.5px; } .pf-hist p.opp .pf-ico { color: var(--opp); }
+.pf-hist em { color: var(--muted); } .pf-hist .pf-ico { width: 20px; height: 20px; }
+
+/* The result */
+.pf-result { text-align: center; padding: 16px 12px; border-radius: 16px; border: 1px solid var(--line); background: var(--panel); }
+.pf-result h2 { margin: 0; font: 600 32px var(--display); color: var(--gold-2); } .pf-result.loss h2 { color: #ff9d90; }
+.pf-result p { margin: 4px 0 10px; color: var(--muted); }
+/* A mutual knockout, said plainly (feedback 2026-10-29) */
+.pf-result .pf-tb { margin: -2px auto 12px; max-width: 46ch; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(240, 213, 140, .45); background: rgba(240, 213, 140, .08); color: var(--text); font-size: 13px; line-height: 1.4; }
+.pf-result .pf-tb b { display: block; color: var(--gold-2); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.pf-net { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin-bottom: 12px; font-size: 13px; }
+.pf-net .neg { color: #ff8a80; } .pf-net .pos { color: var(--k-heal); }
+
+/* The moves, kept in view at the bottom of the fight while the rest scrolls (forks B and C). */
+.pf-dock { display: flex; flex-direction: column; gap: 5px; flex: 0 0 auto; }
+/* A split screen (forks A and B): the wrap fills the layer; the upper part shrinks and scrolls, the dock never does. */
+.pf-layer:has(.pf-up) { overflow: hidden; }
+.pf-wrap:has(> .pf-up) { flex: 1 1 auto; min-height: 0; padding-bottom: 4px; gap: 6px; }
+.pf-head { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; }
+.pf-up { flex: 0 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.pf-dock.stick { position: sticky; bottom: 0; z-index: 5; padding: 10px 0 2px; margin-top: auto; background: linear-gradient(rgba(14, 17, 36, 0), var(--night, #0e1124) 14px); }
+
+/* Outcome pills (what a move did) and recap extras (what else happened) */
+.pf-pill { display: inline-flex; align-items: center; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 800; background: rgba(255, 255, 255, .07); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pf-pill.dmg { color: #1d0a08; background: var(--k-dmg); } .pf-pill.spell { color: #1a0824; background: var(--k-spell); }
+.pf-pill.heal { color: #0b1d0e; background: var(--k-heal); } .pf-pill.mana { color: #08182a; background: var(--k-mana); }
+.pf-pill.def { color: var(--k-guard); background: rgba(233, 212, 156, .14); border: 1px solid rgba(233, 212, 156, .4); }
+.pf-pill.ok { color: var(--k-debuff); background: rgba(242, 168, 214, .14); border: 1px solid rgba(242, 168, 214, .4); }
+.pf-pill.none { color: var(--muted); font-weight: 600; }
+.pf-layer .pf-pill.void { border: 1px dashed rgba(255, 255, 255, .35); background: none; color: var(--muted); font-style: italic; }
+.pf-x { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.pf-x .pf-ico { width: 18px; height: 18px; } .pf-x.opp .pf-ico { color: var(--opp); }
+.pf-x b { font-weight: 800; }
+.pf-chip.inc { border-style: dashed; } .pf-chip.inc.now { animation: pf-pulse 1.2s ease-in-out infinite; }
+@keyframes pf-pulse { 50% { box-shadow: 0 0 0 3px rgba(255, 120, 90, .35); } }
+.pf-cost { display: inline-flex; gap: 4px; font-size: 11px; font-weight: 800; }
+.pf-cost .c-mana { color: var(--mana); } .pf-cost .c-mana::before { content: '✦'; margin-right: 1px; }
+.pf-cost .c-hp { color: var(--hp); } .pf-cost .c-hp::before { content: '♥'; margin-right: 1px; }
+
+/* ---- Iteration 2 (feedback 2026-10-29) ---- */
+/* Short vertical bars, numbers beside them */
+.pf-vbars { display: inline-flex; gap: 3px; height: 52px; flex: 0 0 auto; }
+.pf-vt { position: relative; width: 7px; height: 100%; border-radius: 999px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.pf-vt i { position: absolute; left: 0; right: 0; bottom: 0; border-radius: inherit; transition: height .35s ease, bottom .35s ease; }
+.pf-vt .trail { background: rgba(255, 255, 255, .3); transition: height .9s ease .35s; }
+.pf-vt.hp .fill { background: var(--hp); } .pf-vt.mana .fill { background: var(--mana); }
+.pf-vt .flux { background: repeating-linear-gradient(45deg, var(--flux) 0 3px, transparent 3px 5px); opacity: .85; }
+.pf-n { position: relative; display: block; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 1.35; }
+.pf-n small { color: var(--muted); font-weight: 500; } .pf-n .pf-flux { color: var(--flux); font-weight: 700; }
+.pf-n.hp .pf-k { color: var(--hp); } .pf-n.mana .pf-k { color: var(--mana); }
+.pf-n .pf-delta { top: -2px; }
+.pf-n.drop { animation: pf-shake .35s ease; }
+
+/* Outline lighting (feedback 2026-10-29): each status its own colour (--kc) and motion. The most pressing one draws the
+ * ring (.a-<key>: a masked ::before, so it can rotate, shimmer or flicker), the next adds its colour as an outer glow
+ * (.g-<key>: --gc). A blow landing on the panel this exchange pulses red over all of it. */
+@property --pf-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.pf-layer .s-frozen, .pf-layer .a-frozen { --kc: #cfefff; } .pf-layer .g-frozen { --gc: #cfefff80; }
+.pf-layer .s-bound, .pf-layer .a-bound { --kc: #b98cff; } .pf-layer .g-bound { --gc: #b98cff80; }
+.pf-layer .s-compelled, .pf-layer .a-compelled { --kc: #ff8fd0; } .pf-layer .g-compelled { --gc: #ff8fd080; }
+.pf-layer .s-torment, .pf-layer .a-torment { --kc: #ff5a5a; } .pf-layer .g-torment { --gc: #ff5a5a80; }
+.pf-layer .s-poison, .pf-layer .a-poison { --kc: #8be36b; } .pf-layer .g-poison { --gc: #8be36b80; }
+.pf-layer .s-heartprice, .pf-layer .a-heartprice { --kc: #ff4d6d; } .pf-layer .g-heartprice { --gc: #ff4d6d80; }
+.pf-layer .s-ward, .pf-layer .a-ward { --kc: #f0d58c; } .pf-layer .g-ward { --gc: #f0d58c80; }
+.pf-layer .s-guard, .pf-layer .a-guard { --kc: #ffe2a0; } .pf-layer .g-guard { --gc: #ffe2a080; }
+.pf-layer .s-reflect, .pf-layer .a-reflect { --kc: #e8eefc; } .pf-layer .g-reflect { --gc: #e8eefc80; }
+.pf-layer .s-shadowstep, .pf-layer .a-shadowstep { --kc: #9a8cff; } .pf-layer .g-shadowstep { --gc: #9a8cff80; }
+.pf-layer .s-brace, .pf-layer .a-brace { --kc: #e0a050; } .pf-layer .g-brace { --gc: #e0a05080; }
+.pf-layer .s-haste, .pf-layer .a-haste { --kc: #6fe3ff; } .pf-layer .g-haste { --gc: #6fe3ff80; }
+.pf-layer .s-tailwind, .pf-layer .a-tailwind { --kc: #7fffd4; } .pf-layer .g-tailwind { --gc: #7fffd480; }
+.pf-layer .s-eclipse, .pf-layer .a-eclipse { --kc: #a070ff; } .pf-layer .g-eclipse { --gc: #a070ff80; }
+.pf-layer .s-lodestar, .pf-layer .a-lodestar { --kc: #ffe680; } .pf-layer .g-lodestar { --gc: #ffe68080; }
+.pf-layer .s-channel, .pf-layer .a-channel { --kc: #d68fff; } .pf-layer .g-channel { --gc: #d68fff80; }
+.pf-layer .s-construct, .pf-layer .a-construct { --kc: #d68fff; } .pf-layer .g-construct { --gc: #d68fff80; }
+.pf-layer .s-foresight, .pf-layer .a-foresight { --kc: #8fc9e8; } .pf-layer .g-foresight { --gc: #8fc9e880; }
+.pf-layer .s-rime, .pf-layer .a-rime { --kc: #bfe9ff; } .pf-layer .g-rime { --gc: #bfe9ff80; }
+.pf-aura { position: relative; --kc: transparent; --gc: transparent; --ring-w: 2px; --ring-bg: var(--kc); box-shadow: 0 0 16px -3px var(--kc), 0 0 30px 1px var(--gc); transition: box-shadow .3s; }
+.pf-aura::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: var(--ring-w); background: var(--ring-bg); pointer-events: none; z-index: 1;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.pf-aura:not([class*=" a-"])::before { display: none; }
+/* Defences: steady light. Ward breathes gold, Parry flashes, Brace is thick amber, Reflect shimmers silver, Shadowstep flickers. */
+.pf-aura.a-ward::before, .pf-aura.a-lodestar::before, .pf-aura.a-foresight::before, .pf-aura.a-rime::before { animation: pf-breathe 1.8s ease-in-out infinite; }
+.pf-aura.a-guard::before { animation: pf-breathe .7s ease-in-out infinite; }
+.pf-aura.a-brace { --ring-w: 3.5px; }
+.pf-aura.a-reflect { --ring-bg: linear-gradient(110deg, #8d97b8 20%, #fff 45%, #8d97b8 70%) 0 0 / 300% 100%; } .pf-aura.a-reflect::before { animation: pf-sheen 1.4s linear infinite; }
+.pf-aura.a-shadowstep { --ring-bg: repeating-conic-gradient(from var(--pf-a), var(--kc) 0 14deg, transparent 14deg 26deg); } .pf-aura.a-shadowstep::before { animation: pf-spin-a 6s linear infinite, pf-flicker 1.1s steps(2) infinite; }
+.pf-aura.a-shadowstep > * { opacity: .82; }
+/* Momentum: a light runs round the edge. Haste fast, Tailwind in two streams, a channel or a summon slowly. */
+.pf-aura.a-haste { --ring-bg: conic-gradient(from var(--pf-a), transparent 0 50%, var(--kc) 78%, #fff 84%, transparent 90%); } .pf-aura.a-haste::before { animation: pf-spin-a .75s linear infinite; }
+.pf-aura.a-tailwind { --ring-bg: conic-gradient(from var(--pf-a), transparent 0 25%, var(--kc) 45%, transparent 50% 75%, var(--kc) 95%, transparent); } .pf-aura.a-tailwind::before { animation: pf-spin-a 1.6s linear infinite; }
+.pf-aura.a-channel, .pf-aura.a-construct { --ring-bg: conic-gradient(from var(--pf-a), color-mix(in srgb, var(--kc) 25%, transparent), var(--kc) 30%, color-mix(in srgb, var(--kc) 25%, transparent) 60%); } .pf-aura.a-channel::before, .pf-aura.a-construct::before { animation: pf-spin-a 3.2s linear infinite; }
+.pf-aura.a-eclipse { --ring-bg: conic-gradient(from var(--pf-a), #1a0d33, var(--kc), #1a0d33 50%, var(--kc), #1a0d33); box-shadow: 0 0 18px -2px #000, 0 0 26px 2px var(--gc); } .pf-aura.a-eclipse::before { animation: pf-spin-a 4s linear infinite; }
+.pf-aura.a-lodestar { box-shadow: 0 0 18px -1px var(--kc), 0 0 30px 1px var(--gc); }
+/* Harm: it throbs. Poison green, Torment a hard red beat, Compel pink; Bind is a thick static band; frozen is pale and still. */
+.pf-aura.a-poison::before { animation: pf-breathe 1.1s ease-in-out infinite; } .pf-aura.a-poison { animation: pf-sick 1.1s ease-in-out infinite; }
+.pf-aura.a-torment::before, .pf-aura.a-heartprice::before { animation: pf-beat .8s ease-in-out infinite; }
+.pf-aura.a-compelled::before { animation: pf-breathe .9s ease-in-out infinite; }
+.pf-aura.a-bound { --ring-w: 4px; --ring-bg: repeating-linear-gradient(45deg, var(--kc) 0 6px, #4a2f7a 6px 10px); }
+.pf-aura.a-frozen { --ring-w: 3px; background-image: linear-gradient(180deg, rgba(200, 235, 255, .12), transparent 60%); box-shadow: 0 0 20px -2px var(--kc), inset 0 0 18px rgba(200, 235, 255, .18); }
+.pf-aura.hit-now { animation: pf-alarm .9s ease-in-out infinite; }
+@keyframes pf-alarm { 50% { box-shadow: 0 0 0 2px rgba(255, 110, 80, .95), 0 0 24px rgba(255, 110, 80, .6); } }
+@keyframes pf-breathe { 50% { opacity: .45; } }
+@keyframes pf-beat { 0%, 100% { opacity: .55; } 15% { opacity: 1; } 30% { opacity: .6; } 45% { opacity: 1; } }
+@keyframes pf-flicker { 50% { opacity: .5; } }
+@keyframes pf-sheen { to { background-position: -300% 0; } }
+@keyframes pf-spin-a { to { --pf-a: 360deg; } }
+@keyframes pf-sick { 50% { box-shadow: 0 0 22px -1px var(--kc), 0 0 30px 1px var(--gc); } }
+
+/* Compact status chips: the icon and one number, in the status's colour */
+.pf-layer .pf-chip.mini { gap: 1px; padding: 1px 6px 1px 2px; border-color: color-mix(in srgb, var(--kc, #888) 70%, transparent); background: color-mix(in srgb, var(--kc, #888) 16%, transparent); color: var(--kc, var(--text)); }
+.pf-chip.mini .pf-ico { width: 18px; height: 18px; color: var(--kc, currentColor); } .pf-chip.mini b { font-size: 11.5px; color: #fff; }
+.pf-layer .pf-chip.mini.inc { --kc: #ff9a7a; border-style: dashed; } .pf-chip.mini.inc b { color: inherit; }
+
+/* What an exchange did to a fighter, while it is fresh: a shake and a flash by how hard, a gold flash for a blow kept off,
+ * a green one for a heal, and the number popping over the portrait. Fast: all of it inside ~0.6 s. */
+.fx-hit::after, .fx-block::after, .fx-heal::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; animation: pf-flash .38s ease-out both; }
+.fx-hit::after { background: radial-gradient(circle at 50% 45%, rgba(255, 90, 70, .7), rgba(255, 60, 60, .15) 70%); }
+.fx-block::after { background: radial-gradient(circle at 50% 50%, rgba(255, 225, 140, .6), transparent 70%); }
+.fx-heal::after { background: radial-gradient(circle at 50% 60%, rgba(140, 240, 160, .55), transparent 70%); }
+.pf-layer .fx-hit.fx-light { animation: pf-jolt .22s ease-out both; } .pf-layer .fx-hit.fx-hard { animation: pf-jolt-2 .3s ease-out both; } .pf-layer .fx-hit.fx-heavy { animation: pf-jolt-3 .4s ease-out both; }
+.pf-layer .fx-block:not(.fx-hit) { animation: pf-brace .25s ease-out both; }
+@keyframes pf-flash { from { opacity: 1; } to { opacity: 0; } }
+@keyframes pf-jolt { 30% { transform: translate(-2px, 1px); } 60% { transform: translate(2px, -1px); } }
+@keyframes pf-jolt-2 { 15% { transform: translate(-5px, 2px) rotate(-.6deg); } 35% { transform: translate(5px, -2px) rotate(.6deg); } 55% { transform: translate(-3px, 1px); } 80% { transform: translate(2px, 0); } }
+@keyframes pf-jolt-3 { 10% { transform: translate(-8px, 3px) rotate(-1.2deg) scale(.98); } 25% { transform: translate(8px, -3px) rotate(1deg); } 40% { transform: translate(-6px, 2px); } 60% { transform: translate(4px, -1px); } 80% { transform: translate(-2px, 0); } }
+@keyframes pf-brace { 40% { transform: scale(.97); } }
+.pf-pop { position: absolute; left: 50%; top: 30%; z-index: 3; transform: translate(-50%, -50%); font: 900 22px/1 var(--sans); white-space: nowrap; pointer-events: none; text-shadow: 0 2px 0 rgba(0, 0, 0, .6), 0 0 14px currentColor; animation: pf-pop .85s cubic-bezier(.2, 1.3, .4, 1) both; }
+.pf-pop.big { font-size: 30px; }
+.pf-pop.k-guard { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+@keyframes pf-pop { 0% { opacity: 0; transform: translate(-50%, -50%) scale(2.4); } 14% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 70% { opacity: 1; transform: translate(-50%, -80%); } 100% { opacity: 0; transform: translate(-50%, -150%) scale(.9); } }
+
+/* The ledger: what each side did, to whom */
+.pf-pill.up { color: var(--k-buff); background: rgba(201, 185, 255, .12); border: 1px solid rgba(201, 185, 255, .35); }
+.pf-li { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.pf-li .pf-ico { width: 16px; height: 16px; } .pf-li b { font-weight: 800; }
+.pf-flavor { margin: 0; font: italic 12.5px/1.35 var(--serif); color: #cfd3ea; }
+.pf-flavor.opp { color: #bcd9ea; } .pf-flavor.fin { color: var(--gold-2); }
+
+/* This exchange */
+.pf-now { display: flex; flex-direction: column; gap: 4px; }
+.pf-layer .pf-tg { position: relative; display: grid; grid-template-columns: auto auto minmax(0, auto) 1fr; grid-template-areas: 'k i b e' 'f f f f'; align-items: center; gap: 0 7px; width: 100%; padding: 5px 10px; border-radius: 12px; text-align: left; font-weight: 500; }
+.pf-tg-k { grid-area: k; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+.pf-tg > .pf-ico { grid-area: i; width: 24px; height: 24px; } .pf-tg > b { grid-area: b; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .pf-tg > .pf-eff { grid-area: e; } .pf-tg > em, .pf-tg > small { grid-area: f; font: italic 12px/1.3 var(--serif); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-tg-k { padding-right: 6px; border-right: 1px solid currentColor; opacity: .85; }
+.pf-layer .pf-tg.shown { border: 1.5px solid rgba(143, 201, 232, .75); background: linear-gradient(90deg, rgba(143, 201, 232, .16), rgba(143, 201, 232, .04)); color: var(--opp); }
+.pf-tg.shown .pf-tg-k::before { content: '◉ '; }
+.pf-layer .pf-tg.forced { border-color: rgba(242, 168, 214, .8); background: linear-gradient(90deg, rgba(242, 168, 214, .16), transparent); color: var(--k-debuff); }
+.pf-tg.hidden { border: 1.5px dashed rgba(255, 255, 255, .22); background: rgba(10, 12, 28, .45); color: var(--muted); }
+.pf-tg.hidden b { font-size: 12.5px; font-weight: 600; color: #d7dbef; white-space: normal; }
+.pf-tg.wait { border: 1.5px dashed rgba(143, 201, 232, .35); color: var(--opp); } .pf-tg.wait b { font-size: 13.5px; }
+.pf-ico.spin { animation: pf-spin 1.4s linear infinite; } @keyframes pf-spin { to { transform: rotate(180deg); } }
+.pf-layer .pf-tg-blow { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px 6px; width: 100%; padding: 4px 10px; border-radius: 12px; border: 1.5px solid rgba(255, 120, 90, .8); background: rgba(255, 120, 90, .12); color: #ffc28a; text-align: left; font-weight: 600; font-size: 13px; animation: pf-pulse 1.2s ease-in-out infinite; }
+.pf-tg-blow .pf-ico { width: 20px; height: 20px; color: #ffab8a; } .pf-tg-blow b { font-size: 14px; } .pf-tg-blow small { margin-left: auto; font-weight: 400; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+/* The timeline, compact as the live track (feedback 2026-10-29): fixed narrow columns, scrolled to now, names held. */
+.pf-tl { width: fit-content; max-width: 100%; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); overflow: hidden; }
+.pf-tl-scroll { overflow-x: auto; scrollbar-width: thin; padding: 2px 0 3px; }
+.pf-tl-grid { display: flex; flex-direction: column; width: max-content; min-width: 100%; }
+.pf-tl-row { display: grid; grid-template-columns: 46px repeat(var(--cols), 28px); align-items: center; }
+.pf-tl-row.head { min-height: 15px; }
+.pf-tl-side + .pf-tl-side { border-top: 1px dashed rgba(255, 255, 255, .08); }
+.pf-tl-w { position: sticky; left: 0; z-index: 2; align-self: stretch; display: flex; align-items: center; padding-left: 6px; font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: #191d3e; }
+.pf-tl-side.s1 .pf-tl-w { color: var(--opp); } .pf-tl-side.s0 .pf-tl-w { color: var(--you); }
+.pf-tl-h { text-align: center; font-size: 9.5px; font-weight: 700; color: var(--muted); line-height: 1.1; }
+.pf-tl-h.past { opacity: .55; cursor: pointer; } .pf-tl-h.now { color: var(--gold-2); }
+.pf-tl-h i { display: block; width: 12px; height: 2px; border-radius: 2px; margin: 1px auto 0; background: var(--you); } .pf-tl-h i.opp { background: var(--opp); }
+.pf-tl-c { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 26px; }
+.pf-tl-c.now { background: rgba(240, 213, 140, .08); box-shadow: inset 1px 0 rgba(240, 213, 140, .3), inset -1px 0 rgba(240, 213, 140, .3); }
+.pf-tl-c.past .pf-ico { width: 18px; height: 18px; opacity: .85; } .pf-tl-side.s1 .pf-tl-c.past .pf-ico { color: var(--opp); }
+.pf-tl-c .lost { position: absolute; right: 0; bottom: 0; font-size: 8.5px; font-weight: 800; color: #ff8a80; line-height: 1; }
+.pf-layer .pf-tok { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 20px; padding: 0 3px; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 12, 28, .5); font-size: 10px; font-weight: 800; }
+.pf-tok .pf-ico { width: 15px; height: 15px; } .pf-tok svg { width: 13px; height: 13px; }
+.pf-layer .pf-tok.move { border-color: rgba(143, 201, 232, .75); color: var(--opp); } .pf-tok.move .pf-ico { color: var(--opp); }
+.pf-layer .pf-tok.forced { border-color: rgba(242, 168, 214, .75); }
+.pf-tok.mine { border-color: rgba(240, 213, 140, .7); }
+.pf-layer .pf-tok.blow { border-style: dashed; border-color: rgba(255, 150, 120, .7); }
+.pf-layer .pf-tok.eye { color: var(--opp); opacity: .55; border-color: transparent; background: none; } .pf-tok.hid, .pf-tok.wait { color: var(--muted); }
+.pf-tl-row.span { min-height: 8px; cursor: pointer; }
+.pf-tl-s { position: relative; height: 8px; }
+.pf-tl-s i { position: absolute; left: 0; right: 0; top: 2px; height: 4px; background: var(--kc, var(--k-buff)); opacity: .85; }
+.pf-tl-s i.c-bad:not([class*=" s-"]) { --kc: var(--k-debuff); }
+.pf-tl-s i.first { left: 50%; border-radius: 3px 0 0 3px; } .pf-tl-s i.last { right: 50%; border-radius: 0 3px 3px 0; } .pf-tl-s i.first.last { left: 25%; right: 25%; border-radius: 3px; }
+.pf-tl-s i.open { right: 0; -webkit-mask: linear-gradient(90deg, #000 50%, transparent); mask: linear-gradient(90deg, #000 50%, transparent); }
+.pf-tl-s i .pf-ico { position: absolute; left: -6px; top: -4px; width: 12px; height: 12px; color: var(--kc); background: #191d3e; border-radius: 50%; }
+
+/* The engine's analysis */
+.pf-engine { border-radius: 12px; border: 1px solid rgba(159, 224, 167, .3); background: var(--night-2); padding: 4px 8px; font-size: 11.5px; }
+.pf-engine:not(.on) { border-color: transparent; background: none; padding: 0; }
+.pf-engine-top { display: flex; align-items: center; gap: 8px; }
+.pf-layer .pf-eng-toggle { padding: 3px 10px; font-size: 11px; border-radius: 999px; font-weight: 600; }
+.pf-eng-toggle[aria-pressed="true"] { border-color: #9fe0a7; color: #9fe0a7; }
+.pf-engine-head { flex: 1; font-weight: 600; color: #9fe0a7; font-size: 11px; }
+.pf-eng-budget { font-size: 11px; background: var(--night); border: 1px solid var(--line); border-radius: 6px; }
+.pf-engine-lines ol { list-style: none; margin: 4px 0 0; padding: 0; }
+.pf-engine-lines li { display: flex; gap: 6px; align-items: center; padding: 2px 0; border-top: 1px solid var(--line); }
+.pf-ev { flex: none; min-width: 42px; text-align: center; font-weight: 800; padding: 1px 5px; border-radius: 6px; background: var(--night-3); }
+.pf-engine-lines li.best .pf-ev { background: #9fe0a7; color: #0c1a10; }
+.pf-engine-lines li > span:last-child { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; } .pf-engine-lines i { color: var(--muted); font-style: normal; }
+.pf-ply { display: inline-flex; align-items: center; gap: 2px; padding: 0 6px 0 2px; border-radius: 9px; font-size: 10.5px; background: var(--night-3); }
+.pf-ply.you { box-shadow: inset 0 0 0 1px rgba(240, 213, 140, .55); } .pf-ply.opp { box-shadow: inset 0 0 0 1px rgba(143, 201, 232, .55); } .pf-ply.end { background: #3a2a2a; color: #f3d3a8; padding: 0 7px; }
+.pf-ply .pf-ico { width: 15px; height: 15px; } .pf-ply.opp .pf-ico { color: var(--opp); }
+.pf-eval { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); padding: 0 4px; border-radius: 5px; background: rgba(10, 12, 28, .7); font: 800 9.5px/14px var(--sans); font-style: normal; color: #9fe0a7; }
+.pf-eval:empty { display: none; }
+.pf-layer .pf-mv.best { border-color: #9fe0a7; box-shadow: 0 0 0 2px rgba(159, 224, 167, .35); }
+
+/* The moves: a compact grid */
+.pf-mvs { display: grid; grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: 4px; max-height: calc(4 * 58px + 3 * 4px + 2px); overflow-y: auto; scrollbar-width: thin; padding: 1px; }
+.pf-layer .pf-mv { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 0; min-height: 58px; padding: 4px 5px 4px; border-radius: 10px; text-align: left; font-weight: 600; background: linear-gradient(180deg, #252b58, #1b2046); }
+.pf-mv-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.pf-mv .pf-ico { width: 20px; height: 20px; }
+.pf-mv .pf-cost { font-size: 10px; } .pf-mv .pf-cost b::before { font-size: 9px; }
+.pf-mv-n { font-size: 11.5px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .pf-mv-n i { font-style: normal; font-size: 9px; color: var(--muted); margin-left: 2px; }
+.pf-mv .pf-eff { font-size: 10.5px; overflow: hidden; } .pf-mv .pf-eff small { overflow: hidden; text-overflow: ellipsis; }
+.pf-mv kbd { position: absolute; bottom: 2px; right: 4px; font: 700 8.5px var(--sans); color: rgba(255, 255, 255, .22); }
+.pf-layer .pf-mv.on { border-color: var(--gold-2); box-shadow: 0 0 0 2px rgba(240, 213, 140, .3); background: linear-gradient(180deg, #3a3a58, #26264a); }
+.pf-read { display: flex; gap: 10px; align-items: center; padding: 6px 10px; border-radius: 12px; background: var(--panel); border: 1px solid rgba(240, 213, 140, .3); }
+.pf-read > div { flex: 1; min-width: 0; cursor: pointer; } .pf-read b { font-size: 13.5px; }
+.pf-read p { margin: 1px 0 0; font-size: 12px; color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pf-layer .pf-go { padding: 11px 18px; font-size: 15px; }
+.pf-hint { margin: 0; text-align: center; color: var(--muted); font-size: 11.5px; }
+.pf-state { margin: 0; padding: 5px 10px; border-radius: 10px; background: rgba(242, 168, 214, .1); color: var(--k-debuff); font-size: 12.5px; font-weight: 600; }

@@ -1,0 +1,88 @@
+{
+  "batch": "current-other-new-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "isolde_asks_again",
+      "stables_hippogriff_grooming",
+      "stables_tack_room",
+      "courtyard_fountain_wishes",
+      "courtyard_lost_cat",
+      "company_card_widow",
+      "intro_what_is_just",
+      "intro_places",
+      "intro_lunch_alone",
+      "ring_cameo_corvin",
+      "ring_cameo_lyra",
+      "ring_cameo_bram",
+      "ring_cameo_ilse"
+    ],
+    "files": [
+      "content/events/calendar.grim",
+      "content/events/expansion_lightrag_2026_10.grim",
+      "content/events/intro.grim",
+      "content/events/pools/night.grim"
+    ]
+  },
+  "summary": "Rejected: the widow’s stated stakes and moral cost do not match her game, a repeat assumes a cat rescue, and all four ring cameos can remove their non-fight route. The intro additions and Isolde callback have no new concrete defect in this pass.",
+  "issues": [
+    {
+      "event": "company_card_widow",
+      "priority": "P2",
+      "category": "stated stakes",
+      "problem": "Play her honestly warns that she may take the player’s purse, but the appeal loss always grants a small tip. There is no stake deduction or purse-loss path. The button promises a financial risk the card never executes.",
+      "fix": "Describe the actual risk of a smaller tip and embarrassment, or implement the intended monetary downside with matching outcomes.",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 82
+    },
+    {
+      "event": "company_card_widow",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Let her win moves Hollow even though the setup says she always knows when someone lets her win and every outcome confirms she knows. The described exchange is a paid, mutually understood performance; no cheating victim or deception for gain is established.",
+      "fix": "Remove the Hollow shift from the consensual performance, or establish an actual deceptive or exploitative choice if that is intended.",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 82
+    },
+    {
+      "event": "courtyard_lost_cat",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "On the third showing the crowd parts for the player as the cat-retrieval expert even if every prior choice was Wait him out and the cat came down by himself. The sequence awards a successful-rescuer reputation without checking any rescue.",
+      "fix": "Gate expert status on a successful climb, or let the crowd recognize a familiar onlooker instead.",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 59
+    },
+    {
+      "event": "ring_cameo_corvin",
+      "priority": "P2",
+      "category": "no-fight route",
+      "related_events": [
+        "ring_cameo_lyra",
+        "ring_cameo_bram",
+        "ring_cameo_ilse"
+      ],
+      "problem": "Every cameo locks its only non-fight choice when ring_last_standing is set. The opener can set that flag before queuing a cameo, so the additional encounter presents only a fight. This violates the current checklist’s rule that each fight sits beside a route without a fight, even though entering the ring earlier was optional.",
+      "fix": "Keep a costly walkout/concession route available on the cameo, including last-standing nights, or explicitly record an approved design exception instead of silently contradicting the fight rule.",
+      "evidence": [
+        "content/events/pools/night.grim: ring_on_yourself on_show and win queues",
+        "docs/authoring/checklist.md: Conflict and climax"
+      ],
+      "file": "content/events/pools/night.grim",
+      "line": 675
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "query": "One More Night {Sister Amaranth wants you in for \"one more night, for observation\". You feel completely fine and have three things due tomorrow.|One more night again. Sister Amaranth has started leaving your boots on the far side of the ward.|The bed by the window has your name on the slate in ink. \"One more night,\" says Sister Amaranth, not as a question.} Stay the night {You stay. You sleep through two bells and the breakfast trolley and wake up much better than \"completely fine\" turned out to be. Your three things are now late.|You stay. She was right, irritatingly; you sleep like a dropped stone. Your essay, unwritten, waits.|You stay without arguing. Sister Amaranth notices, and gives you the good tonic, and a look that might be respect.} Argue your case {You make a short, true, convincing case. She looks at you over her spectacles. \"Go,\" she says. \"Come back if it swells. Don't come back if it doesn't.\"|You tell her the true version of how fine you are, with the limp left in. She respects that and lets you go.|She lets you go with a tonic in your pocket and instructions you'll follow later, when you understand them.} {She listens to every word, then points at the bed. You lie down. You don't remember falling asleep.|\"No,\" says Sister Amaranth, which was always going to be the answer, and she says it while doing something else.|She lets you argue to the end, then writes \"argued\" on your slate, under your name.} Step out through the dark {When her lamp turns, you step into the shadow behind the screen and out of the shadow by the door. In the morning there's a note on your desk in square handwriting. It says \"Next time, ask.\"|You step out of the ward and into your own room's corner in one breath. You get your three things done. Sister Amaranth, of course, knows.|Shadow to shadow, past the beds, out. Your essay is finished by midnight. At breakfast Sister Amaranth puts a tonic by your plate without a word.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:infirmary_slip_out",
+      "title": "One More Night",
+      "file": "content/events/spell_uses.grim",
+      "line": 501,
+      "sourceHash": "91a993cdfac7902aeb31bff6609ff6394cb47ddfebc8e85c832cca017ef13518",
+      "score": 0.9515591859817505,
+      "excerpt": "One More Night\n{Sister Amaranth wants you in for \"one more night, for observation\". You feel completely fine and have three things due tomorrow.|One more night again. Sister Amaranth has started leaving your boots on the far side of the ward.|The bed by the window has your name o"
+    },
+    {
+      "key": "event:amaranth_orders",
+      "title": "Doctor's Orders",
+      "file": "content/events/fixtures.grim",
+      "line": 62,
+      "sourceHash": "f4f8e4588c436f39820e1be774950d25347dbc5c76ce38493b47dc32113aa47a",
+      "score": 0.6687716245651245,
+      "excerpt": "Doctor's Orders\n{Sister Amaranth has come to find you, which has never happened to anyone. \"You look like a draught of bad decisions,\" she says. \"Bed.\"|Amaranth again, at your door, arms folded. \"I can hear you coughing from the infirmary.\"|\"Bed,\" says Amaranth, before you've ope"
+    },
+    {
+      "key": "event:infirmary_spare_bed",
+      "title": "The Spare Bed",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 408,
+      "sourceHash": "777c0c43c70a1c391290ba8303647a8d05b1bd7d7bd5ce34808ae54eaec740c9",
+      "score": 0.5944134593009949,
+      "excerpt": "The Spare Bed\n{You only came in for a plaster.|Your name is on the slate by the end bed, in pencil.|Your name on the slate is in ink now.} {health < 40: Sister Amaranth takes one look at you and points at the spare bed.|Sister Amaranth decides, over her spectacles, that you'll li"
+    },
+    {
+      "key": "event:amaranth_rounds",
+      "title": "Evening Rounds",
+      "file": "content/events/fixtures.grim",
+      "line": 36,
+      "sourceHash": "f8f61ab6fdb40121ee28ce6f4c754c84265d5dcdae347a4c4ab7015a70d86899",
+      "score": 0.584320068359375,
+      "excerpt": "Evening Rounds\n{Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's s"
+    },
+    {
+      "key": "event:amaranth_intro",
+      "title": "No Excuses",
+      "file": "content/events/fixtures.grim",
+      "line": 12,
+      "sourceHash": "523676754b5f62157f00b833091fc2386959f19f76736c07267cbbd7e4ca65e0",
+      "score": 0.5550946593284607,
+      "excerpt": "No Excuses\nYou came in for a plaster. Sister Amaranth takes your hand, turns it to the light and asks how it happened. You tell her. She waits. You tell her the true version. \"Better,\" she says, and reaches for a bottle that is not a plaster.\nDrink whatever it is\nIt tastes of iro"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "2102289382b884eae5151481d6aca6a4979ad19baa4c1ef188832290a2bcffaa",
+      "at": "2026-10-28T23:31:42.410Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 468,
+        "total_tokens": 468,
+        "cost": 0.00000468,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000468,
+          "upstream_inference_prompt_cost": 0.00000468,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "2102289382b884eae5151481d6aca6a4979ad19baa4c1ef188832290a2bcffaa",
+      "elapsedMs": 50793,
+      "at": "2026-10-28T23:32:33.203Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d8ebc368bd5a72b676cf492145159260b14f1f0daa1f8d40c33140e4c378862d",
+      "at": "2026-10-28T23:32:33.269Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 53641,
+        "cost": 0.00268205
+      },
+      "requestHash": "d8ebc368bd5a72b676cf492145159260b14f1f0daa1f8d40c33140e4c378862d",
+      "elapsedMs": 514,
+      "at": "2026-10-28T23:32:33.783Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

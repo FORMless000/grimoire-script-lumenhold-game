@@ -9,95 +9,21 @@ You are the second reader. You did not write this batch, and you don't get the a
 
 ## 0. Load
 
-1. `docs/authoring/checklist.md` (the "Critic" list), `style.md`, `costs.md` (the trade), `checks.md` (how checks are pitched), `classes.md` and `presets.md`.
-2. The batch's files (they're named in the request, or in `build/batches/<name>.json` under `files`). Read every event in full.
+1. `docs/authoring/checklist.md`: the "Critic" list is your question list. Read the rule files it cites: `style.md`, `classes.md`, `costs.md`, `checks.md`, `pools.md` and `presets.md`.
+2. The batch's files (named in the request, or in `build/batches/<name>.json` under `files`). Read every event in full.
 3. For the cast, places and tracks the batch touches, get a brief:
    `node tools/grim.js brief --cast <ids> --place <id> --track <id> --out build/critic-brief.md`.
-   Its "Already written here" list names every card at that place or track; check the batch against them for repeated premises (`grim show <id>`, `grim dupes <files>`).
-   Read the `voice:` lines and the `@fact`s of every character who speaks.
-4. Read `build/batches/<name>.json` if it exists. Don't re-report what the validators already failed; mention it only if it changes your verdict.
-5. Read `build/batches/<name>.notes.md`: the retrieval queries the author ran, the rework they caused, and any skip with its reason.
+   Its "Already written here" list names every card at that place or track: check the batch against them for repeated premises (`grim show <id>`, `grim dupes <files>`). Read the `voice:` lines and the `@fact`s of every character who speaks.
+4. `build/batches/<name>.json` if it exists. Don't re-report what the validators already failed; mention it only if it changes your verdict.
+5. `build/batches/<name>.notes.md`: the retrieval queries the author ran, the rework they caused, and any skip with its reason.
 
 ## 1. Check each event
 
-For every event, ask the questions below. Write down an issue only when you can name a concrete fix.
-
-**Canon**
-- Names, places, facts and history match the worldbook. Nothing contradicts hard lore (`content/world/lore/hard/`).
-- Characters are where their `schedule:` puts them, or there's a reason they aren't.
-- A new proper noun needs a soft `@lore` entry.
-
-**Voice**
-- Each character who speaks sounds like their `voice:` line: Lyra never says "please" first, Kael uses few words, Maud says "dearie", Mir says "probably".
-- They act on their traits and facts.
-
-**Tone and safety**
-- Warm, witty, slightly melancholy. The humour comes from specifics, never from winking at the reader.
-- No gore, nothing explicit. Every character is an adult, and romance is only between adults.
-- No real-world brands, modern slang or real month names.
-
-**Class rules** (`classes.md`)
-- `routine`: has a real trade-off, and neither option is obviously better.
-- `incident`: offers agency (mitigate or accept).
-- `windfall`: small and funny.
-- `milestone`: earned and given room to breathe.
-- `story`: never jokey at the climax.
-- Only hard-canon story events may `find` a key clue or `advance` an arc clock.
-
-**Choices**
-- No option is obviously best (`costs.md`): options trade by giving different things, or by a cost or risk. A free option is fine when it gives up what the other offers.
-- Every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment). A cost the scene doesn't show is a defect, not a fix.
-- Every option has its own specific `say:`, never "You gain 5 mood." Prose never mentions numbers or mechanics.
-- Labels are under about 36 characters, imperative or first person.
-
-**Conflict and climax** (plot and arc cards, and any card where characters clash; `style.md`, "Conflict and climax")
-- Does the confrontation happen on the page, out loud, with each side saying something only they would say? A clash reported afterwards or left to a hint is a fix to raise.
-- Does the opposition act, and is each return bolder than the last?
-- Does every fight sit beside a way that isn't a fight? Does a loss cost something real and leave a way back?
-- In a climax: does one card name the companions once, does each planted clue or item pay off (and the beat still happen when it was missed), and does the reward show at once?
-
-**Checks** (`checks.md`)
-- Is the difficulty what the player is actually up against (the opponent or the obstacle), not who is on the card or when it shows?
-- Is any reason counted twice: a strong foe written as `slim`, a coin toss written as a high rung? Is a gamble on `luck`?
-- Grandmaster+ only on story or milestone cards, with `partial:` and a route without the check; a loss that ends the run has `partial:` or `likely`+.
-- Does the kind fit the action and the skill fit the obstacle? `using` only when it differs from the kind's default; `exam` only in a course.
-
-**Repeats** (pool events with `repeat:`)
-- The event will be seen 3–6 times in a run. Do the variation lines (`{~a|b|c}`, `{season=…}`, `{final_year: …|…}`) make each showing read differently?
-- Cast roles are re-filled each showing: a sequence that implies the same companion as last time is a bug. Classmate roles should be `tagged(<role>, student)`.
-- Sequences count showings, not choices: a sequence line that describes a choice's payoff (readers you helped, respect you earned) is a bug unless it is gated on state.
-- Variation is linked: variant *k* of every field shows together (one mode, one count per card; the lint checks counts). Read each position as one set: variant *k* of a `say:` must fit variant *k* of the text, and a sequence's step *k* must fit the *k*-th showing. A set that contradicts itself is a bug; a payoff whose setup sits at a different position is a bug.
-- Would the fourth showing still be welcome, or does the joke wear out? A repeatable event shouldn't hinge on a one-time surprise.
-
-**Items and recipes** (design §9.3)
-- Items exist as `@item` blocks (world expansion 1; `docs/grimoire-script.md`): `give` / `take`, `has_item()` / `worn()`, and an owned item's own option `> up[item:x]:`. An object the prose mentions that isn't an `@item` must not be "used" or "got" as if it were inventory.
-- An item option is that item's moment in that scene: it should feel like owning the thing paid off, without being free (it still trades), and at most one per card. Worn effects act only in fights; nothing on a card reads what you wear except `worn()` gates.
-- No recipes or ingredients (§9.3 still holds for crafting).
-
-**Continuity**
-- Does everything the text promises happen? Check that money, an item, a payback or a later scene that a `say:` mentions is in the effects (`gold`, `give`, `queue … in N`).
-- Does a `say:` read a counter or flag after a statement that resets it? Its text is filled in at that point, so the reader sees the reset value.
-- Do time, weather and place fit every way the card can show? A night scene without `slot:`, snow outside winter, the castle on a break spent at home.
-- Does a callback gate on the scene it recalls (`seen(<card>) > 0`)? Does a `learn` that another card can teach first gate on `not knows(<fact>)`?
-- Do numbers of years and ages agree with `content/world/timeline.grim` and the facts?
-
-**Gating**
-- `when`, `level:`, `rank:`, `place:` and `plan:` make sense together: a club-practice event isn't gated to a place the club doesn't use, and a level-3 class doesn't read like a first lesson.
-- Flags read are set somewhere, and queued events are queued by something.
-- Read a card with what its group gives it: `grim show <id>` prints the compiled card and where each property came from (its `pool:`, its `thread:` and a template's role). Wiring belongs to the group (`docs/authoring/pools.md`, "Where a card lives"): a card that copies its pool's or thread's lines, a storyline wired card by card where a template fits (`story`, `quest`, `scene`), or a schedule faked with a tricky `when` instead of an `@appointment` is a fix to raise.
-
-**Duplication**
-- Was `retrieve related` run on each new card (or the skip justified), and do its top hits differ in premise, options and punchline? A repeated premise is a blocking issue. Re-run `npm run grim -- retrieve related --draft <file>` on any card you doubt (`rag/AUTHORING.md`).
-- The premise doesn't repeat an existing event's premise, even when the words differ. Check with `node tools/grim.js query event --grep <word>`.
-- Within the batch, two events at the same place shouldn't be the same scene twice.
-
-**Length**
-- `text` under 400 characters, `say` under 300.
-- Two to four sentences of `text`, ending on the moment of choice.
+Ask every question of the checklist's "Critic" list of every event. Write down an issue only when you can name a concrete fix. Re-run `npm run grim -- retrieve related --draft <file>` on any card whose premise you doubt (`rag/AUTHORING.md`), and `node tools/grim.js query event --grep <word>`.
 
 ## 2. Verdict
 
-- **Reject** (`accept: false`) when any issue is about canon, safety, class rules, plot safety, a premise that repeats an existing card, or a repeat that will clearly grate. Also reject when more than about 1 in 5 events has an issue.
+- **Reject** (`accept: false`) when any issue is about canon, safety, class rules, plot safety, a premise that repeats an existing card (a blocking issue), or a repeat that will clearly grate. Also reject when more than about 1 in 5 events has an issue.
 - **Accept** when there are only small fixes (a weak `say`, a label one word too long). List them anyway, so the author can polish.
 
 Write the verdict as JSON to `build/batches/<name>.critic.json`, and give it as your final answer:
@@ -118,5 +44,5 @@ Then the author fixes the issues, re-runs `node tools/grim.js batch <name> --fil
 ## Don't
 
 - Don't edit the batch files yourself; the author owns them.
-- Don't rewrite events to your own taste. Raise issues only where you can name a concrete defect against this checklist.
+- Don't rewrite events to your own taste. Raise issues only where you can name a concrete defect against the checklist.
 - Don't judge the numbers beyond the class rules; `balance` and the budget lint already judge them.

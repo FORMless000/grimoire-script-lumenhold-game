@@ -1,0 +1,108 @@
+{
+  "query": "The Night It Bolts Tobias wakes you at midnight. Your plant has bolted: a hedge of thorns is surging across the greenhouse toward the moonflower beds, and it is not stopping for anyone but you. {flag(bramble_fed) and flag(bramble_choir): It knows your voice.|You're not sure it knows you at all.} Call it to heel You put out your hand and the hedge stops a finger's width from the moonflowers, then folds itself back into your palm like a sleeping cat. Tobias sits down on a bucket and laughs from the belly. The thorns take your sleeve and some of your arm before Tobias shears it back. Maud keeps a cutting, and says she'll offer it to you again in Stormbloom. Wade in and grab the root You wade through thorns to the root and hold it. The hedge goes still, then curls round you instead, gently. You're scratched to ribbons and it's yours. You get the root and it gets you. Tobias shears the hedge back by dawn. Maud keeps a cutting for Stormbloom.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:verdant_bramble_bolts",
+      "title": "The Night It Bolts",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 455,
+      "sourceHash": "a533980e2c0e20433a0a4e81683345b859ec987528810d31a9836633140493b4",
+      "score": 0.9498041868209839,
+      "excerpt": "The Night It Bolts\nTobias wakes you at midnight. Your plant has bolted: a hedge of thorns is surging across the greenhouse toward the moonflower beds, and it is not stopping for anyone but you. {flag(bramble_fed) and flag(bramble_choir): It knows your voice.|You're not sure it kn"
+    },
+    {
+      "key": "event:tobias_storm_greenhouse",
+      "title": "Storm Over the Greenhouses",
+      "file": "content/events/expansion_people.grim",
+      "line": 130,
+      "sourceHash": "4977a4425f3f92e4d09225a16df248957677777c75f5648a7b6a73534ea30fd4",
+      "score": 0.5617424845695496,
+      "excerpt": "Storm Over the Greenhouses\nA storm hits at midnight. Glass is cracking in the greenhouses. Tobias is out there in his nightshirt, trying to hold a door shut against the wind with his whole body. \"The moonflowers!\" he shouts. \"Eleven years!\"\nRun out and help\nYou hold the panes tog"
+    },
+    {
+      "key": "event:garden_moonflower",
+      "title": "The Moonflower",
+      "file": "content/events/clubs.grim",
+      "line": 369,
+      "sourceHash": "cc89c92b721e383083d017946592b0601b60e7d95bae91c76511dca8c78b0f5d",
+      "score": 0.5526245832443237,
+      "excerpt": "The Moonflower\n\"The moonflower's going to bloom tonight,\" Tobias says, a little breathless. \"Once every eleven years. I'm staying up to see it. You... could stay too. If you want.\"\nYou need sleep\n\"Course. Yeah.\" He tells you about it at breakfast, in detail, with gestures.\nStay u"
+    },
+    {
+      "key": "event:green_moonflower_sprout",
+      "title": "A Moonflower Seedling",
+      "file": "content/events/slice_2b.grim",
+      "line": 553,
+      "sourceHash": "79335c4435b1c85c0a893fd1f29de5ccd6fed379ed7d849c3a06333735b18881",
+      "score": 0.5480769276618958,
+      "excerpt": "A Moonflower Seedling\nIn a forgotten corner of the greenhouse, a moonflower seed has sprouted on its own, eleven years early. It glows faintly when you lean over it.\nPot it and look after it\nYou give it a pot, a label and a name. It glows a little brighter when you visit.\nTell To"
+    },
+    {
+      "key": "event:verdant_plant_seed",
+      "title": "Somewhere to Grow",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 350,
+      "sourceHash": "7eb140c73006918e7e9af4f66d37040322deb7e68de06dfd90d5c092f592763b",
+      "score": 0.5351199507713318,
+      "excerpt": "Somewhere to Grow\nThe seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, \"if you can keep a secret, dearie.\"\nPlant it with Tobias\nYou plant it together"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "cd7daf1ca4e6137d0062aaa828787c17755f68da0c0de308def99a6333e56487",
+      "at": "2026-10-28T23:51:35.073Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 231,
+        "total_tokens": 231,
+        "cost": 0.00000231,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000231,
+          "upstream_inference_prompt_cost": 0.00000231,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "cd7daf1ca4e6137d0062aaa828787c17755f68da0c0de308def99a6333e56487",
+      "elapsedMs": 1095,
+      "at": "2026-10-28T23:51:36.168Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b148fd07bde1e067e3ab5a8bc261e08733defc243f693913c2fb75a373713a82",
+      "at": "2026-10-28T23:51:36.215Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43945,
+        "cost": 0.00219725
+      },
+      "requestHash": "b148fd07bde1e067e3ab5a8bc261e08733defc243f693913c2fb75a373713a82",
+      "elapsedMs": 359,
+      "at": "2026-10-28T23:51:36.574Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -4,7 +4,7 @@
 // Kept outside the files hashed into the extraction identity (retrieve.js, catalog.js, the adapter), so
 // changing it never orphans a built index.
 const U = require('./util.js');
-const R = require('./retrieve.js');
+const R = require('./retrieval.js');
 const C = require('./catalog.js');
 const { run } = require('./process.js');
 

@@ -13,7 +13,7 @@ This file holds only the standing principles and where to look. It carries no lo
 | Canon (characters, places, tracks, spells, arcs, factions, lore) | the worldbook, `content/world/`, via `node tools/grim.js brief …`, `lorebook`, `query lore …` |
 | How to write a good card | `skills/write-academy-events/SKILL.md` (the workflow), built from `docs/authoring/`: style, costs (how a choice trades), checks (how a check or roll is pitched), classes, presets (generated from `balance.grim`), checklist, pools, examples; batches are reviewed with `skills/critic/SKILL.md` |
 | Existing cards to learn from or extend | `node tools/grim.js brief …` (every card already at that place or track, and the most similar ones in full; `--like` names more), `query event …`, `show <id>`, `graph <id>` (what leads to a card and what it leads to), `dupes <files>` |
-| Source retrieval and controlled authoring review | `rag/AUTHORING.md` for commands; `rag/README.md` for setup; `rag/EVALUATION.md` for frozen experiments |
+| Source retrieval | `rag/AUTHORING.md` (the whole procedure and commands); `rag/README.md` for setup |
 | Whether a card is balanced | `docs/authoring/costs.md` and `classes.md` (the rules the lint checks); `node tools/grim.js balance` (invariants and alarms); `tools/economy.js --by event` (each card's flow and frequency) against the measured monthly flows in `docs/playtest-2-flows.md`; `tools/hs-funnel.js` for the main plot; `tools/exam-odds.js` for exam grades; `grim analyze` for how runs unfold month by month, per play style (`grim styles` says what each plays for) |
 | How to extend canon | `skills/distill-lore/SKILL.md` |
 | The language and the `.lang` format | `docs/grimoire-script.md` |
@@ -21,6 +21,7 @@ This file holds only the standing principles and where to look. It carries no lo
 | Rules, resources, skills, hooks | `content/core/rules.grim`; tiers, presets, weights and the E(turn) curve in `content/core/balance.grim` |
 | Every tool and its options | the header of `tools/grim.js` (`node tools/grim.js` prints it); `tools/economy.js` and `tools/hs-funnel.js` for balance |
 | The combat minigame (every fight is played in it) | `combat/HANDOFF.md` (how it's wired in), `combat/README.md` (building and testing it alone); design §9.2 |
+| The negotiation minigame (Crux) | `crux/HANDOFF.md` (campaign bridge, shared UI, resource scale and checks); `crux/README.md` (rules and standalone tools) |
 | Translation terms | `locales/<lang>/GLOSSARY.md` |
 | Playtesting | `docs/playtest-2.md`; feedback with `node tools/grim.js feedback` |
 | Hosting online, deploys, players and sync codes | `docs/hosting.md`; design §1 |
@@ -54,9 +55,8 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - Simulated players are crude: `balance` catches gross errors and regressions; human playtests are the judge.
 
 **Retrieval maintenance**
-- Follow `rag/AUTHORING.md` for source discovery and inspection. After final source edits, explicitly run `npm run grim -- retrieve index` at the end of each content-writing session; synchronize mid-session when fresh retrieval is needed. An unbuilt index blocks authoring: rebuild it before drafting (`skills/write-academy-events/SKILL.md` §2), never write cards without retrieval. Frozen experiments follow their assigned instructions.
-- Every new or reworked card is checked for duplicate premises with retrieval before review; see `skills/write-academy-events/SKILL.md` and `rag/AUTHORING.md`.
-- `rag/src/catalog.js`, `rag/src/retrieve.js` and the adapter files are hashed into the index's identity: any edit orphans the built index and forces a full rebuild. Put retrieval fixes in other modules, or rebuild before the next content session.
+- Retrieval is part of authoring, by `rag/AUTHORING.md`: never write cards without it (an unbuilt index is rebuilt first), check every new or reworked card for duplicate premises with it before review, and run `npm run grim -- retrieve index` at the end of each content-writing session (mid-session when fresh retrieval is needed).
+- `rag/src/catalog.js` and the selected backend's implementation (`grim-retrieve.js` / `adapters/grim.js` / `openrouter.js` for Grim; `retrieve.js` and its adapter files for LightRAG) are hashed into the index's identity: edits require a rebuild. Put interface fixes in other modules, or rebuild before the next content session.
 
 **Localization**
 - English in `content/` is the source of truth; never translate inside `.grim` files. After English changes, run `node tools/grim.js i18n <lang>` and fill the new or STALE lines (bulk: `locales/<lang>/_in/`). Keep `{tokens}` intact and follow the glossary. New UI strings go in `UI_EN` in `src/i18n.js`.

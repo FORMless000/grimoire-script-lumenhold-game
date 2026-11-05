@@ -33,7 +33,7 @@ A card-swipe life sim at a magical academy. Each month is one day. Pick two plac
 - lean toward the Lumen or the Hollow;
 - decide what to do about the secret beneath the lake.
 
-Fights are played, not rolled. Every duel and brawl opens a turn-based combat minigame in place of the cards, against an AI opponent that plays its character. At graduation your yearbook collects what you became: a headline, the Hollow Star's outcome, your bonds and how you're remembered. Playable in **English** and **简体中文** (Simplified Chinese).
+Fights and negotiations are played. Every duel and brawl opens a turn-based combat minigame in place of the cards, against an AI opponent that plays its character. Every negotiation opens Crux: answer their arguments, manage their patience and choose when to press your case. At graduation your yearbook collects what you became: a headline, the Hollow Star's outcome, your bonds and how you're remembered. Playable in **English** and **简体中文** (Simplified Chinese).
 
 ### Play
 
@@ -62,7 +62,7 @@ Or run the local server (Node 24, no npm install needed): `npm start`, then open
   - personal arcs;
   - a main mystery, *The Hollow Star*, in four acts.
 - **21 characters**, 7 of them romanceable. Each has a relationship score and a status (friend, close, rival, nemesis, partner, ex). The places and tracks have their own regulars.
-- **35 spells.** They're used on cards and in fights at one Mana price.
+- **35 spells.** They're used on cards and in fights at one Mana price; supported negotiation spells use the campaign's Crux resource scale.
 - **The combat minigame:** rules and AI written in Rust and compiled to WebAssembly, bundled so the game still runs from `file://`.
 - **Alignment:** choices with moral weight move you toward the Lumen or the Hollow, and people notice.
 - **35 endings:** 5 early game-overs, and a graduation yearbook assembled from the rest.
@@ -77,8 +77,7 @@ On macOS install it with `brew install node@24`. The npm scripts select Node 24
 automatically, including the Homebrew installation when your shell still points
 to an older Node. `npm run grim --` lists every command. `.nvmrc` and
 `.node-version` also select major version 24 for existing version managers.
-Retrieval setup and tooling live in [`rag/`](rag/README.md); controlled authoring
-comparisons follow [`rag/EVALUATION.md`](rag/EVALUATION.md).
+Retrieval setup and tooling live in [`rag/`](rag/README.md).
 
 ```bash
 npm run build                      # rebuild build/content.bundle.js — required after editing .grim files
@@ -92,6 +91,31 @@ npm run verify:full                # everything (about ten minutes): plus slow s
 
 Preview any event with `index.html?event=<id>&debug`. `?debug` alone adds a content-debug panel.
 
+### RAG for authoring
+
+Agents retrieve relevant cards and worldbook entries before writing, without loading
+the whole corpus into context. **Grim RAG** is the default: contextual BM25 and
+embedding search, reciprocal rank fusion, and reranking. Reads return original
+`.grim` blocks, including branches; parser-derived dependencies help inspect
+continuity. Generated search descriptions are aids, not canon.
+
+With Node 24 installed, copy `rag/.env.example` to the ignored `rag/.env.local`
+and set `OPENROUTER_API_KEY`. Run `./rag/prepare.sh --build` (Windows:
+`.\rag\prepare.ps1 --build`) to build the index. Grim needs no Python environment.
+Indexing and searches make paid API calls; incremental updates reuse unchanged work.
+
+```sh
+npm run grim -- retrieve status
+npm run grim -- retrieve search "a stable favour that costs study time"
+npm run grim -- retrieve read npc:lyra
+npm run grim -- retrieve related --draft path/to/single-card.grim
+npm run grim -- retrieve index      # synchronize after the final content edits
+```
+
+See [`rag/AUTHORING.md`](rag/AUTHORING.md) for the authoring procedure and evidence
+budgets, and [`rag/README.md`](rag/README.md) for setup and the optional LightRAG backend.
+Credentials, indexes and retrieval receipts stay local and are excluded from Git.
+
 ## Layout
 
 ```
@@ -100,7 +124,8 @@ content/              the game, in Grimoire Script (English source); content/wor
 locales/zh-CN/        Simplified Chinese (.lang) + GLOSSARY.md
 src/                  grimoire.js (parser), engine.js + director.js (rules, no DOM), ui.js, combat-ui.js, i18n.js, net.js
 combat/               the combat minigame: Rust rules and AI → wasm, setup, bridge (see combat/HANDOFF.md)
-build/                generated bundles (content, combat) — rebuild, don't edit
+crux/                 negotiation: shared Rust rules/search, renderer and standalone bench (see crux/HANDOFF.md)
+build/                generated bundles (content, combat, Crux) — rebuild, don't edit
 skills/               agent skills: write events, critique a batch, distill lore
 docs/                 design, language reference, authoring spec, hosting
 tools/                grim.js (build, lint, brief, balance, analyze, i18n, …) and the balance tools

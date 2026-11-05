@@ -1,0 +1,107 @@
+{
+  "query": "A Crack in Tomorrow {The great hall's ceiling shows tomorrow, and tomorrow, it seems, is wet. There's a crack across the sky above the end of the long table, and tomorrow's rain is dripping through it into somebody's soup.|The crack is back, over a different table. Tomorrow is sleet.|A crack again, and a first-year holding a bowl under it with the air of someone who's been there a while.} Fetch buckets from the kitchens {You fetch two buckets and a mop. By supper there are buckets all down the table, and the hall sounds like a clock shop.|You set out buckets under the drips. They ring all through supper in different notes, and somebody starts conducting.|Buckets, and the mop, and the first-year freed from duty. They follow you about for a week.} Move to a dry bench and eat {You move up the table and eat with tomorrow dripping steadily behind you. Someone else will fix it. Nobody does until Thursday.|You move. The first-year with the bowl watches you go with the look of a soldier left at the gate.|A dry bench, and supper. The drip keeps time with your spoon all evening, which is somehow worse.} Mend the sky {You reach up with Mend and the crack in tomorrow knits shut, cloud to cloud. The drip stops mid-fall. Half the hall claps; the other half didn't notice, which is the better compliment.|The crack draws together from both ends and meets in the middle with a small click. Tomorrow's rain will have to wait for tomorrow, as it should.|You mend the sky over the long table. The first-year with the bowl pours it, solemnly, into a plant pot.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:great_hall_cracked_sky",
+      "title": "A Crack in Tomorrow",
+      "file": "content/events/spell_uses.grim",
+      "line": 244,
+      "sourceHash": "660f1b2c8b68e34e3aa36d3936169a52e3353b538c1817367ed847eca2bfcb3b",
+      "score": 0.9635436534881592,
+      "excerpt": "A Crack in Tomorrow\n{The great hall's ceiling shows tomorrow, and tomorrow, it seems, is wet. There's a crack across the sky above the end of the long table, and tomorrow's rain is dripping through it into somebody's soup.|The crack is back, over a different table. Tomorrow is sl"
+    },
+    {
+      "key": "event:great_hall_tomorrow_sky",
+      "title": "Tomorrow's Weather",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 338,
+      "sourceHash": "8bd97b464362d502c05b266d8062a921a6c212716cbc3897da9380a2dca03f2b",
+      "score": 0.5594205856323242,
+      "excerpt": "Tomorrow's Weather\n{The great hall is empty but for the candles. The ceiling shows tomorrow.|One candle drifts over to you and hovers at reading height.|Your candle meets you at the door now and leads you to your bench.} {season == \"winter\": Tomorrow, it says, it will snow.|{seas"
+    },
+    {
+      "key": "event:brk_one_long_table",
+      "title": "One Long Table",
+      "file": "content/events/breaks.grim",
+      "line": 11,
+      "sourceHash": "445d04647e7f18e8c8c8d55f2e5acfb7a888bfdfb6380f872836f69b8858717d",
+      "score": 0.4294918477535248,
+      "excerpt": "One Long Table\n{season == \"winter\": The Great Hall has given up on house tables for the break. Everyone left eats at one long table by the fire: a handful of students, two professors and a cook who sits down with you, which nobody has ever seen.|Half the candles are out for the s"
+    },
+    {
+      "key": "event:refectory_tipping_tray",
+      "title": "The Tipping Tray",
+      "file": "content/events/spell_uses.grim",
+      "line": 109,
+      "sourceHash": "214bf0d413d68f5e2fdfa0fecaca282b2bea7ddc330f5425d845d8529317aa53",
+      "score": 0.41109979152679443,
+      "excerpt": "The Tipping Tray\n{A first-year is coming down the aisle with a tray of eight soup bowls stacked like a tower, and a bench leg is sticking out right where they'll step.|The same first-year, a bigger tray, a different bench leg. Some people never learn; some benches don't either.|T"
+    },
+    {
+      "key": "event:workshop_cracked_lens",
+      "title": "The Cracked Lens",
+      "file": "content/events/spell_uses.grim",
+      "line": 200,
+      "sourceHash": "a294bf9f2ef3e0c764e0244af691e67838da38bb51757275411896e256f24384",
+      "score": 0.4003210663795471,
+      "excerpt": "The Cracked Lens\n{Mir is holding their best lens up to the window, and there's a crack across it like a hair. \"Demonstration's tomorrow,\" they say. \"For the faculty. It's probably fine. It's not fine.\"|Another lens, another crack. Mir has started keeping the good ones in a sock.|"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "90fe66fcfd2b4cb6a50d9a787f53faa274d9f20d1c7b8767dcd4738841fd11cd",
+      "at": "2026-10-28T23:28:16.196Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 357,
+        "total_tokens": 357,
+        "cost": 0.00000357,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000357,
+          "upstream_inference_prompt_cost": 0.00000357,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "90fe66fcfd2b4cb6a50d9a787f53faa274d9f20d1c7b8767dcd4738841fd11cd",
+      "elapsedMs": 1711,
+      "at": "2026-10-28T23:28:17.907Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "8418bb2f42e0a349f2ed4337af6803c7d3e4bcb35e22a2550dfff5c30a558545",
+      "at": "2026-10-28T23:28:18.001Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 53615,
+        "cost": 0.00268075
+      },
+      "requestHash": "8418bb2f42e0a349f2ed4337af6803c7d3e4bcb35e22a2550dfff5c30a558545",
+      "elapsedMs": 430,
+      "at": "2026-10-28T23:28:18.431Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

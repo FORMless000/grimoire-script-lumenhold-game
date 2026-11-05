@@ -1,0 +1,108 @@
+{
+  "query": "The Masked Night {Tonight every guest wears a mask, and nobody says why. The landlady hands you one too, plain black, no feathers.|The masks again. One guest, in lacquered silver, asks for you by the colour of your mask.|The masked night. The silver mask is here, and has saved you the seat beside it.} Without faces the room is easier to read, and harder. Sit with the masks {You learn to read a room by its hands. You go home with heavy pockets, no names, and a feeling you can't put down.|The silver mask asks you nothing at all, and tips like a duke. You lie awake wondering who that was.|Behind the masks the guests say what they mean. You come home rich and a little colder.} {A masked guest won't take no for an answer, and nobody can see who it is. You leave by the back stair with a few coins and a very bad feeling.|The silver mask leans too close, and nobody else in the room seems to notice. You go home by the long way.|A guest takes your mask off, laughing, in front of everyone. Someone at the far table looks very like a prefect.} Work the door {You take coats at the door all night. The stairwell is freezing, and every coat smells of a different perfume.|You keep the door, and turn away a guest the landlady points out. The draught gets into your bones.|You work the door and watch the masks arrive one by one. The silver one bows to you, which is worse than being spoken to.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_masked",
+      "title": "The Masked Night",
+      "file": "content/events/pools/night.grim",
+      "line": 231,
+      "sourceHash": "624f946b021aff7a24f2b564362c06c70bcc341b78b60605ae2d90fbcbaaa3e9",
+      "score": 0.9355452060699463,
+      "excerpt": "The Masked Night\n{Tonight every guest wears a mask, and nobody says why. The landlady hands you one too, plain black, no feathers.|The masks again. One guest, in lacquered silver, asks for you by the colour of your mask.|The masked night. The silver mask is here, and has saved yo"
+    },
+    {
+      "key": "event:company_wants_more",
+      "title": "A Guest Who Wants More",
+      "file": "content/events/pools/night.grim",
+      "line": 311,
+      "sourceHash": "fe4de4e7a319f821f58ddfd0c77313cd9244ad0a544768b2e8d681e2bf996cd5",
+      "score": 0.5246179103851318,
+      "excerpt": "A Guest Who Wants More\n{A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. \"Come back to my inn,\" he says. \"Just to talk.\" The house rule is clear.|Another guest, another heavy purse, another invitation \"just to talk\". T"
+    },
+    {
+      "key": "event:company_castle",
+      "title": "Someone from the Castle",
+      "file": "content/events/pools/night.grim",
+      "line": 281,
+      "sourceHash": "fb7121b93dcaa6a0422d2998abb2951994d39a2060fbd79f7dac5dbd950b8fd2",
+      "score": 0.43166783452033997,
+      "excerpt": "Someone from the Castle\n{Halfway up the stair you see {guest} at the corner table, out of robes, with a glass of wine and the air of someone who would rather not be seen either.|{guest} is at the corner table tonight. You both pretend this is a coincidence.|Tonight it is {guest} "
+    },
+    {
+      "key": "event:newt_company_regular",
+      "title": "The Upstairs Room",
+      "file": "content/events/pools/night.grim",
+      "line": 34,
+      "sourceHash": "8b4131d78d56b576167bffa78adc1d451af677325e873c31bccb222ca40b81a6",
+      "score": 0.41396236419677734,
+      "excerpt": "The Upstairs Room\n{The woman who runs the upstairs room knows your face now. \"There's a party tonight,\" she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. \"Your table's waiting,\" she says.|\"Your regulars asked after yo"
+    },
+    {
+      "key": "event:newt_company",
+      "title": "Company for the Evening",
+      "file": "content/events/pools/night.grim",
+      "line": 8,
+      "sourceHash": "f822064ccd7f35ff30f97fdf420d490bd7f52e6480c69fe05d3b8072c6e3ade2",
+      "score": 0.39582887291908264,
+      "excerpt": "Company for the Evening\nThe woman who runs the upstairs room looks you over. \"The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more: guests who want more are shown the stair. Every night is a different party, and every par"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "57c654338183c4cc70fb744178e845c84e9fa55a5efc1915ba97ee8a53d09335",
+      "at": "2026-10-28T23:51:14.855Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 334,
+        "total_tokens": 334,
+        "cost": 0.00000334,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000334,
+          "upstream_inference_prompt_cost": 0.00000334,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "57c654338183c4cc70fb744178e845c84e9fa55a5efc1915ba97ee8a53d09335",
+      "elapsedMs": 738,
+      "at": "2026-10-28T23:51:15.593Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f0fe0e615943b61eecd880dbf320001ac16f6a05846a6a6ec0110f52da73b48b",
+      "at": "2026-10-28T23:51:15.662Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 56944,
+        "cost": 0.0028472
+      },
+      "requestHash": "f0fe0e615943b61eecd880dbf320001ac16f6a05846a6a6ec0110f52da73b48b",
+      "elapsedMs": 989,
+      "at": "2026-10-28T23:51:16.651Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

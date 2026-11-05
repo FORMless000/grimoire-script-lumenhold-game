@@ -1,0 +1,107 @@
+{
+  "query": "The Mock Defence {Final-years run mock defences at the end of the lab. Three in borrowed gowns play the committee, and they play it cruel.|Mock defence day. The pretend committee has added a fourth chair and a tiny gavel.|The mock committee nods at you as you come in. They've started keeping score on the board.} {Tonight's chief examiner is doing an impression of Thorne that is unkindly accurate.|The chair has a bell, which they ring for every \"um\".|{season == \"winter\": Everyone defends in scarves; the lab's fire is out.|Someone has borrowed a skeleton from the infirmary to sit in the audience.}} Take the hot seat {You field every question, even the cruel one about your sources. The chief examiner says \"Hm,\" in Thorne's voice, and means it.|They ring the bell for \"um\" only twice. That's a record, and the committee applauds with the tiny gavel.|You hold your ground for an hour. Your score on the board is the highest of the term, and people come to ask how.} {The third question undoes you. You stand at the board saying \"well\" while the chief examiner does Thorne's eyebrow at you.|They find the hole in your argument in four minutes, and the bell rings for every \"um\" after that. Better here than in front of the real thing.|You lose your thread under the gavel. The committee is merciful afterwards, which is worse.} Sit on the committee {You ask one question, quietly, and watch the defender's face as they see the hole. You feel like a cat. A kind cat.|You learn to find the weak joint in an argument by watching three of them crack. It's educational and a little shameful.|You're the committee's favourite examiner now: gentle voice, terrible questions.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:thesis_lab_mock_defence",
+      "title": "The Mock Defence",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 453,
+      "sourceHash": "1ef7b60ff3c6a91c25f77bbe20c86d5b2ce4f521da68e15e6f9c3a6118ce58a3",
+      "score": 0.9469779133796692,
+      "excerpt": "The Mock Defence\n{Final-years run mock defences at the end of the lab. Three in borrowed gowns play the committee, and they play it cruel.|Mock defence day. The pretend committee has added a fourth chair and a tiny gavel.|The mock committee nods at you as you come in. They've sta"
+    },
+    {
+      "key": "event:thesis_defence",
+      "title": "The Defence",
+      "file": "content/events/calendar_2b.grim",
+      "line": 641,
+      "sourceHash": "f869adeee34fae75fe8c4e62b5ab8eed20abec43739a325e9992983139f0db4e",
+      "score": 0.6262134313583374,
+      "excerpt": "The Defence\nThree examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.} First, you present. Then they ask.\nDefend it\nYour presentation runs clean from first slide t"
+    },
+    {
+      "key": "event:thesis_defence_question",
+      "title": "The Question",
+      "file": "content/events/calendar_2b.grim",
+      "line": 711,
+      "sourceHash": "40a26fcd6a453b978378691bd007c4d50ab931a04bd43de46e3ba7575717d1a5",
+      "score": 0.5730206370353699,
+      "excerpt": "The Question\nThe examiner who hasn't spoken yet opens your thesis to a page near the end, puts a finger on one line and asks the question you hoped no one would ask.\nAnswer it head-on\nYou answer it, and then the question behind it, and then the one behind that. The examiner close"
+    },
+    {
+      "key": "event:thesis_defence_verdict",
+      "title": "The Verdict",
+      "file": "content/events/calendar_2b.grim",
+      "line": 740,
+      "sourceHash": "671ff8554fc496440640cd3d9cd1685ecb654addc70b4214a2c1cd67fc7fc415",
+      "score": 0.5016431212425232,
+      "excerpt": "The Verdict\nThey send you out. Twenty minutes on a bench in the corridor, with the clock and your heartbeat. Then the door opens, and they call you back in.\nGo back in\nThey stop asking questions and start asking for copies. Distinction. One of them shakes your hand twice, as if t"
+    },
+    {
+      "key": "event:renown_debate",
+      "title": "The Great Debate",
+      "file": "content/events/pools/renown.grim",
+      "line": 58,
+      "sourceHash": "fb62a0dd9e0c8a334f4f70dc9547b049f822d662840a744959a1decf75d03aa5",
+      "score": 0.4226687550544739,
+      "excerpt": "The Great Debate\nThe great debate: \"That magic should be taught to anyone who asks.\" You've drawn the side you disagree with, against a fourth-year who has never lost. The faculty are in the front row, and Thorne is taking notes: win and they'll remember you, lose and so will eve"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "7a45a1598e6a9bf93a039abc2cf95b903f3397b9eedff5d250035ee0bd413df7",
+      "at": "2026-10-28T23:39:49.452Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 391,
+        "total_tokens": 391,
+        "cost": 0.00000391,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000391,
+          "upstream_inference_prompt_cost": 0.00000391,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "7a45a1598e6a9bf93a039abc2cf95b903f3397b9eedff5d250035ee0bd413df7",
+      "elapsedMs": 713,
+      "at": "2026-10-28T23:39:50.165Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f0a6964cd67b548a0fca690fd21a36989e5c9f6402c3739c7cbfc8f7708c5d94",
+      "at": "2026-10-28T23:39:50.247Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 62798,
+        "cost": 0.0031399
+      },
+      "requestHash": "f0a6964cd67b548a0fca690fd21a36989e5c9f6402c3739c7cbfc8f7708c5d94",
+      "elapsedMs": 501,
+      "at": "2026-10-28T23:39:50.748Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

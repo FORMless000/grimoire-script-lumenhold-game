@@ -1,0 +1,108 @@
+{
+  "query": "Somewhere to Grow The seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, \"if you can keep a secret, dearie.\" Plant it with Tobias You plant it together by lantern light, and Tobias tells it a long story about a goat to help it settle. It settles. So does Tobias, eventually. Plant it in Maud's garden Maud leads you through a door you'd never noticed into a garden you'll never find on your own. You plant it there. \"It'll be happy,\" she says, \"for a while.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:verdant_plant_seed",
+      "title": "Somewhere to Grow",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 350,
+      "sourceHash": "7eb140c73006918e7e9af4f66d37040322deb7e68de06dfd90d5c092f592763b",
+      "score": 0.9525025486946106,
+      "excerpt": "Somewhere to Grow\nThe seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, \"if you can keep a secret, dearie.\"\nPlant it with Tobias\nYou plant it together"
+    },
+    {
+      "key": "event:garden_maud_secret",
+      "title": "The Secret Garden",
+      "file": "content/events/clubs.grim",
+      "line": 396,
+      "sourceHash": "aeef965551fe4bc77118f40a0e6dd64639071eaf4bb0eb6d4206b8e823aae621",
+      "score": 0.7509344816207886,
+      "excerpt": "The Secret Garden\nThe old groundskeeper beckons you behind the potting shed, to a door in the wall you've walked past a hundred times without seeing. \"You've got the hands for it,\" Old Maud says. \"Want to see what grows where nobody's looking?\"\nThank her and decline\n\"Suit yoursel"
+    },
+    {
+      "key": "event:y3_maud_seeds",
+      "title": "Seeds for Later",
+      "file": "content/events/expansion_y3.grim",
+      "line": 399,
+      "sourceHash": "7ce0f374582c5860771e3a4b3f7a66286cf504baa1a73b341bbb4457dd7ec5c6",
+      "score": 0.6314467191696167,
+      "excerpt": "Seeds for Later\nMaud presses a paper packet into your hands. \"Seeds,\" she says. \"From the secret garden. Plant them wherever you end up. They'll grow anywhere someone is a bit kind to them.\" She sniffs. \"Like you did.\"\nHug her\nShe protests for exactly one second and then hugs bac"
+    },
+    {
+      "key": "event:picture_tobias",
+      "title": "A Saying for It",
+      "file": "content/events/full_picture.grim",
+      "line": 52,
+      "sourceHash": "f1605e524c8658bc2a1b66de8877fe3109b751c97473c18702d56aa600e70fce",
+      "score": 0.592070460319519,
+      "excerpt": "A Saying for It\nRepotting seedlings, Tobias goes quiet for so long that Gerald, on his shelf, stops screaming to look. \"You know about my ma, and the blight, and the broom,\" he says. \"And about after. I haven't told anyone about after.\" He wipes his hands on his apron. \"Back home"
+    },
+    {
+      "key": "event:verdant_far_bed",
+      "title": "The Far Bed Answers",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 325,
+      "sourceHash": "75953555a783b260fac2f443864bdf03e64f49f63fb5a465c24243ce570f3a8d",
+      "score": 0.5867346525192261,
+      "excerpt": "The Far Bed Answers\nThe far bed answers back today: every vine in it turns to follow you. On the way out you find a seed in your coat pocket that wasn't there this morning, and it has already put out a shoot.\nKeep it and grow it\nYou cup it in your palm. The shoot curls round your"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "b957544984b3ddc3b005d40fd6bebe0ac3c10e7563a9a53c4398a3a8a3bc0e9c",
+      "at": "2026-10-28T23:51:33.748Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 143,
+        "total_tokens": 143,
+        "cost": 0.00000143,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000143,
+          "upstream_inference_prompt_cost": 0.00000143,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "b957544984b3ddc3b005d40fd6bebe0ac3c10e7563a9a53c4398a3a8a3bc0e9c",
+      "elapsedMs": 297,
+      "at": "2026-10-28T23:51:34.045Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "243b8a7afe0a066817d216d5be6b8a135d3a320b676859c60b7e22d3437cc43e",
+      "at": "2026-10-28T23:51:34.295Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 41726,
+        "cost": 0.0020863
+      },
+      "requestHash": "243b8a7afe0a066817d216d5be6b8a135d3a320b676859c60b7e22d3437cc43e",
+      "elapsedMs": 809,
+      "at": "2026-10-28T23:51:35.104Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

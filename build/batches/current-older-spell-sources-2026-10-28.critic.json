@@ -1,0 +1,82 @@
+{
+  "batch": "current-older-spell-sources-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "evo_first_flame",
+      "astro_first_foresight",
+      "alch_first_mend",
+      "illu_first_glamour",
+      "beast_first_haste",
+      "umbral_first_shadowstep",
+      "art_first_animate",
+      "star_first_starlight",
+      "hollow_first_seal",
+      "lyra_teaches_wildfire",
+      "tobias_teaches_heartwood",
+      "seraphine_teaches_omen",
+      "corvin_teaches_sleight",
+      "mir_teaches_contraption",
+      "kael_teaches_hoarfrost",
+      "nessa_teaches_candour"
+    ],
+    "files": [
+      "content/events/spell_sources.grim"
+    ]
+  },
+  "summary": "Course and peer sources give distinct routes to spells. The Illusion II practical needs moral accounting, and Lyra’s repeat offer needs to remember the first demonstration.",
+  "issues": [
+    {
+      "event": "illu_first_glamour",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "At Illusion II the practical makes three people falsely remember the player rescuing the cook. This knowingly takes undeserved credit through manipulated memories but has no Hollow consequence, unlike other lying-for-gain choices.",
+      "fix": "Give this level-specific fabrication its moral consequence, or make it an openly consented classroom illusion test that does not create real false credit.",
+      "file": "content/events/spell_sources.grim",
+      "line": 76
+    },
+    {
+      "event": "beast_first_haste",
+      "priority": "P3",
+      "category": "label continuity",
+      "problem": "The right label is always Watch how the hare moves even when the advanced setup and outcome are about a hawk or hippogriff.",
+      "fix": "Use a species-neutral label such as Study its movement first, or branch the label with the course level.",
+      "file": "content/events/spell_sources.grim",
+      "line": 97
+    },
+    {
+      "event": "lyra_teaches_wildfire",
+      "priority": "P2",
+      "category": "repeat continuity",
+      "problem": "Declining the lesson leaves this repeat-4 offer eligible, but each opening again claims I’ve never shown anyone after the player has already watched her demonstrate it.",
+      "fix": "Branch the opening on seen(lyra_teaches_wildfire), with a repeat invitation after the first showing.",
+      "file": "content/events/spell_sources.grim",
+      "line": 208
+    },
+    {
+      "event": "illu_first_glamour",
+      "file": "content/events/spell_sources.grim",
+      "line": 76,
+      "priority": "P2",
+      "category": "canon",
+      "problem": "The level-I opening says Illusion begins by trying to make Vey like the student, and the left route casts directly on her. The worldbook fact vey.own_face says every student first glamours their own face, because a glamour they cannot hold on themselves will not hold on anyone.",
+      "fix": "Put the required self-glamour step before trying it on Vey in the introductory practical, or change the introductory exercise to match the established teaching order.",
+      "evidence": [
+        "content/world/facts/vey.grim: vey.own_face"
+      ]
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

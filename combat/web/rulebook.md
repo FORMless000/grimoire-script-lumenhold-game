@@ -164,7 +164,7 @@ This implements the supplied spell redesign in the standalone **combat** testpla
 
 ## Exchanges, ending and basic actions
 
-One actor commits publicly, then the other responds; both actions resolve. Normal commitment order alternates in the background. Foresight can force the actual first committer. Ordinary hits land together; a mutual knockout goes to that exchange's telegraphed actor. Both actions and costs still happen.
+One actor commits publicly, then the other responds; both actions resolve. Normal commitment order alternates in the background. Foresight can force the actual first committer. Ordinary hits land together; a mutual knockout goes to that exchange's telegraphed actor (the side that committed first), whose blow lands first: the loser's blows that exchange never land, so the winner keeps the HP and Health they took (2026-10-29). Both actions and costs still happen, the winner's own HP prices included. The fight text says so (`ending.tiebreak`, `line.tooLate`).
 
 There is **no exchange limit**. A fight ends by knockout, concession, or a structural stalemate where neither actor has a way to damage the other. Choosing Guard repeatedly is not itself a stalemate. Temporary evasion/freezing/shields are not treated as permanent invulnerability. Simulation runs may be censored at a work budget; censoring is never a draw, victory or settlement.
 

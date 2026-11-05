@@ -1,0 +1,108 @@
+{
+  "query": "The Old Schoolmistress {In the market you're stopped by the old schoolmistress who taught half the town its letters. \"Come and tell my little ones about the academy,\" she says. \"They won't believe me.\"|The schoolmistress again, with her satchel of slates. \"They've talked of nothing else since last time. Come back.\"|The schoolmistress waves from across the square. The children at her heels are wearing paper wizard hats, badly folded.} {She looks smaller than she used to.|She smells of chalk, as she always did.|{season == \"winter\": Her breath steams; she's been out in the cold looking for you.|A market dog is following her for the biscuits in her pocket.}} Visit the schoolroom {You tell twenty children about the moving stairs and the floating candles. One asks if you've met a dragon. You lie a little. They swarm you like bees.|You show them a single small flame in your palm. Twenty faces light up. You're exhausted after an hour, the good way.|You answer questions until your voice gives out. One of them wants to go to the academy now, very badly. It's your fault, and you're glad.} Buy her tea and listen {You buy her a pot of tea and she tells you which of your old classmates married whom, and which ran off to sea. You'd forgotten you missed them.|She asks what you're studying and actually listens. Then she corrects your grammar, out of habit, and you let her.|You buy her tea and she tells you what you were like at seven. It's alarming how little you've changed.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:home_market_schoolmistress",
+      "title": "The Old Schoolmistress",
+      "file": "content/events/pools/village_more.grim",
+      "line": 186,
+      "sourceHash": "918a955daf198dc558885696a9c15867f01aaa47557c92e36bdefe9e81b98563",
+      "score": 0.9528540372848511,
+      "excerpt": "The Old Schoolmistress\n{In the market you're stopped by the old schoolmistress who taught half the town its letters. \"Come and tell my little ones about the academy,\" she says. \"They won't believe me.\"|The schoolmistress again, with her satchel of slates. \"They've talked of nothi"
+    },
+    {
+      "key": "event:mabels_regulars_table",
+      "title": "The Regulars' Table",
+      "file": "content/events/pools/village_more.grim",
+      "line": 58,
+      "sourceHash": "048744cb74cbbd6054af5ad3067844d4049123f26c4c5dc65403d9c62fea5648",
+      "score": 0.4921019375324249,
+      "excerpt": "The Regulars' Table\n{The big round table at Mabel's belongs to the village regulars, four old friends, a box of dominoes and fifty years of arguments. They wave you over. \"Settle something for us.\"|The regulars wave you over again. Today's dispute is about the academy in their da"
+    },
+    {
+      "key": "event:headmistress_tower_tea",
+      "title": "Two Cups Poured",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 310,
+      "sourceHash": "dab50755ec9ace94f27728f0cf4d48a077f0dcff7bb3615857d204fb72005638",
+      "score": 0.48777061700820923,
+      "excerpt": "Two Cups Poured\n{The headmistress pours two cups unasked. \"Sit. Tell me how your term is going, and then how it is really going.\"|Two cups, already poured. \"Well,\" says {host}, \"how is it really going?\"|You sit before she asks. She looks pleased, and doesn't say so.} {The crystal"
+    },
+    {
+      "key": "event:starfall_at_home",
+      "title": "Starfall at Home",
+      "file": "content/events/festivals.grim",
+      "line": 104,
+      "sourceHash": "6df56d8ad448ac8892e3093b579b059d9f89ac773698dfbf9a18a53289c2b000",
+      "score": 0.4815407395362854,
+      "excerpt": "Starfall at Home\n{Starfall at home. There's no observatory here, only the cottage roof and the whole family on it in quilts, as when you were small.|Starfall at home again. Someone has saved you the warm patch of roof by the chimney.|The roof, the quilts, the chimney. Someone ask"
+    },
+    {
+      "key": "event:break_home_village_children",
+      "title": "The Wizard Is Home",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 134,
+      "sourceHash": "42dec7069117de1fcd5af15a1be0a854341ca4d971d3c7da9451aaa1d79399b2",
+      "score": 0.48054760694503784,
+      "excerpt": "The Wizard Is Home\n{Word has spread that you're home from the wizard school. Half the village has found a reason to pass the gate.|The neighbours are back at the gate, with a cousin from the next village to show you off to.|The gate committee is in session. They've drawn up a lis"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "691c0bfd9a924f128c2c2bcab1170820714f8435b3f8b33fc9fa556e1eb9353e",
+      "at": "2026-10-28T23:50:50.864Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 348,
+        "total_tokens": 348,
+        "cost": 0.00000348,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000348,
+          "upstream_inference_prompt_cost": 0.00000348,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "691c0bfd9a924f128c2c2bcab1170820714f8435b3f8b33fc9fa556e1eb9353e",
+      "elapsedMs": 438,
+      "at": "2026-10-28T23:50:51.302Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "15f9b311f5290db14df4062ec04b17b7d4d9265ac0a69a6898b26f4843096bab",
+      "at": "2026-10-28T23:50:51.363Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 52882,
+        "cost": 0.0026441
+      },
+      "requestHash": "15f9b311f5290db14df4062ec04b17b7d4d9265ac0a69a6898b26f4843096bab",
+      "elapsedMs": 539,
+      "at": "2026-10-28T23:50:51.902Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

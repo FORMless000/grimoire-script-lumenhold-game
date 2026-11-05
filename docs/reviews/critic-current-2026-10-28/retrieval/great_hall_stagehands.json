@@ -1,0 +1,107 @@
+{
+  "query": "Stagehands Wanted {season == \"autumn\": Scenery for the Harvest Feast is going up on the stage: a painted moon the size of a barn.|{season == \"winter\": They're building the Midwinter Ball's ice arch out of painted canvas and optimism.|{season == \"spring\": The Spring Tournament's banners are being hemmed on the stage, in five house colours.|They're painting the Starfall backdrop, a whole sky, star by star.}}} {A sign by the stage says STAGEHANDS WANTED, NO EXPERIENCE NECESSARY.|The sign now says SOME EXPERIENCE PREFERRED, and someone has pencilled your name under it.|They hand you a brush as you come in.} Meanwhile the kitchens are testing the feast menu on anyone who sits still. Paint, hammer and hold ladders {You paint for three hours and charm the paint to shimmer at the edges. It's the best thing on the stage. Your shoulders disagree.|You hold ladders, hammer, paint, hit your thumb twice and get paint in your hair that won't come out till the festival. Someone stands back and says \"oh\", the good kind.|You're trusted with the tricky bit now, the part that has to move when the candles do. It does. You get splinters, and applause.} Taste-test for the kitchens {You eat seven tasting plates and give honest marks. The pear tart wins. Your revision notes stay shut.|You taste and judge and taste again. The cook writes down everything you say, and your afternoon of reading is gone.|The cook saves you the corner seat and the first spoonful. The menu is better for you; your reading pile is taller.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:great_hall_stagehands",
+      "title": "Stagehands Wanted",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 128,
+      "sourceHash": "f61e894cf01d907aa3ea38c60ca313eccdfcd4349b8a1491c4581b1c07be3ba8",
+      "score": 0.9227488040924072,
+      "excerpt": "Stagehands Wanted\n{season == \"autumn\": Scenery for the Harvest Feast is going up on the stage: a painted moon the size of a barn.|{season == \"winter\": They're building the Midwinter Ball's ice arch out of painted canvas and optimism.|{season == \"spring\": The Spring Tournament's b"
+    },
+    {
+      "key": "event:life_harvest_festival",
+      "title": "The Harvest Feast",
+      "file": "content/events/life.grim",
+      "line": 819,
+      "sourceHash": "87098bce2e203b47b4038358deca928d1ccba3a9b32181c9424ec3dcb52deef0",
+      "score": 0.5584601163864136,
+      "excerpt": "The Harvest Feast\nThe Harvest Feast: pies the size of cartwheels, cider, and {&a pumpkin carved to look like the headmistress, which she pretends not to notice.|a pumpkin carved to look like Professor Thorne this year, which he pretends not to notice, badly.|a turnip carved to lo"
+    },
+    {
+      "key": "event:gig_kitchens_feast_night",
+      "title": "Feast Night",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 188,
+      "sourceHash": "fa62fc9b27a00c2b803734756915c02b6b177093e8d03dc2694f674d0c9352ec",
+      "score": 0.46356308460235596,
+      "excerpt": "Feast Night\n{season == \"winter\": Tonight the castle keeps a small Midwinter table for those who stayed, and the kitchens will cook as if for the whole school.|Tonight the stay-behinds hold a summer supper in the courtyard, and the kitchens will cook as if for the whole school.} A"
+    },
+    {
+      "key": "event:midwinter_ball",
+      "title": "The Midwinter Ball",
+      "file": "content/events/calendar.grim",
+      "line": 306,
+      "sourceHash": "e847dd6e2d2543afdea798d166d99bed3ce2942606379e4590c00c8e89437004",
+      "score": 0.4401177763938904,
+      "excerpt": "The Midwinter Ball\nThe great hall has been turned to ice and starlight for the Midwinter Ball. Couples float above the floor. Who will you go with? You can only ask someone you know well.\nAsk Lyra\n{bond(lyra) == \"partner\": \"Obviously,\" she says, before you finish asking. She lead"
+    },
+    {
+      "key": "event:know_tamsin_backdrop",
+      "title": "A Forest by Post",
+      "file": "content/events/knowing_2.grim",
+      "line": 308,
+      "sourceHash": "e4278bb3d363b08e5862755705c959b789020f045e4c24733ff90da2d90417ac",
+      "score": 0.4398900270462036,
+      "excerpt": "A Forest by Post\nThe first-years' end-of-term play needs a backdrop, a forest at night, and you, somehow, have been volunteered to paint it. You have a week, a bucket of grey and no idea at all.\nPaint the best forest you can\nYou paint a forest. It looks like a forest from the bac"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "d7d271be032c3878de6051894a4dedd415ffc8349d20f383e5a33adab236aa5a",
+      "at": "2026-10-28T23:34:56.289Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 349,
+        "total_tokens": 349,
+        "cost": 0.00000349,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000349,
+          "upstream_inference_prompt_cost": 0.00000349,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "d7d271be032c3878de6051894a4dedd415ffc8349d20f383e5a33adab236aa5a",
+      "elapsedMs": 1750,
+      "at": "2026-10-28T23:34:58.039Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d6290599d2c3362467bc37f3639d9e2442c9e187cc1ec5547943cf791eb5f65a",
+      "at": "2026-10-28T23:34:58.068Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 52526,
+        "cost": 0.0026263
+      },
+      "requestHash": "d6290599d2c3362467bc37f3639d9e2442c9e187cc1ec5547943cf791eb5f65a",
+      "elapsedMs": 612,
+      "at": "2026-10-28T23:34:58.680Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

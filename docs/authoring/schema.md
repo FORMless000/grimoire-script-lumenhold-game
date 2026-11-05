@@ -21,7 +21,7 @@ text: Two to four sentences. Present tense, second person. Set up a real dilemma
   mood -tiny
   say: What happened, in one or two sentences, with a little wit (and the cost the scene shows).
 > right: Short label
-  challenge research easy:
+  challenge research apprentice:
     win:
       lore +medium
       say: What winning looks like.
@@ -30,13 +30,41 @@ text: Two to four sentences. Present tense, second person. Set up a real dilemma
       say: What losing looks like: a real outcome, not "it doesn't work".
 ```
 
-- **Where it's drawn:** `place:` (a map visit), `track:` with `level:` or `rank:` (class mornings, practice, shifts), `plan:` (break mornings), or none (the night's world slot). `class:` and `tone:` are required (`classes.md`). A pool card has `repeat:` (its cooldown) and at least three variants, one mode and one count per card (`pools.md`); a one-off has neither.
-- **Effects** are tier words and presets (`presets.md`), never raw numbers; checks are `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>]:` with `win:` / `lose:` (and `partial:`), pitched with `checks.md`; romance is `spark`. How the options should trade is `costs.md`.
+- **Where it's drawn:** `place:` (a map visit), `track:` with `level:` (course mornings) or `rank:` (club practice, job shifts), `plan: castle|home|work|internship` (break mornings), or none (the night's world slot; the director: `docs/grimoire-script.md` §6c). Most everyday content belongs to a place or track.
+- `class:` and `tone:` are required (`classes.md`). A pool card has `repeat:` (its cooldown) and at least three variants, one mode and one count per card (`pools.md`); a one-off has neither.
+- **Effects** are tier words and presets (`presets.md`), never raw numbers: `mood -small`, `grind arcana`, `study evocation +small` (never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). How options trade: `costs.md`.
+- **Checks** are `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>]:` with `win:` / `lose:` (and `partial:`), and pure luck is `chance <word>:`; pitch both with `checks.md`. Never `check`.
 
-**Menus**: 3–8 options with keys other than left/right, each with a `hint:`; at least one option without `when:`.
-**Character events**: `actor: <npc>` with `when: rel(<npc>) >= N` (`trigger: social` puts it on their own track too). **Generic relationship events**: a `cast:` role cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`) with `per: friend`; `{friend}`, `{friend.their}`, or `{they}` / `{them}` / `{s}` / `{are}` for the first role; `rel friend +small`, `spark friend +tiny`.
-**Chains**: `queue <event> [now | in N] [with <role>] [chance N]`; every queued event must be queued by something (`grim graph <id>` shows what leads where).
+**Menus**: 3–8 options with keys other than left/right, each with a `hint:`; at least one option without `when:`. `locked:` on a menu option.
+**Chains**: `queue <event> [now | in N] [with <role>] [chance N]`; every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both; `grim graph <id>` shows what leads where).
 **Legacy** (still parses; lint counts it; don't write it): raw amounts in events. (`check` and `love` no longer parse, and `actor: any` names no character: lint rejects it.)
+
+## Constructs at a glance
+
+Each is documented in `docs/grimoire-script.md`; `node tools/grim.js schema` lists what the format has gained.
+
+**Triggers**
+- `random`: everyday, gated by `when`.
+- `social`: about a character. A fixed `actor:` puts it on that character's own track as well, so it comes when you meet them where they are or when they come looking for you.
+- `auto`: forced when `when` holds (calendar beats, chain climaxes); tight `when` plus `repeat`.
+- `queued`: only reachable by `queue`; `queue x in 2 with friend chance 30` delays it, carries a cast role and rolls odds.
+- `letter`: the nightly letter while you or they are away: `actor:` or a cast role with `per:`.
+
+**Who and when**
+- `actor: <npc>` (a fixed npc id) with `when: rel(<npc>) >= N`, or `cast:` roles cast by premise: `friend: any where tagged(friend, peer) and rel(friend) >= 10`; classmates `tagged(x, student) or tagged(x, prefect)`; `tagged(x, teacher)`; `here: present(place)`; `keeper: maud`. Don't write `actor: any`.
+- Generic relationship events: a cast role with `per: friend`; `{friend}`, `{friend.their}`, or `{they}` / `{them}` / `{s}` / `{are}` for the first role; `rel friend +small`, `spark friend +tiny`.
+- `when` reads state, flags, relationship, month, year. A condition repeated across cards is a `@cond` (`courting(x)` exists).
+- `time:` / `slot:` (time of day), `defer:`, `day:` on break plans and on states (a state's day replaces the term day while it holds: detention gives both visits to its pool).
+
+**What a card leaves behind**: flags, states, queued follow-ups. A hint the player must follow up later (a card at a place, slot or track waiting on its flag) also leaves a side-thread lead: `find lead_x`, an `@clue` with `thread:`, `kind: lead` and `followed:` (`node tools/grim.js leads` lists missing ones).
+
+**Other constructs**
+- `up[spell]` options (a spell problem's wiring: `pools.md`); `boost: <kind>[:<size>]` on a state (a tonic, Owl's Ink's `exam:large`); `wage`; milestone `ramp:`; track `intro:`; `@game appeal` with `regrade`; `display:` on resources.
+- `@item` blocks (`content/world/items.grim`): `give` / `take`, `has_item()` / `worn()`, and an owned item's own option `> up[item:x]:`, at most one per card.
+- `specializes:`: one character's own version of a generic card.
+- The plain check kinds `appeal`, `perform` and `soothe` (which kind fits: `checks.md`).
+- `on_shift()`, so a shop counter skips a worker's shift visit.
+- **Shop counters**: a `type: menu` card at the shop's place (its `always:`), with a `hint:` on each priced option and one free option with no `when`. The engine locks any option whose price you can't pay. Special offers are separate cards tagged `offer`, and cost more than money: a check, a fact you know, or a price such as `price_dear`.
 
 ## Worldbook blocks
 
@@ -118,6 +146,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `combat_cost` | text |  |
 |  | `swing` | structured |  |
 |  | `negotiate` | structured |  |
+|  | `parley_scale` | structured |  |
 |  | `tonic` | text |  |
 |  | `boost_sizes` | structured |  |
 |  | `wage` | structured |  |

@@ -1,0 +1,107 @@
+{
+  "query": "The Newt's Ballad {An old regular is standing on a bench singing the ballad of the Newt, about the fire that never goes out. It has forty verses. He knows most of them.|The ballad again. Tonight it has forty-one verses; the new one is about a student who fell into the cellar.|The ballad has a verse about the castle now, and the regulars look at you when they reach it.} {The landlady pretends to hate it.|The whole room bangs time on the tables.|{season == \"winter\": Snow is coming down outside, and nobody is going anywhere.|The fire flares at the chorus, every time.}} Stand up and add a verse {You make up a verse about the landlady's slate and the room roars. She pours you a cider on the house, scowling.|You rhyme \"Newt\" with \"absolute\" and the whole tavern sings it back. You'll hear it for weeks.|Your verse about the castle gets a chorus of its own. The old regular claps you on the back and says you'll go in the ballad.} {You stand up, open your mouth and forget every word in the language. The old regular finishes your verse for you, kindly, and badly.|Your rhyme for \"Newt\" is \"Newt\". The room is silent, then merciless.|You sing your verse to the wrong tune. Half the room follows you and half the right one, and it ends in a brawl of harmonies.} Buy the singer a drink {You buy the old regular a cider, and he tells you the verses that aren't allowed in the ballad any more. They're the best ones.|You buy him a drink between verses. He toasts you in verse forty-two, which is new.|You buy the singer his usual. He tells you which verses are true. It's fewer than you'd hoped.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:gilded_newt_ballad",
+      "title": "The Newt's Ballad",
+      "file": "content/events/pools/village_more.grim",
+      "line": 11,
+      "sourceHash": "bd6a7949c57dca3f3404643e03583a88f9e2dd15921e8f81be6e883cfb62ff3e",
+      "score": 0.9411165714263916,
+      "excerpt": "The Newt's Ballad\n{An old regular is standing on a bench singing the ballad of the Newt, about the fire that never goes out. It has forty verses. He knows most of them.|The ballad again. Tonight it has forty-one verses; the new one is about a student who fell into the cellar.|The"
+    },
+    {
+      "key": "event:spot_tavern_song",
+      "title": "The Ballad of {player}",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 9,
+      "sourceHash": "f963adb5d3f4df2340204326b414391ef16aa2dc276c9d7ede176812d21e44ed",
+      "score": 0.6404404044151306,
+      "excerpt": "The Ballad of {player}\nThe Newt has a new song, and it's about you. It has nine verses and a chorus everybody knows. In verse three you fight a frost giant on the lake. In verse six you marry a mermaid. The fiddler sees you in the doorway, bows, and starts again from the top, lou"
+    },
+    {
+      "key": "event:gig_newt_brawl",
+      "title": "A Fight Over a Song",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 341,
+      "sourceHash": "2ee29743cfc7885da83dd3085a9de68939fe447d04fc3e95d01be5cde7532336",
+      "score": 0.6336740851402283,
+      "excerpt": "A Fight Over a Song\n{Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {A chair is already in the air.|Somebody has taken their"
+    },
+    {
+      "key": "event:gilded_newt_fireside",
+      "title": "By the Newt's Fire",
+      "file": "content/events/pools/village_home.grim",
+      "line": 90,
+      "sourceHash": "613b24d65223846d9d2a254327fad976da93a37c8f93dd28ceabc886d9bfa602",
+      "score": 0.5715529322624207,
+      "excerpt": "By the Newt's Fire\n{The Gilded Newt's fire has never gone out, and the landlady says it never will while she lives.|The landlady chalks your name on her slate before you've ordered.|Your corner by the fire is free. The regulars leave it for you now.} {season == \"winter\": Snow his"
+    },
+    {
+      "key": "event:shop_newt",
+      "title": "The Newt's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 254,
+      "sourceHash": "48725023698773413358951f61d55a2bb498c8fe13e63fe860bb87ecb3d51fa0",
+      "score": 0.5617409348487854,
+      "excerpt": "The Newt's Counter\n{{slot == \"afternoon\": By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|At this hour the Gilded Newt is all elbows and cider, and the landlady works the bar with a cloth over her shoulder.}|{slot == \""
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "3c1aad40e52433dddb926bcb55bd1eb69a539101fe7d4b831f81043d8768a25c",
+      "at": "2026-10-28T23:49:43.481Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 402,
+        "total_tokens": 402,
+        "cost": 0.00000402,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000402,
+          "upstream_inference_prompt_cost": 0.00000402,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "3c1aad40e52433dddb926bcb55bd1eb69a539101fe7d4b831f81043d8768a25c",
+      "elapsedMs": 514,
+      "at": "2026-10-28T23:49:43.995Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "18543048f2a10e033fdc5a89e396cb6b90d3f810e26637e6c78517641f364df1",
+      "at": "2026-10-28T23:49:44.080Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47647,
+        "cost": 0.00238235
+      },
+      "requestHash": "18543048f2a10e033fdc5a89e396cb6b90d3f810e26637e6c78517641f364df1",
+      "elapsedMs": 602,
+      "at": "2026-10-28T23:49:44.682Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

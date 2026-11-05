@@ -1,0 +1,107 @@
+{
+  "query": "Kite Day {The wind is too wild for brooms, so the first-years are out with charmed kites, paper dragons and fish and one very angry swan.|Kite day again. The kites have learned to fight; a paper dragon has a fish in a headlock.|Whenever the wind is too wild for brooms, the kites come out. You know the swan by now, and the swan knows you.} One kite is stuck in the far hoop, {flapping like a trapped bird|and its first-year is close to tears|and the other kites are jeering at it}. Climb the hoop and free it {You shin up the hoop pole and free the kite. The first-years cheer as if you'd won a race.|You climb, untangle, slide down. The first-year announces your name to the whole field.|You know the hoop pole's footholds by now. The kite goes back to its owner, who tells everyone, loudly.} {You get halfway up the pole and the wind takes your hat and your grip. You land in the long grass, bruised.|The kite comes free and so do you, from rather high up.|You slip on the wet pole and slide down it, slowly and painfully, to applause.} Borrow a kite and fly it {You borrow a fish kite and steer it with a whispered charm. It bites the swan. Everyone is delighted.|You fly a paper dragon in loops until your arms ache with the pull and your face aches with grinning.|You fly your borrowed kite higher than the rest, holding the charm steady against the gusts.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:flight_field_kite_day",
+      "title": "Kite Day",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 120,
+      "sourceHash": "8cdeab9bfebb88598e76fd22b1593fdfb7fbcc7d9bcb8a6596ea3c84dbdae95e",
+      "score": 0.9601669311523438,
+      "excerpt": "Kite Day\n{The wind is too wild for brooms, so the first-years are out with charmed kites, paper dragons and fish and one very angry swan.|Kite day again. The kites have learned to fight; a paper dragon has a fish in a headlock.|Whenever the wind is too wild for brooms, the kites "
+    },
+    {
+      "key": "event:lakeshore_swan",
+      "title": "The Swan",
+      "file": "content/events/spell_uses.grim",
+      "line": 588,
+      "sourceHash": "a260a4206ed1eea73c70528ce422148d03171ec96b299e9a9a9bd6e9b2df9a5a",
+      "score": 0.4956444501876831,
+      "excerpt": "The Swan\n{A first-year has wandered into the reeds too close to the swans' nest. The cob is coming out of the water with his wings up, hissing like a kettle.|The swans are nesting again. The cob has grown, or your memory of him has, and there's a first-year in the reeds.|The cob "
+    },
+    {
+      "key": "event:flight_field_cheating_wind",
+      "title": "The Cheating Wind",
+      "file": "content/events/pools/grounds.grim",
+      "line": 214,
+      "sourceHash": "4c42de918000da7e7164dd72e3460a7aa3aa766e6a8f9ea2006f34ccde65f1a4",
+      "score": 0.4550810754299164,
+      "excerpt": "The Cheating Wind\n{season == \"winter\": The flight field is white, the hoops wearing caps of snow.|{season == \"spring\": The field is soft with new grass and the wind is playful.|{The field is empty but for the wind, practising on its own.|A lone first-year is flying very careful c"
+    },
+    {
+      "key": "event:break_castle_flight_field",
+      "title": "The Field to Yourself",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 42,
+      "sourceHash": "78b6f7210d611d0c416cb237fcf32cf672151849337f5a4e9b1c58d742bbef09",
+      "score": 0.43080776929855347,
+      "excerpt": "The Field to Yourself\n{With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {seas"
+    },
+    {
+      "key": "event:flight_field_pickup_race",
+      "title": "The Pick-Up Race",
+      "file": "content/events/pools/grounds.grim",
+      "line": 232,
+      "sourceHash": "f0752eb9ff7d5845861ec12544a28c09ee56ab1f3813b0fc301daa486dbeb633",
+      "score": 0.42594680190086365,
+      "excerpt": "The Pick-Up Race\n{A pick-up race is forming at the far hoops. Three brooms, two rules, no referee.|The pick-up racers are back. The rules have grown to four.|The pick-up race is a fixture now. Someone has painted a finish line, crookedly.} {A second-year from Emberhall is taking "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "17f01d014b9e0dd1353e93727e5f0afa10993a1f4e80306f14d6bb0cda38031f",
+      "at": "2026-10-28T23:46:30.503Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 340,
+        "total_tokens": 340,
+        "cost": 0.0000034,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000034,
+          "upstream_inference_prompt_cost": 0.0000034,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "17f01d014b9e0dd1353e93727e5f0afa10993a1f4e80306f14d6bb0cda38031f",
+      "elapsedMs": 589,
+      "at": "2026-10-28T23:46:31.092Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "4d4a31d787edcc28d79803c5ad325bb08e7ac846429201d924aadf78645757fb",
+      "at": "2026-10-28T23:46:31.145Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49439,
+        "cost": 0.00247195
+      },
+      "requestHash": "4d4a31d787edcc28d79803c5ad325bb08e7ac846429201d924aadf78645757fb",
+      "elapsedMs": 500,
+      "at": "2026-10-28T23:46:31.645Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

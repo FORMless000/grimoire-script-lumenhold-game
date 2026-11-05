@@ -1,0 +1,108 @@
+{
+  "query": "Hold Firm The club gathers on the benches. You step into the chalk circle, and the eyepatched dummy turns its head toward you with an audible creak. The captain's charm begins to fire. {flag(brace_notes) and flag(brace_circle) and flag(brace_footwork): You know how to stand, and why.|You have done some of the work. Not all of it.} Hold firm The hexes break on you one after another, and each lands softer than the last. When the charm finally sputters out, the club is on its feet. Lyra doesn't clap. She nods, once, which is louder. The fourteenth hex lifts you out of the circle and into the benches. The dummy turns its head back with a creak. It will be there at practice, waiting. Borrow the captain's old gauntlets The club quartermaster rents you the captain's own gauntlets for the night. They take the first blow for you, and the rest you take yourself. When the charm sputters out, the benches roar. Even in the gauntlets, the fourteenth hex lifts you out of the circle. The rental is not refunded. The dummy creaks its head back and waits.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:duel_brace_final",
+      "title": "Hold Firm",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 145,
+      "sourceHash": "bc807255bb240b971fa31416921245defc886c3a0c5fb58868ae81b8f5915c17",
+      "score": 0.9272257685661316,
+      "excerpt": "Hold Firm\nThe club gathers on the benches. You step into the chalk circle, and the eyepatched dummy turns its head toward you with an audible creak. The captain's charm begins to fire. {flag(brace_notes) and flag(brace_circle) and flag(brace_footwork): You know how to stand, and "
+    },
+    {
+      "key": "event:duel_dummy_hexes",
+      "title": "The Dummy Hits Back",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 51,
+      "sourceHash": "e91640407a2c549b92e1a1669f7275720ace7db22bc6d96bec8765a47ec08da2",
+      "score": 0.6986359357833862,
+      "excerpt": "The Dummy Hits Back\nThe eyepatched dummy has started throwing hexes back. Lyra splits its seam and pulls out an old captain's charm, sewn in decades ago and still humming. \"It empties if someone holds firm in the circle while it fires,\" she says. \"Nobody's managed it. Nobody's tr"
+    },
+    {
+      "key": "event:duel_bram_barrage",
+      "title": "Inside the Chalk Circle",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 95,
+      "sourceHash": "58eb57a813e091e8a4ef77792794a8debc1b0c4fab44241ae08d93641fea6e6a",
+      "score": 0.6313580274581909,
+      "excerpt": "Inside the Chalk Circle\nWord reaches Bram that you mean to empty the captain's charm. He turns up with his sleeves rolled. \"Regulation hazing,\" he announces, \"section four. You stand in the circle. I throw. You don't step out. Ready?\"\nHold the circle against him\nYou don't step ou"
+    },
+    {
+      "key": "event:lesson_brace",
+      "title": "Planted",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 453,
+      "sourceHash": "87fb1e53d19bab1c3682937e202dfcaf1fafb98d8aca4d4fe69750c39faad2bb",
+      "score": 0.5567708611488342,
+      "excerpt": "Planted\nThe eyepatched dummy is empty now, but it still throws a hex or two out of habit. The Circle uses it to practise bracing. Today the seniors are taking bets on how long you'll stand.\nStand until it gives up\nYou stand there for an hour while the dummy throws everything it h"
+    },
+    {
+      "key": "event:duel_hall_dummies",
+      "title": "The Practice Dummies",
+      "file": "content/events/pools/grounds.grim",
+      "line": 70,
+      "sourceHash": "e87a7ee44dd83b4f946921d440618a30360f10fd0fd63de1fc624299dad3413d",
+      "score": 0.5385174751281738,
+      "excerpt": "The Practice Dummies\n{The near end of the hall belongs to the practice dummies, who watch you come in. The one with the painted moustache looks especially unforgiving.|The dummy with the moustache is still here, with a new scorch mark and, you'd swear, a new grudge.|The moustache"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c3141b03efbed9f93fd57fa3fb0e6bbb9276b8cd5967012ec89b35ff15c80fc5",
+      "at": "2026-10-28T23:51:28.648Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 258,
+        "total_tokens": 258,
+        "cost": 0.00000258,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000258,
+          "upstream_inference_prompt_cost": 0.00000258,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c3141b03efbed9f93fd57fa3fb0e6bbb9276b8cd5967012ec89b35ff15c80fc5",
+      "elapsedMs": 368,
+      "at": "2026-10-28T23:51:29.015Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "6b8c138e590514326e8a5b98d34f89ff386d81a6e51aec53cb81811e33a40a0f",
+      "at": "2026-10-28T23:51:29.524Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40161,
+        "cost": 0.00200805
+      },
+      "requestHash": "6b8c138e590514326e8a5b98d34f89ff386d81a6e51aec53cb81811e33a40a0f",
+      "elapsedMs": 411,
+      "at": "2026-10-28T23:51:29.936Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,85 @@
+{
+  "batch": "current-older-calendar-and-life-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "term_begins",
+      "job_board_odd_job",
+      "intern_assessment",
+      "lantern_making",
+      "lantern_reeds",
+      "lantern_washed_up",
+      "lantern_asked",
+      "forbidden_annotations",
+      "forbidden_bram_watch",
+      "forbidden_fourth_year",
+      "art_mir_collab",
+      "mir_ornithopter",
+      "mir_lab_fire",
+      "mir_name_day",
+      "night_sleep",
+      "noble_letter",
+      "scholarship_award",
+      "trading_report",
+      "job_board_copying",
+      "job_board_message_run",
+      "job_board_market_stall",
+      "job_board_lost_property",
+      "job_board_sick_familiar",
+      "job_board_porters_crates",
+      "job_board_tutor_hour",
+      "job_board_greenhouse_pots",
+      "library_revision"
+    ],
+    "files": [
+      "content/events/calendar.grim",
+      "content/events/calendar_2b.grim",
+      "content/events/chains_minor.grim",
+      "content/events/classes.grim",
+      "content/events/expansion_people.grim",
+      "content/events/night.grim",
+      "content/events/origin_funding.grim",
+      "content/events/pools/castle_halls.grim"
+    ]
+  },
+  "summary": "The seven compiled retired calendar definitions are excluded from the active scope. Current calendar, funding and everyday work cards mostly hold together; privacy morality and the Field Station report’s Vigor need repair.",
+  "issues": [
+    {
+      "event": "job_board_lost_property",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Read what people lose explicitly reads private love letters and notes in other people’s pockets for useful gossip, but treats this as an ordinary Guile/pay option without the privacy violation’s Hollow consequence used by lantern_washed_up.",
+      "fix": "Add the modest Hollow consequence for knowingly reading private correspondence, or restrict the inspection to public names and lending marks.",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 719
+    },
+    {
+      "event": "intern_assessment",
+      "priority": "P2",
+      "category": "costs and skill fiction",
+      "problem": "Ask what you could have done better grants Vigor at the Field Station, although all that happens is listening to a twenty-minute report and writing notes on the coach. Vigor requires bodily practice.",
+      "fix": "Show a last practical demonstration/repeated exercise for the Field Station branch, or use a learning reward grounded in reading the report.",
+      "file": "content/events/calendar_2b.grim",
+      "line": 511
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  },
+  "dismissedCandidates": [
+    {
+      "event": "forbidden_bram_watch",
+      "reason": "Bluffing past the doorway can be the scene’s fictional action without separately advancing the investigation. Its place is already the Restricted Section; no unmet promised reward was established."
+    }
+  ]
+}

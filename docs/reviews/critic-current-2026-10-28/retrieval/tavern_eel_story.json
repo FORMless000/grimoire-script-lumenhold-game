@@ -1,0 +1,108 @@
+{
+  "query": "The Eel Story The old barge-man's eel story is the most famous story at the Newt. Regulars mouth along. The landlady says if you can tell it as well as he does, the room will be half yours. He's willing to teach it, slowly, for an evening. Learn it and tell it back You tell it back that same night, to the same corner, and get the laugh at the eel's second escape. The barge-man wipes his eyes and buys you a cider. You get the eel's name wrong and the ending backwards. The regulars are very kind about it, which is worse. Just enjoy the story You sit and listen to the eel story twice through, and laugh both times. You couldn't tell it, but you've rarely had a better evening.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:tavern_eel_story",
+      "title": "The Eel Story",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 675,
+      "sourceHash": "5d924ad4bcb38f34195d8d1f30aefe1c321a220e60aa359d8090ce87c96a3d90",
+      "score": 0.938973605632782,
+      "excerpt": "The Eel Story\nThe old barge-man's eel story is the most famous story at the Newt. Regulars mouth along. The landlady says if you can tell it as well as he does, the room will be half yours. He's willing to teach it, slowly, for an evening.\nLearn it and tell it back\nYou tell it ba"
+    },
+    {
+      "key": "event:tavern_regulars_corner",
+      "title": "The Regulars' Corner",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 547,
+      "sourceHash": "a46cbfac9382d697dc1851d5cc48cd1bf258cf40c0d35a17f58eda61004621b0",
+      "score": 0.6841216683387756,
+      "excerpt": "The Regulars' Corner\n{The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all"
+    },
+    {
+      "key": "event:tavern_festival_room",
+      "title": "The Room Is Yours",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 737,
+      "sourceHash": "15a848f489dc12355cb5ae3bdb706ac6ee292b3f9ac6e4a77baa73bc03f13bab",
+      "score": 0.6364849209785461,
+      "excerpt": "The Room Is Yours\nThe landlady is away for the night and the Newt is packed to the rafters, two barges in and a fight brewing by the fire. It's yours to hold. {flag(rapport_eel) and flag(rapport_round) and flag(rapport_shift): You know this room now.|You know some of this room.}\n"
+    },
+    {
+      "key": "event:tavern_two_taps",
+      "title": "Two Taps on the Bar",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 653,
+      "sourceHash": "c61d02f2265ea7ca701ab2745b6da3cc3749b630785a66691a07a12c20f4462f",
+      "score": 0.5843679904937744,
+      "excerpt": "Two Taps on the Bar\nTwo barge-men are halfway out of their chairs when the landlady taps the bar twice, says one sentence you don't catch, and the whole room laughs instead. The fight is over before it began. She catches you staring. \"Want to know how?\"\n\"Yes. Teach me.\"\n\"Can't te"
+    },
+    {
+      "key": "event:gilded_newt_ballad",
+      "title": "The Newt's Ballad",
+      "file": "content/events/pools/village_more.grim",
+      "line": 11,
+      "sourceHash": "bd6a7949c57dca3f3404643e03583a88f9e2dd15921e8f81be6e883cfb62ff3e",
+      "score": 0.5086899399757385,
+      "excerpt": "The Newt's Ballad\n{An old regular is standing on a bench singing the ballad of the Newt, about the fire that never goes out. It has forty verses. He knows most of them.|The ballad again. Tonight it has forty-one verses; the new one is about a student who fell into the cellar.|The"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "09018601a09ebb054ad1a175aaac9898de4de7834a9bf9174b7f9512b2090e26",
+      "at": "2026-10-28T23:51:37.002Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 171,
+        "total_tokens": 171,
+        "cost": 0.00000171,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000171,
+          "upstream_inference_prompt_cost": 0.00000171,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "09018601a09ebb054ad1a175aaac9898de4de7834a9bf9174b7f9512b2090e26",
+      "elapsedMs": 400,
+      "at": "2026-10-28T23:51:37.402Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d5e35698a7e350509d0113633726aeef4f9d9b5b7d2fac736a9fe09018adf7ed",
+      "at": "2026-10-28T23:51:37.475Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49372,
+        "cost": 0.0024686
+      },
+      "requestHash": "d5e35698a7e350509d0113633726aeef4f9d9b5b7d2fac736a9fe09018adf7ed",
+      "elapsedMs": 544,
+      "at": "2026-10-28T23:51:38.019Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

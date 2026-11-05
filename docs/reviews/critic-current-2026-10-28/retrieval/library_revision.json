@@ -1,0 +1,108 @@
+{
+  "query": "The Revision Tables The librarians have set out the revision tables early this term: past papers, model answers, and a sign promising the lamps stay lit until the bell. {~Footnote is asleep on last year's Evocation paper.|A shelf has rearranged itself into exam order, which it has never done for anyone before.|Someone has left a full set of notes behind, with a note of their own: \"Take them. I passed.\"} Sit down and revise {~You work through two past papers and most of a third. The questions start to look like ones you have seen before, which is the point.|You copy out the model answers until your hand aches, then close the book and write them again from memory. Mostly right.|By the bell you have a page of everything you didn't know this morning. It is a shorter page than you feared.} Not today {~You leave the tables to the people who look more worried than you. The afternoon is yours.|You borrow a novel instead and read it in the window seat. The exams can wait for another day, you hope.|You nod at the revision tables on your way past, like an acquaintance you mean to call on.} Take notes with the owl quill {~The owl quill takes your notes tidier than your hand could, and then underlines the bits you'll be asked. You argue with it for an hour.|The quill writes faster than you think. By the bell you have a page of everything, in a hand you could almost be proud of.|You let the quill copy out the model answers. It corrects your spelling, then your reasoning, then your posture.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:library_revision",
+      "title": "The Revision Tables",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 813,
+      "sourceHash": "bc9583f9467672e321020da93cfc164c48bf7f839eae7ad00d468f4bd7341536",
+      "score": 0.9464864134788513,
+      "excerpt": "The Revision Tables\nThe librarians have set out the revision tables early this term: past papers, model answers, and a sign promising the lamps stay lit until the bell. {~Footnote is asleep on last year's Evocation paper.|A shelf has rearranged itself into exam order, which it ha"
+    },
+    {
+      "key": "event:course_exam",
+      "title": "Exam Day",
+      "file": "content/events/calendar_2b.grim",
+      "line": 134,
+      "sourceHash": "d26a871158876045c86621928e2a4e3ab7948e766f2b08aad09ab778d76c264d",
+      "score": 0.5242298245429993,
+      "excerpt": "Exam Day\nExam day for {track}. The hall is silent except for quills and somebody's knee bouncing under a desk. {~The paper is long.|The first question is one you revised.|The first question is one you didn't.|The invigilator turns the hourglass with a click you feel in your teeth"
+    },
+    {
+      "key": "event:lesson_index",
+      "title": "The Right Page",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 507,
+      "sourceHash": "4f99e3586e94d100d1ebc8a590d58c41b434ee35cd358e0c2c972d18a018abc3",
+      "score": 0.5221421718597412,
+      "excerpt": "The Right Page\nEvery book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest.\nRead every page they offer\nYou read every page that offers itself until the"
+    },
+    {
+      "key": "event:library_shared_table",
+      "title": "The Last Free Chair",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 115,
+      "sourceHash": "69ae728a1f6d4324c9a6f079369482956ba5b1e2087377d78ade393d237c406c",
+      "score": 0.5208803415298462,
+      "excerpt": "The Last Free Chair\n{The library is full. The only free chair is opposite {here}.|The only free chair is opposite {here}. A shelf has leaned over it, as if keeping it for you.|The library knows your habits now. The free chair, opposite {here}, has a book you wanted waiting on it."
+    },
+    {
+      "key": "event:soc_study_session",
+      "title": "Study Session",
+      "file": "content/events/social.grim",
+      "line": 12,
+      "sourceHash": "0f9788c47280c98be22048b08ddb3d42a2649311bc19c2dafc612ee4abb8e9a8",
+      "score": 0.5150832533836365,
+      "excerpt": "Study Session\n{~{npc} drops into the seat across from you with an armful of books. \"Exams are coming for us all. Misery loves company. Study with me?\"|{npc} slides a stack of notes onto your table. \"I've read this chapter four times and it's still in a foreign language. Help?\"|{n"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "f9f15d3d4252442ae31d555ac3468356e334339343fbb3fe61b78615e3099b70",
+      "at": "2026-10-28T23:51:11.568Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 345,
+        "total_tokens": 345,
+        "cost": 0.00000345,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000345,
+          "upstream_inference_prompt_cost": 0.00000345,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "f9f15d3d4252442ae31d555ac3468356e334339343fbb3fe61b78615e3099b70",
+      "elapsedMs": 436,
+      "at": "2026-10-28T23:51:12.004Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "af45befc9b68c6294aebf1741b826d5ce6a1e262e32a58d0cd3c3fc9b88328cc",
+      "at": "2026-10-28T23:51:12.407Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58219,
+        "cost": 0.00291095
+      },
+      "requestHash": "af45befc9b68c6294aebf1741b826d5ce6a1e262e32a58d0cd3c3fc9b88328cc",
+      "elapsedMs": 816,
+      "at": "2026-10-28T23:51:13.223Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

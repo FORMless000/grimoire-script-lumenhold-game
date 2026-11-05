@@ -1,0 +1,107 @@
+{
+  "query": "The Far Bell {The bell for your lecture is ringing in the other tower, and you are on the wrong side of the bridge with all your books.|The bell again, and you on the wrong end of the bridge again. You're starting to suspect the bridge.|You can hear the bell before you see the bridge. Seven strokes; it's on the third.} Run for it {You slide into your seat on the last stroke with your books in a heap. The lecturer looks at the clock, then at you, then lets it go.|You make it, red-faced and triumphant. Your neighbour pushes a quill at you without a word.|You know the run now: left foot on the second plank, duck the lamp. In with a stroke to spare.} {You drop your books halfway across the bridge and arrive five minutes late with half of them.|You arrive as the door closes, and spend the hour listening through it. It's not the same.|You trip on the top step and the whole lecture turns to watch you pick up your inkwell.} Arrive late, quietly {You walk, and slip in at the back ten minutes late. You miss the one thing that'll be on the exam.|You arrive late and sit on the end of the back row, where the notes from the front arrive late too.|Late, and calm, and behind for the rest of the hour. Someone lends you their notes afterwards, in a hand you can't read.} Borrow a hare's legs {You cross the bridge in four strides with the wind whistling, and sit down before the bell has finished. Your books arrive a moment later, in your arms.|Haste, and the bridge goes by in a blur of light. You're in your seat, notes open, looking as if you've been there an hour.|{spell_level(haste) >= 2: You're early. You've time to sharpen a quill and help a first-year find the room.|You arrive breathless but on the stroke. The lecturer says \"Prompt,\" which from them is warm.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:lecture_tower_far_bell",
+      "title": "The Far Bell",
+      "file": "content/events/spell_uses.grim",
+      "line": 361,
+      "sourceHash": "d4f79ec2f507c1ac6caa77d903341c9f8a54acbbfab0594bb08db14174ebda1e",
+      "score": 0.9601801633834839,
+      "excerpt": "The Far Bell\n{The bell for your lecture is ringing in the other tower, and you are on the wrong side of the bridge with all your books.|The bell again, and you on the wrong end of the bridge again. You're starting to suspect the bridge.|You can hear the bell before you see the br"
+    },
+    {
+      "key": "event:world_bridge_in_a_gale",
+      "title": "The Bridge in a Gale",
+      "file": "content/events/pools/world_more.grim",
+      "line": 75,
+      "sourceHash": "26fb5dbdedb4a17cf9d2bfe2d81556a45335e6884d166da8762a03d9aa4bca23",
+      "score": 0.6123926043510437,
+      "excerpt": "The Bridge in a Gale\n{The wind is up, and the bridge of light between the towers is swaying like a hammock. The long way round is ten minutes and four staircases.|Gale day. The bridges of light sway and ring faintly, like glass in a cupboard.|The bridge in the wind. You know its "
+    },
+    {
+      "key": "event:beast_first_haste",
+      "title": "Borrowed Speed",
+      "file": "content/events/spell_sources.grim",
+      "line": 97,
+      "sourceHash": "ba6f4d46c365aba7b56efca82e2b75b515a7dda884b8d602963fdfd60ad2eeb1",
+      "score": 0.5151817798614502,
+      "excerpt": "Borrowed Speed\n{level(beastcraft) == 0: Beastcraft I's first spell is taught at a run. Professor Brask points at a hare in the paddock. \"Catch it. You won't, on your legs.\" She teaches you Haste in four words and lets the hare go.|{level(beastcraft) == 1: Beastcraft II: Haste in "
+    },
+    {
+      "key": "event:injured_on_the_stairs",
+      "title": "The Moving Stairs, Limping",
+      "file": "content/events/pools/statuses.grim",
+      "line": 178,
+      "sourceHash": "67e68c35f348c992def0e47b26cd14ebf5832d36c0c2a3f5c61baab2757487b2",
+      "score": 0.48251786828041077,
+      "excerpt": "The Moving Stairs, Limping\n{Your ankle is bandaged and the stairs are moving, as stairs here do. The lecture is three landings up and starts in five minutes.|The stairs again, the ankle again. The lecture, as ever, is at the top.}\nTake the long way, slowly\n{You limp round by the "
+    },
+    {
+      "key": "event:lecture_tower_faculty_basket",
+      "title": "The Faculty Basket",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 53,
+      "sourceHash": "9ce7e66a8042143fa96d9ae874077ea76e6f416b80f17c4c68d50ab0bf779783",
+      "score": 0.4509676992893219,
+      "excerpt": "The Faculty Basket\n{Up the hollow middle of the Lecture Tower runs a wicker basket on a rope, for faculty knees. A sign says FACULTY ONLY. It's two hundred and twelve steps to the top.|The basket is waiting at the bottom again. Someone has added \"AND THEIR LUGGAGE\" to the sign.|T"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "ad3d6010a72c5c986d66bab3eebe5f8f3dbdb9b76a4dcb47b387ae1d0f28e6cb",
+      "at": "2026-10-28T23:29:30.561Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 430,
+        "total_tokens": 430,
+        "cost": 0.0000043,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000043,
+          "upstream_inference_prompt_cost": 0.0000043,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "ad3d6010a72c5c986d66bab3eebe5f8f3dbdb9b76a4dcb47b387ae1d0f28e6cb",
+      "elapsedMs": 1139,
+      "at": "2026-10-28T23:29:31.700Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "9897cc4755b298da3fa5188e6bde6a1d4ec7702ddc861899657136405b2bcccf",
+      "at": "2026-10-28T23:29:31.782Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 57536,
+        "cost": 0.0028768
+      },
+      "requestHash": "9897cc4755b298da3fa5188e6bde6a1d4ec7702ddc861899657136405b2bcccf",
+      "elapsedMs": 498,
+      "at": "2026-10-28T23:29:32.280Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

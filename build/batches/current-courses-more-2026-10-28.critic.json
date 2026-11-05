@@ -1,0 +1,83 @@
+{
+  "batch": "current-courses-more-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "evo_fog_to_the_line",
+      "astro_dream_diary",
+      "alch_antidote_race",
+      "illu_turnip_market",
+      "beast_bristle_trim",
+      "umbral_shadow_witness",
+      "art_fair_entry",
+      "star_cloudy_appointment",
+      "hollow_jarred_silences"
+    ],
+    "files": [
+      "content/events/pools/courses_more.grim"
+    ]
+  },
+  "summary": "Rejected: the invented assignment bypasses alignment, a sequence assumes a successful unchosen repair, and resource and pool wiring details conflict with the stated rules. All nine scoped cards were read.",
+  "issues": [
+    {
+      "event": "astro_dream_diary",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Inventing an impressive dream deceives the lecturer on a required assignment and can receive full marks and public praise. It has no Hollow movement, although the alternative bears the honest account’s embarrassment.",
+      "fix": "Apply the appropriate Hollow movement to choosing the fabricated assignment, independent of whether the deception succeeds.",
+      "evidence": [
+        "docs/authoring/costs.md: cheating and lying for gain"
+      ],
+      "file": "content/events/pools/courses_more.grim",
+      "line": 38
+    },
+    {
+      "event": "evo_fog_to_the_line",
+      "priority": "P2",
+      "category": "resource continuity",
+      "problem": "The first Hold the water outcome says the exercise uses all the Mana the player had, but the option always spends only -small. At ordinary larger Mana values the player retains most of their bar.",
+      "fix": "Describe the strain without asserting complete depletion, or condition the wording on the actual remaining resource.",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 9
+    },
+    {
+      "event": "art_fair_entry",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "The second setup declares the player’s clockwork wren now sings on key and hops even if the previous choice only repaired the neighbour’s entry, or the player’s own tinkering failed. Show count does not record a successful repair.",
+      "fix": "Keep the wren’s development independent of unchosen or failed actions, or gate the claimed improvement on the actual successful work.",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 173
+    },
+    {
+      "event": "evo_fog_to_the_line",
+      "priority": "P2",
+      "category": "wiring",
+      "related_events": [
+        "astro_dream_diary",
+        "alch_antidote_race"
+      ],
+      "problem": "These three cards repeat their course’s track/class/repeat/weight properties directly despite existing evocation_class, astromancy_class and alchemy_class pools. The other ordinary course cards in this same batch already join their course pools.",
+      "fix": "Join the existing course pool on each card and retain only intentional overrides, such as this batch’s four-month repeat.",
+      "evidence": [
+        "content/core/templates.grim: course_routine",
+        "docs/authoring/pools.md: Where a card lives"
+      ],
+      "file": "content/events/pools/courses_more.grim",
+      "line": 9
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "query": "Sealed With Wax {a} presses a folded note into your hand, sealed with candle wax and, by the look of it, a great deal of worry. \"For {b}. Don't read it. Don't let {b.them} open it in front of anyone. Don't say it's from me.\" You point out that {b} will know who it's from. {a} looks stricken. Deliver it as asked You find {b} alone in the library and hand it over. {b} reads it twice, goes pink to the ears, and asks you, with great dignity, to tell {a} \"yes. Probably. Thursday.\" {b} reads it in the library and goes quiet. \"Tell {a} it's very kind,\" {b.they} say{b.s}, which is the worst thing anyone can say. You carry it back as gently as you can. Help {a} write it better You sit up with {a} over four drafts, crossing out the poetry. What's left is three plain lines, the best thing {a} has ever written, and {b} answers them the same evening. You find out how it went at breakfast, from the way they arrive together. By the fourth draft it's a sonnet, and a bad one, and {a} has gone off the whole idea. \"I'll just tell {b.them}. One day.\" The note stays in {their} pocket for the rest of the term. You can see the corner of it.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:between_love_note",
+      "title": "Sealed With Wax",
+      "file": "content/events/between_hearts.grim",
+      "line": 42,
+      "sourceHash": "81165aa54c3c9ddeb4e3d92025786e2518304ef7379c209754ec1e57d1c5d96a",
+      "score": 0.9387521147727966,
+      "excerpt": "Sealed With Wax\n{a} presses a folded note into your hand, sealed with candle wax and, by the look of it, a great deal of worry. \"For {b}. Don't read it. Don't let {b.them} open it in front of anyone. Don't say it's from me.\" You point out that {b} will know who it's from. {a} loo"
+    },
+    {
+      "key": "event:lesson_seal",
+      "title": "Only for the Addressee",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 296,
+      "sourceHash": "bd5f094db68eca9dcd553cd27042ee1b4d8b8e36f27dae317dc88c4811793698",
+      "score": 0.5591527819633484,
+      "excerpt": "Only for the Addressee\nToday's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. \"If I can,\" she says mildly, \"you haven't.\"\nSeal it against her\nShe tries the letter for a long minute with one"
+    },
+    {
+      "key": "event:soc_secret_admirer",
+      "title": "A Secret Admirer",
+      "file": "content/events/expansion_social.grim",
+      "line": 152,
+      "sourceHash": "36e7d331eb43b09155994bc7673df7027459f17e42a424462ab90c9f7fee5c7a",
+      "score": 0.5423721075057983,
+      "excerpt": "A Secret Admirer\nFolded notes keep appearing in your library books. Unsigned. They're funny, and a little nervous, and they know things about you that only someone paying attention would know. The handwriting looks familiar.\nLeave a note back\nYou write back. The notes get longer."
+    },
+    {
+      "key": "event:between_messenger",
+      "title": "Pass It On",
+      "file": "content/events/between.grim",
+      "line": 56,
+      "sourceHash": "c0d0b3e3ad55c942214776b7b68ca2e4bf707749a1e2c13ca0573919724d2f2c",
+      "score": 0.5178171396255493,
+      "excerpt": "Pass It On\n{~{a} and {b} aren't speaking, and you've become the post. \"Tell {b} the common-room lamp is NOT {b.theirs},\" says {a}.|{a} hands you a folded note for {b}. It isn't sealed. The first word is underlined three times.|\"Would you let {b} know,\" says {a}, very politely, \"t"
+    },
+    {
+      "key": "event:life_mail_owl",
+      "title": "The Wrong Letter",
+      "file": "content/events/life.grim",
+      "line": 416,
+      "sourceHash": "da9a4c8d8d2503ce1cba114b5fe850610d37c4efcf1290e5c793da1e4fa9a816",
+      "score": 0.516973614692688,
+      "excerpt": "The Wrong Letter\nA delivery owl drops a scented pink letter in your porridge. It's addressed to someone else. It's a love letter. It's very, very passionate.\nDeliver it to its owner\nThe recipient goes crimson and thanks you. Two weeks later, they're holding hands with the sender "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "requestHash": "a64ab5ee5c6e1df45a7b9af14e6c674fd2e8e3555aa5a52629b466fca68d8341",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:52.929Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "cb4fea28a735da2a34bae709da8786bee5a3006bc2e87583f100a876c1b89e89",
+      "at": "2026-10-28T23:51:52.976Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 48110,
+        "cost": 0.0024055
+      },
+      "requestHash": "cb4fea28a735da2a34bae709da8786bee5a3006bc2e87583f100a876c1b89e89",
+      "elapsedMs": 445,
+      "at": "2026-10-28T23:51:53.421Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

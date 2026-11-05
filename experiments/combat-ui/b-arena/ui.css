@@ -1,0 +1,120 @@
+/* Fork B · Arena, iteration 3 */
+.fork-b .pf-wrap { gap: 6px; }
+.fork-b .ar-around { display: flex; flex-direction: column; gap: 5px; }
+
+/* The face-off: you and them side by side, the exchange under them; on a wide stage, the exchange between them. */
+.fork-b .ar-top { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: 'you opp' 'mid mid'; gap: 6px 8px; }
+.fork-b .ar-side.you { grid-area: you; } .fork-b .ar-side.opp { grid-area: opp; } .fork-b .ar-stage { grid-area: mid; }
+@container fight (min-width: 600px) {
+  .fork-b .ar-top { grid-template-columns: minmax(170px, 200px) minmax(0, 1fr) minmax(170px, 200px); grid-template-areas: 'you mid opp'; align-items: stretch; }
+}
+.fork-b .ar-side { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 7px 8px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); min-width: 0; }
+.fork-b .ar-id { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.fork-b .ar-side.opp .ar-id { flex-direction: row-reverse; text-align: right; }
+.fork-b .ar-pfw { position: relative; flex: 0 0 auto; }
+.fork-b .ar-pf { display: block; width: 46px; height: 46px; padding: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.fork-b .ar-pf svg { width: 100%; height: 100%; display: block; }
+.fork-b .ar-meta { min-width: 0; display: flex; flex-direction: column; }
+.fork-b .ar-meta > b { font: 600 14px/1.15 var(--serif); color: var(--gold-2); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.fork-b .ar-side.opp .ar-meta > b { color: var(--opp); }
+.fork-b .ar-meta > small { color: var(--muted); font-size: 10px; }
+.fork-b .ar-side .pf-vbars { height: 46px; }
+.fork-b .ar-side .pf-chips { gap: 3px; }
+.fork-b .ar-side.opp .pf-chips { justify-content: flex-end; }
+.fork-b .ar-side .pf-pop { top: 40%; }
+
+/* The exchange */
+.fork-b .ar-stage { position: relative; padding: 6px 8px 7px; border-radius: 16px; background: radial-gradient(ellipse at 50% 35%, rgba(70, 80, 150, .38), rgba(20, 24, 48, .55) 70%); border: 1px solid rgba(255, 255, 255, .1); display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.fork-b .ar-stage.empty { justify-content: center; gap: 6px; }
+.fork-b .ar-kit { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; width: 100%; padding: 4px 8px; border-radius: 10px; border: 1px solid rgba(143, 201, 232, .3); background: rgba(10, 12, 28, .45); color: var(--opp); font-weight: 500; text-align: left; }
+.fork-b .ar-kit small { flex-basis: 100%; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.fork-b .ar-kit .pf-ico { width: 22px; height: 22px; color: var(--opp); } .fork-b .ar-kit i { margin-left: auto; font-style: normal; color: var(--muted); } .fork-b .ar-stage.empty .pf-setting { background: rgba(10, 12, 28, .45); }
+.fork-b .ar-stage header { display: flex; align-items: baseline; gap: 6px; }
+.fork-b .ar-stage header b { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.fork-b .ar-stage header small { flex: 1; font-size: 10.5px; color: var(--muted); opacity: .75; }
+.fork-b .ar-stage header button { padding: 1px 9px; font-size: 10.5px; border-radius: 999px; background: none; color: var(--muted); font-weight: 500; }
+.fork-b .ar-meet { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: 6px; }
+.fork-b .ar-tile { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 6px; padding: 4px 6px; border-radius: 12px; background: rgba(10, 12, 28, .55); border: 1px solid rgba(240, 213, 140, .4); text-align: center; }
+.fork-b .ar-tile.opp { border-color: rgba(143, 201, 232, .45); } .fork-b .ar-tile.opp .pf-ico { color: var(--opp); }
+.fork-b .ar-tile .pf-ico { width: 24px; height: 24px; } .fork-b .ar-tile b { font-size: 13px; }
+.fork-b .ar-self { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+.fork-b .ar-x { position: relative; align-self: center; font-size: 15px; color: var(--muted); }
+.fork-b .ar-way { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 6px; margin: 0; padding: 3px 8px; border-radius: 10px; background: rgba(10, 12, 28, .38); font-size: 12px; }
+.fork-b .ar-way.you { border-left: 3px solid var(--you); } .fork-b .ar-way.opp { border-left: 3px solid var(--opp); }
+.fork-b .ar-from, .fork-b .ar-to { font-weight: 700; } .fork-b .ar-way.you .ar-from, .fork-b .ar-way.opp .ar-to { color: var(--you); } .fork-b .ar-way.opp .ar-from, .fork-b .ar-way.you .ar-to { color: var(--opp); }
+.fork-b .ar-arrow { font-size: 9px; color: var(--muted); }
+.fork-b .ar-items { display: flex; flex-wrap: wrap; gap: 3px 8px; margin-left: auto; align-items: center; }
+/* The fight's text: each move's line in its fighter's panel (wide), or all of it at the foot of the exchange (phone). */
+.fork-b .ar-text { display: flex; flex-direction: column; gap: 2px; padding: 2px 4px 0; }
+.fork-b .ar-say { margin: 0; padding: 5px 2px 0; border-top: 1px solid rgba(255, 255, 255, .07); font-size: 12px; }
+.fork-b .ar-side.opp .ar-say { text-align: right; }
+.fork-b .pf-flavor.idle { font: 500 12px/1.4 var(--sans); color: var(--muted); }
+.fork-b .ar-side .ar-say { display: none; }
+@container fight (min-width: 600px) {
+  .fork-b .ar-side .ar-say { display: block; }
+  .fork-b .ar-stage .ar-text .own { display: none; }
+  .fork-b .ar-stage .ar-text:not(:has(.fin)) { display: none; }
+}
+
+/* An exchange lands (all within ~0.6 s; the leader's move strikes first): the tiles slam in, a spark where they meet, each
+ * side's line wipes in from that side, the numbers pop, then the text. The fighters jolt and flash as the blows land
+ * (base.css .fx-*), the whole face-off on a heavy hit. */
+.fork-b .ar-stage.fresh .ar-tile.you { animation: ar-slam-l .2s cubic-bezier(.2, 1.6, .4, 1) both; }
+.fork-b .ar-stage.fresh .ar-tile.opp { animation: ar-slam-r .2s cubic-bezier(.2, 1.6, .4, 1) both; }
+.fork-b .ar-stage.fresh.lead-0 .ar-tile.opp, .fork-b .ar-stage.fresh.lead-1 .ar-tile.you { animation-delay: .07s; }
+.fork-b .ar-stage.fresh .ar-x { animation: ar-spark .38s cubic-bezier(.2, 1.4, .4, 1) .15s both; color: #fff3c4; }
+.fork-b .ar-stage.fresh .ar-x::before { content: ''; position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 236, 170, .9), rgba(255, 140, 80, .35) 40%, transparent 70%); animation: ar-burst .35s ease-out .15s both; pointer-events: none; }
+.fork-b .ar-stage.fresh .ar-way.you { animation: ar-wipe-l .18s ease-out .22s both; } .fork-b .ar-stage.fresh .ar-way.opp { animation: ar-wipe-r .18s ease-out .28s both; }
+.fork-b .ar-stage.fresh .ar-way .pf-pill, .fork-b .ar-stage.fresh .ar-way .pf-li b { animation: ar-num .26s cubic-bezier(.2, 1.8, .4, 1) .34s both; }
+.fork-b .ar-stage.fresh .ar-self .pf-pill { animation: ar-num .26s cubic-bezier(.2, 1.8, .4, 1) .2s both; }
+.fork-b .ar-stage.fresh .ar-text p, .fork-b .ar-say.fresh { animation: ar-rise .25s ease-out .4s both; } .fork-b .ar-stage.fresh .ar-text p + p, .fork-b .ar-side.opp .ar-say.fresh { animation-delay: .48s; }
+.fork-b .ar-side.fx-hit, .fork-b .ar-side.fx-block { animation-delay: .17s; } .fork-b .ar-side.fx-hit::after, .fork-b .ar-side.fx-block::after, .fork-b .ar-side.fx-heal::after { animation-delay: .17s; }
+.fork-b .ar-side .pf-pop { animation-delay: .19s; }
+.fork-b .ar-top.fx-quake { animation: ar-quake .32s ease-out .17s both; }
+@keyframes ar-slam-l { from { opacity: 0; transform: translateX(-70%) scale(1.25); } }
+@keyframes ar-slam-r { from { opacity: 0; transform: translateX(70%) scale(1.25); } }
+@keyframes ar-spark { 0% { transform: scale(0) rotate(-90deg); } 55% { transform: scale(2) rotate(10deg); } 100% { transform: scale(1); } }
+@keyframes ar-burst { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }
+@keyframes ar-wipe-l { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes ar-wipe-r { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+@keyframes ar-num { from { transform: scale(1.9); opacity: 0; } }
+@keyframes ar-rise { from { opacity: 0; transform: translateY(5px); } }
+@keyframes ar-quake { 20% { transform: translate(-4px, 2px); } 45% { transform: translate(4px, -2px); } 70% { transform: translate(-2px, 1px); } }
+
+/* Room held for what an exchange can bring (feedback 2026-10-29: picking or playing a move never shifts the layout): a
+ * row of chips under each fighter, the exchange at its usual tallest with its text, three status bars on the timeline and
+ * a telegraph with its flavour line. The room is filled from the start (the stakes and how the fight opens), so none of it
+ * stands empty; a rare, fuller exchange still grows. */
+.fork-b .ar-side .pf-chips { min-height: 22px; }
+.fork-b .ar-stage { min-height: 230px; }
+.fork-b .pf-tl { min-height: 100px; }
+.fork-b .ar-now { min-height: 53px; display: flex; flex-direction: column; justify-content: center; }
+@container fight (min-width: 600px) {
+  .fork-b .ar-stage { min-height: 232px; }
+}
+
+/* The timeline and this exchange: one row on a wide stage, stacked on a phone. The timeline takes the whole width it is
+ * given: its columns widen to fill it, and stay 28px (scrolling sideways) once the fight outgrows it. */
+.fork-b .ar-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.fork-b .pf-tl { width: auto; }
+/* It keeps one height, and fills it (feedback 2026-10-29): each fighter's half shares the room, its move row centred over
+ * its status bars; only more bars than fit make it taller. */
+.fork-b .pf-tl { display: flex; flex-direction: column; }
+.fork-b .pf-tl-scroll { flex: 1; display: flex; }
+.fork-b .pf-tl-grid { flex: 1 0 auto; }
+.fork-b .pf-tl-side { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.fork-b .pf-tl-side .pf-tl-row:not(.span) { flex: 1; }
+.fork-b .pf-tl-row { grid-template-columns: 46px repeat(var(--cols), minmax(28px, 1fr)); }
+@container fight (min-width: 600px) {
+  .fork-b .ar-row:has(.ar-now) { grid-template-columns: minmax(0, 1fr) minmax(260px, 45%); }
+  .fork-b .ar-now .pf-now { flex: 1; }
+  .fork-b .ar-now .pf-tg { flex: 1; align-content: center; }
+  .fork-b .ar-now .pf-tg { grid-template-columns: auto minmax(0, auto) 1fr; grid-template-areas: 'k k k' 'i b e' 'f f f'; gap: 2px 7px; }
+  .fork-b .ar-now .pf-tg-k { justify-self: start; border-right: 0; padding-right: 0; }
+  .fork-b .ar-now .pf-tg > em, .fork-b .ar-now .pf-tg > small { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}
+
+/* The moves */
+.fork-b .ar-moves { display: flex; flex-direction: column; gap: 5px; }
+@container fight (max-width: 380px) { .fork-b .ar-pf { width: 40px; height: 40px; } .fork-b .ar-side .pf-vbars { height: 40px; } }
+@media (prefers-reduced-motion: reduce) { .fork-b *, .fork-b *::before, .fork-b *::after, .fork-b.pf-layer { animation: none !important; } }

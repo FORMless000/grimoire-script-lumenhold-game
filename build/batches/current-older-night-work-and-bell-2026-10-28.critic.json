@@ -1,0 +1,92 @@
+{
+  "batch": "current-older-night-work-and-bell-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "newt_company_regular",
+      "company_birthday",
+      "company_magistrate",
+      "company_masked",
+      "company_patron",
+      "company_castle",
+      "company_wants_more",
+      "newt_high_table_raise",
+      "newt_high_table_last",
+      "company_late_hour",
+      "company_wedding",
+      "company_poets",
+      "ring_bout_2",
+      "ring_bout_3",
+      "ring_bout_4",
+      "ring_side_bets",
+      "bell_laid_to_rest",
+      "bell_dive_again",
+      "bell_echo_lakeshore",
+      "bell_echo_boathouse",
+      "bell_echo_cottage"
+    ],
+    "files": [
+      "content/events/pools/night.grim",
+      "content/events/slice_2b.grim"
+    ]
+  },
+  "summary": "Night-work scenes are distinctive, but annual repeat prose and an all-winnings stake do not match their state. The last-standing contract also needs an explicit resolution against the noncombat-route rule.",
+  "issues": [
+    {
+      "event": "company_birthday",
+      "related_events": [
+        "company_poets"
+      ],
+      "priority": "P2",
+      "category": "calendar and repeat continuity",
+      "problem": "Birthday and poets’ supper sequences explicitly move forward a year on their second showing, but repeat 3 is a turn cooldown and neither card has an annual gate. They can be selected again three months later, and even more than once within the same academic year.",
+      "fix": "Track the last year offered and allow one showing per year, or make later showings ordinary reunions/suppers without another birthday or last-year claim.",
+      "file": "content/events/pools/night.grim",
+      "line": 174
+    },
+    {
+      "event": "company_poets",
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "The second opening says the president remembers your contest verdict from last year, even if you only poured and listened on the first showing.",
+      "fix": "Gate the remembered verdict on choosing Judge; otherwise recall your serving or listening.",
+      "file": "content/events/pools/night.grim",
+      "line": 453
+    },
+    {
+      "event": "newt_high_table_last",
+      "priority": "P2",
+      "category": "stake continuity",
+      "problem": "Everything on one hand and its loss outcomes say all earlier winnings are lost, but the fixed gold -large is only thirty crowns; two preceding wins have added substantially more. The gamble leaves earlier profits while telling the player they lost them all.",
+      "fix": "Either describe the actual fixed stake and retained earlier winnings, or explicitly store and stake the night’s profit if the intended bet is everything.",
+      "file": "content/events/pools/night.grim",
+      "line": 373
+    },
+    {
+      "event": "ring_bout_2",
+      "related_events": [
+        "ring_bout_3",
+        "ring_bout_4"
+      ],
+      "priority": "P2",
+      "category": "conflict escape",
+      "problem": "With ring_last_standing the only noncombat option is locked. The opener advertises the contract, so this is deliberate, but it contradicts the standing every-fight-has-a-nonfight-route checklist; the same issue is recorded for the cameos.",
+      "fix": "Offer a costly surrender/forfeiture route during last standing, or explicitly record and approve the intended design exception in PROGRESS.md.",
+      "file": "content/events/pools/night.grim",
+      "line": 538
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

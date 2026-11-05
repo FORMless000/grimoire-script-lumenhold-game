@@ -1,0 +1,107 @@
+{
+  "query": "The Cracked Lens {Mir is holding their best lens up to the window, and there's a crack across it like a hair. \"Demonstration's tomorrow,\" they say. \"For the faculty. It's probably fine. It's not fine.\"|Another lens, another crack. Mir has started keeping the good ones in a sock.|Mir doesn't say anything; they just hold up the lens. The crack is worse than last time.} Grind a spare by hand {You grind a spare lens with Mir until midnight. It's slightly wrong in a way only Mir can see, and they say it's the best wrong lens they've ever had.|Two hours of grit and polish. The new lens works. Mir writes your name on its rim in tiny letters.|Mir grinds one side, you the other. The lens is done by ten; Mir makes tea that tastes of solder.} Tape it and hope {You tape the crack and tell Mir it'll hold. It holds for the demonstration and splits in half at the applause, which Mir calls \"dramatic timing\".|Tape, and a promise to come back. Mir says \"probably\" four times in a row, which is a lot even for Mir.|You tape it. Mir looks at the tape for a long time, then at you, then says it's fine in a voice that means it isn't.} Mend it, seamless {You close the crack with a breath of Mend, and the glass runs together like water. Mir holds it to the light and can't find where it was. \"Probably magic,\" they say, and hug you.|The lens mends clear as the day it was poured. Mir tests it on a moth, which is now the best-studied moth in the castle.|{spell_level(mend) >= 2: You mend the lens and the hairline crack in its brass ring. Mir makes you promise to come to the demonstration, \"in case\".|You mend it on the second try. Mir says the first try was \"very educational\", and keeps the slightly wobbly result for a different machine.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:workshop_cracked_lens",
+      "title": "The Cracked Lens",
+      "file": "content/events/spell_uses.grim",
+      "line": 200,
+      "sourceHash": "a294bf9f2ef3e0c764e0244af691e67838da38bb51757275411896e256f24384",
+      "score": 0.9568793177604675,
+      "excerpt": "The Cracked Lens\n{Mir is holding their best lens up to the window, and there's a crack across it like a hair. \"Demonstration's tomorrow,\" they say. \"For the faculty. It's probably fine. It's not fine.\"|Another lens, another crack. Mir has started keeping the good ones in a sock.|"
+    },
+    {
+      "key": "event:alch_first_mend",
+      "title": "The Mending Practical",
+      "file": "content/events/spell_sources.grim",
+      "line": 55,
+      "sourceHash": "d7e777cbc72e6a97569f31285706ec8a5f08267b06f35f0cc86fe795dcbc34f3",
+      "score": 0.5229566693305969,
+      "excerpt": "The Mending Practical\n{level(alchemy) == 0: Alchemy I's first practical is a cracked teacup on every bench. Sister Amaranth sets them down without looking up. \"Mend it,\" she says. \"Then I'll let you near a person.\"|{level(alchemy) == 1: Alchemy II moves into the infirmary. Sister"
+    },
+    {
+      "key": "event:lesson_mend",
+      "title": "Teacups First",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 89,
+      "sourceHash": "16b4c27bb3ad4c49b19955d140e5a6904572caeca387f8ef73cd8a371a37ca63",
+      "score": 0.493762731552124,
+      "excerpt": "Teacups First\nSister Amaranth teaches Mend with teacups. She drops one on the infirmary floor without looking. \"Mend it.\" When it's whole she drops another. \"Bones are harder,\" she says, rolling bandages. \"Cups first.\"\nMend cup after cup\nBy the twentieth cup you can hear the crac"
+    },
+    {
+      "key": "event:alch_cracked_tray",
+      "title": "The Cracked Tray",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 224,
+      "sourceHash": "26c6f3e6166bb7f9cc31b621d7e1fc3920833719d865e41448f23a5a6d11b679",
+      "score": 0.4807227849960327,
+      "excerpt": "The Cracked Tray\n{Mend at Alchemy II. Sister Amaranth sets out a tray of cracked things, cup, mirror and bone. \"Mend those,\" she says, \"and then we'll see about people.\"|The tray again. Sister Amaranth has found new things to crack.|Sister Amaranth puts the tray down and nods at "
+    },
+    {
+      "key": "event:great_hall_cracked_sky",
+      "title": "A Crack in Tomorrow",
+      "file": "content/events/spell_uses.grim",
+      "line": 244,
+      "sourceHash": "660f1b2c8b68e34e3aa36d3936169a52e3353b538c1817367ed847eca2bfcb3b",
+      "score": 0.4601632058620453,
+      "excerpt": "A Crack in Tomorrow\n{The great hall's ceiling shows tomorrow, and tomorrow, it seems, is wet. There's a crack across the sky above the end of the long table, and tomorrow's rain is dripping through it into somebody's soup.|The crack is back, over a different table. Tomorrow is sl"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "de36c482087e3b1a70b3995cad13ef5ed2f1bb14f8246b1648196b988d08e357",
+      "at": "2026-10-28T23:27:47.988Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 436,
+        "total_tokens": 436,
+        "cost": 0.00000436,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000436,
+          "upstream_inference_prompt_cost": 0.00000436,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "de36c482087e3b1a70b3995cad13ef5ed2f1bb14f8246b1648196b988d08e357",
+      "elapsedMs": 2266,
+      "at": "2026-10-28T23:27:50.254Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "065171d52e9360eda4e5224a674b894fd7baf222aa7b4c24b3c907e392914b0b",
+      "at": "2026-10-28T23:27:50.290Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58430,
+        "cost": 0.0029215
+      },
+      "requestHash": "065171d52e9360eda4e5224a674b894fd7baf222aa7b4c24b3c907e392914b0b",
+      "elapsedMs": 606,
+      "at": "2026-10-28T23:27:50.896Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

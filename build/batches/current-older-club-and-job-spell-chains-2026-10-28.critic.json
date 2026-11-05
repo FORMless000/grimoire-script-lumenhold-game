@@ -1,0 +1,94 @@
+{
+  "batch": "current-older-club-and-job-spell-chains-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "duel_dummy_hexes",
+      "duel_captains_notes",
+      "duel_bram_barrage",
+      "duel_footwork_lyra",
+      "duel_brace_final",
+      "ledger_spare_quill",
+      "ledger_soup_complaint",
+      "ledger_proper_ink",
+      "ledger_deadline_night",
+      "ledger_quill_interview",
+      "verdant_far_bed",
+      "verdant_plant_seed",
+      "verdant_cold_snap",
+      "verdant_mandrake_choir",
+      "verdant_bramble_bolts",
+      "library_footnote_drawer",
+      "library_fish_footnote",
+      "library_hush_lamp",
+      "library_wandering_section",
+      "library_overdue_book",
+      "tavern_two_taps",
+      "tavern_eel_story",
+      "tavern_regulars_round",
+      "tavern_double_shift",
+      "tavern_festival_room",
+      "pell_oldest_drawer",
+      "pell_counting_drops",
+      "pell_buy_moonwort",
+      "pell_daughters_shortcut",
+      "pell_draught",
+      "courier_wind_jar",
+      "courier_fisherman_waves",
+      "courier_race_gulls",
+      "courier_fix_broom",
+      "courier_storm_delivery"
+    ],
+    "files": [
+      "content/events/club_spell_chains.grim"
+    ]
+  },
+  "summary": "Quest inheritance and preparation flags generally preserve agency. The Bramble location choice is lost downstream, and two courier beats award or assume work that did not happen.",
+  "issues": [
+    {
+      "event": "verdant_plant_seed",
+      "related_events": [
+        "verdant_cold_snap",
+        "verdant_mandrake_choir",
+        "verdant_bramble_bolts"
+      ],
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "Planting in Maud’s secret frost-free garden sets the same flag as Tobias’s greenhouse. Later cards put the plant beside Gerald and the warm greenhouse pipes, threaten it with frost, and have it bolt across the greenhouse. The chosen garden is forgotten.",
+      "fix": "Remember the planting location and adapt the later scenes, or have Maud offer a protected spot inside the same greenhouse so both routes converge honestly.",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 350
+    },
+    {
+      "event": "courier_race_gulls",
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "The opening credits the fisherman with explaining that you must beat the gulls, even when you skipped his conversation or failed the appeal and heard only fish talk.",
+      "fix": "Branch on tailwind_fisherman, or make the loft master/jar supply the race clue independently.",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 973
+    },
+    {
+      "event": "courier_wind_jar",
+      "priority": "P2",
+      "category": "skill fiction",
+      "problem": "Take the jar down grants Vigor, but only taking a jar off a shelf and holding it is shown; all the actual flight is in the other option or later cards.",
+      "fix": "Show a first physical test flight/wind exercise in the accepting outcome, or remove the exertion reward.",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 929
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

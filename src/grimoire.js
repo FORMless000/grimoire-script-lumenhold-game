@@ -243,7 +243,7 @@
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
       'combat', 'combat_cost', 'swing',
       // the negotiation stub's mix until the minigame (E8): skill weights, and mood and renown around their middle
-      'negotiate',
+      'negotiate', 'parley_scale',
       // what a tonic adds to the checks its state's `boost:` names (world expansion 1, K3); a sized boost's amounts (threads 1)
       'tonic', 'boost_sizes',
       // a shift's pay per wage word (`wage short`), as a share of the job's `pay:` at your rank (M10)
@@ -442,6 +442,7 @@
     performance(t) { return STRUCT_PROPS.weights(t); },
     combat(t) { return STRUCT_PROPS.weights(t); },
     negotiate(t) { return STRUCT_PROPS.weights(t); },
+    parley_scale(t) { return toNum(t, 'parley_scale'); },
     swing(t) { return STRUCT_PROPS.weights(t); },
     wage(t) { return STRUCT_PROPS.weights(t); },
     boost_sizes(t) { return STRUCT_PROPS.weights(t); },

@@ -1,0 +1,108 @@
+{
+  "query": "A Moment Ahead {level(astromancy) == 0: Astromancy I begins with a coin. The lecturer spins it on the brass desk and asks which way it will fall. \"Don't guess,\" the lecturer says. \"Look a moment ahead and read it.\"|{level(astromancy) == 1: Astromancy II, and Foresight must reach further. The lecturer deals star cards face down. \"The next three, in order, before I turn them.\"|Advanced Astromancy: the lecturer sits opposite you and says nothing at all. \"Foresee what I am about to say,\" the lecturer says at last, \"and say it first.\"}} Look ahead until you see it {level(astromancy) == 0: The coin falls heads eleven times before you see it fall heads first. Then you see it every time, and your head aches with how far you're leaning.|{level(astromancy) == 1: You see the third card before the first, which is the wrong order and still counts as a start. By the bell you read all three, drained to the soles of your feet.|You say \"Tuesday\" a heartbeat before the lecturer does. It costs you an afternoon of feeling hollowed out, and a small, rare nod.}} Ask how far ahead to look {level(astromancy) == 0: \"Less far than you think,\" says the lecturer, and makes you read the rules of it twice. You get the coin right on the last try of the hour, with the class watching.|{level(astromancy) == 1: The answer is a chart, and the chart is long. You copy it all and read the cards the next week, after everyone else.|\"A breath,\" says the lecturer. \"Anything past a breath is fortune-telling.\" You learn the breath slowly, and are the last in the room to get it.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:astro_first_foresight",
+      "title": "A Moment Ahead",
+      "file": "content/events/spell_sources.grim",
+      "line": 34,
+      "sourceHash": "3646d1d92651be93b8fcf296ff8c65dfad2ce85011883ef7918d47f48ed7207c",
+      "score": 0.9460119605064392,
+      "excerpt": "A Moment Ahead\n{level(astromancy) == 0: Astromancy I begins with a coin. The lecturer spins it on the brass desk and asks which way it will fall. \"Don't guess,\" the lecturer says. \"Look a moment ahead and read it.\"|{level(astromancy) == 1: Astromancy II, and Foresight must reach "
+    },
+    {
+      "key": "event:astro_far_glimpse",
+      "title": "Looking Too Far",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 308,
+      "sourceHash": "683c66f5fd235b3c5b22641ae385453bad3faff9fef2ec21061896bee9838789",
+      "score": 0.6848275065422058,
+      "excerpt": "Looking Too Far\n{At this level Foresight reaches a season ahead. The lecturer allows one glimpse each, timed by an hourglass. People who look longer come back strange.|The dark mirror waits behind its curtain.|The hourglass is turned before you sit down. The lecturer knows your p"
+    },
+    {
+      "key": "event:astro_two_futures",
+      "title": "Both Futures",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 175,
+      "sourceHash": "5eb3708f7a94a95a2061cf06210a5d2e8ad658457bb78b532334fe1179f68c0f",
+      "score": 0.6795939207077026,
+      "excerpt": "Both Futures\n{Advanced Foresight. The lecturer balances a coin on its edge. Read both futures at once, the one where it falls heads and the one where it falls tails, and hold them both.|The coin on its edge again. You know how it feels to be two places at once now.|The coin. Peop"
+    },
+    {
+      "key": "event:astro_foresight_drill",
+      "title": "Catch the Chalk",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 235,
+      "sourceHash": "5306668c7e49a0451f5cef2406763b62585c357a660c7dac0d9e73e282a92d43",
+      "score": 0.6179465055465698,
+      "excerpt": "Catch the Chalk\n{Foresight at Astromancy II is practised on chalk. The lecturer drops a stick without warning; you catch it before it falls, by seeing it a heartbeat early.|The lecturer has opened a new box of chalk, which is a threat.|The lecturer's drops have got sneakier, and "
+    },
+    {
+      "key": "event:astro_moving_charts",
+      "title": "The Charts Move",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 285,
+      "sourceHash": "fac8cadf8539c81adf4236de7740c9af2c7b17246a1f6efe4725cb5f8d130b3a",
+      "score": 0.6100999116897583,
+      "excerpt": "The Charts Move\n{Advanced Astromancy uses charts that move. The inked stars drift to where they will be, not where they are.|The charts are livelier this morning, and one has crept off the table.|You've stopped flinching when the stars move. You still check twice.} {Your chart ke"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6a9348da30029e7fdcac79db06af15e0888a14676703caef25e2d0b19f84717c",
+      "at": "2026-10-28T23:51:48.517Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 399,
+        "total_tokens": 399,
+        "cost": 0.00000399,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000399,
+          "upstream_inference_prompt_cost": 0.00000399,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6a9348da30029e7fdcac79db06af15e0888a14676703caef25e2d0b19f84717c",
+      "elapsedMs": 342,
+      "at": "2026-10-28T23:51:48.859Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "3ef8e54e77479e7abbbed669d3ce6ab07984a34365d5a7b3aa6c9280c8102901",
+      "at": "2026-10-28T23:51:48.901Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46336,
+        "cost": 0.0023168
+      },
+      "requestHash": "3ef8e54e77479e7abbbed669d3ce6ab07984a34365d5a7b3aa6c9280c8102901",
+      "elapsedMs": 283,
+      "at": "2026-10-28T23:51:49.184Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

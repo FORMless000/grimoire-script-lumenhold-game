@@ -1,0 +1,108 @@
+{
+  "query": "Pockets and Decks Corvin is teaching you to keep your hand in. \"Decks are practice,\" he says, shuffling. \"Pockets are performance.\" Bram is asleep in an armchair nearby, his whistle on a ribbon round his neck. Practise on the deck Two hours of coins and cards until your fingers cramp. It's dull, and by the end the coin vanishes so cleanly even Corvin blinks. \"Saint,\" he says, \"with very quick hands.\" Lift Bram's whistle and return it The whistle comes off its ribbon without a sound and goes back on it the same way. Bram snores through all of it. Corvin is delighted and slightly worried about you.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_sleight",
+      "title": "Pockets and Decks",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 373,
+      "sourceHash": "22b8c4c79b817bd6b52cded7db581e226cca4ebcf031b800ac690e73e57837d1",
+      "score": 0.9304905533790588,
+      "excerpt": "Pockets and Decks\nCorvin is teaching you to keep your hand in. \"Decks are practice,\" he says, shuffling. \"Pockets are performance.\" Bram is asleep in an armchair nearby, his whistle on a ribbon round his neck.\nPractise on the deck\nTwo hours of coins and cards until your fingers c"
+    },
+    {
+      "key": "event:corvin_teaches_sleight",
+      "title": "Watch the Other Hand",
+      "file": "content/events/spell_sources.grim",
+      "line": 277,
+      "sourceHash": "10cd51adaf957a5763e8c32821786c5bc2620ac32c191fa43dd784b422d8fef1",
+      "score": 0.6725590229034424,
+      "excerpt": "Watch the Other Hand\nAt the Gilded Newt, Corvin rolls a coin across his knuckles, and then it's in your pocket, and then it's back in his. \"Grandfather's trick,\" he says. \"I'd teach it to a saint, if the saint promised to only use it on people who deserve it.\" The jokes stop. \"Do"
+    },
+    {
+      "key": "event:corvin_lucky_deck",
+      "title": "The Lucky Deck",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 210,
+      "sourceHash": "c1aa07a3cfe8e75e23d819782f1886dedd95e5e3a8e81106a4c5a26e34f044bc",
+      "score": 0.6249615550041199,
+      "excerpt": "The Lucky Deck\nCorvin deals you a hand from an old deck, soft at the corners and smelling of pipe smoke. {~\"Grandfather's,\" he says. \"It really is lucky. Watch.\"|\"Cut,\" he says. \"Any card. It'll be the queen. It's always the queen.\"} You win, which shouldn't be possible against C"
+    },
+    {
+      "key": "event:corvin_cards",
+      "title": "How to Cheat at Cards",
+      "file": "content/events/expansion_people.grim",
+      "line": 292,
+      "sourceHash": "1f4b6c3b10aad6b68a3563c0dcd3b0fd1e748baa64ea84ab836c21604ab6c270",
+      "score": 0.6043031811714172,
+      "excerpt": "How to Cheat at Cards\n\"Rule one: never cheat,\" says Corvin, shuffling so fast the cards blur. \"Rule two: if you're going to cheat, never get caught. Rule three: I'm about to teach you how they cheat, so you never lose to them.\"\nLearn the tricks\nBy midnight you can spot a marked c"
+    },
+    {
+      "key": "event:gargoyle_passage_parapet_cards",
+      "title": "Cards on the Parapet",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 492,
+      "sourceHash": "c56e680af917c5f514bb790debc23e10f69652fb8c776ccde814de862926ac3d",
+      "score": 0.514636754989624,
+      "excerpt": "Cards on the Parapet\n{On the parapet, by lantern-light, {here} is dealing cards for buttons, and crowns for anyone who dares.|{here} has a new deck, and the pot of buttons has grown.|{here} deals you in before you've sat down.} {The wind keeps trying to take the jack.|A pigeon wa"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4acf7debbbfa40747851b46f5140f5ce447b5fdef86c565571c50b0b186dcd75",
+      "at": "2026-10-28T23:51:45.647Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 145,
+        "total_tokens": 145,
+        "cost": 0.00000145,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000145,
+          "upstream_inference_prompt_cost": 0.00000145,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4acf7debbbfa40747851b46f5140f5ce447b5fdef86c565571c50b0b186dcd75",
+      "elapsedMs": 1080,
+      "at": "2026-10-28T23:51:46.727Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "fc3f43d401536d4822de7f1cc560d451ee8c3bb702a27080202a549956d1dea2",
+      "at": "2026-10-28T23:51:46.759Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49009,
+        "cost": 0.00245045
+      },
+      "requestHash": "fc3f43d401536d4822de7f1cc560d451ee8c3bb702a27080202a549956d1dea2",
+      "elapsedMs": 397,
+      "at": "2026-10-28T23:51:47.156Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

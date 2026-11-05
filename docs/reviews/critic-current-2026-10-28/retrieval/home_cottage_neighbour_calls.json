@@ -1,0 +1,108 @@
+{
+  "query": "A Neighbour Calls {A neighbour is at the kitchen door with a stopped clock, a hopeful face and the air of someone who has been saving it for you since harvest.|Another neighbour, another hopeful face. This one has a hen that's laying eggs the wrong colour.|The neighbours have a list now, you suspect. Today, a pie that won't rise and won't explain why.} {Your family pretends not to listen.|Someone at the table says, \"Go on, then,\" with pride.|{season == \"winter\": There's snow on the neighbour's hat; they've walked a long way.|The neighbour has brought a basket of plums, as payment in advance.}} Have a go at it {You coax the clock's spring awake with a whisper. It chimes, a bit sheepishly. The neighbour tells the whole lane.|You charm the hen's eggs back to brown, more or less. The neighbour insists on giving you a dozen. They're mostly brown.|You find the trouble with the pie: it was sulking. A warm word and it rises. The neighbour's face rises with it.} {The clock starts running backwards, cheerfully. The neighbour leaves delighted, which is somehow worse, and tells the whole lane.|The eggs come out tartan. The neighbour is polite about it, and tells everyone.|The pie rises, and keeps rising, and leaves by the chimney. The whole lane will talk about it for years.} Say you're on holiday {You smile and say magic is for term time. The neighbour goes away disappointed, and you have the afternoon to yourself by the fire.|You send them to the tinker, who will charge them, but kindly. You put your feet up.|You say no, gently. Your family exchange a look. You spend the afternoon asleep in your old chair, guilty and rested.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:home_cottage_neighbour_calls",
+      "title": "A Neighbour Calls",
+      "file": "content/events/pools/village_more.grim",
+      "line": 165,
+      "sourceHash": "af47601b1abca096706b11b5df1e7370f1a1934f69f7042c6697553113a9fec3",
+      "score": 0.959227979183197,
+      "excerpt": "A Neighbour Calls\n{A neighbour is at the kitchen door with a stopped clock, a hopeful face and the air of someone who has been saving it for you since harvest.|Another neighbour, another hopeful face. This one has a hen that's laying eggs the wrong colour.|The neighbours have a l"
+    },
+    {
+      "key": "event:break_home_village_children",
+      "title": "The Wizard Is Home",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 134,
+      "sourceHash": "42dec7069117de1fcd5af15a1be0a854341ca4d971d3c7da9451aaa1d79399b2",
+      "score": 0.5142149329185486,
+      "excerpt": "The Wizard Is Home\n{Word has spread that you're home from the wizard school. Half the village has found a reason to pass the gate.|The neighbours are back at the gate, with a cousin from the next village to show you off to.|The gate committee is in session. They've drawn up a lis"
+    },
+    {
+      "key": "event:life_timeloop_3",
+      "title": "The Broken Chronometer",
+      "file": "content/events/expansion_life.grim",
+      "line": 82,
+      "sourceHash": "5af8d2c00beaa02100f9485dbad13e3df5e588a3c383b0620670a03289745938",
+      "score": 0.4761272072792053,
+      "excerpt": "The Broken Chronometer\nIn the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. \"I just wanted one more day before my exam,\" says the note on his chest. {loop_clues >= 3: You know exactly which gear, and why.|You kn"
+    },
+    {
+      "key": "event:break_home_mending_chair",
+      "title": "The Mending Chair",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 159,
+      "sourceHash": "775eba28b219e9f845d93a068fb4ceae68b2a9b267415c4637cfab065e5ae421",
+      "score": 0.4634985327720642,
+      "excerpt": "The Mending Chair\n{Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == \"winter\": Today it's a stove door that won't stay shut.|"
+    },
+    {
+      "key": "event:home_cottage_list",
+      "title": "The List on the Table",
+      "file": "content/events/pools/village_home.grim",
+      "line": 446,
+      "sourceHash": "23845c23ab9f38b3cc5bedba3b281cb5cc3c657c9bf9fb9f1c93ba6bccb8b233",
+      "score": 0.4303709864616394,
+      "excerpt": "The List on the Table\n{&Home has remembered that you know where everything is.|A day home, and already a list.|The list. Your name, underlined.} {has(origin_noble): {&The steward wants the ledgers checked.|The steward wants the tenants' letters answered.|The steward wants you to "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "37ddc37769e7ad5f5859b552b6050a39091f0a5e7e8759fa931efefb7fd577e9",
+      "at": "2026-10-28T23:50:50.599Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 384,
+        "total_tokens": 384,
+        "cost": 0.00000384,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000384,
+          "upstream_inference_prompt_cost": 0.00000384,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "37ddc37769e7ad5f5859b552b6050a39091f0a5e7e8759fa931efefb7fd577e9",
+      "elapsedMs": 274,
+      "at": "2026-10-28T23:50:50.873Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "badc4dec7551d1c0f52fd0e59ecee6d0df3ef1288939095213a3ccbe890b4429",
+      "at": "2026-10-28T23:50:50.930Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54904,
+        "cost": 0.0027452
+      },
+      "requestHash": "badc4dec7551d1c0f52fd0e59ecee6d0df3ef1288939095213a3ccbe890b4429",
+      "elapsedMs": 565,
+      "at": "2026-10-28T23:50:51.495Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

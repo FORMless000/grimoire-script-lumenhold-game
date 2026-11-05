@@ -1,0 +1,108 @@
+{
+  "query": "Bribing the Cat Footnote won't move from the drawer for less than fish. Good fish, from the village, not the refectory's. The head librarian says this is \"between you and the cat\". Buy him a proper herring Footnote eats the herring slowly, looking at you the whole time, then steps off the drawer and onto your lap. The card is yours. So, apparently, is the cat. Wait him out You wait. Footnote waits better. At closing he yawns, stretches, and lies back down on the drawer.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:library_fish_footnote",
+      "title": "Bribing the Cat",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 538,
+      "sourceHash": "47cfc0f74f4bfe3417e249fccff7cdbeea221b85215d4da6f55c4b3927f6cd99",
+      "score": 0.9577427506446838,
+      "excerpt": "Bribing the Cat\nFootnote won't move from the drawer for less than fish. Good fish, from the village, not the refectory's. The head librarian says this is \"between you and the cat\".\nBuy him a proper herring\nFootnote eats the herring slowly, looking at you the whole time, then step"
+    },
+    {
+      "key": "event:life_library_cat",
+      "title": "The Library Cat",
+      "file": "content/events/expansion_life.grim",
+      "line": 196,
+      "sourceHash": "0ac9918ada0ca3abf9bc4a007870b84e12885e57cd0a28e3518a12fd9ab25484",
+      "score": 0.7086802124977112,
+      "excerpt": "The Library Cat\nThe library cat — a vast, ancient beast called Footnote — is asleep on the only copy of the book you need. You have an essay due tomorrow. Footnote has no deadlines.\nMove the cat\nYou lift Footnote like a sack of warm flour. He allows it, with contempt. You get the"
+    },
+    {
+      "key": "event:lib_footnote_strike",
+      "title": "Footnote Goes on Strike",
+      "file": "content/events/slice_2b.grim",
+      "line": 328,
+      "sourceHash": "38001d4cd6865f53e4163d194b76eedd9abfb2e73c0f434de8ed6207000055a7",
+      "score": 0.705858051776886,
+      "excerpt": "Footnote Goes on Strike\nFootnote has lain down across the reference desk and will not move. Students are queueing. The cat has made its demands clear: none.\nBribe him with fish\nFootnote accepts the fish, the apology and the chair you bring him. The queue resumes.\nWork around him\n"
+    },
+    {
+      "key": "event:library_footnote_drawer",
+      "title": "Footnote's Drawer",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 517,
+      "sourceHash": "94b62ea0a26eda4f601a008dd04850a6e2e6f5b912e7d9756d9d69c66059e760",
+      "score": 0.6869364976882935,
+      "excerpt": "Footnote's Drawer\nFootnote has sat on one catalogue drawer for a week and hisses at anyone who comes near it. The label underneath him says OVERDUE, ELEVEN YEARS. The head librarian says whoever finds that book is welcome to the trick of finding books.\nFind out what he's guarding"
+    },
+    {
+      "key": "event:nudge_footnote",
+      "title": "Still Guarding It",
+      "file": "content/events/journal_cards.grim",
+      "line": 89,
+      "sourceHash": "ddf36c8c01ffd7b72fcdfb8db275246e8358e78c6ef0ca14c8288e2372275411",
+      "score": 0.6079726815223694,
+      "excerpt": "Still Guarding It\nFootnote is still on the overdue drawer, eleven years and half a year now, and the head librarian has started leaving his saucer there. When you pass, he stops washing and stares at you, as if you'd promised him something and he has been very patient about it.\nG"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "42ff0eab03216bf3b6b070f18a608d06da92676a47818ba12db6442b4c47fee4",
+      "at": "2026-10-28T23:51:35.282Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 117,
+        "total_tokens": 117,
+        "cost": 0.00000117,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000117,
+          "upstream_inference_prompt_cost": 0.00000117,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "42ff0eab03216bf3b6b070f18a608d06da92676a47818ba12db6442b4c47fee4",
+      "elapsedMs": 282,
+      "at": "2026-10-28T23:51:35.564Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2556a13a9df220ecdc68dd4922631e80c56bcacd5db2a46f3f11ad68db0a66dd",
+      "at": "2026-10-28T23:51:35.603Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 35751,
+        "cost": 0.00178755
+      },
+      "requestHash": "2556a13a9df220ecdc68dd4922631e80c56bcacd5db2a46f3f11ad68db0a66dd",
+      "elapsedMs": 423,
+      "at": "2026-10-28T23:51:36.026Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "The Daughters' Shortcut Pell's daughters say there's a shortcut: learn what the draught takes out of a brewer by tasting a little of it first. \"Father hates it,\" says one. \"It works,\" says the other. \"You'll be ill for a day.\" Try it on yourself It takes the strength out of your knees and then, slowly, gives it back. You spend a day in bed. When you get up, you know exactly where the draught will pull from. Do it Pell's way You decline. The daughters shrug. Pell, who was listening, corrects a label more firmly than it needed.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:pell_daughters_shortcut",
+      "title": "The Daughters' Shortcut",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 856,
+      "sourceHash": "ab4a883048a79c5e82e9e9d50087782fef74186cbc007defdf3de7ec63a0cba5",
+      "score": 0.9517173171043396,
+      "excerpt": "The Daughters' Shortcut\nPell's daughters say there's a shortcut: learn what the draught takes out of a brewer by tasting a little of it first. \"Father hates it,\" says one. \"It works,\" says the other. \"You'll be ill for a day.\"\nTry it on yourself\nIt takes the strength out of your "
+    },
+    {
+      "key": "event:pell_draught",
+      "title": "Of Your Own Strength",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 874,
+      "sourceHash": "4cf1cd9141f2a906dbd4b59b3e053521124740f2df4deceaf46ded46ffc2dd39",
+      "score": 0.6252030730247498,
+      "excerpt": "Of Your Own Strength\nPell closes the shop early, sets the old still on the bench and holds the lamp himself. \"Brew it,\" he says. \"I'll count.\" The recipe card lies beside you. {flag(distil_drops) and flag(distil_moonwort) and flag(distil_shortcut): You know every step of it.|Ther"
+    },
+    {
+      "key": "event:pell_apothecary_tonic",
+      "title": "The Daughters' Tonic",
+      "file": "content/events/pools/village_home.grim",
+      "line": 340,
+      "sourceHash": "3060899f86c91e2bdc6439e42495083e966753b39365393b4f12ff7647e7f54c",
+      "score": 0.557716429233551,
+      "excerpt": "The Daughters' Tonic\n{One of Pell's daughters has a new tonic and needs someone to try it. Her father must not know.|The daughters have another tonic, and a notebook with your name at the top of a column.|The daughters see you and reach under the counter before you've said hello."
+    },
+    {
+      "key": "event:shop_pell",
+      "title": "Pell's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 227,
+      "sourceHash": "554e54c5db7f2c8b1b687c8e539db653b4ef82fad43979a9cae0db84b700b9c4",
+      "score": 0.5539276003837585,
+      "excerpt": "Pell's Counter\n{One of Pell's daughters is at the counter. Behind her, Old Pell counts drops aloud and doesn't look up.|\"Tonic or draught?\" asks the daughter on the counter. \"Dad will say draught. Dad always says draught.\"|The drawers rattle as you come in, as if they were sortin"
+    },
+    {
+      "key": "event:pell_oldest_drawer",
+      "title": "The Oldest Drawer",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 793,
+      "sourceHash": "0714859a742da270d5ce96222b83c892c33ab65d868930af73b45faa99411d03",
+      "score": 0.44085320830345154,
+      "excerpt": "The Oldest Drawer\nRestocking, you open the oldest drawer at the bottom of Pell's wall. Inside is one yellowed card: a draught \"of your own strength\", in a hand older than Pell's. Pell sees it and counts to three under his breath. \"That one costs the brewer,\" he says. \"Measure twi"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "9ca01a6c34145ee9f69c76498df55705c9eb3e4f9741e1490a08db1c593148af",
+      "at": "2026-10-28T23:51:39.082Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 132,
+        "total_tokens": 132,
+        "cost": 0.00000132,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000132,
+          "upstream_inference_prompt_cost": 0.00000132,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "9ca01a6c34145ee9f69c76498df55705c9eb3e4f9741e1490a08db1c593148af",
+      "elapsedMs": 420,
+      "at": "2026-10-28T23:51:39.502Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7b64fb8315734cf990d001cd7b15f7f48051dae719066c25e184159f5f61d983",
+      "at": "2026-10-28T23:51:39.776Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44007,
+        "cost": 0.00220035
+      },
+      "requestHash": "7b64fb8315734cf990d001cd7b15f7f48051dae719066c25e184159f5f61d983",
+      "elapsedMs": 597,
+      "at": "2026-10-28T23:51:40.373Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

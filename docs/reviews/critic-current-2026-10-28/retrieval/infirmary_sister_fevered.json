@@ -1,0 +1,107 @@
+{
+  "query": "The Healer's Own Fever You find her in the little office behind the ward, upright in her chair, a cold compress on her own neck and the patient list in her lap. Her face is grey. \"Lake Fever,\" she says. \"From bed six. It's nothing. Go to bed.\" Fetch the Headmistress The headmistress comes in her dressing gown, and two healers from the village by morning. Sister Amaranth doesn't speak to you for a week. Then she thanks you, as an instruction: \"Next time, run faster.\" Do the rounds she dictates \"Bed two, the blue bottle, half a spoon. Bed four, turn the charm. Bed six…\" She stops. \"Bed six will lie to you. Don't believe her.\" You do the rounds until midnight.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:infirmary_sister_fevered",
+      "title": "The Healer's Own Fever",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 58,
+      "sourceHash": "4559bad6249be8e66ca435e5e9bcbd6b3e2d768c538135bfeb2c6afdc15bc06d",
+      "score": 0.9425784349441528,
+      "excerpt": "The Healer's Own Fever\nYou find her in the little office behind the ward, upright in her chair, a cold compress on her own neck and the patient list in her lap. Her face is grey. \"Lake Fever,\" she says. \"From bed six. It's nothing. Go to bed.\"\nFetch the Headmistress\nThe headmistr"
+    },
+    {
+      "key": "event:infirmary_bed_six",
+      "title": "Bed Six's Story",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 108,
+      "sourceHash": "7199c488cdbdf74882b14ac17167229e0741cc571783a2f3326e6d14795b872a",
+      "score": 0.7889429330825806,
+      "excerpt": "Bed Six's Story\nBed six is a second-year with Lake Fever, blue to the ears, who swears she never went near the lake. \"I fell asleep in the bath,\" she says. From her chair, Sister Amaranth raises one eyebrow and keeps it there. The fever isn't breaking. A cure for a bath is not a "
+    },
+    {
+      "key": "event:infirmary_own_prescription",
+      "title": "Her Own Prescription",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 137,
+      "sourceHash": "7b3fac3f4b53c73b6e33b08826a8e1e9ee0287a28d8bd959255a65b05a018ae5",
+      "score": 0.7224584221839905,
+      "excerpt": "Her Own Prescription\nSister Amaranth is up a week too soon, grey at the edges, taking the tray out for the evening round as if nothing had happened. At bed two she sways and puts a hand on the rail. {flag(bed_six_truth): Four second-years sit up in their beds to watch.|The whole "
+    },
+    {
+      "key": "event:alch_lake_fever",
+      "title": "Lake Fever Season",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 248,
+      "sourceHash": "3c9e338b920d01c5ad40e05b7de6c9ab7fae8203596cd56dd47213504c380751",
+      "score": 0.6585673093795776,
+      "excerpt": "Lake Fever Season\n{Advanced Alchemy treats real patients. The infirmary has Lake Fever cases, from swimming where they shouldn't. Sister Amaranth wants the fever drawn out, not just cooled.|Lake Fever again. Students never learn, Sister Amaranth says, and neither do lakes.|Fever "
+    },
+    {
+      "key": "event:infirmary_night_watch",
+      "title": "Turning the Fever Charm",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 151,
+      "sourceHash": "c1607e34499554201d4a48616a4707f7fb9b64fa3eb92b3fc3da70123da609f3",
+      "score": 0.6441618204116821,
+      "excerpt": "Turning the Fever Charm\n{A first-year in the end bed has a fever, and the cooling charm over the bed has to be turned by hand every hour until dawn. Sister Amaranth looks at you, then at the chair.|Another fever, another chair. The cooling charm's brass ring is worn smooth where "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "fb6e58fcadbf8f350ec5f261f011ba0f5e2f61256638174b25786e72e5576e84",
+      "at": "2026-10-28T23:23:07.292Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 167,
+        "total_tokens": 167,
+        "cost": 0.00000167,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000167,
+          "upstream_inference_prompt_cost": 0.00000167,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "fb6e58fcadbf8f350ec5f261f011ba0f5e2f61256638174b25786e72e5576e84",
+      "elapsedMs": 9024,
+      "at": "2026-10-28T23:23:16.315Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "90beb315017fb094151e9aa0de3f6425332041f0482b946f72389daa08644b5a",
+      "at": "2026-10-28T23:23:16.356Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 35613,
+        "cost": 0.00178065
+      },
+      "requestHash": "90beb315017fb094151e9aa0de3f6425332041f0482b946f72389daa08644b5a",
+      "elapsedMs": 470,
+      "at": "2026-10-28T23:23:16.826Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

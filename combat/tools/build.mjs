@@ -10,7 +10,7 @@ fs.copyFileSync(path.join(rust,'target/wasm32-unknown-unknown/wasm/combat_wasm.w
 // The site: UI files as they are, and one engine.mjs made of the JS setup/data modules and the core glue (tools/site.mjs,
 // which the main game's server also serves at /bench/).
 const {siteFiles}=await import('./site.mjs');
-const files=await siteFiles();
+const files=await siteFiles({game:true});
 for(const [name,data]of Object.entries(files)){fs.mkdirSync(path.dirname(path.join(site,name)),{recursive:true});fs.writeFileSync(path.join(site,name),data);}
 const kb=f=>(fs.statSync(path.join(site,f)).size/1024).toFixed(0)+' KB';
 console.log(`site → ${site}: engine.mjs ${kb('engine.mjs')}, core.wasm ${kb('core.wasm')}`);

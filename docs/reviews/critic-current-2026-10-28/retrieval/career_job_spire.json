@@ -1,0 +1,107 @@
+{
+  "query": "The Stacks Want You Back A note under the bell on the reference desk, after your shift. The head librarian wants to keep you on after graduation, full time, as a keeper of the stacks. \"Footnote has stopped biting you,\" it says. \"That is a qualification.\" Answer by the last day. Leave a note under the bell: yes You leave your answer under the bell. In the morning there's a second note: \"Good. Bring a longer ladder.\" Ask about the restricted shelves \"In time,\" says the next note, \"and only with gloves.\" It is not a no, and you find you're counting the years.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_job_spire",
+      "title": "The Stacks Want You Back",
+      "file": "content/events/careers.grim",
+      "line": 267,
+      "sourceHash": "3dc5cf6faa17b933c021846a80cdfd25c9e9431c2562fbfcdd9cd185ad50152c",
+      "score": 0.934836208820343,
+      "excerpt": "The Stacks Want You Back\nA note under the bell on the reference desk, after your shift. The head librarian wants to keep you on after graduation, full time, as a keeper of the stacks. \"Footnote has stopped biting you,\" it says. \"That is a qualification.\" Answer by the last day.\nL"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5905459523200989,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:library_assistant_stack_keys",
+      "title": "The Stack Keys",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 493,
+      "sourceHash": "346e390cd330e5b80679ab97b7ec7400c909e56cae81719184c655a34e3eb963",
+      "score": 0.5754542350769043,
+      "excerpt": "The Stack Keys\nAt closing the head librarian presses a brass ring of keys into your hand: the upper stacks, the map drawers, the ladder chains. Not the Restricted Section. \"Lock up. The shelves settle after dark. Let them.\"\nDo the closing round alone\nYou walk every floor with the"
+    },
+    {
+      "key": "event:gig_library_stocktake",
+      "title": "The Stocktake",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 251,
+      "sourceHash": "110dd0d4a492385bc8c1b3408d11c8e4667e04b34b2f892e63515696054c1f1d",
+      "score": 0.5693185329437256,
+      "excerpt": "The Stocktake\n{The library in the holidays is all yours and all to be counted.|The stocktake ledger is half full; the shelves are not half counted.|You've stopped counting books and started counting floors.} {A shelf of atlases has migrated to the poetry section.|One book is not "
+    },
+    {
+      "key": "event:career_return_royal_library",
+      "title": "The Archives Write Again",
+      "file": "content/events/careers.grim",
+      "line": 139,
+      "sourceHash": "068e0457e018f68fe0938d7f8345e4e611182cb1627082ffb776e3b4a16487f8",
+      "score": 0.5325851440429688,
+      "excerpt": "The Archives Write Again\nThe Royal Library Archives remember your summer. The keeper writes that a cataloguer's post is free from the autumn, \"for someone who reads the footnotes\", and that your name was the only one proposed. Answer by the last day.\nWrite back in your best coppe"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "40abf66c67ab560b7c2fe75db9156295c791677de2975bb3fdddabf5128d7130",
+      "at": "2026-10-28T23:20:19.988Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 133,
+        "total_tokens": 133,
+        "cost": 0.00000133,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000133,
+          "upstream_inference_prompt_cost": 0.00000133,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "40abf66c67ab560b7c2fe75db9156295c791677de2975bb3fdddabf5128d7130",
+      "elapsedMs": 9935,
+      "at": "2026-10-28T23:20:29.923Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "fb24e354152ae20ff11dfccfb47fa212ba0cee1d9ec973d74fd92b79b28f460e",
+      "at": "2026-10-28T23:20:29.960Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 38109,
+        "cost": 0.00190545
+      },
+      "requestHash": "fb24e354152ae20ff11dfccfb47fa212ba0cee1d9ec973d74fd92b79b28f460e",
+      "elapsedMs": 414,
+      "at": "2026-10-28T23:20:30.374Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

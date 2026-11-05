@@ -277,6 +277,11 @@
     'check.fight': 'Fight', 'check.fightButton': 'Fight · {foe} · level {level}', 'check.fightChip': 'Fight: {result} · {reason}',
     // A negotiation (E8): bound to the negotiation minigame; until it arrives, settled by charm, lore and guile.
     'check.parleyButton': 'Negotiation · {skill}', 'check.parleyChip': 'Negotiation ({p}%) · {result}',
+    'parley.noEngine': 'The negotiation could not load. Your choice has not been applied.',
+    'parley.resumeError': 'This negotiation could not resume with the current Crux version. Your saved meeting has been kept.',
+    'parley.result': 'Negotiation · {result}',
+    'parley.button': 'Negotiation',
+    'parley.noBond': 'No shared history', 'parley.noRecord': 'No relevant record',
     'check.parleyStub': 'Settled by charm, lore and guile until the negotiation game arrives.',
     // Introductions (E7): the title screen's option and Settings.
     'title.options': 'More options', 'title.skipIntros': 'Skip the introductions (you know the academy already)',
@@ -338,6 +343,44 @@
     'fight.witnessed': 'Someone here would report a forbidden spell', 'fight.unwitnessed': 'No one here would report a forbidden spell', 'fight.allyBeside': '{name} fights beside you and throws in {spell} now and then', 'fight.unfitMana': 'Your Mana isn\'t full ({n} of {max}): the rest starts as flux, which takes a Reclaim.',
     'fight.win': 'Victory', 'fight.lose': 'Defeat', 'fight.draw': 'Draw', 'fight.continue': 'Continue',
     'fight.reason.knockout': 'by knockout', 'fight.reason.decision': 'on points', 'fight.reason.stalemate': 'neither can finish it', 'fight.reason.conceded': 'by concession',
+    // The fight screen (the Arena, 2026-11-02; designed in experiments/combat-ui): the last exchange, statuses, summons,
+    // blows on their way, this exchange's telegraph, a mutual knockout.
+    'fight.tbWon': 'You both fell in the same exchange, but you committed first: your blow landed first and theirs never did, so you keep your HP.',
+    'fight.tbLost': 'You both fell in the same exchange, but {name} committed first: their blow landed first and yours never did.',
+    'fight.tbNever': 'Never landed', 'fight.tbFirst': 'Struck first', 'fight.tbTag': 'Won on initiative', 'fight.tbTagLost': 'Lost on initiative',
+    'fight.them': 'Them', 'fight.idleYou': 'Pick your opening move below. Tap any move or status for its full rules.',
+    'fight.theirSpells': 'Their spells', 'fight.idleTheyAnswer': '{name} sees nothing of your move and answers it.',
+    'fight.idleTheyLead': '{name} opens: their move is shown before you choose.', 'fight.lastEx': 'Exchange {n}', 'fight.youLocked': 'You: {move}',
+    'fight.waitingFor': '{name} is choosing…', 'fight.noDamage': 'no damage', 'fight.blocked': 'Blocked {n}', 'fight.dealt': '−{n}',
+    'fight.healed': '+{n}', 'fight.manaUp': '+{n} Mana', 'fight.def.guard': 'Parried', 'fight.def.tiredGuard': 'Half-parried',
+    'fight.def.ward': 'Warded', 'fight.def.brace': 'Braced', 'fight.def.shadowstep': 'Evaded', 'fight.def.reflect': 'Reflected',
+    'fight.def.construct': 'Blunted', 'fight.def.lodestar': 'Negated', 'fight.def.frozen': 'Frozen', 'fight.applied.landed': 'Landed',
+    'fight.applied.blocked': 'Blocked', 'fight.applied.reflected': 'Turned back', 'fight.applied.reflectedBlocked': 'Turned back, blocked',
+    'fight.ex.constructEnded': '{name} is gone', 'fight.ex.froze': '{who} froze instead of falling', 'fight.ex.compelsCancel': 'Both Compels cancel',
+    'fight.ex.hoarfrostCancel': 'Frost and fire cancel', 'fight.ex.torment': 'Torment: {who} −{n}', 'fight.ex.witnessed': 'Seen casting {name}',
+    'fight.ex.assist': '{name} joins in', 'fight.hits': '{name} → {who} {n}', 'fight.reflectedHit': '{name}, turned back → {who} {n}',
+    'fight.st.haste': 'Spells that deal no damage also throw an Impulse; other moves also Parry.',
+    'fight.st.shadowstep': 'Evading attacks and spell effects. Attacking or Refocusing breaks it.',
+    'fight.st.brace': 'Every opposing hit is softened (not Omen).', 'fight.st.ward': 'This exchange: stops spells, halves Impact.',
+    'fight.st.guard': 'This exchange: stops Impact, halves spells.', 'fight.st.reflect': 'This exchange: spells go back to their caster.',
+    'fight.st.tailwind': 'Another Tailwind next hits {n}.', 'fight.st.torment': 'Each move costs HP: {n}× the Mana paid.',
+    'fight.st.compelled': 'Must repeat {action}.', 'fight.st.compelledAny': 'Must repeat the seized move.', 'fight.st.bound': 'Can only Break Free.',
+    'fight.st.poison': '{n} damage at the end of each exchange, past defences.', 'fight.st.eclipse': 'Damage taken also gives Mana.',
+    'fight.st.heartprice': 'Spells cost HP. Nothing heals.', 'fight.st.lodestar': 'Exchange {n}: blocks all damage, then heals {h}.',
+    'fight.st.foresight': '{who} commit first: the move is shown before the other picks.',
+    'fight.st.foresightThey': '{name} commits first, in the open: you see their move before you pick.',
+    'fight.st.foresightYou': 'You commit first, in the open: {name} sees your move before picking.',
+    'fight.st.channel': '{holds} held. Hold to build, Release to fire.', 'fight.st.frozen': 'Frozen: loses exchange {n}.',
+    'fight.st.rime': 'Freezes instead of falling, once.', 'fight.st.generic': 'In effect.', 'fight.turnsLeft': '{n} left',
+    'fight.untilEx': 'through exchange {n}', 'fight.youObj': 'you', 'fight.lastExShort': 'last exchange', 'fight.cx.strike': '{n} Impact to {foe}',
+    'fight.cx.spell': '{n} spell damage to {foe}', 'fight.cx.heal': 'Heals {owner} {n}', 'fight.cx.every': 'Each exchange: {effect}.',
+    'fight.cx.blunt': 'Each hit on {owner} is {n} lighter.', 'fight.cx.breaks': 'Breaks after {n} more damage to {owner}.',
+    'fight.cx.ends': 'Gone after exchange {n}.', 'fight.cx.burst': 'When it goes: {n} spell damage to both sides.', 'fight.cx.hp': '{n} to break',
+    'fight.incoming': 'Incoming', 'fight.landsNow': 'lands now', 'fight.landsIn': 'in {n}', 'fight.landsNext': 'next', 'fight.log': 'Log',
+    'fight.nowShort': 'Now', 'fight.blowNow': '{name} lands now', 'fight.tgThinking': 'Their move', 'fight.tgHidden': 'Hidden',
+    'fight.tgHiddenText': '{name} answers your move', 'fight.tgShown': 'They committed', 'fight.tgForced': 'Compelled to',
+    'fight.hpLost': 'Lost {n} HP this exchange', 'fight.role.guard': 'Stops Impact', 'fight.role.ward': 'Stops spells',
+    'fight.role.brace': 'Softens hits', 'fight.role.reflect': 'Returns spells', 'fight.whatStops': 'What stops it', 'fight.history': 'Fight so far',
     'size.tiny': 'tiny', 'size.small': 'small', 'size.medium': 'medium', 'size.large': 'large', 'size.huge': 'huge',
     'note.grade': '{track}: {grade}',
     'note.regrade': '{track}: {from} → {grade} on appeal',
@@ -554,12 +597,14 @@
   }
 
   /* ------------------------------------------------------------------ runtime (UI) */
-  let current = { lang: 'en', ui: {}, combat: {} };
+  let current = { lang: 'en', ui: {}, combat: {}, parley: {} };
   // The fight's strings (locales/<lang>/combat.lang, @combat) are kept for the combat minigame (src/ui.js hands them over).
   function use(locale) {
     const combat = locale && locale.blocks && locale.blocks.combat ? Object.fromEntries(Object.entries(locale.blocks.combat).filter(([, v]) => v.text !== '').map(([k, v]) => [k, v.text])) : {};
-    current = locale ? { lang: locale.lang, ui: locale.ui || {}, combat } : { lang: 'en', ui: {}, combat: {} };
+    const parley = locale && locale.blocks && locale.blocks.parley ? Object.fromEntries(Object.entries(locale.blocks.parley).filter(([, v]) => v.text !== '').map(([k, v]) => [k, v.text])) : {};
+    current = locale ? { lang: locale.lang, ui: locale.ui || {}, combat, parley } : { lang: 'en', ui: {}, combat: {}, parley: {} };
   }
+  function parleyText() { return current.parley; }
   function combatText() { return current.combat; }
   function t(key, vars) {
     let s = current.ui[key] != null ? current.ui[key] : UI_EN[key];
@@ -578,5 +623,5 @@
     return names[Math.floor(rand() * names.length)] || t('title.defaultName');
   }
 
-  return { UI_EN, hash, enc, dec, parseLang, loadLocale, visit, extract, applyContent, pronounTable, use, t, lang, combatText, randomName, FIELDS };
+  return { UI_EN, hash, enc, dec, parseLang, loadLocale, visit, extract, applyContent, pronounTable, use, t, lang, combatText, parleyText, randomName, FIELDS };
 });

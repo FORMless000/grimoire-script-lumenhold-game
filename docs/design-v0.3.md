@@ -251,9 +251,8 @@ text: The founders bound something beneath the lake with seven locks, one per to
 
   It's capped at about 6k tokens by default.
 
-Experimental authoring retrieval and controlled evaluation are documented in
-[`rag/README.md`](../rag/README.md) and
-[`rag/EVALUATION.md`](../rag/EVALUATION.md).
+Authoring retrieval is documented in [`rag/README.md`](../rag/README.md) and
+[`rag/AUTHORING.md`](../rag/AUTHORING.md).
 
 ### 3.5 Authoring spec (`docs/authoring/`)
 
@@ -431,8 +430,6 @@ time_fit  = 3 in an event's `time:` slots, 0.3 elsewhere, 1 without one; 0 outsi
 
   These are hard-canon story cards with `arc: hollowstar` and `limit: plot`. They find no clue and move no clock.
 
-The target is one to three a year while each one's condition holds. Measured on the simulated styles, it's about 1.5 a year for rivals and the man in grey, and about 2 for Ember and the Wardens.
-
 ### 5.4 Radiant casting
 
 ```
@@ -477,7 +474,7 @@ Friends are found the way they are in life: in the courses, clubs, jobs and plac
   - `never`.
 - **Fixtures** are the people of a place or a track, promoted from the background:
   - Sister Amaranth; Professors Brask, Vey and Marisol; Mabel, Mr Grimsby, Old Pell and Grisk.
-  - **Shape:** lighter ladders (an introduction where they work or through their track, two or three repeatable cards, one milestone, often teaching a spell, §9.1), no romance, `seeks: rarely` (Grisk `sometimes`), and their own facts.
+  - **Shape:** lighter ladders (an introduction where they work or through their track, repeatable cards, a milestone, often teaching a spell, §9.1), no romance, `seeks: rarely` (Grisk `sometimes`), and their own facts.
   - **The roster's tiers:** core cast (full arcs, romance, the plot) and fixtures; no procedural characters for now.
 - **Leads (`@track lead:`)** are a course's professor or whoever runs a club or job:
   - enrolling or joining meets them;
@@ -694,10 +691,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Ranks:**
   - Promotion = performance ≥ 70 + rank XP (from track events) + a milestone event. A new rank starts at performance 50 (M12).
   - Perks per rank (clubs: fixtures, contacts, spells; jobs: pay, discounts, access to places).
-- **Event depth targets:**
-  - 15–20 events per course level;
-  - 30+ per club or job across its ranks;
-  - a milestone event per level or rank.
+- **A milestone event per level or rank.**
 - **Rewards come through track events,** not a fixed payout.
 - **The Midnight Cartographers** are a society (M40): hidden, joined by invitation, with no dues, performance or ranks, and beside your club rather than instead of it.
 
@@ -752,7 +746,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 | Deepwinter–Thawmoon | (optional) | "thesis retreat" break plan: +progress |
 | Stormbloom–Greenrise | experiment / fieldwork | discipline-skill `challenge`; a pushed **complication** incident |
 | Blossomtide | final draft | progress < 60 → crunch event (mood and health for progress) |
-| Highsun | **defence** | `challenge negotiate` against a committee of 3, modified by progress and the advisor relationship (auto-resolved until §T1) |
+| Highsun | **defence** | `challenge negotiate` against a committee at one Crux table (§T1); Record reads thesis progress directly |
 
 **Result:** distinction, pass, or fail and resubmit (graduate late). It feeds GPA, the yearbook headline, the Career Fair and renown. An ambitious, plot-bound thesis adds a line to the ending's *mystery* slot.
 
@@ -920,8 +914,8 @@ A check's difficulty comes from the story, not the calendar (the skill-check sur
 |---|---|---|
 | `routine` | strict budget (§8.4) | per event |
 | `milestone` | may be pure reward; capped at 2 large | per run: count and value |
-| `incident` | may be all-negative; must offer agency (mitigate vs accept) | per run: about 1–3 serious ones a year |
-| `windfall` | may be all-positive; capped at 1 large | per run: frequency band |
+| `incident` | may be all-negative; must offer agency (mitigate vs accept) | per run: count |
+| `windfall` | may be all-positive; capped at 1 large | per run: count |
 | `story` | exempt from budget; reviewed by the critic | per arc |
 | `crisis` | exempt | rate per play style |
 
@@ -959,7 +953,6 @@ So automation catches **gross errors and regressions only**. **Human playtests**
 | One friend at ~2 years | `social:x`: friendship < 80 by month 24 |
 | Romance is volatile | swings < 20 within 3 months in most romance runs |
 | Skipping hurts | `truant` is never dropped or fired |
-| Incidents / windfalls per year | outside 1–3 / 1–4 per year |
 
 **Level 3: impact report** (`grim report`, §11.2): reach × magnitude per event, using telemetry wherever human runs exist.
 
@@ -1042,7 +1035,7 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 |---|---|
 | combat | played (above); the old stub, compatibility only: arcana, vigor and guile, plus condition (health, mood, mana) and the levels of every spell content knows |
 | duel | played (above); the stub, compatibility only: (vigor + arcana) / 2 |
-| negotiate | charm |
+| negotiate | played in Crux (§T1); raw campaign skills, Standing, Bond and Record |
 | deceive | guile |
 | exam | the course's skill |
 | research | lore |
@@ -1165,8 +1158,8 @@ key_clues: seven_locks star_key ilse_truth
 
 ### 11.1 Path 1: batch authoring by Claude Code (from Phase 3)
 
-Loop per batch (a typical batch is 20–40 events around one brief):
-1. Choose a gap from `grim report --gaps` (depth targets, places with thin pools, under-served arcs, characters, seasons).
+Loop per batch (a group of events around one brief):
+1. Choose a gap from `grim report --gaps` (the thinnest pools, under-served arcs, characters, seasons).
 2. `grim brief …` → context pack.
 3. Write the events.
 4. `grim build && grim lint && grim balance --quick && grim i18n zh-CN`, then translate.
@@ -1352,7 +1345,7 @@ Every batch and every tuning pass runs `i18n zh-CN` and translates per the gloss
 9. **Human playtest #2:** a full run in each language.
 10. **Feedback tooling:** `grim report` and the `tune-events` skill working on playtest telemetry.
 
-**Content production opens:** path 1 starts with depth targets (§7.4): course levels, clubs and jobs, places, break plans.
+**Content production opens:** path 1 starts with the draw sources: course levels, clubs and jobs, places, break plans.
 
 **Exit:**
 - 0 lint errors and 0 legacy warnings;
@@ -1410,7 +1403,7 @@ These sections record the direction agreed so far. Their **only** effect on Phas
 
 **Built: fights** (2026-10-19). The combat minigame (`combat/`; its hand-over, `combat/HANDOFF.md`) plays every `combat` and `duel` challenge (§9.2). By the user's decision there is no auto-resolve for fights and no monthly limit on them. Everything else in this section stays tentative.
 
-**Bound: negotiations** (world expansion 1, E8). Every `challenge negotiate` is a real negotiation, bound to the negotiation minigame (`docs/minigame-negotiation-v03.md`) and registered with its opponent profile and room in `src/negotiation.js`; until the minigame ships, a stub decides it from charm, lore and guile (`@balance negotiate`). Trivial asks became plain checks (`appeal`, `perform`, `soothe`). **Minigames happen freely:** the "about one a month" limit below is superseded by the user's decision (2026-10-20).
+**Bound: negotiations — Crux** (integrated November 5). Every `challenge negotiate` opens Crux, registered with its profile and room in `src/negotiation.js`. The Rust rules/search and table renderer live once in `crux/`, shared with standalone testing and simulated players. Campaign skills, spell ranks and resource balances pass through directly. Standing reads Renown, Bond the relevant signed relationship, Record relevant performance or thesis progress; missing context is unavailable rather than replaced by a level proxy. Resource transfers use `@balance parley_scale` (0.6, rounded up for non-Mana transfers; Mana is unscaled) at payment time, with no rebates; authored card consequences remain additional. No new card syntax, pacing limit or content retuning is introduced. See `crux/HANDOFF.md` for the runtime inputs, settlement and checks.
 
 **Shared direction:**
 - **Short:** 30–90 seconds, 5–8 decisions, swipe or tap, no reflex tests.
@@ -1460,3 +1453,5 @@ These sections record the direction agreed so far. Their **only** effect on Phas
 **Audit:** a Library panel and `/admin` to list, preview, rate and delete, with automatic pruning.
 
 **Also deferred here:** content chunking for very large libraries; embedding-based retrieval and duplicate detection; the model provider (D9).
+
+Crux payment revision (November 5): Mana retains its full cost, including demands and hostile drains. Other campaign transfers use scale 0.6, rounded up per transfer. No rebates. Earlier 0.5 reports are historical.

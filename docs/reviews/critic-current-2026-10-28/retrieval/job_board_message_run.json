@@ -1,0 +1,108 @@
+{
+  "query": "Messages Across the Castle {A professor wants a runner for the afternoon, with notes for every tower before the bell. A small fee, and no reading them.|The runner's notice is back, with a longer list of towers.|The runner's notice, and a list you could walk in your sleep. The staircases have learned your face.} Run the round yourself {You reach the last tower as the bell goes. Your legs are jelly and the fee is honest.|Seven towers, two moving staircases and one argument with a portrait. Paid in full.|You take the shortcuts the staircases allow you now. Paid, and back in time for supper.} Send the owls instead {You pay the owlery out of the fee and keep the rest, and the afternoon. The professor never knows.|The owls do it faster than you would have. You pocket what's left and feel only slightly guilty.|The owls know the round now as well as you. You keep a little of the fee and all of your afternoon.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_message_run",
+      "title": "Messages Across the Castle",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 685,
+      "sourceHash": "122032a11b21f850136f5921aff4b153b1696dd53743908a5e238f92dbd8847a",
+      "score": 0.9484858512878418,
+      "excerpt": "Messages Across the Castle\n{A professor wants a runner for the afternoon, with notes for every tower before the bell. A small fee, and no reading them.|The runner's notice is back, with a longer list of towers.|The runner's notice, and a list you could walk in your sleep. The sta"
+    },
+    {
+      "key": "event:beast_owl_post",
+      "title": "Teaching the Owls",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 431,
+      "sourceHash": "c85b8c46038b61eac401705b274dc065b5d1df21bebbad201b5a988c493bfd10",
+      "score": 0.5660727620124817,
+      "excerpt": "Teaching the Owls\n{Beast-speech at Beastcraft II. The young owls must learn the post routes. Brask hands you one and says, \"Explain the castle to it.\"|A new young owl, and the same castle to explain.|Another owl. You've got a speech now, and a map scratched on a beam.} {Your owl "
+    },
+    {
+      "key": "event:courier_loft_dispatch_bell",
+      "title": "The Dispatch Bell",
+      "file": "content/events/pools/grounds.grim",
+      "line": 642,
+      "sourceHash": "b5e2a8b3a8cca3d57ef645780c71a5338d339077535a936cfe712daee8b2c541",
+      "score": 0.4966495633125305,
+      "excerpt": "The Dispatch Bell\n{The dispatch bell clangs and the loft explodes into brooms. A courier shoves a parcel at you. \"You've got legs. Lecture tower!\"|The couriers have started eyeing the ladder whenever someone climbs it.|The bell. A parcel. A look. You know the drill.} {The parcel "
+    },
+    {
+      "key": "event:break_castle_bored_stairs",
+      "title": "The Bored Staircases",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 64,
+      "sourceHash": "8610c06cd11122317500b8c5c6a28a970443860b9c4ae53532caec9aabe0a8b2",
+      "score": 0.49249187111854553,
+      "excerpt": "The Bored Staircases\n{With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == \"winter\": The st"
+    },
+    {
+      "key": "event:upper_year_errands",
+      "title": "Errands for Upper-Years",
+      "file": "content/events/pools/money.grim",
+      "line": 122,
+      "sourceHash": "9496430d05bfb83a4d25db742f48adde2a1b14f5a388c3c63bc503ff4c37ecf9",
+      "score": 0.4922346770763397,
+      "excerpt": "Errands for Upper-Years\n{Upper-years pay for errands, a book fetched or a queue stood in or a letter carried to the owlery.|An upper-year waves a list and a coin at you. Word has got round.|\"You again,\" says the upper-year, pleased. \"Good. The usual, plus my laundry.\"} {The list "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6e2d76f0a94a1dd33a8a3fbcdbb911657ed7d76ce31cf2268623f2549ef1be2e",
+      "at": "2026-10-28T23:51:07.231Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 212,
+        "total_tokens": 212,
+        "cost": 0.00000212,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000212,
+          "upstream_inference_prompt_cost": 0.00000212,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6e2d76f0a94a1dd33a8a3fbcdbb911657ed7d76ce31cf2268623f2549ef1be2e",
+      "elapsedMs": 263,
+      "at": "2026-10-28T23:51:07.494Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c06191f29d85ae5757d6ccaabac538f7305e7d69aafdc5a5ee6541dcd93e809e",
+      "at": "2026-10-28T23:51:07.666Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42864,
+        "cost": 0.0021432
+      },
+      "requestHash": "c06191f29d85ae5757d6ccaabac538f7305e7d69aafdc5a5ee6541dcd93e809e",
+      "elapsedMs": 386,
+      "at": "2026-10-28T23:51:08.052Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

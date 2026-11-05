@@ -1,0 +1,108 @@
+{
+  "query": "The Common-Room Kettle {Your house common room has one kettle, older than anyone in the room, and whoever makes the tea hears everything.|The common-room kettle is whistling. Somebody shouts \"Whoever's nearest!\" and it's you.|The kettle. You know its temper now: two taps on the lid and it behaves.} {The fire is roaring and people are in their dressing gowns.|Someone has a letter from home and is reading it aloud.|{season == \"winter\": Snow has drifted against the windows.|The windows are open to the warm night.}} Make tea for everyone {You make a pot for twelve with the last of your good leaves. In return you hear who's courting whom, who's failing what, and one secret you'll keep.|You make the tea from your own tin, and everyone moves up to make room for you by the fire. It's the warmest you've been all week.|You make it the way the room likes it now, with the good leaves you bought. Someone says \"Thank you\" exactly the way your family says it, and your throat goes tight.} Take your cup up to bed {You take your tea up to bed and fall asleep before it's cold. The common room laughs below you half the night.|You slip away early with your cup. You miss the best story of the term, you hear in the morning.|You go up early, as you've started to. The noise from below is a nice thing to fall asleep to.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_common_room_kettle",
+      "title": "The Common-Room Kettle",
+      "file": "content/events/pools/world_more.grim",
+      "line": 97,
+      "sourceHash": "b5928992fd30381eb67fde29d8a090e8380e75687857e4be670fc4cf4f4f282f",
+      "score": 0.9546942114830017,
+      "excerpt": "The Common-Room Kettle\n{Your house common room has one kettle, older than anyone in the room, and whoever makes the tea hears everything.|The common-room kettle is whistling. Somebody shouts \"Whoever's nearest!\" and it's you.|The kettle. You know its temper now: two taps on the l"
+    },
+    {
+      "key": "event:maud_cottage_kettle",
+      "title": "Tea at Maud's",
+      "file": "content/events/pools/grounds.grim",
+      "line": 490,
+      "sourceHash": "892f84b4cf1ad947ba13a628a588cfc246de2a3aba955146661c30a69040c15e",
+      "score": 0.5312471985816956,
+      "excerpt": "Tea at Maud's\n{Old Maud's kettle is nearly boiling, as it always is. \"Sit down, dearie,\" she says. \"You look like a puddle with a worry.\"|The kettle is nearly boiling. Maud has already put out your cup, the chipped one.|Your chipped cup is waiting. Maud says it's been asking afte"
+    },
+    {
+      "key": "event:astro_tea_rota",
+      "title": "Another Pot of Tea",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 174,
+      "sourceHash": "1525c59e72385030a1af4f726487a490513990c127db162deed61035420bc731",
+      "score": 0.5303065776824951,
+      "excerpt": "Another Pot of Tea\nAstromancy I has a tea-leaf morning every week, and tea leaves require tea. {The class gets through three pots before ten.|The tea rota has your name on it again.|The teapot greets you like an old colleague.} {Your cup shows something that is either a ship or a"
+    },
+    {
+      "key": "event:break_castle_one_fire",
+      "title": "The One Lit Fire",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 6,
+      "sourceHash": "443989f6dcc65738da84aa52898a2e1de001a938fca152a652bf13f6850071ba",
+      "score": 0.49850979447364807,
+      "excerpt": "The One Lit Fire\n{With the houses empty, the stewards light one common room and let the rest go dark.|Someone has brought a kettle, and now there's a rota for it.|The break common room. You know everyone's blanket by now.} {season == \"winter\": The best armchair is right by the fi"
+    },
+    {
+      "key": "event:thesis_lab_tea_urn",
+      "title": "The Tea Urn",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 421,
+      "sourceHash": "950326161dcc018e68f2a9c2df6a52e083adab0fc82688a2dea697763f638b66",
+      "score": 0.497813880443573,
+      "excerpt": "The Tea Urn\n{The thesis lab runs on the tea urn, a dented copper monster that has outlived forty years of final-years. Round it, people confess things.|At the urn today someone is crying quietly into their mug about chapter three.|The urn. Someone has taped a list to it: STAGES O"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "586677608d0c7c4fb25a80a1af787dbac61ffc41572eed410d9bc671d70cbbdc",
+      "at": "2026-10-28T23:50:52.077Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 314,
+        "total_tokens": 314,
+        "cost": 0.00000314,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000314,
+          "upstream_inference_prompt_cost": 0.00000314,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "586677608d0c7c4fb25a80a1af787dbac61ffc41572eed410d9bc671d70cbbdc",
+      "elapsedMs": 301,
+      "at": "2026-10-28T23:50:52.378Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a5cfad2813e5b36e513850dce97a36b5546287e7086737160f641a2d9e4b9857",
+      "at": "2026-10-28T23:50:52.445Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47274,
+        "cost": 0.0023637
+      },
+      "requestHash": "a5cfad2813e5b36e513850dce97a36b5546287e7086737160f641a2d9e4b9857",
+      "elapsedMs": 345,
+      "at": "2026-10-28T23:50:52.790Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

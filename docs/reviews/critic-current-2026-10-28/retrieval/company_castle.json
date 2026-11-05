@@ -1,0 +1,108 @@
+{
+  "query": "Someone from the Castle {Halfway up the stair you see {guest} at the corner table, out of robes, with a glass of wine and the air of someone who would rather not be seen either.|{guest} is at the corner table tonight. You both pretend this is a coincidence.|Tonight it is {guest} in the corner. Half the faculty seem to drink here, and there is an arrangement: nobody has seen anybody.} Serve {them} as if you'd never met {You serve {guest} like any guest, and {they} tip{s} like one, too generously. At breakfast {they} nod{s} to you as if nothing ever happened.|You keep a straight face all night. On the way out {guest} leaves a coin under {their} glass and, beside it, a very small nod.|Neither of you blinks. In class next week {guest} calls on you with something almost like respect.} {You drop a glass when {guest} looks up. Everyone turns. {guest} leaves early, and is cold to you all week.|You say \"Professor\" before you can stop yourself. The table laughs. {guest} does not.|{guest} catches your eye and you both flinch, in front of everyone. By morning half the village knows who was where.} Slip back downstairs {You give the landlady an excuse and go down the back stair. It's a lost night's pay, and the walk home is sulky.|You hand your tray to another student and leave. {guest} never sees you; your purse notices.|You go home early, and lie awake doing the sum of what you didn't earn.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_castle",
+      "title": "Someone from the Castle",
+      "file": "content/events/pools/night.grim",
+      "line": 281,
+      "sourceHash": "fb7121b93dcaa6a0422d2998abb2951994d39a2060fbd79f7dac5dbd950b8fd2",
+      "score": 0.9457532167434692,
+      "excerpt": "Someone from the Castle\n{Halfway up the stair you see {guest} at the corner table, out of robes, with a glass of wine and the air of someone who would rather not be seen either.|{guest} is at the corner table tonight. You both pretend this is a coincidence.|Tonight it is {guest} "
+    },
+    {
+      "key": "event:company_wants_more",
+      "title": "A Guest Who Wants More",
+      "file": "content/events/pools/night.grim",
+      "line": 311,
+      "sourceHash": "fe4de4e7a319f821f58ddfd0c77313cd9244ad0a544768b2e8d681e2bf996cd5",
+      "score": 0.5477808117866516,
+      "excerpt": "A Guest Who Wants More\n{A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. \"Come back to my inn,\" he says. \"Just to talk.\" The house rule is clear.|Another guest, another heavy purse, another invitation \"just to talk\". T"
+    },
+    {
+      "key": "event:gilded_newt_corner_table",
+      "title": "The Corner Table",
+      "file": "content/events/pools/village_home.grim",
+      "line": 132,
+      "sourceHash": "80958c3859bfa25add4c264d1ddc9897acc84716ee7e045c82e68ddb160e01ee",
+      "score": 0.5319049954414368,
+      "excerpt": "The Corner Table\n{here} is at the corner table with {a jug of cider and no plans to leave.|the house jug, which the landlady refills for whoever sits there.|the table's jug. The landlady nods at you as you come in, as if you're expected.} \"{Sit down, you're blocking the fire.|You"
+    },
+    {
+      "key": "event:company_masked",
+      "title": "The Masked Night",
+      "file": "content/events/pools/night.grim",
+      "line": 231,
+      "sourceHash": "624f946b021aff7a24f2b564362c06c70bcc341b78b60605ae2d90fbcbaaa3e9",
+      "score": 0.48585429787635803,
+      "excerpt": "The Masked Night\n{Tonight every guest wears a mask, and nobody says why. The landlady hands you one too, plain black, no feathers.|The masks again. One guest, in lacquered silver, asks for you by the colour of your mask.|The masked night. The silver mask is here, and has saved yo"
+    },
+    {
+      "key": "event:company_late_hour",
+      "title": "The Second Party",
+      "file": "content/events/pools/night.grim",
+      "line": 405,
+      "sourceHash": "f6b4cc262e44212fd7b4c2cb6db0bce0442b25bae728aec635e5f3bc1bc80b59",
+      "score": 0.45810574293136597,
+      "excerpt": "The Second Party\n{Past two, the landlady catches your sleeve on the stair. \"Another party's just come up, and I'm a pair of hands short. Same pay again.\"|A second party is coming up the stair as yours goes down it. The landlady looks at you and raises an eyebrow.|\"One more,\" says"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "d8358056bc23f42b39e22b66c7bebce020f53ba77a389cb2a5729126ac44ed58",
+      "at": "2026-10-28T23:51:16.956Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 349,
+        "total_tokens": 349,
+        "cost": 0.00000349,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000349,
+          "upstream_inference_prompt_cost": 0.00000349,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "d8358056bc23f42b39e22b66c7bebce020f53ba77a389cb2a5729126ac44ed58",
+      "elapsedMs": 304,
+      "at": "2026-10-28T23:51:17.260Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f9b9bc4e23bfba55bf8a294182c8fcd269678b5af1a6362b1088f727b407d391",
+      "at": "2026-10-28T23:51:17.333Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 56534,
+        "cost": 0.0028267
+      },
+      "requestHash": "f9b9bc4e23bfba55bf8a294182c8fcd269678b5af1a6362b1088f727b407d391",
+      "elapsedMs": 710,
+      "at": "2026-10-28T23:51:18.043Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

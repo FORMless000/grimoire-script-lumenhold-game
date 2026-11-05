@@ -1,18 +1,17 @@
 /*
  * Negotiations (E8, the first world-expansion plan): which meeting each `challenge negotiate` is. DOM-free; read by
- * lint (every negotiation has an entry) and, later, by the negotiation minigame (docs/minigame-negotiation-v03.md),
- * which sets up its opponent from the entry. The page doesn't load it until then.
+ * lint (every negotiation has an entry) and by the Crux campaign bridge (crux/HANDOFF.md),
+ * which binds campaign context and opponent identity once per option.
  *
  *   PARLEYS["<event>/<option>"] = { profile, context, tutorial?, note? }
  *
  * profile: who sits across the table (the prototype's request weights): debater, scholar, social_operator, skeptic,
  *   official, or committee (a panel taking turns: scholar, skeptic and official).
  * context: the room. workshop (practical requests join the deck), broker (crowns change hands), formal (a hearing, a
- *   viva, a desk with a stamp), public (an audience: settlement rebates differ), practice (a lesson: nothing at stake).
- * tutorial: true for the intro's lesson (coach marks, and "Skip the lesson" settles at no cost once the minigame exists).
+ *   viva, a desk with a stamp), public (an audience), practice (a lesson). Played meetings always keep their costs.
+ * tutorial: true for the intro's lesson ("Skip the lesson" settles at no cost before any move).
  *
- * Until the minigame arrives a negotiation is decided by the engine's stub (Engine#parleyValue: charm, lore and guile,
- * with mood and renown), so an entry changes nothing yet but what the button says.
+ * The legacy weighted roll remains only for isolated engine fixtures without a resolver.
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory();
@@ -108,6 +107,25 @@
     'hs_night_cult/family': { profile: 'debater', context: 'public', note: 'Madame Dumont, before her circle' },
     'hs_night_ilse/reach': { profile: 'skeptic', context: 'formal', note: 'Ilse, under the man in grey\'s compulsion' },
   };
+  // Bind only where the existing challenge/cast/track context does not identify the right person or record.
+  Object.assign(PARLEYS['nessa_headmistress_interview/left'], { bond: 'isolde' });
+  Object.assign(PARLEYS['mir_workshop_closed/left'], { bond: 'thorne' });
+  Object.assign(PARLEYS['bram_father_visit/left'], { bond: false });
+  Object.assign(PARLEYS['lyra_mother_visit/left'], { bond: false });
+  Object.assign(PARLEYS['corvin_brother/left'], { bond: false });
+  Object.assign(PARLEYS['thesis_defence/left'], { record: 'thesis' });
+  Object.assign(PARLEYS['intern_credit_taken/left'], { record: 'internship' });
+  const FACTS = {
+    'flag(quickquill_soup)': 'The soup interview', 'flag(quickquill_ink)': 'The ink interview',
+    'flag(quickquill_deadline)': 'The deadline interview', 'flag(rapport_eel)': 'The eel story',
+    'flag(rapport_round)': 'A round for the regulars', 'flag(rapport_shift)': 'The double shift',
+    'has(origin_noble)': 'A noble upbringing', 'renown >= 25': 'A name people know',
+    'clue(kael_family)': 'What you learned about the family', 'clue(ilse_truth)': 'What you learned about Ilse',
+    'flag(hs_early)': 'Your early warning', 'flag(kept_dumont_letter)': 'The letter you kept',
+    'flag(ilse_saved)': 'Ilse was rescued', 'flag(mother_answered)': 'The answer from her mother',
+    'flag(night_kael)': 'Kael is with you', 'rel(ilse) >= 15': 'Ilse trusts you',
+  };
+  const factLabel = (condition) => FACTS[condition] || 'Prepared evidence';
   const lookup = (event, option) => PARLEYS[event + '/' + option] || null;
-  return { PROFILES, CONTEXTS, PARLEYS, lookup };
+  return { PROFILES, CONTEXTS, PARLEYS, lookup, FACTS, factLabel };
 });

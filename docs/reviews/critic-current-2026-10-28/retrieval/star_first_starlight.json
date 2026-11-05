@@ -1,0 +1,108 @@
+{
+  "query": "A Name to Call The first appointment is under the open dome, past midnight. Your tutor says a star's name aloud, the old name, the one on no chart, and points. \"Ask it for a thread of its light,\" the tutor says. \"Ask properly. It has been asked rudely before.\" Call until it answers You call until your voice goes and your hands are numb on the rail. At four the thread comes down, no thicker than a hair, and rests in your palm, warm. You don't feel the cold again until breakfast. Learn whose name it is first You ask about the name instead, and get an hour of history you'll need later. The thread comes for you at dawn, the last in the dome, with the tutor already yawning.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:star_first_starlight",
+      "title": "A Name to Call",
+      "file": "content/events/spell_sources.grim",
+      "line": 162,
+      "sourceHash": "6e0e61704b42d42e7fa98a632e316fac80195915a2045fbd591ca99b3235d7cc",
+      "score": 0.9393054246902466,
+      "excerpt": "A Name to Call\nThe first appointment is under the open dome, past midnight. Your tutor says a star's name aloud, the old name, the one on no chart, and points. \"Ask it for a thread of its light,\" the tutor says. \"Ask properly. It has been asked rudely before.\"\nCall until it answe"
+    },
+    {
+      "key": "event:star_thread_of_light",
+      "title": "A Thread of Light",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 87,
+      "sourceHash": "ecf7ea8d9bd172936a0f983a2399e38fbc34b1e4cb8d713f148d3995b3e7241f",
+      "score": 0.7433410286903381,
+      "excerpt": "A Thread of Light\n{Tonight's lesson, says the morning note, is to call down a single thread of a named star's light, no thicker than a hair.|Tonight's lesson is the same as ever: one thread, one star, held as long as you can bear it.|You've called down threads before. The morning"
+    },
+    {
+      "key": "event:star_names_in_the_dark",
+      "title": "Names in the Dark",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 61,
+      "sourceHash": "a35563fda62b6091ecbc4a363451b2aeae6471b41da8bcdc3e4b5f030f330156",
+      "score": 0.7398624420166016,
+      "excerpt": "Names in the Dark\n{Starcalling is taught by appointment, at night, and this morning's note gives you tonight's hour. It begins with names. \"You cannot call what you cannot name.\"|Another note at breakfast, another night appointment under the dome. The list of names is longer than"
+    },
+    {
+      "key": "event:star_cloudy_appointment",
+      "title": "A Cloudy Appointment",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 203,
+      "sourceHash": "28da7d49e972001bee179f6e6701b6a45b1bf01d464e8e0f053c831dd7bcc7fa",
+      "score": 0.628945529460907,
+      "excerpt": "A Cloudy Appointment\n{Tonight's appointment, says this morning's note, will go ahead \"whatever the sky thinks\". The sky thinks clouds, wall to wall.|Another clouded appointment tonight. The note is unbothered. \"Starlight comes through cloud. It simply has to want to.\"|Cloud again"
+    },
+    {
+      "key": "event:lesson_starlight",
+      "title": "A Jar on the Roof",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 71,
+      "sourceHash": "2ceb85312e8adce2c09f48aff0f5e862974a7eb21b59c0bc201dc399306e3aa5",
+      "score": 0.6241654753684998,
+      "excerpt": "A Jar on the Roof\nStarlight is practised after midnight on the observatory roof, where your Starcalling tutor hands you a glass jar and tells you to hold it up \"until something falls in\". The stars are very far away. The roof is very cold.\nHold the jar until it fills\nAt three in "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4384de9feb5cf4c3d26d128dfe0339be66fd50ea86a3a0d459b03c13a6c966c5",
+      "at": "2026-10-28T23:51:49.938Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 160,
+        "total_tokens": 160,
+        "cost": 0.0000016,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000016,
+          "upstream_inference_prompt_cost": 0.0000016,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4384de9feb5cf4c3d26d128dfe0339be66fd50ea86a3a0d459b03c13a6c966c5",
+      "elapsedMs": 375,
+      "at": "2026-10-28T23:51:50.314Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c60d4e39a3e89da77c99567f1049328b3b9f6e4dbe96977603f6336643f9b86b",
+      "at": "2026-10-28T23:51:50.399Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 52043,
+        "cost": 0.00260215
+      },
+      "requestHash": "c60d4e39a3e89da77c99567f1049328b3b9f6e4dbe96977603f6336643f9b86b",
+      "elapsedMs": 354,
+      "at": "2026-10-28T23:51:50.753Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

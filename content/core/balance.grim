@@ -25,6 +25,8 @@ combat_cost: small
 # The negotiation stub (E8): until the minigame, a negotiation reads charm, lore and guile (weighted; `using` doubles one),
 # plus mood and renown × their change since the run's start (as % of max). Known spells of those skills add the usual
 # spell bonus (spell_check).
+# Crux resource transfers use this share, paid during play; no settlement rebates.
+parley_scale: 0.6
 negotiate: charm 1 lore 1 guile 1 mood 0.15 renown 0.15
 # A tonic (world expansion 1, K3): what a `boost:` state adds to the plain checks it names: one rung, about 8 points of odds
 # on a normal check. Tonics share `group: tonic`, so one holds at a time; fights and negotiations never read it.

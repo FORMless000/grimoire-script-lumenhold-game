@@ -1,0 +1,107 @@
+{
+  "query": "The Waiting Bench {On the bench at the foot of the stair sits a first-year with a summons in one hand and doom on their face. \"What's she like?\" they whisper.|Another summoned first-year on the bench, another whisper: \"Is it true she can read minds?\"|The waiting bench has a first-year on it again; you suspect it always will. \"Have you been in? What happens?\"} {The stone owl watches you both.|Somewhere above, a door opens and closes.|{final_year: You remember sitting there yourself, a hundred years ago, last week.|The summons is smudged from being held so hard.}} Tell them the kind truth {\"She'll listen,\" you say, \"and it will be worse than shouting, and then it will be better.\" The first-year breathes for the first time in an hour.|\"She can't read minds,\" you say. \"She just doesn't need to.\" The first-year laughs, shakily, and goes up a little taller.|\"She'll pour you tea,\" you say. \"Drink it. Tell her the truth.\" The first-year nods and goes up the stair like someone visiting a friend.} Tell them a horror story {You describe the trapdoor, the pit and the crocodiles in loving detail. The first-year goes up grey. You feel wonderful, then less wonderful.|\"Only on Thursdays,\" you say gravely. It's Thursday. The first-year's face is a work of art.|You tell them about the owl that eats liars. The owl, above you, opens one eye and looks at you for a long time.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:headmistress_tower_waiting_bench",
+      "title": "The Waiting Bench",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 332,
+      "sourceHash": "f402910aa96f495f3573a6242239831449b5afa5ee2755b45f1e6f43be383c72",
+      "score": 0.9487398862838745,
+      "excerpt": "The Waiting Bench\n{On the bench at the foot of the stair sits a first-year with a summons in one hand and doom on their face. \"What's she like?\" they whisper.|Another summoned first-year on the bench, another whisper: \"Is it true she can read minds?\"|The waiting bench has a first"
+    },
+    {
+      "key": "event:headmistress_tower_stone_owl",
+      "title": "The Stone Owl",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 287,
+      "sourceHash": "96e0ec57a30d27d8f705383eb9e67ce695be32dabec5630f0fab6919f7a2815f",
+      "score": 0.5160977840423584,
+      "excerpt": "The Stone Owl\n{The stone owl on the stair opens one eye. \"A question first,\" it says, in a voice like a door closing.|The owl's other eye is half open tonight. It has been waiting all day for someone to ask.|The owl opens both eyes for you now, which may or may not be an honour.}"
+    },
+    {
+      "key": "event:headmistress_tower_tea",
+      "title": "Two Cups Poured",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 310,
+      "sourceHash": "dab50755ec9ace94f27728f0cf4d48a077f0dcff7bb3615857d204fb72005638",
+      "score": 0.48206284642219543,
+      "excerpt": "Two Cups Poured\n{The headmistress pours two cups unasked. \"Sit. Tell me how your term is going, and then how it is really going.\"|Two cups, already poured. \"Well,\" says {host}, \"how is it really going?\"|You sit before she asks. She looks pleased, and doesn't say so.} {The crystal"
+    },
+    {
+      "key": "event:lecture_tower_office_hours",
+      "title": "The Office-Hours Queue",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 77,
+      "sourceHash": "b87b9f605b56bdb63c851701653918d5fbbe875f50618b8d319aef0f87f8c60d",
+      "score": 0.40320369601249695,
+      "excerpt": "The Office-Hours Queue\n{{prof} keeps office hours on the landing, and the queue already reaches the stairs.|Office hours. {prof}'s queue has its etiquette now: no pushing, no crying, no essays read aloud.|The office-hours queue. You know the landing's cold step and the warm one.}"
+    },
+    {
+      "key": "event:y3_first_year_mentee",
+      "title": "Your First-Year",
+      "file": "content/events/expansion_y3.grim",
+      "line": 298,
+      "sourceHash": "b1f79bb9c9e73ddca9f7620b2e3c802e3d2cbfc1ec51217dc71b4c2ad243cbde",
+      "score": 0.4031211733818054,
+      "excerpt": "Your First-Year\nFourth-years are assigned a first-year to mentor. Yours is called Pim, is about the size of a large cat, and has already asked forty-one questions, including \"are the stairs alive\" and \"are YOU alive\".\nAnswer every question honestly\nYes, the stairs are alive. Yes,"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "0ddc903c1bbe4b3011904bb737e1ca0b5404406ab335bdd47f1a959fe191b789",
+      "at": "2026-10-28T23:37:44.856Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 341,
+        "total_tokens": 341,
+        "cost": 0.00000341,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000341,
+          "upstream_inference_prompt_cost": 0.00000341,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "0ddc903c1bbe4b3011904bb737e1ca0b5404406ab335bdd47f1a959fe191b789",
+      "elapsedMs": 794,
+      "at": "2026-10-28T23:37:45.650Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "b4e9bc4fbe91ebceecb97490a0697b5d4d0ce340cef21146fb5d9e71738e91b6",
+      "at": "2026-10-28T23:37:45.712Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 53167,
+        "cost": 0.00265835
+      },
+      "requestHash": "b4e9bc4fbe91ebceecb97490a0697b5d4d0ce340cef21146fb5d9e71738e91b6",
+      "elapsedMs": 537,
+      "at": "2026-10-28T23:37:46.249Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

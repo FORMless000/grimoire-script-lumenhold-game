@@ -1,0 +1,108 @@
+{
+  "query": "Closed, Even to Me The headmistress sets a small wooden box on the table and opens it. It is empty. \"Close it,\" she says, \"so that it stays closed. To anyone. Even to me.\" She sits down across from you with her hands folded. \"That is Seal.\" Seal it as tight as you can It takes everything you have and the rest of the hour. The headmistress tries the lid with one finger, then two, then not at all. \"Good,\" she says. You feel scraped hollow until supper. Ask what she keeps sealed \"Many things,\" she says, \"for good reasons.\" She doesn't say more, and you seal the box with that sitting in your stomach. It holds. She doesn't try it.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:hollow_first_seal",
+      "title": "Closed, Even to Me",
+      "file": "content/events/spell_sources.grim",
+      "line": 183,
+      "sourceHash": "b42af27b9677c8809966e055e931258748fd7ea8a8c38b4bd37cfe339f2d7059",
+      "score": 0.9321742653846741,
+      "excerpt": "Closed, Even to Me\nThe headmistress sets a small wooden box on the table and opens it. It is empty. \"Close it,\" she says, \"so that it stays closed. To anyone. Even to me.\" She sits down across from you with her hands folded. \"That is Seal.\"\nSeal it as tight as you can\nIt takes ev"
+    },
+    {
+      "key": "event:hollow_sealed_boxes",
+      "title": "How It Was Sealed",
+      "file": "content/events/pools/courses_hidden.grim",
+      "line": 112,
+      "sourceHash": "25bc3b6ce55230d56095502b29ea6ed745c5cf62fb7102275a674383178a4f6c",
+      "score": 0.75030517578125,
+      "excerpt": "How It Was Sealed\n{Each lesson, the headmistress sets a sealed thing in front of you. \"Tell me how it was closed,\" she says. \"Not what is inside. How.\"|Another sealed thing on the table. Today it is {a letter with a wax seal|a small lacquered box|a jar with its lid charmed shut}."
+    },
+    {
+      "key": "event:lesson_seal",
+      "title": "Only for the Addressee",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 296,
+      "sourceHash": "bd5f094db68eca9dcd553cd27042ee1b4d8b8e36f27dae317dc88c4811793698",
+      "score": 0.738222062587738,
+      "excerpt": "Only for the Addressee\nToday's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. \"If I can,\" she says mildly, \"you haven't.\"\nSeal it against her\nShe tries the letter for a long minute with one"
+    },
+    {
+      "key": "event:hs_aftermath_lost",
+      "title": "The Headmistress Closed It",
+      "file": "content/events/chain_hollowstar.grim",
+      "line": 721,
+      "sourceHash": "ed0bdf4677ee105832f02e65e65fa63b278c24fa42050c778dedd4aaca5f7573",
+      "score": 0.6599153280258179,
+      "excerpt": "The Headmistress Closed It\nYou wake in the infirmary. The lake has thawed, and the door is shut: the headmistress came down after you and closed it with her own hands. She is sitting by your bed. Her hair has gone white overnight, and her silver ring is gone. {flag(ilse_taken): I"
+    },
+    {
+      "key": "event:hollow_jarred_silences",
+      "title": "Silences in Jars",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 232,
+      "sourceHash": "48417471b257e946f8c2d06a36a2efee02b9d3519b4c2a79b7ec97452e8245b0",
+      "score": 0.6391557455062866,
+      "excerpt": "Silences in Jars\n{Today the headmistress hands you an empty jar. \"Seal a silence in it. Not quiet; silence. You will know the difference by the end.\"|Another empty jar. Behind the headmistress, a shelf of stoppered jars, all apparently empty, all labelled in faded hands.|Silence "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "b7ab88c69f9dcc69e3983c0571031825f78c37ea7bcafbe00a042ab4a0bc370b",
+      "at": "2026-10-28T23:51:50.089Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 158,
+        "total_tokens": 158,
+        "cost": 0.00000158,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000158,
+          "upstream_inference_prompt_cost": 0.00000158,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "b7ab88c69f9dcc69e3983c0571031825f78c37ea7bcafbe00a042ab4a0bc370b",
+      "elapsedMs": 318,
+      "at": "2026-10-28T23:51:50.407Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "995f088dcdfc24792d2e425ec7451c150e5bb197f25c91a5d79c5fa47d02882c",
+      "at": "2026-10-28T23:51:50.462Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47184,
+        "cost": 0.0023592
+      },
+      "requestHash": "995f088dcdfc24792d2e425ec7451c150e5bb197f25c91a5d79c5fa47d02882c",
+      "elapsedMs": 454,
+      "at": "2026-10-28T23:51:50.916Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

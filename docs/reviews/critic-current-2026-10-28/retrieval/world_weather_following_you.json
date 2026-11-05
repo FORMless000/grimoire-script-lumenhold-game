@@ -1,0 +1,108 @@
+{
+  "query": "Weather Following You {~Somebody's weather charm has escaped and attached itself to you. A small rain cloud is following you at head height, drizzling.|A runaway weather charm has found you. A tiny snow flurry is falling on you, and only you.|An escaped weather charm has chosen you. A single warm sunbeam follows you everywhere, even indoors.} {~People step politely out of your way.|A first-year is following you around to see what happens.|It seems pleased with itself.} Try to dispel it {~You unpick the charm thread by thread and the cloud pops like a soap bubble, leaving a small rainbow.|You dispel it; the last snowflake lands on your nose like a goodbye.|You unpick the sunbeam's charm and it fades, regretfully. You feel the cold at once.} {~Your spell makes it a thundercloud. It follows you for the rest of the day, rumbling at anyone who looks at you, and soaks you to the skin.|Your spell doubles it. You spend the day in a small private blizzard and catch a chill.|Your spell turns the sunbeam into a heatwave. You spend the afternoon sweating in a cold castle, red as a lobster.} Let it be, and enjoy it {~You go about your day in your own private drizzle. By evening it's a castle joke, and you're in on it.|You let it snow on you all day and catch flakes on your tongue in lectures. People talk about it.|You go about your day sunlit and warm. People keep finding reasons to stand next to you.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_weather_following_you",
+      "title": "Weather Following You",
+      "file": "content/events/pools/world_more.grim",
+      "line": 175,
+      "sourceHash": "915cbf29a196cdcb180e64cc6a2a7eb84339537511358f5cb3e0bc1cd0124d98",
+      "score": 0.9665210247039795,
+      "excerpt": "Weather Following You\n{~Somebody's weather charm has escaped and attached itself to you. A small rain cloud is following you at head height, drizzling.|A runaway weather charm has found you. A tiny snow flurry is falling on you, and only you.|An escaped weather charm has chosen y"
+    },
+    {
+      "key": "event:ilse_private_storm",
+      "title": "Her Weather",
+      "file": "content/events/bonds/friends.grim",
+      "line": 656,
+      "sourceHash": "9bb6a8bec3603bbde9fc4b1aff0932f060942d596452ea4ff772373938b2bf83",
+      "score": 0.5786730051040649,
+      "excerpt": "Her Weather\nIlse's private snowstorm follows her about the village. You've learned to read it. {~Today it's thick and sideways, which means stay away.|Today it's three flakes, slow, which means something's wrong and she won't say what.}\nStep under it with her\n{~You walk beside he"
+    },
+    {
+      "key": "event:kael_date_snow",
+      "title": "Snow, Just for You",
+      "file": "content/events/pools/dating.grim",
+      "line": 328,
+      "sourceHash": "484fd2bf42781ae53dd57e3d1bdd300cb5284a53265767d97ad5ec1cb5d4efbe",
+      "score": 0.5715174078941345,
+      "excerpt": "Snow, Just for You\n{Kael leads you to a corner of the lawn and makes it snow, only there, only on the two of you.|Another private snowfall. He's getting better at the shapes.|Kael has made it snow again. This time the flakes are stars.} {season == \"summer\": It's a hot day; the sn"
+    },
+    {
+      "key": "event:ilse_contempt",
+      "title": "Beneath Her",
+      "file": "content/events/bonds/rivals.grim",
+      "line": 480,
+      "sourceHash": "68d21a4199a77a92a2d6fec040c2a27fa89df2cca8655ed5065dc63ea955dae7",
+      "score": 0.4929659962654114,
+      "excerpt": "Beneath Her\nIlse walks past you in the village square as if you were weather. Her private storm, by accident or not, empties itself into your shoes. Two villagers laugh. She doesn't look back.\nSay her name\nShe stops. She doesn't turn round. \"What,\" she says. You don't have an ans"
+    },
+    {
+      "key": "event:illu_courtyard_hour",
+      "title": "Holding the Courtyard",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 124,
+      "sourceHash": "97853305309d012844891f1d4ed366099ca7eb0d6a8be3a1b8e58748868e539b",
+      "score": 0.47922608256340027,
+      "excerpt": "Holding the Courtyard\n{Advanced Illusion leaves the classroom. Hold an illusion over the busy courtyard for an hour, and don't let it fray.|Another courtyard hour. The porters step round you now.|The courtyard. {final_year: One of the last times you'll hold this sky.|Your hands k"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "ef500c57382a2d114d8c07e4ec51caa525dd926552fa8ae4b44206f0adcfd38e",
+      "at": "2026-10-28T23:50:53.560Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 336,
+        "total_tokens": 336,
+        "cost": 0.00000336,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000336,
+          "upstream_inference_prompt_cost": 0.00000336,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "ef500c57382a2d114d8c07e4ec51caa525dd926552fa8ae4b44206f0adcfd38e",
+      "elapsedMs": 331,
+      "at": "2026-10-28T23:50:53.891Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d203b8636407a6c2506c7e60f7a4b9458de6b0363fee8d4162a42d02db644f86",
+      "at": "2026-10-28T23:50:53.956Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46595,
+        "cost": 0.00232975
+      },
+      "requestHash": "d203b8636407a6c2506c7e60f7a4b9458de6b0363fee8d4162a42d02db644f86",
+      "elapsedMs": 778,
+      "at": "2026-10-28T23:50:54.734Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

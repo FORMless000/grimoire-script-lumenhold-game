@@ -1,0 +1,108 @@
+{
+  "query": "Something to Stand Under Tobias kneels in an empty bed at the back of the greenhouse. \"Ma used to say a farm's only as good as its shelter,\" he says, and presses his hands into the soil. A sapling comes up between you, then a trunk, then branches overhead. \"Took me a year. I'll show you in an evening, if you like.\" Kneel down beside him You kneel in the cold soil until your knees ache and your back complains. Near midnight a little tree stands up out of your bed, wobbling, and spreads one branch over you. Tobias laughs from the belly and apologises for the mud. Sit under his tree instead You sit under his tree and he tells you a long story about a goat. It is very peaceful. \"Another evening, then,\" he says, and means it.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:tobias_teaches_heartwood",
+      "title": "Something to Stand Under",
+      "file": "content/events/spell_sources.grim",
+      "line": 231,
+      "sourceHash": "56f0d5b9a7903a8581f58790b2768aea3297bb7c7d2562a11cbfd655ef715f04",
+      "score": 0.9384825825691223,
+      "excerpt": "Something to Stand Under\nTobias kneels in an empty bed at the back of the greenhouse. \"Ma used to say a farm's only as good as its shelter,\" he says, and presses his hands into the soil. A sapling comes up between you, then a trunk, then branches overhead. \"Took me a year. I'll s"
+    },
+    {
+      "key": "event:lesson_heartwood",
+      "title": "A Tree by the Window",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 334,
+      "sourceHash": "6263c8f32c345e66cbdabd372a33c5121c125d8cb3750268d64c8027d5890d83",
+      "score": 0.6961073279380798,
+      "excerpt": "A Tree by the Window\nTobias wants you to grow a heartwood every evening for a week, \"so your hands remember\". Today he suggests the courtyard under your dormitory window, where nothing has grown in years.\nGrow it properly, roots and all\nIt takes everything you've got and a bliste"
+    },
+    {
+      "key": "event:picture_tobias",
+      "title": "A Saying for It",
+      "file": "content/events/full_picture.grim",
+      "line": 52,
+      "sourceHash": "f1605e524c8658bc2a1b66de8877fe3109b751c97473c18702d56aa600e70fce",
+      "score": 0.6546732187271118,
+      "excerpt": "A Saying for It\nRepotting seedlings, Tobias goes quiet for so long that Gerald, on his shelf, stops screaming to look. \"You know about my ma, and the blight, and the broom,\" he says. \"And about after. I haven't told anyone about after.\" He wipes his hands on his apron. \"Back home"
+    },
+    {
+      "key": "event:verdant_plant_seed",
+      "title": "Somewhere to Grow",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 350,
+      "sourceHash": "7eb140c73006918e7e9af4f66d37040322deb7e68de06dfd90d5c092f592763b",
+      "score": 0.6094059348106384,
+      "excerpt": "Somewhere to Grow\nThe seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, \"if you can keep a secret, dearie.\"\nPlant it with Tobias\nYou plant it together"
+    },
+    {
+      "key": "event:tobias_storm_greenhouse",
+      "title": "Storm Over the Greenhouses",
+      "file": "content/events/expansion_people.grim",
+      "line": 130,
+      "sourceHash": "4977a4425f3f92e4d09225a16df248957677777c75f5648a7b6a73534ea30fd4",
+      "score": 0.5965087413787842,
+      "excerpt": "Storm Over the Greenhouses\nA storm hits at midnight. Glass is cracking in the greenhouses. Tobias is out there in his nightshirt, trying to hold a door shut against the wind with his whole body. \"The moonflowers!\" he shouts. \"Eleven years!\"\nRun out and help\nYou hold the panes tog"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c97b7f7628ec04d8b405c6b5b62735cc6d7fbdd3c1123d864ebff22bda8f3e43",
+      "at": "2026-10-28T23:51:50.813Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 176,
+        "total_tokens": 176,
+        "cost": 0.00000176,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000176,
+          "upstream_inference_prompt_cost": 0.00000176,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c97b7f7628ec04d8b405c6b5b62735cc6d7fbdd3c1123d864ebff22bda8f3e43",
+      "elapsedMs": 351,
+      "at": "2026-10-28T23:51:51.164Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c17b9d966dc6789a38ce3ff704c4313e100b06eb813fe542ee005118d5b9027e",
+      "at": "2026-10-28T23:51:51.224Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40427,
+        "cost": 0.00202135
+      },
+      "requestHash": "c17b9d966dc6789a38ce3ff704c4313e100b06eb813fe542ee005118d5b9027e",
+      "elapsedMs": 303,
+      "at": "2026-10-28T23:51:51.527Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

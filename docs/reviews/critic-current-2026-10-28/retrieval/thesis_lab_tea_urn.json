@@ -1,0 +1,107 @@
+{
+  "query": "The Tea Urn {The thesis lab runs on the tea urn, a dented copper monster that has outlived forty years of final-years. Round it, people confess things.|At the urn today someone is crying quietly into their mug about chapter three.|The urn. Someone has taped a list to it: STAGES OF THESIS GRIEF. Everyone has initialled the stage they're at.} {The urn is making the noise that means it's about to boil over.|Someone has hidden a tin of biscuits behind it, labelled NOT BISCUITS.|{season == \"spring\": The windows are open, and blossom keeps landing in the mugs.|The lamps are lit already, though it's barely evening.}} Stay and listen {You hear about an advisor who writes only in question marks, a source that turned out to be a forgery and a cat that ate a bibliography. You say almost nothing, and everyone thanks you.|You sit with the one crying about chapter three until they're laughing about chapter three.|You find your stage on the list and initial it. Then you listen to everyone else's, which is better than any advice.} Fill your mug and get back to work {You fill your mug and walk away from the confessions. Your carrel is quiet and your notes go well, and you feel slightly like a deserter.|You pat the crying student's shoulder on your way past and go back to work. It's the best you can do today.|You take your tea back to your carrel. Behind you, the list of stages grows another set of initials.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:thesis_lab_tea_urn",
+      "title": "The Tea Urn",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 421,
+      "sourceHash": "950326161dcc018e68f2a9c2df6a52e083adab0fc82688a2dea697763f638b66",
+      "score": 0.9444388747215271,
+      "excerpt": "The Tea Urn\n{The thesis lab runs on the tea urn, a dented copper monster that has outlived forty years of final-years. Round it, people confess things.|At the urn today someone is crying quietly into their mug about chapter three.|The urn. Someone has taped a list to it: STAGES O"
+    },
+    {
+      "key": "event:thesis_is_it_good",
+      "title": "Is It Any Good?",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 371,
+      "sourceHash": "f31fde890786fe0181954513947fcdb64320845efc26c8bcfe8cf744688db085",
+      "score": 0.5153781771659851,
+      "excerpt": "Is It Any Good?\n{Halfway through rereading your thesis, you can't tell if it's brilliant or obvious.|The doubt has learned your timetable. It comes the morning after good work.|You know this doubt now. It reaches your carrel first.} {progress(thesis) >= 60: Most of it is written,"
+    },
+    {
+      "key": "event:thesis_lab_old_theses",
+      "title": "The Shelf of Old Theses",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 437,
+      "sourceHash": "f0f53da54e4257300c9c134b9447026d09bc4ae5d9aaf6cf4c0b3362dcff42ca",
+      "score": 0.48628437519073486,
+      "excerpt": "The Shelf of Old Theses\n{Along the back wall run three centuries of finished theses, bound in cloth that has faded to the same brown.|The thesis shelf. You've started a list of the best titles. Today's find: a study of the emotional lives of doorknobs.|The old theses. You can fin"
+    },
+    {
+      "key": "event:thesis_lab_spare_carrel",
+      "title": "The Spare Carrel",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 394,
+      "sourceHash": "a01ef65cd6318ae6671227cd56b5085eabd2bce0c844310613d6d53ab175ea92",
+      "score": 0.48474952578544617,
+      "excerpt": "The Spare Carrel\n{There's an empty carrel at the end of the row, with a candle stub and nobody's name on it.|The spare carrel is still unclaimed. You've started thinking of its candle stub as yours.|You know the carrels by their scratches now. The spare one has a new scratch, and"
+    },
+    {
+      "key": "event:thesis_carrel_neighbour",
+      "title": "The Next Carrel",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 345,
+      "sourceHash": "a0430a60f45fa3de06b4ef4f9ada162313d458e808e6ea9aecb70f8bf83e32aa",
+      "score": 0.4635846018791199,
+      "excerpt": "The Next Carrel\n{Your carrel neighbour, a final-year from Rootward, reads aloud under their breath.|Your carrel neighbour now reads your chapter titles aloud too.|You and your carrel neighbour now speak a language of sighs.} {They're stuck on chapter three.|They've found a source"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "da817fa40fa39aa0b899a3b6275b7c64224785a683958b58a3a103b8cd01d373",
+      "at": "2026-10-28T23:39:06.851Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 329,
+        "total_tokens": 329,
+        "cost": 0.00000329,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000329,
+          "upstream_inference_prompt_cost": 0.00000329,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "da817fa40fa39aa0b899a3b6275b7c64224785a683958b58a3a103b8cd01d373",
+      "elapsedMs": 4093,
+      "at": "2026-10-28T23:39:10.944Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "56f0aa246a23e954a97573d2ea21a0b14ee98a1f9ea99d6024c304fab84bb73e",
+      "at": "2026-10-28T23:39:10.971Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46066,
+        "cost": 0.0023033
+      },
+      "requestHash": "56f0aa246a23e954a97573d2ea21a0b14ee98a1f9ea99d6024c304fab84bb73e",
+      "elapsedMs": 443,
+      "at": "2026-10-28T23:39:11.414Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

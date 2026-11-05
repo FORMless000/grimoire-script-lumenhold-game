@@ -1,0 +1,108 @@
+{
+  "query": "The Regulars' Corner The regulars' corner has never had a round bought by staff. The landlady says that's exactly why you should. \"Nobody listens to a story from someone who's never stood them a drink.\" Stand the corner a round The corner raises the mugs to you, by name, which you didn't know they knew. For the rest of the night they call you over to settle every argument. Keep your tips You pocket your tips. The corner doesn't notice either way, which is rather the point.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:tavern_regulars_round",
+      "title": "The Regulars' Corner",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 699,
+      "sourceHash": "1f0294353525f9a9fd3a9bfdef7ebf2f548bcc7c9be68240651cf54278b8a59f",
+      "score": 0.9410597085952759,
+      "excerpt": "The Regulars' Corner\nThe regulars' corner has never had a round bought by staff. The landlady says that's exactly why you should. \"Nobody listens to a story from someone who's never stood them a drink.\"\nStand the corner a round\nThe corner raises the mugs to you, by name, which yo"
+    },
+    {
+      "key": "event:tavern_regulars_corner",
+      "title": "The Regulars' Corner",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 547,
+      "sourceHash": "a46cbfac9382d697dc1851d5cc48cd1bf258cf40c0d35a17f58eda61004621b0",
+      "score": 0.7220878005027771,
+      "excerpt": "The Regulars' Corner\n{The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all"
+    },
+    {
+      "key": "event:nudge_two_taps",
+      "title": "How Far Have You Got?",
+      "file": "content/events/journal_cards.grim",
+      "line": 105,
+      "sourceHash": "803a41a125a8c0ff18ba57bf9d62773e5684295d0372494e2531b3b29379cc7f",
+      "score": 0.5133911967277527,
+      "excerpt": "How Far Have You Got?\nThe landlady catches your eye across the Newt and taps the bar twice, gently, like a question. It's half a year since she said you could earn it. \"Learn the room, buy the room, work the room,\" she says, polishing a glass. \"How far have you got?\"\nAsk where to"
+    },
+    {
+      "key": "event:shop_newt",
+      "title": "The Newt's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 254,
+      "sourceHash": "48725023698773413358951f61d55a2bb498c8fe13e63fe860bb87ecb3d51fa0",
+      "score": 0.5095352530479431,
+      "excerpt": "The Newt's Counter\n{{slot == \"afternoon\": By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|At this hour the Gilded Newt is all elbows and cider, and the landlady works the bar with a cloth over her shoulder.}|{slot == \""
+    },
+    {
+      "key": "event:home_market_inn_crowd",
+      "title": "Outside the Inn",
+      "file": "content/events/pools/village_home.grim",
+      "line": 561,
+      "sourceHash": "8ea0833b55dd8c06dc0cbaadbff535dbae823d2f5b72c20afdaaf59fa755c7c0",
+      "score": 0.5015693306922913,
+      "excerpt": "Outside the Inn\n{The old crowd is outside the inn, exactly where you left them. \"Look who it is,\" someone says. \"The wizard.\"|The old crowd have been rehearsing the wizard joke. It has a second part now.|The old crowd outside the inn. Fewer of them every break: somebody married, "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "be33dea272dfda16d1c9c4f644a3362794a4a0e2a6387d985cdada9f1f964d7b",
+      "at": "2026-10-28T23:51:37.396Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 110,
+        "total_tokens": 110,
+        "cost": 0.0000011,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000011,
+          "upstream_inference_prompt_cost": 0.0000011,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "be33dea272dfda16d1c9c4f644a3362794a4a0e2a6387d985cdada9f1f964d7b",
+      "elapsedMs": 549,
+      "at": "2026-10-28T23:51:37.945Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "eec0b54c7f54aeca493b24ee257492d6de36377bd5abd67e4800395d8abf0f5c",
+      "at": "2026-10-28T23:51:38.003Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40055,
+        "cost": 0.00200275
+      },
+      "requestHash": "eec0b54c7f54aeca493b24ee257492d6de36377bd5abd67e4800395d8abf0f5c",
+      "elapsedMs": 497,
+      "at": "2026-10-28T23:51:38.500Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

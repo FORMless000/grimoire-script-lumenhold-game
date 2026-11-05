@@ -1,0 +1,76 @@
+{
+  "query": "The Upper Floor {A ladder at the back of Grimsby's climbs through a hatch to an upper floor nobody mentions. \"The remainders,\" says Mr Grimsby vaguely. \"Mind the third rung. And the fourth.\"|The ladder to the upper floor. Someone has tied a ribbon round the third rung, as a warning or a memorial.|The upper floor. You know its geography now: poetry slumps against history, and history has given up.} {Dust swirls in the light from the hatch.|Somewhere up there, something slides and thumps.|{season == \"summer\": It's stifling under the roof.|Rain drums on the roof right above your head.}} Climb up and rummage {You find a first edition priced at a coin, with a pressed love letter inside. Mr Grimsby buys the book back at twice the price without noticing; the letter you keep.|You dig out a box of old exam papers from the castle, decades old. Mr Grimsby gives them to you for nothing and then pays you to take the box away.|You find a book of spells nobody casts any more, wedged under a shelf to stop it falling. Mr Grimsby gives you a crown for straightening the shelf.} {The third rung breaks, as advertised. You land in a heap of atlases and see stars, and some constellations.|A shelf leans on you, gently, and then less gently. You climb down under a small avalanche of poetry.|The fourth rung, this time. Mr Grimsby looks up from his counter, says \"Ah,\" and goes back to his reading.} Browse the window display {The window display is arranged by colour, not subject. You find three books you didn't know you wanted, and want none of them enough to buy.|You browse the window, where the books have faded through thirty summers. It's a lovely, useless hour.|You browse the window and watch the village go by through the gaps between the spines.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:grimsbys_upper_floor",
+      "title": "The Upper Floor",
+      "file": "content/events/pools/village_more.grim",
+      "line": 102,
+      "sourceHash": "397d9d76eec4373c474a78102c378f4c4dc220d90d34465ae00e6775e343b1fd",
+      "score": 0.9531181454658508,
+      "excerpt": "The Upper Floor\n{A ladder at the back of Grimsby's climbs through a hatch to an upper floor nobody mentions. \"The remainders,\" says Mr Grimsby vaguely. \"Mind the third rung. And the fourth.\"|The ladder to the upper floor. Someone has tied a ribbon round the third rung, as a warni"
+    },
+    {
+      "key": "event:know_grimsby_upper_floor",
+      "title": "Out of Print",
+      "file": "content/events/knowing_2.grim",
+      "line": 246,
+      "sourceHash": "38555c079b9e4ddc4b5eaa51ffa0ec47549f67c6a1f5693b0d1bd50d77e2d777",
+      "score": 0.7425335645675659,
+      "excerpt": "Out of Print\nYou need a book for an essay: the one every reading list cites and nobody has seen in thirty years. The library's copy went missing before you arrived. Grimsby, asked, gives you a book about lighthouses instead and says it's the next best thing. He may even be right."
+    },
+    {
+      "key": "event:shop_grimsbys",
+      "title": "Grimsby's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 188,
+      "sourceHash": "a5e0e87ffda72b399e3dbbeb887f532d020419f578445acc105ef2b8e86101ff",
+      "score": 0.676167368888855,
+      "excerpt": "Grimsby's Counter\n{Mr Grimsby is up a ladder, sniffing a spine. \"Ah! Not that one,\" he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pi"
+    },
+    {
+      "key": "event:grimsbys_wrong_book",
+      "title": "Not the Book You Wanted",
+      "file": "content/events/pools/village_home.grim",
+      "line": 228,
+      "sourceHash": "a29ddb61df7ae4c6ab5fa92ea5c310d6dabebb16d31e4e57d57df44d3e48c851",
+      "score": 0.5626104474067688,
+      "excerpt": "Not the Book You Wanted\n{You ask Mr Grimsby for a textbook. He vanishes into the shelves and comes back with something else entirely.|You ask Mr Grimsby for one thing. He brings you another, with great confidence.|Mr Grimsby sees you coming and is already halfway up a ladder, loo"
+    },
+    {
+      "key": "event:grimsbys_by_the_nose",
+      "title": "Chosen by the Nose",
+      "file": "content/events/pools/village_more.grim",
+      "line": 81,
+      "sourceHash": "21ad93fd64d7f85387a21e5504e2232e61fa00876b4b1f9e6ef5bbb2491121e1",
+      "score": 0.5410359501838684,
+      "excerpt": "Chosen by the Nose\n{Mr Grimsby holds three books under your nose, one after another, eyes closed. \"Don't look. Smell. The right book smells right.\"|Mr Grimsby greets you with a book already held out at nose height. \"Vanilla and rain,\" he says. \"Trust me.\"|Mr Grimsby hands you a b"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "requestHash": "e8cfcc294f2af9f1e63bcf697d0f812b90a6696e73f08f09e2c6d2d4bcbb96e4",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:57.806Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "cached",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "requestHash": "78b31380e74371ed3e5e7e6a8f65b7485c66ba483fd5bc7f7284af65ba88011e",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:57.894Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

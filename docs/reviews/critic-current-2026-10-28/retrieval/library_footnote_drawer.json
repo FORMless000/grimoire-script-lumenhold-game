@@ -1,0 +1,108 @@
+{
+  "query": "Footnote's Drawer Footnote has sat on one catalogue drawer for a week and hisses at anyone who comes near it. The label underneath him says OVERDUE, ELEVEN YEARS. The head librarian says whoever finds that book is welcome to the trick of finding books. Find out what he's guarding You read the card around his tail. A book on wards, borrowed by a Professor Thorne, eleven years ago. Footnote looks at you as if you've finally asked the right question. Shelve around him You shelve around Footnote for the rest of the shift. He watches every book you put away, as if marking them.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:library_footnote_drawer",
+      "title": "Footnote's Drawer",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 517,
+      "sourceHash": "94b62ea0a26eda4f601a008dd04850a6e2e6f5b912e7d9756d9d69c66059e760",
+      "score": 0.9504579901695251,
+      "excerpt": "Footnote's Drawer\nFootnote has sat on one catalogue drawer for a week and hisses at anyone who comes near it. The label underneath him says OVERDUE, ELEVEN YEARS. The head librarian says whoever finds that book is welcome to the trick of finding books.\nFind out what he's guarding"
+    },
+    {
+      "key": "event:nudge_footnote",
+      "title": "Still Guarding It",
+      "file": "content/events/journal_cards.grim",
+      "line": 89,
+      "sourceHash": "ddf36c8c01ffd7b72fcdfb8db275246e8358e78c6ef0ca14c8288e2372275411",
+      "score": 0.8240535259246826,
+      "excerpt": "Still Guarding It\nFootnote is still on the overdue drawer, eleven years and half a year now, and the head librarian has started leaving his saucer there. When you pass, he stops washing and stares at you, as if you'd promised him something and he has been very patient about it.\nG"
+    },
+    {
+      "key": "event:library_overdue_book",
+      "title": "Eleven Years Overdue",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 598,
+      "sourceHash": "59dd3ec43e14ac015206f132570dfe491ad6c6942aace24053271c2c60c3e914",
+      "score": 0.8148589730262756,
+      "excerpt": "Eleven Years Overdue\nTonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.}\nFind the page\nYour hand "
+    },
+    {
+      "key": "event:library_fish_footnote",
+      "title": "Bribing the Cat",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 538,
+      "sourceHash": "47cfc0f74f4bfe3417e249fccff7cdbeea221b85215d4da6f55c4b3927f6cd99",
+      "score": 0.725492537021637,
+      "excerpt": "Bribing the Cat\nFootnote won't move from the drawer for less than fish. Good fish, from the village, not the refectory's. The head librarian says this is \"between you and the cat\".\nBuy him a proper herring\nFootnote eats the herring slowly, looking at you the whole time, then step"
+    },
+    {
+      "key": "event:lib_overdue_professor",
+      "title": "Overdue",
+      "file": "content/events/jobs.grim",
+      "line": 30,
+      "sourceHash": "c6333993637c43bd6346a6247c2e713e41dfcea0d9644eb3fe8bb73f39562a3d",
+      "score": 0.6629984378814697,
+      "excerpt": "Overdue\nProfessor Thorne returns a book that is eleven years overdue. The fine, by library rules, is forty crowns. He looks at you. You look at the ledger.\nWaive the fine\n\"Hm,\" says Thorne. You can't tell if you've earned his respect or lost it.\nEnforce the rules\nA long silence. "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6f8703953990ee5d6e1a844440b3aed4139e3a457e877e4e0b9cda9c0c4809e0",
+      "at": "2026-10-28T23:51:35.186Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 132,
+        "total_tokens": 132,
+        "cost": 0.00000132,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000132,
+          "upstream_inference_prompt_cost": 0.00000132,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6f8703953990ee5d6e1a844440b3aed4139e3a457e877e4e0b9cda9c0c4809e0",
+      "elapsedMs": 325,
+      "at": "2026-10-28T23:51:35.511Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "1ecb1c323c7dc9a75570d50f0370fa8c381a4a2d723b977f44d0ae9a8566b365",
+      "at": "2026-10-28T23:51:35.555Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 38564,
+        "cost": 0.0019282
+      },
+      "requestHash": "1ecb1c323c7dc9a75570d50f0370fa8c381a4a2d723b977f44d0ae9a8566b365",
+      "elapsedMs": 398,
+      "at": "2026-10-28T23:51:35.953Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

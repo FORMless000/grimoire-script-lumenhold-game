@@ -1,0 +1,107 @@
+{
+  "query": "A Letter That Wasn't Posted The envelope is on your pillow, though the door was locked and the window shut. Inside, a single line: the Crown's Office of Unseen Affairs has a desk for you, if you want it, from the autumn. There is no address to reply to. They'll know your answer on the last day. Leave a \"yes\" on the pillow You leave one word on the pillow and go to supper. When you come back, the paper is gone and the bed has been made. You did not make it. Find out how they got in You spend a week on it and find the scratch on the window catch, the loose tile, the borrowed key. It's very good work. That's the trouble.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_letter_unseen",
+      "title": "A Letter That Wasn't Posted",
+      "file": "content/events/careers.grim",
+      "line": 101,
+      "sourceHash": "0914dde1cce2820c693a40216da707ea403c7e821dd9527ed21ffca8b86dd084",
+      "score": 0.931632399559021,
+      "excerpt": "A Letter That Wasn't Posted\nThe envelope is on your pillow, though the door was locked and the window shut. Inside, a single line: the Crown's Office of Unseen Affairs has a desk for you, if you want it, from the autumn. There is no address to reply to. They'll know your answer o"
+    },
+    {
+      "key": "event:career_return_unseen",
+      "title": "The Office Writes Again",
+      "file": "content/events/careers.grim",
+      "line": 247,
+      "sourceHash": "aa1fe3711bd1619e698c8edffed954700fe13b0fbe8dc021ccc070568d0e2bed",
+      "score": 0.6214429140090942,
+      "excerpt": "The Office Writes Again\nA blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and the file you didn't open. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day.\nBurn it, as they'd want\nYou bu"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5091943144798279,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:lumen_ledger_editor_threat",
+      "title": "A Letter to the Editor",
+      "file": "content/events/pools/upper_ranks.grim",
+      "line": 92,
+      "sourceHash": "c42542ee757af0c8c593a6d9b685c15ca3621c9e33184487fa8eaa3c39fdda20",
+      "score": 0.419670969247818,
+      "excerpt": "A Letter to the Editor\n{A letter to the editor, unsigned, about a story you ran. It knows where you sleep.|Another unsigned letter, the same careful hand.|The letters have stopped being polite.} {It smells of expensive ink.|The seal has been scraped off.|It's been slipped under t"
+    },
+    {
+      "key": "event:intern_unseen_office_file",
+      "title": "The File With Your Name",
+      "file": "content/events/pools/internships.grim",
+      "line": 231,
+      "sourceHash": "aee924847fbf7c26891834a4e61852f42614045d2ddafbca1c48e01ec5ca2085",
+      "score": 0.40764525532722473,
+      "excerpt": "The File With Your Name\nSorting files for the Office, you find one with your name on it. It's thin. The clerk has gone to lunch. The last page is about Lumenhold, and the lake, and a tower nobody has opened in a century.\nRead it all\nThey know where you sleep and what you eat, whi"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "40edfc9a9f2231eb71116570953fee723283895174abf932bae27b5d67e46a24",
+      "at": "2026-10-28T23:17:47.045Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 154,
+        "total_tokens": 154,
+        "cost": 0.00000154,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000154,
+          "upstream_inference_prompt_cost": 0.00000154,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "40edfc9a9f2231eb71116570953fee723283895174abf932bae27b5d67e46a24",
+      "elapsedMs": 8979,
+      "at": "2026-10-28T23:17:56.024Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "40f548e938828688942f6667f1146ae2cbf4d94f0dde895503863791f55d5765",
+      "at": "2026-10-28T23:17:56.068Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 48441,
+        "cost": 0.00242205
+      },
+      "requestHash": "40f548e938828688942f6667f1146ae2cbf4d94f0dde895503863791f55d5765",
+      "elapsedMs": 538,
+      "at": "2026-10-28T23:17:56.606Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

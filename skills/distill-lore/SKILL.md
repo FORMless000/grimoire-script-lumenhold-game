@@ -9,7 +9,9 @@ The worldbook (`content/world/`) is the canon every author relies on (design §3
 
 ## 0. Context
 
-Read `docs/authoring/README.md` (canon rules) and `schema.md` (worldbook blocks), then `content/world/vocabulary.grim` (allowed traits, interests, roles, tones, slots).
+Read `docs/authoring/schema.md` (worldbook blocks), then `content/world/vocabulary.grim` (allowed traits, interests, roles, tones, slots).
+
+**Canon.** `canon: hard` lore is curated and fixed. `canon: soft` lore is proposed (by distillation or by a batch) and becomes hard when a human promotes it. A batch that introduces a new name must add a soft `@lore` entry for it, or canon lint rejects the batch.
 
 ## 1. Per character
 

@@ -1,0 +1,108 @@
+{
+  "query": "The Helmet in the Boathouse The old diving helmet is where you left it, on the workbench by the doors. Somebody has oiled the rope since last time. The lake is still, and under it the bell is waiting. Dive again You go down slower this time, and further. The bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the name. The cold finds you again, halfway down. You come up blue and shaking, with nothing but the certainty that it's down there. Not today You put the helmet back on the bench. The bell can wait one more day. It has waited sixty years.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:bell_dive_again",
+      "title": "The Helmet in the Boathouse",
+      "file": "content/events/slice_2b.grim",
+      "line": 913,
+      "sourceHash": "1c0a7d0a537ce2a426f9980c6f2ec3d290c22d903d1ee0e1eed721aa57faf781",
+      "score": 0.9566512703895569,
+      "excerpt": "The Helmet in the Boathouse\nThe old diving helmet is where you left it, on the workbench by the doors. Somebody has oiled the rope since last time. The lake is still, and under it the bell is waiting.\nDive again\nYou go down slower this time, and further. The bell lies on its side"
+    },
+    {
+      "key": "event:bell_drowned",
+      "title": "The Diving Bell",
+      "file": "content/events/slice_2b.grim",
+      "line": 836,
+      "sourceHash": "33e5fda66d2b3eb83d8906786343eac970fc143d1061fb67a8cf02359d88bc1a",
+      "score": 0.8458924293518066,
+      "excerpt": "The Diving Bell\nThe bell has rung every night for a week. The boathouse has an old diving helmet and a rope. The lake is very dark and very still.\nDive\nFar down, the bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the n"
+    },
+    {
+      "key": "event:bell_laid_to_rest",
+      "title": "The Bell Falls Silent",
+      "file": "content/events/slice_2b.grim",
+      "line": 881,
+      "sourceHash": "f24a57d1e15de5ab70f6b4802a500cd88e03bf35699e08b17ba6b3452c3ff7bd",
+      "score": 0.6583265066146851,
+      "excerpt": "The Bell Falls Silent\nThe shore is empty and the lake is glass. Then the bell begins, slow and low, from the very middle. {clue(bell_name) and clue(bell_rope): You have the name from its rim and Maud's rope in your hands.|{clue(bell_name): You have the name from its rim.|You have"
+    },
+    {
+      "key": "event:hs_boathouse_bell",
+      "title": "The Hatch in the Boathouse",
+      "file": "content/events/chain_hollowstar.grim",
+      "line": 132,
+      "sourceHash": "5da7cecaf8debd2fe839ba3e8483ce5153836c13eaeea05f004f17c65589d0f6",
+      "score": 0.6572960615158081,
+      "excerpt": "The Hatch in the Boathouse\nUnder a coil of rotten rope in the boathouse there's a hatch, and under the hatch, stone steps going down into the lake. The air coming up smells of cold bronze. From somewhere below, very faint, a bell is tolling under the water.\nGo down the steps\nThe "
+    },
+    {
+      "key": "event:tide_drowned_bell",
+      "title": "The Drowned Bell",
+      "file": "content/events/classes.grim",
+      "line": 139,
+      "sourceHash": "285c2b70ab6de1e58fa3d0453a1c5a2a1380aa3b6482d0c55b45366e3bddbdea",
+      "score": 0.6037240624427795,
+      "excerpt": "The Drowned Bell\nEver since the lake held its breath in Mistveil, you listen for it. During a breathing-charm lesson you hear it: a bell, deep under the lake, tolling slow and soft. Nobody else seems to notice.\nMention it to Professor Marisol\nHer face goes very still. \"There is n"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "37e0eb370cc312055e248d44269136eb310d49780437e5644a6a0ede34654fe4",
+      "at": "2026-10-28T23:51:23.517Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 145,
+        "total_tokens": 145,
+        "cost": 0.00000145,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000145,
+          "upstream_inference_prompt_cost": 0.00000145,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "37e0eb370cc312055e248d44269136eb310d49780437e5644a6a0ede34654fe4",
+      "elapsedMs": 423,
+      "at": "2026-10-28T23:51:23.940Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "3505562a70e70558fd1129fb06c443439b2a9f76bf56d2032f363c94446bdd99",
+      "at": "2026-10-28T23:51:23.995Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 50610,
+        "cost": 0.0025305
+      },
+      "requestHash": "3505562a70e70558fd1129fb06c443439b2a9f76bf56d2032f363c94446bdd99",
+      "elapsedMs": 527,
+      "at": "2026-10-28T23:51:24.522Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,107 @@
+{
+  "query": "A Letter From the Seven Towers Silver wax, seven little towers in it. The Conclave writes that Professor Thorne has mentioned your name, \"more than once and without being asked\", and offers you an apprenticeship at the Seven Towers after graduation. Your answer is due on the last day. Write back that you're interested You write three drafts and send the shortest. Thorne passes you in the corridor the next day and says \"Hm,\" which from him is a parade. Ask what an apprentice actually does The answer comes by return: long hours, a grey robe, and seven years before anyone lets you near a real ward. It is less glamorous on paper. The offer stands.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_letter_conclave",
+      "title": "A Letter From the Seven Towers",
+      "file": "content/events/careers.grim",
+      "line": 47,
+      "sourceHash": "1ded8d7a84ca10d4e8ddb91e1e62e250ffc120c4911f4056e6f8e0ab97568515",
+      "score": 0.9469017386436462,
+      "excerpt": "A Letter From the Seven Towers\nSilver wax, seven little towers in it. The Conclave writes that Professor Thorne has mentioned your name, \"more than once and without being asked\", and offers you an apprenticeship at the Seven Towers after graduation. Your answer is due on the last"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.7140747308731079,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:career_return_conclave",
+      "title": "The Laboratory Writes Again",
+      "file": "content/events/careers.grim",
+      "line": 157,
+      "sourceHash": "c115b97c4b052c266b8ff30e85f560d2495e4b9810831ecdc9d4c52994ad1a1b",
+      "score": 0.5571652054786682,
+      "excerpt": "The Laboratory Writes Again\nThe Conclave Laboratory remembers your summer, and especially the ward that held. Your old supervisor writes that a place as a junior researcher is yours from the autumn if you'll take it. \"Don't make me ask twice,\" she adds. Answer by the last day.\nWr"
+    },
+    {
+      "key": "event:y3_career_fair",
+      "title": "The Career Fair",
+      "file": "content/events/expansion_y3.grim",
+      "line": 21,
+      "sourceHash": "d14a80ac1808961590ce631e600a8ee9e082e877454d259fe0cc06ae3d1aaf87",
+      "score": 0.5224629640579224,
+      "excerpt": "The Career Fair\n{month == 3: The fair's second week, and the great hall is half packed: the booths that are left have stopped being polite and started being keen. This is the last chance to leave your name.|Every guild, order and institution in the kingdom has sent someone to the"
+    },
+    {
+      "key": "event:thorne_recommendation",
+      "title": "A Letter of Recommendation",
+      "file": "content/events/people_others.grim",
+      "line": 303,
+      "sourceHash": "9907009b478318ead354676845c4987439429b5e251934dd816829bb0819d06b",
+      "score": 0.5025327801704407,
+      "excerpt": "A Letter of Recommendation\nThorne calls you to his office and slides an envelope across the desk. \"The Conclave asked for my recommendations. I wrote one. I don't write many.\" He pauses. \"Don't make me regret it.\"\nThank him sincerely\n\"Go away,\" he says gruffly. \"I have marking.\" "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4bf09e2c5a5995f26333518e9bb94e60b68c81782be2ad03d7da39e153b24878",
+      "at": "2026-10-28T23:17:10.110Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 140,
+        "total_tokens": 140,
+        "cost": 0.0000014,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000014,
+          "upstream_inference_prompt_cost": 0.0000014,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4bf09e2c5a5995f26333518e9bb94e60b68c81782be2ad03d7da39e153b24878",
+      "elapsedMs": 11218,
+      "at": "2026-10-28T23:17:21.328Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a1d9741161a771a067431ca0c9f41fb79a0e422c0a5a5454cbc8fe8ca80c5ea9",
+      "at": "2026-10-28T23:17:21.370Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 70011,
+        "cost": 0.00350055
+      },
+      "requestHash": "a1d9741161a771a067431ca0c9f41fb79a0e422c0a5a5454cbc8fe8ca80c5ea9",
+      "elapsedMs": 768,
+      "at": "2026-10-28T23:17:22.138Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

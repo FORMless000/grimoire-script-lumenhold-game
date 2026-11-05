@@ -62,6 +62,16 @@
       "port": 61090
     },
     {
+      "name": "negotiation-testplay",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "PORT=55918",
+        "node",
+        "experiments/negotiation/results/testplay-gentler-gap8-20261021/server.mjs"
+      ],
+      "port": 55918
+    },
+    {
       "name": "combat-bench",
       "runtimeExecutable": "env",
       "runtimeArgs": [
@@ -70,6 +80,21 @@
         "combat/out/site/server.mjs"
       ],
       "port": 61098
+    },
+    {
+      "name": "crux",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8795",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "/Users/accessair/Desktop/Workspaces/lifesim/.claude/worktrees/parley-cards/experiments"
+      ],
+      "port": 8795,
+      "url": "http://localhost:8795"
     }
   ]
 }

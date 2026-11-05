@@ -1,0 +1,108 @@
+{
+  "query": "Let It Ride {Grisk sweeps your winnings into one neat stack and pushes it back into the middle of the table. \"Let it ride,\" he says. \"The second hand pays double. Most people stop here. Most people are dull.\"|Grisk is already shuffling. \"Again?\" he says, as if it were your idea. Your winnings sit in the middle of the table, waiting.|\"Second hand,\" says Grisk, and the players at the next table stop pretending not to watch.} The new dealer is a woman who hasn't smiled once tonight. Let it ride {The unsmiling dealer turns her last card and looks at you properly for the first time. The pot is yours, and it's heavy.|You bluff on nothing and the whole table folds. Grisk laughs so hard he has to sit down.|You win the second hand by a single card. Somewhere behind you somebody says your name, which is not ideal.} {The dealer takes the hand without a flicker. Your winnings go back to the bank, and the walk home is very long.|You read her wrong, and she lets you know it. Grisk pats your shoulder. \"That's the second hand,\" he says. \"It's always the second hand.\"|The pot goes the other way. On the stair down, a lamp moves in the courtyard and you have to wait in the dark for it to pass.} Cash out {You stand, pocket your winnings and bow to the table. Grisk looks almost disappointed in you.|\"Dull,\" says Grisk fondly, as you go. Your purse doesn't think so.|You leave while the leaving is good, and whistle all the way back to the castle, very quietly.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:newt_high_table_raise",
+      "title": "Let It Ride",
+      "file": "content/events/pools/night.grim",
+      "line": 345,
+      "sourceHash": "47afbb7f3419b671a9075a7c24f061ef12af392d8971687756f02fd5fd15ada7",
+      "score": 0.9573543667793274,
+      "excerpt": "Let It Ride\n{Grisk sweeps your winnings into one neat stack and pushes it back into the middle of the table. \"Let it ride,\" he says. \"The second hand pays double. Most people stop here. Most people are dull.\"|Grisk is already shuffling. \"Again?\" he says, as if it were your idea. "
+    },
+    {
+      "key": "event:newt_high_table_last",
+      "title": "Everything on One Hand",
+      "file": "content/events/pools/night.grim",
+      "line": 373,
+      "sourceHash": "6fea0fe25eab0c652478155545be20ece9377199c304ba5a113c102c1df2986a",
+      "score": 0.6763004660606384,
+      "excerpt": "Everything on One Hand\n{The room has gone quiet. Players from every other table have drifted over to stand around yours. Grisk takes off his rings, one by one, and sets them on the pot. \"Everything,\" he says. \"One hand. Then we see who goes home.\"|Grisk deals this one himself. No"
+    },
+    {
+      "key": "event:newt_high_table",
+      "title": "The High Table",
+      "file": "content/events/pools/night.grim",
+      "line": 57,
+      "sourceHash": "7e057309be7fc954442a5030e71dcc5e420800e047798d3ecbd5f2313219e39b",
+      "score": 0.6385945677757263,
+      "excerpt": "The High Table\n{Behind the upstairs room there's a back room, and in it the high table. Grisk keeps the bank. Nobody here plays for crowns alone.|The high table again. Grisk nods to you as if you were a regular. You are becoming one.|Grisk has kept your seat warm, he says. It is "
+    },
+    {
+      "key": "event:midnight_newt_cards",
+      "title": "Upstairs at the Newt",
+      "file": "content/events/night.grim",
+      "line": 111,
+      "sourceHash": "7ed8770bdd1cb249ef53162ab9ce6d3d5236d020c67a779a909cfa292239c9bd",
+      "score": 0.5432329773902893,
+      "excerpt": "Upstairs at the Newt\nUpstairs at the Gilded Newt, after hours, the real game starts. The stakes are higher than anything downstairs, and nobody asks your name.\nPlay a few hands\n{~You leave with more than you came with and a few new enemies who smile too much.|Luck, nerve and one "
+    },
+    {
+      "key": "event:company_magistrate",
+      "title": "The Magistrate's Card Party",
+      "file": "content/events/pools/night.grim",
+      "line": 202,
+      "sourceHash": "5da88fe0abf6509459664a2792548b8bd56b89cb139a71242ad44ebdb485902b",
+      "score": 0.5191368460655212,
+      "excerpt": "The Magistrate's Card Party\n{A magistrate from the county court is holding a card party, and she likes to win, but not too easily.|The magistrate again. She deals you in without asking, and her eyes say she hasn't forgotten the last game.|The magistrate's party, and a new rule: w"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4cbe2601de99a57638a47251b568ac4c151bd5d3afc2d9d76a55f61fc17045dd",
+      "at": "2026-10-28T23:51:18.006Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 360,
+        "total_tokens": 360,
+        "cost": 0.0000036,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000036,
+          "upstream_inference_prompt_cost": 0.0000036,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4cbe2601de99a57638a47251b568ac4c151bd5d3afc2d9d76a55f61fc17045dd",
+      "elapsedMs": 320,
+      "at": "2026-10-28T23:51:18.326Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "3ea05ce21ec473a883682c2627d6823d1572133f5f0fe385b2b47a1b95d79e4f",
+      "at": "2026-10-28T23:51:18.380Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46892,
+        "cost": 0.0023446
+      },
+      "requestHash": "3ea05ce21ec473a883682c2627d6823d1572133f5f0fe385b2b47a1b95d79e4f",
+      "elapsedMs": 381,
+      "at": "2026-10-28T23:51:18.761Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Deny Everything Nessa sends you to interview the chair of the refectory committee, who will deny everything, including the soup. \"Get it word for word,\" she says. \"Every word. They'll deny the words too.\" {flag(quickquill_soup) and flag(quickquill_ink) and flag(quickquill_deadline): Your quill sits up in your pocket, ready.|Your quill is half-tamed at best.} Interview them with the quill The chair denies everything, and the quill takes every denial down word for word, including the one that contradicts the other three. Nessa reads it and goes very quiet. \"Front page,\" she says. The quill gets bored halfway and starts improving the chair's answers. Nothing is printable. The quill sulks in the WILL NOT PRINT basket until your next front page. Prepare all night first You go in tired and over-prepared, with every question written out. The quill follows your lead all the way through. Nessa reads the transcript twice. \"Front page.\" All night's preparation, and the chair simply doesn't turn up. The quill sulks in the WILL NOT PRINT basket until your next front page.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ledger_quill_interview",
+      "title": "Deny Everything",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 281,
+      "sourceHash": "aac6de1e9670645fd5e8ddfeaec0b1eed748893bdc1a00630e5cdae442fa1e7c",
+      "score": 0.9364530444145203,
+      "excerpt": "Deny Everything\nNessa sends you to interview the chair of the refectory committee, who will deny everything, including the soup. \"Get it word for word,\" she says. \"Every word. They'll deny the words too.\" {flag(quickquill_soup) and flag(quickquill_ink) and flag(quickquill_deadlin"
+    },
+    {
+      "key": "event:ledger_soup_complaint",
+      "title": "The Soup Complaint",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 221,
+      "sourceHash": "a5f98a521e1406ccf2ad64950d282364653fd34d89421bd3162547a9d8fa877d",
+      "score": 0.5257116556167603,
+      "excerpt": "The Soup Complaint\nForty furious letters about the refectory soup have arrived. Nessa wants one calm reply, printed. You decide to dictate it to the quill, which wants very badly to make it more exciting.\nKeep the quill to the facts\nEvery time it reaches for a flourish, you catch"
+    },
+    {
+      "key": "event:ledger_deadline_night",
+      "title": "Deadline Night",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 262,
+      "sourceHash": "3b7079900a0e99b72813158990aa60ba13f949cc6724a64dd5fafb3f7f5fc581",
+      "score": 0.49051231145858765,
+      "excerpt": "Deadline Night\nDeadline night. The front page fell through at nine and Nessa is pacing. \"We need eight hundred words by four,\" she says. \"Anybody with a quill that writes fast, now is the time.\"\nSit it out with the quill\nYou and the quill write until four. By the end it finishes "
+    },
+    {
+      "key": "event:nessa_argument",
+      "title": "On the Record",
+      "file": "content/events/romance/kael_nessa.grim",
+      "line": 403,
+      "sourceHash": "47c77287d29521375373508ff42137ae650c92416464f2896aeed401e96d5b51",
+      "score": 0.48789697885513306,
+      "excerpt": "On the Record\nYou and Nessa are arguing about something small, and it's getting less small, and halfway through you realise her quill is taking it down. Verbatim. With stage directions. \"Ignore it,\" she says. \"Go on. You were saying I'm 'impossible'?\"\nMake her put the quill away\n"
+    },
+    {
+      "key": "event:scandal_ledger_lie",
+      "title": "The Dragon, Checked",
+      "file": "content/events/scandals.grim",
+      "line": 38,
+      "sourceHash": "303f635fc370b8190bce8c8e232b9e295d5eed6b477250d58a5a71a648fa40ea",
+      "score": 0.478130042552948,
+      "excerpt": "The Dragon, Checked\nSomebody has checked the Ledger's profile of you, the one with the better version of yourself in it. A boxed item on page two lists, very politely, the four things in it that never happened, with dates. The refectory has read it. Everybody is waiting to see wh"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "afa0ec1b6bc710439cf024ebf54b794cef5daab976ef9384268612e6b66e852b",
+      "at": "2026-10-28T23:51:32.475Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 253,
+        "total_tokens": 253,
+        "cost": 0.00000253,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000253,
+          "upstream_inference_prompt_cost": 0.00000253,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "afa0ec1b6bc710439cf024ebf54b794cef5daab976ef9384268612e6b66e852b",
+      "elapsedMs": 694,
+      "at": "2026-10-28T23:51:33.169Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a91db905aebc135c983d10d30b30b0217e296caa87e5c3cd207de1617d9a4252",
+      "at": "2026-10-28T23:51:33.236Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46979,
+        "cost": 0.00234895
+      },
+      "requestHash": "a91db905aebc135c983d10d30b30b0217e296caa87e5c3cd207de1617d9a4252",
+      "elapsedMs": 528,
+      "at": "2026-10-28T23:51:33.764Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

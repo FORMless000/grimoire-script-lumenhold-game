@@ -1,0 +1,108 @@
+{
+  "query": "The Lost-Property Box {The porter wants the lost-property box sorted before it starts to smell, and pays by the hour.|The lost-property box is full again, the porter says, mostly of the same gloves.|The porter slides the box across without a word. You know where the odd boot goes now.} Sort it quickly for the pay {Gloves, scarves, books and one boot, in piles by dusk. The porter pays and keeps the boot for himself.|You sort it in an hour. The porter pays for two, out of habit.|You sort it fast. The porter pays, and then tries the odd boot on again, hopefully.} Read what people lose {You learn who carries love letters and who never returns library books. The porter pays you less for taking so long.|You read the names in the books and the notes in the pockets, and put everything back exactly. A slow hour, and a useful one.|You know the castle by what it drops. The porter pays a little less, and you put the gossip away for later.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_lost_property",
+      "title": "The Lost-Property Box",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 719,
+      "sourceHash": "a8a1124a138d763d9472bee704917408e986143998e0b6bfb0b1fb1a91465640",
+      "score": 0.9410575032234192,
+      "excerpt": "The Lost-Property Box\n{The porter wants the lost-property box sorted before it starts to smell, and pays by the hour.|The lost-property box is full again, the porter says, mostly of the same gloves.|The porter slides the box across without a word. You know where the odd boot goes"
+    },
+    {
+      "key": "event:flight_field_long_grass",
+      "title": "The Long Grass",
+      "file": "content/events/pools/grounds.grim",
+      "line": 261,
+      "sourceHash": "de48e71dc541959a3ee86e8988ffafc045ad94abb5b101f63c06a6440fdaaa0c",
+      "score": 0.500458836555481,
+      "excerpt": "The Long Grass\n{The long grass at the edge of the flight field catches everything that falls off a broom.|Someone has planted a little flag in the long grass, to mark where things land.|You've come to think of the long grass as the academy's real lost-and-found.|Somebody has star"
+    },
+    {
+      "key": "event:job_board_lost_familiars",
+      "title": "Lost and Found",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 583,
+      "sourceHash": "00d7f5e2ee96117d996eb66514eca128c860fb9d15f39c07a871e809fc4246e9",
+      "score": 0.48281481862068176,
+      "excerpt": "Lost and Found\n{The corner of the board for lost things is busier than the jobs.|An old poster in the lost-things corner now reads \"found, thanks to a student\".|The lost-things corner has thank-you notes now. One draws the rescuer with a halo.} {A toad called \"Sir\" is missing, la"
+    },
+    {
+      "key": "event:job_board_porters_crates",
+      "title": "Crates for the Porter",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 756,
+      "sourceHash": "b96f43a1b69c3d4aafe38f3bfabce5620a8530644806880147a72c5b6616a6ce",
+      "score": 0.4533916711807251,
+      "excerpt": "Crates for the Porter\n{The porter needs crates carried up from the barge, a great many of them, up a great many stairs.|Crates again, the porter says, pointing at the barge. More of them than last time.|You hear the barge bell and the porter waves before you're even down the stai"
+    },
+    {
+      "key": "event:break_castle_post_day",
+      "title": "Post for the Stay-Behinds",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 63,
+      "sourceHash": "2be202f0839d88702536a799455187263b73a901124f0c7f851adf0f33099443",
+      "score": 0.43701237440109253,
+      "excerpt": "Post for the Stay-Behinds\n{Post day. The porter lays the letters out on one table in the Great Hall.|The porter now sorts the stay-behinds' letters into a pile of their own.|The porter nods to you. He keeps your letters on top now.} {season == \"winter\": {Most of it is Midwinter c"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "f11e766b5189046640db32e711dc3e9c36a8e8e65424a8c08d5905c5bf9ab491",
+      "at": "2026-10-28T23:51:08.137Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 220,
+        "total_tokens": 220,
+        "cost": 0.0000022,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000022,
+          "upstream_inference_prompt_cost": 0.0000022,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "f11e766b5189046640db32e711dc3e9c36a8e8e65424a8c08d5905c5bf9ab491",
+      "elapsedMs": 748,
+      "at": "2026-10-28T23:51:08.885Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "da7ca38edad3356f507411765667ab855ec51c1547bd847cda0fa91ee5b287a2",
+      "at": "2026-10-28T23:51:09.162Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 49547,
+        "cost": 0.00247735
+      },
+      "requestHash": "da7ca38edad3356f507411765667ab855ec51c1547bd847cda0fa91ee5b287a2",
+      "elapsedMs": 428,
+      "at": "2026-10-28T23:51:09.590Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,107 @@
+{
+  "query": "After the Closing Bell {The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the doors. You know the alcove on the fourth floor where the last lamp dies.} {Footnote is doing his rounds, tail up.|Rain is loud on the high windows.|{final_year: You wonder who will hide in your alcove next year.|Somewhere a book closes itself with a snap.}} Stay hidden past closing {You read by a stolen candle until the small hours. The library is a different animal at night, and it lets you be.|The shelves lean together and whisper while you read. You catch one word in three, and none of them are kind about the history section.|You read in your alcove till the candle drowns. Walking back across the bridges at two, you feel like a burglar who stole only sentences.} {A shelf shuffles sideways and nudges you, firmly, toward the door. A prefect on the stair watches you evicted by furniture.|The shelves close the aisle behind you like a mouth and walk you to the exit. The story is round the house by breakfast.|Footnote finds you, sits on your book and yowls until the porter comes. The porter tells everyone. Footnote is unrepentant.} Leave with the crowd {You go to bed at a decent hour, which feels almost illicit.|You leave with everyone else and sleep like a shelved book.|You walk out under the dying lamps and sleep well. The alcove can wait for you.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:library_after_closing",
+      "title": "After the Closing Bell",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 28,
+      "sourceHash": "bf6a3b7fa5a74826386ba78c7bfa6c71b84f2db84722c467e83b45d2cb1b2798",
+      "score": 0.9466139674186707,
+      "excerpt": "After the Closing Bell\n{The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the"
+    },
+    {
+      "key": "event:slice_late_lamps",
+      "title": "The Last Lamp",
+      "file": "content/events/slice_2a.grim",
+      "line": 91,
+      "sourceHash": "80f55422ef9a4e0cced5046916a4e4ba3b065a099fcc7dfc07a9be6f9f4d3228",
+      "score": 0.7314154505729675,
+      "excerpt": "The Last Lamp\n{~The library is emptying.|Rain on the high windows, and the library is emptying early.|Exam fever has filled the library all day; now, finally, it is emptying.} {~Footnote, the library cat, is asleep on the book you need|The book you need is on the top shelf, and t"
+    },
+    {
+      "key": "event:library_assistant_stack_keys",
+      "title": "The Stack Keys",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 493,
+      "sourceHash": "346e390cd330e5b80679ab97b7ec7400c909e56cae81719184c655a34e3eb963",
+      "score": 0.6005277037620544,
+      "excerpt": "The Stack Keys\nAt closing the head librarian presses a brass ring of keys into your hand: the upper stacks, the map drawers, the ladder chains. Not the Restricted Section. \"Lock up. The shelves settle after dark. Let them.\"\nDo the closing round alone\nYou walk every floor with the"
+    },
+    {
+      "key": "event:midnight_restricted_stacks",
+      "title": "The Restricted Stacks",
+      "file": "content/events/night.grim",
+      "line": 204,
+      "sourceHash": "6a3bba2fae071c618e2ce2273b4e799545451f55d231bca47f8f4a56e1ea4e1e",
+      "score": 0.5785782337188721,
+      "excerpt": "The Restricted Stacks\nThe Restricted Section at midnight. The chains on the shelves clink when nobody touches them. One book has been left open, as if for you.\nRead the open book\n{~Three pages before the book closes itself. You remember every word, which is worrying.|The book sho"
+    },
+    {
+      "key": "event:restricted_section_breathing_shelves",
+      "title": "The Breathing Shelves",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 360,
+      "sourceHash": "fbf549d47474b2c771f4b0df8251d9479b513a6127869b0ba2f1a4a1582c1866",
+      "score": 0.5715793371200562,
+      "excerpt": "The Breathing Shelves\n{The black-bound books breathe in the dark, slow as sleepers. You find a chair and light a candle.|You've learned to breathe with the shelves; it helps.|Your chair is where you left it. The books shift, as if making room.} {One spine is warm to the touch.|So"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "0baa1aaa49c95e0474206af952bc7caef61795617e0bc4062254e2b50dd0334e",
+      "at": "2026-10-28T23:33:56.230Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 359,
+        "total_tokens": 359,
+        "cost": 0.00000359,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000359,
+          "upstream_inference_prompt_cost": 0.00000359,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "0baa1aaa49c95e0474206af952bc7caef61795617e0bc4062254e2b50dd0334e",
+      "elapsedMs": 4621,
+      "at": "2026-10-28T23:34:00.851Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "5bc302c987ee6802267a6e4e5d22e7b9e775fd74b94b1628478123ff5af2820c",
+      "at": "2026-10-28T23:34:00.881Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47325,
+        "cost": 0.00236625
+      },
+      "requestHash": "5bc302c987ee6802267a6e4e5d22e7b9e775fd74b94b1628478123ff5af2820c",
+      "elapsedMs": 829,
+      "at": "2026-10-28T23:34:01.710Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -116,7 +116,9 @@ export const DEFEAT={'Shadow stag':'{foe} {fv:lowers|lower} its head and {fv:ste
  'The Spinner':'{foe} {fv:bows|bow} {fpos} forelegs to {name}.',
  'The Spinner, weakened':'{foe} {fv:bows|bow} {fpos} forelegs to {name}.',
  'The Outcast':'{foe} {fv:laughs|laugh}, {fv:bows|bow}, and {fv:vanishes|vanish} into silver frost.'};
-export const ENDINGS={knockout:'{foe} can fight no more, and {name} {v:wins|win}.',decision:'Neither falls; {name} {v:wins|win} on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} {fv:yields|yield} to {name}.'};
+export const ENDINGS={knockout:'{foe} can fight no more, and {name} {v:wins|win}.',decision:'Neither falls; {name} {v:wins|win} on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} {fv:yields|yield} to {name}.',
+ // Told after the finishing line when both fell in the same exchange and the side that committed first won (feedback 2026-10-29).
+ tiebreak:'Both blows flew at once, but {name} committed first: {name’s} blow landed first, and {foe} {fv:goes|go} down before {fpos} own can reach {name}.'};
 // Effects that end with a line, by effect key → the spell whose `end` it uses. {name} is the effect's holder, except for
 // Torment, whose effect sits on the cursed side but is told from the caster's.
 const LASTING={brace:'brace',haste:'haste',shadowstep:'shadowstep',tailwind:'tailwind',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel',lodestar:'lodestar'};
@@ -136,6 +138,8 @@ export const LINES={
  reflectedBack:'{name} {v:takes|take} {n} damage from {pos} own {noun}.',
  noDamage:'It does no damage.',
  takes:'{foe} {fv:takes|take} {n} damage.',
+ // A mutual knockout's loser (feedback 2026-10-29): the winner committed first, so this side's blows never land.
+ tooLate:'But {name} {v:is|are} already falling: the blow never lands.',
  takesHits:'{foe} {fv:takes|take} {n} damage from {hits} hits.',
  regains:'{name} {v:regains|regain} {n} Mana.',
  noLooseMagic:'There is no loose magic left to gather.',
@@ -240,6 +244,8 @@ export function resolvedLines(before,after,r,names=['the player','the opponent']
   const L=(k,v={})=>F(Object.entries(v).reduce((s,[a,b])=>s.replaceAll('{'+a+'}',b),line(k)));
   const labels=after.actors[side]?.kit?.labels??null,lab=x=>labels?.[x]??x;
   const mine=ev.filter(e=>e.type==='hit'&&e.source===side&&!e.reflected).map(e=>labels?{...e,id:lab(e.id)}:e);
+  // The loser of a mutual knockout: the winner committed first, and this side's blows never landed (the core gave them back).
+  const lost=!!after.result?.tiebreak&&after.result.winner===1-side;
   // Attacks: one sentence per kind of attack this side landed or lost, then the damage.
   const byId={};for(const e of mine)(byId[e.id]??=[]).push(e);
   const head=flavorLine(id,{channel:ch,round:r.round,names,side,labels});
@@ -255,6 +261,7 @@ export function resolvedLines(before,after,r,names=['the player','the opponent']
    else if(said)parts.push(F(said));else if(own&&!usedHead&&head){parts.push(head);usedHead=true;}else if(!own)parts.push(L('hits',{noun:noun(aid)}));
    const back=ev.filter(e=>e.type==='hit'&&e.reflected&&e.source===1-side&&e.id===aid).reduce((n,e)=>n+e.amount,0);
    if(def==='reflected')parts.push(back>0?L('reflectedBack',{n:r0(back),noun:noun(aid)}):L('noDamage'));
+   else if(lost&&dealt>0)parts.push(L('tooLate'));
    else parts.push(dealt>0?(hits.length>1?L('takesHits',{n:r0(dealt),hits:hits.length}):L('takes',{n:r0(dealt)})):L('noDamage'));
   }
   if(!usedHead&&head&&!Object.keys(byId).includes(lab(spell)))parts.unshift(head);
@@ -321,6 +328,7 @@ export function finishLines(before,after,pair,round,names=['the player','the opp
    const id=pair[w],key0=id==='hold'||id==='release'?before.actors[w].channel?.id:id,key=landed??after.actors[w].kit?.labels?.[key0]??key0;
    const foeLoadout=after.actors[1-w].kit?.loadout,defeat=DEFEAT[foeLoadout]?tx('defeat.'+slug(foeLoadout),DEFEAT[foeLoadout]):null;
    add(defeat??(r.reason==='knockout'?fl(key+'.ko',FLAVOR[key]?.ko)??ending('knockout'):ENDINGS[r.reason]?ending(r.reason):ending('knockout')),w);
+   if(r.tiebreak)add(ending('tiebreak'),w);
   }
  }
  return out;

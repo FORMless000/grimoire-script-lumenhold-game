@@ -1,0 +1,108 @@
+{
+  "query": "The Study Group {{friend} has a study group going in an empty classroom and a spare seat. \"We're doing the hard chapter. Bring your brain, and biscuits.\"|{friend}'s study group is still going, and still short of biscuits. The chalkboard is a battlefield.|{friend} waves you into the study group. Someone has started a list of who brings what; you're down for biscuits.} {Someone is drawing diagrams in the air with a glowing wand-tip.|Two of them are arguing about a footnote.|{season == \"winter\": It's freezing; everyone's in scarves.|The window's open, and moths are attending too.}} Join and work late {You work through the hard chapter together until midnight. It makes sense in the end, mostly because {friend} drew it as a sandwich. You're shattered.|You argue the footnote to a draw and finish the chapter. {friend} walks you back across the bridges, yawning, long past midnight.|You bring the biscuits and an answer. {friend} says you're the group's secret weapon. You go to bed far too late.} Go to bed instead {You go to bed early. {friend} tells you at breakfast how good the group was, at length.|You turn in. Through the wall you hear the study group laughing until one, and sleep anyway.|You skip it. {friend} saves you a biscuit, which is somehow worse than a reproach.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_study_group",
+      "title": "The Study Group",
+      "file": "content/events/pools/world_more.grim",
+      "line": 151,
+      "sourceHash": "882f41b1af77b3e13436db5c9f43863032948c20e205856da1f3a357e56f8885",
+      "score": 0.9577711820602417,
+      "excerpt": "The Study Group\n{{friend} has a study group going in an empty classroom and a spare seat. \"We're doing the hard chapter. Bring your brain, and biscuits.\"|{friend}'s study group is still going, and still short of biscuits. The chalkboard is a battlefield.|{friend} waves you into t"
+    },
+    {
+      "key": "event:soc_study_session",
+      "title": "Study Session",
+      "file": "content/events/social.grim",
+      "line": 12,
+      "sourceHash": "0f9788c47280c98be22048b08ddb3d42a2649311bc19c2dafc612ee4abb8e9a8",
+      "score": 0.6584674715995789,
+      "excerpt": "Study Session\n{~{npc} drops into the seat across from you with an armful of books. \"Exams are coming for us all. Misery loves company. Study with me?\"|{npc} slides a stack of notes onto your table. \"I've read this chapter four times and it's still in a foreign language. Help?\"|{n"
+    },
+    {
+      "key": "event:circle_exam_night",
+      "title": "The Night Before",
+      "file": "content/events/between_stories.grim",
+      "line": 333,
+      "sourceHash": "3e1cafe0f6bc998b936743fcb5de29a18c3e24bc95852a4b70ace21fd8d59285",
+      "score": 0.5808295011520386,
+      "excerpt": "The Night Before\nThe night before exams the circle sits till the lamps are trimmed, and it goes wrong. {w} hasn't done the notes {w.they} promised, and somebody says so, loudly, and {w} says some things back. Half the table is on its feet.\nHold it together\nYou split {w}'s chapter"
+    },
+    {
+      "key": "event:date_study_together",
+      "title": "Studying Together",
+      "file": "content/events/pools/dating.grim",
+      "line": 30,
+      "sourceHash": "ccf2b5383a58cad9a30cf11ee9bae7b29f6eaa6de4025671e9de03b9fb803192",
+      "score": 0.5403079390525818,
+      "excerpt": "Studying Together\n{{partner} suggests studying together. In theory, this is efficient.|Another study evening with {partner}. The theory remains a theory.|{partner} has saved you a seat in the library and stacked your books for you.} {The exam is in a fortnight.|The library is ver"
+    },
+    {
+      "key": "event:lyra_study_hall_truce",
+      "title": "The Study Hall Truce",
+      "file": "content/events/bonds/friends.grim",
+      "line": 55,
+      "sourceHash": "f6c92428287881ebed6da5b1f8b69cd649ed78533958382a9e10fabca4318bd1",
+      "score": 0.5254157781600952,
+      "excerpt": "The Study Hall Truce\nLyra has built a wall of books down the middle of your library table. \"My side,\" she says. \"Your side. No talking.\" {~Twenty minutes later she slides a note over the wall: \"What did Thorne mean by the second law?\"|An hour in, a biscuit appears on your side of"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "fbe45646a9ebb47e7e36ed42b8f02abd81d57aa366a49b0d4724161fd3c8c311",
+      "at": "2026-10-28T23:50:53.273Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 304,
+        "total_tokens": 304,
+        "cost": 0.00000304,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000304,
+          "upstream_inference_prompt_cost": 0.00000304,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "fbe45646a9ebb47e7e36ed42b8f02abd81d57aa366a49b0d4724161fd3c8c311",
+      "elapsedMs": 292,
+      "at": "2026-10-28T23:50:53.565Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7a48b86f67c939cad97df7c39999e730bf3a32bf193d786c16c5847d67f853ac",
+      "at": "2026-10-28T23:50:53.629Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 47770,
+        "cost": 0.0023885
+      },
+      "requestHash": "7a48b86f67c939cad97df7c39999e730bf3a32bf193d786c16c5847d67f853ac",
+      "elapsedMs": 403,
+      "at": "2026-10-28T23:50:54.032Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

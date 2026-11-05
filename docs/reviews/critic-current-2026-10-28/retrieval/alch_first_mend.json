@@ -1,0 +1,108 @@
+{
+  "query": "The Mending Practical {level(alchemy) == 0: Alchemy I's first practical is a cracked teacup on every bench. Sister Amaranth sets them down without looking up. \"Mend it,\" she says. \"Then I'll let you near a person.\"|{level(alchemy) == 1: Alchemy II moves into the infirmary. Sister Amaranth hands you a first-year with a split lip from the Duelling Circle. \"Skin this time,\" she says. \"It argues more than china.\"|Advanced Alchemy: Mend for what's deep. Sister Amaranth gives you a sprained wrist, its unhappy owner and her own pocket watch. \"Bone takes patience,\" she says. \"Patients don't.\"}} Mend it until it holds {level(alchemy) == 0: Your cup holds tea on the fifth try and leaks on the sixth, and you've spent everything getting there. Sister Amaranth pours some anyway and drinks it. \"Keep doing that,\" she says.|{level(alchemy) == 1: The lip closes under your hand, slowly, and you feel every bit of it leave you. The first-year says it tickles. Sister Amaranth says that means it worked.|The sprain knits with the watch ticking beside you. You're wrung out by the end, and the wrist bends like a wrist. Sister Amaranth puts the watch away. \"Again tomorrow,\" she says, which is praise.}} Watch her do one first {level(alchemy) == 0: She mends hers without stopping her conversation with the next bench. You copy her hands. Yours takes the whole hour, and the bench beside you finishes first.|{level(alchemy) == 1: You watch her close a cut from the inside out. When your turn comes it's slower than hers by a mile, and the first-year sighs the whole time.|You watch her set a wrist and mend it in one quiet minute. Yours takes twenty, and the patient tells you about every one.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:alch_first_mend",
+      "title": "The Mending Practical",
+      "file": "content/events/spell_sources.grim",
+      "line": 55,
+      "sourceHash": "d7e777cbc72e6a97569f31285706ec8a5f08267b06f35f0cc86fe795dcbc34f3",
+      "score": 0.9441974759101868,
+      "excerpt": "The Mending Practical\n{level(alchemy) == 0: Alchemy I's first practical is a cracked teacup on every bench. Sister Amaranth sets them down without looking up. \"Mend it,\" she says. \"Then I'll let you near a person.\"|{level(alchemy) == 1: Alchemy II moves into the infirmary. Sister"
+    },
+    {
+      "key": "event:lesson_mend",
+      "title": "Teacups First",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 89,
+      "sourceHash": "16b4c27bb3ad4c49b19955d140e5a6904572caeca387f8ef73cd8a371a37ca63",
+      "score": 0.8143998980522156,
+      "excerpt": "Teacups First\nSister Amaranth teaches Mend with teacups. She drops one on the infirmary floor without looking. \"Mend it.\" When it's whole she drops another. \"Bones are harder,\" she says, rolling bandages. \"Cups first.\"\nMend cup after cup\nBy the twentieth cup you can hear the crac"
+    },
+    {
+      "key": "event:alch_cracked_tray",
+      "title": "The Cracked Tray",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 224,
+      "sourceHash": "26c6f3e6166bb7f9cc31b621d7e1fc3920833719d865e41448f23a5a6d11b679",
+      "score": 0.804355263710022,
+      "excerpt": "The Cracked Tray\n{Mend at Alchemy II. Sister Amaranth sets out a tray of cracked things, cup, mirror and bone. \"Mend those,\" she says, \"and then we'll see about people.\"|The tray again. Sister Amaranth has found new things to crack.|Sister Amaranth puts the tray down and nods at "
+    },
+    {
+      "key": "event:alch_bandage_round",
+      "title": "Bandage Round",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 389,
+      "sourceHash": "5de3f8d685028c9380e875b565119681df225f86c067c0ac573c2e0ad49b20a1",
+      "score": 0.7152593731880188,
+      "excerpt": "Bandage Round\n{&The healing half of Alchemy I is taught in the infirmary, where Sister Amaranth has the class roll bandages and watch her work.|Sister Amaranth inspects every roll, and unrolls one of yours.|Sister Amaranth hands you a roll without looking up.} {&A third-year is i"
+    },
+    {
+      "key": "event:heal_first_patient",
+      "title": "Your First Patient",
+      "file": "content/events/classes.grim",
+      "line": 613,
+      "sourceHash": "12bde0f476a69deddb1cc472b742704b3e4c3bea6e5f11268203ab780abf631a",
+      "score": 0.6597937345504761,
+      "excerpt": "Your First Patient\nA first-year stumbles into the practice ward with a wrist that bends the wrong way. Sister Amaranth is busy. The first-year looks at you with enormous, trusting eyes.\nFetch Sister Amaranth\nAmaranth fixes it in seconds and nods at you. \"Knowing your limits is th"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "a13427c6087dd29449129de8cc1b08aafb066d3380e71c3ce3758a007419dd31",
+      "at": "2026-10-28T23:51:48.840Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 426,
+        "total_tokens": 426,
+        "cost": 0.00000426,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000426,
+          "upstream_inference_prompt_cost": 0.00000426,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "a13427c6087dd29449129de8cc1b08aafb066d3380e71c3ce3758a007419dd31",
+      "elapsedMs": 266,
+      "at": "2026-10-28T23:51:49.106Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d908eb4bf4dbc8b41194a2bdc070807a926dfab38386550941baf917d691a7ba",
+      "at": "2026-10-28T23:51:49.152Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54284,
+        "cost": 0.0027142
+      },
+      "requestHash": "d908eb4bf4dbc8b41194a2bdc070807a926dfab38386550941baf917d691a7ba",
+      "elapsedMs": 391,
+      "at": "2026-10-28T23:51:49.543Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

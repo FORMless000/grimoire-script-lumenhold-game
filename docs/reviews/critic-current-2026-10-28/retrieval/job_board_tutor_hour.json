@@ -1,0 +1,108 @@
+{
+  "query": "An Hour of Tutoring {A first-year's notice, written with great care, asks for an hour's help with an essay. They can pay a little.|The same first-year's careful handwriting: another essay, another hour.|The first-year has stopped writing notices. They just pin up the essay, with a coin taped to the corner.} Take the hour, and the coin {An hour of commas and confusion. The essay improves; so does your purse, slightly.|You take them through it line by line. They pay, and thank you twice.|You know their mistakes before they make them now. The hour goes quickly, and they pay.} Help, and leave the coin pinned {You leave the coin taped to the board. The essay comes back with a good mark, and the first-year tells everyone.|You help for nothing. They try to pay you anyway, and you won't let them.|You leave the coin where it is, as always. Somebody has drawn a small sun beside the notice.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_tutor_hour",
+      "title": "An Hour of Tutoring",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 777,
+      "sourceHash": "a25ad4ac61a5334c88b8ef6cfe84ff3f6a7b51db773d72836c5f524ac0d36885",
+      "score": 0.9447181820869446,
+      "excerpt": "An Hour of Tutoring\n{A first-year's notice, written with great care, asks for an hour's help with an essay. They can pay a little.|The same first-year's careful handwriting: another essay, another hour.|The first-year has stopped writing notices. They just pin up the essay, with "
+    },
+    {
+      "key": "event:tutor_bribe",
+      "title": "An Indecent Proposal",
+      "file": "content/events/jobs.grim",
+      "line": 390,
+      "sourceHash": "db1bb8e03707be6ea06fee992578f5d4b96b08705b62da311c459dedfffe9e45",
+      "score": 0.5992405414581299,
+      "excerpt": "An Indecent Proposal\nA rich second-year doesn't want tutoring. He wants an essay. \"Thirty crowns,\" he says, dropping a purse on the table. \"Nobody needs to know.\"\nRefuse\nHe sneers and goes elsewhere. You spend the evening on your own essays. Later you see him in detention, scrubb"
+    },
+    {
+      "key": "event:align_asked_for_help",
+      "title": "\"You're the One People Ask\"",
+      "file": "content/events/alignment.grim",
+      "line": 200,
+      "sourceHash": "126c424e548907d205e63a8beec6fc53069f38e50abdd4f5a06f0832dbfded48",
+      "score": 0.5597920417785645,
+      "excerpt": "\"You're the One People Ask\"\n{~A first-year hovers by your table with a torn essay and a face like a wet weekend.|A first-year you've never met asks if you're the one who helps people. Apparently you are.|Someone has written your name on the common-room board under \"ask them\".} \"S"
+    },
+    {
+      "key": "event:soc_homework_help",
+      "title": "Desperate Homework",
+      "file": "content/events/social.grim",
+      "line": 313,
+      "sourceHash": "92ade7572a8e8c55a7f4ff2fb39378c0b5ca7adff9df448a6b4da7d0872f94fe",
+      "score": 0.5519869327545166,
+      "excerpt": "Desperate Homework\n{npc} waves a half-finished {~essay|lab report|star chart} at you. \"It's due in an hour and I've written the title twice. Help.\"\nExplain the concept\nYou explain it so clearly that {npc} finishes the essay with time to spare. {They} insist{s} you're a genius.\nYo"
+    },
+    {
+      "key": "event:lecture_tower_office_hours",
+      "title": "The Office-Hours Queue",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 77,
+      "sourceHash": "b87b9f605b56bdb63c851701653918d5fbbe875f50618b8d319aef0f87f8c60d",
+      "score": 0.5428218841552734,
+      "excerpt": "The Office-Hours Queue\n{{prof} keeps office hours on the landing, and the queue already reaches the stairs.|Office hours. {prof}'s queue has its etiquette now: no pushing, no crying, no essays read aloud.|The office-hours queue. You know the landing's cold step and the warm one.}"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "b2dbba9ae2747808eb461a84d332785cc811238759b4faa2cf76a32c3e17d52c",
+      "at": "2026-10-28T23:51:09.952Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 209,
+        "total_tokens": 209,
+        "cost": 0.00000209,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000209,
+          "upstream_inference_prompt_cost": 0.00000209,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "b2dbba9ae2747808eb461a84d332785cc811238759b4faa2cf76a32c3e17d52c",
+      "elapsedMs": 410,
+      "at": "2026-10-28T23:51:10.362Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "e6b88aeedb17d5d71ced7793bb77fcfc22cfcd35a4e067654a5cdea77c465609",
+      "at": "2026-10-28T23:51:10.822Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45079,
+        "cost": 0.00225395
+      },
+      "requestHash": "e6b88aeedb17d5d71ced7793bb77fcfc22cfcd35a4e067654a5cdea77c465609",
+      "elapsedMs": 498,
+      "at": "2026-10-28T23:51:11.320Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

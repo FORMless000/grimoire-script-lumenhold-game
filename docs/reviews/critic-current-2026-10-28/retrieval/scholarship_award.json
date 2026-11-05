@@ -1,0 +1,108 @@
+{
+  "query": "The Bursary List The bursary list {month == 6: for the spring term|for the new year} goes up outside the registrar's office. {term_gpa >= 3.5: {&Your name is near the top with a small star beside it: the full stipend, and a merit bonus.|The clerk hands you the envelope herself. The full stipend, and a little extra \"for distinction\".|Your name, the full sum, and the word \"Merit\" in red ink, which the clerk says she rarely gets to use.}|{term_gpa >= 3.0: {&Your name is there: the stipend is renewed for another term.|\"Renewed,\" says the list, in the clerk's tidy hand. You breathe out.|Your stipend stands for another term. The marks held, if only just.}|{term_gpa > 0: {&Your name is there with a line through the amount. Last term's marks fell below the 3.0 the Crown pays for, and the stipend waits until they come back up.|The clerk is apologetic: the Crown pays for marks of 3.0 and above, and last term yours were not. Next term, perhaps.|No stipend this term. Your marks dipped below what the Crown pays for, and the list says so in plain ink.}|{&Your name isn't on the list. No marks were recorded for you last term, and the Crown pays for marks.|The clerk checks twice. No grades last term means no stipend this one.|An empty line where your amount should be: the Crown pays for marks, and last term you had none.}}}} Read your line again {term_gpa >= 3.0: {&You fold the envelope into your book and walk a little taller to breakfast.|Tuition, board and something left over. You allow yourself one good dinner.|You write home that the stipend held. Your family will read the letter aloud to the neighbours.}|{&You do the sums on the back of a lecture note, and they come out short. Work, then, or thinner meals.|You walk away from the list without looking back at it. Next term the marks will be better; they have to be.|You go straight to the library, which is free, and stay until it closes.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:scholarship_award",
+      "title": "The Bursary List",
+      "file": "content/events/origin_funding.grim",
+      "line": 33,
+      "sourceHash": "0a59a75eceabba87007a6e397aeebe464abe74a2bd5f163bd89e9e37744ea3da",
+      "score": 0.9339295029640198,
+      "excerpt": "The Bursary List\nThe bursary list {month == 6: for the spring term|for the new year} goes up outside the registrar's office. {term_gpa >= 3.5: {&Your name is near the top with a small star beside it: the full stipend, and a merit bonus.|The clerk hands you the envelope herself. T"
+    },
+    {
+      "key": "event:last_results",
+      "title": "The Final Lists",
+      "file": "content/events/last_day.grim",
+      "line": 30,
+      "sourceHash": "411c42c308e9e5ec536e3cc105a06af8d5cb1df850a358c2108352d5b52079f3",
+      "score": 0.5349962115287781,
+      "excerpt": "The Final Lists\nThe final lists are pinned to the great hall door, and the whole year is crowded in front of them. {gpa >= 3.5: Your name is near the top, and someone has drawn a small star beside it.|{gpa >= 2.5: Your name sits in the middle of the list, solid and unremarkable, "
+    },
+    {
+      "key": "event:aid_interview",
+      "title": "The Bursar Will See You",
+      "file": "content/events/pools/money.grim",
+      "line": 24,
+      "sourceHash": "aee7fbc6e33faa156708a729a3f13d29a4126753689ec3ca2adb1f13252f9d16",
+      "score": 0.5091254711151123,
+      "excerpt": "The Bursar Will See You\nThe bursar has your forms open under her hand and a ledger the size of a tombstone at her elbow. \"The fund is small,\" she says, \"and the hands are many. Tell me why it should be yours. Or, if you'd rather not beg, I can lend you sixty crowns against your f"
+    },
+    {
+      "key": "event:noble_letter",
+      "title": "A Letter from Home",
+      "file": "content/events/origin_funding.grim",
+      "line": 14,
+      "sourceHash": "9c9292649f288adbdc0fa56cacac72df4c07a01b0ffd382e6ca8a74fc54381fd",
+      "score": 0.45938292145729065,
+      "excerpt": "A Letter from Home\n{month == 6: Before the spring term|Before the new year} a letter comes with your family's seal and a draft on the family bank. {flag(family_gift): {&Folded inside is a smaller note from your grandmother, and a little more money \"for something nice\".|There's an"
+    },
+    {
+      "key": "event:lyra_rankings_war",
+      "title": "The Rankings War",
+      "file": "content/events/bonds/rivals.grim",
+      "line": 10,
+      "sourceHash": "9ea821ea05c97c733c6df7dce2a43448b0af287a0af0558d6e0e2393f4414f14",
+      "score": 0.43740367889404297,
+      "excerpt": "The Rankings War\nThe rankings are up outside the Great Hall. {~You're one place above Lyra.|Lyra is one place above you.} She's standing in front of the list when you get there, and she doesn't move aside. \"Enjoy it,\" she says. \"It's the last time.\"\nOut-study her this term\n{~You "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e61e1417bef1a603f8675ef817265e735a82ae6b6d0dbf6960b64d4f9a876c90",
+      "at": "2026-10-28T23:51:04.153Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 493,
+        "total_tokens": 493,
+        "cost": 0.00000493,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000493,
+          "upstream_inference_prompt_cost": 0.00000493,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e61e1417bef1a603f8675ef817265e735a82ae6b6d0dbf6960b64d4f9a876c90",
+      "elapsedMs": 422,
+      "at": "2026-10-28T23:51:04.575Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "8358a66d6ad23297a71f58a60644e88a79d61059d2ecf8f4fe093aa4bdb6b6d8",
+      "at": "2026-10-28T23:51:04.628Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 79309,
+        "cost": 0.00396545
+      },
+      "requestHash": "8358a66d6ad23297a71f58a60644e88a79d61059d2ecf8f4fe093aa4bdb6b6d8",
+      "elapsedMs": 561,
+      "at": "2026-10-28T23:51:05.189Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

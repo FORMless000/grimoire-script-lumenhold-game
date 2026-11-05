@@ -1,0 +1,76 @@
+{
+  "query": "Chosen by the Nose {Mr Grimsby holds three books under your nose, one after another, eyes closed. \"Don't look. Smell. The right book smells right.\"|Mr Grimsby greets you with a book already held out at nose height. \"Vanilla and rain,\" he says. \"Trust me.\"|Mr Grimsby hands you a book by its smell before you've closed the door. He hasn't asked what you came in for. He never does.} {One smells of pipe smoke and the sea.|One smells of cut grass and arguments.|{season == \"winter\": One smells of woodsmoke, and the shop is freezing.|One smells, faintly, of you.}} Buy the one that smells right {You buy the one that smells of the sea. It's a book of storms, beautifully written and of no use whatsoever. You love it.|Vanilla and rain is a slim book of poems about lighthouses. Mr Grimsby wraps it like a gift and takes your coin as an afterthought.|You buy the one that smells like you. It's a novel about someone your age on the night before they leave home. You read it on the barge, slowly.} Insist on the one you came for {You describe the book four times. On the fifth, Mr Grimsby lights up and produces it from under a cat-sized stack. He seems a little disappointed in you.|You stand firm. Mr Grimsby sighs, sniffs the air and goes straight to the right shelf. He could do this all along.|You've learned to describe a book by its smell. Mr Grimsby finds yours in a minute, beaming at your progress.} {You ask for a textbook and leave, somehow, with nothing at all, after an hour's lecture on the smell of old maps.|Mr Grimsby goes into the shelves for your book and is gone so long you leave a note.|Mr Grimsby brings you a cookbook, with great confidence, and is so hurt when you decline it that you stay an hour to make up for it.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:grimsbys_by_the_nose",
+      "title": "Chosen by the Nose",
+      "file": "content/events/pools/village_more.grim",
+      "line": 81,
+      "sourceHash": "21ad93fd64d7f85387a21e5504e2232e61fa00876b4b1f9e6ef5bbb2491121e1",
+      "score": 0.9611470699310303,
+      "excerpt": "Chosen by the Nose\n{Mr Grimsby holds three books under your nose, one after another, eyes closed. \"Don't look. Smell. The right book smells right.\"|Mr Grimsby greets you with a book already held out at nose height. \"Vanilla and rain,\" he says. \"Trust me.\"|Mr Grimsby hands you a b"
+    },
+    {
+      "key": "event:know_grimsby_nose",
+      "title": "The Night Before the Essay",
+      "file": "content/events/knowing.grim",
+      "line": 212,
+      "sourceHash": "4882f76d827e984098a4ca67c4b4f7fae5f40c386b717a575eee325f91d64896",
+      "score": 0.7775641679763794,
+      "excerpt": "The Night Before the Essay\nYour essay is due tomorrow, and the one book you need isn't in the library. You reach Grimsby's as he's turning the sign to \"closed\". He lets you in, holds up the lamp to a wall of a thousand spines, and says, \"Well? What does it look like?\"\nDescribe th"
+    },
+    {
+      "key": "event:shop_grimsbys",
+      "title": "Grimsby's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 188,
+      "sourceHash": "a5e0e87ffda72b399e3dbbeb887f532d020419f578445acc105ef2b8e86101ff",
+      "score": 0.7767785787582397,
+      "excerpt": "Grimsby's Counter\n{Mr Grimsby is up a ladder, sniffing a spine. \"Ah! Not that one,\" he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pi"
+    },
+    {
+      "key": "event:grimsbys_right_book",
+      "title": "The Right Book, First Time",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 372,
+      "sourceHash": "624f1c5833556a7ba16b3ceb377808dc281b40b5e3b52772fdc96e24df61b8a7",
+      "score": 0.7002170085906982,
+      "excerpt": "The Right Book, First Time\nYou step into Grimsby's and open your mouth, and Mr Grimsby is already holding out a book. It is exactly the one you came for. He looks as astonished as you are. \"Must be getting to know you,\" he says, and then, worried, \"Don't tell anyone.\"\nBuy it befo"
+    },
+    {
+      "key": "event:grimsbys_wrong_book",
+      "title": "Not the Book You Wanted",
+      "file": "content/events/pools/village_home.grim",
+      "line": 228,
+      "sourceHash": "a29ddb61df7ae4c6ab5fa92ea5c310d6dabebb16d31e4e57d57df44d3e48c851",
+      "score": 0.6548265218734741,
+      "excerpt": "Not the Book You Wanted\n{You ask Mr Grimsby for a textbook. He vanishes into the shelves and comes back with something else entirely.|You ask Mr Grimsby for one thing. He brings you another, with great confidence.|Mr Grimsby sees you coming and is already halfway up a ladder, loo"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "requestHash": "9aa52157aa4a93f3985d4146022d7e7c96e730199e731c09d30a307241759493",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:34.509Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "cached",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "requestHash": "bcc20d37b5d2b4e90dcdc376ccacbfe98af03584db4359a9fd0fc53c39114004",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:35.074Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

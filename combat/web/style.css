@@ -226,3 +226,14 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 }
 @media(max-width:600px) and (max-height:700px){.fight-setting{display:none}.hfull .flavor:not(.finish),.intent .flavor,.intent .it>small,.intent .eff small,.hx-full h4{display:none}.intent b{font-size:12px}}
 @media(max-width:600px) and (max-height:620px){.card-stub,.stub-top{display:none}.stub-meters .meter small{display:none}.intent .it>small:not(.flavor){display:none}.fname small{display:none}.fname{min-height:24px}}
+/* The fight on the main game's own screen (web/app.mjs playInGame): the game's page, framed at a device's size. */
+.game-host{width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:0;flex:1 1 auto}
+.gh-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;width:100%;max-width:1280px;font-size:12.5px;color:var(--muted)}
+.gh-bar button{padding:5px 11px;font-size:12.5px}.gh-bar label{display:flex;align-items:center;gap:6px;margin:0}.gh-bar select{max-width:260px}
+.gh-bar a{color:var(--gold-2)}.gh-status{color:#ffb4a8}
+.gh-sizes{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}.gh-sizes button{border:0;border-radius:0;background:none;padding:5px 10px}.gh-sizes button.on{background:var(--night-3);color:var(--gold-2)}
+.gh-frame{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#0e1124;box-shadow:0 18px 50px rgba(0,0,0,.45);flex:0 0 auto}
+.gh-frame iframe{display:block;width:100%;height:100%;border:0}
+.gh-frame.phone{width:390px;height:844px;max-height:calc(100vh - 90px)}.gh-frame.tablet{width:820px;max-width:100%;height:1080px;max-height:calc(100vh - 90px)}
+.gh-frame.fill{width:100%;height:calc(100vh - 90px);border-radius:10px}
+.gh-tab{color:var(--muted);font-style:italic}

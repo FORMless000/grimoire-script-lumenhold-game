@@ -1,0 +1,108 @@
+{
+  "query": "The Duchess Has News {The Duchess of Ambry, who refuses to stay in her own frame, has squeezed into a pastoral scene by your corridor and is beckoning to you with her fan.|The Duchess again, this time in a portrait of a stern admiral, who looks resigned. \"Darling. News.\"|The Duchess has taken to waiting for you in whatever frame is nearest your door. Today she's sharing a still life with a pear.} {A painted cow is chewing at her elbow.|Her wig is slightly askew from travel.|{season == \"winter\": She's wearing a painted fur borrowed from a neighbouring frame.|She's fanning herself vigorously.}} Listen to her gossip {She tells you which professor has a secret allergy to cats and which prefect cries at the opera. You'll never look at either the same way.|She whispers who is courting whom on the third floor, in scandalous detail. You feel like a spy and enjoy it more than you should.|She hands you the castle's secrets like sweets. Some of them are about people you like. You take them anyway.} Offer her some news instead {You tell her about your week, a little improved. By supper every portrait in the castle knows a much grander version, and so does half your house, not all of it flattering.|You give her a harmless story about yourself. It comes back to you three days later as a romance, a duel and a minor tragedy, and people keep asking which bit is true.|You feed her an anecdote; she gasps in all the right places. By morning it's a legend with you in it, not entirely flatteringly.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_duchess_has_news",
+      "title": "The Duchess Has News",
+      "file": "content/events/pools/world_more.grim",
+      "line": 33,
+      "sourceHash": "7c802e09261968fd337c17b6183f9689cd2f193739e2686e79800ca0a14232a4",
+      "score": 0.9541959762573242,
+      "excerpt": "The Duchess Has News\n{The Duchess of Ambry, who refuses to stay in her own frame, has squeezed into a pastoral scene by your corridor and is beckoning to you with her fan.|The Duchess again, this time in a portrait of a stern admiral, who looks resigned. \"Darling. News.\"|The Duch"
+    },
+    {
+      "key": "event:life_portrait_escape",
+      "title": "The Escaped Portrait",
+      "file": "content/events/expansion_life.grim",
+      "line": 176,
+      "sourceHash": "3e6c630ff5f268c3aaa20bc92c12562e9ef2e0dc8cd5418a96e069048f77c473",
+      "score": 0.6039073467254639,
+      "excerpt": "The Escaped Portrait\nAn empty frame in the long gallery. The Duchess of Ambry has escaped her portrait and is hiding in a landscape three corridors away, refusing to come back. \"That frame,\" she declares, \"is hideous.\"\nPersuade her back\nYou promise to have her frame regilded. She"
+    },
+    {
+      "key": "event:life_portrait_gossip",
+      "title": "The Portraits Talk",
+      "file": "content/events/life.grim",
+      "line": 105,
+      "sourceHash": "4019231b77dfc9dc750432cef1816aa85c9e30447f10c84c1d1c6b185af6c620",
+      "score": 0.533944845199585,
+      "excerpt": "The Portraits Talk\nTwo portraits in the east gallery are gossiping about a student. Then one of them says your name and they both go suspiciously quiet.\nBribe them with flattery\nTen minutes of compliments on their brushwork, and they tell you everything. Gossip about half the fac"
+    },
+    {
+      "key": "event:court_rumour_mill",
+      "title": "The Rumour Mill",
+      "file": "content/events/slice_2b.grim",
+      "line": 371,
+      "sourceHash": "e0644fb0f12e1eff81b8f6e8858529503e63559a07c47c40ec135d823eb273d0",
+      "score": 0.48560887575149536,
+      "excerpt": "The Rumour Mill\n{gossip} has news, which is to say gossip, which is to say three different stories about the same broken window. \"You'll want to hear this,\" {they} say{s}.\nListen to all of it\nYou hear all three stories. Two are true. One is about you.\nMake up a better one\nYour st"
+    },
+    {
+      "key": "event:letter_castle_news",
+      "title": "News From the Castle",
+      "file": "content/events/pools/letters.grim",
+      "line": 32,
+      "sourceHash": "fb91fe407e4abb7633a29f8aa2fc906c75f77864b99a45963f19feea94220489",
+      "score": 0.4811406433582306,
+      "excerpt": "News From the Castle\nSomeone has forwarded the Lumen Ledger to you at home. {~A professor's hat has gone missing.|The lake froze, or thawed, depending on which column you believe.|There's a letter to the editor about the refectory soup, and it is furious.} It's strange to read ab"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "3a0d04e7970d9ebdad80f380d51423f9543a8cbaac1d532d6b8bc46ce09bdca4",
+      "at": "2026-10-28T23:50:51.214Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 343,
+        "total_tokens": 343,
+        "cost": 0.00000343,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000343,
+          "upstream_inference_prompt_cost": 0.00000343,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "3a0d04e7970d9ebdad80f380d51423f9543a8cbaac1d532d6b8bc46ce09bdca4",
+      "elapsedMs": 403,
+      "at": "2026-10-28T23:50:51.612Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "513899b8d753e7bb293aee4bc5b9a87de056428bea9929228604c7eb97d2b73e",
+      "at": "2026-10-28T23:50:51.662Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54622,
+        "cost": 0.0027311
+      },
+      "requestHash": "513899b8d753e7bb293aee4bc5b9a87de056428bea9929228604c7eb97d2b73e",
+      "elapsedMs": 482,
+      "at": "2026-10-28T23:50:52.144Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

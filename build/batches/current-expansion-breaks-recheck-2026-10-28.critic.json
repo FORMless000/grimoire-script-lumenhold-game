@@ -1,0 +1,64 @@
+{
+  "batch": "current-expansion-breaks-recheck-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "brk_one_long_table",
+      "brk_kitchen_pie",
+      "brk_courtyard_quiet",
+      "brk_snowball_bram",
+      "brk_library_alone",
+      "brk_kael_shore",
+      "brk_starfall_observatory",
+      "brk_mir_project",
+      "brk_holiday_edition",
+      "brk_duel_trophies",
+      "brk_amaranth_restock",
+      "brk_stables_round",
+      "brk_corridors_echo",
+      "brk_corvin_route",
+      "home_cottage_rain",
+      "home_cottage_photograph",
+      "home_fields_harvest_help",
+      "home_fields_old_friend",
+      "home_fields_night_sky",
+      "home_market_stallholder",
+      "home_market_letter_home"
+    ],
+    "files": [
+      "content/events/breaks.grim"
+    ]
+  },
+  "summary": "The holiday edition, harvest morality and evening field-sky repairs are present. A daytime observatory deal and an unremembered project transition remain.",
+  "issues": [
+    {
+      "event": "brk_starfall_observatory",
+      "priority": "P2",
+      "problem": "This card can be dealt during the day, but its opening and both outcomes already take place under the night sky, including waiting through midnight.",
+      "fix": "Give the card an evening/night slot or write an explicit transition that spends the remaining daylight before the stargazing.",
+      "file": "content/events/breaks.grim",
+      "line": 136
+    },
+    {
+      "event": "brk_mir_project",
+      "priority": "P3",
+      "problem": "One watching outcome promises that next time the wardrobe has been replaced by a teacup; repeat 6 deals the unchanged wardrobe opening again.",
+      "fix": "Make the next visit conditional on the earlier outcome, or remove the definite promise about the next visit.",
+      "file": "content/events/breaks.grim",
+      "line": 160
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

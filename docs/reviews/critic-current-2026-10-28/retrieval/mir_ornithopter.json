@@ -1,0 +1,107 @@
+{
+  "query": "The Test Flight Mir has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. \"Brooms are so last century,\" they say, strapping in. \"I need someone on the rope. Probably. Possibly.\" Hold the rope The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mir surfaces whooping. You're both legends by dinner. The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mir waves from it, delighted. Insist on a safety net You spend a day building a net. The machine flies four feet and drops into it. \"Data!\" says Mir happily. Nobody dies. It's a good day.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:mir_ornithopter",
+      "title": "The Test Flight",
+      "file": "content/events/expansion_people.grim",
+      "line": 326,
+      "sourceHash": "f95e1f942ed2813f604b44d9ad1b1c7c30e530f1e051137f0e243f5eecc89a4e",
+      "score": 0.95567786693573,
+      "excerpt": "The Test Flight\nMir has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. \"Brooms are so last century,\" they say, strapping in. \"I need someone on the rope. Probably. Possibly.\"\nHold the rope\nThe machine flies — wobbly, "
+    },
+    {
+      "key": "event:mir_date_invention",
+      "title": "They Built You Something",
+      "file": "content/events/pools/dating.grim",
+      "line": 301,
+      "sourceHash": "2adbb43cc79551e30432a9954b175d9d63ee9ed3346de34a377f1d6d6689a8d3",
+      "score": 0.4566209018230438,
+      "excerpt": "They Built You Something\n{Mir has built you a present, a brass bird that sings your name, mostly.|Another present from Mir's bench, ticking ominously.|Mir presents their newest invention with a flourish and a fire bucket.} {It's warm to the touch.|It has seven moving parts and on"
+    },
+    {
+      "key": "event:core_flying_lesson",
+      "title": "Compulsory Broom Flight",
+      "file": "content/events/expansion_classes.grim",
+      "line": 6,
+      "sourceHash": "394d794253f60253640d2b07f0a086bcd2764a9c45f14f58d403be4c8cb10a46",
+      "score": 0.4238187372684479,
+      "excerpt": "Compulsory Broom Flight\nCompulsory first-year broom flight. The instructor blows her whistle. Your broom rises, hesitates, and then — clearly having taken a dislike to you — begins drifting toward the lake.\nHold on and steer it back\nYou wrestle it round and land, wobbling, exactl"
+    },
+    {
+      "key": "event:mir_dance_machine",
+      "title": "The Dancing Machine",
+      "file": "content/events/people_students.grim",
+      "line": 894,
+      "sourceHash": "a0ad5e83311c1102fa9236996c3455412b095787d732593d060cff2d6a1c18fb",
+      "score": 0.4198426902294159,
+      "excerpt": "The Dancing Machine\nMir has built a machine that teaches dancing. It has six legs and opinions. \"It needs a test subject,\" they say. \"It's mostly safe. It only kicked me twice.\"\nMake Mir test it\nYou watch Mir and the machine waltz, badly, across the room. It kicks them twice; Mir"
+    },
+    {
+      "key": "event:brk_mir_project",
+      "title": "The Break Project",
+      "file": "content/events/breaks.grim",
+      "line": 160,
+      "sourceHash": "c02dd1ce82449e1b4a28b88b83eb74f662cd142e14b3f547409c6818a2c567eb",
+      "score": 0.4191240072250366,
+      "excerpt": "The Break Project\nMir has had the workshop to themself for a week and it shows. In the middle of the floor is something the size of a wardrobe with too many gears. \"It's a machine,\" Mir says, \"for turning pages. Any book. Hands free.\" It's very loud. \"It's not finished.\"\nHold the"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "1baaf2999da8cf5a4ad20225132debc0ee6a42f7f77e9a70081a5f21fca1fcae",
+      "at": "2026-10-28T23:49:43.394Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "SiliconFlow",
+      "usage": {
+        "prompt_tokens": 163,
+        "total_tokens": 163,
+        "cost": 0.00000652,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000652,
+          "upstream_inference_prompt_cost": 0.00000652,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "1baaf2999da8cf5a4ad20225132debc0ee6a42f7f77e9a70081a5f21fca1fcae",
+      "elapsedMs": 814,
+      "at": "2026-10-28T23:49:44.208Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d07b47a04a367726f5b3a765938b9027733e0df544f1c3e2f497af00b50d7387",
+      "at": "2026-10-28T23:49:44.265Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 41292,
+        "cost": 0.0020646
+      },
+      "requestHash": "d07b47a04a367726f5b3a765938b9027733e0df544f1c3e2f497af00b50d7387",
+      "elapsedMs": 736,
+      "at": "2026-10-28T23:49:45.001Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

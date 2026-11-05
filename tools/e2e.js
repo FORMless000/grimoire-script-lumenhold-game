@@ -54,13 +54,29 @@ async function playthrough(browser, lang) {
   const visible = () => p.evaluate(() => (document.querySelector('#deck .card') || document.querySelector('#overlay') || {}).innerText || '');
   const scan = async () => { if (lang === 'en') return; for (const m of (await visible()).match(ENGLISH_RUN) || []) english.add(m); };
   let steps = 0, ended = false;
-  const n = { menu: 0, multi: 0, map: 0, card: 0, outcome: 0, month: 0, fight: 0 };
+  const n = { menu: 0, multi: 0, map: 0, card: 0, outcome: 0, month: 0, fight: 0, parley: 0 };
   let idle = 0;
   while (steps++ < 5000) {
+    if (await p.$('.parley-layer')) {
+      n.parley++;
+      const begin = p.locator('.parley-layer button[data-act=begin]'), done = p.locator('.parley-layer [data-act=done]');
+      if (await begin.count()) await begin.click();
+      else if (await done.count()) await done.click();
+      else if (await p.$('.parley-layer [data-act=press]:not([disabled])')) await p.click('.parley-layer [data-act=press]');
+      else { const deflect = await p.$('.parley-layer [data-deflect]:not([disabled])'); if (deflect) await deflect.click(); else await p.click('.parley-layer [data-confront]'); }
+      await p.waitForTimeout(80); continue;
+    }
     if (await p.$('#deck .card, .opt, #mapGo, #contBtn, #beginMonth, #again, #fightLayer')) idle = 0;
     if (await p.$('#again')) { ended = true; break; }
     if (await p.$('#beginMonth')) { n.month++; await scan(); await p.click('#beginMonth'); await p.waitForTimeout(80); continue; }
     if (await p.$('#mapGo')) { n.map++; await scan(); if (!(await mapPick(p, steps))) break; await p.waitForTimeout(200); continue; }
+    if (await p.$('#shopBuy')) {   // a shop (type: shop): its wares are .opt too, but only Buy or Leave goes on
+      n.menu++; await scan();
+      const wares = await p.$$('.shop-item:not([disabled])');
+      if (wares.length) { await wares[steps % wares.length].click(); await p.waitForTimeout(80); }
+      if (await p.$('#shopBuy:not([disabled])')) await p.click('#shopBuy'); else if (await p.$('#shopLeave')) await p.click('#shopLeave');
+      await p.waitForTimeout(120); continue;
+    }
     if (await p.$('.opt')) {
       n.menu++; await scan();
       const o = await p.$$('.opt:not([disabled])'); await o[steps % o.length].click(); await p.waitForTimeout(120);
@@ -75,8 +91,8 @@ async function playthrough(browser, lang) {
     }
     if (await p.$('#fightLayer')) {   // a fight: an open action each exchange, then back to the card
       if (await p.$('#fightDone')) { n.fight++; await p.click('#fightDone'); await p.waitForTimeout(300); continue; }
-      const a = await p.$$('#fightLayer .act:not([disabled])');
-      if (a.length) { await a[steps % a.length].click(); await p.click('#fightLayer .fl-commit'); }
+      const a = await p.$$('#fightLayer .fl-mv:not([disabled])');
+      if (a.length) { await a[steps % a.length].click(); await p.click('#fightLayer [data-fl-commit]'); }
       await p.waitForTimeout(150); continue;
     }
     if (await p.$('#contBtn')) { n.outcome++; await scan(); await p.keyboard.press('Enter'); await p.waitForTimeout(240); continue; }
@@ -232,6 +248,7 @@ async function previews(browser) {
     for (const lang of only ? [only] : QUICK ? ['en'] : ['en', 'zh-CN']) results.push(await playthrough(browser, lang));
     if (!only && !QUICK) results.push(await languageSwitch(browser));
     if (!only) results.push(await previews(browser));
+    await require('./parley-e2e.js').run(browser, URL);
   } finally { await browser.close(); if (server) server.close(); }
   const failed = results.filter((r) => !r).length;
   console.log(failed ? `\n${failed} check(s) failed` : '\nall browser checks passed');

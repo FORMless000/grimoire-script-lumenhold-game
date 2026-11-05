@@ -1,0 +1,108 @@
+{
+  "query": "The Practice Next Door {Someone in the room next door is learning a piece on a charmed fiddle. They play the same eight bars over and over, and the fiddle sighs at every wrong note.|The fiddle next door has got as far as the sixteenth bar. It still sighs, but less.|The piece next door is almost a piece now. You know it as well as the player does, wrong notes included.} {You were trying to read.|It's late, and the wall is thin.|{season == \"winter\": The radiator carries it into your room like a second instrument.|The windows are open, and half the corridor can hear it.}} Knock and offer to help {You knock. The player is a mortified first-year who has never had a lesson. You hum the eight bars properly until they have them, which is well past midnight.|You knock, and stay to count the beat for an hour. The sixteenth bar comes right for the first time; you both cheer, and the neighbours bang on the wall.|The door's already open when you knock. You tap out the tricky bit on the tabletop while they follow. Bed is very late.} Pillow over your head {You read with a pillow pressed to one ear. You get through the chapter; the eight bars get into your dreams.|You work through it while the fiddle sighs at the sixteenth bar every four minutes, regular as a clock. You finish your reading through gritted teeth.|You study to the sound of it, grudgingly. Annoyingly, it helps; you'll be humming it in the exam.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_practice_next_door",
+      "title": "The Practice Next Door",
+      "file": "content/events/pools/world_more.grim",
+      "line": 289,
+      "sourceHash": "5515c9f6e00e5d2c3ed478829115af08a68d832c876829ff3dc80db08c92f881",
+      "score": 0.9639887809753418,
+      "excerpt": "The Practice Next Door\n{Someone in the room next door is learning a piece on a charmed fiddle. They play the same eight bars over and over, and the fiddle sighs at every wrong note.|The fiddle next door has got as far as the sixteenth bar. It still sighs, but less.|The piece next"
+    },
+    {
+      "key": "event:world_study_group",
+      "title": "The Study Group",
+      "file": "content/events/pools/world_more.grim",
+      "line": 151,
+      "sourceHash": "882f41b1af77b3e13436db5c9f43863032948c20e205856da1f3a357e56f8885",
+      "score": 0.4723708927631378,
+      "excerpt": "The Study Group\n{{friend} has a study group going in an empty classroom and a spare seat. \"We're doing the hard chapter. Bring your brain, and biscuits.\"|{friend}'s study group is still going, and still short of biscuits. The chalkboard is a battlefield.|{friend} waves you into t"
+    },
+    {
+      "key": "event:thesis_carrel_neighbour",
+      "title": "The Next Carrel",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 345,
+      "sourceHash": "a0430a60f45fa3de06b4ef4f9ada162313d458e808e6ea9aecb70f8bf83e32aa",
+      "score": 0.4410589635372162,
+      "excerpt": "The Next Carrel\n{Your carrel neighbour, a final-year from Rootward, reads aloud under their breath.|Your carrel neighbour now reads your chapter titles aloud too.|You and your carrel neighbour now speak a language of sighs.} {They're stuck on chapter three.|They've found a source"
+    },
+    {
+      "key": "event:soc_study_session",
+      "title": "Study Session",
+      "file": "content/events/social.grim",
+      "line": 12,
+      "sourceHash": "0f9788c47280c98be22048b08ddb3d42a2649311bc19c2dafc612ee4abb8e9a8",
+      "score": 0.4346844255924225,
+      "excerpt": "Study Session\n{~{npc} drops into the seat across from you with an armful of books. \"Exams are coming for us all. Misery loves company. Study with me?\"|{npc} slides a stack of notes onto your table. \"I've read this chapter four times and it's still in a foreign language. Help?\"|{n"
+    },
+    {
+      "key": "event:seventh_tower_wind_song",
+      "title": "The Wind in the Slits",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 375,
+      "sourceHash": "74c86944f50b40b8f533bda5a98b7a8810b841a8893eace165d62ca520c6678b",
+      "score": 0.43314918875694275,
+      "excerpt": "The Wind in the Slits\n{The wind plays the seventh tower's arrow-slits like a flute, a different note at every window.|The tower is playing again. You'd swear the tune has more notes than there are windows.|The wind's song. You can hum the first part now; nobody else in the castle"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "7beb57aeae243b5a61964d020badd3cbd85b84707c01fbb976efacfa5caf1393",
+      "at": "2026-10-28T23:50:55.650Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 338,
+        "total_tokens": 338,
+        "cost": 0.00000338,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000338,
+          "upstream_inference_prompt_cost": 0.00000338,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "7beb57aeae243b5a61964d020badd3cbd85b84707c01fbb976efacfa5caf1393",
+      "elapsedMs": 310,
+      "at": "2026-10-28T23:50:55.960Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "490964c388b17ee58f61274e57507a5d5cb405d5d99ecca932dd5ec3278acb0b",
+      "at": "2026-10-28T23:50:56.037Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58195,
+        "cost": 0.00290975
+      },
+      "requestHash": "490964c388b17ee58f61274e57507a5d5cb405d5d99ecca932dd5ec3278acb0b",
+      "elapsedMs": 580,
+      "at": "2026-10-28T23:50:56.617Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

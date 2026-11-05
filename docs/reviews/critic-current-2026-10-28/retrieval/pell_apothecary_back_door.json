@@ -1,0 +1,108 @@
+{
+  "query": "Foragers at the Back Door {At Pell's back door a forager in muddy boots is waiting to sell the morning's haul from the Whisperwood. She catches your eye. \"Cheaper than the counter, love. No questions.\"|The forager at the back door again, basket heavier, prices lower. She remembers you.|The back-door forager nods at you like an old business partner. Today's basket has something in it that's still moving.} {The basket smells of moss and rain.|There's moonpetal in it, wrapped in a dock leaf.|{season == \"winter\": Her fingers are blue with cold.|Old Pell can be heard counting aloud inside.}} Buy straight from her basket {You buy a bundle of roots for half the counter price and spend the evening sorting the useful from the merely muddy.|You buy the moonpetal, dock leaf and all. It's the real thing; you can tell by the way it doesn't wilt.|You buy the moving thing, which turns out to be a root that wriggles toward water. You learn a great deal keeping it alive.} Ask where she found it all {She tells you about a clearing west of the stream where the moss glows. You write it down and do not go there, yet.|She tells you which mushrooms lie about being safe. It's an education, and it's free.|She tells you, lowering her voice, about a stream that runs uphill on nights of the full moon. Then she laughs and says it's probably nothing.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:pell_apothecary_back_door",
+      "title": "Foragers at the Back Door",
+      "file": "content/events/pools/village_more.grim",
+      "line": 126,
+      "sourceHash": "7c0722de3ff3ccd7b0ccebd45ad07b77061f11baf6eb0ae0d2dab61c653e29fb",
+      "score": 0.9613336324691772,
+      "excerpt": "Foragers at the Back Door\n{At Pell's back door a forager in muddy boots is waiting to sell the morning's haul from the Whisperwood. She catches your eye. \"Cheaper than the counter, love. No questions.\"|The forager at the back door again, basket heavier, prices lower. She remember"
+    },
+    {
+      "key": "event:whisperwood_foragers",
+      "title": "Foraging Season",
+      "file": "content/events/pools/grounds.grim",
+      "line": 709,
+      "sourceHash": "44178f331336de18a52e5db0dc5d515330e1c216ed86a34b2e149eb773cc8fa0",
+      "score": 0.6943721175193787,
+      "excerpt": "Foraging Season\n{season == \"autumn\": The Whisperwood is full of mushrooms and students with baskets.|{season == \"winter\": A few hardy foragers are scraping lichen off the oaks.|{season == \"spring\": The clearings are thick with wild garlic and foragers.|The brambles are heavy with"
+    },
+    {
+      "key": "event:ww_way_home",
+      "title": "The Way Home",
+      "file": "content/events/whisperwood/delve.grim",
+      "line": 110,
+      "sourceHash": "26f41a7c2d5e1e9131b4ee53afaa10b065e76c0c26373852882f11f7c77ded12",
+      "score": 0.5460724234580994,
+      "excerpt": "The Way Home\n{ww_haul == 0: You come out of the trees with nothing but burrs and the feeling you were watched.|{ww_haul <= 2: You come out of the trees with a light bag: a few good mushrooms, a root Pell will want.|{ww_haul <= 4: You come out of the trees with a bag that clinks a"
+    },
+    {
+      "key": "event:grimsbys_field_guide",
+      "title": "A Field Guide",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 256,
+      "sourceHash": "081c336b07ab5e8ecf8103375d840955b7ccbac643201716ee041d69a453d1c3",
+      "score": 0.5309276580810547,
+      "excerpt": "A Field Guide\nGrimsby has put a field guide to the western woods on the counter, open at moonpetal. There's a long footnote, in tiny print, and someone has circled it. \"I think,\" says Grimsby mildly, \"that you should read the footnote.\"\nBuy the book\nThe footnote says moonpetal in"
+    },
+    {
+      "key": "event:ww1_forage",
+      "title": "The Mushroom Ring",
+      "file": "content/events/whisperwood/delve.grim",
+      "line": 231,
+      "sourceHash": "6d73b537bda3baa57cc17534d12fb12b59d671229590a8de5826175fcfa71025",
+      "score": 0.513327956199646,
+      "excerpt": "The Mushroom Ring\n{season == \"autumn\": A fairy ring in full flush, caps as big as saucers, more than you could carry.|A ring of pale caps in the moss, and among them the frilled ones Pell pays for.} Never step inside a ring, Maud says. She never says why.\nLeave it and turn back\n{"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "d5cca8d527c20e772f9d49a6f92f824872d52fa3ae66519c9a286b08033dd613",
+      "at": "2026-10-28T23:50:48.921Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 317,
+        "total_tokens": 317,
+        "cost": 0.00000317,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000317,
+          "upstream_inference_prompt_cost": 0.00000317,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "d5cca8d527c20e772f9d49a6f92f824872d52fa3ae66519c9a286b08033dd613",
+      "elapsedMs": 1298,
+      "at": "2026-10-28T23:50:50.219Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ae034461ae253a5ffe524dcba6c9929be431177ce4a37a06a9658f8974e9a0d5",
+      "at": "2026-10-28T23:50:50.263Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 48702,
+        "cost": 0.0024351
+      },
+      "requestHash": "ae034461ae253a5ffe524dcba6c9929be431177ce4a37a06a9658f8974e9a0d5",
+      "elapsedMs": 717,
+      "at": "2026-10-28T23:50:50.980Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

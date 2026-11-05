@@ -1,0 +1,108 @@
+{
+  "query": "Where Things Are Bram reads the castle to you off his ledger. \"Job Board, by the stairs: work and wages. Library: revision tables before every exam. Infirmary, on the Alchemy floor: Sister Amaranth, for when you break something, yourself included. The village, down the hill: robes and wands on market day, tea at Mabel's, tonics at Pell's.\" He snaps the ledger shut. \"Questions? No. Good.\" \"No questions.\" \"Excellent,\" says Bram, and means it. He leaves you at the foot of the stairs with a map in your head and a strong sense of having been processed. Ask what he left out He looks pained. \"The Gilded Newt, in the village, after dark: supper, cider and people you shouldn't be seen with. The Lakeshore, for thinking. That's all.\" He writes something in the ledger. It might be your name.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:intro_places",
+      "title": "Where Things Are",
+      "file": "content/events/intro.grim",
+      "line": 88,
+      "sourceHash": "7f45981852249e08272566f6cc02fc5585d7299aca9251207c1bb28ce7d19665",
+      "score": 0.9353957176208496,
+      "excerpt": "Where Things Are\nBram reads the castle to you off his ledger. \"Job Board, by the stairs: work and wages. Library: revision tables before every exam. Infirmary, on the Alchemy floor: Sister Amaranth, for when you break something, yourself included. The village, down the hill: robe"
+    },
+    {
+      "key": "event:bram_marked",
+      "title": "Top of the Ledger",
+      "file": "content/events/bonds/rivals.grim",
+      "line": 182,
+      "sourceHash": "84d60e1f15cb00c471f5209b2f9f7c89d80ea4895210dec3cd8d4b34608d180a",
+      "score": 0.6398543119430542,
+      "excerpt": "Top of the Ledger\nBram opens his demerit ledger in the middle of the corridor and writes your name at the top of a fresh page, slowly, so you can watch him do it. \"A page of your own,\" he says. \"You've earned it.\"\nKeep your head down\nYou walk past without a word. He looks almost "
+    },
+    {
+      "key": "event:shop_newt",
+      "title": "The Newt's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 254,
+      "sourceHash": "48725023698773413358951f61d55a2bb498c8fe13e63fe860bb87ecb3d51fa0",
+      "score": 0.568617582321167,
+      "excerpt": "The Newt's Counter\n{{slot == \"afternoon\": By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|At this hour the Gilded Newt is all elbows and cider, and the landlady works the bar with a cloth over her shoulder.}|{slot == \""
+    },
+    {
+      "key": "event:holiday_gigs",
+      "title": "Holiday Work",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 6,
+      "sourceHash": "870008d949ea70a87610e9813d37a6552d17abedb27bc08bdeb0acabccb68deb",
+      "score": 0.5599802136421204,
+      "excerpt": "Holiday Work\nTwo notices are still pinned by the gates. {season == \"winter\": The snow has got under one of them.|The sun has curled the corners of both.} Old Maud wants hands for the grounds. The Refectory kitchens want someone who can peel fast and not complain about it. {rank(l"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.5075092911720276,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "039edb976bf32004d8a687c98350b39f11bdcae9edd8ced3a3c7c3794366d9f4",
+      "at": "2026-10-28T23:50:59.171Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 197,
+        "total_tokens": 197,
+        "cost": 0.00000197,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000197,
+          "upstream_inference_prompt_cost": 0.00000197,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "039edb976bf32004d8a687c98350b39f11bdcae9edd8ced3a3c7c3794366d9f4",
+      "elapsedMs": 34365,
+      "at": "2026-10-28T23:51:33.536Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "34560e481fc08c632427d19d702ec9409b082c386e66d28fda6e5ad64dfc9164",
+      "at": "2026-10-28T23:51:33.585Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 51976,
+        "cost": 0.0025988
+      },
+      "requestHash": "34560e481fc08c632427d19d702ec9409b082c386e66d28fda6e5ad64dfc9164",
+      "elapsedMs": 1116,
+      "at": "2026-10-28T23:51:34.701Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

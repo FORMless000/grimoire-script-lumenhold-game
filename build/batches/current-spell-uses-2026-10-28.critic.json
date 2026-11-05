@@ -1,0 +1,117 @@
+{
+  "batch": "current-spell-uses-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "mabels_cold_range",
+      "boathouse_damp_stove",
+      "secret_garden_late_frost",
+      "refectory_tipping_tray",
+      "library_crumbs",
+      "gilded_newt_knucklebones",
+      "workshop_cracked_lens",
+      "lakeshore_torn_net",
+      "great_hall_cracked_sky",
+      "boathouse_good_boat",
+      "courtyard_prefects_notebook",
+      "grimsbys_book_behind_counter",
+      "lecture_tower_far_bell",
+      "courtyard_loose_pages",
+      "refectory_supper_hatch",
+      "lecture_tower_volunteer",
+      "observatory_shutter_rope",
+      "infirmary_slip_out",
+      "alchemy_lab_do_not_drop",
+      "courtyard_hail",
+      "lakeshore_swan"
+    ],
+    "files": [
+      "content/events/spell_uses.grim"
+    ]
+  },
+  "summary": "Rejected: magical exploitation has no moral effect, one ordinary choice is dominated on every result, live lectures can appear on breaks, and several scene/effect details disagree. All 21 cards were read with their inherited pools and automatic spell costs.",
+  "issues": [
+    {
+      "event": "boathouse_good_boat",
+      "priority": "P2",
+      "category": "alignment",
+      "related_events": [
+        "courtyard_prefects_notebook",
+        "grimsbys_book_behind_counter"
+      ],
+      "problem": "The Glamour options magically manipulate another person for a benefit: bypassing the boatman’s rental price, erasing a prefect’s intended sanction, and obtaining a reserved parcel. The prose explicitly makes them forget or misremember why they like the player, but none of these choices moves alignment. This is the dishonest/exploitative shortcut described in costs.md, not ordinary persuasion.",
+      "fix": "Give the manipulative shortcut its appropriate Hollow movement, or rewrite it as informed, consensual magical assistance while preserving the trade.",
+      "evidence": [
+        "docs/authoring/costs.md: deception or exploitation for gain",
+        "src/engine.js: chargeCast charges Mana, and only forbidden spells automatically move alignment"
+      ],
+      "file": "content/events/spell_uses.grim",
+      "line": 278
+    },
+    {
+      "event": "lecture_tower_far_bell",
+      "priority": "P2",
+      "category": "class rules",
+      "problem": "Arrive late, quietly always loses study and mood. Running costs nothing before the roll; winning grants Vigor, while losing only loses the same study. Every running result is at least as good as walking, so the random check disguises a dominated ordinary option.",
+      "fix": "Give walking a real calm/rest benefit, or give the failed run a distinct cost that the late walk avoids; keep both outcomes grounded in the prose.",
+      "file": "content/events/spell_uses.grim",
+      "line": 361
+    },
+    {
+      "event": "lecture_tower_far_bell",
+      "priority": "P2",
+      "category": "teaching-month continuity",
+      "related_events": [
+        "lecture_tower_volunteer"
+      ],
+      "problem": "Both visit cards describe a live lecture but have no term gate. They remain in the Lecture Tower’s visit pool and spell appointments during breaks spent on campus, when ordinary classes are suspended.",
+      "fix": "Gate live-lecture versions to teaching months or supply an explicitly extracurricular break version.",
+      "evidence": [
+        "compiled event when is absent for both cards",
+        "docs/design-v0.3.md: term and break calendar"
+      ],
+      "file": "content/events/spell_uses.grim",
+      "line": 361
+    },
+    {
+      "event": "mabels_cold_range",
+      "priority": "P2",
+      "category": "weather continuity",
+      "problem": "The first left outcome always calls the yard frozen, but the repeatable card can first show in summer and has no seasonal gate or wording for that detail.",
+      "fix": "Make the yard’s frozen state winter-dependent, or use an all-season effort cost such as carrying the heavy coal buckets.",
+      "file": "content/events/spell_uses.grim",
+      "line": 29
+    },
+    {
+      "event": "boathouse_damp_stove",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "Lending the scarf and leaving always loses Mood, but the outcomes describe a cold neck, a returned scarf, and a friendly joke and wave. They do not show disappointment, guilt or other loss of spirits; the concrete cost is exposure on the walk home.",
+      "fix": "Use the bodily exposure the scene actually shows or state the emotional cost consistently in all variants.",
+      "file": "content/events/spell_uses.grim",
+      "line": 51
+    },
+    {
+      "event": "lakeshore_swan",
+      "priority": "P2",
+      "category": "alignment consistency",
+      "problem": "The safe Ward rescue earns Lumen for spending Mana, while stepping bodily between the swan and the first-year earns none despite the explicitly shown injury risk. The same card applies the costly-protection rule only to the safe magical route.",
+      "fix": "Apply the protection choice’s moral effect consistently before the physical check, or establish a concrete moral distinction between the two rescues.",
+      "file": "content/events/spell_uses.grim",
+      "line": 588
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

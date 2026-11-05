@@ -1,0 +1,122 @@
+{
+  "batch": "current-castle-more-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "library_whispering_dome",
+      "library_after_closing",
+      "lecture_tower_faculty_basket",
+      "lecture_tower_office_hours",
+      "great_hall_house_banners",
+      "great_hall_stagehands",
+      "infirmary_night_watch",
+      "infirmary_curious_case",
+      "alchemy_lab_crystal_sill",
+      "alchemy_lab_good_scales",
+      "alchemy_lab_mind_my_cauldron",
+      "workshop_after_the_bang",
+      "ledger_office_crossword",
+      "headmistress_tower_window_boxes",
+      "headmistress_tower_waiting_bench",
+      "seventh_tower_candle_landing",
+      "seventh_tower_wind_song",
+      "seventh_tower_outside_ledge",
+      "thesis_lab_tea_urn",
+      "thesis_lab_old_theses",
+      "thesis_lab_mock_defence"
+    ],
+    "files": [
+      "content/events/pools/castle_more.grim"
+    ]
+  },
+  "summary": "Rejected: a matched variant turns rehearsal into a wedding, closing contradicts public opening hours, and several repeated memories and moral/resource effects are unsupported. All 21 cards were read, including inherited pools and discovery gates.",
+  "issues": [
+    {
+      "event": "library_whispering_dome",
+      "priority": "P2",
+      "category": "matched variants",
+      "problem": "The second setup says someone is rehearsing a proposal of marriage, but the matched Listen outcome says the proposal ends in a yes and that the player stole a wedding. Rehearsal has become an actual accepted proposal without a transition.",
+      "fix": "Keep the second outcome about overhearing the rehearsal, or change its setup to an actual proposal.",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 12
+    },
+    {
+      "event": "library_after_closing",
+      "priority": "P2",
+      "category": "opening-hours continuity",
+      "problem": "The card is explicitly bound to evening and closes the whole library, while the place remains open at night and several fixed character schedules put them there at night. It stages the global closing bell before ordinary permitted night visits.",
+      "fix": "Place closing after the last open session, or make this the closure of a specific upper gallery while the main library remains open.",
+      "evidence": [
+        "content/world/places.grim: library open includes night",
+        "content/world/cast.grim: lyra schedule includes library@night"
+      ],
+      "file": "content/events/pools/castle_more.grim",
+      "line": 28
+    },
+    {
+      "event": "great_hall_stagehands",
+      "priority": "P2",
+      "category": "choice-dependent sequence",
+      "problem": "By the third showing the painting outcome says the player is now trusted with the moving scenery. The setup also increasingly treats the player as an experienced stagehand even if every previous visit was spent taste-testing; showing the card does not earn that painting trust.",
+      "fix": "Gate earned stagehand experience on actually helping, or make every showing a new invitation that does not assume previous work.",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 128
+    },
+    {
+      "event": "headmistress_tower_waiting_bench",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Telling a nervous first-year the kind truth grants Lumen in addition to Charm with no sacrifice, risk or forgone duty shown. It is ordinary reassurance, which the alignment rule expressly leaves unmoralized.",
+      "fix": "Remove the positive alignment reward, or make the assistance involve a real cost rather than adding an unexplained penalty.",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 332
+    },
+    {
+      "event": "headmistress_tower_waiting_bench",
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "The final-year setup remembers sitting on this summons bench, and the options speak as an experienced visitor, but eligibility comes only from access to the tower. Access can come from rel(isolde)>=12 without ever being summoned to this bench.",
+      "fix": "Gate a remembered summons on the actual earlier scene, or use a final-year observation about the new student that makes no claim about the player’s history.",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 332
+    },
+    {
+      "event": "seventh_tower_wind_song",
+      "priority": "P2",
+      "category": "unshown magic cost",
+      "problem": "Humming along always spends Mana. The outcomes describe singing, cold hands, thin air and an unspecified cost, but never show the player casting or the tower drawing their magic. The resource cost is not the bodily effort the prose actually names.",
+      "fix": "Explicitly show the tower drawing magic through the tune, or use a cost that the existing scene supports.",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 375
+    },
+    {
+      "event": "seventh_tower_outside_ledge",
+      "priority": "P2",
+      "category": "duplicate premise",
+      "related_events": [
+        "observatory_roof_ledge"
+      ],
+      "problem": "This repeats the Observatory roof ledge’s full decision: climb through a high window onto a narrow exterior ledge for the view, risk a slip/gust and scraped hands, or remain at the window with a partial view. Moving it to the Seventh Tower and exchanging the sky for a castle panorama leaves the same premise, options and danger punchline.",
+      "fix": "Give this tower exterior a different task or consequence, such as negotiating a blocked passage or retrieving something, rather than another view-versus-window ledge dare.",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 391,
+      "evidence": [
+        "docs/reviews/critic-current-2026-10-28/retrieval/seventh_tower_outside_ledge.json",
+        "content/events/pools/castle_towers.grim: observatory_roof_ledge; full opening and outcomes inspected."
+      ]
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

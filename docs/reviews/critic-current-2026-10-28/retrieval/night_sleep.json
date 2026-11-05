@@ -1,0 +1,76 @@
+{
+  "query": "Lights Out {has(locked_out): {~The lock on your door turns at curfew now, from the outside. The castle has decided where you sleep.|Bram's boots go past your door twice before midnight. There's nowhere to go, so you go to bed.|Locked in for the night. You can hear the castle's second timetable starting without you.}|{break and has(plan_home): {~Your old bed at home, too short now, and the smell of the kitchen still in the walls.|At home the night is so quiet you can hear the kettle cooling downstairs.|Your own pillow, your own ceiling, and nobody's footsteps but family's.}|{has(plan_internship): {~Your lodgings are small, the bed is narrow, and you're too tired to mind.|The city doesn't stop at night, but you do.|Tomorrow's work is already laid out on the chair. The bed is the only other furniture.}|{off_campus: {~A borrowed bed, a strange ceiling, and the day finally over.|The night is quiet here, far from the towers.|You fall asleep before you've finished deciding to.}|{season == \"winter\": {~Frost on the window, and the blankets pulled up to your ears.|Snow on the sills; the tower creaks like a ship.|Ice in the water jug, and the warmest place in the castle is your bed.}|{~The castle settles for the night, beam by beam.|Rain on the leads, and a gargoyle gargling it.|The day is done, and the candle is low.}}}}}} Sleep {break and has(plan_home): {~You sleep the way you only sleep at home: all night, without a single dream you remember.|Somebody looks in on you before they go to bed, as if you were still small. You pretend to be asleep, and then you are.|You wake late, to bread and the smell of the garden. Home mends things.}|{~You blow out the candle, and the day goes with it.|You're asleep before the candle has stopped smoking.|You lie awake a little, listening, and then you don't.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:night_sleep",
+      "title": "Lights Out",
+      "file": "content/events/night.grim",
+      "line": 54,
+      "sourceHash": "56ab65ad9b9e555f34c18182abd71537aca38dd781db57c5600bd9a9205297d4",
+      "score": 0.9385448694229126,
+      "excerpt": "Lights Out\n{has(locked_out): {~The lock on your door turns at curfew now, from the outside. The castle has decided where you sleep.|Bram's boots go past your door twice before midnight. There's nowhere to go, so you go to bed.|Locked in for the night. You can hear the castle's se"
+    },
+    {
+      "key": "event:night_out",
+      "title": "After Curfew",
+      "file": "content/events/night.grim",
+      "line": 27,
+      "sourceHash": "eafc3fb679d2f3aa61777e7d3eeb0f3ddd52c1e8b3217333d528f4c88d49934f",
+      "score": 0.7826529145240784,
+      "excerpt": "After Curfew\n{month == 11: Starfall is close, and the sky over the towers is already restless.|{month == 12: The last of Starfall is still falling over the towers, slow and silver.|{month == 4 or month == 10: Exams soon. Half the windows on your corridor are still lit.|{season =="
+    },
+    {
+      "key": "event:break_home_own_bed",
+      "title": "Your Own Bed",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 142,
+      "sourceHash": "f8f0255a7cb4758c8d3ab4d1517297c039c259030414d090209c714ccf21eb32",
+      "score": 0.5402061939239502,
+      "excerpt": "Your Own Bed\n{Your own bed, after a term in the dormitory. You wake at the academy's hour anyway.|The house wakes at dawn. It always has; you'd forgotten.|You know which floorboard creaks on the way down, and that everyone else learned it first.} {season == \"winter\": There's fros"
+    },
+    {
+      "key": "event:break_castle_night_rounds",
+      "title": "The Lone Prefect",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 86,
+      "sourceHash": "1afe185d718c75372348f062c73f2678c9f2b43029ea442215af0b457ed9a7aa",
+      "score": 0.5238856673240662,
+      "excerpt": "The Lone Prefect\n{Only one prefect has stayed for the break, and at breakfast they sigh that seven towers are a lot to patrol tonight.|The lone prefect is pinning tonight's rounds to the noticeboard again.|You know the lone prefect's rounds by now, to the quarter-hour, and tonigh"
+    },
+    {
+      "key": "event:intro_room",
+      "title": "Your Room",
+      "file": "content/events/intro.grim",
+      "line": 197,
+      "sourceHash": "a4e232365c248256164ab656c06dd7a84eebf8e24db695cb95cc28f9a4e85486",
+      "score": 0.5188342928886414,
+      "excerpt": "Your Room\nYour room in the tower: a bed, a trunk, a window with half the lake in it. On the pillow, a note from the bursar, folded twice.\nUnpack later\nYou fall onto the bed in your robes and sleep like a dropped stone. The note is still under your cheek in the morning.\nRead the b"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "cached",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "requestHash": "4ffe731a4b02b3107b0e940b95bed84372f1d6ab1a34a054623f4f7681c3ab2e",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:57.242Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "cached",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "requestHash": "aa624bc0ba372b918116515eca39745146bfcd7103c0dd2867959ff5d8998182",
+      "localCost": 0,
+      "at": "2026-10-28T23:51:57.325Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

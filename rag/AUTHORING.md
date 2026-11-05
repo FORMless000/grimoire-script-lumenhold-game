@@ -1,109 +1,56 @@
 # Source evidence for authoring
 
-Use these tools from the project root with any compatible coding-agent harness or
-model. Read the relevant canon and existing scenes before drafting; generated
-graph descriptions aid discovery and are not canon. Original sources retain
-conditional outcomes and fact unlock conditions.
+Run these from the project root, with any compatible coding-agent harness or model. Grim RAG is the default; the commands below are unchanged. Generated search descriptions aid discovery and are not canon; original sources keep conditional outcomes and fact unlock conditions.
 
-## Authoring loop
+## When retrieval is required
 
-Retrieval is a required step of event authoring (the workflow, skip rule and
-fallback are in `skills/write-academy-events/SKILL.md`):
+Retrieval is a required step of authoring: for every new card, and every edit that changes a card's premise, options or outcomes.
 
-1. `search` the one-line premise before drafting; read close hits with `grim show`.
-2. Draft the card.
-3. `related --draft` on each card, one card per file; read the top 2–4 results.
-4. Rework any card whose premise, options or punchline repeat an existing card.
-5. Synchronize with `retrieve index` at the end of the session, after final edits.
+- **Skip it** only when the change can't introduce or duplicate a premise: typo or wording fixes, tier or balance retunes, translations, renames, mechanical migrations. Write a one-line reason in the batch notes ("retrieval skipped: tier retune only"). When unsure, run it: doubt counts as required.
+- **Before drafting, check `retrieve status`.** An unbuilt index (a first build, or a changed build configuration) is rebuilt first: `retrieve index --rebuild --mode sync`, below. Never draft cards without retrieval; `grim brief` and `grim dupes` supplement it and don't replace it. If retrieval can't run at all (no key, the provider down), report it and stop before drafting.
+- **A stale index is fine:** searches answer from the last synced snapshot and print a notice.
 
-Frozen experiments in [EVALUATION.md](EVALUATION.md) follow their trial's own instructions instead.
+## The loop
+
+1. **Search the premise before drafting:** `search "<one-line premise>"`. Read anything close in the top results with `node tools/grim.js show <id>`. If the premise is taken, pick another, or a clearly different angle.
+2. **Draft the card.**
+3. **Check each draft for duplicates**, one card per file: `related --draft <file>`, then read the top 2–4 results. The tool lists similar premises to inspect, not a duplicate verdict: you judge, but you must look. Rework any card whose premise, options or punchline repeat an existing card.
+4. **Record it** in the batch notes (`build/batches/<name>.notes.md`): the queries you ran and any rework, so the critic can check them.
+5. **Synchronize** with `retrieve index` at the end of the session, after final edits.
 
 ## Find evidence
 
 ```sh
 npm run grim -- retrieve search "a stable favour that costs study time" --limit 10
-```
-Use `search` before drafting to find relevant worldbook entries and existing premises.
-
-```sh
 npm run grim -- retrieve related --draft content/events/draft.grim
 ```
-Use `related` to find existing premises resembling a draft; inspect candidates rather than treating the ranking as a duplicate verdict.
+`search` finds relevant worldbook entries and existing premises; `related` finds existing premises resembling a draft (inspect candidates; the ranking is not a duplicate verdict).
 
 ## Inspect evidence
 
 ```sh
-npm run grim -- retrieve read npc:lyra --budget 12000
+npm run grim -- retrieve read npc:lyra --budget 12000        # complete original blocks, every branch and condition
+npm run grim -- retrieve neighbors npc:lyra --limit 20       # bounded, typed static references (not proof of runtime reachability)
+npm run grim -- retrieve brief "a library discovery with a cost" --place library --budget 24000   # evidence and dependencies in one bounded packet
 ```
-Use `read` to inspect complete original blocks, including every branch and condition.
 
-```sh
-npm run grim -- retrieve neighbors npc:lyra --limit 20
-```
-Use `neighbors` to inspect bounded, typed static references; references do not prove runtime reachability.
-
-```sh
-npm run grim -- retrieve brief "a library discovery with a cost" --place library --budget 24000
-```
-Use `brief` to assemble original evidence and dependencies into a bounded packet.
-
-All commands support `--json`. Search defaults to ten matches, evidence packets
-to 24,000 characters, and neighbors to twenty edges. Evidence limits apply at
-complete-block boundaries; omissions and required evidence that does not fit are
-reported explicitly. Resolve incomplete required evidence with separate reads.
-Ordinary `query`, `show`, `graph`, and `brief` remain available for structural
-inspection. Automatic receipts are saved in `rag/receipts/retrieval.jsonl`; retain
-your harness's native transcript as well when auditing other tool access.
+All commands support `--json`. Search defaults to ten matches, evidence packets to 24,000 characters, neighbors to twenty edges. Limits apply at complete-block boundaries; omissions, and required evidence that doesn't fit, are reported explicitly: resolve them with separate reads. Ordinary `query`, `show`, `graph` and `brief` remain available for structural inspection. Receipts are saved in `rag/receipts/retrieval.jsonl`; keep your harness's native transcript as well when auditing other tool access.
 
 ## Maintain the index
 
 ```sh
-npm run grim -- retrieve status
+npm run grim -- retrieve status              # readiness, without model requests
+npm run grim -- retrieve index --dry-run     # added, edited, deleted and moved blocks, without model requests
+npm run grim -- retrieve index               # incremental sync
+npm run grim -- retrieve index --resume      # after an interrupted update (same source and build configuration)
+npm run grim -- retrieve index --rebuild --mode sync   # initial construction or a changed extraction configuration
 ```
-Use `status` to check readiness without making model requests.
 
-```sh
-npm run grim -- retrieve index --dry-run
-```
-Use the dry run to inspect added, edited, deleted, and moved blocks without model requests.
+- **Run the incremental sync at the end of every content-writing session, after final source edits**; sync explicitly mid-session when fresh retrieval is needed. Until then `search`, `brief` and `related` answer from the last synced snapshot with a notice: new blocks aren't searchable yet, edited blocks rank by their synced text, deleted blocks are hidden. An unbuilt index or a changed build configuration still fails closed.
+- `--resume` keeps the previous revision active until publication.
+- Each published sync deletes index data it no longer needs: older revisions, and indexes from earlier build configurations. `retrieve prune --dry-run` lists what would go; `index --keep-old` skips it.
+- **A rebuild** submits paid model work: run it in the background and wait, and don't edit `content/` while it runs (a source change stops it from publishing). Grim updates reuse unchanged descriptions and vectors; no extracted graph is maintained. Searches never index content. Reranker changes don't rebuild the index. No backend fallback is used; a busy reranker falls back to the next in `rag/src/models.json` (announced). The optional LightRAG backend's recovery details remain in `rag/README.md`.
 
-```sh
-npm run grim -- retrieve index
-```
-**Run incremental synchronization at the end of every content-writing session,
-after final source edits.** Synchronize explicitly mid-session when fresh retrieval is needed.
-Until then, `search`, `brief` and `related` answer from the last synchronized snapshot and
-print a notice: new blocks are not searchable yet, edited blocks rank by their synced
-text, deleted blocks are hidden. An unbuilt index, a changed build configuration and
-frozen experiments still fail closed.
+**Don't edit index-identity files casually.** Grim hashes `grim-retrieve.js`, `catalog.js` and `adapters/grim.js`; LightRAG hashes `retrieve.js`, `catalog.js` and its adapter support files. Changing these requires a rebuild. Put interface fixes in `cli.js` or `snapshot.js` where possible.
 
-```sh
-npm run grim -- retrieve index --resume
-```
-Use `--resume` after an interrupted update, with the same source and build configuration; the previous revision remains active until publication.
-
-Each published sync then deletes the index data it no longer needs: older revisions, and indexes from earlier
-build configurations. `retrieve prune --dry-run` lists what would go; `index --keep-old` skips it. See
-[README.md](README.md).
-
-```sh
-npm run grim -- retrieve index --rebuild --mode sync
-```
-Use this for initial construction or changed extraction configuration;
-it submits paid model work and may take hours. An unbuilt index blocks authoring:
-rebuild it before drafting, in the background, without editing `content/` until it
-publishes (the procedure is in `skills/write-academy-events/SKILL.md` §2). Searches never index content.
-An embedding change rebuilds vectors; keyword and reranker changes do not rebuild
-the graph. No backend fallback is used; a busy reranker falls back to the next in
-`rag/src/models.json` (announced), and new reranker aliases are registered without a
-rebuild by `rag/src/rebind.js` (`rag/README.md`).
-
-**Don't edit `rag/src/retrieve.js`, `catalog.js` or the adapter files casually**
-(`adapters/lightrag.js`, `process.js`, `credentials.js`, `model-aliases.json`,
-`lightrag_*.py`). They are hashed into the index identity: any change orphans the
-built index and forces a paid rebuild. Put fixes in modules outside that list,
-such as `cli.js` or `snapshot.js`.
-
-See [README.md](README.md) for setup, presets, cache behavior, and recovery, or
-[EVALUATION.md](EVALUATION.md) for controlled comparisons and frozen experiments.
-Frozen experiment instructions take precedence over everyday synchronization.
+Setup, presets, cache behaviour and recovery: [README.md](README.md).

@@ -1,0 +1,108 @@
+{
+  "query": "Proper Ink The quill refuses the school ink. It blots, it sulks, it writes \"no\" in large letters. The stationer in the village has proper ink, black as a well and priced like it. Buy the proper ink The quill drinks the new ink and writes a whole page of your notes, neatly, in a better hand than yours. It underlines the bits you'll need. You feel slightly managed. Make it use the school ink It uses the school ink under protest and blots every third word, including, pointedly, your name.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:ledger_proper_ink",
+      "title": "Proper Ink",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 244,
+      "sourceHash": "4b524353958598c02a5367491fc80ee3af8dfba9ec7ae1bc7f8cbb182176e01a",
+      "score": 0.94244384765625,
+      "excerpt": "Proper Ink\nThe quill refuses the school ink. It blots, it sulks, it writes \"no\" in large letters. The stationer in the village has proper ink, black as a well and priced like it.\nBuy the proper ink\nThe quill drinks the new ink and writes a whole page of your notes, neatly, in a b"
+    },
+    {
+      "key": "event:nudge_quickquill",
+      "title": "How's My Quill?",
+      "file": "content/events/journal_cards.grim",
+      "line": 71,
+      "sourceHash": "400f8e468477494ccf2ec09f114075ad3b8235cacab41a0aa89dc60e2985cc44",
+      "score": 0.5546924471855164,
+      "excerpt": "How's My Quill?\n\"How's my quill?\" says Nessa, reading over your shoulder. On Tuesday the spare quill announced the engagement of two of the gargoyles and slipped it into a proof. \"You took it home half a year ago. Have you tamed it yet, or has it tamed you?\"\n\"I'm working on it.\"\n"
+    },
+    {
+      "key": "event:art_enchanted_quill",
+      "title": "The Self-Writing Quill",
+      "file": "content/events/classes.grim",
+      "line": 452,
+      "sourceHash": "b7ce9e15b5477025e53637d15c1f0fc81169c4514a20892a61a5db8a9930191d",
+      "score": 0.5043304562568665,
+      "excerpt": "The Self-Writing Quill\nYou've enchanted a quill to take dictation. It works beautifully. A thought occurs: what if it wrote your essays, too?\nJust use it for notes\nYour notes are flawless. Even the professor's jokes are transcribed, with a small marginal comment: \"(not funny).\"\nL"
+    },
+    {
+      "key": "event:lesson_quickquill",
+      "title": "Lecture Notes",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 471,
+      "sourceHash": "1c634afd0c41274ec1cff289864cadfc5813c2c968b5051ff37167ef2ffca93d",
+      "score": 0.47121357917785645,
+      "excerpt": "Lecture Notes\nYour quill wants to take your lecture notes for you. It writes everything down, word for word, faster than the lecturer can talk. It also writes what it thinks of the lecturer, in the margins.\nLet it take the notes\nYou have perfect notes, every word, and a margin fu"
+    },
+    {
+      "key": "event:ledger_soup_complaint",
+      "title": "The Soup Complaint",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 221,
+      "sourceHash": "a5f98a521e1406ccf2ad64950d282364653fd34d89421bd3162547a9d8fa877d",
+      "score": 0.4272110164165497,
+      "excerpt": "The Soup Complaint\nForty furious letters about the refectory soup have arrived. Nessa wants one calm reply, printed. You decide to dictate it to the quill, which wants very badly to make it more exciting.\nKeep the quill to the facts\nEvery time it reaches for a flourish, you catch"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "3b71f48e7e1eca0368e04e0b350ab668ffcdf6c3ec7231b3411dfdcd4f9bcd3d",
+      "at": "2026-10-28T23:51:31.723Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 119,
+        "total_tokens": 119,
+        "cost": 0.00000119,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000119,
+          "upstream_inference_prompt_cost": 0.00000119,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "3b71f48e7e1eca0368e04e0b350ab668ffcdf6c3ec7231b3411dfdcd4f9bcd3d",
+      "elapsedMs": 767,
+      "at": "2026-10-28T23:51:32.490Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "544a12cab2423d5949a79463b04174a21e6c91ce7441d8c9f321ca3cb8c05bac",
+      "at": "2026-10-28T23:51:32.873Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45974,
+        "cost": 0.0022987
+      },
+      "requestHash": "544a12cab2423d5949a79463b04174a21e6c91ce7441d8c9f321ca3cb8c05bac",
+      "elapsedMs": 504,
+      "at": "2026-10-28T23:51:33.377Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

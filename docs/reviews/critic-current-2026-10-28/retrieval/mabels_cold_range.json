@@ -1,0 +1,107 @@
+{
+  "query": "The Cold Range {No steam on Mabel's windows, and no smell of toast. The range behind the counter has gone out, and a queue of students in scarves is stamping its feet. \"No tea till it's lit, petal,\" says Mabel, rattling the grate.|The range is out again: the flue sulks in a north wind. Mabel looks at the queue, then at you, then at the coal bucket.|Mabel's range, cold again, and Mabel in front of it with a twist of paper. \"It knows you now,\" she says. \"Talk to it.\"} Fetch coal from the yard {You haul two buckets in from the frozen yard. When the kettle finally sings, Mabel pours yours first and waves your coins away.|Two buckets, one dropped on your foot. The range catches on the third try, and Mabel puts a scone by your cup, \"for the foot\".|You fetch the coal without being asked. Mabel tells the queue you're \"staff, near enough\", and makes you carry the milk.} Read in the cold till it's lit {You read a chapter in your coat while the queue grumbles. By the time the tea comes your fingers can't turn the page.|You read by the cold window. The chapter is good; the draught under the door is better at its job.|Coat on, book open, breath fogging. You learn a great deal and feel your toes rather less.} Light it with a finger {You lean over the counter and touch the coals. The range roars, the queue cheers, and Mabel calls you \"a useful sort of petal\" for the rest of the term.|A flick, and the flue draws like a chimney in a storybook. Mabel pours your cup first and doesn't charge, \"for services to tea\".|{spell_level(flame) >= 2: You light the range and the lamps and the kettle's underside, one, two, three. Mabel applauds with the tea towel.|You light it before Mabel has finished asking. She gives you a look that's half thanks, half \"show-off\".}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:mabels_cold_range",
+      "title": "The Cold Range",
+      "file": "content/events/spell_uses.grim",
+      "line": 29,
+      "sourceHash": "8cda5ed276d2b523239ce8e2d73e35f1a29e5ab79c3065b988fa91a930207afd",
+      "score": 0.9597312808036804,
+      "excerpt": "The Cold Range\n{No steam on Mabel's windows, and no smell of toast. The range behind the counter has gone out, and a queue of students in scarves is stamping its feet. \"No tea till it's lit, petal,\" says Mabel, rattling the grate.|The range is out again: the flue sulks in a north"
+    },
+    {
+      "key": "event:shop_mabels",
+      "title": "Mabel's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 156,
+      "sourceHash": "f3d2cf554feef5baaac062e5f51d39e7a4cd632f89b1a24d15cb4e655bde7960",
+      "score": 0.5262854695320129,
+      "excerpt": "Mabel's Counter\n{Mabel looks at you once as you come in and is already reaching for a tin. \"Sit, petal. I know what you want; let's see if you do.\"|\"There's my petal,\" says Mabel. \"You've the look of someone who needs something steeped.\"|The bell over the door. Mabel doesn't turn"
+    },
+    {
+      "key": "event:mabels_the_door",
+      "title": "Mabel Reads the Door",
+      "file": "content/events/pools/village_home.grim",
+      "line": 162,
+      "sourceHash": "f7115dc5fc6e9ebd77433b40eca376000a11cae15bac29137b53590841d01c25",
+      "score": 0.49540144205093384,
+      "excerpt": "Mabel Reads the Door\n{Mabel looks up as you open the door and is already reaching for a tin.|Mabel watches you open the door the way a doctor watches a cough.|You've tried opening Mabel's door every way you can think of. She still knows.} {The bell over the door rings a little fl"
+    },
+    {
+      "key": "event:mabel_intro",
+      "title": "The Way You Open a Door",
+      "file": "content/events/fixtures.grim",
+      "line": 374,
+      "sourceHash": "de90cb041dc7428a3620bb91ff8865ea72045fc6a760853a1daf4890fca112c6",
+      "score": 0.4738956093788147,
+      "excerpt": "The Way You Open a Door\nThe bell over the door rings. The woman behind the counter looks up, considers how you came in, and reaches for a tin before you've said a word. \"Homesick,\" says Mabel, \"with a side of exam. Sit by the window, petal.\"\nSit by the window\nThe tea is exactly r"
+    },
+    {
+      "key": "event:mabels_window_seat",
+      "title": "The Window Seat",
+      "file": "content/events/pools/village_home.grim",
+      "line": 183,
+      "sourceHash": "d7405f4cbe4aeb7acb2162025ce729db20eed7635704abf683fc08beb79380a9",
+      "score": 0.47362884879112244,
+      "excerpt": "The Window Seat\n{Mabel's window seat looks out over the lake to the castle, and it's free.|Mabel has stopped asking if you're waiting for someone at the window seat.|Your window seat. Mabel puts a cushion on it when she sees you on the quay.} {season == \"winter\": Frost has drawn "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "65e57cb6853da9a576372c068f4a18f5575e599d6328aeb7a97aea8496532930",
+      "at": "2026-10-28T23:26:28.209Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 455,
+        "total_tokens": 455,
+        "cost": 0.00000455,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000455,
+          "upstream_inference_prompt_cost": 0.00000455,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "65e57cb6853da9a576372c068f4a18f5575e599d6328aeb7a97aea8496532930",
+      "elapsedMs": 4193,
+      "at": "2026-10-28T23:26:32.401Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "bbe652d7c4beee713e3eefab072f387ccb462c1bbcd420686a270fa3321f8763",
+      "at": "2026-10-28T23:26:32.465Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58173,
+        "cost": 0.00290865
+      },
+      "requestHash": "bbe652d7c4beee713e3eefab072f387ccb462c1bbcd420686a270fa3321f8763",
+      "elapsedMs": 666,
+      "at": "2026-10-28T23:26:33.131Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

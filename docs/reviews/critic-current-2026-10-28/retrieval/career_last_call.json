@@ -1,0 +1,107 @@
+{
+  "query": "The Last Call Everyone else seems to have a letter. The registrar, who has seen this a hundred times, pins a short list beside her window: posts still open for this year's graduates. \"Some people find their work late,\" she says. \"Some people find it here. Some people find it in a fortnight's time, in their mother's kitchen. Choose.\" Go back to where you worked You knock on a door you know. The person behind it remembers you, and remembers your work better than you do. \"We'd been wondering when you'd ask,\" they say, and write your name on a list that matters. You knock on a door you know. They remember you warmly, and they've filled the post, last week, with someone who asked first. They wish you luck and mean it. Take the registrar's list You put your name to the first post on the list: a junior clerk's desk, stamps and ledgers, a window that looks at a wall. It isn't a dream. It is a start date, and today that feels like a great deal. Write to the post you really want You write the letter you'd been too proud to write at the fair, and send it before you can tear it up. A reply comes by the next owl: come and see us. You go. They say yes. You write the letter you'd been too proud to write at the fair. The reply is kind and short, and the post went in the autumn to someone who wrote then. Leave it until after graduation You thank the registrar and walk away from the window. The world will still be there in a fortnight. So, she says to your back, will her list.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_last_call",
+      "title": "The Last Call",
+      "file": "content/events/careers.grim",
+      "line": 341,
+      "sourceHash": "b3abcd36162697a9dcf771e074905a4ee17a0b5eaa4e4866ddbbe58e6f4cfab2",
+      "score": 0.8904430270195007,
+      "excerpt": "The Last Call\nEveryone else seems to have a letter. The registrar, who has seen this a hundred times, pins a short list beside her window: posts still open for this year's graduates. \"Some people find their work late,\" she says. \"Some people find it here. Some people find it in a"
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.7215651273727417,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:y3_waitlist",
+      "title": "The Waiting List",
+      "file": "content/events/expansion_y3.grim",
+      "line": 228,
+      "sourceHash": "cbdb6ac3cf3f384ba68b6dc52ea8317fcf7275940e09e7a476813de2b48f6e95",
+      "score": 0.5652856826782227,
+      "excerpt": "The Waiting List\nA thin letter. You are \"a strong candidate\" and on \"a short list\", and they \"hope to write again\". It's not a no. It's not anything.\nWrite back and make your case\nTwo pages, plain and sure: why you, why them, why now. A fortnight later, a heavier envelope.\nYou wr"
+    },
+    {
+      "key": "event:y3_career_fair",
+      "title": "The Career Fair",
+      "file": "content/events/expansion_y3.grim",
+      "line": 21,
+      "sourceHash": "d14a80ac1808961590ce631e600a8ee9e082e877454d259fe0cc06ae3d1aaf87",
+      "score": 0.5004587173461914,
+      "excerpt": "The Career Fair\n{month == 3: The fair's second week, and the great hall is half packed: the booths that are left have stopped being polite and started being keen. This is the last chance to leave your name.|Every guild, order and institution in the kingdom has sent someone to the"
+    },
+    {
+      "key": "event:y3_offer_letter",
+      "title": "The Offer",
+      "file": "content/events/expansion_y3.grim",
+      "line": 276,
+      "sourceHash": "312f1dedc87ed307f289b76e24e6693edb5e78903a875299bb4bb0755673aaa4",
+      "score": 0.4976940453052521,
+      "excerpt": "The Offer\nA heavy envelope with a seal you recognise from the fair. Inside, a single page: an offer. A place. A future with a start date. {iv_score >= 3: There is a signing purse, too, which they call \"a token\".|} The contract itself is signed on the last day, with any other you'"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "6f0596a93489f8f369616637411cb21f130cf1a788b020c480fde05bf65cd09c",
+      "at": "2026-10-28T23:21:54.024Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 350,
+        "total_tokens": 350,
+        "cost": 0.0000035,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000035,
+          "upstream_inference_prompt_cost": 0.0000035,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "6f0596a93489f8f369616637411cb21f130cf1a788b020c480fde05bf65cd09c",
+      "elapsedMs": 7391,
+      "at": "2026-10-28T23:22:01.415Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "be02a2586742a04be2eaa28c2139f01f5f92f554a780297db28f4279cf607308",
+      "at": "2026-10-28T23:22:01.478Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 80829,
+        "cost": 0.00404145
+      },
+      "requestHash": "be02a2586742a04be2eaa28c2139f01f5f92f554a780297db28f4279cf607308",
+      "elapsedMs": 666,
+      "at": "2026-10-28T23:22:02.144Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

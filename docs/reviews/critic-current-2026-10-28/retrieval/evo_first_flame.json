@@ -1,0 +1,108 @@
+{
+  "query": "Flame, Properly {level(evocation) == 0: Professor Thorne writes one word on the board: FLAME. \"Every duellist you will ever face has this ready before their wand is out,\" he says. \"So will you. By Friday.\"|{level(evocation) == 1: Evocation II meets at the duel hall, not the lectern. Thorne has set a straw target forty paces off. \"Last year you lit candles. This year the fire goes where you send it, and arrives.\"|Advanced Evocation opens with Thorne standing in a ring of fire he did not light. \"This is what a duel looks like when it goes wrong,\" he says. \"Your flame must hold while you are hit.\" He has hired a senior to hit you.}} Drill it until it comes {level(evocation) == 0: By Friday the flame comes when you call it, and your fingertips are pink and tender. Thorne looks at your palm for a long moment. \"Hm,\" he says.|{level(evocation) == 1: You throw until your sleeves smoke. On the sixtieth try the straw target goes up with a satisfying whump. Thorne writes something down, without comment.|The senior hits you nine times. On the tenth your flame stays lit through it, and the senior, singed, asks for a rest. Thorne says \"Better,\" which is new.}} Learn the shape of it first {level(evocation) == 0: You work it out on paper while the room fills with small fires. Yours comes last, on Thursday night, alone in your room. It's a very correct flame.|{level(evocation) == 1: You chart the target's distance and the arc a flame takes. Your fire lands late but dead centre. Nobody saw, because they'd gone to lunch.|You watch how Thorne's ring keeps burning when the senior hits him. It takes a week of evenings to copy it, and the class teases you for every one.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:evo_first_flame",
+      "title": "Flame, Properly",
+      "file": "content/events/spell_sources.grim",
+      "line": 13,
+      "sourceHash": "99c3355257fb03f334367fb0ded0a471510e02ef0f4c770ff847e92e680ced2b",
+      "score": 0.9411091804504395,
+      "excerpt": "Flame, Properly\n{level(evocation) == 0: Professor Thorne writes one word on the board: FLAME. \"Every duellist you will ever face has this ready before their wand is out,\" he says. \"So will you. By Friday.\"|{level(evocation) == 1: Evocation II meets at the duel hall, not the lecte"
+    },
+    {
+      "key": "event:evo_signature_flame",
+      "title": "A Fire of Your Own",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 146,
+      "sourceHash": "772e2e460d4866ee751407e25c4271fc98110c4ca921db87feb30f2ee3eb3a71",
+      "score": 0.7269942164421082,
+      "excerpt": "A Fire of Your Own\nAdvanced Evocation asks every student for a signature flame: its own colour, its own heat, its own temper. {Yours is a sulky orange.|Yours has turned a gold that you're quietly proud of.|Yours knows you now. It leans toward you when you come in.} {Somebody's fl"
+    },
+    {
+      "key": "event:evo_shaping_hour",
+      "title": "Shaping Hour",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 69,
+      "sourceHash": "5411945c3bb3ccc425e108342732dd9e840ce901aeeb7b4e0de692b0c34c1e30",
+      "score": 0.6632919311523438,
+      "excerpt": "Shaping Hour\nEvocation II is shaping: flame made into a sphere, a key, a bird. The lecturer keeps a ledger of every scorch mark in the hall and makes you sign for yours. {flag(scorched_ledger): Your page in the ledger has a few signatures on it already.|Your page in the ledger is"
+    },
+    {
+      "key": "event:lesson_flame",
+      "title": "Putting Fire Out",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 4,
+      "sourceHash": "edaeae3b13757d3042fd980504c25679f986ce864702f22eb78c735567961002",
+      "score": 0.6583465337753296,
+      "excerpt": "Putting Fire Out\nFlame is yours now. Professor Thorne gathers the year's new Flame casters in the stone practice room and lights a brazier. \"Any fool can start a fire,\" he says. \"You are here to learn to stop one.\" There is a bucket of water at his feet, and he forbids you to tou"
+    },
+    {
+      "key": "event:evo_first_spark",
+      "title": "The First Spark",
+      "file": "content/events/slice_2b.grim",
+      "line": 17,
+      "sourceHash": "331239998774a62d0a61a2d77d5810593068c661dc6e85c658017aa559de74b2",
+      "score": 0.6104823350906372,
+      "excerpt": "The First Spark\nEvocation I begins with a single instruction from the lectern: \"Make heat. Not fire. Heat.\" Half the class makes nothing. One student makes a small, apologetic fire.\nAim for heat, carefully\nYour palm warms like a stone left in the sun. The lecturer nods, which is "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "709e54947cd64e89d9c1f7d0e24d975d86fb1560d1711cc2ad54cc1bda2a44ff",
+      "at": "2026-10-28T23:51:48.292Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 425,
+        "total_tokens": 425,
+        "cost": 0.00000425,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000425,
+          "upstream_inference_prompt_cost": 0.00000425,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "709e54947cd64e89d9c1f7d0e24d975d86fb1560d1711cc2ad54cc1bda2a44ff",
+      "elapsedMs": 303,
+      "at": "2026-10-28T23:51:48.595Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2dd265f56b55d76dad758657e253fce443b5ec960106ca020fe5892d6a2548a0",
+      "at": "2026-10-28T23:51:48.632Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 53425,
+        "cost": 0.00267125
+      },
+      "requestHash": "2dd265f56b55d76dad758657e253fce443b5ec960106ca020fe5892d6a2548a0",
+      "elapsedMs": 348,
+      "at": "2026-10-28T23:51:48.980Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,107 @@
+{
+  "query": "Bed Six's Story Bed six is a second-year with Lake Fever, blue to the ears, who swears she never went near the lake. \"I fell asleep in the bath,\" she says. From her chair, Sister Amaranth raises one eyebrow and keeps it there. The fever isn't breaking. A cure for a bath is not a cure for the lake. Get the true story out of her It comes out in a rush: the flat rock, a dare, four of them. The other three are in her dormitory, coughing into their scarves so nobody will know. You fetch them down one by one. By midnight the ward is full, and all four fevers are breaking. She sticks to the bath. You treat her for the lake anyway, on Sister Amaranth's say-so, and on Thursday three more second-years turn up blue to the ears. Treat what she tells you You dose her for a chill and get an early night. The fever takes three days longer than it should, and the chair across the ward watches every one of them.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:infirmary_bed_six",
+      "title": "Bed Six's Story",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 108,
+      "sourceHash": "7199c488cdbdf74882b14ac17167229e0741cc571783a2f3326e6d14795b872a",
+      "score": 0.9501145482063293,
+      "excerpt": "Bed Six's Story\nBed six is a second-year with Lake Fever, blue to the ears, who swears she never went near the lake. \"I fell asleep in the bath,\" she says. From her chair, Sister Amaranth raises one eyebrow and keeps it there. The fever isn't breaking. A cure for a bath is not a "
+    },
+    {
+      "key": "event:alch_lake_fever",
+      "title": "Lake Fever Season",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 248,
+      "sourceHash": "3c9e338b920d01c5ad40e05b7de6c9ab7fae8203596cd56dd47213504c380751",
+      "score": 0.6786816716194153,
+      "excerpt": "Lake Fever Season\n{Advanced Alchemy treats real patients. The infirmary has Lake Fever cases, from swimming where they shouldn't. Sister Amaranth wants the fever drawn out, not just cooled.|Lake Fever again. Students never learn, Sister Amaranth says, and neither do lakes.|Fever "
+    },
+    {
+      "key": "event:infirmary_sister_fevered",
+      "title": "The Healer's Own Fever",
+      "file": "content/events/miniplots_2026_10.grim",
+      "line": 58,
+      "sourceHash": "4559bad6249be8e66ca435e5e9bcbd6b3e2d768c538135bfeb2c6afdc15bc06d",
+      "score": 0.659931480884552,
+      "excerpt": "The Healer's Own Fever\nYou find her in the little office behind the ward, upright in her chair, a cold compress on her own neck and the patient list in her lap. Her face is grey. \"Lake Fever,\" she says. \"From bed six. It's nothing. Go to bed.\"\nFetch the Headmistress\nThe headmistr"
+    },
+    {
+      "key": "event:life_lake_fever",
+      "title": "Lake Fever Season",
+      "file": "content/events/life.grim",
+      "line": 723,
+      "sourceHash": "db5d362ee486459fed32418b24d242301595db74860582c5c7e02499bf2dd0de",
+      "score": 0.6356779336929321,
+      "excerpt": "Lake Fever Season\nHalf your dormitory has Lake Fever. Noses are glowing blue. You feel a tickle in your throat.\nDose up on Maud's tea\nMaud's lemon-and-thunder tea keeps you upright through the whole outbreak.\nThe tea from the kitchens isn't the same. Your nose starts glowing on T"
+    },
+    {
+      "key": "event:sick_in_the_infirmary",
+      "title": "A Bed by the Window",
+      "file": "content/events/pools/statuses.grim",
+      "line": 160,
+      "sourceHash": "d13d6d1bf1680da70da9eaa38732e6ed7a12c5bffffffbe1910e2adb8fd18c9f",
+      "score": 0.5554840564727783,
+      "excerpt": "A Bed by the Window\n{Lake fever. Your nose glows faintly blue, and Sister Amaranth says \"Bed,\" in the voice that means it.|The fever again, and the same bed by the window.} {Lectures are going on without you.|Someone has left a stack of notes on the chair.}\nStay in bed all week\n{"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "7c1c5d350c7bf993fbc99a5cd843167dfd211a353692c54abb20690981781d1c",
+      "at": "2026-10-28T23:23:38.099Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 220,
+        "total_tokens": 220,
+        "cost": 0.0000022,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000022,
+          "upstream_inference_prompt_cost": 0.0000022,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "7c1c5d350c7bf993fbc99a5cd843167dfd211a353692c54abb20690981781d1c",
+      "elapsedMs": 9334,
+      "at": "2026-10-28T23:23:47.433Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "89be31a1bc8ba4171724b2f037b32154e48a70f43eb1ffeeffa303aefe9a9958",
+      "at": "2026-10-28T23:23:47.462Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 40142,
+        "cost": 0.0020071
+      },
+      "requestHash": "89be31a1bc8ba4171724b2f037b32154e48a70f43eb1ffeeffa303aefe9a9958",
+      "elapsedMs": 390,
+      "at": "2026-10-28T23:23:47.852Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

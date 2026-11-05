@@ -1,0 +1,107 @@
+{
+  "query": "The Dream Diary {Every first-year astromancer keeps a dream diary, and once a month you read an entry aloud for the class to interpret. Today it's your turn.|Dream diaries again. The lecturer reminds you that dreams are evidence; the class reminds you they're also very funny.|Your turn with the dream diary. The class leans in; your entries have a following.} {Last night you dreamed about a goat in a crown.|Last night you dreamed your teeth were made of keys.|{season == \"winter\": Last night you dreamed of snow falling upward.|Last night you dreamed of an exam in a language made of birds.}} Read the real one aloud {You read about the goat. The class interprets it as ambition, appetite and possibly a farm. You go pink, and learn more than they do.|You read the dream of key-teeth. The lecturer finds three meanings in it; the class finds four, one of them rude.|You read it straight. The interpretations are thoughtful and humiliating, in equal parts.} Invent something impressive {You describe a dream of a silver hare on a staircase. The lecturer is deeply moved. You must remember to have it someday.|You invent a prophetic dream so convincing that half the class writes it down. The lecturer gives it full marks and a worried look.|Your invented dream gets a round of applause. You almost wish it were true.} {You get the silver hare's symbolism backwards. The lecturer, who keeps a book of real dream symbols, notices, and says so, gently, in front of everyone.|You overdo it. Nobody dreams in footnotes. The class is delighted to say so.|Halfway through, you forget what the hare was doing. The class finishes your dream for you, badly.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:astro_dream_diary",
+      "title": "The Dream Diary",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 38,
+      "sourceHash": "55bef42109bf180c9fcd002c112ddc0c80f3c1774859da88fa02cfd886d5e51e",
+      "score": 0.9450718760490417,
+      "excerpt": "The Dream Diary\n{Every first-year astromancer keeps a dream diary, and once a month you read an entry aloud for the class to interpret. Today it's your turn.|Dream diaries again. The lecturer reminds you that dreams are evidence; the class reminds you they're also very funny.|You"
+    },
+    {
+      "key": "event:life_exam_dream",
+      "title": "The Exam Dream",
+      "file": "content/events/expansion_life.grim",
+      "line": 274,
+      "sourceHash": "ae8cc408d4709b89c1936e6a7c5cb7941fb3619b0248c8ddcbe0e92f4f08a11b",
+      "score": 0.5632268786430359,
+      "excerpt": "The Exam Dream\nYou dream you're in the exam hall in your pyjamas. The paper is in a language that keeps changing. The proctor is Bartholomew the goat. You wake at 4am, heart pounding.\nGet up and revise\nYou revise until breakfast. The real exam paper is written in a normal languag"
+    },
+    {
+      "key": "event:div_prophecy_exam",
+      "title": "The Prophecy Exam",
+      "file": "content/events/expansion_classes.grim",
+      "line": 135,
+      "sourceHash": "7846da0cbfe5af0eae4aa0ff2cff7ba34aa67d04002e8d22e8e5834a4a81c7b9",
+      "score": 0.45529982447624207,
+      "excerpt": "The Prophecy Exam\nThe mock Divination exam: gaze into the crystal and make one prophecy about the coming month. The examiner will check. \"Vague prophecies,\" she warns, \"fail.\"\nMake a bold, specific prophecy\n\"On the eighth, the kitchen cat will have kittens in the headmistress's h"
+    },
+    {
+      "key": "event:astro_sealed_forecast",
+      "title": "Tomorrow's Weather",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 105,
+      "sourceHash": "54fb4126f52e006fa619c2da8acf5b89eba70490e7a02ad13426b3a10d81a864",
+      "score": 0.415376216173172,
+      "excerpt": "Tomorrow's Weather\n{Foresight at Astromancy II. Write down tomorrow's weather to the hour, seal it, pin it to the board. The lecturer opens the envelopes a day later, in public.|The envelopes come out again.|You've written so many forecasts you dream in drizzle.} {Outside the dom"
+    },
+    {
+      "key": "event:astro_star_names",
+      "title": "Naming the Stars",
+      "file": "content/events/pools/courses_a.grim",
+      "line": 191,
+      "sourceHash": "3179b9f8437af8cf9686cba90aac859628b5920dbf43cd255a7edc0f515f9589",
+      "score": 0.41112324595451355,
+      "excerpt": "Naming the Stars\n{Astromancy I begins with names. Three hundred stars painted on the dome, to be recited on request.|The long pole comes out. The lecturer points; you name.|You dream the star names some nights now, and wake reciting.} {Today it's the winter constellations.|Today "
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "261dfe370897a9ee5304b538276fc693cf15f95bbf31269bae634a115d342959",
+      "at": "2026-10-28T23:40:16.350Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 365,
+        "total_tokens": 365,
+        "cost": 0.00000365,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000365,
+          "upstream_inference_prompt_cost": 0.00000365,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "261dfe370897a9ee5304b538276fc693cf15f95bbf31269bae634a115d342959",
+      "elapsedMs": 560,
+      "at": "2026-10-28T23:40:16.910Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c9cc2c1bd05de42d0babe142769f4af80833d97f46e9ae3799548090b9d739fd",
+      "at": "2026-10-28T23:40:16.935Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 53190,
+        "cost": 0.0026595
+      },
+      "requestHash": "c9cc2c1bd05de42d0babe142769f4af80833d97f46e9ae3799548090b9d739fd",
+      "elapsedMs": 482,
+      "at": "2026-10-28T23:40:17.417Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,3 +1,39 @@
+## Crux payment revision (November 5)
+
+Final revised checks: `grim check` passes; the independent 120-game golden diff passes; balance has zero invariant failures and four alarms, with 63,704 choices and zero preview violations. The slow gameplay tests pass. The full runner loaded the two retrieval tests before their configuration fix; their subsequent 16-test rerun passes. Focused browser checks pass.
+
+Mana is unscaled. All other Crux campaign transfers use 0.6, rounded up per transfer, including gains. No rebates. This supersedes the initial 0.5 setting and measurements below. The revised 120-game snapshot has zero simulation errors and changes 93 games from the initial integration baseline; that previous baseline is preserved in `build/snapshots/pre-crux-reprice-baseline.json`. Four Rust campaign tests, ten bridge tests and the focused English/Chinese browser checks pass. The two retrieval test failures below were traced to machine-local configuration leaking into tests; explicit empty configuration fixes them without changing the retriever or its index identity (all 16 retrieval tests pass).
+
+## Crux joins the campaign (November 5)
+
+- **Promoted to `crux/`** from `experiment/parley-cards` at `74ab2ce`. The old experiment's README and worktree CLAUDE.md redirect future work to the canonical source and require future experiments to live separately.
+- **One implementation:** standalone and campaign share Rust rules, bots/search, argument/spell data, renderer and scoped styles. `src/parley.js` adapts campaign inputs/results; `src/parley-ui.js` mounts the table. The committed classic-script bundle includes Wasm and works from `file://`; the server serves it and the shared stylesheet. See `crux/HANDOFF.md`.
+- **All current negotiations:** 61 registered event/option pairs, 65 challenge statements including alternative branches. The reached branch supplies DC, `using`, partial eligibility and satisfied evidence conditions. Earlier authored spending is reflected through disposable lookahead. Authored outcomes still apply after settlement, including Health. Simulated players use the same Rust core and record results for replay.
+- **Payments:** `@balance parley_scale: 0.5` scales actual Mana, Crowns, Health and Alignment transfers before affordability/payment, including gains and hostile losses. Fractions are retained. No rebates, including played lessons; skipping the introductory lesson before any move is free. Crux's Patience, Suspicion and Agreement stay unchanged.
+- **Direct campaign signals:** Standing is raw Renown; Bond the relevant signed NPC relationship; Record relevant job/club/internship performance or thesis progress. No normalization or GPA conversion. Missing context removes that signal's arguments and uses the circumstance's existing skill lean for its crux. The briefing names each source. A committee is one Crux table, not three separately simulated opponents.
+- **Persistence and language:** save setup and every move, refuse incompatible rules on resume, clear only after successful settlement; unavailable runtime keeps the card. English and Chinese share the renderer (1,103 Crux strings translated, no stale entries). Host loading/title changes dispose the table's worker and keyboard handler.
+- **Measured, not tuned to an optimum:** `crux/reports/integration-2026-11-05.md` and its raw JSON compare the old roll with 0.5 and 1.0 scales for three styles at seed 13. At 0.5 the balanced run pays 26.5 Mana, 13 Crowns and 5 Health across nine meetings; the social run pays 45.5 Mana and 34 Crowns across ten. Branching differs between modes. Human playtests still need to assess difficulty, duration and the distributions of the direct signals.
+- **Validation:** `grim check` passes. Rust rules, campaign payment tests and retained golden/search cases pass; ten bridge/localization tests pass, including all 65 challenges and exact move replay. Browser checks pass for both languages on a phone, worker analysis, refresh, settlement, disabled analysis, lesson skip and unavailable runtime; the standalone bench also passes. The HTTP browser playthrough reaches an ending and stores all 671 card records, with no unresolved cards.
+- **Full gate:** `verify:full` completed the static checks, slow style suite, 120-game snapshot and balance pass. Two existing retrieval tests remain failing (`rag/test/authoring.test.js:100`, `rag/test/lifecycle.test.js:43`: the retired retriever reports "Only LightRAG is supported"). The run also caught a temporarily stale Crux bundle and the old golden baseline while those were being updated; the rebuilt bundle passes all ten focused tests, and the independently generated `build/snapshots/latest.json` matches the refreshed baseline exactly. The full gate therefore remains red; no unrelated retrieval code was changed.
+- **Balance:** seven styles × 30 games: zero invariant failures; 61,867 previewed choices in 100 additional games, zero violations. Five alarms: random Health departures 37%, social's searching headline 50%, truant's archmage headline 37%, aggressive mood lasting 24 term months, and 146 events unseen. These are recorded rather than hidden by retuning content. The previous balance report is preserved in `build/snapshots/pre-crux-balance-report-2026-11-05.json`. The campaign golden baseline was inspected and refreshed (118/120 games change, zero simulation errors); its previous file is preserved in `build/snapshots/pre-crux-2026-11-05.json`.
+
+## The fight screen becomes the Arena; a mutual knockout keeps the winner's HP (November 2)
+
+- **The Arena ships** (`src/combat-ui.js`, `src/combat.css`; designed and iterated in `experiments/combat-ui/b-arena` with the combat bench on the game's own page).
+  - The fighters face off with the last exchange between them (under them on a phone): both moves, a line each way with what it did and the defence that met it, and each move's line of fight text in its fighter's panel.
+  - Below: the timeline beside this exchange's telegraph, the moves as a compact grid (a picked move's rules under it, with Cast), and the engine's analysis when the setting allows it.
+  - Statuses are compact chips; a tap gives the rules in plain words and a summon's numbers. Foresight shows under its caster. The outline takes each status's colour and motion.
+  - No panel scrolls on a tablet or wider; a phone scrolls the fight as one page. Room is held for what an exchange brings, so acting never shifts the layout. Sheets overlay the screen.
+  - 95 new `fight.*` strings in `UI_EN`, translated in `locales/zh-CN/ui.lang`. The browser e2e drives the new selectors (`.fl-mv`, `[data-fl-commit]`, `#fightDone`).
+- **Rules F5.11-plan.1b** (`combat/HANDOFF.md`): when both fall in the same exchange, the side that committed first wins and the loser's blows that exchange never land, so the winner keeps the HP and Health they took. The result and the fight text say so.
+
+## No card budgets or event-frequency targets (November 2)
+
+The guidelines no longer set how many cards a source, character or batch gets, or how often a card or class should come; where a rule needed one, it is relative (a milestone weighs more than the cards around it; a hidden-course hint is rarer than the place's other cards).
+- **Docs:** `docs/authoring/pools.md`, `classes.md`, `checklist.md`, `README.md`, the writing skill, and design §5.3 (the pushers' target), §5.5 (the fixtures' shape), §7.4 (the depth targets), §8.7–8.8 and §11.1.
+- **`grim report --gaps`:** no floors or depth targets. It lists the five thinnest sources of each kind (most visits without a card of their own, then fewest repeatable) and flags any source with nothing repeatable, which runs dry.
+- **`grim balance`:** the incidents and windfalls a year alarm is removed.
+
 ## Threads 2: shops, the Night Market, the minor cast, pushers, offer hints (October 30–31)
 
 The plan, decisions, ledger and batch log: `docs/threads-2-plan.md`. 61 new cards and 12 appointments in seven batches, each through retrieval, the critic (every batch accepted, all on round two) and zh-CN (complete).
@@ -27,7 +63,7 @@ The plan, decisions, ledger and batch log: `docs/threads-2-plan.md`. 61 new card
     - truant's shadow headline at 37%;
     - aggressive's mood and health;
     - the never-seen list;
-    - balanced's incidents, now 3.0–3.3 a year against a ceiling of 3 (2.8 before). The rise is `grisk_reminder`: more missed debt payments, as players now spend on the offers they find.
+    - balanced's incidents, now 3.0–3.3 a year against a ceiling of 3 (2.8 before). The rise is `grisk_reminder`: more missed debt payments, as players now spend on the offers they find. (Gone since November 2: see the entry above.)
   - balanced's windfall alarm and social's still-searching alarm are gone.
   - **Gold:** net per game within noise (balanced +17, social −22).
   - **The plot funnel:** every act opens at the same median turn, in 100% of games.
@@ -72,6 +108,11 @@ The plan, budgets (about 228 new cards in 14 batches), decisions, ledger and "Ne
   - **Review:** the critic accepted every batch (P4-01 and P4-10 on round two). On the new retrieval backend every card was rechecked against the others; five overlaps across batches were reworked (`build/batches/P4-recheck.notes.md`).
 - **Balance pass (done, October 28):** 0 invariant failures. Of the 19 alarms, 16 are the ones from before phase 4's cards; the other three sit just past their lines (balanced's windfalls at 0.8 a year against a floor of 1, and homebody's and spender's archmage headline at 37% and 36% against 35%). The cards no style sees are rare by design. Legend's fade stays at 12%: a month begins at Legend only from 97 before the fade, so the renown-chaser holds it a month or three, after winning the Spring Tournament while Famous. A skill rusted or injured below 1 no longer crashes a fight (the combat bridge clamps to 1–100). Details and the deviations: `docs/phase4-plan.md`. `verify:full` passed except the browser e2e, which was skipped.
 - **Next:** a human playtest of the four systems. Still deferred: archetypes, spawned characters, memory recall.
+
+## Authoring guidelines streamlined; the RAG authoring experiments retired (October 26)
+
+- **Guidelines:** each authoring rule now has one home, and the files cite one another in one direction only (`docs/authoring/README.md` gives the order). `checklist.md` holds every acceptance question (the critic skill keeps only its procedure), `costs.md` the trade and alignment, `classes.md` each class's register, `schema.md` the constructs at a glance, and `rag/AUTHORING.md` the whole retrieval procedure. The pointer stubs (`docs/authoring/retrieval.md`, `a-rag.md`, `rag/skills/`) are gone. No writer-facing rule was added or dropped; `schema.md`'s example check now uses a ladder word (`apprentice`, not the legacy `easy`).
+- **Experiments retired:** `grim author-eval` only reports that it's retired. `rag/src/experiments.js` and `workspace-projection.js` are stubs that throw. Their dependents (review, handoff, panels, audit, workspaces, batch import/review/traces), `rag/evaluation/`, `rag/EVALUATION.md`, `rag/WORKSPACES.md`, the evaluation skills and their tests are removed, and the frozen-trial branch of `grim retrieve` (`--run`, `authoring-input/run.json`) is gone. Historical experiment data can no longer be imported; the sections below that cite those tools are history.
 
 ## Feedback round: careers, the last day, the Hollow Star, the ring (October 25–26)
 

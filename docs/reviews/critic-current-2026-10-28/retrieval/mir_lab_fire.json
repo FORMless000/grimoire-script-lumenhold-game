@@ -1,0 +1,107 @@
+{
+  "query": "Fire in the Workshop The workshop is on fire. Properly this time. Mir is in the doorway, coughing — and trying to go back in. \"My notebooks! Three years of notes!\" Grab the notebooks You come out singed, smoking, with an armful of notebooks. Mir stares at you, then at the notebooks, then bursts into tears and hugs you, both of you coughing. You get halfway before the smoke drives you back. You save one notebook. Mir says it's the most important one. You both know it isn't. They mean it anyway. Drag Mir away You haul Mir back from the door. The notebooks burn. Mir is silent for a week. Then they start a new notebook. The first page just says: \"Thank you.\" The next morning you find them soldering on the corridor floor outside the burnt door, and bring them a cushion, and tea. Freeze the fire out You throw frost at the doorway until the flames grey over and give up with a hiss. The notebooks are wet, cold and whole. Mir hugs them, then you, then the notebooks again, shivering.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:mir_lab_fire",
+      "title": "Fire in the Workshop",
+      "file": "content/events/expansion_people.grim",
+      "line": 353,
+      "sourceHash": "dc28485e4955c90eb9c38c422be464655025267a4efbabfb28fc32fc6f454504",
+      "score": 0.9562244415283203,
+      "excerpt": "Fire in the Workshop\nThe workshop is on fire. Properly this time. Mir is in the doorway, coughing — and trying to go back in. \"My notebooks! Three years of notes!\"\nGrab the notebooks\nYou come out singed, smoking, with an armful of notebooks. Mir stares at you, then at the noteboo"
+    },
+    {
+      "key": "event:mir_notebooks",
+      "title": "The Notebooks",
+      "file": "content/events/romance/seraphine_corvin_mir.grim",
+      "line": 471,
+      "sourceHash": "2e88a5c4c8361f10df9fe5600cbe56672529cf73a20cb3c17d7a2d3db38d41b0",
+      "score": 0.6566139459609985,
+      "excerpt": "The Notebooks\nMir holds out a notebook, one of a stack, battered and bristling with slips of paper. \"Three years,\" they say. \"Every idea. Some of them work. Probably. Nobody's read them. You can, if you want. Carefully. Very carefully. With clean hands.\"\nRead it with them\nYou rea"
+    },
+    {
+      "key": "event:mir_small_fire",
+      "title": "A Small Fire",
+      "file": "content/events/bonds/friends.grim",
+      "line": 348,
+      "sourceHash": "340391acfda542d67d84dc852bc8adc12541e2edbe805e6515f763f9d7c7dd1e",
+      "score": 0.6080648303031921,
+      "excerpt": "A Small Fire\nThere's a small fire on Mir's workbench. Mir is looking at it with interest. \"It's fine,\" they say. \"It's a controlled fire. I'm controlling it by watching it.\" The fire grows. \"I'm watching it harder.\"\nPut it out\nYou smother it with a lab coat. Mir sighs, and writes"
+    },
+    {
+      "key": "event:mir_padlock",
+      "title": "The Padlock",
+      "file": "content/events/bonds/friends.grim",
+      "line": 372,
+      "sourceHash": "d6b7c531b5b43ebfa1ee67565bfa17c64ef9f91a5289caedb8d9d9490374bf69",
+      "score": 0.5963603258132935,
+      "excerpt": "The Padlock\nMir's workshop is still padlocked, and whatever they've been making do with isn't working: they've been soldering in the corridor outside the old door, on the floor, for a week. \"It's fine,\" they say, soldering on their knee. \"It's character-building. My character is "
+    },
+    {
+      "key": "event:mir_workshop_closed",
+      "title": "The Workshop Is Shut",
+      "file": "content/events/people_students.grim",
+      "line": 862,
+      "sourceHash": "d603e146da4d50196050cb749a03dfbedce3a1db335971e16fbabc089ca452b0",
+      "score": 0.5886398553848267,
+      "excerpt": "The Workshop Is Shut\nAfter the third fire this term, the faculty has padlocked Mir's workshop. Mir is sitting on a toolbox outside it, looking like someone took their heart and filed it under \"hazards\".\nPlead their case to Professor Thorne\nThorne agrees to reopen it — with fire b"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4073878fc36af9522cc3f518e9eccd30377a2a5bf8965d223ec895662770926d",
+      "at": "2026-10-28T23:50:37.177Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 231,
+        "total_tokens": 231,
+        "cost": 0.00000231,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000231,
+          "upstream_inference_prompt_cost": 0.00000231,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4073878fc36af9522cc3f518e9eccd30377a2a5bf8965d223ec895662770926d",
+      "elapsedMs": 736,
+      "at": "2026-10-28T23:50:37.913Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "4b40ac675e1eb190143fdb76e462bce9d3d7475ea3ce9b699c5c3b6d05b7fd4c",
+      "at": "2026-10-28T23:50:38.189Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 51091,
+        "cost": 0.00255455
+      },
+      "requestHash": "4b40ac675e1eb190143fdb76e462bce9d3d7475ea3ce9b699c5c3b6d05b7fd4c",
+      "elapsedMs": 599,
+      "at": "2026-10-28T23:50:38.788Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

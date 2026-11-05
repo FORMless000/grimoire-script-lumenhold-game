@@ -166,6 +166,7 @@
     ui.notice = t('title.oldSave');
   }
   function titleScreen() {
+    if (window.ParleyUI) window.ParleyUI.close();
     if (window.Sky) window.Sky.set('night', null);
     ui.mode = 'title';
     closeOverlay(); closeFeedback(); removeFeedbackBar();
@@ -194,7 +195,7 @@
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
       '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button>' +
-      '<a class="btn ghost-btn grow bench-btn" id="benchBtn" href="bench/" target="_blank" rel="noopener" title="' + esc(t('title.benchHint')) + '">' + Art.icon('sword', 16) + ' ' + esc(t('title.bench')) + '</a></div>' +
+      '<a class="btn ghost-btn grow bench-btn" id="benchBtn" href="bench/?lang=' + encodeURIComponent(I18n.lang()) + '" target="_blank" rel="noopener" title="' + esc(t('title.benchHint')) + '">' + Art.icon('sword', 16) + ' ' + esc(t('title.bench')) + '</a></div>' +
       (ui.notice ? '<div class="notice">' + esc(ui.notice) + '</div>' : '') +
       '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
       '</div>' + creditsLine() + '</div></div>';
@@ -263,6 +264,7 @@
     if (scrim) scrim.classList.toggle('on', ui.sideOpen);
   }
   function buildGame() {
+    if (window.ParleyUI) window.ParleyUI.close();
     // Fights are played on screen (startFight); one that reaches the engine otherwise is played by the AI (logged), never
     // rolled. Installed with every game, so previews know fights are played.
     if (eng && window.CombatUI) eng.fights = (req) => CombatUI.autoResolve(req, content);
@@ -589,6 +591,13 @@
       return showEnding(r);
     }
     if (r.onShow) floatDeltas(r.onShow.deltas);
+    const pip = eng.s.parleyInProgress;
+    if (pip && pip.request && pip.request.event === r.view.id) {
+      if (r.view.type !== 'menu') showCard(r.view); else ui.view = r.view;
+      const req = eng.parleyAhead(pip.key);
+      if (req && req.id === pip.request.id) return startParley(pip.key, req, pip);
+      toast(t('parley.resumeError')); return;
+    }
     const fip = eng.s.fightInProgress;
     if (fip && fip.request && fip.request.event === r.view.id) {
       const req = fightAhead(fip.key);
@@ -619,10 +628,13 @@
     return !!ui.fightAhead.req;
   }
   function resolve(key) {
+    const pending = eng.s.parleyInProgress;
+    if (pending) return startParley(pending.key, pending.request, pending);
     const known = ui.fightAhead && ui.fightAhead.key === key ? ui.fightAhead : null; ui.fightAhead = null;
     const req = known ? known.req : fightAhead(key);
     // The minigame didn't load (build/combat.bundle.js missing or a server that doesn't serve it): say so and keep the card,
     // rather than choosing an option whose fight can't be played.
+    if (req && req.kind === 'negotiate') { if (!window.LumenholdCrux || !window.ParleyUI) { toast(t('parley.noEngine')); return keepCard(); } return startParley(key, req, null); }
     if (req && !window.LumenholdCombat) { console.error('[fight] build/combat.bundle.js did not load: ' + req.id + ' cannot be played'); toast(t('fight.noEngine')); return keepCard(); }
     if (req) return startFight(key, req, null);
     settle(key);
@@ -632,8 +644,8 @@
   // The fight an option starts (a combat or duel challenge on the path it takes), or null: played in the combat minigame
   // (src/combat-ui.js) in place of the card (the card waits, hidden, until the fight ends), its result handed to choose(). A fight in progress is saved with the run.
   function fightAhead(key) {
-    if (typeof key !== 'string' || !window.CombatUI) return null;
-    try { return eng.fightAhead(key); } catch (e) { console.error(e); return null; }
+    if (typeof key !== 'string') return null;
+    try { return eng.minigameAhead(key); } catch (e) { console.error(e); return null; }
   }
   function startFight(key, req, saved) {
     ui.busy = true; ui.mode = 'fight'; setPreview(null); closeOverlay();
@@ -650,6 +662,17 @@
       onDone: (res) => { delete eng.s.fightInProgress; settle(key, { fights: [res] }); },
     });
   }
+  async function startParley(key, req, saved) {
+    ui.busy = true; ui.mode = 'parley'; setPreview(null); closeOverlay();
+    try {
+      await ParleyUI.open({ host: document.querySelector('.stage'), key, request: req, saved, content, view: ui.view, t,
+        engineHelp: settings.fightEngine, engineShown: settings.fightEngineShown !== false,
+        engineBudget: settings.fightEngineBudget === 'inf' ? Infinity : settings.fightEngineBudget,
+        onEngineShown: (on) => { settings.fightEngineShown = on; saveSettings(); },
+        onSave: (snap) => { eng.s.parleyInProgress = snap; save(); },
+        onDone: (res) => settle(key, { parleys: [res] }) });
+    } catch (e) { console.error(e); toast(t(saved ? 'parley.resumeError' : 'parley.noEngine')); keepCard(); }
+  }
   function kitForFight() {
     const snap = eng.snapshot(); if (!snap.items || !snap.items.length) return null;
     const slots = ['wand', 'robe', 'trinket'].map((slot) => ({ slot, worn: snap.worn[slot] || null, items: snap.items.filter((it) => it.slot === slot).map((it) => ({ id: it.id, name: it.name })) }));
@@ -658,11 +681,14 @@
   function settle(key, opts) {
     // A choice that throws part-way (a fight that can't be played, a bug) is undone, so no half-applied option is saved.
     let out; const before = eng.save();
-    try { out = eng.choose(key, opts); } catch (e) { console.error(e); eng.load(before); toast(t('error.choice')); return keepCard(); }
+    try { out = eng.choose(key, opts); } catch (e) { console.error(e); eng.load(before); toast(t('error.choice')); if (opts && opts.parleys) return false; return keepCard(); }
+    if (opts && opts.parleys) delete eng.s.parleyInProgress;
+    save();
     renderChrome();
     floatDeltas(out.deltas);
     if (out.say || out.notes.length || out.checks.length || hasVisibleDeltas(out.deltas)) showOutcome(out);
     else next();
+    return true;
   }
   function hasVisibleDeltas(d) { return Object.keys(d).some((k) => content.skills[k] || k.startsWith('rel:') || k.startsWith('spark:') || (content.resources[k] && content.resources[k].display === 'panel')); }
 
@@ -700,7 +726,7 @@
   // of pure luck is the dice alone.
   const skillsOf = (using) => String(using || '').split('+').filter(Boolean).map(skillName).join(' + ');
   const checkText = (c, key) => c.fight ? fightText(key)
-    : c.parley ? t('check.parleyButton', { skill: skillsOf(c.using) })
+    : c.parley ? t('parley.button')
     : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost })
     : c.luck ? ''
     : t('check.button', { skill: skillsOf(c.using) });
@@ -824,7 +850,7 @@
       return '';
     };
     // A fight's paths are its outcomes (win, partial, lose), with no odds: the fight decides, not a roll.
-    const paths = pv.paths.length <= 1 ? pv.paths : pv.fight ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
+    const paths = pv.paths.length <= 1 ? pv.paths : (pv.fight || pv.parley) ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
     const items = revealItems(paths, label);
     const reveal = items.length ? '<span class="tip-more">' + items.map((x) => '<em>' + esc(x.text) + (x.on ? ' <small>' + esc(x.on) + '</small>' : '') + '</em>').join('') + '</span>' : '';
     // One "…" for the whole option (its window spells it out), not one per outcome.
@@ -833,7 +859,7 @@
       const l = line(pv.deltas);
       return { html: l || more ? '<span class="pv">' + l + more + '</span>' : '', tip: (l ? '<span class="pv">' + line(pv.deltas, true) + '</span>' : '') + reveal, extra: !!items.length };
     }
-    const head = (pth) => '<b class="' + outcomeClass(pth.labels[0]) + '">' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>';
+    const head = (pth) => '<b class="' + outcomeClass(pth.labels[0]) + '">' + esc(pth.fight || pth.parley ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>';
     const rows = paths.slice(0, 3).map((pth) => head(pth) + (line(pth.deltas) || '—'));
     rows[rows.length - 1] += more;
     return {
@@ -1034,6 +1060,7 @@
     const resultClass = (c) => (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail');
     for (const c of out.checks || []) {
       if (c.fight) h += '<span class="chip ' + resultClass(c) + ' combat">' + Art.icon('sword', 14) + esc(t('check.fightChip', { result: t('fight.' + c.outcome), reason: t('fight.reason.' + c.reason) })) + '</span>';
+      else if (c.parley && c.played) h += '<span class="chip ' + resultClass(c) + ' parley">' + Art.icon('scroll', 14) + esc(t('parley.result', { result: t('challenge.' + c.result) })) + '</span>';
       else if (c.parley) h += '<span class="chip ' + resultClass(c) + ' parley" title="' + esc(t('check.parleyStub')) + '">' + Art.icon('scroll', 14) + esc(t('check.parleyChip', { p: c.p, result: t('challenge.' + c.result) })) + '</span>' + (c.played ? '' : '<span class="chip-note">' + esc(t('check.parleyStub')) + '</span>');
       else if (c.challenge) h += '<span class="chip ' + resultClass(c) + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: skillsOf(c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
     }

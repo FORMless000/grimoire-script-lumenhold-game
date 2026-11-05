@@ -1,0 +1,108 @@
+{
+  "query": "The Warm Flue {Behind the kitchens there's a window niche where the chimney flue runs warm through the stone. It's the best nap in the castle, and it's free.|The warm niche by the flue is free again. Someone has left a cushion, and a note: \"FIRST COME\".|The niche by the flue. You've learned when the kitchens fire the ovens, and when it's warmest.} {The corridor is quiet.|A cat is already asleep in one corner.|{season == \"winter\": Frost is on the window; the stone is toasty.|The window is open, and a breeze plays over it.}} Curl up for an hour {You sleep like a loaf in an oven. You wake to find you've missed the reading you meant to do, and don't regret it as much as you should.|You nap on the cushion and wake an hour later, rosy and behind on everything.|You nap through the oven-firing, the warmest hour. Your notes stay shut; your soul is restored.} Read in it instead {You read in the warm with your back to the flue and finish a whole chapter without once nodding off. Nearly.|You read with the cushion behind you and the warmth seeping in. It's the most comfortable studying you've ever done.|You read through the warmest hour and manage not to sleep. It's an act of will, and a pleasant one.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:world_the_warm_flue",
+      "title": "The Warm Flue",
+      "file": "content/events/pools/world_more.grim",
+      "line": 214,
+      "sourceHash": "3ec9eb36515894670b103312c7ac013c22c4440854e0f0679697bce07f8e33ee",
+      "score": 0.9595881104469299,
+      "excerpt": "The Warm Flue\n{Behind the kitchens there's a window niche where the chimney flue runs warm through the stone. It's the best nap in the castle, and it's free.|The warm niche by the flue is free again. Someone has left a cushion, and a note: \"FIRST COME\".|The niche by the flue. You"
+    },
+    {
+      "key": "event:break_castle_one_fire",
+      "title": "The One Lit Fire",
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 6,
+      "sourceHash": "443989f6dcc65738da84aa52898a2e1de001a938fca152a652bf13f6850071ba",
+      "score": 0.5825695991516113,
+      "excerpt": "The One Lit Fire\n{With the houses empty, the stewards light one common room and let the rest go dark.|Someone has brought a kettle, and now there's a rota for it.|The break common room. You know everyone's blanket by now.} {season == \"winter\": The best armchair is right by the fi"
+    },
+    {
+      "key": "event:greenhouses_warm_glass",
+      "title": "The Warm Glass",
+      "file": "content/events/pools/grounds.grim",
+      "line": 142,
+      "sourceHash": "47ece5311e4da9dc402618bfaf13e16861c7f4c82493b3718d88fc64af08e351",
+      "score": 0.5325915217399597,
+      "excerpt": "The Warm Glass\n{season == \"winter\": Outside it's snowing. Inside, the glass runs with warm water and everything smells of earth.|{season == \"summer\": The greenhouses are sweltering, and everyone has retreated to the far end where the vents are.|The greenhouses steam gently. Someo"
+    },
+    {
+      "key": "event:kitchen_night_baker",
+      "title": "The Night Baker",
+      "file": "content/events/pools/night.grim",
+      "line": 918,
+      "sourceHash": "975b27228b70491c3f23418405da54e44a32b6d92f3739aba2a21d3939dd22d3",
+      "score": 0.49980705976486206,
+      "excerpt": "The Night Baker\n{The bakehouse behind the kitchens is lit. The night baker, flour to the elbows, looks up. \"Hungry or helpful?\" she says. \"Both is allowed.\"|The night baker waves you in without looking up. \"Dough's waiting.\"|The bakehouse smells of tomorrow's bread. The baker has"
+    },
+    {
+      "key": "event:headmistress_tower_window_seat",
+      "title": "The Window Seat",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 335,
+      "sourceHash": "021605291d16154fa64d69761a9d3e0ce92c42e4eafc88fddb141df7f6667d4f",
+      "score": 0.48301151394844055,
+      "excerpt": "The Window Seat\n{The headmistress waves you to the window seat without looking up from her letters. \"Read anything. Break nothing.\"|A book has been left on the window seat, open, as if for you.|Your window seat, the headmistress calls it now, as though it always was.} {Below, the"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "32d01afd16711083d9f8aef84dc454b71a26cfbfad5c70a2c75720f71c3b3feb",
+      "at": "2026-10-28T23:50:53.867Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 301,
+        "total_tokens": 301,
+        "cost": 0.00000301,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000301,
+          "upstream_inference_prompt_cost": 0.00000301,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "32d01afd16711083d9f8aef84dc454b71a26cfbfad5c70a2c75720f71c3b3feb",
+      "elapsedMs": 589,
+      "at": "2026-10-28T23:50:54.456Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "0b3a182e4a5352ec191f6155e34009419e0f0e61213e98057fc6de19d6cf17b7",
+      "at": "2026-10-28T23:50:54.556Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42531,
+        "cost": 0.00212655
+      },
+      "requestHash": "0b3a182e4a5352ec191f6155e34009419e0f0e61213e98057fc6de19d6cf17b7",
+      "elapsedMs": 689,
+      "at": "2026-10-28T23:50:55.245Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

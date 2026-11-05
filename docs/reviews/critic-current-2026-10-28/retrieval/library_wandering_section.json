@@ -1,0 +1,108 @@
+{
+  "query": "The Wandering Section The section the book belongs to wanders. It was by the stairs on Monday and in the map room on Wednesday. The only way to follow it is to tie a string to the end shelf and walk where it goes, however long that takes. Follow it with string You follow it for six hours, through rooms you didn't know the library had. At the end you know its route by heart and never want to see a ball of string again. Wait for it to come back You read at the desk until the section wanders past again, a day later. You learn nothing about its route, and a little about medieval ward-lattices.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:library_wandering_section",
+      "title": "The Wandering Section",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 580,
+      "sourceHash": "658286f43262219ea45c302f2b06fee9ae6b36982278f0a00f7cea44c093d641",
+      "score": 0.9420074224472046,
+      "excerpt": "The Wandering Section\nThe section the book belongs to wanders. It was by the stairs on Monday and in the map room on Wednesday. The only way to follow it is to tie a string to the end shelf and walk where it goes, however long that takes.\nFollow it with string\nYou follow it for s"
+    },
+    {
+      "key": "event:library_assistant_wandering_shelves",
+      "title": "The Wandering Section",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 410,
+      "sourceHash": "a0b02503adc9d695c847249b874506e34d0d8ec7c1b627907a3bf9dbd99100b1",
+      "score": 0.8035781979560852,
+      "excerpt": "The Wandering Section\n{The shelves rearranged themselves overnight. History is missing, and a queue is forming for it.|The shelves have wandered, this time the {poetry|herbals|atlases}. You have brought string to mark the way.|The head librarian simply hands you the catalogue now"
+    },
+    {
+      "key": "event:library_wandering_book",
+      "title": "The Book That Moved",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 99,
+      "sourceHash": "44c737ca023e8d93140a5518f419817f2a18c28ec7eb3cec733fc4ff46354716",
+      "score": 0.5645155906677246,
+      "excerpt": "The Book That Moved\n{Yesterday your book was on the third floor. Today the third floor has never heard of it.|Your book has moved again, leaving a bookmark in the gap, like a note.|You keep a map of where the shelves hide your books. They've started hiding the map.} {In its place"
+    },
+    {
+      "key": "event:library_overdue_book",
+      "title": "Eleven Years Overdue",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 598,
+      "sourceHash": "59dd3ec43e14ac015206f132570dfe491ad6c6942aace24053271c2c60c3e914",
+      "score": 0.495291531085968,
+      "excerpt": "Eleven Years Overdue\nTonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.}\nFind the page\nYour hand "
+    },
+    {
+      "key": "event:restricted_section_breathing_shelves",
+      "title": "The Breathing Shelves",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 360,
+      "sourceHash": "fbf549d47474b2c771f4b0df8251d9479b513a6127869b0ba2f1a4a1582c1866",
+      "score": 0.43314918875694275,
+      "excerpt": "The Breathing Shelves\n{The black-bound books breathe in the dark, slow as sleepers. You find a chair and light a candle.|You've learned to breathe with the shelves; it helps.|Your chair is where you left it. The books shift, as if making room.} {One spine is warm to the touch.|So"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "bb5720ffb347bc75b082cdcd41a637673e9e052936ead699a82d955c54e7bbd2",
+      "at": "2026-10-28T23:51:36.023Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 136,
+        "total_tokens": 136,
+        "cost": 0.00000136,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000136,
+          "upstream_inference_prompt_cost": 0.00000136,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "bb5720ffb347bc75b082cdcd41a637673e9e052936ead699a82d955c54e7bbd2",
+      "elapsedMs": 677,
+      "at": "2026-10-28T23:51:36.700Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "c5749a730cf460bb6a3579b45353b5064b748265f8f83c7221c6e1b5f6f3bc65",
+      "at": "2026-10-28T23:51:36.750Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 41334,
+        "cost": 0.0020667
+      },
+      "requestHash": "c5749a730cf460bb6a3579b45353b5064b748265f8f83c7221c6e1b5f6f3bc65",
+      "elapsedMs": 522,
+      "at": "2026-10-28T23:51:37.272Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

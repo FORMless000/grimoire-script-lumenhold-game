@@ -1,0 +1,108 @@
+{
+  "query": "Fair Copies Wanted {A notice in a shaky hand. A student down with fever needs a fortnight of lecture notes copied out fair, and will pay for neatness.|Another fever, another fortnight of notes to copy fair. The notice says \"neat hand preferred\", and someone has written your name beside it.|The copying notice again. By now you can copy a page without reading a word of it, if you want to.} Copy them for the pay {Two evenings of careful letters. The pay arrives with a note that says your sevens are beautiful.|You copy every page, blot nothing and are paid exactly. Your wrist aches until the weekend.|You copy without reading, as fast as the ink allows. The pay is fair and the evening is gone.} Copy them slowly, and learn them too {You read as you copy. Half the pay goes on candles, and you learn a course you aren't even taking.|You copy slowly and read every line. The notes are better than your own, and you keep a few of the ideas.|You read it all, slowly. The student pays a little less for the delay, and you know a little more for it.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_copying",
+      "title": "Fair Copies Wanted",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 664,
+      "sourceHash": "f2c7cefe1b283b368b22d199c1d010a1714101feaed16a197579b2788f55346a",
+      "score": 0.9409549832344055,
+      "excerpt": "Fair Copies Wanted\n{A notice in a shaky hand. A student down with fever needs a fortnight of lecture notes copied out fair, and will pay for neatness.|Another fever, another fortnight of notes to copy fair. The notice says \"neat hand preferred\", and someone has written your name "
+    },
+    {
+      "key": "event:spot_notes_for_sale",
+      "title": "Your Notes, For Sale",
+      "file": "content/events/spotlight.grim",
+      "line": 400,
+      "sourceHash": "b23370c449c90cb3e7e13b13f9b5bcdbb26d4dde687ad85b1bc3f250bcbef58c",
+      "score": 0.5353007316589355,
+      "excerpt": "Your Notes, For Sale\nSomebody has been copying your lecture notes and selling them in the common room as \"the {player} method\", a few coppers a copy, and there's a queue. The seller, a cheerful third-year with a cash tin, sees you and doesn't even look guilty. \"You could have a c"
+    },
+    {
+      "key": "event:lecture_tower_old_board",
+      "title": "Someone Else's Lecture",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 264,
+      "sourceHash": "e637d5ea0d48ec7fd7f487b8c10289241e4116207ff57ae41003aa83d4d85f5f",
+      "score": 0.46698611974716187,
+      "excerpt": "Someone Else's Lecture\n{term: {The fourth-floor hall is empty, but someone else's lecture is still on the board.|In the empty hall, a stub of chalk waits on the ledge, as if for you.|The board has a corner fenced off in chalk, labelled \"answers here\".}|In the break the boards are"
+    },
+    {
+      "key": "event:lesson_quickquill",
+      "title": "Lecture Notes",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 471,
+      "sourceHash": "1c634afd0c41274ec1cff289864cadfc5813c2c968b5051ff37167ef2ffca93d",
+      "score": 0.46072888374328613,
+      "excerpt": "Lecture Notes\nYour quill wants to take your lecture notes for you. It writes everything down, word for word, faster than the lecturer can talk. It also writes what it thinks of the lecturer, in the margins.\nLet it take the notes\nYou have perfect notes, every word, and a margin fu"
+    },
+    {
+      "key": "event:soc_lost_notes",
+      "title": "The Borrowed Notes",
+      "file": "content/events/expansion_social.grim",
+      "line": 11,
+      "sourceHash": "241fa635a2dbddc0afed5ac8e3cfbf388e7492f3918199e20d005345eeb517fc",
+      "score": 0.44574618339538574,
+      "excerpt": "The Borrowed Notes\n{npc} borrowed all your lecture notes last week. {They} {are} now standing in front of you holding a single soggy page. \"There was a stream,\" {they} say{s}. \"And a duck. Mostly a duck.\"\nLaugh it off\nYou rewrite your notes from memory. {npc} brings you a cake ev"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "4f0ef3a29e835070473e13d4ff782cf7dab30c56fb9c6ff4c56e30a1d0426304",
+      "at": "2026-10-28T23:51:06.461Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 244,
+        "total_tokens": 244,
+        "cost": 0.00000244,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000244,
+          "upstream_inference_prompt_cost": 0.00000244,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "4f0ef3a29e835070473e13d4ff782cf7dab30c56fb9c6ff4c56e30a1d0426304",
+      "elapsedMs": 261,
+      "at": "2026-10-28T23:51:06.722Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ab7547603e0203809d58b361e7e8ddfc33c29c0e09aa7cd1d58f74046aef6bc2",
+      "at": "2026-10-28T23:51:06.758Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42166,
+        "cost": 0.0021083
+      },
+      "requestHash": "ab7547603e0203809d58b361e7e8ddfc33c29c0e09aa7cd1d58f74046aef6bc2",
+      "elapsedMs": 330,
+      "at": "2026-10-28T23:51:07.088Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "Coins in the Fountain {Students throw coins in the courtyard fountain for luck before exams. The coins are still there, glinting.|The fountain is full of exam-luck again.|You know exactly how many coins are in the fountain this week, and that is a bad sign.} {season == \"winter\": The water is cold enough to make your teeth ache by looking at it.|{A sign says the coins go to the infirmary fund.|A first-year is throwing in a coin with a long, whispered wish.|The fountain is freezing at one edge, as it does when it shouldn't.}} Fish out a few coins for yourself {Nobody's watching. Your sleeve is soaked to the shoulder and your pocket is heavier. The sign about the infirmary fund keeps looking at you.|You fish quickly and walk away fast. A first-year's wish is in your pocket now, and the coin is warm.|You've become good at this, which is not a compliment.} Throw one in yourself {You throw a coin and wish for something you won't admit to. It's the best you've felt all week.|You throw your coin in after the first-year's. They grin at you, as if you're in on something together.|You throw a coin in. It lands on top of an old one of yours, which you take to mean something.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:courtyard_fountain_wishes",
+      "title": "Coins in the Fountain",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 41,
+      "sourceHash": "7cc464d9ba3f605317a7cdea24402a624ad8a477164856b3440c9775bfd97cc6",
+      "score": 0.9493764638900757,
+      "excerpt": "Coins in the Fountain\n{Students throw coins in the courtyard fountain for luck before exams. The coins are still there, glinting.|The fountain is full of exam-luck again.|You know exactly how many coins are in the fountain this week, and that is a bad sign.} {season == \"winter\": "
+    },
+    {
+      "key": "event:court_fountain_freeze",
+      "title": "The Frozen Fountain",
+      "file": "content/events/slice_2b.grim",
+      "line": 350,
+      "sourceHash": "27e74da0eb186750f998b57352e87ef950b0483e9ed02808bc0545e162ce1bd5",
+      "score": 0.6236200928688049,
+      "excerpt": "The Frozen Fountain\nThe courtyard fountain has frozen in the middle of a splash. The water hangs in the air like glass. A first-year is trying to lick it.\nStop the first-year\nYou pull the first-year away just as the ice cracks. For a moment you'd swear you saw a black star reflec"
+    },
+    {
+      "key": "event:life_wishing_well",
+      "title": "The Wishing Well",
+      "file": "content/events/expansion_life.grim",
+      "line": 396,
+      "sourceHash": "46ba4f1d7ba4cc2f023a900e261f0a82392d8992ef19d15e4e31b91bc7c7857d",
+      "score": 0.606938362121582,
+      "excerpt": "The Wishing Well\nIn the old cloister there's a wishing well. The inscription says: \"ONE COIN, ONE WISH, ONE PRICE.\" The bottom glitters with three hundred years of coins.\nThrow in a coin and wish\nYou wish for a good month. It is, mostly. Coincidence, probably.\nYou wish. The well "
+    },
+    {
+      "key": "event:spot_luck_sleeve",
+      "title": "For Luck",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 211,
+      "sourceHash": "de86660178281e8ddc99b334ab75b637f8528669d57c6b991edbc28e14902530",
+      "score": 0.5114736557006836,
+      "excerpt": "For Luck\nSomebody has decided that touching your sleeve before an exam brings luck. The queue outside the exam hall reaches out as you pass, one after another, very solemnly. A first-year asks if you'd mind breathing on their quill.\nBless them all, grandly\nYou bless every quill a"
+    },
+    {
+      "key": "event:ball_ice_garden",
+      "title": "The Ice Garden",
+      "file": "content/events/festivals.grim",
+      "line": 180,
+      "sourceHash": "f7ea6484dfbdfb77398ce6e5504bd64a53691e27578f710b6a52c99835fa6f24",
+      "score": 0.4595126807689667,
+      "excerpt": "The Ice Garden\n{The frost-mages have turned the courtyard into an ice garden for the ball. Frozen roses line the paths, and the fountain has stopped mid-splash.|The ice garden again, bigger this year, with a hedge maze of frost.|The ice garden, and you know its paths by heart now"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "cb51637fb7e2c910820e1b82bb3c15bfb94b1747e2677e89b086438c923a8279",
+      "at": "2026-10-28T23:50:57.789Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 282,
+        "total_tokens": 282,
+        "cost": 0.00000282,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000282,
+          "upstream_inference_prompt_cost": 0.00000282,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "cb51637fb7e2c910820e1b82bb3c15bfb94b1747e2677e89b086438c923a8279",
+      "elapsedMs": 281,
+      "at": "2026-10-28T23:50:58.070Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "9971a9782aae687d22b38c58771032b0a26271dd39f99be87786f3e2edec4889",
+      "at": "2026-10-28T23:50:58.264Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 54183,
+        "cost": 0.00270915
+      },
+      "requestHash": "9971a9782aae687d22b38c58771032b0a26271dd39f99be87786f3e2edec4889",
+      "elapsedMs": 618,
+      "at": "2026-10-28T23:50:58.882Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

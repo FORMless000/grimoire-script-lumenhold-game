@@ -1,0 +1,108 @@
+{
+  "query": "The Company's Report {month == 6: The company's half-year report|The company's year-end report} arrives with a clerk's note on top. {flag(trade_good): {&The spice fleet came in early and whole. Your share is paid in full.|A good season: the northern warehouses sold out by midsummer. Your share comes with your mother's compliments.|Profit on every route but one. Your share is enclosed, and so is a list of what it cost.}|{&A ship lost off the southern coast, and a cargo of silk ruined by rain. There is no share this term.|The markets turned. The report is long and the envelope is empty: no share until trade recovers.|Pirates, tariffs and a warehouse fire, in that order. Your mother writes that the company cannot spare anything this term.}} Fold the report away {flag(trade_good): {&You count it twice and lock it away. Next term's tuition is safe.|You read the figures like a story with a happy ending, and put the draft somewhere safe.|You think about what the good season cost someone else, and then about tuition, and put the draft away.}|{&You count what's in your purse instead. It will have to do.|You read the figures twice, as if they might change. They don't.|You write back that you understand, and then go and look at the job board.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:trading_report",
+      "title": "The Company's Report",
+      "file": "content/events/origin_funding.grim",
+      "line": 46,
+      "sourceHash": "4e8d809dbccae2d70dbb893204f0a54fbcdb31324492e1008df135fbc81640a1",
+      "score": 0.9364596605300903,
+      "excerpt": "The Company's Report\n{month == 6: The company's half-year report|The company's year-end report} arrives with a clerk's note on top. {flag(trade_good): {&The spice fleet came in early and whole. Your share is paid in full.|A good season: the northern warehouses sold out by midsumm"
+    },
+    {
+      "key": "event:job_board_visit",
+      "title": "The Job Board",
+      "file": "content/events/calendar_2b.grim",
+      "line": 55,
+      "sourceHash": "dc83d7c1673fa08b1af074704046d796dabc39891da11ec56f5fd05ddfba6062",
+      "score": 0.5168774127960205,
+      "excerpt": "The Job Board\nNotices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.{term and (month == 4 or month == 10):  This week every notice ends the same way: new staff start next term.|}\nJust"
+    },
+    {
+      "key": "event:purse_and_the_board",
+      "title": "A Light Purse",
+      "file": "content/events/pools/statuses.grim",
+      "line": 202,
+      "sourceHash": "3039e76adbc78920136b332d2013cb1221fd8f425a6185330a176d3247d09cd1",
+      "score": 0.46341773867607117,
+      "excerpt": "A Light Purse\n{You tip out your purse on the bed. Three coins and a button.|The purse again. The button is still there; the coins are fewer.|The purse, the button, and fewer coins than ever. You've stopped counting the button.} Board is due at the start of every month. {On the wa"
+    },
+    {
+      "key": "event:noble_letter",
+      "title": "A Letter from Home",
+      "file": "content/events/origin_funding.grim",
+      "line": 14,
+      "sourceHash": "9c9292649f288adbdc0fa56cacac72df4c07a01b0ffd382e6ca8a74fc54381fd",
+      "score": 0.453448086977005,
+      "excerpt": "A Letter from Home\n{month == 6: Before the spring term|Before the new year} a letter comes with your family's seal and a draft on the family bank. {flag(family_gift): {&Folded inside is a smaller note from your grandmother, and a little more money \"for something nice\".|There's an"
+    },
+    {
+      "key": "event:job_board_odd_job",
+      "title": "One Evening's Work",
+      "file": "content/events/calendar_2b.grim",
+      "line": 78,
+      "sourceHash": "5359e034857785f3ba0abac28401067c62637d158cb750afe19a7515d41fc434",
+      "score": 0.43976980447769165,
+      "excerpt": "One Evening's Work\nEvery notice says \"from next term\", except one, pinned low and crooked: {~the refectory wants hands for the end-of-term clear-out|the porters want someone to carry exam desks back to the store rooms|a professor wants her rooms boxed up before the break}. One ev"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "ce24d1bd078297663ce9e61d9a21f1c209ffe383045c3b8172c31b1f40c59f4c",
+      "at": "2026-10-28T23:51:05.475Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 297,
+        "total_tokens": 297,
+        "cost": 0.00000297,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000297,
+          "upstream_inference_prompt_cost": 0.00000297,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "ce24d1bd078297663ce9e61d9a21f1c209ffe383045c3b8172c31b1f40c59f4c",
+      "elapsedMs": 293,
+      "at": "2026-10-28T23:51:05.768Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "278ca088f995c5856000fabc9d9bf8c35290d15a2760b48e94bf04229e9685da",
+      "at": "2026-10-28T23:51:05.960Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58302,
+        "cost": 0.0029151
+      },
+      "requestHash": "278ca088f995c5856000fabc9d9bf8c35290d15a2760b48e94bf04229e9685da",
+      "elapsedMs": 443,
+      "at": "2026-10-28T23:51:06.403Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

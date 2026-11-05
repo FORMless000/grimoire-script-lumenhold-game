@@ -1,0 +1,108 @@
+{
+  "query": "The Shadows in Between {level(umbral) == 0: Umbral Theory I. The lecturer snuffs every lamp but two and stands in the dark between them. \"Shadowstep,\" says the voice. \"In at one shadow, out at another. Don't stop in the middle.\"|{level(umbral) == 1: Umbral Theory II: Shadowstep under watch. The lecturer sits a prefect in the doorway with a lantern. \"Out of the room,\" says the lecturer, \"without being seen leaving it.\"|Advanced Umbral Theory: step, and keep stepping. At dusk the lecturer lays a path of shadows across the tower roof, chimney to chimney. \"To the far side. Without the floor.\"}} Step through and trust it {level(umbral) == 0: You step in, and the dark is cold, and you come out against a desk with your shin. It counts. The lecturer's voice says, \"Again,\" from somewhere new.|{level(umbral) == 1: You leave by the prefect's own shadow and arrive in the corridor with your elbow in a coat rack. The prefect is still watching the door.|Chimney to chimney, six steps, and on the fifth the shadow is thinner than you thought. You land on the far side with grazed palms and a grin.}} Map the shadows first {level(umbral) == 0: You sketch where every shadow falls before you trust one. The class has stepped twice by then and is bored of watching you. Your step, when it comes, is clean.|{level(umbral) == 1: You learn where the lantern can't reach before you move, and the bell goes first. You get out the next day, unseen and unhurried.|You chart the roof's shadows as the sun goes down and miss the light for it. You cross at full dark, alone, to no applause.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:umbral_first_shadowstep",
+      "title": "The Shadows in Between",
+      "file": "content/events/spell_sources.grim",
+      "line": 118,
+      "sourceHash": "03ed10f25bd0117365acb9f27dd8be698a87f75cfdd25c157bade5c29b0156e3",
+      "score": 0.9354308247566223,
+      "excerpt": "The Shadows in Between\n{level(umbral) == 0: Umbral Theory I. The lecturer snuffs every lamp but two and stands in the dark between them. \"Shadowstep,\" says the voice. \"In at one shadow, out at another. Don't stop in the middle.\"|{level(umbral) == 1: Umbral Theory II: Shadowstep u"
+    },
+    {
+      "key": "event:umbral_short_distances",
+      "title": "Short Distances",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 384,
+      "sourceHash": "a5734c6c09fbecb423704ffc75cfd8e98a26f2cb2fb918cd16176255a81a3378",
+      "score": 0.7962946891784668,
+      "excerpt": "Short Distances\n{Umbral Theory II brings the shadowstep, desk to desk. \"The shadows in between are not friendly,\" the professor says, \"so don't linger.\"|Shadowstep drill. Three desks this time, then four.|The desks. You know the way between them, and the cold that lives there.} {"
+    },
+    {
+      "key": "event:umbral_corridor_step",
+      "title": "Across the Corridor",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 567,
+      "sourceHash": "19394440fe8606983237940c30694b0c6d727f084364eb7d06892b30aae7e81f",
+      "score": 0.7769290208816528,
+      "excerpt": "Across the Corridor\n{Advanced Umbral Theory. Shadowstep across the corridor, door to door, the farthest the professor allows. \"Short distances only,\" the professor says. \"This is as short as long gets.\"|The corridor. The cold in between is colder than last time.|You stand at the "
+    },
+    {
+      "key": "event:lesson_shadowstep",
+      "title": "Where the Voice Was",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 258,
+      "sourceHash": "4bea2c329024c902fc509c056a32c7d8e638bfde92fca719ae1c4f7dba79121c",
+      "score": 0.7204999327659607,
+      "excerpt": "Where the Voice Was\nShadowstep is taught in the dark. The umbral lecturer puts out the last dim lamp and calls your name from somewhere else in the room. You have to arrive where the voice was before it moves. Somewhere, a chair is waiting for your shins.\nStep into the dark\nYou s"
+    },
+    {
+      "key": "event:umbral_dark_roll",
+      "title": "Who Moved",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 544,
+      "sourceHash": "86e074d01d012a964dc57e6db90605df0303bdeca0a1e9d08d79af13a13770e9",
+      "score": 0.6215286254882812,
+      "excerpt": "Who Moved\n{Umbral Theory II. The professor puts out every lamp, and in the dark one student moves. Say who, and where to.|Lamps out. You've learned to hear a sleeve.|The dark. You know the room's sounds, and which floorboard is a liar.} {Rain on the tower roof makes it harder.|It"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "534582618635c858996c106551c87d36d5a723f4b532529b9ee61d0447732f1e",
+      "at": "2026-10-28T23:51:49.271Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 400,
+        "total_tokens": 400,
+        "cost": 0.000004,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.000004,
+          "upstream_inference_prompt_cost": 0.000004,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "534582618635c858996c106551c87d36d5a723f4b532529b9ee61d0447732f1e",
+      "elapsedMs": 824,
+      "at": "2026-10-28T23:51:50.095Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "7b1f3d54f0f225a9e92a1210efa20c3c1555c48fd1f5e6c1e17303ed48d41521",
+      "at": "2026-10-28T23:51:50.153Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 43815,
+        "cost": 0.00219075
+      },
+      "requestHash": "7b1f3d54f0f225a9e92a1210efa20c3c1555c48fd1f5e6c1e17303ed48d41521",
+      "elapsedMs": 417,
+      "at": "2026-10-28T23:51:50.570Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -2,7 +2,7 @@
 // Read-only by default. Building, syncing or resuming requires an explicit flag.
 const fs = require('fs');
 const path = require('path');
-const R = require('./src/retrieve.js');
+const R = require('./src/retrieval.js');
 const U = require('./src/util.js');
 const E = require('./src/environment.js');
 const { setup } = require('./setup.js');
@@ -26,6 +26,11 @@ function options(argv) {
 // No LightRAG initialization, embedding, query, or remote request is made here.
 function verifyStorage(engine) {
   const manifest = engine.load();
+  if (manifest.config?.backend === 'grim') {
+    const expected = engine.cat.records.filter(r => !r.retired).map(r => r.key).sort();
+    if (U.hash(manifest.records.map(r => r.key).sort()) !== U.hash(expected)) throw new Error('Grim document coverage differs from the source catalog');
+    return { documents: expected.length, chunks: expected.length };
+  }
   const storage = U.inside(engine.dir, manifest.storage);
   for (const name of ['graph_chunk_entity_relation.graphml', 'vdb_chunks.json', 'vdb_entities.json', 'vdb_relationships.json']) {
     if (!fs.statSync(path.join(storage, name)).size) throw new Error('Empty native storage: ' + name);
@@ -60,7 +65,7 @@ async function prepare(opts, dependencies = {}) {
   if (opts.mode !== 'check') install(opts['python-bin'] ? { 'python-bin': opts['python-bin'] } : {});
   const cfg = config();
   const environment = await inspect(cfg);
-  if (environment.light.lightrag !== '1.5.7') throw new Error('Expected lightrag-hku==1.5.7; run ./rag/setup.sh');
+  if (cfg.backend !== 'grim' && environment.light.lightrag !== '1.5.7') throw new Error('Expected lightrag-hku==1.5.7; run ./rag/setup.sh --python');
   let engine = create(cfg);
   let status = engine.status();
   if (opts.mode !== 'check' && !status.ready) {
@@ -75,7 +80,7 @@ async function prepare(opts, dependencies = {}) {
   }
   if (!status.ready) throw new Error(status.state + ': ' + status.reason + '. Use --build for an initial build, --sync for source edits, or --resume for interrupted work.');
   return { ready: true, mode: opts.mode, ...verify(engine), corpusHash: status.corpusHash, indexHash: status.indexHash,
-    lightrag: environment.light.lightrag, verification: 'local fingerprints and native storage coverage; no live retrieval probe' };
+    backend: cfg.backend, lightrag: environment.light?.lightrag, verification: 'local fingerprints and storage coverage; no live retrieval probe' };
 }
 
 if (require.main === module) {

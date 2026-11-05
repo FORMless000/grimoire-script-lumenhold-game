@@ -1,0 +1,108 @@
+{
+  "query": "A Tree by the Window Tobias wants you to grow a heartwood every evening for a week, \"so your hands remember\". Today he suggests the courtyard under your dormitory window, where nothing has grown in years. Grow it properly, roots and all It takes everything you've got and a blister. By dusk there's a young tree under your window, and your back aches like a harvest. Tobias says it's the best one he's seen, and apologises for saying so. Sit under his instead You let him grow it and sit under it with him, talking about nothing. Your hands don't remember much. The rest of you does.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_heartwood",
+      "title": "A Tree by the Window",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 334,
+      "sourceHash": "6263c8f32c345e66cbdabd372a33c5121c125d8cb3750268d64c8027d5890d83",
+      "score": 0.9515821933746338,
+      "excerpt": "A Tree by the Window\nTobias wants you to grow a heartwood every evening for a week, \"so your hands remember\". Today he suggests the courtyard under your dormitory window, where nothing has grown in years.\nGrow it properly, roots and all\nIt takes everything you've got and a bliste"
+    },
+    {
+      "key": "event:tobias_teaches_heartwood",
+      "title": "Something to Stand Under",
+      "file": "content/events/spell_sources.grim",
+      "line": 231,
+      "sourceHash": "56f0d5b9a7903a8581f58790b2768aea3297bb7c7d2562a11cbfd655ef715f04",
+      "score": 0.7728617191314697,
+      "excerpt": "Something to Stand Under\nTobias kneels in an empty bed at the back of the greenhouse. \"Ma used to say a farm's only as good as its shelter,\" he says, and presses his hands into the soil. A sapling comes up between you, then a trunk, then branches overhead. \"Took me a year. I'll s"
+    },
+    {
+      "key": "event:tobias_storm_greenhouse",
+      "title": "Storm Over the Greenhouses",
+      "file": "content/events/expansion_people.grim",
+      "line": 130,
+      "sourceHash": "4977a4425f3f92e4d09225a16df248957677777c75f5648a7b6a73534ea30fd4",
+      "score": 0.5246465802192688,
+      "excerpt": "Storm Over the Greenhouses\nA storm hits at midnight. Glass is cracking in the greenhouses. Tobias is out there in his nightshirt, trying to hold a door shut against the wind with his whole body. \"The moonflowers!\" he shouts. \"Eleven years!\"\nRun out and help\nYou hold the panes tog"
+    },
+    {
+      "key": "event:tobias_homesick",
+      "title": "Homesick",
+      "file": "content/events/people_students.grim",
+      "line": 254,
+      "sourceHash": "96973d7fe42af42da8118d0a3d8fa903cd831bcd06435b026fad2f4b8b68bdb9",
+      "score": 0.5122132301330566,
+      "excerpt": "Homesick\nTobias has gone quiet. He's planted seedlings in every cup in the common room. \"Harvest at home,\" he says. \"First one I've missed. Ma's doing it alone.\"\nCheer him up with a joke\nYour joke is terrible. He laughs anyway, the big rumbling laugh, and that seems to help.\nHelp"
+    },
+    {
+      "key": "event:item_heartwood_tobias",
+      "title": "It Hums",
+      "file": "content/events/whisperwood/around.grim",
+      "line": 499,
+      "sourceHash": "f7979e30d44c191a7a58a2ff102bbdfe05b9db2261d7b192f610184386a6db46",
+      "score": 0.47938284277915955,
+      "excerpt": "It Hums\nYou walk into the greenhouses with the heartwood wand, and every plant in the place leans toward it. Tobias looks up from his potting. \"Oh,\" he says. \"Oh, they like that. It's humming. Can you hear it? It's humming to them.\"\nLet him listen\nTobias holds the wand to his ear"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "cc99e81246674f00e77cfd043ab4aa55c0a7ceee94cd5399e883a3480d9e59ca",
+      "at": "2026-10-28T23:51:43.944Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 132,
+        "total_tokens": 132,
+        "cost": 0.00000132,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000132,
+          "upstream_inference_prompt_cost": 0.00000132,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "cc99e81246674f00e77cfd043ab4aa55c0a7ceee94cd5399e883a3480d9e59ca",
+      "elapsedMs": 702,
+      "at": "2026-10-28T23:51:44.646Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "55d0411f4efaacf09425157d237842943f68de40c09f1c6fd53872c58412445c",
+      "at": "2026-10-28T23:51:44.913Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42998,
+        "cost": 0.0021499
+      },
+      "requestHash": "55d0411f4efaacf09425157d237842943f68de40c09f1c6fd53872c58412445c",
+      "elapsedMs": 528,
+      "at": "2026-10-28T23:51:45.441Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

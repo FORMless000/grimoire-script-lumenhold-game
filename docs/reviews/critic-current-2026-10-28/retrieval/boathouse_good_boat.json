@@ -1,0 +1,107 @@
+{
+  "query": "The Good Boat {The boathouse has six boats that leak and one, the blue one, that doesn't. The boatman keeps it for himself and sits on it to make the point.|The blue boat, the boatman, the folded arms. You've started to think of them as one animal.|The boatman sees you coming and settles more firmly onto the blue boat. \"No,\" he says, before you've asked.} Pay his price for an hour {He takes your crowns, counts them twice and lets you have the blue boat for exactly an hour. It's the stillest hour you've spent all term.|An hour on the lake in a boat that doesn't sink. You row out to the middle and lie back and watch the towers upside down.|You pay. He watches you the whole hour, from the jetty, as if you'd borrowed his dog.} Take the green one, bailing {You take the green boat and a bailer. You row half the time and bail the other half. It's still the lake, and still lovely.|The green boat, which takes on water like a sponge. You come back with wet boots and a better opinion of yourself.|You bail all the way out and all the way back. The boatman says you've got a rower's arms now, and charges you nothing for the joke.} Charm him off the blue boat {You turn on a little more charm than you have, and he finds himself telling you about his late wife, and then lending you the blue boat, and then wondering why.|A smile with Glamour in it. The boatman gets up, holds the boat steady for you, and calls you \"young sir or madam\" like a courtier.|He remembers liking you and not quite why. You get the blue boat for the rest of the day and a cup of his terrible tea after.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:boathouse_good_boat",
+      "title": "The Good Boat",
+      "file": "content/events/spell_uses.grim",
+      "line": 278,
+      "sourceHash": "71576eb22a9f5043fe0ce41c5ead378888ec1f60e6400e7570875c7a4c08e9b4",
+      "score": 0.963821530342102,
+      "excerpt": "The Good Boat\n{The boathouse has six boats that leak and one, the blue one, that doesn't. The boatman keeps it for himself and sits on it to make the point.|The blue boat, the boatman, the folded arms. You've started to think of them as one animal.|The boatman sees you coming and"
+    },
+    {
+      "key": "event:boathouse_green_boat",
+      "title": "The Leaky Green Boat",
+      "file": "content/events/pools/grounds.grim",
+      "line": 376,
+      "sourceHash": "233f430bed69f3ffc0f5ae495fb14458ecef49c6e2ca48e1312f9255ca9f680c",
+      "score": 0.6342394351959229,
+      "excerpt": "The Leaky Green Boat\n{The boathouse smells of tar and old rope. Its rowing boats are mostly leaks held together by paint, the green one worst of all.|Someone has patched the green boat since your last visit, badly, with what looks like a cake tin.|The boathouse knows you. The gre"
+    },
+    {
+      "key": "event:boathouse_jetty_end",
+      "title": "The End of the Jetty",
+      "file": "content/events/pools/grounds.grim",
+      "line": 350,
+      "sourceHash": "7a170b7b72eae6653248cd965a142e1ac75bf5655324cfdd137a1163dae73af6",
+      "score": 0.5217253565788269,
+      "excerpt": "The End of the Jetty\n{{date} is at the end of the jetty, boots over the water. {They} move{s} over without a word.|The end of the jetty has become your place for saying things. Today {date} is already there.|You know which plank creaks. {date} doesn't, and finds it.} {season == \""
+    },
+    {
+      "key": "event:village_barge_crossing",
+      "title": "The Barge Across",
+      "file": "content/events/pools/village_home.grim",
+      "line": 14,
+      "sourceHash": "4db3005566a800607a4e0455e148ef2fe67c575bc57594fbafd420211898943d",
+      "score": 0.4495094120502472,
+      "excerpt": "The Barge Across\n{The village barge is slower than walking, if you could walk on water.|The bargeman has started nodding at you like a regular.|The bargeman saves you the dry end of the bench.} {season == \"winter\": Ice ticks against the hull.|{season == \"summer\": Dragonflies ride"
+    },
+    {
+      "key": "event:boathouse_damp_stove",
+      "title": "The Damp Stove",
+      "file": "content/events/spell_uses.grim",
+      "line": 51,
+      "sourceHash": "26c42e98c7f791bf0410b149419d9dc298a01575b78b96ac6e95f5b746be552e",
+      "score": 0.43541640043258667,
+      "excerpt": "The Damp Stove\n{A rowing crew comes in off the lake soaked to the skin, laughing through chattering teeth. The boathouse stove is cold, and the kindling basket is wet through.|The crew again, wetter than last time: someone caught a crab and took the boat over. The kindling has be"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "142eef21b0d24911aea1108e238a6dcb6f760fd503d36481622cb3c35872900e",
+      "at": "2026-10-28T23:28:32.832Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 392,
+        "total_tokens": 392,
+        "cost": 0.00000392,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000392,
+          "upstream_inference_prompt_cost": 0.00000392,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "142eef21b0d24911aea1108e238a6dcb6f760fd503d36481622cb3c35872900e",
+      "elapsedMs": 9627,
+      "at": "2026-10-28T23:28:42.459Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ecc63e5e04f80ef4cd29fae08e53de08ab45067066e66514ed842fc2d299d2fe",
+      "at": "2026-10-28T23:28:42.545Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 58726,
+        "cost": 0.0029363
+      },
+      "requestHash": "ecc63e5e04f80ef4cd29fae08e53de08ab45067066e66514ed842fc2d299d2fe",
+      "elapsedMs": 668,
+      "at": "2026-10-28T23:28:43.213Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

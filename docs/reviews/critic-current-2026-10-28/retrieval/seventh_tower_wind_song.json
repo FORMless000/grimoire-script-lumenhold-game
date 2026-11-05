@@ -1,0 +1,107 @@
+{
+  "query": "The Wind in the Slits {The wind plays the seventh tower's arrow-slits like a flute, a different note at every window.|The tower is playing again. You'd swear the tune has more notes than there are windows.|The wind's song. You can hum the first part now; nobody else in the castle knows it.} {Today it sounds almost like a lullaby.|Today it is quick and fretful, as if late for something.|{season == \"winter\": It plays low and slow, like something under snow.|It plays in fits, between gusts.}} Hum along and listen {You hum back. For a moment the tower answers in harmony, and the air goes thin and bright, and you come away drained and happy, as after a long song.|You hum, and one window falls silent as if to listen. It costs you something to keep going. You keep going.|You hum the part you know and the tower plays the rest. When it's done your hands are cold to the elbow and you're smiling.} Write the tune down {You mark each window's note in your notebook. It's a scale nobody uses any more; you find it later in a very old songbook.|You write the notes down and get a different tune each time you read them back. That seems important, and you can't think why.|Your page of notes is filling up. The tune has the same shape as the stair, you realise; you climb it, more or less.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:seventh_tower_wind_song",
+      "title": "The Wind in the Slits",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 375,
+      "sourceHash": "74c86944f50b40b8f533bda5a98b7a8810b841a8893eace165d62ca520c6678b",
+      "score": 0.957693874835968,
+      "excerpt": "The Wind in the Slits\n{The wind plays the seventh tower's arrow-slits like a flute, a different note at every window.|The tower is playing again. You'd swear the tune has more notes than there are windows.|The wind's song. You can hum the first part now; nobody else in the castle"
+    },
+    {
+      "key": "event:seventh_tower_stair_count",
+      "title": "The Stair That Changes",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 522,
+      "sourceHash": "afd6d0156ff9c213844e6a2eb6d53b8f39a74ad349982b366715e401b521a6fe",
+      "score": 0.5968754887580872,
+      "excerpt": "The Stair That Changes\n{The seventh tower's stair never has the same number of steps twice. Scholars count it to learn how the castle bends; everyone else says it lets you up faster if you don't look.|Back on the stair that won't keep its count. You've started chalking each total"
+    },
+    {
+      "key": "event:hs_seventh_tower",
+      "title": "The Seventh Tower",
+      "file": "content/events/chain_hollowstar.grim",
+      "line": 380,
+      "sourceHash": "645867e0cbf1b0eb7056ac4a528b1b1002e325dfd6aac4a642dbc309f40580e3",
+      "score": 0.5149921774864197,
+      "excerpt": "The Seventh Tower\nThe seventh tower has been locked for a century, and its wards start shrieking the moment you touch the door. You go up anyway, two steps at a time, while lights come on all over the academy. At the very top, a single room: dust, moonlight, and a star-shaped hol"
+    },
+    {
+      "key": "event:seventh_tower_outside_ledge",
+      "title": "The Outside Ledge",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 391,
+      "sourceHash": "3bd95be0226f55b8167d3469c242f08d7bdab54e02384ab1d71eeee76d91f746",
+      "score": 0.49671968817710876,
+      "excerpt": "The Outside Ledge\n{From the window at the top, a ledge a foot wide runs round the outside of the tower. From the far side, they say, you can see all seven towers and every bridge at once.|The ledge. Someone has chalked a tiny arrow on the sill: THIS WAY, BRAVE ONE.|You know the l"
+    },
+    {
+      "key": "event:seventh_tower_lake_window",
+      "title": "The Window Over the Lake",
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 558,
+      "sourceHash": "1c6bf6ed9b4a1ad7e335501d8fb494d7be1a01071d1740accd175d160bc74bca",
+      "score": 0.4830226004123688,
+      "excerpt": "The Window Over the Lake\n{The tower's one window looks down on the Mirror Lake, and the latch isn't locked. They say if you open it, you can hear the lake.|The latch moves more easily than last time, as if someone else has been practising.|The window. You've stood here often enou"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "586b63222de7a017e1c7811554197f1bd41bd745af9acc54b652ddc17bdd43b3",
+      "at": "2026-10-28T23:38:17.478Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 310,
+        "total_tokens": 310,
+        "cost": 0.0000031,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000031,
+          "upstream_inference_prompt_cost": 0.0000031,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "586b63222de7a017e1c7811554197f1bd41bd745af9acc54b652ddc17bdd43b3",
+      "elapsedMs": 60015,
+      "at": "2026-10-28T23:39:17.493Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "66b2c8dfd00cedf8e0b7abc9db06852e221fea06a0c7f03dc458f611c7f37c24",
+      "at": "2026-10-28T23:39:17.587Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 52011,
+        "cost": 0.00260055
+      },
+      "requestHash": "66b2c8dfd00cedf8e0b7abc9db06852e221fea06a0c7f03dc458f611c7f37c24",
+      "elapsedMs": 455,
+      "at": "2026-10-28T23:39:18.042Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

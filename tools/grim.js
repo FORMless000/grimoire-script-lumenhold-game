@@ -51,9 +51,6 @@
  *   node tools/grim.js retrieve status|index|prune|search|read|neighbors|brief|related [QUERY/ID] [index: --dry-run|--resume|--rebuild --mode batch|sync|--keep-old] [prune: --dry-run]
  *                                       bounded authoring evidence, --profile full|lexical|no-dense|no-rerank|no-graph|no-descriptions;
  *                                       --config FILE, --cache DIR, --json (rag/README.md)
- *   node tools/grim.js author-eval workspaces|environment|prepare|handoff|packet|draft|validate|freeze|trace|audit|critic-packet|critic|panel-prepare|panel-import|review|lock|report
- *     workspaces import --experiment DIR --prompt FILE [--scan FILE] [--final]; workspaces review --experiment DIR
- *                                       manual harness trials and blind human review (rag/EVALUATION.md)
  *   node tools/grim.js brief [--cast a,b] [--place P] [--track T] [--arc A] [--topic "…"] [--tier T] [--out FILE]
  *                            [--examples N] [--like id,id]
  *                                      a ~6k-token context pack for writing events (design §3.4): cast, place, track,
@@ -62,7 +59,7 @@
  *   node tools/grim.js docs [--check]   regenerate the block table in docs/authoring/schema.md and the tiers and presets
  *                                      in docs/authoring/presets.md (from content/core/balance.grim)
  *   node tools/grim.js report --gaps [--games N] [--policy P] [--all] [--json]
- *                                       pools per draw source vs floors and depth targets; empty draws and cards per day
+ *                                       pools per draw source, the thinnest first (--all: every source); cards per day
  *   node tools/grim.js dupes [FILE…] [--threshold 0.6] [--strict]
  *                                       near-duplicate events (5-word shingle Jaccard); with files, only pairs touching them
  *   node tools/grim.js batch NAME --files a.grim,b.grim [--critic FILE] [--skip-balance]
@@ -127,7 +124,9 @@ function build(opts = {}) {
     // The combat minigame's bundle (combat/tools/bundle.mjs): built from combat/, committed like the content bundle.
     const stale = require('../combat/tools/bundle-hash.cjs').staleReason();
     console.log(stale ? C.r + 'build: ' + stale + C.x : 'build: combat bundle is up to date');
-    return fresh && !stale;
+    const parley = require('../crux/tools/bundle-hash.cjs').staleReason();
+    console.log(parley || 'build: Crux bundle is up to date');
+    return fresh && !stale && !parley;
   }
   fs.writeFileSync(BUNDLE, text);
   const nLoc = Object.values(locales).reduce((n, a) => n + a.length, 0);
@@ -611,6 +610,9 @@ function fightLint(content, P, loc) {
 // path through it, and has an entry in src/negotiation.js PARLEYS (who sits across the table, and the room).
 function parleyLint(content, P, loc) {
   const N = require('../src/negotiation.js');
+  const Crux = require('../build/crux.bundle.js');
+  const scale = (content.balance || {}).parley_scale;
+  if (scale != null && (!Number.isFinite(scale) || scale <= 0 || scale > 1)) P('error', 'content/core/balance.grim', 'parley_scale must be in (0, 1]');
   const isParley = (st) => st.t === 'challenge' && G.MINIGAME_KINDS[st.kind] === 'parley';
   const most = (effs) => (effs || []).reduce((n, st) => {
     if (st.t === 'if') return n + Math.max(...st.branches.map((b) => most(b.body)), most(st.else));
@@ -629,6 +631,9 @@ function parleyLint(content, P, loc) {
       const p = N.PARLEYS[key];
       if (!p) P('warn', e.file + ':' + o.line, 'negotiation with no entry in src/negotiation.js PARLEYS["' + key + '"] (who sits across the table, and the room)');
       else {
+        const enc = Crux.encounters.find((e) => e.key === key);
+        const circ = enc && Crux.cards.circumstanceOf(enc);
+        if (!circ || !Crux.voices.CIRC[circ]) P('error', e.file + ':' + o.line, 'Crux has no voiced circumstance for ' + key);
         if (!N.PROFILES[p.profile]) P('error', e.file + ':' + o.line, 'PARLEYS["' + key + '"]: unknown profile "' + p.profile + '" (' + Object.keys(N.PROFILES).join(' ') + ')');
         if (!N.CONTEXTS[p.context]) P('error', e.file + ':' + o.line, 'PARLEYS["' + key + '"]: unknown context "' + p.context + '" (' + Object.keys(N.CONTEXTS).join(' ') + ')');
       }
@@ -983,7 +988,8 @@ function badToken(content, k) {
   if (!PRONOUN_KEYS.has(key.toLowerCase())) return 'unknown token {' + k + '}';
   return null;
 }
-// grim report --gaps: pools per draw source against floors and depth targets, with empty-draw rates from sim runs.
+// grim report --gaps: pools per draw source, the thinnest first (most visits without a card of their own, then fewest repeatable),
+// and the sources with nothing repeatable, which run dry.
 function report(opts = {}) {
   const { content } = compiled();
   const R = require('./report.js');
@@ -995,19 +1001,18 @@ function report(opts = {}) {
   if (opts.json) { console.log(JSON.stringify({ rows, usage }, null, 2)); return; }
   console.log(C.b + 'pacing' + C.x + ' (' + opts.games + ' ' + style.name + ' games): term day ' + usage.termDay.toFixed(1) + ' cards, break day ' + usage.breakDay.toFixed(1) + ', empty visits ' + (usage.emptyShare * 100).toFixed(0) + '% of ' + usage.visits);
   const pct = (x) => (x == null ? '   –' : String(Math.round(x * 100)).padStart(3) + '%');
-  let short = 0;
   for (const kind of ['place', 'course', 'club', 'job', 'plan', 'thesis', 'internship', 'slot']) {
-    const rs = rows.filter((r) => r.kind === kind);
+    const sorted = rows.filter((r) => r.kind === kind).sort((a, b) => (b.dry - a.dry) || (b.emptyShare || 0) - (a.emptyShare || 0) || a.repeatable - b.repeatable);
+    const rs = opts.all ? sorted : sorted.filter((r, i) => r.dry || i < 5);
     if (!rs.length) continue;
-    console.log('\n' + C.b + kind + C.x + C.d + '  (floor ' + R.FLOOR[kind] + ', target ' + R.TARGET[kind] + ')' + C.x);
+    console.log('\n' + C.b + kind + C.x);
     for (const r of rs) {
-      if (!opts.all && !r.short && r.events >= r.target) continue;
-      short += r.short;
       const extra = [r.track ? '+' + r.track + ' track' : '', r.compat ? r.compat + ' compat' : '', r.ranks ? 'ranks ' + r.ranks.join('/') : '', r.hidden ? 'hidden' : ''].filter(Boolean).join(', ');
-      console.log('  ' + (r.short ? C.r : r.events < r.target ? C.y : C.g) + r.id.padEnd(24) + C.x + String(r.events).padStart(3) + ' events ' + String(r.repeatable).padStart(3) + ' repeatable' + (kind === 'place' ? '  empty ' + pct(r.emptyShare) + ' of ' + String(r.visits || 0).padStart(4) + ' visits' : '') + (r.short ? C.r + '  short ' + r.short + C.x : '') + (extra ? C.d + '  ' + extra + C.x : ''));
+      console.log('  ' + (r.dry ? C.y : C.g) + r.id.padEnd(24) + C.x + String(r.events).padStart(3) + ' events ' + String(r.repeatable).padStart(3) + ' repeatable' + (kind === 'place' ? '  empty ' + pct(r.emptyShare) + ' of ' + String(r.visits || 0).padStart(4) + ' visits' : '') + (r.dry ? C.y + '  runs dry' + C.x : '') + (extra ? C.d + '  ' + extra + C.x : ''));
     }
   }
-  console.log('\n' + (short ? C.y : C.g) + 'gaps: ' + short + ' event(s) below the floors' + C.x + C.d + ' (--all lists sources at target too; --json for machines)' + C.x);
+  const dry = rows.filter((r) => r.dry).length;
+  console.log('\n' + (dry ? C.y : C.g) + 'gaps: ' + dry + ' source(s) with nothing repeatable' + C.x + C.d + ' (the five thinnest of each kind shown; --all lists every source; --json for machines)' + C.x);
 }
 
 // grim batch NAME --files a.grim,b.grim [--critic verdict.json] [--skip-balance]
@@ -1099,6 +1104,9 @@ function combatStrings(content) {
   return Object.entries(C.combatTextTable()).filter(([k]) => !(k.startsWith('label.') && content.spells[k.slice(6)]))
     .map(([key, text]) => ({ file: 'combat.lang', block: 'combat', key, text, hash: I18n.hash(text) }));
 }
+function parleyStrings() {
+  return Object.entries(require('../crux/text.js').table).map(([key, text]) => ({ file: 'parley.lang', block: 'parley', key, text, hash: I18n.hash(text) }));
+}
 // A fight line's placeholders: the values ({n}, {dmg}, {noun}…) must all stay; names and pronouns may change form; the
 // {v:…|…} agreement forms are English grammar.
 const FIGHT_GRAMMAR = new Set(['name', 'foe', 'name’s', 'foe’s', 'pos', 'fpos', 'fobj']);
@@ -1107,14 +1115,14 @@ function lintLocale(content, lang, problems, opts = {}) {
   const P = (level, where, msg) => problems.push({ level, where, msg });
   const loc = I18n.loadLocale(lang, liveLocaleSources(lang));
   loc.errors.forEach((e) => P('error', e.split(': ')[0], e.split(': ').slice(1).join(': ')));
-  const strings = I18n.extract(content), fight = combatStrings(content);
+  const strings = I18n.extract(content), fight = combatStrings(content).concat(parleyStrings());
   const known = new Set(strings.concat(fight).map((s) => s.block + ' ' + s.key));
   let missing = 0, stale = 0;
   const where = (block, key) => { for (const [f, p] of Object.entries(loc.files)) if (p.blocks[block] && p.blocks[block][key]) return f + ':' + p.blocks[block][key].line; return 'locales/' + lang; };
   for (const s of fight) {
-    const e = loc.blocks.combat && loc.blocks.combat[s.key];
+    const e = loc.blocks[s.block] && loc.blocks[s.block][s.key];
     if (!e || e.text === '') { missing++; continue; }
-    const w = where('combat', s.key), en = fightTokens(s.text), tr = fightTokens(e.text);
+    const w = where(s.block, s.key), en = fightTokens(s.text), tr = fightTokens(e.text);
     if (e.hash && e.hash !== s.hash) { stale++; if (opts.verbose) P('info', w, 'stale translation (English changed): combat ' + s.key); }
     const lost = en.filter((k) => !FIGHT_GRAMMAR.has(k) && !tr.includes(k)), extra = tr.filter((k) => !en.includes(k) && !FIGHT_GRAMMAR.has(k));
     if (lost.length || extra.length) P('warn', w, '[' + lang + '] combat ' + s.key + ': placeholders differ from English (' + (lost.length ? 'missing {' + lost.join('} {') + '}' : '') + (extra.length ? ' unknown {' + extra.join('} {') + '}' : '') + ')');
@@ -1165,7 +1173,7 @@ function i18nSync(lang) {
   const langName = loc.ui['lang.name'] || lang;
   const used = new Set();
   const byFile = {};
-  for (const s of I18n.extract(content).concat(combatStrings(content))) (byFile[s.file] = byFile[s.file] || []).push(s);
+  for (const s of I18n.extract(content).concat(combatStrings(content), parleyStrings())) (byFile[s.file] = byFile[s.file] || []).push(s);
   const report = [];
   const written = new Set();
   for (const [file, list] of Object.entries(byFile)) {
@@ -1424,7 +1432,6 @@ function runMetrics(content, eng) {
   // a run that ended in collapse (health) or despair (mood) broke down then, even if no month started at zero
   const early = eng.s.ended && eng.s.turn < eng.maxTurns ? eng.s.ended.id : null;
   const firstZero = (k) => { let n = 0; for (const m of termMonths) { n++; if (m.vals[k] <= 0) return n; } return (k === 'health' && early === 'ending_sent_home') || (k === 'mood' && early === 'ending_quiet_departure') ? termMonths.length : null; };
-  const cls = (c) => h.filter((x) => x.t === 'card' && x.class === c).length;
   const cards = h.filter((x) => x.t === 'card'), leads = eng.threads().flatMap((t) => t.leads || []);
   const years = Math.max(1, Math.ceil(eng.s.turn / 12));
   return {
@@ -1436,7 +1443,6 @@ function runMetrics(content, eng) {
     moodZeroAt: firstZero('mood'), healthZeroAt: firstZero('health'),
     relAt24, swing, sparked: Object.keys(spark).length > 0,
     dropped: h.some((x) => (x.out && x.out.notes || []).some((n) => n.kind === 'dropped')) || h.some((x) => (x.summary || []).some((it) => (it.notes || []).some((n) => n.kind === 'dropped'))),
-    incidentsPerYear: cls('incident') / years, windfallsPerYear: cls('windfall') / years,
     // for the strategy styles (tools/policies.js): nights out, the scholarship, leads, romance, coverage
     nightsOut: cards.filter((x) => x.id === 'night_out' && x.choice === 'right').length,
     stipendPaid: cards.filter((x) => x.id === 'scholarship_award' && x.out && x.out.deltas && x.out.deltas.gold > 0).length,
@@ -1467,9 +1473,6 @@ function designAlarms(name, runs, alarm, all) {
     if (share((r) => r.manaFullShare > 0.9) > 0.5) alarm('balanced: mana is (almost) always full without casting');
     const tight = med(runs.map((r) => r.tightPerYear));
     if (tight < 1) alarm('balanced: ' + r1(tight) + ' tight month(s) a year (design: forced sinks make food risky now and then)');
-    const inc = med(runs.map((r) => r.incidentsPerYear)), win = med(runs.map((r) => r.windfallsPerYear));
-    if (inc < 1 || inc > 3) alarm('balanced: ' + r1(inc) + ' incidents a year (design: 1–3)');
-    if (win < 1 || win > 4) alarm('balanced: ' + r1(win) + ' windfalls a year (design: 1–4)');
   }
   if (name === 'moneymaxx') {
     const climb = med(runs.map((r) => r.goldY3 == null || r.turn < 40 ? null : (r.goldEnd - r.goldY3) / Math.max(1, r.turn - 36)));
@@ -1824,7 +1827,7 @@ function genPresetsDoc(opts = {}) {
   // The check ladder (docs/authoring/checks.md): rungs, odds by nature, luck, drift, course standards.
   if (b.dc_tiers) {
     const RK = G.RANKS, at = (w) => b.dc_tiers[w];
-    rows.push('', '## Check ladder (`checks.md`)', '', '| rank | − | (plain) | + |', '|---|---|---|---|');
+    rows.push('', '## Check ladder', '', '| rank | − | (plain) | + |', '|---|---|---|---|');
     for (const r of RK) rows.push('| ' + r + ' | ' + at(r + '-') + ' | ' + at(r) + ' | ' + at(r + '+') + ' |');
     rows.push('', 'Odds by nature (the chance when your skill matches the DC): ' + Object.entries(b.likelihood || {}).map(([k, v]) => '`' + k + '` ' + v + '%').join(' · ') + '. A circumstance step moves the z by ' + b.odds_step + '.', '');
     rows.push('Luck (the bell\'s σ): ' + Object.entries(b.sigma || {}).map(([k, v]) => '`' + k + '` ' + v).join(' · ') + '; odds run ' + (b.bell || {}).floor + '–' + (b.bell || {}).ceil + '% (milestones and exams 0–100).', '');

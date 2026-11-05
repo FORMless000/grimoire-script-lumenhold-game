@@ -1,0 +1,108 @@
+{
+  "query": "Eleven Years Overdue Tonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.} Find the page Your hand finds the spine before your eyes do, and the book falls open at exactly the page it was borrowed for. Every book you touch afterwards does the same. The head librarian stamps the card, eleven years late, without a word. You get lost on the seventh floor among shelves that don't exist by day. Footnote leads you out at dawn, looking smug. The card is still on the drawer. Pay a senior clerk for their map The senior clerk's map is ten years out of date and exactly right where it matters. You find the book, and it falls open at the page it was borrowed for. Every book does, after that. The map is ten years out of date and mostly wrong. Footnote leads you out at dawn. The book stays lost, for now.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:library_overdue_book",
+      "title": "Eleven Years Overdue",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 598,
+      "sourceHash": "59dd3ec43e14ac015206f132570dfe491ad6c6942aace24053271c2c60c3e914",
+      "score": 0.9412801861763,
+      "excerpt": "Eleven Years Overdue\nTonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.}\nFind the page\nYour hand "
+    },
+    {
+      "key": "event:library_footnote_drawer",
+      "title": "Footnote's Drawer",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 517,
+      "sourceHash": "94b62ea0a26eda4f601a008dd04850a6e2e6f5b912e7d9756d9d69c66059e760",
+      "score": 0.7408272624015808,
+      "excerpt": "Footnote's Drawer\nFootnote has sat on one catalogue drawer for a week and hisses at anyone who comes near it. The label underneath him says OVERDUE, ELEVEN YEARS. The head librarian says whoever finds that book is welcome to the trick of finding books.\nFind out what he's guarding"
+    },
+    {
+      "key": "event:library_hush_lamp",
+      "title": "The Night Hush",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 556,
+      "sourceHash": "e24d951b7e8565b761a10ca25224d6615d5d5ca28bb8084ae06e862a84c27d97",
+      "score": 0.6916306018829346,
+      "excerpt": "The Night Hush\nThe overdue book will only be on the shelves the night hush sends it to. The head librarian lends you the old lamp. \"Walk the hush,\" she says, \"and listen to which shelf goes quiet last.\"\nWalk the hush and listen\nThree laps, and on the third, the shelves on the nor"
+    },
+    {
+      "key": "event:nudge_footnote",
+      "title": "Still Guarding It",
+      "file": "content/events/journal_cards.grim",
+      "line": 89,
+      "sourceHash": "ddf36c8c01ffd7b72fcdfb8db275246e8358e78c6ef0ca14c8288e2372275411",
+      "score": 0.6782512664794922,
+      "excerpt": "Still Guarding It\nFootnote is still on the overdue drawer, eleven years and half a year now, and the head librarian has started leaving his saucer there. When you pass, he stops washing and stares at you, as if you'd promised him something and he has been very patient about it.\nG"
+    },
+    {
+      "key": "event:library_wandering_section",
+      "title": "The Wandering Section",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 580,
+      "sourceHash": "658286f43262219ea45c302f2b06fee9ae6b36982278f0a00f7cea44c093d641",
+      "score": 0.6018832325935364,
+      "excerpt": "The Wandering Section\nThe section the book belongs to wanders. It was by the stairs on Monday and in the map room on Wednesday. The only way to follow it is to tie a string to the end shelf and walk where it goes, however long that takes.\nFollow it with string\nYou follow it for s"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "ddc46ad4408f5dfb78660c1c47a741da840d048155fef6799000651a879d6b62",
+      "at": "2026-10-28T23:51:36.143Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 224,
+        "total_tokens": 224,
+        "cost": 0.00000224,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000224,
+          "upstream_inference_prompt_cost": 0.00000224,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "ddc46ad4408f5dfb78660c1c47a741da840d048155fef6799000651a879d6b62",
+      "elapsedMs": 362,
+      "at": "2026-10-28T23:51:36.505Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2e522cd5730e4e522d2803482b0e53eb84462bd612fcd540dcb9718496abc656",
+      "at": "2026-10-28T23:51:36.566Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 38695,
+        "cost": 0.00193475
+      },
+      "requestHash": "2e522cd5730e4e522d2803482b0e53eb84462bd612fcd540dcb9718496abc656",
+      "elapsedMs": 372,
+      "at": "2026-10-28T23:51:36.938Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

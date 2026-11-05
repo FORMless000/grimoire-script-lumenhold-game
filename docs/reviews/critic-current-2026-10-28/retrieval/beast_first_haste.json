@@ -1,0 +1,108 @@
+{
+  "query": "Borrowed Speed {level(beastcraft) == 0: Beastcraft I's first spell is taught at a run. Professor Brask points at a hare in the paddock. \"Catch it. You won't, on your legs.\" She teaches you Haste in four words and lets the hare go.|{level(beastcraft) == 1: Beastcraft II: Haste in the air. Brask has a hawk on her glove and a broom against the fence. \"Keep up with her,\" she says, \"to the far tower and back.\"|Advanced Beastcraft: Brask's test is to keep pace with a hippogriff at full gallop, the length of the flight field, and still be able to talk at the end.}} Run it down {level(beastcraft) == 0: You catch the hare on the fourth go, briefly, and it bites you. You sleep eleven hours. Brask says that's the price, and the hare agrees.|{level(beastcraft) == 1: You reach the far tower a wingbeat behind the hawk, and the hawk looks smug about it. Your legs shake all through supper.|You run the field at the hippogriff's shoulder and say \"good afternoon\" at the end, gasping. Brask laughs once. You're stiff for three days.}} Watch how the hare moves {level(beastcraft) == 0: You watch the hare for an hour, then borrow its speed properly, once, at the end. Everyone else is already muddy and proud of it.|{level(beastcraft) == 1: You watch the hawk's turns from the fence and only fly the course at dusk, alone. It's tidy. Nobody sees.|You study the gallop from the rail until you can feel it in your knees. You run it last, slower than the rest, and very sure.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:beast_first_haste",
+      "title": "Borrowed Speed",
+      "file": "content/events/spell_sources.grim",
+      "line": 97,
+      "sourceHash": "ba6f4d46c365aba7b56efca82e2b75b515a7dda884b8d602963fdfd60ad2eeb1",
+      "score": 0.9450283050537109,
+      "excerpt": "Borrowed Speed\n{level(beastcraft) == 0: Beastcraft I's first spell is taught at a run. Professor Brask points at a hare in the paddock. \"Catch it. You won't, on your legs.\" She teaches you Haste in four words and lets the hare go.|{level(beastcraft) == 1: Beastcraft II: Haste in "
+    },
+    {
+      "key": "event:beast_hare_paddock",
+      "title": "Running with Hares",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 237,
+      "sourceHash": "c0003e4e5251a60225508f178ec51f2d327c84ef058782d5235827a8e0cd81f5",
+      "score": 0.8215965032577515,
+      "excerpt": "Running with Hares\n{Beastcraft II teaches haste the old way. Run with the hares until their speed rubs off. \"Borrow it,\" Brask says. \"Don't steal it.\"|The hare paddock. The hares remember you.|Hares. You dream in sudden right angles now.} {The grass is wet and the hares don't car"
+    },
+    {
+      "key": "event:lesson_haste",
+      "title": "Race the Hippogriff",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 188,
+      "sourceHash": "b1b675ded5ac2db5cb40a9803be2a18c8596332e5d272f06576235d9cf1ab62d",
+      "score": 0.7183085083961487,
+      "excerpt": "Race the Hippogriff\nProfessor Brask teaches Haste on the flight field, with a stopwatch and a hippogriff that is faster than the spell. \"Beat her,\" she says to you. To the hippogriff she explains, at length and politely, that she is not to bite you if you win.\nRace the hippogriff"
+    },
+    {
+      "key": "event:beast_hedge_run",
+      "title": "The Hedge Run",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 409,
+      "sourceHash": "b9038ff5b9becc4ad1ab3f5f91abc283353d85f4147bca1c13c551e5b911721c",
+      "score": 0.6608466506004333,
+      "excerpt": "The Hedge Run\n{Beastcraft II puts haste on a broom, low over the hedges, as fast as you dare. Professor Brask says brooms are harder to reason with than hippogriffs, and harder to apologise to.|The hedge run. Your broom remembers last time.|Hedges. You've learned to read a broom'"
+    },
+    {
+      "key": "event:lecture_tower_far_bell",
+      "title": "The Far Bell",
+      "file": "content/events/spell_uses.grim",
+      "line": 361,
+      "sourceHash": "d4f79ec2f507c1ac6caa77d903341c9f8a54acbbfab0594bb08db14174ebda1e",
+      "score": 0.5760936141014099,
+      "excerpt": "The Far Bell\n{The bell for your lecture is ringing in the other tower, and you are on the wrong side of the bridge with all your books.|The bell again, and you on the wrong end of the bridge again. You're starting to suspect the bridge.|You can hear the bell before you see the br"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "00fb1d6e0a03838dbcf52ce293b3d0472fa511d86eef6dae9760abaeb18e9a1b",
+      "at": "2026-10-28T23:51:49.049Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 394,
+        "total_tokens": 394,
+        "cost": 0.00000394,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000394,
+          "upstream_inference_prompt_cost": 0.00000394,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "00fb1d6e0a03838dbcf52ce293b3d0472fa511d86eef6dae9760abaeb18e9a1b",
+      "elapsedMs": 432,
+      "at": "2026-10-28T23:51:49.481Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "65a9af2143643a3515ba56123341aba0c4bece147ff2abc7b7f8c8bfaeaa09b7",
+      "at": "2026-10-28T23:51:49.527Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44169,
+        "cost": 0.00220845
+      },
+      "requestHash": "65a9af2143643a3515ba56123341aba0c4bece147ff2abc7b7f8c8bfaeaa09b7",
+      "elapsedMs": 458,
+      "at": "2026-10-28T23:51:49.985Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

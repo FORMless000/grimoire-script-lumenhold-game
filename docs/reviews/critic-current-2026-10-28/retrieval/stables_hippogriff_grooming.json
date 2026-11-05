@@ -1,0 +1,108 @@
+{
+  "query": "Feathers the Wrong Way {A hippogriff has rolled in the mud and lies in her stall with every feather pointing the wrong way, waiting to be groomed.|The muddy hippogriff again. She lies down the moment she sees you with a brush.|The hippogriff has kept her muddiest wing for you, and holds it out like a gift.} {season == \"autumn\": Leaves are stuck in her feathers.|{The stable cat supervises from a beam.|The owls are watching to see if you get it wrong.|Brask is somewhere nearby, humming to a feed sack.}} Groom her properly, feather by feather {It takes the whole afternoon and both your arms. She falls asleep with her head on your boot, which is the highest mark a hippogriff gives.|You do it the slow way, with the grain. She clicks her beak at you every time you're right, and once, gently, when you're wrong.|You know her feathers now. She lets you do the hard bit under the wing, and Brask, passing, says nothing at all.} Read Brask's grooming notes on the wall {The notes are long, opinionated and illustrated. You learn a great deal about feathers. The hippogriff stays muddy and sighs at you.|You read the notes. Brask catches you at it and says, \"She doesn't need a scholar, she needs a brush.\"|You finish the notes, which you could recite by now, and leave the brush for someone else. The hippogriff looks away.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:stables_hippogriff_grooming",
+      "title": "Feathers the Wrong Way",
+      "file": "content/events/expansion_lightrag_2026_10.grim",
+      "line": 3,
+      "sourceHash": "d940cfb5cc22da487d5f4e0c532ed1a902659c468e08101f9fd2beaa30aa8431",
+      "score": 0.960748016834259,
+      "excerpt": "Feathers the Wrong Way\n{A hippogriff has rolled in the mud and lies in her stall with every feather pointing the wrong way, waiting to be groomed.|The muddy hippogriff again. She lies down the moment she sees you with a brush.|The hippogriff has kept her muddiest wing for you, an"
+    },
+    {
+      "key": "event:beast_mucking_out",
+      "title": "Mucking Out",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 171,
+      "sourceHash": "4d1b6eda29e37ab1d3036d5e87502109ef8171155275236331aad8da4ee790ff",
+      "score": 0.5273341536521912,
+      "excerpt": "Mucking Out\n{Beastcraft I begins in the stables, with a pitchfork. Professor Brask says you don't touch a creature until you've cleaned up after it.|Pitchforks. Brask still hasn't said when that rule ends.|The stables, early. You know which stall to start with.} {The hippogriff i"
+    },
+    {
+      "key": "event:beast_hooves",
+      "title": "Hoof Day",
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 455,
+      "sourceHash": "f4468dd4725fd2545b3e0f45e21e0219c433bc80c8038bd083f72b6d8800b031",
+      "score": 0.49624061584472656,
+      "excerpt": "Hoof Day\n{Advanced Beastcraft does the work nobody else wants. Today it's hooves. A hippogriff's need trimming each month, and the hippogriff disagrees.|Hoof day. The stall is the same; the hippogriff's opinion is too.|Hooves. You go in with a bucket of apples and a plan.} {Today"
+    },
+    {
+      "key": "event:stables_brask_rounds",
+      "title": "Brask's Rounds",
+      "file": "content/events/pools/grounds.grim",
+      "line": 306,
+      "sourceHash": "4be8dbb60c62cac0467acfc23da70755e0aa58f7261f3ddfb1bc68403c1b36c9",
+      "score": 0.48391687870025635,
+      "excerpt": "Brask's Rounds\n{Professor Brask is on her rounds, telling each hippogriff she's a very good girl. She tells you to mind the bucket.|Brask is on her rounds. She nods at you, which is more than most get.|Brask greets you by name now, somewhere after the owls.} {season == \"spring\": "
+    },
+    {
+      "key": "event:brask_shovel",
+      "title": "Hands Wanted",
+      "file": "content/events/fixtures.grim",
+      "line": 108,
+      "sourceHash": "4e115361cf0064dbde0562a313d58312001911278c80384d1cb1010438bf68b2",
+      "score": 0.47449952363967896,
+      "excerpt": "Hands Wanted\n{Professor Brask holds out a shovel as you pass the stables. She doesn't say anything. The hippogriff behind her does, loudly.|Brask hands you the shovel before you're through the door.|\"Ah,\" says Brask, and the shovel is already in your hands.} {The griffon chick is"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "e59508f28e3d91742714bdc298e8024adf75540f1434a3c76637c8f5f8c9405d",
+      "at": "2026-10-28T23:50:56.528Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 327,
+        "total_tokens": 327,
+        "cost": 0.00000327,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000327,
+          "upstream_inference_prompt_cost": 0.00000327,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "e59508f28e3d91742714bdc298e8024adf75540f1434a3c76637c8f5f8c9405d",
+      "elapsedMs": 423,
+      "at": "2026-10-28T23:50:56.951Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "d15b9b0adede42f61f79a0bf49805a87b37bf3d97cbf9d8a68e825b74d272a0b",
+      "at": "2026-10-28T23:50:57.058Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 45023,
+        "cost": 0.00225115
+      },
+      "requestHash": "d15b9b0adede42f61f79a0bf49805a87b37bf3d97cbf9d8a68e825b74d272a0b",
+      "elapsedMs": 868,
+      "at": "2026-10-28T23:50:57.926Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

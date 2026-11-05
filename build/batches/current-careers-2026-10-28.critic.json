@@ -1,0 +1,123 @@
+{
+  "batch": "current-careers-2026-10-28",
+  "accept": false,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "career_letter_conclave",
+      "career_letter_fellowship",
+      "career_letter_shop",
+      "career_letter_unseen",
+      "career_letter_trading",
+      "career_return_royal_library",
+      "career_return_conclave",
+      "career_return_guild",
+      "career_return_observatory",
+      "career_return_field_station",
+      "career_return_thornwick",
+      "career_return_unseen",
+      "career_job_spire",
+      "career_job_newt",
+      "career_job_pell",
+      "career_job_courier",
+      "career_last_call",
+      "last_dumonts",
+      "last_tamsin",
+      "last_remembered"
+    ],
+    "files": [
+      "content/events/careers.grim",
+      "content/events/last_day.grim"
+    ]
+  },
+  "summary": "Rejected: return letters invent specific earlier choices, Ilse can reappear after leaving north, and the yearbook can print a line the player explicitly strikes out. All 20 current scoped cards and fresh retrieval matches were reviewed.",
+  "issues": [
+    {
+      "event": "career_return_conclave",
+      "priority": "P2",
+      "category": "choice memory",
+      "related_events": [
+        "career_return_guild",
+        "career_return_unseen"
+      ],
+      "problem": "The return letters assert the ward held, a batch was saved, or the player did not open the file. Return flags are set solely by internship performance >=80 in intern_assessment, and all three letters can be delivered without those milestone scenes ever showing. The Unseen letter can also contradict choosing to read the file.",
+      "fix": "Make the base letters refer to the strong placement; gate any specific accomplishment on the actual successful choice, not merely seeing its card.",
+      "evidence": [
+        "probes.json: career_return_conclave, career_return_guild, career_return_unseen",
+        "content/events/calendar_2b.grim: intern_assessment on_show",
+        "content/events/pools/internships.grim: intern_conclave_your_ward and intern_unseen_office_file"
+      ],
+      "file": "content/events/careers.grim",
+      "line": 157
+    },
+    {
+      "event": "career_return_field_station",
+      "priority": "P2",
+      "category": "choice memory",
+      "problem": "The yes reply calls its paw print the foal’s agreement, although the letter requires only a strong placement. The foal may never have been found, or the player may have counted it and left it; neither history supplies a foal at the station.",
+      "fix": "Use a nonspecific station creature in the reply, or gate the foal detail on actually raising it.",
+      "evidence": [
+        "probes.json: career_return_field_station",
+        "content/events/pools/internships.grim: intern_field_station_foal right"
+      ],
+      "file": "content/events/careers.grim",
+      "line": 211
+    },
+    {
+      "event": "career_return_field_station",
+      "priority": "P2",
+      "category": "effects and prose",
+      "related_events": [
+        "career_job_courier"
+      ],
+      "problem": "Asking about the winters grants Vigor for reading a letter. Asking about winter courier routes likewise grants Vigor for looking at a map. Neither outcome shows stamina, reflex, duelling or flight practice.",
+      "fix": "Use a knowledge gain supported by the reply, or show practical preparation or flight before retaining Vigor.",
+      "evidence": [
+        "content/core/rules.grim: @skill vigor",
+        "docs/authoring/costs.md: skill XP follows matching practice"
+      ],
+      "file": "content/events/careers.grim",
+      "line": 211
+    },
+    {
+      "event": "last_dumonts",
+      "priority": "P2",
+      "category": "continuity",
+      "problem": "A reunion flag puts Ilse in the graduation photograph even after ilse_northern_letter sends her north. That departure sets ilse_went_north and makes her absent; the letter explicitly leaves her return by graduation uncertain. This card neither tests her departure nor explains a return.",
+      "fix": "Distinguish her current absence from the earlier reunion, or explicitly resolve her return before staging the photograph.",
+      "evidence": [
+        "probes.json: last_dumonts-after-departure",
+        "content/world/cast.grim: ilse gone_when",
+        "content/events/chain_ilse.grim: ilse_northern_letter left"
+      ],
+      "file": "content/events/last_day.grim",
+      "line": 280
+    },
+    {
+      "event": "last_remembered",
+      "priority": "P1",
+      "category": "choice consequences",
+      "problem": "The pick:2 menu accepts both a print option and Strike them all. The latter says every line is removed but does not clear remember_* flags, so the fame/thesis/alignment line remains eligible for the yearbook. Both contradictory say lines are shown.",
+      "fix": "Make the plain-name decision exclusive through existing content wiring, or give it an unambiguous override honored by every yearbook gate; ensure selection order cannot change the result.",
+      "evidence": [
+        "probes.json: last_remembered-contradictory-selection",
+        "src/engine.js: chooseMany executes every selected option",
+        "content/endings.grim: remember_* gates"
+      ],
+      "file": "content/events/last_day.grim",
+      "line": 330
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}

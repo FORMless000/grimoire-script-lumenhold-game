@@ -1,0 +1,107 @@
+{
+  "query": "Reading the Floor {Every famous bout in the Duelling Hall left its mark on the floor, a scorch or a frost-crack or a gouge. Old duellists say you can read a fight in the boards.|The floor again. You've learned which scorch belongs to which year's champion, from the plaques on the wall.|You can read the boards now, more or less: here someone parried late; here someone lost their nerve and their eyebrows.} {Today a fresh burn sits on top of the old ones.|The cleaners have been, and the boards shine like a map under glass.|{season == \"winter\": The hall is freezing and the boards creak under every step.|Dust hangs in the long light from the windows.}} Trace an old bout through {You follow a duel from the first scorch to the final frost-crack, step by step, until you know where the loser went wrong. Your knees ache from crawling.|You walk a champion's footwork across the burns, slowly, like learning a dance from its footprints. It's tiring, careful work.|You read a whole tournament final in the floor and find the moment it turned, a single mark the size of a coin. You stand up stiff and certain.} Scrub the floor for the club {The club pays a crown or two for scrubbing. You scrub until the boards gleam and your arms burn.|You scrub, and the old marks stay, as they always do; the dirt goes. You're paid in coins and a sore back.|You know which boards to go easy on: the famous ones. The club treasurer pays you, and adds a nod.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:duel_hall_reading_the_floor",
+      "title": "Reading the Floor",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 10,
+      "sourceHash": "2117cc4f6b54134b085d0a05fbbc2bc346a0fe8732bf934ac54c2f825b488134",
+      "score": 0.9519604444503784,
+      "excerpt": "Reading the Floor\n{Every famous bout in the Duelling Hall left its mark on the floor, a scorch or a frost-crack or a gouge. Old duellists say you can read a fight in the boards.|The floor again. You've learned which scorch belongs to which year's champion, from the plaques on the"
+    },
+    {
+      "key": "event:donate_duel_floor",
+      "title": "The Scorched Floor",
+      "file": "content/events/incidents.grim",
+      "line": 213,
+      "sourceHash": "afde43dfc94fab4dbb7acbe11e9190e3c73c6a8f07df56ecc1e64a0e0b8d96e4",
+      "score": 0.572445809841156,
+      "excerpt": "The Scorched Floor\nA duellist with a bandaged hand rattles a box at the foot of the east stair. \"The hall floor,\" he says. \"Someone set it on fire again. Every board you buy, we carve your initials on the underside. Honour, and splinters.\"\nBuy a row of floorboards\nHe drags you up"
+    },
+    {
+      "key": "event:duel_hall_gallery",
+      "title": "From the Gallery",
+      "file": "content/events/pools/grounds.grim",
+      "line": 91,
+      "sourceHash": "2214b6760731159ef9e2623a25d59ef333a5d6b1e606cc535f2ae0fba898aafe",
+      "score": 0.5259894728660583,
+      "excerpt": "From the Gallery\n{From the gallery above the duelling floor you can watch whoever is practising. Today it's {here}.|You've learned to read duels from up here. Today {here} is drilling.|The gallery rail has a groove where you lean. Below, {here} is drilling.} {Sparks drift up to t"
+    },
+    {
+      "key": "event:brk_duel_trophies",
+      "title": "Polishing the Trophies",
+      "file": "content/events/breaks.grim",
+      "line": 207,
+      "sourceHash": "ba5c375b9f38c4079f665596b4d15ac63463185c6ddcc99ac695541f67900f78",
+      "score": 0.5038229823112488,
+      "excerpt": "Polishing the Trophies\nThe duelling hall is empty except for the trophy cabinets, which are open, and a bucket of polish with a note on it: \"Volunteers. —Thorne\". Two hundred years of cups and shields stare at you, tarnished.\nPolish them all\n{~It takes all afternoon. Halfway thro"
+    },
+    {
+      "key": "event:duel_footwork_lyra",
+      "title": "Footwork Until Dark",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 125,
+      "sourceHash": "3a49a664793462255d83d458cf7a805e9dcabde6cb4345af095ff4da8bd3a4bd",
+      "score": 0.4527227282524109,
+      "excerpt": "Footwork Until Dark\nLyra finds you after practice. \"The captain's notes say the stance is everything,\" she says. \"Your stance is a disgrace. Three hours. Now.\" She has already chalked the marks on the floor.\nDrill until dark\nShe is merciless and exact. By dark you can set your fe"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "39f91752282519ab40fdb45b11d54c4b19f727af5ee2e37f17a46c1a6a0036ee",
+      "at": "2026-10-28T23:44:10.064Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 346,
+        "total_tokens": 346,
+        "cost": 0.00000346,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000346,
+          "upstream_inference_prompt_cost": 0.00000346,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "39f91752282519ab40fdb45b11d54c4b19f727af5ee2e37f17a46c1a6a0036ee",
+      "elapsedMs": 6174,
+      "at": "2026-10-28T23:44:16.237Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "f7d46197484e6b49954997f9119a68a1c8ea3096832c2566c96babfec4b67f94",
+      "at": "2026-10-28T23:44:16.306Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 51455,
+        "cost": 0.00257275
+      },
+      "requestHash": "f7d46197484e6b49954997f9119a68a1c8ea3096832c2566c96babfec4b67f94",
+      "elapsedMs": 516,
+      "at": "2026-10-28T23:44:16.822Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

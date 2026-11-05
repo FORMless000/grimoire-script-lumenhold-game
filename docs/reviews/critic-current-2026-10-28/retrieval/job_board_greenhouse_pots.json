@@ -1,0 +1,108 @@
+{
+  "query": "Pots for Old Maud {Old Maud's notice asks for clay pots scrubbed before planting, for a small wage and a cup of tea.|Maud's notice again. More pots, the same tea.|Maud has given up pinning notices. The pots are just waiting at the greenhouse door, with your brush on top.} Scrub them for the wage {A hundred pots, scrubbed and stacked. Maud pays you and says you're slower than her and twice as thorough.|You scrub them all and drink the tea. The wage is small and honestly earned.|You scrub in silence, and so does she. She pays you and lets you take a cutting home.} Scrub them and ask about the plants {Maud talks while you scrub, about which leaf cures what and which leaf kills. She pays a little less, because of the talking.|You learn three remedies and a poison you should never brew. The wage is smaller; the lesson isn't.|Maud tests you on last month's lesson while you scrub. You pass, mostly. The wage is small and the tea is good.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:job_board_greenhouse_pots",
+      "title": "Pots for Old Maud",
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 794,
+      "sourceHash": "c4efdcf156d63bcbf43b0e13ccd2049e78d0bb699114bb34be37fb61daf7dd6d",
+      "score": 0.9512509107589722,
+      "excerpt": "Pots for Old Maud\n{Old Maud's notice asks for clay pots scrubbed before planting, for a small wage and a cup of tea.|Maud's notice again. More pots, the same tea.|Maud has given up pinning notices. The pots are just waiting at the greenhouse door, with your brush on top.}\nScrub t"
+    },
+    {
+      "key": "event:maud_cottage_kettle",
+      "title": "Tea at Maud's",
+      "file": "content/events/pools/grounds.grim",
+      "line": 490,
+      "sourceHash": "892f84b4cf1ad947ba13a628a588cfc246de2a3aba955146661c30a69040c15e",
+      "score": 0.5855082869529724,
+      "excerpt": "Tea at Maud's\n{Old Maud's kettle is nearly boiling, as it always is. \"Sit down, dearie,\" she says. \"You look like a puddle with a worry.\"|The kettle is nearly boiling. Maud has already put out your cup, the chipped one.|Your chipped cup is waiting. Maud says it's been asking afte"
+    },
+    {
+      "key": "event:secret_garden_two_cups",
+      "title": "Two Cups on the Bench",
+      "file": "content/events/pools/grounds_more.grim",
+      "line": 177,
+      "sourceHash": "1723293fe8a1c8a098794b07db40c59c5516af644ae6e2613c2aa266aec3ab40",
+      "score": 0.5330601334571838,
+      "excerpt": "Two Cups on the Bench\n{On the bench by the humming pear there's a flask and two chipped cups, and a note in Old Maud's hand. \"One for you, dearie, one for whoever comes.\"|The flask on the bench again, still warm, still with two cups. Maud is never here when you are; the tea alway"
+    },
+    {
+      "key": "event:gig_grounds_hard_ground",
+      "title": "Hard Ground",
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 76,
+      "sourceHash": "a32ef580023142a59253eda37d3eb22b493fc32e66d8c081b404d466f4dbccc5",
+      "score": 0.519589364528656,
+      "excerpt": "Hard Ground\n{season == \"winter\": The ground is frozen two fingers deep and Maud wants the beds turned anyway.|The ground is baked hard and Maud wants the beds turned anyway.} \"The soil doesn't take holidays,\" she says. {~She hands you the heavier spade.|The bees watch you from th"
+    },
+    {
+      "key": "event:picture_maud",
+      "title": "Over Tea, Dearie",
+      "file": "content/events/full_picture.grim",
+      "line": 124,
+      "sourceHash": "0251e04fc2ca154a2c700e3516e7caf5aaa4e8735fac0edd0912427e5b5c7dd6",
+      "score": 0.5162591338157654,
+      "excerpt": "Over Tea, Dearie\nMaud pours two cups and doesn't sit. \"You know about Edmund,\" she says. \"And the garden, and Tuppence, and my knees, and the soup. You've heard all my sad stories, dearie, and you've never once looked sorry for me.\" She sits, finally. \"Sixty years since anyone kn"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "0a0bd27ded555683739a65265f14afee39d6b0118e83df6b22fcaf517feaaf74",
+      "at": "2026-10-28T23:51:11.217Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 231,
+        "total_tokens": 231,
+        "cost": 0.00000231,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000231,
+          "upstream_inference_prompt_cost": 0.00000231,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "0a0bd27ded555683739a65265f14afee39d6b0118e83df6b22fcaf517feaaf74",
+      "elapsedMs": 406,
+      "at": "2026-10-28T23:51:11.623Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "45999ea4dda174d2b1db6fc442e25733389a003d9c2369e53cfde514f29b908f",
+      "at": "2026-10-28T23:51:11.803Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42573,
+        "cost": 0.00212865
+      },
+      "requestHash": "45999ea4dda174d2b1db6fc442e25733389a003d9c2369e53cfde514f29b908f",
+      "elapsedMs": 887,
+      "at": "2026-10-28T23:51:12.690Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

@@ -1,0 +1,108 @@
+{
+  "query": "The Right Page Every book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest. Read every page they offer You read every page that offers itself until the lamps go out. You learn a great deal, most of it useful, and none of it what you came in for. Find one thing for your exams You ask for one thing, firmly. Twelve books bring it. You take your page and leave the others, who sulk on the table until a clerk shelves them.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:lesson_index",
+      "title": "The Right Page",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 507,
+      "sourceHash": "4f99e3586e94d100d1ebc8a590d58c41b434ee35cd358e0c2c972d18a018abc3",
+      "score": 0.9346999526023865,
+      "excerpt": "The Right Page\nEvery book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest.\nRead every page they offer\nYou read every page that offers itself until the"
+    },
+    {
+      "key": "event:library_overdue_book",
+      "title": "Eleven Years Overdue",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 598,
+      "sourceHash": "59dd3ec43e14ac015206f132570dfe491ad6c6942aace24053271c2c60c3e914",
+      "score": 0.632260262966156,
+      "excerpt": "Eleven Years Overdue\nTonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.}\nFind the page\nYour hand "
+    },
+    {
+      "key": "event:library_footnote_drawer",
+      "title": "Footnote's Drawer",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 517,
+      "sourceHash": "94b62ea0a26eda4f601a008dd04850a6e2e6f5b912e7d9756d9d69c66059e760",
+      "score": 0.5604473948478699,
+      "excerpt": "Footnote's Drawer\nFootnote has sat on one catalogue drawer for a week and hisses at anyone who comes near it. The label underneath him says OVERDUE, ELEVEN YEARS. The head librarian says whoever finds that book is welcome to the trick of finding books.\nFind out what he's guarding"
+    },
+    {
+      "key": "event:library_after_closing",
+      "title": "After the Closing Bell",
+      "file": "content/events/pools/castle_more.grim",
+      "line": 28,
+      "sourceHash": "bf6a3b7fa5a74826386ba78c7bfa6c71b84f2db84722c467e83b45d2cb1b2798",
+      "score": 0.5541239976882935,
+      "excerpt": "After the Closing Bell\n{The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the"
+    },
+    {
+      "key": "event:slice_late_lamps",
+      "title": "The Last Lamp",
+      "file": "content/events/slice_2a.grim",
+      "line": 91,
+      "sourceHash": "80f55422ef9a4e0cced5046916a4e4ba3b065a099fcc7dfc07a9be6f9f4d3228",
+      "score": 0.5452641844749451,
+      "excerpt": "The Last Lamp\n{~The library is emptying.|Rain on the high windows, and the library is emptying early.|Exam fever has filled the library all day; now, finally, it is emptying.} {~Footnote, the library cat, is asleep on the book you need|The book you need is on the top shelf, and t"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "3d1e6a3f0f61f4622ae1aea8e89dc569db7409867869c450426814e17ba6e54e",
+      "at": "2026-10-28T23:51:47.869Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 125,
+        "total_tokens": 125,
+        "cost": 0.00000125,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000125,
+          "upstream_inference_prompt_cost": 0.00000125,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "3d1e6a3f0f61f4622ae1aea8e89dc569db7409867869c450426814e17ba6e54e",
+      "elapsedMs": 259,
+      "at": "2026-10-28T23:51:48.128Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "4081fd38704569ac1f18654b83ba0dbd197bb1dcbcfc7c8adb43df95ca69e8f6",
+      "at": "2026-10-28T23:51:48.177Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 37948,
+        "cost": 0.0018974
+      },
+      "requestHash": "4081fd38704569ac1f18654b83ba0dbd197bb1dcbcfc7c8adb43df95ca69e8f6",
+      "elapsedMs": 276,
+      "at": "2026-10-28T23:51:48.453Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

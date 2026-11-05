@@ -1,0 +1,108 @@
+{
+  "query": "A Guest Who Offers Patronage {An old collector of books has asked for \"the student who reads\". He wants company and argument, and he says he funds promising young minds.|The old collector is back with a new pile of books and a new argument. He has been thinking about what you said, for a month.|The collector again. He calls you his protégé to the whole room now, which is flattering and a little alarming.} Take the patron's purse {He funds your books for the term, and wants you at his table every week. You argue till two, and sleep through a lecture.|The purse is generous and so is the argument, which runs until the candles do. Your coursework waits.|He pays you to disagree with him. You are good at it, and your exam reading is not getting done.} Ask to borrow his books {He beams, and lends you three books older than the castle. You read them on the walk home by moonlight.|He lends you his annotated copy, full of furious notes in the margin. They are better than the book.|\"Finally,\" he says, \"someone who wants the books more than the money.\" He gives you a small purse anyway.}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:company_patron",
+      "title": "A Guest Who Offers Patronage",
+      "file": "content/events/pools/night.grim",
+      "line": 260,
+      "sourceHash": "442bde8d6eea4766b0482be5294aafab7b09426f75e0f869e82c0f51b09fb54e",
+      "score": 0.9508640170097351,
+      "excerpt": "A Guest Who Offers Patronage\n{An old collector of books has asked for \"the student who reads\". He wants company and argument, and he says he funds promising young minds.|The old collector is back with a new pile of books and a new argument. He has been thinking about what you sai"
+    },
+    {
+      "key": "event:renown_patron_dinner",
+      "title": "Dinner With a Patron",
+      "file": "content/events/pools/renown.grim",
+      "line": 181,
+      "sourceHash": "1274887c53786e43560bf5c177aed9d03e2f1110567aee3e713401f831920893",
+      "score": 0.6075032949447632,
+      "excerpt": "Dinner With a Patron\nA wealthy patron of the academy has asked to meet \"the students everyone's talking about\", and you're one of them. Dinner is nine courses. The patron likes clever talk and has been known to fund a promising student's whole final year.\nBe dazzling\nYou're witty"
+    },
+    {
+      "key": "event:world_margin_argument",
+      "title": "The Argument in the Margins",
+      "file": "content/events/pools/world_more.grim",
+      "line": 233,
+      "sourceHash": "78b6596b43d74ad5e46a8dd0ca53415c444b4434f260363db4e3f98694954224",
+      "score": 0.5195802450180054,
+      "excerpt": "The Argument in the Margins\n{Your second-hand textbook came with an argument in the margins. Two former owners, decades apart, have been disagreeing about chapter four in ink.|You've reached chapter six, and the margin argument has followed. A third hand has joined in, in green, "
+    },
+    {
+      "key": "event:shop_grimsbys",
+      "title": "Grimsby's Counter",
+      "file": "content/events/kit/shops.grim",
+      "line": 188,
+      "sourceHash": "a5e0e87ffda72b399e3dbbeb887f532d020419f578445acc105ef2b8e86101ff",
+      "score": 0.4760490655899048,
+      "excerpt": "Grimsby's Counter\n{Mr Grimsby is up a ladder, sniffing a spine. \"Ah! Not that one,\" he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pi"
+    },
+    {
+      "key": "event:company_wants_more",
+      "title": "A Guest Who Wants More",
+      "file": "content/events/pools/night.grim",
+      "line": 311,
+      "sourceHash": "fe4de4e7a319f821f58ddfd0c77313cd9244ad0a544768b2e8d681e2bf996cd5",
+      "score": 0.444141685962677,
+      "excerpt": "A Guest Who Wants More\n{A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. \"Come back to my inn,\" he says. \"Just to talk.\" The house rule is clear.|Another guest, another heavy purse, another invitation \"just to talk\". T"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "5597f77158ce0fe139140cb78509ed30ec24ce97e3a1821fbe187aab948577db",
+      "at": "2026-10-28T23:51:15.540Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 249,
+        "total_tokens": 249,
+        "cost": 0.00000249,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000249,
+          "upstream_inference_prompt_cost": 0.00000249,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "5597f77158ce0fe139140cb78509ed30ec24ce97e3a1821fbe187aab948577db",
+      "elapsedMs": 502,
+      "at": "2026-10-28T23:51:16.042Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "74fc345a82bd822bca6ea92d3b7f956e1d55fa7088b2a0afe82fe42e51af6db3",
+      "at": "2026-10-28T23:51:16.554Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46967,
+        "cost": 0.00234835
+      },
+      "requestHash": "74fc345a82bd822bca6ea92d3b7f956e1d55fa7088b2a0afe82fe42e51af6db3",
+      "elapsedMs": 472,
+      "at": "2026-10-28T23:51:17.026Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

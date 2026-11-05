@@ -1,0 +1,107 @@
+{
+  "query": "A Partnership Offered A shipping house in the harbour has heard about your purse, or rather about how you filled it. Its old partner wants to retire, and offers you his desk and his share of the ledger from the autumn. \"Bring your crowns,\" he writes. \"Bring your nerve. Answer on the last day.\" Write back that you're interested You reply on the cream paper's own back, which seems businesslike. By return comes a ledger page with a column already headed with your name. Ask to see the books first He sends them, all of them, and you find the hole in the third year that he hoped you'd find. \"Good,\" says his next letter. \"The last partner didn't.\"",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "results": [
+    {
+      "key": "event:career_letter_trading",
+      "title": "A Partnership Offered",
+      "file": "content/events/careers.grim",
+      "line": 119,
+      "sourceHash": "14a2579521ea0d8012760f39a33c4eeb5523ce09e356698b0c8abd94db6b30b1",
+      "score": 0.923534631729126,
+      "excerpt": "A Partnership Offered\nA shipping house in the harbour has heard about your purse, or rather about how you filled it. Its old partner wants to retire, and offers you his desk and his share of the ledger from the autumn. \"Bring your crowns,\" he writes. \"Bring your nerve. Answer on "
+    },
+    {
+      "key": "event:last_career",
+      "title": "What Comes Next",
+      "file": "content/events/last_day.grim",
+      "line": 45,
+      "sourceHash": "801b34c250484cb062b3cf3fb07f17e42efba139e3f51510717803328bad4201",
+      "score": 0.4568246006965637,
+      "excerpt": "What Comes Next\n{has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems "
+    },
+    {
+      "key": "event:career_return_unseen",
+      "title": "The Office Writes Again",
+      "file": "content/events/careers.grim",
+      "line": 247,
+      "sourceHash": "aa1fe3711bd1619e698c8edffed954700fe13b0fbe8dc021ccc070568d0e2bed",
+      "score": 0.3947502076625824,
+      "excerpt": "The Office Writes Again\nA blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and the file you didn't open. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day.\nBurn it, as they'd want\nYou bu"
+    },
+    {
+      "key": "event:career_letter_shop",
+      "title": "A Lease by the Harbour",
+      "file": "content/events/careers.grim",
+      "line": 83,
+      "sourceHash": "b3749e2a4b927c37bbee400492741ca60fee49b4197eca4f51ccc6504c76fa1a",
+      "score": 0.3820856511592865,
+      "excerpt": "A Lease by the Harbour\nThe lease comes with a brass key and a letter from a harbour landlord whose wife swears by your hair tonic. A crooked little shop, two rooms and a still, yours from the autumn if you sign on the last day. Nobody has ever offered you a door of your own befor"
+    },
+    {
+      "key": "event:trading_report",
+      "title": "The Company's Report",
+      "file": "content/events/origin_funding.grim",
+      "line": 46,
+      "sourceHash": "4e8d809dbccae2d70dbb893204f0a54fbcdb31324492e1008df135fbc81640a1",
+      "score": 0.3812481760978699,
+      "excerpt": "The Company's Report\n{month == 6: The company's half-year report|The company's year-end report} arrives with a clerk's note on top. {flag(trade_good): {&The spice fleet came in early and whole. Your share is paid in full.|A good season: the northern warehouses sold out by midsumm"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "3bbe8fbec1a2cc5c4e392db3e9be3d02a7ebd9bc76f0a928542a594432d06a4d",
+      "at": "2026-10-28T23:18:24.570Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 148,
+        "total_tokens": 148,
+        "cost": 0.00000148,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000148,
+          "upstream_inference_prompt_cost": 0.00000148,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "3bbe8fbec1a2cc5c4e392db3e9be3d02a7ebd9bc76f0a928542a594432d06a4d",
+      "elapsedMs": 11654,
+      "at": "2026-10-28T23:18:36.224Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "2ab853a42a40509b1f1dbf23d6128ccf7a267d69544c03e2e42a20002266b7cd",
+      "at": "2026-10-28T23:18:36.309Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 46865,
+        "cost": 0.00234325
+      },
+      "requestHash": "2ab853a42a40509b1f1dbf23d6128ccf7a267d69544c03e2e42a20002266b7cd",
+      "elapsedMs": 455,
+      "at": "2026-10-28T23:18:36.764Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

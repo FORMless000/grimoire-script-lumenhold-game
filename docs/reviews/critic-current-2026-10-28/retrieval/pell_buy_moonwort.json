@@ -1,0 +1,108 @@
+{
+  "query": "Moonwort The old draught needs moonwort, and the only good moonwort in the village is the jar on Pell's top shelf, labelled \"Do not hum near.\" Pell sells it to staff at cost. The cost is not small. Buy the moonwort Pell weighs it twice and wraps it in waxed paper. You carry it home without humming, which is harder than it sounds. Try the cheap substitute The substitute smells wrong the moment you open it. Pell takes it from you without a word and puts it in the bin.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:pell_buy_moonwort",
+      "title": "Moonwort",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 838,
+      "sourceHash": "0ea0c3b776f67fdd31dfd068e63df5fb8b96295c679f4240162b60a7c8c361dc",
+      "score": 0.9462058544158936,
+      "excerpt": "Moonwort\nThe old draught needs moonwort, and the only good moonwort in the village is the jar on Pell's top shelf, labelled \"Do not hum near.\" Pell sells it to staff at cost. The cost is not small.\nBuy the moonwort\nPell weighs it twice and wraps it in waxed paper. You carry it ho"
+    },
+    {
+      "key": "event:pell_apothecary_drawers",
+      "title": "A Thousand Drawers",
+      "file": "content/events/pools/village_home.grim",
+      "line": 302,
+      "sourceHash": "1d19e3aa776dd415aa625942a10f58f59c24d28812fd21e567138e4cce709307",
+      "score": 0.6530677080154419,
+      "excerpt": "A Thousand Drawers\n{Pell & Daughters has a thousand drawers, each labelled in a different hand.|You find a drawer you'd swear wasn't there last time.|You've read half the labels in the shop. The other half seem to be reading you.} Today it's {\"Moonwort. Do not hum near.\"|\"Dried c"
+    },
+    {
+      "key": "event:pell_draught",
+      "title": "Of Your Own Strength",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 874,
+      "sourceHash": "4cf1cd9141f2a906dbd4b59b3e053521124740f2df4deceaf46ded46ffc2dd39",
+      "score": 0.6350246071815491,
+      "excerpt": "Of Your Own Strength\nPell closes the shop early, sets the old still on the bench and holds the lamp himself. \"Brew it,\" he says. \"I'll count.\" The recipe card lies beside you. {flag(distil_drops) and flag(distil_moonwort) and flag(distil_shortcut): You know every step of it.|Ther"
+    },
+    {
+      "key": "event:pell_apothecary_back_door",
+      "title": "Foragers at the Back Door",
+      "file": "content/events/pools/village_more.grim",
+      "line": 126,
+      "sourceHash": "7c0722de3ff3ccd7b0ccebd45ad07b77061f11baf6eb0ae0d2dab61c653e29fb",
+      "score": 0.5452879667282104,
+      "excerpt": "Foragers at the Back Door\n{At Pell's back door a forager in muddy boots is waiting to sell the morning's haul from the Whisperwood. She catches your eye. \"Cheaper than the counter, love. No questions.\"|The forager at the back door again, basket heavier, prices lower. She remember"
+    },
+    {
+      "key": "event:know_pell_counting",
+      "title": "The Good Stock",
+      "file": "content/events/knowing.grim",
+      "line": 231,
+      "sourceHash": "7d2b2871f868ef99282431ca182b8cf892be74385ff3e45af93213ec64bf8924",
+      "score": 0.5162197351455688,
+      "excerpt": "The Good Stock\nYou need a strong remedy for a friend with a fever, and Pell has the good stock, in a dark bottle on the top shelf he sells only to people he trusts. Everyone else gets the shop's ordinary tincture. Pell looks at you over his spectacles and starts to measure out th"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "c771284f922f004a5051b10fd417e2a3a7b562b57ed747e7b830cc0a61212074",
+      "at": "2026-10-28T23:51:38.713Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "Nebius",
+      "usage": {
+        "prompt_tokens": 109,
+        "total_tokens": 109,
+        "cost": 0.00000109,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000109,
+          "upstream_inference_prompt_cost": 0.00000109,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "c771284f922f004a5051b10fd417e2a3a7b562b57ed747e7b830cc0a61212074",
+      "elapsedMs": 7194,
+      "at": "2026-10-28T23:51:45.907Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "85f05594c579e27e9d5c811b2132d4088424d7ae79efba2cedbb1fefc8d6f393",
+      "at": "2026-10-28T23:51:45.988Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 42492,
+        "cost": 0.0021246
+      },
+      "requestHash": "85f05594c579e27e9d5c811b2132d4088424d7ae79efba2cedbb1fefc8d6f393",
+      "elapsedMs": 402,
+      "at": "2026-10-28T23:51:46.390Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

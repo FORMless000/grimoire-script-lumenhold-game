@@ -1,0 +1,108 @@
+{
+  "query": "The Broom That Pulls Left Your loft broom pulls left, always has. With the jar's wind behind it, it would pull you into the lake. The broom-maker in the village can true it, for a price. Pay to have it trued The broom-maker sights along it, tuts, and spends an afternoon on it. It flies straight for the first time in living memory. You miss the pull, a little. Learn to fly it crooked You learn to lean right all the time. Your back complains, and the broom keeps pulling left out of habit.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:courier_fix_broom",
+      "title": "The Broom That Pulls Left",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 996,
+      "sourceHash": "eec289852249498f0b631637b18234e2b2285b774d4f9f16d96bdedc017eaf69",
+      "score": 0.9448884129524231,
+      "excerpt": "The Broom That Pulls Left\nYour loft broom pulls left, always has. With the jar's wind behind it, it would pull you into the lake. The broom-maker in the village can true it, for a price.\nPay to have it trued\nThe broom-maker sights along it, tuts, and spends an afternoon on it. It"
+    },
+    {
+      "key": "event:flight_field_cheating_wind",
+      "title": "The Cheating Wind",
+      "file": "content/events/pools/grounds.grim",
+      "line": 214,
+      "sourceHash": "4c42de918000da7e7164dd72e3460a7aa3aa766e6a8f9ea2006f34ccde65f1a4",
+      "score": 0.6637758612632751,
+      "excerpt": "The Cheating Wind\n{season == \"winter\": The flight field is white, the hoops wearing caps of snow.|{season == \"spring\": The field is soft with new grass and the wind is playful.|{The field is empty but for the wind, practising on its own.|A lone first-year is flying very careful c"
+    },
+    {
+      "key": "event:break_castle_flight_field",
+      "title": "The Field to Yourself",
+      "file": "content/events/pools/plans_more.grim",
+      "line": 42,
+      "sourceHash": "78b6f7210d611d0c416cb237fcf32cf672151849337f5a4e9b1c58d742bbef09",
+      "score": 0.5837782025337219,
+      "excerpt": "The Field to Yourself\n{With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {seas"
+    },
+    {
+      "key": "event:beast_bristle_trim",
+      "title": "The Bristle Trim",
+      "file": "content/events/pools/courses_more.grim",
+      "line": 122,
+      "sourceHash": "3345fd483b97506ff0973f3100cc7fe763b6e2a8183e93b9c2d648fe89430dc7",
+      "score": 0.5737949013710022,
+      "excerpt": "The Bristle Trim\n{Professor Brask has the class trimming broom tails. \"Broom's a creature. Sulky, stupid creature. Groom it, or it grooms you. Into a hedge.\"|Bristle day again. Brask inspects each broom tail like a hoof, muttering to the brooms more kindly than to you.|Broom trim"
+    },
+    {
+      "key": "event:core_flying_lesson",
+      "title": "Compulsory Broom Flight",
+      "file": "content/events/expansion_classes.grim",
+      "line": 6,
+      "sourceHash": "394d794253f60253640d2b07f0a086bcd2764a9c45f14f58d403be4c8cb10a46",
+      "score": 0.5559316277503967,
+      "excerpt": "Compulsory Broom Flight\nCompulsory first-year broom flight. The instructor blows her whistle. Your broom rises, hesitates, and then — clearly having taken a dislike to you — begins drifting toward the lake.\nHold on and steer it back\nYou wrestle it round and land, wobbling, exactl"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "52604ff293a0c527af0f1628c2b4dc40bfee982c9dab90354dff9489927c3263",
+      "at": "2026-10-28T23:51:42.497Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 122,
+        "total_tokens": 122,
+        "cost": 0.00000122,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000122,
+          "upstream_inference_prompt_cost": 0.00000122,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "52604ff293a0c527af0f1628c2b4dc40bfee982c9dab90354dff9489927c3263",
+      "elapsedMs": 796,
+      "at": "2026-10-28T23:51:43.293Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "cba4fe94fd423a4b8283b982126a27f947e735e6da62b589ba0b53ea78099f51",
+      "at": "2026-10-28T23:51:43.345Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 38646,
+        "cost": 0.0019323
+      },
+      "requestHash": "cba4fe94fd423a4b8283b982126a27f947e735e6da62b589ba0b53ea78099f51",
+      "elapsedMs": 369,
+      "at": "2026-10-28T23:51:43.714Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

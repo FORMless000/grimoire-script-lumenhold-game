@@ -1,0 +1,108 @@
+{
+  "query": "Say It So It Lands Seraphine stops halfway through a sentence and looks at the candle across the observatory. \"That will go out,\" she says, quite clearly, \"when I've finished the next word.\" It does. \"Saying it is the spell. Seeing it is just… I can teach you the saying part.\" Learn to say it out loud It takes the whole night, and it's unsettling to hear your own voice go flat and certain. Near dawn you foretell a dropped spoon and the spoon drops. Seraphine smiles at something next week. Ask what she sees for you \"Quiet,\" she says. \"Yours is always quiet.\" She doesn't teach you tonight. She says you'll ask again, and you know she's right, which is the strange part.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:seraphine_teaches_omen",
+      "title": "Say It So It Lands",
+      "file": "content/events/spell_sources.grim",
+      "line": 254,
+      "sourceHash": "b2ea082b3bb4668f74a0c07ba3999999048cd3d9f2dd3d98e6897dfd88f93b1c",
+      "score": 0.9464151263237,
+      "excerpt": "Say It So It Lands\nSeraphine stops halfway through a sentence and looks at the candle across the observatory. \"That will go out,\" she says, quite clearly, \"when I've finished the next word.\" It does. \"Saying it is the spell. Seeing it is just… I can teach you the saying part.\"\nLe"
+    },
+    {
+      "key": "event:lesson_omen",
+      "title": "The Spoon Will Fall",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 354,
+      "sourceHash": "687d5ffbf0e308b09f57e26455f9efce1f76f120e6f6fc8d757edd5ccaea4a81",
+      "score": 0.7013975977897644,
+      "excerpt": "The Spoon Will Fall\nAt breakfast Seraphine says, without looking up, \"Practise on small things. Spoons. Doors. The weather. Never people, not yet.\" Then she looks at you, quite clearly, for once.\nForetell small things all day\nThe spoon falls. The door sticks. It rains at four. By"
+    },
+    {
+      "key": "event:seraphine_date_a_future",
+      "title": "A Future She Saw",
+      "file": "content/events/pools/dating.grim",
+      "line": 256,
+      "sourceHash": "8cda76c9bddb3ea25f008a4020191403531a42a48397721fb7cd0363e079cf6f",
+      "score": 0.6703142523765564,
+      "excerpt": "A Future She Saw\n{Seraphine says she's seen a future with the two of you in it, and wants to tell you about it on the observatory floor, under the shuttered dome.|Another future, another hour on the observatory floor.|\"I saw us again,\" Seraphine says, lying down beside you. \"Olde"
+    },
+    {
+      "key": "event:seraphine_too_loud",
+      "title": "Too Loud",
+      "file": "content/events/bonds/friends.grim",
+      "line": 250,
+      "sourceHash": "ae3f1d7913be3e9d8961ac9f0dabbb27faa8985b679f8f19ce096faf8a4f7515",
+      "score": 0.6227171421051025,
+      "excerpt": "Too Loud\nIn the middle of a full refectory Seraphine puts both hands over her ears and goes white. Nobody notices but you. \"Everyone's futures,\" she whispers, when you get to her. \"All at once. It's like a hundred people shouting what they'll be.\"\nGet her out of there\nYou walk he"
+    },
+    {
+      "key": "event:seraphine_between_sentences",
+      "title": "The Other Half",
+      "file": "content/events/between_known_2.grim",
+      "line": 31,
+      "sourceHash": "fe37f8c37f5079a51f1937965cfaf81be128ff4ef165a62209b225fe55bbc2ab",
+      "score": 0.6024503707885742,
+      "excerpt": "The Other Half\n{~{o} has started a sentence three times today, and Seraphine has finished it three times, correctly, half a second early.|Seraphine answered a question {o} hadn't asked yet. {o} asked it anyway, to be sure. It was the right answer.|{o} told a joke at supper, and S"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "f31152fd75dc81ad91b2b2935a9ea778f8fcd183007b7f1b8f26e08ca343444d",
+      "at": "2026-10-28T23:51:50.910Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 163,
+        "total_tokens": 163,
+        "cost": 0.00000163,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000163,
+          "upstream_inference_prompt_cost": 0.00000163,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "f31152fd75dc81ad91b2b2935a9ea778f8fcd183007b7f1b8f26e08ca343444d",
+      "elapsedMs": 344,
+      "at": "2026-10-28T23:51:51.254Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "a79fdaa56eb993399f715cac2db2f378825f814153085317899d867910fce97f",
+      "at": "2026-10-28T23:51:51.347Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 39947,
+        "cost": 0.00199735
+      },
+      "requestHash": "a79fdaa56eb993399f715cac2db2f378825f814153085317899d867910fce97f",
+      "elapsedMs": 611,
+      "at": "2026-10-28T23:51:51.958Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

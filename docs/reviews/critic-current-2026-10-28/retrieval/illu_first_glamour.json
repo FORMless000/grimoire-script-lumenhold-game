@@ -1,0 +1,108 @@
+{
+  "query": "Lighting, Not Lying {level(illusion) == 0: Illusion I begins with Professor Vey asking the class to make her like them more, without saying a word. \"Glamour,\" she says, \"is not lying. It's lighting.\"|{level(illusion) == 1: Illusion II: glamour that lasts past the door. Vey sends you to the refectory at lunch with one rule. \"Be remembered for something you didn't do.\"|Advanced Illusion opens with Vey wearing your face. She teaches the first ten minutes in your voice, quite well. \"Now take it back,\" she says.}} Try it on Vey herself {level(illusion) == 0: Vey likes you a great deal for almost a minute, then shakes it off and applauds. You feel wrung out, as if you'd smiled all day.|{level(illusion) == 1: By supper three people remember you saving the cook from a falling ladle. There was no ladle. You're too tired to enjoy it.|You take your face back from her a feature at a time. It costs you everything you had. Vey hands over the last one, your frown, with regret.}} Practise on a mirror first {level(illusion) == 0: You glamour your reflection, which likes you and is no help at all. Vey catches you at it. \"Start with a harder audience,\" she says, and the class laughs.|{level(illusion) == 1: You rehearse in the washroom mirror until a prefect walks in on you being charming at nobody. The glamour works on the second day.|You practise your own face for a week before you try to take it back. By then everyone has met Vey-as-you, and they liked her better.}}",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:illu_first_glamour",
+      "title": "Lighting, Not Lying",
+      "file": "content/events/spell_sources.grim",
+      "line": 76,
+      "sourceHash": "c5a8308cd9482ee13d9dce40d9db3bd1c38367d12490b236c0bddf2e23063cf4",
+      "score": 0.9429717659950256,
+      "excerpt": "Lighting, Not Lying\n{level(illusion) == 0: Illusion I begins with Professor Vey asking the class to make her like them more, without saying a word. \"Glamour,\" she says, \"is not lying. It's lighting.\"|{level(illusion) == 1: Illusion II: glamour that lasts past the door. Vey sends "
+    },
+    {
+      "key": "event:illu_one_small_change",
+      "title": "One Small Change",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 36,
+      "sourceHash": "c2f7f3691aabbfb0ad8740529814e52e10b642751b622596b0710555a1c78727",
+      "score": 0.6618427634239197,
+      "excerpt": "One Small Change\n{Hand mirrors all round. Glamour your own face, Vey says; change one small thing and hold it.|Out come the mirrors. A glamour you can't hold on yourself, Vey says, won't hold on anyone.|Mirror practice. You know your own face too well by now.} {Vey says people al"
+    },
+    {
+      "key": "event:illu_find_vey",
+      "title": "Find the Professor",
+      "file": "content/events/pools/courses_b.grim",
+      "line": 101,
+      "sourceHash": "c7547c5c122dafd1a7188182cbf11cd3fdf2a1bcfc03f3eb1428bd317136bc7b",
+      "score": 0.642796516418457,
+      "excerpt": "Find the Professor\n{Professor Vey is rarely at the lectern in Illusion II. She is somewhere in the room, wearing someone else, and the first to name her wins.|Vey's chair is empty. Everyone eyes the porter with the mop.|The lectern is empty. You trust nothing in this room.} {Ther"
+    },
+    {
+      "key": "event:illusion_mirror_self",
+      "title": "A Second You",
+      "file": "content/events/classes.grim",
+      "line": 168,
+      "sourceHash": "7dfe2fcf7209caf33b771fb3c5ef921ed18f764d07775593dce3b7d7f8c43440",
+      "score": 0.635392963886261,
+      "excerpt": "A Second You\nAssignment: conjure a convincing illusion of yourself. Professor Vey circles the room. \"Most students make themselves taller. Interesting, what people choose.\"\nMake it flattering\nYour double is radiant, confident, slightly better-looking. Vey writes something down an"
+    },
+    {
+      "key": "event:lesson_glamour",
+      "title": "Pick a Card",
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 138,
+      "sourceHash": "9d98f071fe177d154a79032b5b642637495c571a6419f240861ec4b64e26879f",
+      "score": 0.6105297207832336,
+      "excerpt": "Pick a Card\nProfessor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. \"Fool me, and you may skip the essay.\"\nGlamour your card\n"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "68c9548db4f24199d225f4fe5cf9ad29f40577f7937e153416089537b3536edf",
+      "at": "2026-10-28T23:51:48.966Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 382,
+        "total_tokens": 382,
+        "cost": 0.00000382,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000382,
+          "upstream_inference_prompt_cost": 0.00000382,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "68c9548db4f24199d225f4fe5cf9ad29f40577f7937e153416089537b3536edf",
+      "elapsedMs": 338,
+      "at": "2026-10-28T23:51:49.304Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "1f4da584205fa95ac8cdc9ad077bf73b09306c9c7e958277e657c28b407a3de3",
+      "at": "2026-10-28T23:51:49.433Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 44969,
+        "cost": 0.00224845
+      },
+      "requestHash": "1f4da584205fa95ac8cdc9ad077bf73b09306c9c7e958277e657c28b407a3de3",
+      "elapsedMs": 433,
+      "at": "2026-10-28T23:51:49.866Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

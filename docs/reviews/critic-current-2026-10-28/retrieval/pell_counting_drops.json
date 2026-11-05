@@ -1,0 +1,108 @@
+{
+  "query": "Counting Drops Pell distills by the drop, all night, counting aloud. \"If you mean to try the old draught,\" he says, \"you'll count with me first. Lose count once and we start again.\" Count all night with him Four hundred and twelve drops, and you don't lose count once. At dawn Pell says \"Fair,\" which is once a decade, and lets you stopper the bottle. You lose count at three hundred and something. Pell starts again without comment. So do you. You lose it again. Go home and sleep You go home. Pell counts on alone, steadily, through the night. In the morning the bottle is full and labelled, and he says nothing about it.",
+  "backend": "grim",
+  "corpusHash": "b40c063e5e29814ca8ded0dce3593231ffde182015c0faf3a531b8c1a9eb216c",
+  "indexHash": "443c111afd3b1ff6bf1dd39b7c373523725294d1f8392c76bb2da7a4a4af6986",
+  "method": "Equivalent batched adapter; see method-validation.json",
+  "results": [
+    {
+      "key": "event:pell_counting_drops",
+      "title": "Counting Drops",
+      "file": "content/events/club_spell_chains.grim",
+      "line": 814,
+      "sourceHash": "5c7171514fc50323243d9e2427831ef18a3be08ac180eb0afe08080f7613e896",
+      "score": 0.954414427280426,
+      "excerpt": "Counting Drops\nPell distills by the drop, all night, counting aloud. \"If you mean to try the old draught,\" he says, \"you'll count with me first. Lose count once and we start again.\"\nCount all night with him\nFour hundred and twelve drops, and you don't lose count once. At dawn Pel"
+    },
+    {
+      "key": "event:pell_count_drops",
+      "title": "Count Them Aloud",
+      "file": "content/events/fixtures.grim",
+      "line": 535,
+      "sourceHash": "30ff0e0eadc2278605465e11df3764df59758dad246b83357f285b89945ee948",
+      "score": 0.8139271140098572,
+      "excerpt": "Count Them Aloud\n{Old Pell sets a dropper in your hand. \"Forty. Aloud.\" He watches your lips, not the vial.|\"Forty,\" says Pell, and stands behind you. You can hear him counting along under his breath.|Pell has started leaving you the hard tinctures. That is how he says he trusts "
+    },
+    {
+      "key": "event:apothecary_clerk_counting_drops",
+      "title": "Counting Drops",
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 624,
+      "sourceHash": "fe0075429ea3cb49f60fc4046a7f7f7ff8a7929e1059727c242ced5e92d33e35",
+      "score": 0.7330436110496521,
+      "excerpt": "Counting Drops\n{Old Pell's first rule is to count every drop aloud. Today the counter is lined with tinctures waiting to be measured.|Drop-counting. Your tongue knows the numbers before your eyes do.|Counting drops. Old Pell says you count like a metronome now, which from him is "
+    },
+    {
+      "key": "event:pell_first_shift",
+      "title": "Count Aloud",
+      "file": "content/events/people_others.grim",
+      "line": 638,
+      "sourceHash": "f641ef0185ec53cafdc2dd7065953c48bb1a0b6e41d26d474ab15933ae036224",
+      "score": 0.707821249961853,
+      "excerpt": "Count Aloud\nYour first shift at Pell & Daughters. Old Pell climbs down from his ladder, hands you a dropper and a bottle of tincture, and points at a waiting customer. \"Twelve drops,\" he says. \"Aloud. Everyone counts aloud in this shop. The drawers like it.\"\nCount every drop alou"
+    },
+    {
+      "key": "event:know_pell_counting",
+      "title": "The Good Stock",
+      "file": "content/events/knowing.grim",
+      "line": 231,
+      "sourceHash": "7d2b2871f868ef99282431ca182b8cf892be74385ff3e45af93213ec64bf8924",
+      "score": 0.6971163749694824,
+      "excerpt": "The Good Stock\nYou need a strong remedy for a friend with a fever, and Pell has the good stock, in a dark bottle on the top shelf he sells only to people he trusts. Everyone else gets the shop's ordinary tincture. Pell looks at you over his spectacles and starts to measure out th"
+    }
+  ],
+  "calls": [
+    {
+      "stage": "embedding",
+      "status": "attempted",
+      "model": "qwen/qwen3-embedding-8b",
+      "requestHash": "fb2097d13a7446926ae2d35752438df8f19b357e0520c12cba8a305f00b5dde7",
+      "at": "2026-10-28T23:51:38.578Z"
+    },
+    {
+      "stage": "embedding",
+      "status": "succeeded",
+      "endpoint": "/embeddings",
+      "model": "qwen/qwen3-embedding-8b",
+      "actualModel": "Qwen/Qwen3-Embedding-8B",
+      "provider": "DeepInfra",
+      "usage": {
+        "prompt_tokens": 147,
+        "total_tokens": 147,
+        "cost": 0.00000147,
+        "is_byok": false,
+        "cost_details": {
+          "upstream_inference_cost": 0.00000147,
+          "upstream_inference_prompt_cost": 0.00000147,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "requestHash": "fb2097d13a7446926ae2d35752438df8f19b357e0520c12cba8a305f00b5dde7",
+      "elapsedMs": 309,
+      "at": "2026-10-28T23:51:38.887Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "attempted",
+      "model": "voyageai/rerank-2.5",
+      "requestHash": "ed1b67c988921250eb78a40b01192b9ffe18038c621e0f13896aa0e053ab7fa6",
+      "at": "2026-10-28T23:51:38.981Z"
+    },
+    {
+      "stage": "rerank",
+      "status": "succeeded",
+      "endpoint": "/rerank",
+      "model": "voyageai/rerank-2.5",
+      "actualModel": "rerank-2.5",
+      "provider": "VoyageAI by MongoDB",
+      "usage": {
+        "total_tokens": 38089,
+        "cost": 0.00190445
+      },
+      "requestHash": "ed1b67c988921250eb78a40b01192b9ffe18038c621e0f13896aa0e053ab7fa6",
+      "elapsedMs": 829,
+      "at": "2026-10-28T23:51:39.810Z"
+    }
+  ],
+  "warning": "Similar premises to inspect, not a duplicate verdict."
+}

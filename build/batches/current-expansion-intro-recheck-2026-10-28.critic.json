@@ -1,0 +1,62 @@
+{
+  "batch": "current-expansion-intro-recheck-2026-10-28",
+  "accept": true,
+  "reviewed_at": "2026-10-28",
+  "contentHash": "0e06e8",
+  "scope": {
+    "definition": "Currently compiled event IDs; supporting old cards are context.",
+    "reviewedEventIds": [
+      "intro_welcome",
+      "intro_tour",
+      "intro_wrong_tower",
+      "intro_room",
+      "intro_practice_circle",
+      "intro_kit",
+      "intro_lunch",
+      "intro_vey_tea",
+      "jit_after_curfew",
+      "jit_red_string",
+      "jit_exam_nerves",
+      "jit_long_break",
+      "jit_counter",
+      "jit_real_fight",
+      "jit_real_negotiation",
+      "jit_infirmary",
+      "jit_something_more",
+      "jit_rivals",
+      "jit_mirror",
+      "jit_noticed",
+      "jit_first_shift",
+      "jit_applications"
+    ],
+    "files": [
+      "content/events/intro.grim"
+    ]
+  },
+  "summary": "Accepted with one dialogue/fact polish point after re-reading the 22 surviving original intro IDs. Both earlier findings are repaired: negotiation memories are choice-neutral and breaks handle home/campus context. The retired intro_purse is excluded.",
+  "issues": [
+    {
+      "event": "intro_practice_circle",
+      "priority": "P3",
+      "category": "fact grant and dialogue",
+      "problem": "Winning or drawing against the mannequin learns thorne.lost, whose fact says Thorne lost badly to a storm. Only the loss dialogue actually discloses that story. The winning and drawn tutorials silently give the player specific history Thorne never tells them.",
+      "fix": "Give his storm admission a line in each outcome that teaches the fact, or learn the fact only in the outcome that discloses it.",
+      "evidence": [
+        "content/world/facts/thorne.grim: thorne.lost",
+        "intro_practice_circle win and partial effects"
+      ],
+      "file": "content/events/intro.grim",
+      "line": 215
+    }
+  ],
+  "validation": {
+    "localRead": "complete",
+    "semanticRetrieval": {
+      "status": "complete",
+      "audit": "docs/reviews/critic-current-2026-10-28/retrieval-audit.json",
+      "approval": "User explicitly allowed OpenRouter retrieval for this critic pass.",
+      "scope": "Fresh queries for 135 newer first-pass cards, 114 older first-pass gaps, five post-review edits and two suspected duplicate scenes. Previous evidence reused for unchanged re-review premises."
+    },
+    "probes": "docs/reviews/critic-current-2026-10-28/probes.json"
+  }
+}
