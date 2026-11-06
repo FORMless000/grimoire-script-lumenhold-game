@@ -129,9 +129,10 @@ body:has(.fl-layer) #fbBar { display: none; }
 .fl-result { text-align: center; padding: 16px 12px; border-radius: 16px; border: 1px solid var(--line); background: var(--panel); }
 .fl-result h2 { margin: 0; font: 600 32px var(--display); color: var(--gold-2); } .fl-result.loss h2 { color: #ff9d90; }
 .fl-result p { margin: 4px 0 10px; color: var(--muted); }
-/* A mutual knockout, said plainly (feedback 2026-10-29) */
-.fl-result .fl-tb { margin: -2px auto 12px; max-width: 46ch; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(240, 213, 140, .45); background: rgba(240, 213, 140, .08); color: var(--text); font-size: 13px; line-height: 1.4; }
-.fl-result .fl-tb b { display: block; color: var(--gold-2); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+/* How it was decided, when it wasn't plain (feedback 2026-10-29, 2026-11-05): a mutual knockout, a fight called on points */
+.fl-result .fl-why { margin: -2px auto 12px; max-width: 52ch; padding: 7px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); font-size: 13px; line-height: 1.45; text-align: left; }
+.fl-result .fl-why b { display: block; margin-bottom: 2px; color: var(--accent); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; }
+.fl-result .fl-why p { margin: 0 0 4px; color: var(--text); } .fl-result .fl-why p:last-child { margin-bottom: 0; } .fl-result .fl-why p.rule { color: var(--muted); font-size: 12px; }
 .fl-net { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin-bottom: 12px; font-size: 13px; }
 .fl-net .neg { color: #ff8a80; } .fl-net .pos { color: var(--k-heal); }
 
@@ -274,7 +275,7 @@ body:has(.fl-layer) #fbBar { display: none; }
 .fl-tl-row { display: grid; grid-template-columns: 46px repeat(var(--cols), 28px); align-items: center; }
 .fl-tl-row.head { min-height: 15px; }
 .fl-tl-side + .fl-tl-side { border-top: 1px dashed rgba(255, 255, 255, .08); }
-.fl-tl-w { position: sticky; left: 0; z-index: 2; align-self: stretch; display: flex; align-items: center; padding-left: 6px; font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: #191d3e; }
+.fl-tl-w { position: sticky; left: 0; z-index: 2; align-self: stretch; display: flex; align-items: center; padding-left: 6px; font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--night-2); }
 .fl-tl-side.s1 .fl-tl-w { color: var(--opp); } .fl-tl-side.s0 .fl-tl-w { color: var(--you); }
 .fl-tl-h { text-align: center; font-size: 9.5px; font-weight: 700; color: var(--muted); line-height: 1.1; }
 .fl-tl-h.past { opacity: .55; cursor: pointer; } .fl-tl-h.now { color: var(--gold-2); }
@@ -296,7 +297,7 @@ body:has(.fl-layer) #fbBar { display: none; }
 .fl-tl-s i.c-bad:not([class*=" s-"]) { --kc: var(--k-debuff); }
 .fl-tl-s i.first { left: 50%; border-radius: 3px 0 0 3px; } .fl-tl-s i.last { right: 50%; border-radius: 0 3px 3px 0; } .fl-tl-s i.first.last { left: 25%; right: 25%; border-radius: 3px; }
 .fl-tl-s i.open { right: 0; -webkit-mask: linear-gradient(90deg, #000 50%, transparent); mask: linear-gradient(90deg, #000 50%, transparent); }
-.fl-tl-s i .fl-ico { position: absolute; left: -6px; top: -4px; width: 12px; height: 12px; color: var(--kc); background: #191d3e; border-radius: 50%; }
+.fl-tl-s i .fl-ico { position: absolute; left: -6px; top: -4px; width: 12px; height: 12px; color: var(--kc); background: var(--night-2); border-radius: 50%; }
 
 /* The engine's analysis */
 .fl-engine { border-radius: 12px; border: 1px solid rgba(159, 224, 167, .3); background: var(--night-2); padding: 4px 8px; font-size: 11.5px; }
@@ -320,7 +321,7 @@ body:has(.fl-layer) #fbBar { display: none; }
 
 /* The moves: a compact grid */
 .fl-mvs { display: grid; grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: 4px; max-height: calc(4 * 58px + 3 * 4px + 2px); overflow-y: auto; scrollbar-width: thin; padding: 1px; }
-.fl-layer .fl-mv { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 0; min-height: 58px; padding: 4px 5px 4px; border-radius: 10px; text-align: left; font-weight: 600; background: linear-gradient(180deg, #252b58, #1b2046); }
+.fl-layer .fl-mv { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 0; min-height: 58px; padding: 4px 5px 4px; border-radius: 10px; text-align: left; font-weight: 600; background: linear-gradient(180deg, color-mix(in srgb, var(--night-3) 82%, #fff 6%), var(--night-2)); }
 .fl-mv-top { display: flex; justify-content: space-between; align-items: flex-start; }
 .fl-mv .fl-ico { width: 20px; height: 20px; }
 .fl-mv .fl-cost { font-size: 10px; } .fl-mv .fl-cost b::before { font-size: 9px; }
@@ -455,3 +456,121 @@ body:has(.fl-layer) #fbBar { display: none; }
 .fl-layer .ar-moves { display: flex; flex-direction: column; gap: 5px; }
 @container fight (max-width: 380px) { .fl-layer .ar-pf { width: 40px; height: 40px; } .fl-layer .ar-side .fl-vbars { height: 40px; } }
 @media (prefers-reduced-motion: reduce) { .fl-layer *, .fl-layer *::before, .fl-layer *::after, .fl-layer { animation: none !important; } }
+
+/* ---- The table's skin (2026-11-05): the fight dressed as the negotiation's table (crux/style.css). The fight's setting
+ * picks a skin on the layer (src/combat-ui.js skinOf: a duelling hall, a crowd, the ring's lamp, a real fight, the wild,
+ * the dark), each with the palette of the negotiation circumstance it echoes; its ambience is pinned behind the fight;
+ * the card's parchment tab sits over a gold-lined table. Motion follows the reduced-motion setting. ---- */
+.fl-layer, .fl-amb {
+  --night: #0e1124; --night-2: #161a35; --night-3: #20264a; --line: rgba(233, 214, 160, .16); --line-2: rgba(233, 214, 160, .3);
+  --accent: #f0d58c; --glow-1: rgba(96, 80, 200, .25); --glow-2: rgba(200, 120, 60, .12); --table: rgba(22, 26, 53, .94); --texture: none;
+  --parch: #f4ecd8; --paper-ink: #2a2238; --head-font: var(--display); --panel: color-mix(in srgb, var(--night-2) 78%, transparent);
+}
+.fl-layer { z-index: 1; margin-top: 0; padding: 12px 12px 18px; border-radius: 18px; }
+.fl-layer[data-skin=crowd], .fl-amb[data-skin=crowd] {
+  --night: #170a0e; --night-2: #231016; --night-3: #30161e; --accent: #ffd46b; --line: rgba(255, 212, 107, .15); --line-2: rgba(255, 212, 107, .32);
+  --glow-1: rgba(220, 40, 60, .22); --glow-2: rgba(255, 210, 110, .14); --table: rgba(35, 15, 21, .95);
+  --texture: repeating-linear-gradient(90deg, rgba(0, 0, 0, .1) 0 6px, rgba(255, 255, 255, .012) 6px 12px); --parch: #f6e7c1; --paper-ink: #3b1118; --head-font: "Playfair Display SC", var(--display);
+}
+.fl-layer[data-skin=lamp], .fl-amb[data-skin=lamp] {
+  --night: #17110b; --night-2: #221911; --night-3: #2e2217; --accent: #f2b35c; --line: rgba(242, 179, 92, .15); --line-2: rgba(242, 179, 92, .3);
+  --glow-1: rgba(230, 150, 60, .2); --glow-2: rgba(160, 90, 40, .16); --table: rgba(33, 24, 15, .95);
+  --texture: repeating-linear-gradient(0deg, rgba(255, 220, 160, .02) 0 1px, transparent 1px 4px), repeating-linear-gradient(90deg, rgba(255, 220, 160, .02) 0 1px, transparent 1px 4px); --parch: #e6d1a8; --paper-ink: #3a2a18;
+}
+.fl-layer[data-skin=ember], .fl-amb[data-skin=ember] {
+  --night: #170e12; --night-2: #22151a; --night-3: #2e1d23; --accent: #e7c37a; --line: rgba(231, 195, 122, .15); --line-2: rgba(231, 195, 122, .3);
+  --glow-1: rgba(170, 70, 60, .2); --glow-2: rgba(230, 190, 120, .1); --table: rgba(32, 19, 24, .95);
+  --texture: repeating-linear-gradient(90deg, rgba(255, 230, 180, .022) 0 2px, transparent 2px 26px); --parch: #efe2c4;
+}
+.fl-layer[data-skin=wild], .fl-amb[data-skin=wild] {
+  --night: #0a140e; --night-2: #101e15; --night-3: #17291d; --accent: #a6e88a; --line: rgba(166, 232, 138, .14); --line-2: rgba(166, 232, 138, .28);
+  --glow-1: rgba(90, 190, 110, .2); --glow-2: rgba(200, 240, 140, .1); --table: rgba(15, 29, 20, .92);
+  --texture: radial-gradient(60% 40% at 20% 0%, rgba(200, 255, 170, .05), transparent 70%), radial-gradient(40% 30% at 85% 100%, rgba(200, 255, 170, .04), transparent 70%); --parch: #e3ead2; --paper-ink: #1f3322; --head-font: "IM Fell English", var(--display);
+}
+.fl-layer[data-skin=shadow], .fl-amb[data-skin=shadow] {
+  --night: #08060f; --night-2: #110d1c; --night-3: #1a1429; --accent: #b9a3ff; --line: rgba(185, 163, 255, .14); --line-2: rgba(185, 163, 255, .28);
+  --glow-1: rgba(120, 70, 220, .22); --glow-2: rgba(20, 0, 40, .5); --table: rgba(14, 10, 24, .93);
+  --texture: radial-gradient(130% 100% at 50% 0%, transparent 55%, rgba(0, 0, 0, .35)); --parch: #2a2338; --paper-ink: #e2d8ff; --head-font: "IM Fell English", var(--display);
+}
+html[lang^="zh"] .fl-layer, html[lang^="zh"] .fl-amb { --head-font: var(--display); }
+
+/* The ambience: the night, its two glows, its light and drifting motes, behind the fight (a sibling of the layer, laid over
+ * the layer's box: inside it, it would scroll with the fight or stretch it). Placed by a fixed scatter. */
+.fl-amb { position: absolute; z-index: 0; border-radius: 18px; overflow: hidden; pointer-events: none;
+  background: radial-gradient(1200px 600px at 80% -10%, var(--glow-1), transparent 60%), radial-gradient(900px 500px at -10% 110%, var(--glow-2), transparent 60%), var(--night);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03); }
+.stage.fight-enter > .fl-amb { animation: fl-in .35s ease backwards; }
+.fl-amb > * { position: absolute; display: none; }
+.fl-amb > i { left: var(--x); top: var(--y); }
+.fl-amb .amb-star svg { width: 100%; height: 100%; }
+.fl-amb[data-skin=hall] .amb-light { display: block; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; background: linear-gradient(115deg, transparent 30%, rgba(255, 245, 210, .035) 45%, rgba(255, 245, 210, .055) 52%, transparent 66%); }
+.fl-amb[data-skin=hall] > i { display: block; width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 245, 210, .55); scale: var(--s); animation: crux-mote calc(var(--d) * 2) linear var(--w) infinite; }
+.fl-amb[data-skin=crowd] .amb-light { display: block; left: 50%; top: -30vh; width: 160vh; height: 160vh; margin-left: -80vh; background: conic-gradient(from 168deg at 50% 0%, transparent 0 4deg, rgba(255, 230, 160, .07) 4deg 12deg, transparent 12deg 30deg, rgba(255, 200, 200, .05) 30deg 36deg, transparent 36deg); animation: crux-sweep 9s ease-in-out infinite alternate; transform-origin: 50% 0; }
+.fl-amb[data-skin=lamp] .amb-light { display: block; left: 50%; top: -30vh; width: 90vw; height: 90vh; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(255, 190, 100, .12), transparent); animation: crux-lamp 5s ease-in-out infinite alternate; }
+.fl-amb[data-skin=lamp] > i:nth-child(3n) { display: block; width: 6px; height: 6px; background: #ffe2a0; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); scale: var(--s); animation: crux-glint var(--d) ease-in-out var(--w) infinite; }
+.fl-amb[data-skin=ember] .amb-light { display: block; left: 0; right: 0; top: 0; bottom: 0; background: repeating-linear-gradient(90deg, transparent 0 14vw, rgba(255, 220, 160, .025) 14vw 18vw, transparent 18vw 24vw); -webkit-mask-image: linear-gradient(180deg, #000, transparent 70%); mask-image: linear-gradient(180deg, #000, transparent 70%); }
+.fl-amb[data-skin=ember] > i:nth-child(2n) { display: block; width: 3px; height: 3px; border-radius: 50%; background: #ffb070; box-shadow: 0 0 6px rgba(255, 140, 60, .7); scale: var(--s); animation: crux-rise calc(var(--d) * 1.4) linear var(--w) infinite; }
+.fl-amb[data-skin=wild] > i { display: block; width: 4px; height: 4px; border-radius: 50%; background: #e4ff9a; box-shadow: 0 0 8px 3px rgba(190, 255, 120, .45); scale: var(--s); animation: crux-firefly var(--d) ease-in-out var(--w) infinite alternate, crux-blink 3.2s ease-in-out var(--w) infinite; }
+.fl-amb[data-skin=shadow] .amb-star { display: block; right: -14vh; top: -18vh; width: 70vh; height: 70vh; color: #b9a3ff; opacity: .05; animation: crux-turn 140s linear infinite; }
+.fl-amb[data-skin=shadow] > i { display: block; width: 3px; height: 3px; border-radius: 50%; background: #b9a3ff; box-shadow: 0 0 6px rgba(185, 163, 255, .6); scale: var(--s); animation: crux-rise calc(var(--d) * 1.6) linear var(--w) infinite; }
+/* The negotiation's keyframes, under the same names (crux/style.css is loaded too; these keep the fight whole without it). */
+@keyframes crux-mote { from { transform: translate(0, -20px); opacity: 0; } 20% { opacity: .9; } 80% { opacity: .6; } to { transform: translate(-30px, 90px); opacity: 0; } }
+@keyframes crux-sweep { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+@keyframes crux-lamp { to { opacity: .7; transform: translateX(-50%) scale(1.05); } }
+@keyframes crux-glint { 0%, 70%, 100% { opacity: 0; transform: scale(.4) rotate(0); } 80% { opacity: .9; transform: scale(1.2) rotate(45deg); } }
+@keyframes crux-firefly { from { transform: translate(0, 0); } 50% { transform: translate(26px, -18px); } to { transform: translate(-14px, -40px); } }
+@keyframes crux-blink { 0%, 100% { opacity: .15; } 45%, 60% { opacity: 1; } }
+@keyframes crux-turn { to { transform: rotate(360deg); } }
+@keyframes crux-rise { from { transform: translateY(40px); opacity: 0; } 30% { opacity: .7; } to { transform: translateY(-120px); opacity: 0; } }
+
+/* The card's tab over the table, and the table */
+.fl-stub { display: flex; align-items: baseline; gap: 10px; width: min(696px, calc(100% - 28px)); margin: 0 0 -14px; padding: 8px 14px 20px; background: var(--parch); color: var(--paper-ink); border-radius: 18px 18px 0 0; box-shadow: 0 10px 30px rgba(0, 0, 0, .4); }
+.fl-stub .tag { flex: none; font: 600 9.5px var(--sans); letter-spacing: .14em; color: var(--paper-ink); opacity: .8; background: color-mix(in srgb, var(--paper-ink) 9%, transparent); padding: 2px 7px; border-radius: 6px; }
+.fl-stub h3 { flex: 1; min-width: 0; margin: 0; font: 700 20px var(--head-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fl-layer .fl-wrap { padding: 10px 12px 12px; border-radius: 18px; border: 1px solid var(--line-2); background: var(--texture), var(--table); box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
+.fl-layer .fl-loading { color: var(--muted); }
+@container fight (max-width: 420px) { .fl-layer .fl-wrap { padding: 8px; } .fl-stub h3 { font-size: 17px; } }
+
+/* Type and colour, as at the table: names in the display face, the exchange's label as an eyebrow, the selected move ringed in gold */
+.fl-layer .ar-meta > b { font: 600 16px/1.1 var(--head-font); }
+.fl-layer .ar-side.opp .ar-meta > b { color: var(--accent); }
+.fl-layer .ar-side { background: var(--panel); border-color: var(--line); }
+.fl-layer .ar-stage { background: radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--night) 55%, transparent) 70%); border-color: var(--line); }
+.fl-layer .ar-stage header b { color: var(--accent); letter-spacing: .13em; }
+.fl-layer .fl-tl { background: var(--panel); }
+.fl-layer .fl-read { background: var(--night-3); border-color: var(--line-2); }
+.fl-layer .fl-mv { border-color: var(--line); }
+.fl-layer .fl-mv:hover:not(:disabled) { border-color: var(--gold); }
+.fl-layer .fl-mv.on { border-color: var(--gold); background: color-mix(in srgb, var(--night-3) 70%, #3a3a70); box-shadow: 0 0 0 1px var(--gold), 0 0 18px rgba(217, 180, 90, .3); }
+.fl-layer .fl-primary { background: linear-gradient(180deg, #e7c470, #c99a3a) !important; color: #23190a !important; border-color: transparent !important; }
+.fl-layer .fl-setting, .fl-layer .fl-kit { background: var(--panel); }
+
+/* Effects borrowed from the table: a changed number bumps with a glow; the fight's lines come in as a voice does. */
+.fl-layer .fl-n.bump { display: block; transform-origin: 0 50%; }
+.fl-layer .fl-n.bump.down { --flash: #ff8a80; animation: fl-shake .35s ease, fl-bump .7s cubic-bezier(.3, 1.6, .5, 1) .17s; }
+.fl-layer .fl-n.bump.up { --flash: var(--k-heal); animation: fl-bump .7s cubic-bezier(.3, 1.6, .5, 1) .17s; }
+@keyframes fl-bump { 0% { transform: scale(1); } 35% { transform: scale(1.14); color: var(--flash); text-shadow: 0 0 12px var(--flash); } 100% { transform: none; } }
+.fl-layer .ar-stage.fresh .ar-text p, .fl-layer .ar-say.fresh { animation: fl-voice .6s cubic-bezier(.2, .8, .2, 1) .4s both; }
+.fl-layer .ar-stage.fresh .ar-text p + p, .fl-layer .ar-side.opp .ar-say.fresh { animation-delay: .52s; }
+@keyframes fl-voice { from { opacity: 0; transform: translateY(6px); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* The result, in the table where the moves were: the emblem stamped in on a win, fading on a loss; then the words. */
+.fl-layer .fl-result { position: relative; padding: 14px 14px 16px; border-color: var(--line-2); background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%), var(--night-3); box-shadow: 0 14px 34px rgba(0, 0, 0, .35); animation: fl-result-in .5s cubic-bezier(.2, .8, .25, 1) both; }
+.fl-layer .fl-result.loss { background: radial-gradient(120% 90% at 50% 0%, rgba(255, 138, 128, .1), transparent 70%), var(--night-3); }
+.fl-layer .fl-emblem { display: block; width: 64px; height: 64px; margin: 0 auto 2px; color: var(--accent); filter: drop-shadow(0 0 16px color-mix(in srgb, var(--accent) 45%, transparent)); }
+.fl-layer .fl-emblem svg { width: 100%; height: 100%; }
+.fl-layer .fl-result.win .fl-emblem { transform: rotate(-6deg); animation: crux-stamp .75s cubic-bezier(.3, 1.5, .5, 1) both; }
+.fl-layer .fl-result.draw .fl-emblem { opacity: .7; }
+.fl-layer .fl-result.loss .fl-emblem { opacity: .3; filter: grayscale(.7); animation: crux-fadeAway 1.6s ease both; }
+.fl-layer .fl-eyebrow { display: block; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--accent); }
+.fl-layer .fl-result h2 { font-family: var(--head-font); color: var(--accent); animation: fl-voice .8s .25s both; }
+.fl-layer .fl-result.loss h2 { color: #ff9d90; }
+.fl-layer .fl-result > p { animation: fl-voice .8s .45s both; }
+.fl-layer .fl-result .fl-why, .fl-layer .fl-result .fl-net { animation: fl-voice .7s .65s both; }
+.fl-layer .fl-result .fl-primary { min-width: 160px; animation: fl-voice .6s .85s both; }
+@keyframes fl-result-in { from { opacity: 0; transform: translateY(18px) scale(.98); } }
+@keyframes crux-stamp { 0% { opacity: 0; transform: scale(2.4) rotate(-20deg); } 60% { opacity: 1; transform: scale(.92) rotate(-4deg); } 80% { transform: scale(1.04) rotate(-7deg); } 100% { transform: rotate(-6deg); } }
+@keyframes crux-fadeAway { from { opacity: 1; filter: none; transform: none; } to { opacity: .3; filter: grayscale(.7); transform: translateY(4px); } }
+html[data-motion="reduced"] .fl-layer *, html[data-motion="reduced"] .fl-layer *::before, html[data-motion="reduced"] .fl-amb, html[data-motion="reduced"] .fl-amb * { animation: none !important; }
+html[data-motion="reduced"] .fl-amb > i { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .fl-amb, .fl-amb * { animation: none !important; } .fl-amb > i { display: none !important; } }

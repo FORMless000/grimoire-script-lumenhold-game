@@ -20,6 +20,7 @@
  *     kit       (world expansion 1) the worn kit, changeable before the first exchange: {slots: [{slot, worn, items: [{id, name}]}],
  *               equip(slot, id) → the player's new modifiers}; the fight is set up again with them
  *     skillName, resName   a skill's and a resource's display names (the foe's sheet, the result)
+ *     title     the card's title, on the tab over the fight (else the foe's name)
  *   A card's fight may be a lesson (EVENTS `tutorial: [keys]`: a coach mark per exchange; `script`: the foe's first moves,
  *   CombatBridge.scriptedMove; no way out, as in every fight: feedback 2026-10-20) or carry nothing at stake
  *   (`stakes: none`: "Walk away" settles as a loss); either way the fight changes no bar.
@@ -42,6 +43,9 @@
     eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 20L20 4"/></svg>',
     hourglass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9"/></svg>',
   };
+  // The result's emblem (stamped in on a win, faded on a loss) and the turning star of the shadow skin's ambience.
+  const CREST = '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="27" opacity=".45"/><circle cx="32" cy="32" r="21"/><path d="M19 45L42 22M45 19l-3 3M45 45L22 22M19 19l3 3"/><path d="M38 18l8 0 0 8M26 18l-8 0 0 8" opacity=".7"/><circle cx="32" cy="32" r="3.2" fill="currentColor"/></svg>';
+  const STAR = '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="30"/><path d="M50 4L60 40L96 50L60 60L50 96L40 60L4 50L40 40Z"/><path d="M50 20L56 44L80 50L56 56L50 80L44 56L20 50L44 44Z"/></svg>';
   // A foe with no portrait: a silhouette on a tint picked from the loadout (src/combat-ui.js).
   const TINTS = ['#628B90', '#7d6a9c', '#8c6f55', '#5e7d63', '#86606a', '#5a6f94', '#8a7d4e', '#6b7480'];
   const hash = (s) => [...String(s)].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261);
@@ -75,20 +79,23 @@
     const tr = (k, v) => opts.t('fight.' + k, v), hasTr = (k) => opts.t('fight.' + k) !== 'fight.' + k;
     const layer = document.createElement('div');
     layer.className = 'fl-layer'; layer.id = 'fightLayer';
-    layer.innerHTML = '<div class="fl-wrap"><div class="fl-loading">' + esc(tr('loading')) + '</div></div><div class="fl-sheet" hidden></div>';
+    layer.innerHTML = '<div class="fl-stub" hidden></div><div class="fl-wrap"><div class="fl-loading">' + esc(tr('loading')) + '</div></div><div class="fl-sheet" hidden></div>';
     const animate = document.documentElement.dataset.motion !== 'reduced' && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    host.classList.add('fighting'); if (animate) host.classList.add('fight-enter'); host.appendChild(layer);
+    // Its ambience lies behind it, over the same box (dress() fills and places it).
+    const amb = document.createElement('div'); amb.className = 'fl-amb'; amb.setAttribute('aria-hidden', 'true');
+    host.classList.add('fighting'); if (animate) host.classList.add('fight-enter'); host.appendChild(amb); host.appendChild(layer);
     let entered = !animate;
-    const settleIn = () => { if (entered) return; entered = true; setTimeout(() => host.classList.remove('fight-enter'), 900); };
+    const settleIn = () => { if (entered) return; entered = true; setTimeout(() => { host.classList.remove('fight-enter'); fitAmb(); }, 900); };
+    const fitAmb = () => { if (closed) return; const s = amb.style; s.top = layer.offsetTop + 'px'; s.left = layer.offsetLeft + 'px'; s.width = layer.offsetWidth + 'px'; s.height = layer.offsetHeight + 'px'; };
     const $ = (sel) => layer.querySelector(sel);
-    let ai = null, closed = false, done = false, bars = {}, seen = {}, animated = 0, freshUntil = 0;
+    let ai = null, sizer = null, closed = false, done = false, bars = {}, seen = {}, animated = 0, freshUntil = 0;
     // The engine's analysis (a cheat behind the game's setting; the bench always offers it): src/combat-ui.js's, ported.
     let analyst = null, analysis = null, analysisFor = -1, analysisRunning = false, engineOn = !!(opts.engineHelp && opts.engineShown);
     let engineBudget = [500, 1500, 4000, Infinity].includes(opts.engineBudget) ? opts.engineBudget : 1500;
     const FRESH_MS = 1100;   // how long an exchange's animations run: renders inside it keep them (feedback 2026-10-29)
     const F = { opts, tr, esc, fmt, ICON, layer, view, history: [], selected: null, busy: false, moves: 0, sheet: null, fresh: false, animate };
 
-    const close = () => { closed = true; if (ai) ai.terminate(); if (analyst) analyst.terminate(); document.removeEventListener('keydown', onKey, true); layer.remove(); host.classList.remove('fighting', 'fight-enter'); };
+    const close = () => { closed = true; if (sizer) sizer.disconnect(); if (ai) ai.terminate(); if (analyst) analyst.terminate(); document.removeEventListener('keydown', onKey, true); layer.remove(); amb.remove(); host.classList.remove('fighting', 'fight-enter'); };
     const foeName = (id, en) => C().tx('foe.' + id, en);
     const snapshot = () => ({ key: opts.key, request: F.fight.request, state: F.game, history: F.history, foe: F.fight.foe, setting: F.fight.setting, names: F.names, rules: F.fight.rules });
     const aiOverrides = () => {
@@ -108,7 +115,7 @@
       F.game = F.fight.state; F.names = F.fight.names; animated = F.history.length;
       aiOverrides();
       ai = C().createAI();
-      render(); settleIn(); pump();
+      dress(); render(); settleIn(); pump();
     }).catch((e) => { console.error(e); if (!closed) { close(); opts.onDone(autoResolve(opts.request, content)); } });
 
     // ---- Playing ----
@@ -175,12 +182,17 @@
     const width = (n) => [...n].reduce((w, ch) => w + (ch.codePointAt(0) >= 0x2e80 ? 2 : 1), 0);
     const tagOf = (i) => { if (i === 0) return tr('you'); const n = titleOf(1); return width(n) <= 12 ? n : tr('them'); };
     const levelOf = (i) => { const v = Object.values(F.game.actors[i].kit.skills || {}).filter(Number.isFinite); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : F.game.actors[i].kit.level; };
+    // Drawn once a fight (feedback 2026-11-05): an avatar's SVG takes a fresh clipPath id each time it is drawn, so a foe
+    // drawn anew made the face-off differ on every render; it was rebuilt, and a pick inside an exchange's first second
+    // replayed the hit on the foe.
+    const portraits = {};
     function portrait(i) {
       if (i === 0) return YOU_PORTRAIT;
+      if (portraits[i]) return portraits[i];
       const f = F.fight.foe, npc = f.npc && content.npcs[f.npc];
-      if (npc && opts.avatar) return opts.avatar(Object.assign({ id: f.npc }, npc), 64);
+      if (npc && opts.avatar) return (portraits[i] = opts.avatar(Object.assign({ id: f.npc }, npc), 64));
       const k = C().SPECIAL_LOADOUTS[f.loadout] ? 'creature' : f.loadout === 'The man in grey' ? 'hat' : F.game.actors[1].kit.underground ? 'hooded' : 'bust';
-      return placeholder(f.loadout, k);
+      return (portraits[i] = placeholder(f.loadout, k));
     }
     // A kind of damage by its source: Impact (coral) or spell (violet), for the colour of a number.
     const isImpact = (id) => { const S = C().SPELLS[id], K = C().CONSTRUCTS[id]; return id === 'strike' || id === 'tailwind' || !!(S && S.physical) || !!(K && K.action === 'strike'); };
@@ -235,7 +247,7 @@
       else if (!prev) seen[k] = { v: value, d: 0, until: 0 };
       const st = seen[k], fresh = Date.now() < st.until;
       const delta = fresh && Math.abs(st.d) >= 0.5 ? `<span class="fl-delta ${st.d < 0 ? 'neg' : 'pos'}">${st.d < 0 ? '−' : '+'}${fmt(Math.abs(st.d))}</span>` : '';
-      return `<span class="fl-n ${kind}${fresh && st.d < 0 ? ' drop' : ''}"><span class="fl-k">${kind === 'hp' ? '♥' : '✦'}</span>${Math.round(value)}<small>/${Math.round(max)}</small>${kind === 'mana' && a.flux >= 0.5 ? `<small class="fl-flux" title="${esc(tr('flux'))}"> ↻${fmt(a.flux)}</small>` : ''}${delta}</span>`;
+      return `<span class="fl-n ${kind}${fresh && st.d < 0 ? ' drop' : ''}${fresh && Math.abs(st.d) >= 0.5 ? (st.d < 0 ? ' bump down' : ' bump up') : ''}"><span class="fl-k">${kind === 'hp' ? '♥' : '✦'}</span>${Math.round(value)}<small>/${Math.round(max)}</small>${kind === 'mana' && a.flux >= 0.5 ? `<small class="fl-flux" title="${esc(tr('flux'))}"> ↻${fmt(a.flux)}</small>` : ''}${delta}</span>`;
     }
 
     // ---- What the last exchange did ----
@@ -445,13 +457,54 @@
       aiOverrides(); render(); pump();
     }
     const RESULT_BARS = ['health', 'mana', 'mood', 'renown', 'gold', 'alignment'];
+    // How the fight was decided, when it wasn't plain (feedback 2026-11-05): a fight called on points (it went quiet, or
+    // ran to its limit), a draw nobody can break, and a mutual knockout settled by who committed first.
+    function whyHtml(r, won) {
+      const g = F.game, dec = (C().COMBAT_TUNING || {}).decision || {}, max = dec.maxExchanges || 60, quiet = dec.quietExchanges || 5;
+      const share = (i) => Math.round(100 * Math.max(0, g.actors[i].hp) / g.actors[i].maxHP);
+      // A line given as [text] is the rule behind it, said smaller.
+      const box = (tag, lines) => `<div class="fl-why"><b>${esc(tag)}</b>${lines.filter(Boolean).map((l) => (Array.isArray(l) ? `<p class="rule">${esc(l[0])}</p>` : `<p>${esc(l)}</p>`)).join('')}</div>`;
+      if (r.tiebreak) {
+        const h = F.history[F.history.length - 1], first = h ? h.leader : r.winner;
+        return box(tr(won ? 'tbTag' : 'tbTagLost'), [won ? tr('tbWon') : tr('tbLost', { name: titleOf(1) }),
+          tr('tbWho', { n: h ? h.round : g.round, who: first ? titleOf(1) : tr('you') }), [tr('tbHow')]]);
+      }
+      // A stalemate is either a tie on points (the decision clock ran out) or a fight neither side can damage any more.
+      const called = r.reason === 'decision' || (r.reason === 'stalemate' && (g.quiet >= quiet || g.round >= max));
+      if (called) {
+        return box(tr('whyCalled'), [g.round >= max ? tr('whyLong', { n: max }) : tr('whyQuiet', { n: quiet }),
+          tr('whyPoints', { you: share(0), name: titleOf(1), them: share(1) }), r.reason === 'stalemate' ? tr('whyTie') : '']);
+      }
+      if (r.reason === 'stalemate') return box(tr('draw'), [tr('whyNoDamage')]);
+      return '';
+    }
     function resultHtml() {
       const r = F.game.result, won = r.winner === 0, lost = r.winner === 1, res = B().fightResult(F.fight);
       const ds = RESULT_BARS.filter((k) => res.deltas && res.deltas[k]).map((k) => { const n = res.deltas[k]; return `<span>${esc(opts.resName ? opts.resName(k) : k)} <b class="${n < 0 ? 'neg' : 'pos'}">${n < 0 ? '−' : '+'}${fmt(Math.abs(n))}</b></span>`; }).join('');
-      // A mutual knockout (feedback 2026-10-29): said plainly, who committed first and that the winner's HP was kept.
-      const tb = r.tiebreak ? `<p class="fl-tb"><b>${esc(tr(won ? 'tbTag' : 'tbTagLost'))}</b> ${esc(won ? tr('tbWon') : tr('tbLost', { name: titleOf(1) }))}</p>` : '';
-      return `<div class="fl-result ${won ? 'win' : lost ? 'loss' : 'draw'}"><h2>${esc(won ? tr('win') : lost ? tr('lose') : tr('draw'))}</h2><p>${esc(tr('reason.' + r.reason))}</p>${tb}` +
+      return `<div class="fl-result ${won ? 'win' : lost ? 'loss' : 'draw'}" aria-live="polite"><span class="fl-emblem" aria-hidden="true">${CREST}</span><span class="fl-eyebrow">${esc(tr('against', { name: titleOf(1) }))}</span>` +
+        `<h2>${esc(won ? tr('win') : lost ? tr('lose') : tr('draw'))}</h2><p>${esc(tr('reason.' + r.reason))}</p>${whyHtml(r, won)}` +
         (ds ? `<div class="fl-net">${ds}</div>` : '') + `<button class="fl-primary" id="fightDone" data-fl-done>${esc(tr('continue'))}</button></div>`;
+    }
+
+    // ---- The look (as the negotiation's table, crux/style.css): the fight's setting picks a skin, its ambience and the
+    // card's tab over the table. Made once a fight; nothing outside the layer is touched. ----
+    function skinOf() {
+      const f = F.fight.foe, st = F.fight.setting || {}, kit = F.game.actors[1].kit || {};
+      if (C().SPECIAL_LOADOUTS[f.loadout]) return 'wild';
+      if (f.loadout === 'The man in grey' || kit.underground) return 'shadow';
+      return { public_duel: 'crowd', ring_bout: 'lamp', real_conflict: 'ember' }[st.context] || 'hall';
+    }
+    function dress() {
+      const skin = skinOf(), p = settingParts();
+      layer.dataset.skin = amb.dataset.skin = skin;
+      amb.innerHTML = '<b class="amb-light"></b><b class="amb-star">' + STAR + '</b>' + Array.from({ length: 18 }, (_, k) => {
+        const r = (n) => (hash(k + '|' + n) % 1000) / 1000;
+        return `<i style="--x:${(r('x') * 100).toFixed(1)}%;--y:${(r('y') * 100).toFixed(1)}%;--d:${(6 + r('d') * 10).toFixed(1)}s;--w:${(-r('w') * 12).toFixed(1)}s;--s:${(0.6 + r('s') * 0.9).toFixed(2)}"></i>`;
+      }).join('');
+      fitAmb(); if (window.ResizeObserver) { sizer = new ResizeObserver(fitAmb); sizer.observe(layer); sizer.observe(host); }
+      const stub = $('.fl-stub');
+      stub.innerHTML = `<span class="tag">${esc(String(p.title).toUpperCase())}</span><h3>${esc(opts.title || titleOf(1))}</h3>`;
+      stub.hidden = false;
     }
     function finish() { if (done) return; done = true; const res = B().fightResult(F.fight); close(); opts.onDone(res); }
 
@@ -729,7 +782,7 @@
       for (const el of layer.querySelectorAll('[data-fl-act]')) el.onclick = () => pick(el.dataset.flAct);
       for (const el of layer.querySelectorAll('[data-fl-commit]')) el.onclick = () => commit();
       for (const el of layer.querySelectorAll('[data-fl-leave]')) el.onclick = () => leave();
-      const d = layer.querySelector('[data-fl-done]'); if (d) { d.onclick = finish; d.focus({ preventScroll: true }); }
+      const d = layer.querySelector('[data-fl-done]'); if (d) { d.onclick = finish; d.focus({ preventScroll: true }); if (!F.resultShown) { F.resultShown = true; d.closest('.fl-result').scrollIntoView({ block: 'nearest', behavior: animate ? 'smooth' : 'auto' }); } }
       for (const sel of layer.querySelectorAll('.fl-kit select')) sel.onchange = () => reKit(sel.dataset.slot, sel.value);
       const et = layer.querySelector('.fl-eng-toggle'); if (et) et.onclick = () => setEngine(!engineOn);
       const eb = layer.querySelector('.fl-eng-budget'); if (eb) eb.onchange = () => { engineBudget = Number(eb.value); if (opts.onEngineBudget) opts.onEngineBudget(engineBudget); analysisFor = -1; analysis = null; requestAnalysis(); paintEngine(); };

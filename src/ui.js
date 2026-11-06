@@ -652,7 +652,7 @@
     const card = document.querySelector('#deck .card');
     if (card) { card.classList.remove('dragging'); card.style.transform = ''; card.style.opacity = ''; }
     CombatUI.open({
-      host: document.querySelector('.stage'), key, request: req, saved, content, t, difficulty: settings.fightDifficulty,
+      host: document.querySelector('.stage'), key, request: req, saved, content, t, difficulty: settings.fightDifficulty, title: ui.view && ui.view.title,
       engineHelp: settings.fightEngine, engineShown: settings.fightEngineShown !== false, engineBudget: settings.fightEngineBudget === 'inf' ? Infinity : settings.fightEngineBudget,
       onEngineShown: (on) => { settings.fightEngineShown = on; saveSettings(); }, onEngineBudget: (ms) => { settings.fightEngineBudget = ms === Infinity ? 'inf' : ms; saveSettings(); },
       avatar: (npc, size) => Art.avatar(npc, size), skillName, resName: (k) => (content.resources[k] && content.resources[k].name) || k,

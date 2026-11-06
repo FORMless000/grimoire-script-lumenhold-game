@@ -202,14 +202,14 @@
 .parley-layer .a-acts button:hover { background: #2a3160; }
 .parley-layer .stakes { flex-direction: column; gap: 0; white-space: normal; }
 .parley-layer .col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-@media (min-width: 820px) {
+@container crux (min-width: 820px) {
 .parley-layer .fight.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); gap: 12px; align-items: start; }
 .parley-layer .side-col { position: sticky; top: 12px; }
 .parley-layer .side-col .commit-bar { position: static; box-shadow: none; }
 .parley-layer .side-col .acts { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .parley-layer .main-col .flavor { font-size: 15.5px; }
 }
-@media (max-width: 400px) {
+@container crux (max-width: 400px) {
 .parley-layer .arg { padding: 5px 6px; }
 .parley-layer .atitle { font-size: 13.5px; }
 .parley-layer .odds { font-size: 17px; }
@@ -217,7 +217,7 @@
 .parley-layer .stakes { flex-direction: column; gap: 0; }
 .parley-layer .a-acts svg { display: none; }
 }
-@media (max-width: 560px) {
+@container crux (max-width: 560px) {
 .parley-layer .opp-row { flex-wrap: wrap; row-gap: 6px; }
 .parley-layer .opp-stats { flex: 1 0 130px; }
 .parley-layer .push { flex: 1 0 100%; justify-content: center; }
@@ -273,7 +273,7 @@
 .parley-layer .engine .line > i { font-style: normal; margin: 0 5px; opacity: .6; }
 .parley-layer .engine .line b.ok { color: var(--good); font-weight: 700; }
 .parley-layer .engine .line b.no { color: var(--bad, #d9776b); font-weight: 700; }
-.parley-layer { position: relative; isolation: isolate; overflow: clip; min-height: 100vh; background: var(--night); color: var(--text); transition: background-color .6s; }
+.parley-layer { container: crux / inline-size; position: relative; isolation: isolate; overflow: clip; min-height: 100vh; background: var(--night); color: var(--text); transition: background-color .6s; }
 .parley-layer[data-circ] .fight { background: var(--texture, none), var(--table, rgba(22, 26, 53, .94)); }
 .parley-layer[data-circ] .card-stub { background: var(--paper, var(--parch)); color: var(--paper-ink, var(--ink)); }
 .parley-layer[data-circ] .card-stub h3 { font-family: var(--head-font, var(--display)); }
@@ -359,7 +359,7 @@
 .parley-layer .intent.brief { align-items: flex-start; }
 .parley-layer .a-acts .confront b { font-size: 13px; }
 .parley-layer .a-acts button { min-width: 0; white-space: nowrap; }
-@media (max-width: 640px) {
+@container crux (max-width: 640px) {
 .parley-layer .a-acts svg { display: none; } }
 .parley-layer .deckstack { position: relative; display: inline-flex; align-items: center; width: 44px; height: 28px; flex: none; }
 .parley-layer .deckstack i { position: absolute; left: 2px; top: 2px; width: 18px; height: 24px; border-radius: 3px; background: var(--back, #2a3160); border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 55%, transparent); box-shadow: 0 1px 3px rgba(0, 0, 0, .5); display: grid; place-items: center; color: var(--accent, var(--gold)); }
@@ -376,24 +376,6 @@
 .parley-layer .cpct b.bump.up { --flash: var(--good); }
 .parley-layer .cpct b.bump.down { --flash: var(--bad); }
 @keyframes crux-bump { 0% { transform: scale(1); } 35% { transform: scale(1.18); color: var(--flash); text-shadow: 0 0 14px var(--flash); } 100% { transform: none; } }
-.parley-layer .wrap.veiled { filter: blur(3px) brightness(.55); pointer-events: none; }
-.parley-layer .curtain { position: fixed; inset: 0; z-index: 6; display: flex; align-items: center; justify-content: center; padding: 16px max(16px, env(safe-area-inset-left, 0px)); background: radial-gradient(120% 90% at 50% 40%, transparent, rgba(0, 0, 0, .55)); cursor: pointer; animation: crux-curtainIn .5s ease both; }
-@keyframes crux-curtainIn { from { opacity: 0; } }
-.parley-layer .scene-card { max-width: 540px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 22px 24px 18px; border-radius: var(--radius); background: var(--night-2); border: 1px solid var(--line-2); box-shadow: 0 24px 80px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(255, 255, 255, .03); cursor: default; animation: crux-sceneIn .8s .1s cubic-bezier(.2, .8, .2, 1) both; }
-@keyframes crux-sceneIn { from { opacity: 0; transform: translateY(16px) scale(.98); } }
-.parley-layer .scene-card .eyebrow { margin: 0; color: var(--accent, var(--gold)); }
-.parley-layer .scene-card h2 { margin: 0; font: 600 30px/1.1 var(--head-font, var(--display)); color: var(--text); text-wrap: balance; }
-.parley-layer .scene-card .scene-line { font-size: 13.5px; max-width: 46ch; }
-.parley-layer .scene-card .flavor { margin: 2px 0; font-size: 16px; max-width: 48ch; }
-.parley-layer .facing { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; margin-top: 4px; }
-.parley-layer .facing div { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; border-radius: 10px; background: var(--night-3); border: 1px solid var(--line); min-width: 0; }
-.parley-layer .facing span { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.parley-layer .facing b { font: 600 14.5px/1.2 var(--display); color: var(--accent, var(--gold-2)); overflow-wrap: anywhere; }
-.parley-layer .room-line { margin: 0; font: italic 13px var(--serif); color: var(--muted); }
-.parley-layer .scene-card .primary { margin-top: 6px; min-width: 140px; }
-@media (max-width: 520px) {
-.parley-layer .facing { grid-template-columns: 1fr; }
-.parley-layer .scene-card h2 { font-size: 24px; } }
 .parley-layer .end .emblem { display: block; width: 76px; height: 76px; margin: 2px auto 0; color: var(--accent, var(--gold)); filter: drop-shadow(0 0 16px color-mix(in srgb, var(--accent, var(--gold)) 45%, transparent)); }
 .parley-layer .end .emblem svg { width: 100%; height: 100%; }
 .parley-layer .end.win .emblem, .parley-layer .end.partial .emblem { transform: rotate(-6deg); }
@@ -524,7 +506,7 @@ html[data-motion="reduced"] .parley-layer .ambience i { display: none !important
 .parley-layer[data-room=broker] .arg .a-text { background-image: linear-gradient(90deg, transparent 5px, rgba(165, 56, 44, .3) 5px 6px, transparent 6px), repeating-linear-gradient(180deg, transparent 0 15px, rgba(60, 100, 160, .08) 15px 16px); }
 .parley-layer[data-room=formal] .arg .a-body, .parley-layer[data-room=broker] .arg .a-body { background: none; }
 
-@media (max-width: 640px) {
+@container crux (max-width: 640px) {
 .parley-layer .arg .atitle { font-size: 14.5px; }
 .parley-layer .arg .a-head { padding: 5px 7px; }
 .parley-layer .arg .a-text { padding: 6px 7px 5px; }
@@ -543,3 +525,25 @@ html[data-motion="reduced"] .parley-layer .ambience i { display: none !important
 
 
 html[lang^="zh"] .parley-layer { --head-font: var(--display); --voice-font: var(--serif); }
+
+/* The result, inside the table it was played at (it stays in view, frozen at the last move): the panel takes the arguments'
+ * place, the whole meeting's log takes the spells'. */
+.parley-layer .end-panel { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 14px 12px; border-radius: 16px;
+  background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent, var(--gold)) 14%, transparent), transparent 70%), var(--night-3);
+  border: 1px solid var(--line-2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .03) inset, 0 14px 34px rgba(0, 0, 0, .35); }
+.parley-layer .end-panel.lost { background: radial-gradient(120% 90% at 50% 0%, rgba(255, 138, 128, .1), transparent 70%), var(--night-3); }
+.parley-layer .end-panel .end-head { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.parley-layer .end-panel h2 { margin: 0; font-size: 30px; line-height: 1.05; }
+.parley-layer .end-panel .flavor { margin: 0; max-width: 46ch; }
+.parley-layer .end-panel .stats { width: 100%; margin: 4px auto 2px; padding-top: 8px; border-top: 1px solid var(--line); }
+.parley-layer .end-panel .primary { min-width: 160px; padding: 10px 18px; font-size: 15px; }
+.parley-layer .end-panel.first { animation: crux-panelIn .5s cubic-bezier(.2, .8, .25, 1) both; }
+.parley-layer .end-panel.first .stats { animation: crux-voiceIn .7s .85s both; }
+.parley-layer .end-panel.first .end-btns { animation: crux-voiceIn .6s 1.05s both; }
+@keyframes crux-panelIn { from { opacity: 0; transform: translateY(18px) scale(.98); } }
+.parley-layer .wrap.over .fighters { opacity: .9; }
+.parley-layer .wrap.over .push { filter: grayscale(.6); }
+.parley-layer .end-log { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 12px; background: var(--night-2); border: 1px solid var(--line); max-height: 520px; overflow-y: auto; }
+.parley-layer .end-log .eyebrow { margin: 0; }
+.parley-layer .sources { margin: -2px 0 0; }
+.parley-layer .sources span { color: var(--text); }

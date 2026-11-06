@@ -24,7 +24,6 @@ async function run(browser, base = 'file://' + path.resolve(__dirname, '../index
     try {
       await p.goto(base + '?lang=' + lang); await p.click('#cont');
       await p.click('#choices .left');
-      await p.locator('.parley-layer button[data-act=begin]').click();
       await p.waitForSelector('.parley-layer .arg[data-uid]');
       assert.equal(await p.locator('#choices').isVisible(), false);
       assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'no horizontal overflow');
@@ -42,6 +41,8 @@ async function run(browser, base = 'file://' + path.resolve(__dirname, '../index
       if (process.env.CRUX_SHOTS) await p.screenshot({ path: path.join(process.env.CRUX_SHOTS, 'crux-' + lang + '.png') });
       await p.locator('.parley-layer [data-act=leave]').click();
       await p.locator('.parley-layer [data-act=yes]').click();
+      await p.waitForSelector('.parley-layer .end-panel');
+      assert.equal(await p.locator('.parley-layer .cpct').count(), 1, 'the result is shown inside the table');
       await p.locator('.parley-layer [data-act=done]').click();
       await p.waitForSelector('#contBtn');
       const result = await p.evaluate(() => JSON.parse(localStorage.getItem('lumenhold.save.v1')));
@@ -77,7 +78,6 @@ async function run(browser, base = 'file://' + path.resolve(__dirname, '../index
     await bench.route(/fonts\.(googleapis|gstatic)/, (route) => route.abort());
     await bench.goto('file://' + path.resolve(__dirname, '../crux/index.html') + '?seed=13');
     await bench.locator('[data-act=start]').click();
-    await bench.locator('button[data-act=begin]').click();
     await bench.waitForSelector('.arg[data-uid]');
     assert.ok(await bench.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     await bench.locator('[data-act=leave]').click();

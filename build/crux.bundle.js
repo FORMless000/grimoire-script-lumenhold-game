@@ -1,4 +1,4 @@
-// GENERATED — Crux sources 738bf33c4222a780; node crux/tools/bundle.js
+// GENERATED — Crux sources 8806d5a6090fc89e; node crux/tools/bundle.js
 (function(root) {
 const self = {}; let module;
 /*
@@ -12408,9 +12408,6 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   "message.5f0a4073704d": "Your level",
   "message.7455d4640a6d": "Loadout",
   "message.3e18e2dab6f2": "Negotiation",
-  "message.a99fba8406fd": "They hold to",
-  "message.f0062eb5aa7d": "You want",
-  "message.09b538d1d0fa": "Begin",
   "message.c6cacaef132f": "Index: answered with Lore",
   "message.7ed793470d2a": "Their spell",
   "message.213523bae997": "Free: Patience to the full",
@@ -12446,22 +12443,24 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   "message.7b2568ac1fb0": "{arg1} in their deck",
   "message.8e75ebbdb215": "Engine",
   "message.197f7ddd6511": "The engine’s evaluation of every move, from what you can see",
+  "message.fc6e4a408d56": "Leave",
   "message.894264ed811b": "{arg0} (Push for crux): {arg1} Patience, {arg2} → {arg3}.{arg4} The next costs {arg5}.",
   "message.70112d96a18a": "Nothing left to answer: {arg0}.",
   "message.7b1c62b5df74": "★ on your side: use it on a card",
   "message.51797dcd5671": "Each card’s ★ uses it there: +{arg0}, once",
+  "message.f0062eb5aa7d": "You want",
+  "message.21545b0fa168": "What you came for",
+  "message.319385ad05ef": "The meeting",
   "message.066ffe4ac557": "Mana",
   "message.08b041935798": "You",
   "message.3c1280b56097": "holds to",
-  "message.84362a20ec6e": "Patience {arg29}/{arg30}{arg31}",
-  "message.253e07b76866": "Suspicion {arg33}/{arg34}",
-  "message.fc6e4a408d56": "Leave",
-  "message.cb8866c0448d": "Mana {arg7} of {arg8}",
-  "message.21545b0fa168": "What you came for",
+  "message.a189f0793ff6": "Patience {arg30}/{arg31}{arg32}",
+  "message.e578539ba5ba": "Suspicion {arg34}/{arg35}",
+  "message.95baa471e8c9": "Mana {arg8} of {arg9}",
   "message.b58bc633038f": "{arg0} (overdrawn)",
   "message.11dee3c5b06d": "Crowns · Health paid",
   "message.9d597870c4b3": "Alignment",
-  "message.67279ef1503c": "Arguments won · failed · {arg12}",
+  "message.7611eb75ae10": "Arguments won · failed · {arg10}",
   "message.28fc01972d25": "Presses of the crux",
   "message.0b3176c657c9": "The crux at the end",
   "message.222affdfae8f": "Their Agreement, hidden until now",
@@ -12710,7 +12709,7 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
     },
     engine: { on: (() => { try { return !!localStorage.getItem('crux.engine'); } catch (e) { return false; } })(), report: null, for: null, running: false, error: '' },
     game: options.game || null, gameNo: 1, pick: null, rules: false, ask: null, hint: '', lastCrux: null, cruxDelta: 0,
-    curtain: campaign && !options.resumed, shown: new Set(), lastVoice: null, ended: null,
+    shown: new Set(), lastVoice: null, ended: null,
   };
   const encounter = () => options.encounter || ENC.find((e) => e.key === ui.setup.encKey) || ENC[0];
   const encounterOf = (g) => options.encounter || ENC.find((e) => e.key === g.enc);
@@ -12851,27 +12850,6 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
       </div>`;
   }
 
-  // ---------- the scene, before the first card is dealt
-  function renderCurtain() {
-    if (!ui.curtain || ui.screen !== 'table') return;
-    const g = ui.game.view, e = encounterOf(g), v = voiceOf(e, g.circ);
-    const box = document.createElement('div');
-    box.className = 'curtain';
-    box.dataset.act = 'begin';
-    box.innerHTML = `<div class="scene-card">
-      <span class="v-motif big" aria-hidden="true">${v.motif}</span>
-      <span class="eyebrow">${esc(v.name.toUpperCase())}${v.room ? ` · ${esc(v.room.name.toUpperCase())}` : ''}</span>
-      ${campaign ? '' : `<h2>${esc(e.title)}</h2>`}
-      ${!campaign && e.scene ? `<p class="scene-line">${esc(e.scene)}</p>` : ''}
-      ${campaign ? '' : `<p class="flavor">${esc(e.intro)}</p>`}
-      <div class="facing"><div><span>Across the table</span><b>${esc(v.who)}</b></div><div><span>They hold to</span><b>${esc(g.crux.title)}</b></div><div><span>You want</span><b>${esc(e.label)}</b></div></div>
-      ${v.room ? `<p class="room-line">${esc(v.room.line)}</p>` : ''}
-      ${campaign ? `<p class="fine">${Object.entries(options.sources || {}).map(([k, v]) => `<span>${esc(C.SIGNALS[k])}</span>: ${esc(v)}`).join(' · ')}</p>` : ''}
-      <button class="primary" data-act="begin">Begin</button>${campaign && options.tutorial ? '<button data-act="skiplesson">Skip the lesson</button>' : ''}
-    </div>`;
-    $app.appendChild(box);
-  }
-
   // ---------- the table
   // The small chips: a grudge, a rally, a fact, and what your spells left on it.
   function fxChips(g, c) {
@@ -12939,7 +12917,7 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
       el.classList.toggle('lean-left', x < -20); el.classList.toggle('lean-right', x > 20);
     };
     el.addEventListener('pointerdown', (e) => {
-      if (e.button !== 0 || ui.curtain || ui.busy || acts.contains(e.target) || e.target.closest('button')) return;
+      if (e.button !== 0 || ui.busy || acts.contains(e.target) || e.target.closest('button')) return;
       down = true; moved = false; x0 = e.clientX; y0 = e.clientY; dx = dy = 0;
     });
     el.addEventListener('pointermove', (e) => {
@@ -13010,15 +12988,14 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   const deckStack = (v, n) => `<span class="deckstack${n ? '' : ' empty'}" title="${n} in their deck">${n ? `<i></i><i></i><i>${v.motif}</i>` : ''}<b>${n}</b></span><span class="decknoun">${esc(v.deck(n))}</span>`;
 
   function renderTable() {
-    const g = ui.game.view, e = encounterOf(g), v = voiceOf(e, g.circ);
+    const g = ui.game.view, e = encounterOf(g), v = voiceOf(e, g.circ), over = g.over;
     dress(v);
-    if (g.over) return renderEnd();
     const pc = g.cruxChance, pp = g.pressChance, cost = g.pressCost;
     const moved = ui.lastCrux != null && Math.abs(pc - ui.lastCrux) > 1e-9;
     if (moved) ui.cruxDelta = pc - ui.lastCrux;
     ui.lastCrux = pc;
-    const noPush = g.canPress;
-    const mods = [
+    const noPush = over ? 'The meeting is over' : g.canPress;
+    const mods = over ? '' : [
       noPush ? `<span class="tw bad">${esc(noPush)}</span>` : '',
       ...g.active.map(([kind, text]) => `<span class="tw ${kind === 'good' || kind === 'bad' ? kind : `k-${kind} live`}">${esc(text)}</span>`),
     ].join('');
@@ -13028,20 +13005,24 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
     const seen = g.deck.slice(0, g.seen);
     const after = g.patience - cost;
     // What they say now, fresh when it has just changed (it slides in, and a watched room stirs).
-    const said = voiceNow(g, v), fresh = !ui.curtain && said.key !== ui.lastVoice;
-    if (!ui.curtain) ui.lastVoice = said.key;
-    // Cards not seen before are dealt, one after another; behind the curtain nothing is dealt yet.
+    const said = voiceNow(g, v), fresh = said.key !== ui.lastVoice;
+    ui.lastVoice = said.key;
+    // Cards not seen before are dealt, one after another.
     let k = 0;
-    const deal = (c) => (ui.curtain || ui.shown.has(c.uid) ? null : k++);
-    const engineToggle = !campaign || options.engineHelp ? `<button class="link eng-toggle" data-act="engine" aria-pressed="${ui.engine.on}" title="The engine’s evaluation of every move, from what you can see">Engine</button>` : '';
+    const deal = (c) => (ui.shown.has(c.uid) ? null : k++);
+    const engineToggle = !over && (!campaign || options.engineHelp) ? `<button class="link eng-toggle" data-act="engine" aria-pressed="${ui.engine.on}" title="The engine’s evaluation of every move, from what you can see">Engine</button>` : '';
+    // A lesson can be skipped until the first move (it costs nothing then); the campaign names where Standing, Bond and Record come from.
+    const skip = campaign && options.tutorial && !over && !ui.game.moves.length ? '<button class="link" data-act="skiplesson">Skip the lesson</button>' : '';
+    const sources = campaign && options.sources ? `<p class="fine sources">${Object.entries(options.sources).map(([key, x]) => `<span>${esc(C.SIGNALS[key])}</span>: ${esc(x)}`).join(' · ')}</p>` : '';
+    const engineOn = ui.engine.on && !over;
 
     $app.innerHTML = `
-      <div class="wrap${ui.curtain ? ' veiled' : ''}">
+      <div class="wrap${over ? ' over' : ''}">
         <div class="card-stub">${stubTag(v)}<h3>${esc(e.title)}</h3>
-          <span class="stub-btns">${engineToggle}<button class="link" data-act="rules">Rules</button><button class="icon-btn" data-act="leave" title="Leave">${S.actions.leave}</button></span></div>
+          <span class="stub-btns">${skip}${engineToggle}<button class="link" data-act="rules">Rules</button>${over ? '' : `<button class="icon-btn" data-act="leave" title="Leave">${S.actions.leave}</button>`}</span></div>
         <div class="fight cols">
           <div class="col main-col">
-          <div class="fighters${ui.engine.on ? ' with-eval' : ''}">${ui.engine.on ? '<div class="evalbar" title="The engine: your chance to win from here, played well"><i></i><span></span></div>' : ''}
+          <div class="fighters${engineOn ? ' with-eval' : ''}">${engineOn ? '<div class="evalbar" title="The engine: your chance to win from here, played well"><i></i><span></span></div>' : ''}
             <div class="fighter you">
               <div class="vgauge" title="Mana ${g.mana} of ${g.cap}"><b>${g.mana}</b><span class="vtrack"><i style="height:${Math.max(0, Math.min(100, (g.mana / g.cap) * 100))}%"></i></span><small>Mana</small></div>
               <div class="you-side">
@@ -13058,7 +13039,7 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
                   <div class="susrow patrow"><span class="pats">${pat}</span><small>Patience ${g.patience}/${g.patienceMax}${g.patience < 0 ? ' (overdrawn)' : ''}</small></div>
                   <div class="susrow"><span class="sus">${sus}</span><small>Suspicion ${g.suspicion}/${TUNE.suspicionLimit}</small></div>
                 </div>
-                <button class="push" data-act="press" data-evalfor="press" ${noPush ? 'disabled' : ''} title="${esc(noPush || `${v.verbs.push} (Push for crux): ${cost} Patience, ${g.patience} → ${after}.${after < 0 ? ' Overdrawn: a landed push still wins.' : ''} The next costs ${Math.max(0, TUNE.pressStart + g.presses + 1)}.`)}">${evalSlot('press')}${S.actions.press}<span>${esc(v.verbs.push)}<small>${noPush ? 'a Sore point bars it' : `${pp === 1 ? 'certain' : pct(pp)} · ${cost ? `${cost} Patience` : 'free'}${after < 0 ? ' · overdraws' : ''}`}</small></span></button>
+                <button class="push" data-act="press" data-evalfor="press" ${noPush ? 'disabled' : ''} title="${esc(noPush || `${v.verbs.push} (Push for crux): ${cost} Patience, ${g.patience} → ${after}.${after < 0 ? ' Overdrawn: a landed push still wins.' : ''} The next costs ${Math.max(0, TUNE.pressStart + g.presses + 1)}.`)}">${evalSlot('press')}${S.actions.press}<span>${esc(v.verbs.push)}<small>${over ? 'The meeting is over' : noPush ? 'a Sore point bars it' : `${pp === 1 ? 'certain' : pct(pp)} · ${cost ? `${cost} Patience` : 'free'}${after < 0 ? ' · overdraws' : ''}`}</small></span></button>
               </div>
               <span class="btrack crux"><i class="fill" style="width:${pc * 100}%"></i></span>
               ${v.roomKey === 'public' ? `<span class="audience${fresh && said.crowd ? ` stir ${said.mood}` : ''}" aria-hidden="true"></span>` : ''}
@@ -13068,39 +13049,41 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
             <span class="v-motif" aria-hidden="true">${v.motif}</span>
             <div class="v-text"><p class="v-line">${esc(said.line)}</p><p class="v-sub">${esc(said.mech)}</p>${said.crowd ? `<p class="v-crowd">${esc(said.crowd)}</p>` : ''}</div>
           </div>
-          <div class="objective"><span class="want" title="What you came for"><small>You want</small>${esc(e.label)}</span>${mods ? `<span class="tws">${mods}</span>` : ''}</div>
-
+          ${over ? endPanel(g, e, v) : `<div class="objective"><span class="want" title="What you came for"><small>You want</small>${esc(e.label)}</span>${mods ? `<span class="tws">${mods}</span>` : ''}</div>
+          ${sources}
           <div class="args">${g.table.length ? Array.from({ length: g.tableSize }, (_, s) => { const c = g.table.find((x) => x.slot === s); return c ? argCard(g, v, c, deal(c)) : '<div class="arg empty"></div>'; }).join('') : `<p class="fine">Nothing left to answer: ${esc(v.verbs.push.toLowerCase())}.</p>`}</div>
           <div class="deckline">${deckStack(v, g.deck.length)}${seen.map((c, i) => `<span class="tw seen" title="${esc(c.text)}">${i + 1}. ${esc(c.title)}${c.fx ? ' · ' + esc(C.EFFECTS[c.fx].name) : ''}</span>`).join('')}${g.canBury ? '<button class="link" data-act="bury">send the next to the bottom</button>' : ''}${g.facts.some((f) => !f.used) ? `<span class="tw fact-note" title="Each card’s ★ uses it there: +${pct(TUNE.fact)}, once">★ on your side: use it on a card</span>` : ''}</div>
 
-          <div class="log">${g.log.map((l, i) => [l, i]).filter(([, i]) => i !== said.at).slice(-3).reverse().map(([l, i]) => logLine(g, v, l, i)).join('')}</div>
+          <div class="log">${g.log.map((l, i) => [l, i]).filter(([, i]) => i !== said.at).slice(-3).reverse().map(([l, i]) => logLine(g, v, l, i)).join('')}</div>`}
           </div>
           <div class="col side-col">
-          <div class="acts">${g.known.map((id) => spellTile(g, id, { data: 'spell', why: spellOf(g, id).why, selected: ui.pick === id, evalKey: `cast:${id}` })).join('')}</div>
+          ${over ? `<div class="end-log"><span class="eyebrow">The meeting</span><div class="log">${g.log.map((l, i) => logLine(g, v, l, i)).reverse().join('')}</div></div>` : `<div class="acts">${g.known.map((id) => spellTile(g, id, { data: 'spell', why: spellOf(g, id).why, selected: ui.pick === id, evalKey: `cast:${id}` })).join('')}</div>
           <div class="commit-bar">${preview(g, v)}</div>
-          ${ui.engine.on ? '<div class="engine"><b class="engine-head"></b><ol class="lines"></ol><p class="fine">Your chance to win after each move, played well: a search of your next moves through every roll, as the duels’ engine searches a fight (a partial deal counts half). It knows only what you know: a card you haven’t seen is a blank to it, and their Agreement is the least the crux shows. Each line follows the likelier roll (✓ lands, ✗ holds).</p></div>' : ''}
+          ${engineOn ? '<div class="engine"><b class="engine-head"></b><ol class="lines"></ol><p class="fine">Your chance to win after each move, played well: a search of your next moves through every roll, as the duels’ engine searches a fight (a partial deal counts half). It knows only what you know: a card you haven’t seen is a blank to it, and their Agreement is the least the crux shows. Each line follows the likelier roll (✓ lands, ✗ holds).</p></div>' : ''}`}
           </div>
         </div>
       </div>`;
-    if (!ui.curtain) for (const c of g.table) ui.shown.add(c.uid);
+    for (const c of g.table) ui.shown.add(c.uid);
     $app.querySelectorAll('.args .arg[data-uid]').forEach(attachArgSwipe);
+    if (over) { const b = $app.querySelector('.end-panel .primary'); if (b) b.focus({ preventScroll: true }); const p = $app.querySelector('.end-panel.first'); if (p) p.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   }
 
-  function renderEnd() {
-    const g = ui.game.view, o = g.over, e = encounterOf(g), v = voiceOf(e, g.circ), w = ending(v, o);
+  // How it ended, inside the table it was played at (it stays in view, frozen at the last move): the meeting's emblem,
+  // its headline and line, what you came for, the numbers, then Continue.
+  function endPanel(g, e, v) {
+    const o = g.over, w = ending(v, o);
     const goal = o.outcome === 'win' ? ['met', '✓'] : o.outcome === 'partial' ? ['part', '◐'] : ['missed', '✗'];
     const first = ui.ended !== ui.gameNo;
     ui.ended = ui.gameNo;
-    $app.innerHTML = `
-      <div class="wrap">
-        <div class="card-stub">${stubTag(v)}<h3>${esc(e.title)}</h3></div>
-        <div class="fight end ${o.outcome}${first ? ' first' : ''}">
+    return `<section class="end-panel end ${o.outcome}${first ? ' first' : ''}" aria-live="polite">
           <span class="emblem" aria-hidden="true">${v.motif}</span>
-          <span class="eyebrow">${esc(v.who.toUpperCase())}</span>
-          <h2>${esc(w.head)}</h2>
-          <p class="flavor">${esc(w.line)}</p>
-          <div class="goal ${goal[0]}"><span>${goal[1]}</span>${esc(e.label)}</div>
-          ${w.line !== o.reason ? `<p class="fine">${esc(o.reason)}</p>` : ''}
+          <div class="end-head">
+            <span class="eyebrow">${esc(v.who.toUpperCase())}</span>
+            <h2>${esc(w.head)}</h2>
+            <p class="flavor">${esc(w.line)}</p>
+            <div class="goal ${goal[0]}"><span>${goal[1]}</span>${esc(e.label)}</div>
+            ${w.line !== o.reason ? `<p class="fine">${esc(o.reason)}</p>` : ''}
+          </div>
           <div class="stats">
             <span>Arguments won · failed · ${esc(v.verbs.deflect.toLowerCase())}</span><b>${g.wins} · ${g.fails} · ${g.deflected}</b>
             <span>Presses of the crux</span><b>${g.presses}</b>
@@ -13111,10 +13094,8 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
             ${g.spent.crowns || g.spent.health ? `<span>Crowns · Health paid</span><b>${g.spent.crowns} · ${g.spent.health}</b>` : ''}
             ${g.alignment ? `<span>Alignment</span><b>${g.alignment}</b>` : ''}
           </div>
-          <div class="row center">${campaign ? '<button class="primary" data-act="done">Continue</button>' : '<button class="primary" data-act="again">Again</button><button data-act="replay">Same shuffle</button><button data-act="setup">Setup</button>'}</div>
-          <div class="log">${g.log.map((l, i) => logLine(g, v, l, i)).reverse().join('')}</div>
-        </div>
-      </div>`;
+          <div class="row center end-btns">${campaign ? '<button class="primary" data-act="done">Continue</button>' : '<button class="primary" data-act="again">Again</button><button data-act="replay">Same shuffle</button><button data-act="setup">Setup</button>'}</div>
+        </section>`;
   }
 
   function renderRules() {
@@ -13194,7 +13175,7 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   }
 
   function render() {
-    if (ui.screen === 'setup') renderSetup(); else { renderTable(); requestAnalysis(); paintEngine(); renderCurtain(); }
+    if (ui.screen === 'setup') renderSetup(); else { renderTable(); requestAnalysis(); paintEngine(); }
     renderRules();
     renderAsk();
     if (campaign && !options.engineHelp) $app.querySelectorAll('.eng-toggle').forEach((e) => e.remove());
@@ -13204,7 +13185,7 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   function start(seed) {
     ui.game = K.newGame(cfg(seed >>> 0));
     ui.gameNo = (ui.gameNo || 0) + 1;
-    Object.assign(ui, { screen: 'table', pick: null, hint: '', lastCrux: null, cruxDelta: 0, curtain: true, shown: new Set(), lastVoice: null });
+    Object.assign(ui, { screen: 'table', pick: null, hint: '', lastCrux: null, cruxDelta: 0, shown: new Set(), lastVoice: null });
     render();
     window.scrollTo(0, 0);
   }
@@ -13229,15 +13210,14 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   // The click a drag ends with is not a tap.
   $app.addEventListener('click', (ev) => { if (ui.swallow) { ui.swallow = false; ev.stopImmediatePropagation(); ev.preventDefault(); } }, true);
   $app.addEventListener('click', (ev) => {
-    const t = ev.target.closest('button, .curtain');
+    const t = ev.target.closest('button');
     if (!t) return;
     const d = t.dataset, s = ui.setup, g = ui.game, play = (key) => g.play(key);
     ui.hint = '';
     try {
       if (d.act === 'done') { if (options.onDone() !== false) destroy(); return; }
       if (d.act === 'skiplesson') { if (options.onSkip() !== false) destroy(); return; }
-      if (d.act === 'begin') { ui.curtain = false; }
-      else if (d.act === 'randomenc') { s.encKey = ENC[Math.floor(Math.random() * ENC.length)].key; }
+      if (d.act === 'randomenc') { s.encKey = ENC[Math.floor(Math.random() * ENC.length)].key; }
       else if (d.know) { s.skip = s.skip.includes(d.know) ? s.skip.filter((x) => x !== d.know) : [...s.skip, d.know]; }
       else if (d.act === 'start') { start(s.seed || newSeed()); return; }
       else if (d.confront !== undefined) { play(`confront:${d.confront}`); }
@@ -13264,10 +13244,6 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
     }
     render();
   });
-  const onKey = (ev) => {
-    if (ui.curtain && ui.screen === 'table' && (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Escape')) { ev.preventDefault(); ui.curtain = false; render(); }
-  };
-  document.addEventListener('keydown', onKey);
 
   // The level slider says its value as it moves; the kit is rebuilt when it's let go (change).
   $app.addEventListener('input', (ev) => {
@@ -13282,7 +13258,7 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
   });
 
   function localize() { if (R.text && options.translations) R.text.localize($app, options.translations); }
-  function destroy() { disposed = true; analyst.stop(); document.removeEventListener('keydown', onKey); if (options.game) options.game.play = originalPlay; $app.replaceChildren(); }
+  function destroy() { disposed = true; analyst.stop(); if (options.game) options.game.play = originalPlay; $app.replaceChildren(); }
   render();
   return { destroy };
   }

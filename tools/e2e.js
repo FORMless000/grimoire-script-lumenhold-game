@@ -59,9 +59,8 @@ async function playthrough(browser, lang) {
   while (steps++ < 5000) {
     if (await p.$('.parley-layer')) {
       n.parley++;
-      const begin = p.locator('.parley-layer button[data-act=begin]'), done = p.locator('.parley-layer [data-act=done]');
-      if (await begin.count()) await begin.click();
-      else if (await done.count()) await done.click();
+      const done = p.locator('.parley-layer [data-act=done]');
+      if (await done.count()) await done.click();
       else if (await p.$('.parley-layer [data-act=press]:not([disabled])')) await p.click('.parley-layer [data-act=press]');
       else { const deflect = await p.$('.parley-layer [data-deflect]:not([disabled])'); if (deflect) await deflect.click(); else await p.click('.parley-layer [data-confront]'); }
       await p.waitForTimeout(80); continue;
