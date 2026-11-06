@@ -482,8 +482,33 @@
       const r = F.game.result, won = r.winner === 0, lost = r.winner === 1, res = B().fightResult(F.fight);
       const ds = RESULT_BARS.filter((k) => res.deltas && res.deltas[k]).map((k) => { const n = res.deltas[k]; return `<span>${esc(opts.resName ? opts.resName(k) : k)} <b class="${n < 0 ? 'neg' : 'pos'}">${n < 0 ? '−' : '+'}${fmt(Math.abs(n))}</b></span>`; }).join('');
       return `<div class="fl-result ${won ? 'win' : lost ? 'loss' : 'draw'}" aria-live="polite"><span class="fl-emblem" aria-hidden="true">${CREST}</span><span class="fl-eyebrow">${esc(tr('against', { name: titleOf(1) }))}</span>` +
-        `<h2>${esc(won ? tr('win') : lost ? tr('lose') : tr('draw'))}</h2><p>${esc(tr('reason.' + r.reason))}</p>${whyHtml(r, won)}` +
+        `<h2>${esc(won ? tr('win') : lost ? tr('lose') : tr('draw'))}</h2><p>${esc(tr('reason.' + r.reason))}</p>${whyHtml(r, won)}${statsHtml()}` +
         (ds ? `<div class="fl-net">${ds}</div>` : '') + `<button class="fl-primary" id="fightDone" data-fl-done>${esc(tr('continue'))}</button></div>`;
+    }
+    // The fight in numbers, as the negotiation's end panel gives its own: read off the exchanges as they were played.
+    function statsHtml() {
+      const h = F.history, a = F.game.actors, s = { dealt: 0, taken: 0, best: 0, healed: 0, mana: 0, strike: 0, guard: 0, spell: 0, reclaim: 0 };
+      for (const x of h) {
+        const b = x.before, f = x.after;
+        if (!b || !f) continue;
+        const hit = Math.max(0, b[1].hp - f[1].hp);
+        s.dealt += hit; s.best = Math.max(s.best, hit);
+        s.taken += Math.max(0, b[0].hp - f[0].hp);
+        s.healed += Math.max(0, f[0].hp - b[0].hp);
+        s.mana += Math.max(0, b[0].mana - f[0].mana);
+        const id = x.pair && x.pair[0];
+        if (id === 'strike' || id === 'guard' || id === 'reclaim') s[id]++;
+        else if (id && !['hold', 'release', 'frozen', 'idle'].includes(id)) s.spell++;
+      }
+      const row = (k, v, val) => `<span>${esc(tr(k, v))}</span><b>${esc(val)}</b>`;
+      return '<div class="fl-stats">' +
+        row('stExchanges', null, String(h.length)) +
+        row('stHp', { name: titleOf(1) }, `${fmt(a[0].hp)}/${fmt(a[0].maxHP)} · ${fmt(a[1].hp)}/${fmt(a[1].maxHP)}`) +
+        row('stDamage', null, `${fmt(s.dealt)} · ${fmt(s.taken)}`) +
+        (s.best ? row('stBiggest', null, fmt(s.best)) : '') +
+        (s.healed ? row('stHealed', null, fmt(s.healed)) : '') +
+        row('stMana', null, fmt(s.mana)) +
+        row('stActions', null, `${s.strike} · ${s.guard} · ${s.spell} · ${s.reclaim}`) + '</div>';
     }
 
     // ---- The look (as the negotiation's table, crux/style.css): the fight's setting picks a skin, its ambience and the

@@ -14,11 +14,14 @@
       who: request.vs && content.npcs[request.vs.npc] ? content.npcs[request.vs.npc].name : original.who };
     const layer = document.createElement('div'); layer.className = 'parley-layer';
     const app = document.createElement('div'); app.className = 'crux-app'; layer.appendChild(app);
-    host.classList.add('parleying'); host.appendChild(layer);
+    // A new meeting comes in as a fight does (src/parley.css, .parley-enter); a resumed one, and reduced motion, appear at once.
+    const animate = !saved && document.documentElement.dataset.motion !== 'reduced' && !(root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    host.classList.add('parleying'); if (animate) host.classList.add('parley-enter'); host.appendChild(layer);
+    if (animate) setTimeout(() => host.classList.remove('parley-enter'), 900);
     const save = () => onSave({ ...B.snapshot(p), key });
     const done = (result) => {
       if (onDone(result) === false) return false;
-      layer.remove(); host.classList.remove('parleying'); return true;
+      layer.remove(); host.classList.remove('parleying', 'parley-enter'); return true;
     };
     save();
     const mounted = C.ui.open({ host: app, runtime: C, game: p.game, resumed: !!saved, encounter, entryMana: p.entry.mana,
@@ -26,7 +29,7 @@
       translations: root.I18n.parleyText(), sources: B.signalSources(request, content, { bond: t('parley.noBond'), record: t('parley.noRecord') }),
       onSave: save, onDone: () => done(B.parleyResult(p)),
       onSkip: () => done({ request: request.id, outcome: 'win', reason: 'lesson_skipped', deltas: {}, rules: C.rules, followUps: [] }) });
-    active = { destroy() { mounted.destroy(); layer.remove(); host.classList.remove('parleying'); } };
+    active = { destroy() { mounted.destroy(); layer.remove(); host.classList.remove('parleying', 'parley-enter'); } };
     return active;
   }
   root.ParleyUI = { open, close };

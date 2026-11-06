@@ -1,5 +1,22 @@
 /* Host only. The standalone and campaign table share crux/style.css. */
-.stage.parleying { display: block; overflow-y: auto; }
+/* The stage still scrolls (wheel, touch, keys); its bar only drew a gutter beside the table (feedback 2026-11-06). */
+.stage.parleying { display: block; overflow-y: auto; scrollbar-width: none; }
+.stage.parleying::-webkit-scrollbar, .stage.parleying .end-log .log::-webkit-scrollbar { display: none; }
+.stage.parleying .end-log .log { scrollbar-width: none; }
 .stage.parleying > .deck, .stage.parleying > .choices { display: none; }
-.stage.parleying .parley-layer { position: relative; overflow: clip; isolation: isolate; min-height: 500px; border-radius: 18px; }
+.stage.parleying .parley-layer { position: relative; overflow: clip; isolation: isolate; min-height: 500px; }
+/* No panel behind the table (feedback 2026-11-06): in the game it sits on the game's own sky, as the standalone sits on its
+ * page. The circumstance keeps its colours and its motes; its glows, lights and star would draw the edges of a box. */
+.stage.parleying .parley-layer { background: transparent; }
+.stage.parleying .parley-layer::before, .stage.parleying .parley-layer .amb-light, .stage.parleying .parley-layer .amb-star { display: none !important; }
 body:has(.stage.parleying) #fbBar { display: none; }
+
+/* The entrance, as a fight's (src/combat.css, .fight-enter): for its first moments the table lies over the card view and
+ * its parts rise in one after another while the card and the choices recede; then .parley-enter goes and the table takes
+ * the card's place. Opened only when motion is full (src/parley-ui.js). */
+.stage.parleying.parley-enter { position: relative; display: flex; overflow: hidden; }
+.stage.parleying.parley-enter > .deck { display: block; pointer-events: none; animation: fight-deck-out .55s ease forwards; }
+.stage.parleying.parley-enter > .choices { display: flex; pointer-events: none; animation: fight-fade-out .3s ease forwards; }
+.stage.parley-enter > .parley-layer { position: absolute; top: 10px; left: 16px; right: 16px; z-index: 5; }
+.stage.parley-enter .parley-layer .wrap > * { animation: fight-rise .5s cubic-bezier(.2, .8, .25, 1) both; }
+.stage.parley-enter .parley-layer .wrap > :nth-child(2) { animation-delay: .1s; }

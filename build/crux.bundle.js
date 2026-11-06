@@ -1,4 +1,4 @@
-// GENERATED — Crux sources 8806d5a6090fc89e; node crux/tools/bundle.js
+// GENERATED — Crux sources bec6944f25ee0b27; node crux/tools/bundle.js
 (function(root) {
 const self = {}; let module;
 /*
@@ -12795,8 +12795,10 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
     return 'well above you';
   }
   const spellIcon = (id) => `<span class="a-ico" aria-hidden="true">${S.spells[id].icon}</span>`;
-  // The icon of what a card tests or asks: the skill's, the resource's, or the spell's own.
-  const askIcon = (ask) => `<span class="sign a-${ask.kind}" title="${esc(ask.label)}">${ask.spell ? S.spells[ask.spell].icon : S.signs[ask.sign]}${ask.short ? `<b>${esc(ask.short)}</b>` : ''}</span>`;
+  // The icon of what a card tests or asks: the skill's, the resource's, or the spell's own. Its number says which
+  // (feedback 2026-11-06): a price you pay (crowns, Health, a spell's Mana) is "−5"; a level you must have (Renown) is "≥20".
+  const PAID = { crowns: 1, health: 1, spell: 1 };
+  const askIcon = (ask) => `<span class="sign a-${ask.kind}" title="${esc(ask.label)}">${ask.spell ? S.spells[ask.spell].icon : S.signs[ask.sign]}${ask.short ? `<b>${PAID[ask.kind] ? '−' : '≥'}${esc(ask.short)}</b>` : ''}</span>`;
 
   // A square tile, as in the duels: icon, name, what it does in a word, its price in the corner.
   function tile({ id, data, kind, icon, name, eff, cost, costCls = 'c-mana', sus = 0, on = true, why = '', selected = false, evalKey = '' }) {
@@ -12972,6 +12974,8 @@ self.CRUX_WASM = 'AGFzbQEAAAAB8QEiYAF/AGACf38AYAN/f38Bf2ACf38Bf2ABfwF/YAN/f38AYA
     const g = ui.game.view;
     if (!box) { box = document.createElement('div'); box.id = 'swipeDesc'; box.className = 'swipe-desc'; box.setAttribute('aria-live', 'polite'); $app.closest('.parley-layer').appendChild(box); }
     box.innerHTML = `<div class="preview">${argDesc(g, voiceOf(encounterOf(g), g.circ), c)}</div>`;
+    // It lives outside the table ($app), which localize() covers: it is translated here (feedback 2026-11-06).
+    if (R.text && options.translations) R.text.localize(box, options.translations);
     box.classList.add('show');
   }
 

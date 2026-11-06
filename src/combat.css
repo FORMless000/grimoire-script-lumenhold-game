@@ -28,7 +28,9 @@ body:has(.fl-layer) #fbBar { display: none; }
   position: relative; flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 6px; display: flex; flex-direction: column; align-items: center;
   overflow-x: hidden; overflow-y: auto; container: fight / inline-size; font: 14px/1.4 var(--sans); color: var(--text); -webkit-font-smoothing: antialiased;
   animation: fl-in .35s ease backwards; /* not 'both': a transform left applied would pin the sheet (fixed) to the layer */
+  scrollbar-width: none; /* it still scrolls, by wheel, touch and keys; the bar only drew a gutter beside the table */
 }
+.fl-layer::-webkit-scrollbar { display: none; }
 @keyframes fl-in { from { opacity: 0; transform: translateY(10px); } }
 .fl-layer, .fl-layer * { box-sizing: border-box; }
 .fl-layer [hidden] { display: none !important; }
@@ -466,7 +468,7 @@ body:has(.fl-layer) #fbBar { display: none; }
   --accent: #f0d58c; --glow-1: rgba(96, 80, 200, .25); --glow-2: rgba(200, 120, 60, .12); --table: rgba(22, 26, 53, .94); --texture: none;
   --parch: #f4ecd8; --paper-ink: #2a2238; --head-font: var(--display); --panel: color-mix(in srgb, var(--night-2) 78%, transparent);
 }
-.fl-layer { z-index: 1; margin-top: 0; padding: 12px 12px 18px; border-radius: 18px; }
+.fl-layer { z-index: 1; padding-bottom: 12px; }
 .fl-layer[data-skin=crowd], .fl-amb[data-skin=crowd] {
   --night: #170a0e; --night-2: #231016; --night-3: #30161e; --accent: #ffd46b; --line: rgba(255, 212, 107, .15); --line-2: rgba(255, 212, 107, .32);
   --glow-1: rgba(220, 40, 60, .22); --glow-2: rgba(255, 210, 110, .14); --table: rgba(35, 15, 21, .95);
@@ -496,9 +498,10 @@ html[lang^="zh"] .fl-layer, html[lang^="zh"] .fl-amb { --head-font: var(--displa
 
 /* The ambience: the night, its two glows, its light and drifting motes, behind the fight (a sibling of the layer, laid over
  * the layer's box: inside it, it would scroll with the fight or stretch it). Placed by a fixed scatter. */
-.fl-amb { position: absolute; z-index: 0; border-radius: 18px; overflow: hidden; pointer-events: none;
-  background: radial-gradient(1200px 600px at 80% -10%, var(--glow-1), transparent 60%), radial-gradient(900px 500px at -10% 110%, var(--glow-2), transparent 60%), var(--night);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03); }
+.fl-amb { position: absolute; z-index: 0; overflow: hidden; pointer-events: none; }
+/* No panel behind the table (feedback 2026-11-06): the fight sits on the game's own sky, as it did before the skins; only
+ * the motes drift. The lights and the star would draw the edges of a box, so they stay off here. */
+.fl-amb .amb-light, .fl-amb .amb-star { display: none !important; }
 .stage.fight-enter > .fl-amb { animation: fl-in .35s ease backwards; }
 .fl-amb > * { position: absolute; display: none; }
 .fl-amb > i { left: var(--x); top: var(--y); }
@@ -567,6 +570,9 @@ html[lang^="zh"] .fl-layer, html[lang^="zh"] .fl-amb { --head-font: var(--displa
 .fl-layer .fl-result.loss h2 { color: #ff9d90; }
 .fl-layer .fl-result > p { animation: fl-voice .8s .45s both; }
 .fl-layer .fl-result .fl-why, .fl-layer .fl-result .fl-net { animation: fl-voice .7s .65s both; }
+/* The fight in numbers, as the negotiation's end panel lists its own. */
+.fl-layer .fl-stats { display: grid; grid-template-columns: 1fr auto; gap: 3px 14px; max-width: 360px; margin: 0 auto 12px; padding-top: 8px; border-top: 1px solid var(--line); text-align: left; font-size: 13px; color: var(--muted); animation: fl-voice .7s .75s both; }
+.fl-layer .fl-stats b { color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
 .fl-layer .fl-result .fl-primary { min-width: 160px; animation: fl-voice .6s .85s both; }
 @keyframes fl-result-in { from { opacity: 0; transform: translateY(18px) scale(.98); } }
 @keyframes crux-stamp { 0% { opacity: 0; transform: scale(2.4) rotate(-20deg); } 60% { opacity: 1; transform: scale(.92) rotate(-4deg); } 80% { transform: scale(1.04) rotate(-7deg); } 100% { transform: rotate(-6deg); } }
