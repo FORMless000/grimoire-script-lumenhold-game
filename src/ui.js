@@ -1644,7 +1644,7 @@
   const CREDIT = { author: 'FORMless000', year: 2026, repo: 'https://github.com/FORMless000/grimoire-script-lumenhold-game' };
   function creditsLine() {
     const a = (href, text) => '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>';
-    // The version (src/version.js, 0.3.<commit count>, stamped by the pre-commit hook) leads the line.
+    // The version (src/version.js, <major.minor>.<commit count>, stamped by the pre-commit hook) leads the line.
     return '<footer class="credits">' + [(window.LUMENHOLD_VERSION ? '<b class="version">v' + esc(window.LUMENHOLD_VERSION) + '</b>' : ''), '© ' + CREDIT.year + ' ' + esc(CREDIT.author),
       a(CREDIT.repo + '/blob/main/LICENSE', t('credits.license')), a(CREDIT.repo, t('credits.source')), a(CREDIT.repo + '/issues', t('credits.issues'))]
       .filter(Boolean).map((x) => '<span>' + x + '</span>').join('') + '</footer>';
