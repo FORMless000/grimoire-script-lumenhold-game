@@ -55,6 +55,8 @@ The fight is dressed as Crux's table (`crux/style.css`): `skinOf()` in `src/comb
 
 2026-11-06: no panel behind the table: `.fl-amb` keeps only its motes (its lights and star would draw a box's edges), and the layer's scrollbar is hidden (it still scrolls). The result lists the fight in numbers (`statsHtml`, read off `F.history`'s before/after bodies): exchanges, HP left on both sides, damage dealt and taken, the hardest hit, HP recovered, Mana spent, and how often each kind of move was used.
 
+2026-11-08: a render patches `.fl-wrap` in place: a kept piece (same `data-k`, same markup) is never taken out of the page. `replaceChildren` detached and re-attached every child, kept or not, and a re-attached element starts its CSS animations over, so picking a move (a spell especially) replayed the last exchange's hit, and the render that ends an exchange's freshness replayed the result's entrance. An open sheet that reads the same is likewise left alone.
+
 ## A mutual knockout keeps the winner's HP (2026-10-29; rules F5.11-plan.1b)
 
 When both sides fall in the same exchange, the side that committed first still wins, and now the loser's blows that exchange never land: `terminal()` in `rust/core/src/rules.rs` gives the winner back the HP and Health they took (its own prices stay paid), so the main game charges the winner nothing for them. The result carries `tiebreak`; the fight text ends with `ending.tiebreak`, and the loser's line says `line.tooLate` instead of the damage (`setup/flavor.mjs`, translated in `locales/zh-CN/combat.lang`). Fixtures: `setup/tiebreak.test.mjs`. The combat-ui prototypes (`experiments/combat-ui/`) mark it on the result and the last exchange.

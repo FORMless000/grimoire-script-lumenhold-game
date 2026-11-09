@@ -573,11 +573,13 @@
     }
     function showSheet(kind) {
       F.sheet = kind; const el = $('.fl-sheet');
-      if (!kind || !F.game) { el.hidden = true; el.innerHTML = ''; return; }
+      if (!kind || !F.game) { el.hidden = true; el.innerHTML = ''; el._html = null; return; }
       const [k, a1, a2] = kind.split(':');
       const html = k === 'inspect' ? inspectHtml() : k === 'status' ? statusHtml(Number(a1), Number(a2)) : k === 'action' ? actionHtml(Number(a1), a2) : k === 'incoming' ? incomingHtml(Number(a1), Number(a2)) : k === 'history' ? historyHtml() : '';
       if (!html) { F.sheet = null; el.hidden = true; return; }
-      el.hidden = false; el.innerHTML = `<div class="fl-sheet-card" role="dialog" aria-modal="true">${html}</div>`;
+      // An open sheet that reads the same is left alone: rewritten, it would slide in again on every render.
+      if (el.hidden || el._html !== html) { el.innerHTML = `<div class="fl-sheet-card" role="dialog" aria-modal="true">${html}</div>`; el._html = html; }
+      el.hidden = false;
       el.onclick = (e) => { if (e.target === el || e.target.closest('[data-close]')) showSheet(null); };
     }
     function onKey(e) {
@@ -793,7 +795,13 @@
       const wrap = $('.fl-wrap'), tpl = document.createElement('template'), sig = (el) => el.outerHTML.replace(/ style="[^"]*"/g, '');
       tpl.innerHTML = view.render(F);
       const old = new Map([...wrap.children].filter((el) => el.dataset.k).map((el) => [el.dataset.k, el]));
-      wrap.replaceChildren(...[...tpl.content.children].map((el) => { const k = el.dataset.k, o = k && old.get(k), src = sig(el); if (o && o._sig === src) return o; el._sig = src; return el; }));
+      const next = [...tpl.content.children].map((el) => { const k = el.dataset.k, o = k && old.get(k), src = sig(el); if (o && o._sig === src) return o; el._sig = src; return el; });
+      // Patched in place: a kept piece is never taken out of the page. Detached and put back (replaceChildren did so with
+      // every child), it starts its animations over: picking a spell replayed the last hit, and the redraw that ends an
+      // exchange's freshness replayed the victory (feedback 2026-11-08).
+      const keepSet = new Set(next);
+      for (const el of [...wrap.children]) if (!keepSet.has(el)) el.remove();
+      next.forEach((el, i) => { if (wrap.children[i] !== el) wrap.insertBefore(el, wrap.children[i] || null); });
       if (F.fresh && !layer._freshTimer) layer._freshTimer = setTimeout(() => { layer._freshTimer = null; render(); }, Math.max(0, freshUntil - Date.now()) + 20);
       layer.scrollTop = top;
       if (focusSel) { const el = layer.querySelector(focusSel); if (el && el !== document.activeElement) el.focus({ preventScroll: true }); }
