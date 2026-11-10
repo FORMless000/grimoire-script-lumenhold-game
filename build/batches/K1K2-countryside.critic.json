@@ -1,0 +1,13 @@
+{
+  "batch": "K1K2-countryside",
+  "round": 3,
+  "accept": true,
+  "summary": "Accepted. The fields wiring is fixed: home_fields is back to `always: fields_harvest_day`, which now serves locals too, with the giver framed by `{at_home(): …|…}`. The two neighbour-work cards are retired, so nothing repeats on every visit and nobody gets field work twice on one visit. The coordinator was right that `since(fields_harvest_day) > 0` counts months and could never hold during a break, so retiring both cards is the better fix. Every round-1 and round-2 issue is resolved. Lint shows no errors; zh-CN is still to fill. One optional polish point remains.",
+  "issues": [
+    {
+      "event": "marsh_eel_catcher",
+      "problem": "Optional polish: right v3 says 'He charges you less than last time', which assumes the player bought smoked eel at an earlier showing. A player who always helped with the traps never did.",
+      "fix": "Make it 'He charges you the price for people he knows, and won't say why the inn doesn't buy from him.', or key it on a flag set by the purchase."
+    }
+  ]
+}

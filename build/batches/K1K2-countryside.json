@@ -1,0 +1,74 @@
+{
+  "name": "K1K2-countryside",
+  "at": 1794354180222,
+  "files": [
+    "content/events/maps/countryside_homes.grim",
+    "content/events/maps/countryside_places.grim"
+  ],
+  "events": [
+    "marsh_grandmother_lesson",
+    "marsh_stilt_house_supper",
+    "marsh_witch_stranger",
+    "marsh_lights_on_the_drovers_road",
+    "marsh_drowned_chapel",
+    "marsh_eel_catcher",
+    "market_inn_welcome",
+    "market_harvest_board",
+    "market_day_stalls",
+    "market_inn_hands",
+    "mill_skipping_rhyme",
+    "mill_dry_wheel",
+    "mill_miller_sacks",
+    "fields_scarecrow_coats",
+    "fields_gleaners",
+    "fields_harvest_day",
+    "ridge_count_aloud",
+    "ridge_night_sky"
+  ],
+  "contentHash": "43f14f",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 127,
+      "total": 127
+    }
+  },
+  "critic": {
+    "batch": "K1K2-countryside",
+    "round": 3,
+    "accept": true,
+    "summary": "Accepted. The fields wiring is fixed: home_fields is back to `always: fields_harvest_day`, which now serves locals too, with the giver framed by `{at_home(): …|…}`. The two neighbour-work cards are retired, so nothing repeats on every visit and nobody gets field work twice on one visit. The coordinator was right that `since(fields_harvest_day) > 0` counts months and could never hold during a break, so retiring both cards is the better fix. Every round-1 and round-2 issue is resolved. Lint shows no errors; zh-CN is still to fill. One optional polish point remains.",
+    "issues": [
+      {
+        "event": "marsh_eel_catcher",
+        "problem": "Optional polish: right v3 says 'He charges you less than last time', which assumes the player bought smoked eel at an earlier showing. A player who always helped with the traps never did.",
+        "fix": "Make it 'He charges you the price for people he knows, and won't say why the inn doesn't buy from him.', or key it on a flag set by the purchase."
+      }
+    ]
+  },
+  "spotCheck": [
+    "fields_scarecrow_coats",
+    "ridge_night_sky"
+  ],
+  "accepted": true
+}

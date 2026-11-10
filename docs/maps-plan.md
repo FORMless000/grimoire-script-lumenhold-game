@@ -194,8 +194,8 @@ The generic `home_market` becomes the market village and `home_fields` the field
 | Step | State | Notes |
 |---|---|---|
 | F1 framework | done (2026-11-10) | `@map` (schema v1 addition), `plan:` lists, `plan_home_city`, travel plans and lodging states, `at_home()` (migration 0052), `city_born()`, `lodged_rough()`/`lodged_fine()`, the break menu, sleep by lodging, the arrival and return screens (`src/arrival-ui.js`), the two maps' art, 21 pins (the delve, heist and old-hall pins wait for their batches), six hosts moved and their one-place maps retired, one placeholder per new place, `test/maps.test.js` |
-| K1 countryside homes | next | |
-| K2 countryside places | | |
+| K1 countryside homes | done (2026-11-10) | The Marsh (`countryside_homes.grim`, 6 cards): the hedge origin's grandmother at home (lesson, supper); for everyone else the hedge-witch as a stranger (rue, `marsh_rue`), the drovers' road lights, the drowned chapel, the eel-catcher. The cottage keeps `pools/village_home.grim` (at home only) |
+| K2 countryside places | done (2026-11-10) | `countryside_places.grim`, 12 cards: the market village (for visitors), the mill village, the fields for travellers, the ridge; the work cards `market_inn_hands`, `mill_miller_sacks`, `fields_harvest_day` (the last serves locals too). Retired: `home_fields_harvest_help`, `home_fields_neighbours` (the fixed field-work card carries their premise); `home_market_day` gated to `at_home()` |
 | K3 the moors delve | | |
 | K4 "The Good Year" | | |
 | C1 capital homes | | |
@@ -217,3 +217,4 @@ The generic `home_market` becomes the market village and `home_fields` the field
 ## Batch log
 
 - 2026-11-10 F1: lint 0 errors, zh-CN 100%, tests pass; the golden games change (118 of 120: bots now sometimes travel, and capital-born ones go home to the capital), baseline refreshed.
+- 2026-11-10 K1+K2 (`build/batches/K1K2-countryside`): the critic rejected round 1 (17 issues: repeat lines that assumed an earlier choice, night scenes without `slot:`, a hedge-born intern meeting her grandmother as a stranger, locals greeted as visitors, a duplicate market day, double field work, count contradictions), then round 2 (an `always:` group made the neighbours' favours open every fields visit); accepted round 3. The fix pattern for repeats: a flag set by the option, read by the line. Lint 0, zh-CN 100%, verify green; golden baseline refreshed.

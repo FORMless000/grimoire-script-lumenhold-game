@@ -1,0 +1,254 @@
+# The countryside's public places (new maps, 2026-11-10; docs/maps-plan.md, batch K2): the market village, the mill
+# village, the fields and the ridge, for anyone on the map (a country-born player at home, a traveller, an intern).
+# The cards where you grew up stay in pools/village_home.grim, gated to at_home(). Work is offered only by visiting:
+# each work place's fixed card (`always:`, tagged `work`) is a day's work you can take or leave, and the arrival
+# screen names the places that have it. The valley is very glad to see you; why is "The Good Year" (batch K4).
+
+# ---------------- The market village (home_market) ----------------
+
+@pool countryside_market_routine
+place: home_market
+class: routine
+repeat: 4
+weight: 10
+when: not at_home()
+tags: social
+
+@event market_inn_welcome
+title: On the House
+pool: countryside_market_routine
+tone: eerie
+art: cup
+tags: social mystery
+scene: The warm taproom of a country coaching inn, a beaming landlord setting down a laden plate in front of a student who hasn't ordered.
+text: {The landlord of the coaching inn sets a plate in front of you that you didn't order, pie and pickles and a slab of cheese. "On the house," he beams. "We like visitors here. Always have."|The landlord again, and another plate. He asks how long you're staying, and writes the answer in a little book.|The landlord has kept you a seat by the fire. He asks after your health, your family, and whether anyone back home is expecting you soon.} {season == "winter": The fire is enormous. Nobody else sits near it.|The taproom door stands open on the green; swallows come and go under the eaves.}
+> left: Eat and thank him
+  health +small
+  mood +tiny
+  flag inn_kindness
+  say: {It's the best pie in the valley, he says, and it might be. He watches you eat every bite.|You eat. He asks whether you've made friends in the villages yet, and seems pleased when you say not really.|You thank him. He says the thanks is all his, and means something by it you can't place.}
+> right: Insist on paying
+  gold -tiny
+  guile +tiny
+  say: {He takes the coin as if it's slightly sad. It doesn't go in the till; it goes in a jar on the shelf, by itself.|You pay. He writes it in the little book, under your name, in a column that's otherwise empty.|"Your money's no good here," he says, taking it, which is the first thing he's said that you believe.}
+
+@event market_harvest_board
+title: The Board by the Cross
+pool: countryside_market_routine
+tone: eerie
+art: scroll
+tags: mystery lore
+scene: An old wooden board nailed to a market cross on a village green, covered in neat chalked tallies in seven columns, a student reading it.
+text: {Nailed to the market cross is an old board of chalked tallies, harvests by year, in columns of seven. Every year is a good one. The chalk is fresh on all of them.|The harvest board again. You count the columns this time: six full, and a seventh with this year's mark already chalked in, though the harvest isn't.|Someone has drawn a little sheaf at the top of this year's column, and a little figure beside it, very neatly.} {season == "winter": Frost has whitened the older columns; someone has wiped it off this year's.|Bees work the flowers in the trough below it.}
+> left: Copy it into your notebook
+  lore +small
+  mood -tiny
+  say: {You copy it all. Good, good, good, good. Nobody has a run of harvests like that. Nobody.|You copy the seventh column, mark by mark. A woman at the well watches you do it and goes indoors.|You copy the little figure. Later you notice it's wearing a coat with a long hem, like yours.}
+> right: Ask someone what it counts
+  charm +tiny
+  say: {"Good years," says a farmer. "We've been blessed." He says it like a sum he's finished.|"Harvests, dear," says a woman with a basket. "Seven good ones. We're very grateful." She doesn't say to whom.|A boy starts to tell you, and his mother calls him in mid-word.}
+
+@event market_day_stalls
+title: Everyone Smiles
+pool: countryside_market_routine
+time: morning noon afternoon
+tone: light
+art: coin
+tags: money social
+scene: A busy country market on a village green, stalls of honey, cheese, wool and pies, a student browsing with a basket.
+text: {Market day. Honey, wool, cheeses the size of cartwheels, and a man selling pies out of a hatbox. Everyone smiles at you. Everyone.|Market day again. The pie man has a new hatbox and the same pies.|Market day. The stallholders know your name now, though you don't remember telling it.} {season == "winter": Breath steams over the stalls; the honey is set hard.|Wasps patrol the jam.}
+> left: Buy something good
+  gold -tiny
+  mood +small
+  say: {A pot of heather honey, dark as tea. The woman won't let you leave without tasting three others.|A pie from the hatbox. It's excellent. You decide not to ask about the hatbox.|A pair of wool socks knitted, the seller says, especially for you. They fit perfectly.}
+> right: Just walk the stalls
+  mood +tiny
+  say: {You walk the whole market twice and buy nothing, and everyone is just as nice about it.|You taste everything that's offered, which is everything.|You watch the market more than shop it. Every stall has a sheaf of wheat tied over its awning.}
+
+@event market_inn_hands
+title: The Inn Wants Hands
+place: home_market
+when: break
+repeat: 1
+class: routine
+tone: light
+art: cup
+tags: work money
+scene: The back door of a busy coaching inn, a harried landlord with sleeves rolled up beckoning a student towards a yard full of barrels and horses.
+text: {flag(inn_worked): The inn could use you again today, the landlord says, and he's kept your apron.|The coaching inn is short of hands, with a coach due, a yard full of barrels and a taproom to serve. "A day's wages for a day's work," says the landlord. "We look after our own."}
+> left: Work the day
+  gold +small
+  health -tiny
+  mood -tiny
+  say: {flag(inn_worked): Another long day. The regulars call you by name and tip you in pickles. The landlord pays you more than he said, again.|Barrels, horses, tables, plates. By evening you've carried half the valley's supper. He pays you more than he said, and won't take any back.}
+  flag inn_worked
+> right: Not today
+  say: {"Another day, then," he says. "There's always another day."|"Enjoy the valley," he says, and means it, and keeps looking at you after you've gone.}
+
+# ---------------- The mill village ----------------
+
+@pool countryside_mill_routine
+place: countryside_mill
+class: routine
+repeat: 4
+weight: 10
+tags: mystery
+
+@event mill_skipping_rhyme
+title: Seven for the One
+pool: countryside_mill_routine
+time: morning noon afternoon
+tone: eerie
+art: star
+tags: mystery social
+scene: Village children skipping a long rope on a green in front of a small grey chapel, chanting, one of them pointing at a passing student.
+text: {The children on the green are skipping to a counting rhyme. One for the plough, two for the sheaf, three for the miller, on up to six. At seven they all stop, and look at whoever's nearest. Today it's you.|The rhyme again. This time you hear the words for seven, half under their breath: "and seven for the one who came."|The children start the rhyme when they see you coming, as if they've been waiting for an audience.}
+> left: Learn the whole rhyme
+  lore +small
+  mood -tiny
+  say: {A girl with a gap in her teeth teaches you the whole thing, solemnly. When you get to seven, she claps, and nobody else does.|You write it down. When you ask who "the one who came" is, the girl looks at your coat and doesn't answer.|You learn it by heart. Afterwards it goes round your head for a day, and the counting won't stop at six.}
+> right: Clap along and walk on
+  mood +tiny
+  say: {You clap along to six and leave before seven. The children wave you off, every one.|You clap. A mother calls the children in, pleasantly, as you pass.|You walk on. Behind you they start again, from one.}
+
+@event mill_dry_wheel
+title: A Wheel With No Water
+pool: countryside_mill_routine
+slot: evening
+tone: eerie
+art: wave
+tags: mystery
+scene: A mill at dusk, its great wheel turning slowly over an empty, dry millrace, a miller in a dusty apron watching from his door.
+text: {The millrace is dry tonight, mud and stones, and the wheel is turning anyway, slow and steady and wet, as if water were running over it that you can't see.|The wheel again, turning on a dry race. The miller has brought out a chair to watch it, the way you'd watch a fire.|The wheel is turning when you come, and stops when the miller sees you. He stays in his doorway, watching you watch it, and it starts again.} {season == "winter": Frost on the paddles, and still they drip.|The evening is hot and still; the wheel's breeze is cool.}
+> left: Ask the miller about it
+  charm +tiny
+  mood -tiny
+  say: {"Turns when it likes," he says. "Always has, a good year." He offers you a sack of flour to take home, and you take it, and can't think why.|"You'll want to be indoors by dark," he says, kindly. "Valley air."|He tells you it's an old mill, and an old wheel, and an old arrangement, and then that he's said too much, though he hasn't.}
+> right: Watch it from the bridge
+  lore +tiny
+  say: {You watch until full dark. The wheel turns seven times, stops, and doesn't move again all night.|You watch. Something you can't see drips off the paddles into the dry race and doesn't wet the stones.|You time the wheel against your heartbeat. It's slower. Then it's the same.}
+
+@event mill_miller_sacks
+title: Sacks for the Miller
+place: countryside_mill
+when: break
+repeat: 1
+class: routine
+tone: light
+art: leaf
+tags: work money
+scene: A dusty mill loft, flour sacks stacked to the rafters, a broad miller pointing a student at a hoist and a cart waiting below.
+text: {flag(mill_worked): The miller waves you up to the loft. He's kept the heavy sacks for you, as a compliment.|The miller needs the season's flour carted to the market village and up the hill to the farms. "Strong back?" he asks. "It pays."}
+> left: Cart flour all day
+  gold +small
+  health -small
+  say: {flag(mill_worked): Another day of flour. You're white to the elbows, your back aches, and the miller pays you in coins and a loaf that's still warm.|Sack after sack, down the hoist and onto the cart, and every farm along the road waves you in for a drink. By dusk your back has opinions. The pay is good.}
+  flag mill_worked
+> right: Not today
+  say: {"Suit yourself," says the miller. "It'll all get carried. It always does."|He shrugs, and hoists the next sack himself.}
+
+# ---------------- The fields, for a traveller (home_fields) ----------------
+
+@pool countryside_fields_routine
+place: home_fields
+class: routine
+repeat: 4
+weight: 10
+when: not at_home()
+tags: nature
+
+@event fields_scarecrow_coats
+title: Very Decent Coats
+pool: countryside_fields_routine
+tone: eerie
+art: leaf
+tags: mystery nature
+scene: A row of scarecrows in a golden field, each dressed in a good travelling coat with brass buttons, one coat's collar turned up against no wind.
+text: {The scarecrows in the far field are wearing better coats than you are. Good wool, brass buttons, a travelling cloak with a stitched hem. Somebody's coats, once.|The scarecrows again. One of them has a label inside its collar, from a tailor in the capital.|There's a new scarecrow at the end of the row, in a coat that still has creases from the trunk.}
+> left: Look closer at the coats
+  lore +small
+  mood -small
+  say: {The buttons are real brass. The pockets are empty except for one, which holds a coaching-inn ticket, years old, punched for one night only.|The tailor's label has a name stitched under it, a stranger's. You put the collar straight and don't know why that matters.|The new coat's pocket has a handkerchief in it, neatly folded. You leave it there.}
+> right: Leave them be
+  say: {You walk on. The scarecrows' sleeves move in the wind, all at once, all the same way.|You don't look closer. In the corner of your eye, one of them has its collar up.|You go round by the hedge. Somebody, after all, put those coats there for a reason.}
+
+@event fields_gleaners
+title: Gleaning
+pool: countryside_fields_routine
+when: season != "winter"
+time: morning afternoon
+tone: warm
+art: leaf
+tags: nature social
+scene: Village women in aprons gleaning stray ears of grain behind the reapers in a golden field, one of them handing a student a sack.
+text: {Behind the reapers, the village women glean the stray ears into their aprons, and one of them hands you a sack without asking. "Another good year," she says. "Seven, now."|The gleaners again, and the same sack. They sing as they work, the counting song the children skip to.|The gleaners make room for you in the row. "Stay for the supper," one says. "Everyone stays for the harvest supper."} The stubble crackles underfoot.
+> left: Glean with them
+  vigor +tiny
+  mood +tiny
+  say: {Your back aches and your sack is pitiful and they praise it extravagantly.|You glean until the light goes. They walk you to the lane, all of them, chatting, as if you might get lost.|You glean and listen. Nobody says what comes after seven. They just call this one "the good one".}
+> right: Ask about the harvest supper
+  charm +tiny
+  say: {"Oh, you'll come," she says. "Visitors are the guests of honour. It's tradition." Everyone near enough to hear nods.|"At the inn, end of the season," she says. "The landlord does the honours." She looks at your coat when she says it.|They tell you about the supper: the long table, the sheaf, the toast to the guest. Nobody tells you whose turn it is to be the guest.}
+
+@event fields_harvest_day
+title: Harvest Hands
+place: home_fields
+when: break
+repeat: 1
+class: routine
+tone: warm
+art: leaf
+tags: work money
+scene: A farmer at a field gate under a huge sky holding out a tool to a student, farmhands at work in the field behind.
+text: {season == "winter": {flag(fields_worked): The farmer has a billhook waiting for you again.|Even in winter there's work, hedges to lay and ditches to clear. {at_home(): A neighbour you've known all your life|A farmer at the gate} holds out a billhook. "Day's wages," he says.}|{flag(fields_worked): The farmer has a scythe waiting for you again, and your name on the wages list.|The farmers are a hand short in the long field, and {at_home(): the neighbour who taught you to tie a sheaf|a farmer at the gate} holds out a scythe. "Day's wages, and supper," he says.}}
+> left: Work the day in the field
+  gold +small
+  health -small
+  say: {season == "winter": {flag(fields_worked): Another day of mud and thorns, hands raw, and good pay for it.|Hedges laid, ditches cleared, hands raw. The farmer pays you and says you're a natural, which you aren't.}|{flag(fields_worked): Another day's harvest. They save you the end of the row, where the last sheaf stands, and nobody will cut it but you.|All day in the long rows. You're the slowest in the line and they cheer every sheaf you tie. The pay is good; the supper is better.}}
+  flag fields_worked
+> right: Not today
+  say: {season == "winter": {"Another day," says the farmer, cheerfully.|He shrugs, and lays the hedge himself.}|{"Another day," says the farmer, cheerfully. "The last sheaf'll wait for you."|He shrugs and swings the scythe himself.}}
+
+# ---------------- The ridge ----------------
+
+@pool countryside_ridge_routine
+place: countryside_ridge
+class: routine
+repeat: 4
+weight: 10
+tags: nature mystery
+
+@event ridge_count_aloud
+title: Counting Out Loud
+pool: countryside_ridge_routine
+time: morning afternoon
+tone: eerie
+art: planet
+tags: mystery lore
+scene: A student walking the inside of a ring of leaning standing stones on a bare ridge, touching each stone, lips moving, the valley far below.
+text: {A shepherd on the ridge path tells you not to count the stones out loud, which is exactly the kind of advice that makes you want to.|The stones again. You count them in your head and get nineteen, the same as everyone gets.|The ring of stones. Somebody has tied red thread round one of them, knotted seven times.}
+> left: Count them aloud
+  lore +small
+  mood -tiny
+  say: {"Seventeen, eighteen, nineteen." You turn. "Twenty." There were nineteen. You count again in silence, and get nineteen.|You count aloud and get twenty, and the wind drops completely until you've walked out of the ring.|You count aloud, and at twenty a sheep in the valley below stops grazing and looks up at the ridge.}
+> right: Count in your head and leave it
+  mood +tiny
+  say: {Nineteen, in your head. The stones lean a little, as if listening for the number.|Nineteen. You keep it to yourself. The wind keeps blowing, which feels like approval.|You don't count at all today. You just touch the threaded stone, and it's warm, and the others are cold.}
+
+@event ridge_night_sky
+title: Sightlines
+pool: countryside_ridge_routine
+slot: night
+tone: warm
+art: star
+tags: nature stars
+scene: A student kneeling at a gap between two leaning standing stones on a dark ridge, sighting along it at a bright star rising over the valley rim.
+text: {At night you notice what the stones on the ridge are for. Each gap between two of them frames a piece of the valley rim, and a star rises in some of them, exactly.|Another clear night at the stones. {flag(ridge_chart): You've started a chart of which gap catches which star.|You pick out which gap catches which star, and wish you'd brought paper.}|The stones at night again. Tonight a star is rising in a gap {flag(ridge_chart): where, by your chart, there should be nothing.|that framed nothing at all the last time you looked.}} {season == "winter": Frost on the stones; the stars are hard and close.|Warm grass, moths, and the sky turning slowly over the ring.}
+> left: Chart the sightlines till dawn
+  lore +small
+  health -tiny
+  say: {You sight along the gaps until the cold gets into your knees. Whoever raised these stones knew the sky better than half the astronomy faculty.|You chart the gaps by lantern. One frames nothing at all, no star, all year; you mark it with a question.|You stay till dawn. The new star sets in the gap that framed nothing, and the valley goes quiet, every dog and every cockerel, until the sun is up.}
+  flag ridge_chart
+> right: Come down before midnight
+  mood +tiny
+  say: {You come down by the shepherd's path with the stars on your shoulders. A good night.|You come down early. The lane lamps of both villages are lit, every one, as if for a guest.|You come down before the cold sets in, and sleep better for it.}

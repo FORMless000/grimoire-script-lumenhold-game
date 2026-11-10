@@ -21,12 +21,13 @@ scene: Inside a small house on stilts above a marsh, an old woman and a young st
 text: {Your grandmother has decided the academy has taught you nothing useful, and sets out the mortar to prove it.|The mortar is out again. "Again," she says, "and this time listen to it."|You reach for the mortar before she asks. She pretends not to notice, and is pleased.} {season == "winter": Frost on the reeds outside; inside, the stove and the smell of dried meadowsweet.|The windows open on the marsh's hum; flies argue with the drying bunches.}
 > left: Do it her way, slowly
   alchemy +small
-  mood -tiny
-  say: {Two hours on one poultice. Your wrist aches. She tastes it, nods once, and puts it on the shelf with her own.|She makes you grind until the paste stops sounding gritty. You hadn't known paste had a sound.|You do it her way without being told. She says nothing at all, which is how you know.}
+  health -tiny
+  say: {Two hours on one poultice. Your wrist aches. She tastes it, nods once, and puts it on the shelf with her own.|She makes you grind until the paste stops sounding gritty and your shoulders burn. You hadn't known paste had a sound.|You do it her way without being told, two hours bent over the mortar until your back aches. She says nothing at all, which is how you know.}
 > right: Show her the academy way
   arcana +tiny
   mood +tiny
-  say: {You do it in ten minutes with a charm. She sniffs it, says "It'll keep a week," and makes you do it again her way after supper.|You show her the charm again. She watches closer this time, and doesn't say it's wrong.|She asks you to teach her the charm. Then she tells you three things it does that the professors never mentioned.}
+  say: {You do it in ten minutes with a charm. She sniffs it, says "It'll keep a week," and makes you do it again her way after supper.|{flag(marsh_charm_shown): You show her the charm again. She watches closer this time, and doesn't say it's wrong.|You show her the charm. She watches with her lips pressed together, then has you do it twice more.}|{flag(marsh_charm_shown): She asks you to teach her the charm. Then she tells you three things it does that the professors never mentioned.|You show her a charm. She makes you explain every word of it, then tells you its old name.}}
+  flag marsh_charm_shown
 
 @event marsh_stilt_house_supper
 title: Supper Above the Water
@@ -36,11 +37,11 @@ tone: warm
 art: meal
 tags: home
 scene: A small house on stilts at dusk, lamplight in its window, an old woman and a student eating at a table by the open shutter over dark water.
-text: {Eel pie, black bread and the marsh going quiet outside. Your grandmother wants to hear about the castle, all of it.|Supper again, and the questions again, sharper this time: who your friends are, whether they're good to you.|Supper, and this time she talks and you listen: the year the river froze, the winter the wolves came to the edge.} {final_year: She asks what comes after, and listens to the whole answer.|Out on the water, a light drifts past the window. She shuts the shutter without comment.}
+text: {Eel pie, black bread and the marsh going quiet outside. Your grandmother wants to hear about the castle, all of it.|Supper again, and the questions again, sharper this time: who your friends are, whether they're good to you.|Supper, and this time she talks first: the year the river froze, the winter the wolves came to the edge. Then she wants your news.} {final_year: She asks what comes after, and listens to the whole answer.|Out on the water, a light drifts past the window. She shuts the shutter without comment.}
 > left: Tell her everything
   mood +small
   health -tiny
-  say: {You talk until the lamp gutters and long past your bedtime. She laughs at the professor who throws chalk and goes very quiet at the lake.|You tell her about your friends. She asks two questions about each, both of them the right ones.|You tell her. She says, "Good," about the parts that are, and nothing about the rest.}
+  say: {You talk until the lamp gutters and long past your bedtime. She laughs at the professor who throws chalk and goes very quiet at the duelling.|You tell her about your friends until the lamp's out. She asks two questions about each, both of them the right ones.|You tell her, past midnight. She says, "Good," about the parts that are, and nothing about the rest.}
 > right: Ask about the valley instead
   lore +small
   mood -tiny
@@ -49,16 +50,16 @@ text: {Eel pie, black bread and the marsh going quiet outside. Your grandmother 
 @event marsh_witch_stranger
 title: The Woman on the Stilt House Steps
 pool: countryside_marsh_routine
-when: not at_home()
+when: not at_home() and not has(origin_hedge)
 tone: eerie
 art: leaf
 tags: magic mystery
 scene: An old woman sitting on the steps of a house on stilts at the edge of a marsh, a bunch of grey-green herbs in her lap, not looking at the student on the path.
-text: {The hedge-witch is sitting on her steps with a bunch of rue in her lap, and doesn't look up when you pass. "Visiting," she says. It isn't a question.|The hedge-witch again. This time she looks at you, once, as if counting something.|She's waiting on the steps as if she knew you'd come. "Still here," she says, and it sounds like a worry.} {season == "winter": Her breath smokes; she doesn't seem to feel the cold.|Dragonflies settle on the rail beside her.}
+text: {The hedge-witch is sitting on her steps with a bunch of rue in her lap, and doesn't look up when you pass. "Visiting," she says. It isn't a question.|The hedge-witch again. This time she looks at you, once, as if counting something. "Mind the inn," she says.|She's waiting on the steps as if she knew you'd come. "Still here," she says, and it sounds like a worry.} {season == "winter": Her breath smokes; she doesn't seem to feel the cold.|Dragonflies settle on the rail beside her.}
 > left: Ask what she means
   gold -tiny
+  say: {She ties a sprig of rue with a bit of red thread and holds it out. "A penny. Nothing's free." You pay. "Keep it in your pocket while you're in the valley, and don't let the inn wash your coat."|{flag(marsh_rue): She gives you another sprig, though you still have the first. "For whoever you're travelling with."|She ties you a sprig of rue with red thread. "For the road," she says.} She takes the penny and won't say more.|"You know what I mean," she says, which you don't, and takes your penny for {flag(marsh_rue): another sprig|a sprig of rue on red thread}.}
   flag marsh_rue
-  say: {She ties a sprig of rue with a bit of red thread and holds it out. "A penny. Nothing's free." You pay. "Keep it in your pocket while you're in the valley, and don't let the inn wash your coat."|She gives you another sprig, though you still have the first. "For whoever you're travelling with." She takes the penny and won't say more.|"You know what I mean," she says, which you don't, and takes your penny for another sprig.}
 > right: Wish her good day and walk on
   mood +tiny
   say: {"Good day," she says to the marsh, not to you. Behind you, you hear her shutters close.|You wish her good day. She says, "Is it," and goes back to her herbs.|You walk on. When you look back she's standing, watching the road to the villages, not you.}
@@ -66,7 +67,7 @@ text: {The hedge-witch is sitting on her steps with a bunch of rue in her lap, a
 @event marsh_lights_on_the_drovers_road
 title: The Drovers' Road
 pool: countryside_marsh_routine
-time: evening night
+slot: evening
 tone: eerie
 art: star
 tags: mystery nature
@@ -94,7 +95,7 @@ text: {The water's low today, and out in the reeds there's a roof, a little chap
     win:
       lore +small
       health -tiny
-      say: {Waist-deep, freezing, you reach the turret. No bell, and no fittings for one either; the turret was built empty. That seems a strange thing to build.|You reach the ribbon. It's red thread, the hedge-witch's kind, knotted seven times.|You get close enough to read the lintel: a sheaf of wheat, carved over and over in a band, and a date too worn to read.}
+      say: {Waist-deep, freezing, you reach the turret. No bell, and no fittings for one either; the turret was built empty. That seems a strange thing to build.|You reach the ribbon. It's red thread, knotted seven times, and new.|You get close enough to read the lintel: a sheaf of wheat, carved over and over in a band, and a date too worn to read.}
     lose:
       health -small
       mood -tiny
@@ -102,7 +103,7 @@ text: {The water's low today, and out in the reeds there's a roof, a little chap
 > right: Sketch it from the bank
   lore +tiny
   mood +tiny
-  say: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it again, from the same tussock. It's lower in the water than last time, or the water is higher.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
+  say: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it again, from the same tussock. It's higher out of the water than last time; you draw the new course of stones.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
 
 @event marsh_eel_catcher
 title: The Eel Traps
@@ -112,12 +113,12 @@ tone: light
 art: wave
 tags: social nature
 scene: A weathered fen-man in waders lifting a wicker eel trap out of a marsh channel, a student watching from a plank path with a parcel of smoked fish.
-text: {An eel-catcher in waders is lifting his traps along the channel, and he talks to every one before he opens it.|The eel-catcher again, and the traps again, and the same small speech to each one. "Manners," he explains.|The eel-catcher waves you over with a trap. "You'll do the talking today."} {season == "winter": The channels are slow and black; the eels are sleepy.|The eels are lively and so are the midges.}
+text: {An eel-catcher in waders is lifting his traps along the channel, and he talks to every one before he opens it.|The eel-catcher again, and the traps again, and the same small speech to each one. "Manners," he explains.|The eel-catcher knows your face by now, and waves you over with a trap. "You'll do the talking today."} {season == "winter": The channels are slow and black; the eels are sleepy.|The eels are lively and so are the midges.}
 > left: Help him with the traps
   vigor +tiny
-  mood -tiny
-  say: {You haul six traps and get bitten by one eel. He pays you in smoked eel and a piece of advice. Never, he says, count the stones on the ridge out loud.|You talk to the traps, feeling a fool. The catch is better than last time. "See," he says.|You haul all morning. He tells you the marsh used to be a village, "before they stopped paying," then pretends he said "the drainage".}
+  health -tiny
+  say: {You haul six traps and get bitten by one eel. He pays you in smoked eel and a piece of advice. Never, he says, count the stones on the ridge out loud.|You talk to the traps, feeling a fool, wet and cold to the wrist. The catch is good. "See," he says.|You haul all morning, wet to the elbows. He tells you the marsh used to be a village, "before they stopped paying," then pretends he said "the drainage".}
 > right: Buy some smoked eel
   gold -tiny
   health +tiny
-  say: {Smoked eel in a twist of paper, eaten on the plank path. It's oily, smoky and better than anything in the refectory.|He wraps you a piece of the good stuff without being asked. "For the walk back," he says. "Don't take the drovers' road."|Smoked eel again. You're a regular now; he tells you so, and charges you less, and won't say why the inn doesn't buy from him.}
+  say: {Smoked eel in a twist of paper, eaten on the plank path. It's oily, smoky and better than anything in the refectory.|He wraps you a piece of the good stuff without being asked. "For the walk back," he says. "Don't take the drovers' road."|Smoked eel from the back of the smokehouse, the good stuff. He won't say why the inn doesn't buy from him.}
