@@ -93,7 +93,8 @@
         const track = e.track || legacyOf(e);
         if (e.place) (ix.byPlace[e.place] = ix.byPlace[e.place] || []).push(e);
         else if (track) (ix.byTrack[track] = ix.byTrack[track] || []).push(e);
-        else if (e.plan) (ix.byPlan[e.plan] = ix.byPlan[e.plan] || []).push(e);
+        // `plan:` may name several plans (`plan: home home_city`): one card shared by every home.
+        else if (e.plan) for (const pl of String(e.plan).split(/[\s,]+/).filter(Boolean)) (ix.byPlan[pl] = ix.byPlan[pl] || []).push(e);
         else if (e.trigger === 'social') ix.social.push(e);
         else if (e.slot) ix.slotBound.push(e);
         else ix.ambient.push(e);
@@ -134,16 +135,7 @@
       const fest = this.festivals().filter((f) => !picking || f.visit === vi).map((f) => Object.assign({}, f, { visit: picking ? 0 : f.visit }));
       // A place with a festival later today is closed until then (playtest 2, I5): it is getting ready.
       const later = picking ? this.festivals().filter((f) => f.visit > vi) : [];
-      // Which map (design §4.3): the active plan's `map_id:` on a break (a map id, or a track kind: the map of your track
-      // of that kind's place, the internship host), else `@game map_id:`.
-      let breakMap = this.c.game.map_id || 'campus';
-      const planMap = this.phaseOf() === 'break' && this.planMap();
-      if (planMap && this.trackKinds().has(planMap)) {
-        const host = Object.keys(s.tracks || {}).find((id) => s.tracks[id].kind === planMap && s.tracks[id].status === 'member');
-        const pl = host && this.c.tracks[host] && this.c.places[this.c.tracks[host].place];
-        if (pl && pl.map) breakMap = pl.map.map;
-      } else if (planMap) breakMap = planMap;
-      if (only) breakMap = only;
+      const breakMap = only || this.currentMap();
       const places = [];
       for (const p of Object.values(this.c.places || {})) {
         if (!p.map || p.map.map !== breakMap || p.deprecated) continue;
@@ -169,7 +161,9 @@
           visited: visited || undefined, festLater: waiting ? this.visitSlots()[waiting.visit] : undefined,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
-      return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
+      // Reaching another map, or coming back to the term map (new maps, 2026-11-10): the arrival screen comes first.
+      const arrival = picking ? this.arrival() : null;
+      return { map: breakMap, slots, places, locked: [], arrival, festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
         visit: picking ? vi + 1 : null, visits: this.visitSlots().length + (d && d.extraVisit && !this.visitSlots().includes(d.extraVisit) ? 1 : 0), season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
     },
     // The map button (feedback 2026-10-20): the maps you know, to look at, not to pick from: the one you're on now first,
@@ -182,8 +176,66 @@
       for (const p of Object.values(this.c.places || {})) if (p.map && !p.deprecated && s.places[p.id] && (s.visitsTo || {})[p.id] && !ids.includes(p.map.map)) ids.push(p.map.map);
       return ids.map((m) => {
         const v = this.mapView(m), mine = v.places.filter((p) => p.state !== 'hinted');
-        return Object.assign(v, { now: m === now, name: m === home ? this.c.game.title || null : Object.values(this.c.places).filter((p) => p.map && p.map.map === m).length === 1 && mine[0] ? mine[0].name : null, region: mine[0] ? mine[0].region : null });
+        const def = (this.c.maps || {})[m];
+        return Object.assign(v, { now: m === now, name: def && def.name ? def.name : m === home ? this.c.game.title || null : Object.values(this.c.places).filter((p) => p.map && p.map.map === m).length === 1 && mine[0] ? mine[0].name : null, region: mine[0] ? mine[0].region : null });
       }).filter((v) => v.places.some((p) => p.state !== 'hinted'));
+    },
+    // Which map you're on (design §4.3): the active plan's `map_id:` on a break (a map id, or a track kind: the map of
+    // your track of that kind's place, the internship host), else `@game map_id:`.
+    currentMap() {
+      const s = this.s, planMap = this.phaseOf() === 'break' && this.planMap();
+      if (planMap && this.trackKinds().has(planMap)) {
+        const host = Object.keys(s.tracks || {}).find((id) => s.tracks[id].kind === planMap && s.tracks[id].status === 'member');
+        const pl = host && this.c.tracks[host] && this.c.places[this.c.tracks[host].place];
+        if (pl && pl.map) return pl.map.map;
+      } else if (planMap) return planMap;
+      return this.c.game.map_id || 'campus';
+    },
+    // The arrival screen (new maps, 2026-11-10): pending whenever the map you're on isn't the one you last confirmed
+    // (`s.lastMap`; the term map before any). Arriving elsewhere says where you are, where you stay (a traveller picks
+    // lodging here: the map's `lodging:` states, when the plan is tagged `lodging`) and which places offer work (a found
+    // place whose fixed card is tagged `work`); coming back to the term map says what the time away left you.
+    arrival() {
+      const s = this.s, to = this.currentMap(), home = this.c.game.map_id || 'campus', from = s.lastMap || home;
+      if (to === from) return null;
+      const def = (this.c.maps || {})[to] || {}, ix = this.directorIndex();
+      const plan = Object.keys(s.states || {}).find((k) => this.c.states[k] && this.c.states[k].kind === 'plan');
+      const pd = plan ? this.c.states[plan] : null;
+      const base = { kind: to === home ? 'return' : 'arrival', map: to, from, name: def.name || null, art: def.art || null, line: def[to === home ? 'return' : 'arrival'] ? this.interp(def[to === home ? 'return' : 'arrival']) : '' };
+      if (base.kind === 'return') {
+        const a = s.away || {};
+        const items = Object.keys(s.itemsHad || {}).filter((id) => !(a.items || []).includes(id) && this.c.items && this.c.items[id]).map((id) => this.c.items[id].name);
+        return Object.assign(base, { ledger: { gold: a.gold == null ? null : Math.round((s.vals.gold || 0) - a.gold), items, months: a.turn == null ? null : s.turn - a.turn } });
+      }
+      const travelling = !!(pd && (pd.tags || []).includes('lodging'));
+      const lodging = travelling ? (def.lodging || []).filter((id) => this.c.states[id]).map((id) => {
+        const st = this.c.states[id], cost = Math.max(0, -this.goldOf(st.on_add));
+        return { id, name: st.name, desc: st.desc || '', art: st.art || null, cost, monthly: Math.max(0, -this.goldOf(st.tick)), ok: cost <= (s.vals.gold || 0) };
+      }) : null;
+      const always = (p) => String(p.always || '').split(/[\s|,]+/).filter(Boolean);
+      const work = Object.values(this.c.places || {}).filter((p) => p.map && p.map.map === to && !p.deprecated && s.places[p.id] && always(p).some((id) => this.c.events[id] && (this.c.events[id].tags || []).includes('work')))
+        .map((p) => ({ id: p.id, name: p.name }));
+      return Object.assign(base, { stay: pd ? { id: plan, name: pd.name, desc: pd.desc || '' } : null, lodging, work, held: Object.keys(s.states || {}).find((k) => (def.lodging || []).includes(k)) || null });
+    },
+    // Confirms the arrival screen: remembers the map, and a traveller's lodging is gained (its `on_add:` pays for it). A
+    // lodging you can't pay for falls back to the first you can; with none named, the first the map lists that you can.
+    // Picking a place confirms it too (bots and tests), with the default lodging.
+    confirmArrival(lodging) {
+      const s = this.s, a = this.arrival();
+      if (!a) return null;
+      const ctx = this.newCtx(null, null);
+      if (a.kind === 'arrival' && a.lodging && a.lodging.length && !a.held) {
+        const pick = a.lodging.find((l) => l.id === lodging && l.ok) || a.lodging.find((l) => l.ok);
+        if (pick) this.addState(pick.id, null, ctx);
+      }
+      if (a.kind === 'arrival' && a.from === (this.c.game.map_id || 'campus')) s.away = { turn: s.turn, gold: s.vals.gold || 0, items: Object.keys(s.itemsHad || {}) };
+      if (a.kind === 'return') delete s.away;
+      s.lastMap = a.map;
+      return this.outcome(ctx);
+    },
+    // Crowns an effect list moves, tiers resolved (lodging prices on the arrival screen).
+    goldOf(effs) {
+      return (effs || []).reduce((sum, st) => sum + (st.t === 'delta' && st.name === 'gold' ? (st.tier ? st.sign * this.tierAmount('gold', st.tier) : (st.min + st.max) / 2) : 0), 0);
     },
     // The active plan's `map_id:` (A1), or null.
     planMap() {
@@ -220,6 +272,7 @@
       return this.outcome(ctx);
     },
     pickPlace(id) {
+      if (this.arrival()) this.confirmArrival(null);
       const s = this.s, d = s.day, view = this.mapView(), sl = view.slots[0];
       if (id) {
         const p = view.places.find((x) => x.id === id);

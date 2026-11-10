@@ -32,7 +32,7 @@ text: {friend} has written. {~Three pages, mostly about nothing, which is the be
 @event letter_castle_news
 title: News From the Castle
 trigger: letter
-when: has(plan_home)
+when: at_home()
 class: routine
 tone: light
 repeat: 4
@@ -101,7 +101,7 @@ text: A professor has written over the break, as some of them do, with a reading
 @event letter_parcel_from_home
 title: A Parcel From Home
 trigger: letter
-when: not has(plan_home)
+when: not at_home()
 class: routine
 tone: warm
 repeat: 2
@@ -168,7 +168,7 @@ text: A bill from the village bookshop for a book called "On Small Explosions", 
 @event letter_old_friend
 title: From Before
 pool: letters_routine
-when: not has(plan_home)
+when: not at_home()
 tone: warm
 art: letter
 tags: home

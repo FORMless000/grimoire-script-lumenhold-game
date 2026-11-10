@@ -314,7 +314,7 @@ members:
 title: The Cold Stove
 place: home_market
 tone: warm
-when: not flag(bloomer_begun)
+when: (not flag(bloomer_begun)) and at_home()
 repeat: 4
 weight: 16
 art: cauldron
@@ -362,7 +362,7 @@ thread: late_bloomer
 trigger: queued
 tone: warm
 when: flag(bloomer_steady) and not flag(bloomer_father_seen)
-defer: not has(plan_home)
+defer: not at_home()
 art: door
 scene: A worried shopkeeper at a cottage door holding a small paper bag of sweets, not stepping inside.
 text: Her father is at the door with a paper bag of the sweets you liked when you were small. He doesn't come in. "They take them young, at the castle, don't they," he says. "She's past it. So what is it for, all that fire, in a sweet shop?"
@@ -386,7 +386,7 @@ trigger: queued
 slot: afternoon
 tone: tense
 when: flag(bloomer_father_seen) and not flag(bloomer_charm_done)
-defer: not has(plan_home)
+defer: not at_home()
 art: gem
 scene: A market charm seller holding up a grey glass bead on a cord to a young woman counting coins from her apron.
 text: In the market you find her at the charm seller's stall. He's holding up a grey glass bead on a cord. "Lumenhold-blessed," he's saying. "Smothers it, like a lid on a pot. No more flares, no more fuss." It's plain glass; you can see that from here. She's counting out her savings.
@@ -448,7 +448,7 @@ title: A Flame That Stays
 thread: late_bloomer
 trigger: queued
 slot: evening
-defer: not has(plan_home)
+defer: not at_home()
 class: milestone
 tone: warm
 when: flag(bloomer_charm_done) and (flag(bloomer_ice_done) or flag(bloomer_damped)) and not flag(bloomer_finished)

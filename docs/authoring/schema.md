@@ -420,6 +420,13 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `kind` | text |  |
 |  | `event` | text |  |
 |  | `text` | text |  |
+| `@map id` | `name` | text | yes |
+|  | `region` | text |  |
+|  | `desc` | text | yes |
+|  | `arrival` | text | yes |
+|  | `return` | text | yes |
+|  | `art` | text |  |
+|  | `lodging` | text |  |
 
 ### Functions in expressions
 

@@ -64,3 +64,19 @@ is: bond(x) != "partner" and bond(x) != "ex" and spark(x) < 30
 @cond before_finals
 desc: The two term months that lead up to each term's finals (3–4, 9–10), when exam help sells.
 is: term and (month == 3 or month == 4 or month == 9 or month == 10)
+
+@cond at_home
+desc: Home for the break, wherever home is: the countryside or the capital (new maps, 2026-11-10).
+is: has(plan_home) or has(plan_home_city)
+
+@cond lodged_rough
+desc: Sleeping rough on a trip: a doss-house or a hayloft (new maps, 2026-11-10).
+is: has(lodging_city_rough) or has(lodging_country_rough)
+
+@cond lodged_fine
+desc: Sleeping in the best room money buys on a trip (new maps, 2026-11-10).
+is: has(lodging_city_fine) or has(lodging_country_fine)
+
+@cond city_born
+desc: Home is in the capital: the noble, merchant and street origins (new maps, 2026-11-10). The others' home is the countryside.
+is: has(origin_noble) or has(origin_merchant) or has(origin_street)

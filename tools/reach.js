@@ -138,7 +138,7 @@ function reach(content) {
       else if (e.place && c.places[e.place] && c.places[e.place].kind !== 'internship' && c.places[e.place].open && !c.places[e.place].open.some((s) => visitSlots.has(s)) && !e.replaces) miss = 'place ' + e.place + ' never open in a visit slot';
       else if (e.track && !F.track.has(e.track)) miss = 'track ' + e.track + ' never joined';
       else if (e.track && e.level && c.tracks[e.track] && c.tracks[e.track].levels && e.level > c.tracks[e.track].levels) miss = 'level ' + e.level + ' > track levels';
-      else if (e.plan && !F.state.has('plan_' + e.plan)) miss = 'plan_' + e.plan + ' never gained';
+      else if (e.plan && !String(e.plan).split(/[\s,]+/).filter(Boolean).some((pl) => F.state.has('plan_' + pl))) miss = 'plan_' + e.plan + ' never gained';
       else if (e.slot && !recipeSlots.has(e.slot)) miss = 'slot ' + e.slot + ' in no recipe';
       else if (e.arc && e.beat != null && c.arcs[e.arc] && c.arcs[e.arc].clock && e.beat > c.arcs[e.arc].clock.max) miss = 'beat beyond the clock';
       if (!miss) miss = need(e.when && e.when.ast, rl);

@@ -134,6 +134,8 @@ Tracks: Enrolment 选课 · course fees 课程费 · GPA（保留英文）· ter
 
 Break plans: Stay at the castle 留在城堡 · Go home 回家 · Work full-time 全职打工 · Board at the castle 城堡食宿. Home places: The Family Cottage 老家小屋 · The Fields 田野 · The Market Town 集镇.
 
+The break maps (2026-11-10): the capital 王都 · the countryside 乡间 · Travel to the capital 去王都 · Travel to the countryside 去乡间. Capital places: The Royal Library 皇家图书馆 · The Family Townhouse 家族宅邸 · The Members' Club 会员俱乐部 · The Grand Bazaar 大集市 · The Arcade of Services 服务拱廊 · The Theatre 大剧院 · The Docks 码头 · The Counting House 账房 · The Crew's Loft 伙伴们的阁楼; uptown 上城. Countryside places: The Market Village 集镇 · The Mill Village 磨坊村 · The Marsh 沼泽 · The Moors 荒原 · The Ridge 山脊 · the coaching inn 驿站客栈 · standing stones 立石 · cairn 石堆. Lodging: the sailors' inn 水手客栈 · a doss-house 廉价客栈 · a hayloft 干草棚 · the inn's best room 客栈的上房. hedge-witch 乡野女巫 (as in `cast.lang`).
+
 Arcs: The Bell Under the Water 水下的钟 · the drowned bell 沉钟 · bell-rope 钟绳.
 
 ## 战斗（战斗小游戏，`locales/zh-CN/combat.lang` 与 ui.lang 的 `fight.*`）

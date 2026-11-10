@@ -703,6 +703,110 @@ desc: Family, old friends and free board. The days are slower here.
 on_add:
   gain summer_away 2
 
+# Home in the capital (new maps, 2026-11-10): the noble, merchant and street origins. Home in the countryside (the
+# scholar and hedge origins) is plan_home, on the `home` map. at_home() holds for either (content/core/conds.grim).
+@state plan_home_city
+name: Break: at home
+kind: plan
+group: plan
+duration: 2
+art: house
+tags: away
+map_id: city
+day: morning=plan:0-1 noon=visit afternoon=visit evening=visit night=visit midnight=special:0
+desc: Family, old friends and free board, in the capital. The days are faster here.
+on_add:
+  gain summer_away 2
+
+# Travelling for the break (new maps, 2026-11-10): the fare is paid in the break menu; lodging is picked on arrival
+# (the plan's `lodging` tag; the arrival screen offers the map's `lodging:` states).
+@state plan_travel_city
+name: Break: in the capital
+kind: plan
+group: plan
+duration: 2
+art: coin
+tags: away lodging
+map_id: city
+day: morning=plan:0-1 noon=visit afternoon=visit evening=visit night=visit midnight=special:0
+desc: Two months in the capital, on your own purse: the bazaar, the theatre, the docks, and a bed you pay for.
+on_add:
+  gain summer_away 2
+
+@state plan_travel_country
+name: Break: in the countryside
+kind: plan
+group: plan
+duration: 2
+art: leaf
+tags: away lodging
+map_id: home
+day: morning=plan:0-1 noon=visit afternoon=visit evening=visit night=visit midnight=special:0
+desc: Two months in the countryside beyond the lake: fen, moor and two villages that are very glad to see you.
+on_add:
+  gain summer_away 2
+
+# Lodging for a traveller (new maps, 2026-11-10): picked on the arrival screen from the map's `lodging:`, and kept for
+# the break. The first month is paid on arrival, the second at its start. How you sleep reads lodged_rough() and
+# lodged_fine() (content/core/conds.grim; the `sleep` preset in balance.grim).
+@state lodging_city_rough
+name: A doss-house hammock
+group: lodging
+duration: 2
+art: house
+desc: A hammock in a doss-house in the old streets of Port Calder. Free, loud, and watch your boots.
+
+@state lodging_city_decent
+name: The sailors' inn
+group: lodging
+duration: 2
+art: cup
+desc: A room at an inn by the docks: a lock on the door, songs below until late.
+on_add:
+  gold -small
+tick:
+  gold -small
+
+@state lodging_city_fine
+name: A hotel uptown
+group: lodging
+duration: 2
+art: star
+desc: A hotel uptown among the clubs: feather beds, a doorman, and invitations left on the tray.
+on_add:
+  gold -medium
+tick:
+  gold -medium
+
+@state lodging_country_rough
+name: A hayloft
+group: lodging
+duration: 2
+art: leaf
+desc: A farmer's hayloft above the cows. Free, if nobody asks; draughty, and not as empty at night as you'd like.
+
+@state lodging_country_decent
+name: The coaching inn
+group: lodging
+duration: 2
+art: cup
+desc: A room at the coaching inn on the green, where the landlord is very glad to see you.
+on_add:
+  gold -small
+tick:
+  gold -small
+
+@state lodging_country_fine
+name: The inn's best room
+group: lodging
+duration: 2
+art: star
+desc: The coaching inn's best room, with a fire laid every evening and the landlord's own good linen.
+on_add:
+  gold -medium
+tick:
+  gold -medium
+
 @state gig_grounds
 name: Holiday gig: the grounds
 group: gig

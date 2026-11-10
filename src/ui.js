@@ -1214,7 +1214,23 @@
   }
 
   /* ------------------------------------------------------------------ map (design §6.3) */
+  // Reaching another map, or coming back (new maps, 2026-11-10): src/arrival-ui.js, then the map.
+  function showArrival(view) {
+    ui.mode = 'arrival'; ui.busy = false;
+    document.querySelectorAll('#deck .card').forEach((c) => c.remove());
+    document.getElementById('choices').innerHTML = '';
+    ui.arriveCtl = ArrivalView.open(view.arrival, { t, esc, openPanel,
+      confirm(pick) {
+        if (ui.mode !== 'arrival') return;
+        let out;
+        try { out = eng.confirmArrival(pick); } catch (e) { console.warn(e); return; }
+        ui.mode = null; ui.arriveCtl = null; closeOverlay();
+        renderChrome(); if (out) floatDeltas(out.deltas); save();
+        showMap(eng.mapView());
+      } });
+  }
   function showMap(view) {
+    if (view.arrival && window.ArrivalView) return showArrival(view);
     ui.mode = 'map'; ui.busy = false; setSlotTint(view.slots.length === 1 ? view.slots[0] : null);
     document.querySelectorAll('#deck .card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
@@ -1325,6 +1341,7 @@
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
     if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'shop') { if (ui.shopCtl && ui.shopCtl.key(e)) e.preventDefault(); return; }
+    if (ui.mode === 'arrival') { if (ui.arriveCtl && ui.arriveCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
       if (e.key === 'ArrowLeft') { e.preventDefault(); commitCard(story ? 'right' : 'left'); }

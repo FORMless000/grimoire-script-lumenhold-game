@@ -49,7 +49,7 @@ Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a cou
 |---|---|
 | `grind <skill>` | Hard work on one skill. `$skill +medium; mood -small; health -tiny` |
 | `rest` | A real rest. `mood +medium; health +small` |
-| `sleep` | A night's sleep (bedtime, 2026-10-17): 8 Health and 4 Mood; at home on a break, 20 and 10. Taken when you go to bed, whatever your condition. `if break and has(plan_home): health += 20; mood += 10; else: health += 8; mood += 4` |
+| `sleep` | A night's sleep (bedtime, 2026-10-17): 8 Health and 4 Mood; at home on a break, or in the best room on a trip, 20 and 10; sleeping rough on a trip, 5 and 2 (new maps, 2026-11-10). Taken when you go to bed, whatever your condition. `if break and (at_home() or lodged_fine()): health += 20; mood += 10; elif break and lodged_rough(): health += 5; mood += 2; else: health += 8; mood += 4` |
 | `social <who>` | Time with someone. `rel $who +small; mood +small; gold -tiny` |
 | `work` | Paid work. `gold +medium; mood -small; health -tiny` |
 | `price_dear` | A dear price (world expansion 1, K3): what a shop asks for a special piece, 90 crowns. `gold -huge; gold -large` |

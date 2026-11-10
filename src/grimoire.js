@@ -356,13 +356,18 @@
     // from the first month. `price:` a size tier, what the pawnbroker pays for it (none: it can't be sold).
     item: { props: ['name', 'slot', 'art', 'desc', 'worn', 'legacy', 'bound', 'start', 'price', 'tags'], effects: ['tick'] },
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
+    // A map (new maps, 2026-11-10): what the places with `map: <id> x,y` sit on, as the player sees it. `name:` names its
+    // atlas tab; `arrival:` is said when you reach it from another map, `return:` when you come back to it; `lodging:` the
+    // lodging states a traveller picks from on arrival (their cost is their own `on_add:`/`tick:`); `art:` the arrival
+    // screen's icon.
+    map: { props: ['name', 'region', 'desc', 'arrival', 'return', 'art', 'lodging'], effects: [] },
   };
   // What a pool or a thread may give its cards (a bundle): where and when they're drawn, how often, how they look.
   const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order', 'arc'];
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread', 'boost']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread', 'boost', 'lodging']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
   // The check ladder (docs/authoring/checks.md): rank words, each with a - and + rung; odds-by-nature, luck and drift words.
@@ -974,8 +979,8 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
 
   const COLLECTION = { preset: 'presets', resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
     vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', item: 'items',
-    pool: 'pools', cond: 'conds', thread: 'threads', appointment: 'appointments' };
-  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items', 'pools', 'conds', 'threads', 'appointments'];
+    map: 'maps', pool: 'pools', cond: 'conds', thread: 'threads', appointment: 'appointments' };
+  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items', 'maps', 'pools', 'conds', 'threads', 'appointments'];
 
   /* ---------------- appointments ---------------- */
   // The occasions the game deals at, and who each one is for. `month`: the month's start (after queued cards);

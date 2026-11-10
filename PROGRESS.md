@@ -1,3 +1,13 @@
+## New maps, part 1: the framework (November 10)
+
+The plan, decisions, ledger and batch log are in `docs/maps-plan.md`. The breaks gain two maps, the countryside (the old `home` map, redrawn) and the capital (`city`), with Port Calder as the capital's harbour quarter.
+- **Going home follows your origin.** Noble, merchant and street go to the capital; scholar and hedge go to the countryside. `at_home()` covers both homes (migration 0052).
+- **Travel** to the map that isn't home costs a fare, then a bed: rough (free, sleeps badly), decent, or the best room (sleeps like home).
+- **The arrival screen** (`src/arrival-ui.js`) says where you are and where you stay, lets a traveller pick lodging, and names the places with work going. Coming back to the castle, it says what the time away cost or earned.
+- **Hosts moved:** six internship hosts sit on the two maps, and their one-place maps are retired. Thornwick keeps its own.
+- **New format (schema v1, additive):** `@map` blocks (`content/world/maps.grim`), and `plan:` taking a list.
+- **Not done yet:** every new place has only a placeholder card so far; the cards come in the batches listed in the tracker. The moors and tide-cave delves, the two heists, the old hall and the countryside's plot are still to come.
+
 ## Crux payment revision (November 5)
 
 Final revised checks: `grim check` passes; the independent 120-game golden diff passes; balance has zero invariant failures and four alarms, with 63,704 choices and zero preview violations. The slow gameplay tests pass. The full runner loaded the two retrieval tests before their configuration fix; their subsequent 16-test rerun passes. Focused browser checks pass.

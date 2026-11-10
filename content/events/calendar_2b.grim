@@ -115,14 +115,29 @@ text: {month == 5: The winter break.|The summer break.} Two months without lectu
   gain plan_castle
   say: The castle in the holidays is a different building: louder echoes, kinder staff, doors you've never seen open.
 > home: Go home
-  hint: Family, old friends, free board.
-  gain plan_home
-  say: The barge, the coach, the last mile on foot. Home is smaller than you remember, and warmer.
+  hint: {city_born(): Family and free board, in the capital.|Family and free board, in the countryside.}
+  if city_born():
+    gain plan_home_city
+  else:
+    gain plan_home
+  say: {city_born(): The barge, then the long coach down the river road, and the capital comes up out of its own smoke. Home is smaller than you remember, and louder.|The barge, the coach, the last mile on foot. Home is smaller than you remember, and warmer.}
 > work: Work on campus
   hint: A holiday gig that pays well. Board 8 crowns a month.
   gain plan_work
   queue holiday_gigs now
   say: You trade the holidays for wages. Your feet will remember it.
+> city: Travel to the capital
+  when: not city_born()
+  hint: The bazaar, the theatre, the docks. The coach fare, then a bed you pay for.
+  gold -medium
+  gain plan_travel_city
+  say: You buy a seat on the long coach down the river road. By the second evening the capital is all round you: bells, smoke, and more people in one street than in your whole village.
+> country: Travel to the countryside
+  when: city_born()
+  hint: Fen, moor and quiet villages. A short fare, then a bed you pay for.
+  gold -small
+  gain plan_travel_country
+  say: You take the barge across the lake and the carrier's cart beyond it, into country that smells of hay and peat. The villages wave as you pass. All of them.
 > intern: Start your internship
   when: member(internship) and month == 11
   hint: A stipend, a supervisor and a project.

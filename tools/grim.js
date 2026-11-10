@@ -357,7 +357,8 @@ function analyze(content) {
     }
     if (e.track && !content.tracks[e.track]) P('error', w, 'track: unknown track "' + e.track + '"');
     if (e.arc && !content.arcs[e.arc]) P('error', w, 'arc: unknown arc "' + e.arc + '"');
-    if (e.plan && !content.states['plan_' + e.plan]) P('error', w, 'plan: no @state plan_' + e.plan);
+    // `plan:` may name several plans (new maps, 2026-11-10): each needs its @state plan_<id>.
+    if (e.plan) for (const pl of String(e.plan).split(/[\s,]+/).filter(Boolean)) if (!content.states['plan_' + pl]) P('error', w, 'plan: no @state plan_' + pl);
     if (e.replaces && !e.place) P('error', w, 'replaces: needs a place:');
     if (e.per && !(e.cast || []).some((r) => r.role === e.per)) P('error', w, 'per: "' + e.per + '" is not one of this event\'s cast roles');
     if (e.specializes) {   // E1: one character's own version of a generic card
@@ -861,6 +862,14 @@ function lint(opts = {}) {
   for (const st of Object.values(content.states || {})) if (st.map_id && !MAPS.has(st.map_id) && !KINDS.has(st.map_id)) A.problems.push({ level: 'error', where: rel(st.file) + ':' + st.line, msg: 'state "' + st.id + '": map_id "' + st.map_id + '" is neither a map with places nor a track kind' });
   if (content.game.map_id && !MAPS.has(content.game.map_id)) A.problems.push({ level: 'error', where: '@game', msg: '@game map_id: "' + content.game.map_id + '" has no places' });
   for (const pl of Object.values(content.places || {})) if (pl.map && pl.map.map && !fs.existsSync(path.join(ROOT, 'content', 'world', 'maps', pl.map.map + '.svg'))) A.problems.push({ level: 'error', where: rel(pl.file) + ':' + pl.line, msg: 'place "' + pl.id + '": no map art content/world/maps/' + pl.map.map + '.svg' });
+  // A @map (new maps, 2026-11-10): one for every map a place sits on (its name, arrival and return lines), each with places
+  // and art; its `lodging:` names lodging states (a traveller's bed, paid by the state's own on_add:/tick:).
+  for (const m of MAPS) if (!(content.maps || {})[m]) A.problems.push({ level: 'warn', where: 'content/world/maps.grim', msg: 'map "' + m + '" has places but no @map (its atlas tab and arrival screen go unnamed)' });
+  for (const md of Object.values(content.maps || {})) {
+    if (!MAPS.has(md.id)) A.problems.push({ level: 'error', where: rel(md.file) + ':' + md.line, msg: '@map ' + md.id + ': no place sits on it' });
+    for (const id of md.lodging || []) if (!content.states[id]) A.problems.push({ level: 'error', where: rel(md.file) + ':' + md.line, msg: '@map ' + md.id + ': lodging "' + id + '" is not a @state' });
+    if (md.region && !((content.vocab.regions || {}).values || []).includes(md.region)) A.problems.push({ level: 'error', where: rel(md.file) + ':' + md.line, msg: '@map ' + md.id + ': region "' + md.region + '" is not in @vocab regions' });
+  }
   const by = { error: [], warn: [], info: [] };
   A.problems.forEach((p) => by[p.level].push(p));
   by.error.forEach((p) => console.error(C.r + 'error ' + C.x + p.where + ': ' + p.msg));

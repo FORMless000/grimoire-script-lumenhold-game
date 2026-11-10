@@ -449,12 +449,9 @@ pool: home_cottage_routine
 tone: light
 art: paper
 scene: A kitchen table with a long handwritten list of chores weighted down by a teapot, a student in academy robes reading it with dismay.
-text: {&Home has remembered that you know where everything is.|A day home, and already a list.|The list. Your name, underlined.} {has(origin_noble): {&The steward wants the ledgers checked.|The steward wants the tenants' letters answered.|The steward wants you to sit in on a dispute about a fence.}|{has(origin_merchant): {&The shop's stock needs counting.|The shop sign needs repainting.|The shop's ledger has a column nobody can explain.}|{has(origin_hedge): {&Your grandmother wants herbs hung to dry.|Your grandmother wants every jar labelled.|Your grandmother wants the bees told the news.}|{&The woodpile needs splitting.|The hen house door argues.|The well rope has frayed.}}}}
+text: {&Home has remembered that you know where everything is.|A day home, and already a list.|The list. Your name, underlined.} {&The woodpile needs splitting.|The hen house door argues.|The well rope has frayed.}
 > left: Work through the whole list
-  if has(origin_noble):
-    lore +tiny
-  else:
-    vigor +tiny
+  vigor +tiny
   mood +small
   health -tiny
   say: {&By supper the list is done, and someone you love says "Well." It's the highest praise in the house.|It takes all day. You sleep better than you have all term.|You finish, and the list grows a second page in a different hand.}
@@ -489,6 +486,8 @@ text: After supper, when the dishes are done, someone always asks it. {"So what 
 
 @pool home_fields_routine
 place: home_fields
+# Where you grew up (new maps, 2026-11-10): a traveller to the countryside gets the fields' own cards instead.
+when: at_home()
 class: routine
 repeat: 4
 weight: 10
@@ -553,6 +552,8 @@ text: {season == "winter": The pond at the bottom of the fields has frozen over,
 
 @pool home_market_routine
 place: home_market
+# Where you grew up (new maps, 2026-11-10): a traveller gets the market village's own cards instead.
+when: at_home()
 class: routine
 repeat: 4
 weight: 10

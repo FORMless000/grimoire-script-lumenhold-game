@@ -1,20 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680">
-  <!-- Home base map for the "go home" break plan (design §4.3, §6.3). -->
+  <!-- The countryside (map id `home`, new maps 2026-11-10): two villages on one road through fen, moor and ridge.
+       Markers are drawn on top by src/map.js from @place map: positions. -->
   <defs>
-    <radialGradient id="hbg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#22283c"/><stop offset="1" stop-color="#10131f"/></radialGradient>
-    <linearGradient id="hland" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34402a"/><stop offset="1" stop-color="#26301f"/></linearGradient>
+    <radialGradient id="cbg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#1e2433"/><stop offset="1" stop-color="#0c0f18"/></radialGradient>
+    <linearGradient id="cland" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e3a28"/><stop offset="1" stop-color="#20291d"/></linearGradient>
+    <radialGradient id="cmoor" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#3d3240"/><stop offset="1" stop-color="#2a2430" stop-opacity="0"/></radialGradient>
+    <radialGradient id="cfen" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#26403c"/><stop offset="1" stop-color="#1c2b27" stop-opacity="0"/></radialGradient>
+    <filter id="cmist" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="16"/></filter>
   </defs>
-  <rect width="960" height="680" fill="url(#hbg)"/>
-  <path d="M60 180 C200 120 420 110 600 120 C760 130 880 170 910 250 C940 360 900 520 800 580 C650 650 360 650 200 600 C90 560 40 420 60 180 Z" fill="url(#hland)" stroke="#4f5c3c" stroke-width="2"/>
-  <!-- fields -->
-  <g fill="none" stroke="#6d7a46" stroke-opacity=".6"><path d="M180 260 L420 230 L440 380 L200 410 Z M200 290 L425 262 M206 330 L432 300 M212 370 L437 340"/></g>
-  <g fill="none" stroke="#7a6d40" stroke-opacity=".55"><path d="M500 420 L720 400 L740 520 L520 545 Z M505 450 L725 430 M512 485 L732 465"/></g>
-  <!-- river -->
-  <path d="M640 120 C600 220 680 300 620 380 C570 450 600 560 560 650" fill="none" stroke="#3f6f96" stroke-width="10" stroke-opacity=".75" stroke-linecap="round"/>
-  <!-- the family cottage -->
-  <g fill="#5a4a36" stroke="#7e6a4e"><rect x="455" y="300" width="60" height="40"/><path d="M448 302 L485 272 L522 302 Z"/><rect x="478" y="318" width="12" height="22" fill="#2d241b"/></g>
-  <!-- the market town -->
-  <g fill="#4a3d36" stroke="#6b5a4e"><path d="M730 210 L748 195 L766 210 L766 235 L730 235 Z"/><path d="M775 222 L790 209 L805 222 L805 246 L775 246 Z"/><path d="M748 252 L762 240 L776 252 L776 272 L748 272 Z"/></g>
+  <rect width="960" height="680" fill="url(#cbg)"/>
+  <path d="M50 150 C190 90 420 80 610 90 C780 100 900 140 925 230 C955 350 915 520 820 590 C660 660 360 660 190 610 C80 570 30 420 50 150 Z" fill="url(#cland)" stroke="#45523a" stroke-width="2"/>
+  <!-- the moors: heather and cairns -->
+  <ellipse cx="780" cy="250" rx="170" ry="120" fill="url(#cmoor)"/>
+  <g fill="#4a4048" stroke="#6b5e66" stroke-width="1"><path d="M720 230 l8 -14 l8 14 Z M800 205 l7 -12 l7 12 Z M845 285 l9 -15 l9 15 Z M760 300 l6 -11 l6 11 Z"/></g>
+  <g fill="none" stroke="#5a4a5a" stroke-opacity=".5" stroke-width="1.2"><path d="M690 260 q12 -6 24 0 M770 245 q10 -5 20 0 M820 320 q12 -6 24 0 M880 230 q9 -5 18 0"/></g>
+  <!-- the ridge and its standing stones -->
+  <path d="M560 130 C620 70 720 55 820 85 C870 100 900 130 905 160" fill="none" stroke="#5c6470" stroke-width="5" stroke-linecap="round" stroke-opacity=".7"/>
+  <g fill="#7d8592" stroke="#a3abb8" stroke-width="1"><rect x="676" y="70" width="7" height="16" rx="2"/><rect x="690" y="64" width="7" height="20" rx="2"/><rect x="705" y="68" width="7" height="17" rx="2"/><rect x="719" y="72" width="7" height="15" rx="2"/><rect x="733" y="70" width="7" height="18" rx="2"/></g>
+  <!-- the fen (the Marsh) -->
+  <ellipse cx="170" cy="545" rx="150" ry="85" fill="url(#cfen)"/>
+  <g fill="none" stroke="#4f7a72" stroke-opacity=".55" stroke-width="1.5"><path d="M90 520 q20 -6 40 0 M160 560 q18 -6 36 0 M210 520 q16 -5 32 0 M120 590 q18 -6 36 0 M230 590 q14 -5 28 0"/></g>
+  <g stroke="#6d7b4a" stroke-width="1.5" stroke-linecap="round"><path d="M110 545 v-14 M114 546 v-10 M190 585 v-15 M194 586 v-10 M250 555 v-13"/></g>
+  <!-- the river through the mill village to the fen -->
+  <path d="M560 95 C520 170 460 230 420 300 C380 370 330 400 300 440 C260 490 230 520 200 560" fill="none" stroke="#3a6488" stroke-width="9" stroke-opacity=".7" stroke-linecap="round"/>
+  <!-- the road joining the villages -->
+  <g fill="none" stroke="#7a6e4e" stroke-opacity=".5" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"><path d="M60 330 C200 340 260 380 300 380 C380 380 470 320 600 300 C680 290 740 330 830 420 C870 460 900 470 930 470"/><path d="M600 300 C640 230 680 180 700 140"/></g>
+  <!-- the fields: rows and scarecrows -->
+  <g fill="none" stroke="#6d7a46" stroke-opacity=".55"><path d="M400 150 L560 135 L575 245 L415 262 Z M405 180 L565 164 M410 212 L570 196"/></g>
+  <g stroke="#a08a5a" stroke-width="2"><path d="M445 205 v18 M438 211 h14 M520 190 v18 M513 196 h14"/></g>
+  <!-- the market village -->
+  <g fill="#4a3d36" stroke="#6b5a4e"><path d="M575 285 L590 272 L605 285 L605 305 L575 305 Z"/><path d="M612 278 L628 264 L644 278 L644 302 L612 302 Z"/><path d="M590 318 L604 306 L618 318 L618 336 L590 336 Z"/><rect x="630" y="310" width="34" height="22" fill="#5a4636"/></g>
+  <!-- the mill village and its wheel -->
+  <g fill="#463a33" stroke="#655448"><path d="M270 370 L284 358 L298 370 L298 390 L270 390 Z"/><path d="M305 382 L318 371 L331 382 L331 400 L305 400 Z"/><path d="M262 405 L276 393 L290 405 L290 422 L262 422 Z"/></g>
+  <circle cx="335" cy="360" r="12" fill="none" stroke="#8a7a62" stroke-width="2"/><path d="M335 348 v24 M323 360 h24" stroke="#8a7a62" stroke-width="1.5"/>
+  <!-- the cottage lane -->
+  <g fill="#5a4a36" stroke="#7e6a4e"><rect x="362" y="462" width="40" height="27"/><path d="M357 464 L382 444 L407 464 Z"/></g>
+  <!-- the old hall behind its wall -->
+  <g fill="#3a3436" stroke="#5c5256"><rect x="790" y="400" width="66" height="36"/><path d="M786 402 L823 378 L860 402 Z"/><rect x="800" y="384" width="8" height="18"/></g>
+  <path d="M770 450 C790 455 860 455 880 448" fill="none" stroke="#5c5256" stroke-width="2"/>
   <!-- woods -->
-  <g fill="#22331f" stroke="#344a2f"><circle cx="300" cy="500" r="22"/><circle cx="335" cy="520" r="20"/><circle cx="270" cy="530" r="18"/><circle cx="315" cy="555" r="21"/></g>
+  <g fill="#1d2a1d" stroke="#2f402c"><circle cx="470" cy="520" r="22"/><circle cx="505" cy="545" r="20"/><circle cx="440" cy="555" r="18"/><circle cx="530" cy="510" r="17"/><circle cx="660" cy="520" r="19"/><circle cx="690" cy="545" r="16"/></g>
+  <!-- mist -->
+  <g fill="#c8d2dc" opacity=".06" filter="url(#cmist)"><ellipse cx="200" cy="540" rx="140" ry="50"/><ellipse cx="780" cy="260" rx="150" ry="60"/><ellipse cx="500" cy="420" rx="120" ry="40"/></g>
 </svg>

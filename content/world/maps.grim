@@ -1,0 +1,34 @@
+# ============================================================
+#  Maps (new maps, 2026-11-10): what the places' `map: <id> x,y` sit on, as the player sees them. The art is
+#  content/world/maps/<id>.svg. `arrival:` is said when you reach the map from another, `return:` when you come back
+#  to it; `lodging:` is what a traveller picks from on the arrival screen (the first is the default). The places on each
+#  map are in places.grim.
+# ============================================================
+
+@map campus
+desc: The castle, its grounds and the village across the lake: the term's map.
+art: tower
+return: {~The barge noses into the castle jetty and the towers lean over you like relatives. Somebody has moved your desk.|The gates, the gravel, the smell of chalk and wet stone. The castle takes you back without comment, as it does everyone.}
+
+@map home
+name: The Countryside
+region: countryside
+desc: The valley country beyond the lake: two villages on one road through fen, moor and ridge.
+art: leaf
+arrival: {at_home(): The cart drops you at the end of the lane and the countryside closes round you like a held breath: hay, peat smoke, a bell somewhere, and everyone you pass very glad to see you.|The carrier's cart rattles down into the valley past fields so heavy with harvest they look painted. Two villages, a fen, the moors beyond. Everyone you pass is very glad to see you.}
+lodging: lodging_country_decent lodging_country_rough lodging_country_fine
+
+@map city
+name: The Capital
+region: capital
+desc: The capital, from the uptown towers down the river to Port Calder's docks.
+art: coin
+arrival: {at_home(): The capital comes up out of its own smoke, all bells and barrows, and somewhere in it your own front door. Nobody here has heard of Lumenhold, which is restful.|The coach comes down the river road into the capital: towers uptown, the bazaar's awnings, cranes and masts down at the docks where the old town of Port Calder steals what the new one forgets to watch.}
+lodging: lodging_city_decent lodging_city_rough lodging_city_fine
+
+@map thornwick
+name: Thornwick
+region: internship
+desc: Thornwick Academy, the rival school across the hills.
+art: mask
+arrival: Thornwick's gates are nicer than Lumenhold's, which everyone there mentions within the first hour.

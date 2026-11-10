@@ -1,0 +1,243 @@
+# Placeholders for the new maps (new maps, 2026-11-10): one quiet card for each new place, so a visit always shows
+# something until the place's own cards are written (docs/maps-plan.md). Low weight, so real cards win; tagged
+# `placeholder`, so lint lists them instead of judging them. Each is retired (`when: false`) once its place has cards.
+
+@pool maps_placeholder
+class: routine
+tone: warm
+repeat: 1
+weight: 2
+tags: placeholder
+
+@event capital_library_quiet_hour
+title: The Reading Room
+pool: maps_placeholder
+place: royal_library_archives
+art: book
+scene: A vast reading room under a glass dome, green lamps on long tables, a few readers bent over their books in the hush.
+text: Upstairs from the archives, the Royal Library keeps a reading room for anyone who can whisper. The lamps are green, the chairs are hard and a librarian watches the door like a cat at a mousehole.
+> left: Read a while
+  lore +tiny
+  mood -tiny
+  say: {~An hour with a book you couldn't get at Lumenhold. Your neck aches; your head is full.|You read until the librarian's look becomes a cough. It was worth it.}
+> right: Just look at the dome
+  mood +tiny
+  say: {~You stand under the dome until your neck aches, then go out into the noise again.|Light falls through the glass in long dusty bars. You leave without reading a word.}
+
+@event capital_townhouse_quiet_hour
+title: The Front Steps
+pool: maps_placeholder
+place: capital_townhouse
+art: house
+scene: Polished front steps of a tall uptown townhouse, a brass knocker shaped like a crest, the street busy with carriages below.
+text: The townhouse is quiet this afternoon: the family is out calling, the cook is at the market and the steps have just been scrubbed. You could sit on them, if anyone sat on steps uptown.
+> left: Sit on the steps anyway
+  mood +tiny
+  renown -tiny
+  say: {~You sit. Two carriages slow down to look. You wave. They don't.|The step is warm in the sun. A neighbour's footman pretends not to see you, very loudly.}
+> right: Go in and rest
+  health +tiny
+  say: {~Your old room, a cool sheet, the clock in the hall. You sleep an hour you didn't plan.|The house is so quiet you can hear the clock two floors down. You rest, and nobody asks you anything.}
+
+@event capital_club_quiet_hour
+title: The Porter's Look
+pool: maps_placeholder
+place: capital_club
+art: cup
+scene: A dim club entrance of dark wood and brass, a porter in a waistcoat at a high desk looking a student up and down.
+text: The members' club has a porter whose whole job is to decide who you are. He looks at your boots, then at your face, then at your boots again. "Members only, unless you're expected."
+> left: Say you're expected
+  renown +tiny
+  alignment -tiny
+  say: {~"By whom?" You name a patron off a portrait in the hall. He lets you as far as the cloakroom, which is more than most get.|He doesn't believe you, but he admires the attempt. You get a glass of water and a better story than you came in with.}
+> right: Thank him and go
+  mood -tiny
+  say: {~"Another time," he says, which means never, said kindly.|You leave. Through the window, someone laughs in a chair that costs more than your year.}
+
+@event capital_bazaar_quiet_hour
+title: A Hundred Stalls
+pool: maps_placeholder
+place: capital_bazaar
+art: coin
+scene: A vast covered market, light falling through high windows onto stalls of spices, maps, brass and coloured glass, crowds moving between them.
+text: The Grand Bazaar is one long noise under a glass roof: spice-sellers, map-dealers, a woman selling birds that sing in other languages. You could lose an afternoon here. You could lose a purse.
+> left: Wander and look
+  mood +tiny
+  gold -tiny
+  say: {~You come out with a paper of sugared almonds and no idea where the afternoon went.|A map-seller lets you hold a chart of a coast nobody has sailed. You buy a pastry to recover.}
+> right: Keep your hand on your purse
+  say: {~You walk the length of it with a hand on your purse and see almost nothing. Your purse thanks you.|You watch a pickpocket work a whole aisle. Educational.}
+
+@event capital_arcade_quiet_hour
+title: Brass Plates
+pool: maps_placeholder
+place: capital_arcade
+art: scroll
+scene: A long stone colonnade of open doors and polished brass nameplates, a bathhouse's steam drifting out of one archway.
+text: The arcade sells everything that isn't a thing: a physician, a tutor, a scribe, a bathhouse, a portraitist and a fortune-teller who is, her plate says, "by appointment, mostly". Today you only read the plates.
+> left: Steam at the bathhouse
+  gold -tiny
+  health +tiny
+  say: {~The bathhouse is hot, tiled and full of retired admirals. You come out new.|Steam, cold plunge, steam again. Your shoulders forget the term.}
+> right: Read the plates and walk on
+  mood +tiny
+  say: {~"Teeth drawn, letters written, futures read." You admire the ambition and walk on.|You read every plate twice. One just says "No."}
+
+@event capital_theatre_quiet_hour
+title: Gilt and Draughts
+pool: maps_placeholder
+place: capital_theatre
+art: mask
+scene: The foyer of a grand gilded theatre, chandeliers half-lit, a playbill being pasted on a pillar by a stagehand on a ladder.
+text: The theatre is between shows: chandeliers half-lit, the foyer smelling of dust and oranges. A stagehand on a ladder is pasting up a new playbill and getting most of the paste on himself.
+> left: Hold his ladder
+  mood +tiny
+  say: {~He gives you a ticket for the gods in thanks. The gods are very high and very cheap and you love them.|You hold the ladder; he tells you which actress hates which. It's better than the play.}
+> right: Read the playbill
+  charm +tiny
+  say: {~You learn the names off by heart, in case anyone asks. Nobody does, but you're ready.|A tragedy, a farce and a farce pretending to be a tragedy. You'd see all three.}
+
+@event capital_guild_quiet_hour
+title: The Hiring Hall
+pool: maps_placeholder
+place: alchemists_works
+art: cauldron
+scene: A bare hiring hall at the gate of a great riverside works, a chalkboard of jobs, chimneys smoking beyond the window.
+text: The Guild works' hiring hall is a bench, a chalkboard and a foreman who looks at hands, not faces. Today the board says "NOTHING" in large letters, and under it, in smaller ones, "try tomorrow".
+> left: Wait in case
+  mood -tiny
+  alchemy +tiny
+  say: {~Nothing comes up, but the old hands on the bench argue about distillation for an hour and you listen to every word.|You wait. You learn three words for a burst vat, none polite.}
+> right: Come back another day
+  say: {~"Tomorrow," the foreman says, which is what he says.|You leave the bench to the regulars.}
+
+@event capital_docks_quiet_hour
+title: Gulls and Cranes
+pool: maps_placeholder
+place: capital_docks
+art: wave
+scene: Busy harbour wharves at the river's mouth, cranes swinging crates off a tall ship, gulls wheeling over stacked barrels.
+text: Port Calder's docks never stop: cranes, barrels, a ship from somewhere hot unloading something that smells of oranges. A boy offers to mind your bag for a penny, which is how bags go missing.
+> left: Pay the boy
+  gold -tiny
+  mood +tiny
+  say: {~He minds it beautifully and tells you which ships are smuggling. All of them, apparently.|Your bag comes back with everything in it and one extra orange. Business is business.}
+> right: Keep your bag
+  guile +tiny
+  say: {~You keep your bag and watch the boy offer the same deal to a sailor, who laughs and pays. You learn something.|"Suit yourself." He's gone before you see him go.}
+
+@event capital_counting_house_quiet_hour
+title: The Ledgers Below
+pool: maps_placeholder
+place: capital_counting_house
+art: coin
+scene: A counting house on a wharf, high desks and tall ledgers below, a staircase rising to living rooms above, a clerk with an ink-stained cuff.
+text: Below, the clerks are at their ledgers; above, your old room. The old clerk at the end desk has been here longer than the door, and looks at you as if you're a column that doesn't add up.
+> left: Help with a column
+  gold +tiny
+  mood -tiny
+  say: {~You find the error. He finds two more of yours. Honours even, and a coin for the trouble.|An hour of numbers. The old clerk says "Hm" at the end, which from him is a medal.}
+> right: Go up and rest
+  health +tiny
+  say: {~Your old room still smells of ink. You sleep to the sound of the tide.|Upstairs, the noise of the wharf is a lullaby you'd forgotten.}
+
+@event capital_crew_loft_quiet_hour
+title: The Old Stove
+pool: maps_placeholder
+place: capital_crew_loft
+art: house
+scene: A loft above a chandler's shop, hammocks slung between beams, a pot-bellied stove, young people playing cards in its warmth.
+text: The crew's loft is the same as ever: hammocks, a stove that smokes, a card game that has been going on since you left. "Look who it is," says someone, "the wizard."
+> left: Sit in on the game
+  gold -tiny
+  mood +small
+  say: {~You lose two hands and win back one, and they all pretend you cheated. It's the best evening in months.|They deal you in like you never left. You lose, on purpose, mostly.}
+> right: Sleep in your old hammock
+  health +tiny
+  say: {~The hammock still knows your shape. You sleep through the card game, the stove and an argument about a dog.|You sleep like you used to, with one hand on your boots.}
+
+@event countryside_mill_quiet_hour
+title: The Turning Wheel
+pool: maps_placeholder
+place: countryside_mill
+art: wave
+scene: A mill on a slow river in a small grey village, its wheel turning, children skipping a rope on the green in front of the chapel.
+text: The mill wheel turns slowly, the chapel stands small and grey, and on the green the children skip to a rhyme with a lot of counting in it. They stop when you come near, and smile, and start again when you've passed.
+> left: Watch the wheel a while
+  mood +tiny
+  say: {~The wheel goes round, the water goes over, and the afternoon goes with it.|You watch the wheel until you notice the river is lower than the wheel is fast. Probably nothing.}
+> right: Walk on through
+  say: {~The village waves you off. All of it.|You walk on. Behind you, the skipping starts again, counting.}
+
+@event countryside_marsh_quiet_hour
+title: Lights on the Water
+# Retired (K1): the Marsh has cards of its own.
+when: false
+pool: maps_placeholder
+place: countryside_marsh
+art: leaf
+scene: Reed beds and black water at dusk, small pale lights hanging low over the marsh, a house on stilts at its edge.
+text: The Marsh is reeds, black water and a path that's there until it isn't. At dusk, little lights come out and hang over the pools. A house on stilts stands at the edge with a lamp in its window.
+> left: Watch the lights from the path
+  mood +tiny
+  lore +tiny
+  say: {~The lights drift together and apart, as if they're talking. You don't follow them, which is the main thing.|One light comes nearer than the others. You keep to the path, and it goes away, disappointed.}
+> right: Turn back before dark
+  say: {~You turn back while the path is still a path.|You leave the Marsh to its lights.}
+
+@event countryside_moors_quiet_hour
+title: The Third Cairn
+pool: maps_placeholder
+place: countryside_moors
+art: paw
+scene: Open moorland of heather and grey stone cairns, fog rising in the hollows, a lone sheep watching from a rock.
+text: The moors go on longer than they should. A shepherd tells you to stay this side of the third cairn, then walks off before you can ask why. Fog is coming up in the hollows, unhurried.
+> left: Walk to the first cairn and back
+  health -tiny
+  mood +tiny
+  say: {~The wind is clean and enormous. You touch the cairn, count to ten, and come back with your cheeks burning.|You reach the first cairn. The second is closer than it looked. You turn back anyway.}
+> right: Stay by the road
+  say: {~You watch the fog fill the hollows from the road, which is the sensible place to watch it from.|A sheep stares at you until you leave. You leave.}
+
+@event countryside_ridge_quiet_hour
+title: The Stones
+pool: maps_placeholder
+place: countryside_ridge
+art: planet
+scene: A ring of grey standing stones on a bare ridge under a huge sky, the valley's villages small and far below.
+text: The stones on the ridge stand in a ring, leaning a little, as if listening to the valley. From up here you can see both villages, the fen and the moors, and the road joining them like a stitch.
+> left: Count the stones
+  lore +tiny
+  say: {~You count them twice and get two answers. You decide it's the wind.|Nineteen, you think. Or twenty. You stop counting.}
+> right: Just take in the view
+  mood +tiny
+  say: {~The whole valley, small and peaceful, from up here. It looks very well kept.|The wind tugs your coat and the villages smoke quietly below. Nothing up here wants anything from you.}
+
+@event travel_city_morning
+title: A Morning in the Capital
+pool: maps_placeholder
+plan: travel_city
+art: coin
+scene: Early morning in a capital city, a student at a lodging-house window looking down at barrows, bells and smoke.
+text: The capital wakes before you do, and louder: barrows, bells, a man selling hot chestnuts under your window as if his life depends on it, which it may.
+> left: Chestnuts for breakfast
+  gold -tiny
+  mood +tiny
+  say: {~They burn your fingers and taste of smoke and autumn. A good start.|You eat them walking, like a native, and get lost like a visitor.}
+> right: Plan the day over cheap tea
+  lore +tiny
+  say: {~You draw a map of the day on the back of a playbill. The capital ignores it completely.|Cheap tea, a borrowed newspaper, a plan. Good enough.}
+
+@event travel_country_morning
+title: A Morning in the Countryside
+pool: maps_placeholder
+plan: travel_country
+art: leaf
+scene: Early morning in a country village, mist on the fields, a student at a window watching a farmer lead a cart down the lane.
+text: The country wakes slowly: a cart in the lane, mist on the fields, a rooster with opinions. Your host has left bread and a jug of milk outside your door, and a sprig of something green tied round the jug.
+> left: Breakfast at the window
+  mood +tiny
+  say: {~The bread is still warm. The mist lifts off the fields like a lid.|You eat slowly, watching the village wake. Everyone waves at your window.}
+> right: Walk out early
+  health +tiny
+  say: {~You walk the lane before anyone is up. The fields are very quiet, and the scarecrows are very well dressed.|An early walk, wet boots, and the whole valley to yourself.}

@@ -226,8 +226,15 @@
     'slot.morning': 'Morning', 'slot.noon': 'Noon', 'slot.afternoon': 'Afternoon', 'slot.evening': 'Evening', 'slot.night': 'Night', 'slot.midnight': 'Midnight',
     'phase.term': 'Term', 'phase.break': 'Break', 'phase.wrapup': 'Wrap-up',
     'map.title': '{month} · Year {year} · {phase}',
+    // The arrival screen (new maps, 2026-11-10): src/arrival-ui.js
+    'arrive.kicker': 'You arrive', 'arrive.back': 'Back at last', 'arrive.title': 'Somewhere new', 'arrive.backTitle': 'The castle',
+    'arrive.stay': 'Staying:', 'arrive.lodging': 'Where will you stay?', 'arrive.cost': '{n} crowns', 'arrive.free': 'Free', 'arrive.monthly': '{n} more next month',
+    'arrive.work': 'Work going:', 'arrive.workHint': 'Ask when you visit: nobody hires from a distance.',
+    'arrive.go': 'Look around', 'arrive.goLodging': 'Settle in', 'arrive.goBack': 'Back to the term',
+    'arrive.goldUp': 'You came back {n} crowns richer.', 'arrive.goldDown': 'The time away cost you {n} crowns.', 'arrive.items': 'You brought back: {items}.',
+    'region.countryside': 'The countryside', 'region.capital': 'The capital',
     'map.question2': 'Where will you spend the afternoon and the evening?',
-    'map.q.afternoon': 'Where will you spend the afternoon?', 'map.q.evening': 'Where will you spend the evening?', 'map.q.midnight': 'Where will you go tonight?',
+    'map.q.afternoon': 'Where will you spend the afternoon?', 'map.q.evening': 'Where will you spend the evening?', 'map.q.midnight': 'Where will you go tonight?', 'map.q.noon': 'Where will you spend the noon hour?', 'map.q.night': 'Where will you spend the night?', 'map.q.morning': 'Where will you spend the morning?',
     'map.visitOf': 'visit {n} of {of}', 'map.stayIn': 'Stay in', 'map.goTo': 'Go to {place}', 'map.howToPick': 'Tap a place to pick it; tap it again to go.', 'map.notReady': 'Pick a place for each part of the day first.', 'map.again': 'Tap {place} again to go there, or press the button.', 'map.festivalHere': '{event}: at {place}, this {slot}',
     'map.choose': 'choose…',
     'map.go': 'Begin the day',
@@ -527,6 +534,8 @@
     // The Journal (phase 4): a storyline's name and premise as players read them (its `desc:` is for authors).
     thread: ['name', 'premise'],
     item: ['name', 'desc'],
+    // A map's atlas name and the lines its arrival and return screens say (new maps, 2026-11-10).
+    map: ['name', 'desc', 'arrival', 'return'],
   };
   const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'], item: ['tick'] };
 
@@ -544,7 +553,7 @@
     const defs = [];
     const g = content.game || {};
     defs.push(g.block ? g : Object.assign({ block: 'game', id: 'game' }, g));
-    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues', 'items', 'threads']) defs.push(...Object.values(content[col] || {}));
+    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues', 'items', 'threads', 'maps']) defs.push(...Object.values(content[col] || {}));
     defs.sort((a, b) => (a.file || '').localeCompare(b.file || '') || (a.line || 0) - (b.line || 0));
     for (const d of defs) {
       const kind = d.block || 'game';

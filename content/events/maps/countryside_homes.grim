@@ -1,0 +1,123 @@
+# The countryside's homes (new maps, 2026-11-10; docs/maps-plan.md, batch K1): the Marsh, home to the hedge origin
+# (raised by the hedge-witch who keeps the house on stilts; at home she is "your grandmother") and a public place
+# for everyone else, who meets the same woman as a stranger. The family cottage (the scholar's home) keeps its cards
+# in pools/village_home.grim. Nothing here touches the valley's secret; "The Good Year" (K4) builds on it later.
+
+@pool countryside_marsh_routine
+place: countryside_marsh
+class: routine
+repeat: 4
+weight: 10
+tags: nature
+
+@event marsh_grandmother_lesson
+title: The Old Work
+pool: countryside_marsh_routine
+when: at_home() and has(origin_hedge)
+tone: warm
+art: leaf
+tags: home magic
+scene: Inside a small house on stilts above a marsh, an old woman and a young student bent over a table of drying herbs, jars and a mortar.
+text: {Your grandmother has decided the academy has taught you nothing useful, and sets out the mortar to prove it.|The mortar is out again. "Again," she says, "and this time listen to it."|You reach for the mortar before she asks. She pretends not to notice, and is pleased.} {season == "winter": Frost on the reeds outside; inside, the stove and the smell of dried meadowsweet.|The windows open on the marsh's hum; flies argue with the drying bunches.}
+> left: Do it her way, slowly
+  alchemy +small
+  mood -tiny
+  say: {Two hours on one poultice. Your wrist aches. She tastes it, nods once, and puts it on the shelf with her own.|She makes you grind until the paste stops sounding gritty. You hadn't known paste had a sound.|You do it her way without being told. She says nothing at all, which is how you know.}
+> right: Show her the academy way
+  arcana +tiny
+  mood +tiny
+  say: {You do it in ten minutes with a charm. She sniffs it, says "It'll keep a week," and makes you do it again her way after supper.|You show her the charm again. She watches closer this time, and doesn't say it's wrong.|She asks you to teach her the charm. Then she tells you three things it does that the professors never mentioned.}
+
+@event marsh_stilt_house_supper
+title: Supper Above the Water
+pool: countryside_marsh_routine
+when: at_home() and has(origin_hedge)
+tone: warm
+art: meal
+tags: home
+scene: A small house on stilts at dusk, lamplight in its window, an old woman and a student eating at a table by the open shutter over dark water.
+text: {Eel pie, black bread and the marsh going quiet outside. Your grandmother wants to hear about the castle, all of it.|Supper again, and the questions again, sharper this time: who your friends are, whether they're good to you.|Supper, and this time she talks and you listen: the year the river froze, the winter the wolves came to the edge.} {final_year: She asks what comes after, and listens to the whole answer.|Out on the water, a light drifts past the window. She shuts the shutter without comment.}
+> left: Tell her everything
+  mood +small
+  health -tiny
+  say: {You talk until the lamp gutters and long past your bedtime. She laughs at the professor who throws chalk and goes very quiet at the lake.|You tell her about your friends. She asks two questions about each, both of them the right ones.|You tell her. She says, "Good," about the parts that are, and nothing about the rest.}
+> right: Ask about the valley instead
+  lore +small
+  mood -tiny
+  say: {She tells you about the old drovers' road and the chapel the marsh took. When you ask about the villages, she says they're very hospitable, in a voice that closes the subject.|She tells you who's married whom and who's buried where. She doesn't say why the inn's guest book is the one thing she won't let you fetch.|She talks about the marsh like a person: what it wants, what it gives back. Then she changes the subject, so carefully you notice.}
+
+@event marsh_witch_stranger
+title: The Woman on the Stilt House Steps
+pool: countryside_marsh_routine
+when: not at_home()
+tone: eerie
+art: leaf
+tags: magic mystery
+scene: An old woman sitting on the steps of a house on stilts at the edge of a marsh, a bunch of grey-green herbs in her lap, not looking at the student on the path.
+text: {The hedge-witch is sitting on her steps with a bunch of rue in her lap, and doesn't look up when you pass. "Visiting," she says. It isn't a question.|The hedge-witch again. This time she looks at you, once, as if counting something.|She's waiting on the steps as if she knew you'd come. "Still here," she says, and it sounds like a worry.} {season == "winter": Her breath smokes; she doesn't seem to feel the cold.|Dragonflies settle on the rail beside her.}
+> left: Ask what she means
+  gold -tiny
+  flag marsh_rue
+  say: {She ties a sprig of rue with a bit of red thread and holds it out. "A penny. Nothing's free." You pay. "Keep it in your pocket while you're in the valley, and don't let the inn wash your coat."|She gives you another sprig, though you still have the first. "For whoever you're travelling with." She takes the penny and won't say more.|"You know what I mean," she says, which you don't, and takes your penny for another sprig.}
+> right: Wish her good day and walk on
+  mood +tiny
+  say: {"Good day," she says to the marsh, not to you. Behind you, you hear her shutters close.|You wish her good day. She says, "Is it," and goes back to her herbs.|You walk on. When you look back she's standing, watching the road to the villages, not you.}
+
+@event marsh_lights_on_the_drovers_road
+title: The Drovers' Road
+pool: countryside_marsh_routine
+time: evening night
+tone: eerie
+art: star
+tags: mystery nature
+scene: A line of small pale lights strung along a half-sunken causeway across a marsh at dusk, a student standing at its end with a lantern.
+text: {At dusk the lights come out over the Marsh, and tonight they line up along the old drovers' road, the half-sunk causeway nobody uses, as if marking it for someone.|The lights are on the drovers' road again, and closer together, like a queue.|The lights are already on the causeway when you come, and one of them, you'd swear, is waiting at your end.} {season == "winter": The water between the stones has a skin of ice.|Frogs go silent as you step onto the stones.}
+> left: Walk the causeway a little way
+  lore +small
+  health -tiny
+  say: {You go six stones out. The lights keep their distance exactly, and the seventh stone is underwater. You come back wet to the knee and certain that the road went somewhere once.|You go further this time. Halfway, the lights move aside to let you pass, which is worse than if they'd blocked you. You turn back.|You walk out until the lights are all round you. None of them is warm. When you come back the hedge-witch's lamp is lit, and her shutters are open.}
+> right: Watch from the bank
+  mood -tiny
+  say: {You watch them until full dark, and then they go out one by one, from the far end, like a house being shut up.|You watch from the bank. The lights stay, and so do you, until you realise you've been counting them.|You don't go out. One light comes as far as the bank, hangs there, and goes back. You walk home faster than you meant to.}
+
+@event marsh_drowned_chapel
+title: The Chapel the Marsh Took
+pool: countryside_marsh_routine
+time: morning afternoon
+tone: eerie
+art: tower
+tags: mystery lore
+scene: The slate roof and empty bell turret of a small chapel showing above reeds and still water, a student on a tussock nearby with a sketchbook.
+text: {The water's low today, and out in the reeds there's a roof, a little chapel's slate roof, and an empty bell turret, standing in the marsh up to its eaves.|The drowned chapel again, a hand's width more of it showing. Someone has tied a ribbon to the turret.|The chapel's door lintel is just above the water now. It has something carved on it, worn smooth.} {season == "winter": Ice rims the turret's arch.|Moorhens have nested in the turret.}
+> left: Wade out to it
+  challenge feat apprentice:
+    win:
+      lore +small
+      health -tiny
+      say: {Waist-deep, freezing, you reach the turret. No bell, and no fittings for one either; the turret was built empty. That seems a strange thing to build.|You reach the ribbon. It's red thread, the hedge-witch's kind, knotted seven times.|You get close enough to read the lintel: a sheaf of wheat, carved over and over in a band, and a date too worn to read.}
+    lose:
+      health -small
+      mood -tiny
+      say: {The bottom goes out from under you halfway. You come back soaked to the neck with nothing to show but a leech.|You go in up to your chest and decide the chapel can keep its secrets. The marsh keeps your left boot.|You slip on a submerged step and go under. When you come up, the turret is exactly as far away as before.}
+> right: Sketch it from the bank
+  lore +tiny
+  mood +tiny
+  say: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it again, from the same tussock. It's lower in the water than last time, or the water is higher.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
+
+@event marsh_eel_catcher
+title: The Eel Traps
+pool: countryside_marsh_routine
+time: morning afternoon
+tone: light
+art: wave
+tags: social nature
+scene: A weathered fen-man in waders lifting a wicker eel trap out of a marsh channel, a student watching from a plank path with a parcel of smoked fish.
+text: {An eel-catcher in waders is lifting his traps along the channel, and he talks to every one before he opens it.|The eel-catcher again, and the traps again, and the same small speech to each one. "Manners," he explains.|The eel-catcher waves you over with a trap. "You'll do the talking today."} {season == "winter": The channels are slow and black; the eels are sleepy.|The eels are lively and so are the midges.}
+> left: Help him with the traps
+  vigor +tiny
+  mood -tiny
+  say: {You haul six traps and get bitten by one eel. He pays you in smoked eel and a piece of advice. Never, he says, count the stones on the ridge out loud.|You talk to the traps, feeling a fool. The catch is better than last time. "See," he says.|You haul all morning. He tells you the marsh used to be a village, "before they stopped paying," then pretends he said "the drainage".}
+> right: Buy some smoked eel
+  gold -tiny
+  health +tiny
+  say: {Smoked eel in a twist of paper, eaten on the plank path. It's oily, smoky and better than anything in the refectory.|He wraps you a piece of the good stuff without being asked. "For the walk back," he says. "Don't take the drovers' road."|Smoked eel again. You're a regular now; he tells you so, and charges you less, and won't say why the inn doesn't buy from him.}

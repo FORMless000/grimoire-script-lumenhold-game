@@ -352,13 +352,15 @@ Chosen at the start of each break, as a menu:
 | Plan | Available | Effect |
 |---|---|---|
 | Stay at the castle | always | skeleton crew, secrets, cheap rent (6/month) |
-| Go home | always | home map, family and old friends, free board |
-| Travel | from year 2, costs crowns | travel map (port city / the North) |
+| Go home | always | your origin's map (the capital for noble, merchant and street; the countryside for scholar and hedge), family and old friends, free board |
+| Travel | any break, a fare (a gold tier) | the map that isn't home (the capital or the countryside), with lodging picked on arrival: rough (free, sleeps 5/2, theft), decent, or the best room (sleeps like home) (new maps, 2026-11-10; the North stays for later) |
 | Work on campus | always | a holiday gig chosen on a pushed card (the grounds, the kitchens; X15 adds more), paid through its cards and better than a term job; board still paid; no double wage (playtest 2, M6) |
 | Research internship | from year 2, by application (§7.5) | host map, project, stipend |
 | Thesis retreat | year 4 winter | thesis progress |
 
-v0.3 ships castle, home, work on campus and internships. Travel and internship maps follow as content (Phase 3/4).
+v0.3 ships castle, home, work on campus and internships.
+
+**The break maps** (new maps, 2026-11-10; `docs/maps-plan.md`): the countryside (map `home`: two villages, the fen, the moors, the ridge) and the capital (map `city`: uptown, the river, Port Calder's docks). Home follows the origin: noble, merchant and street in the capital, scholar and hedge in the countryside. Six internship hosts sit on the two maps (Thornwick keeps its own). Reaching another map shows an arrival screen (where you are, where you stay, which places have work going); work is offered only by visiting the place that has it, never from the break menu. Coming back to the castle shows a return screen.
 
 ### 4.4 Festivals and fixed beats
 
