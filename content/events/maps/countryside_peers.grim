@@ -1,0 +1,194 @@
+# The countryside's peers at home (new maps round 2, 2026-11-11; docs/maps-plan.md, batch P2). On a countryside
+# break Tobias is at the Fennick farm and Nessa at her mother's press (their break schedules, content/world/cast.grim).
+# Each home has one recurring card in three showings and a few one-time scenes; each unlocks a fact. The farm lies
+# outside the valley's good years and a man from the capital wants it; the almanac is a page short every seventh
+# year: hooks for "The Good Year" (K4), which they never explain. `country_peers_out` is meeting them about the valley.
+
+# ---------------- Tobias: the Fennick farm ----------------
+
+@pool fennick_farm_tobias
+place: fennick_farm
+actor: tobias
+class: routine
+weight: 12
+tags: home social
+
+@event fennick_weather_first
+title: Weather First
+pool: fennick_farm_tobias
+when: rel(tobias) > -10
+repeat: 3
+tone: warm
+art: leaf
+scene: A low stone farmhouse kitchen with a range and a scrubbed table, a small sturdy woman pouring tea, a big gentle young man ducking under the beams, a ladder at the open door.
+text: {&Mrs Fennick, small and brown with forearms like a blacksmith's, greets you with the weather. The wind's gone round west, there's rain by the week's end, and the barley's thinking about it. Then she puts the kettle on and looks at you both. "Well," she says. "There's the roof wants doing, or there's the tea."|Mrs Fennick again, and the weather again: {season == "winter": a frost coming, she can smell it, and the hens know|thunder by evening, and the cows know}. She sets out three cups without asking. "Roof's still wanting," she says, "if you've the arms for it. Or sit."|The kettle's on before you're through the gate. "Wind's in the east," Mrs Fennick says, "and you're thinner," which from her is a whole letter. "Roof," she says, "or tea."}
+> left: Help Tobias with the roof
+  vigor +small
+  health -tiny
+  say: {&You pass slates up the ladder for an afternoon while Tobias sings to them, which he says helps them sit. Your shoulders burn. Mrs Fennick calls the weather up at you every half hour, and she's right every time.|Up the ladder. Tobias fixes slates and tells you a long story about a goat that ended up on this very roof. Your hands are scraped raw by the end, and the story still isn't over.|You patch the corner where the wind got under the slates, until dusk and until your arms give out. Mrs Fennick stands in the yard with her hands on her hips and says, "That'll keep the weather out," which is the highest thing she says about anything.}
+> right: Sit and have the tea
+  mood +small
+  health +tiny
+  say: {&Strong tea, seed cake and Mrs Fennick's opinions of the weather for an hour. At the door, as you go, she takes your hand and says, quite briskly, that she's glad Tobias has you. Tobias goes red to the ears and studies the hens.|Tea, and a slab of bread and dripping, and the story of the winter Tobias tried to keep a lamb in his bed. He hides his face in his hands. His mother laughs from the belly, exactly like him.|Tea, and the last of the seed cake, which she has plainly saved. She asks about the castle and listens to every word, and at the end says, "Rain tomorrow," and pats your hand twice.}
+
+@event fennick_mandrake_bed
+title: Gerald's Relations
+pool: fennick_farm_tobias
+tone: light
+art: leaf
+scene: A walled garden bed behind a farmhouse, a row of small grumpy mandrakes each wearing a brightly knitted hat, a big young man kneeling beside them with a basket of wool.
+text: Behind the farmhouse is a walled bed of mandrakes, two dozen of them, and every one is wearing a knitted hat: stripes, bobbles, one with ear-flaps. "Gerald's relations," Tobias says proudly. "Ma knits for them all winter. They scream less in a hat." One of them, in purple, glares at you. It's time to lift them for the season, and two have outgrown their hats.
+> left: Help lift them
+  alchemy +small
+  health -tiny
+  say: You lift them one by one, quickly, each with a thin indignant shriek, and your ears ring all afternoon. Tobias talks to every one by name. The purple one hisses at you. "That's Auntie Maud," he says. "Not that Maud. Well. A bit that Maud."
+> right: Knit the new hats
+  rel tobias +small
+  mood -tiny
+  say: Mrs Fennick sits you down with needles and green wool and no mercy. You drop stitches, swear, drop more, and the hat comes out lopsided and you're cross with it. Tobias puts it on the smallest mandrake, who stops screaming and goes to sleep. "It likes you," he says, delighted, which almost makes up for it.
+
+@event fennick_good_boots
+title: A Man in Good Boots
+pool: fennick_farm_tobias
+tone: tense
+art: scroll
+scene: A farm gate on a windy upland, a smartly dressed man from the city with a leather folder, a small woman with her arms folded on the doorstep, a big young man standing very still.
+text: There's a man at the farm gate in good city boots, with a leather folder and a smile he's practised. He's from the capital, he says, and buying upland farms: a fair price, this year only. "Bad years come," he tells Mrs Fennick pleasantly, "and good years don't, up here. You'd be wise." She doesn't move from her step. Tobias has gone very quiet.
+> left: Tell him to clear off
+  rel tobias +small
+  mood -tiny
+  flag fennick_agent_refused
+  say: "She said no," you say, though she hasn't said anything. The man looks at you, and writes something in the folder, and smiles. "I'll remember you," he says, and goes, and you feel his look on your back all down the lane. Mrs Fennick nods once. Tobias lets out a breath.
+> right: Ask who he's buying for
+  challenge appeal adept- unlikely:
+    win:
+      lore +small
+      flag fennick_agent_card
+      say: You get him talking about the company he buys for, and the farms he's bought, all on the upland side, all this year. He gives you his card before he realises he's said too much: an office on the capital's uptown side. Mrs Fennick takes the card off you and puts it on the fire.
+    lose:
+      mood -tiny
+      say: He smiles and says his principals prefer discretion, and asks your name instead, which you don't give. He tips his hat to Mrs Fennick and goes. Neither Fennick will talk about it at supper, and the silence sits heavy on the table.
+
+@event fennick_top_field
+title: Outside the Luck
+pool: fennick_farm_tobias
+when: rel(tobias) >= 12
+tone: eerie
+art: leaf
+scene: A high field divided by an old drystone wall, thick golden barley on the far side, thin patchy barley on the near side, a big young man and a student standing at the wall.
+text: Tobias walks you up to the top field, where the farm meets the valley's land at an old drystone wall. On the far side the barley stands thick and gold. On the Fennick side it's thin, and patchy, and honest. "Seven good years down there," Tobias says. "Every year. Never up here." He puts his big hand flat on the wall. "Ma says the valley's luck is the valley's business."
+> left: Help him clear the stones
+  vigor +small
+  health -tiny
+  say: You pick stones out of the thin side of the wall until your back aches and the sun goes down. It's slow, plain, endless work, and Tobias hums the whole time. "Our luck's this," he says, tipping a basket. "Stones. I don't mind it. It's ours."
+> right: Ask what he thinks it is
+  lore +tiny
+  mood -tiny
+  say: He thinks about it a long time, which is how he thinks about everything. "I think they pay for it," he says at last. "I don't know what with. Nobody down there ever says." The wind goes over the barley on the far side, and none of it bends the way the near side does. You walk back uneasy.
+
+# ---------------- Nessa: the Almanac Printer's ----------------
+
+@pool almanac_printers_nessa
+place: almanac_printers
+actor: nessa
+class: routine
+weight: 12
+tags: home social
+
+@event almanac_type_case
+title: Backwards and Upside Down
+pool: almanac_printers_nessa
+when: rel(nessa) > -10
+repeat: 3
+tone: light
+art: paper
+scene: A crowded country print shop, a young woman in ink-stained sleeves setting metal type into a stick at a tall wooden case, an older woman working a hand press behind her.
+text: {&At her mother's type case Nessa is a different creature, silent and quick, setting metal letters into a stick backwards and upside down, faster than she writes forwards. Mrs Quill works the press behind her, ink to the elbows. "Took her apart at five," Mrs Quill says, "the case. Put it back alphabetical. Took me a month."|Nessa's at the case again, setting the market notices, and she hasn't said a single headline since you came in. It's unnerving. "Here," she says, without looking up, and hands you a stick.|The shop again, and the press thumping. Nessa has set your name in type and left it on the stone where you'll see it, which she pretends was an accident. "Line's yours," she says. "If you can."}
+> left: Set a line yourself
+  lore +small
+  mood -tiny
+  say: {&You set one line in the time she sets a page, and spell it wrong backwards. She corrects it without comment, which is worse. By the end your fingertips are black and your pride is small.|You set the price of eggs and the date of the fair, and get the fair wrong. Nessa fixes it with one flick and says nothing, kindly, which is maddening.|You set a whole notice, slowly, under her eye, and get one letter upside down. She turns it without a word. It stings, a little, that she saw it first.}
+> right: Pull the press for Mrs Quill
+  vigor +small
+  health -tiny
+  say: {&Mrs Quill lets you pull the press. A heave, a thump, a sheet off the stone, again, and again, a hundred times. Your arms are dead by the end. "Same as she did at ten," says Mrs Quill. "She cried. You're doing better."|You pull the almanac covers, a thump to each. Your shoulder aches. Mrs Quill talks the whole time about Nessa as a child, and Nessa, at the case, sets faster and faster.|You and Mrs Quill pull the funeral cards for a farmer you never met. It's slow, careful, heavy work, and quiet. "He'd have liked it done properly," she says, and you ache, and are glad you did.}
+
+@event almanac_first_notice
+title: Lost: One Brown Dog
+pool: almanac_printers_nessa
+tone: warm
+art: paper
+scene: A faded old printed notice pinned in the corner of a print-shop window, LOST in large letters above a woodcut of a dog, a young woman beside it looking embarrassed.
+text: In the corner of the shop window, yellow with sun, is an old notice: LOST, one brown dog, answers to Biscuit, last seen being a nuisance on the green. The type is crooked and the spelling is fierce. "Don't," Nessa says. "I was seven. It was my first story." She pauses. "He came home. The story worked."
+> left: Ask her to tell it properly
+  mood +small
+  rel nessa +tiny
+  say: She tells it like a front page: the disappearance, the search, the witnesses, the triumphant return of Biscuit, muddy, with a sausage. She was insufferable for a year, she says. "I still am," she adds. "But now I know it's the job."
+> right: Write her a new notice
+  rel nessa +small
+  mood -tiny
+  say: You write a notice for the window: FOUND, one editor, answers to Nessa, last seen being a nuisance in the castle. She edits it, ruthlessly, three times, until hardly a word of yours is left, and you sulk a little. Then she sets it, prints it, and pins it beside Biscuit.
+
+@event almanac_short_page
+title: A Page Short
+pool: almanac_printers_nessa
+when: rel(nessa) >= 10
+tone: eerie
+art: book
+scene: A low attic under the eaves stacked with bundles of old thin almanacs, a young woman with a lantern turning pages, dust in the air.
+text: In the attic, a century of the valley's almanacs sit in bundles under the eaves, and Nessa has been counting pages. "Every seventh year it's a page short," she says. "Always the harvest page. Mother says the old press did that." She holds two copies side by side. "It's not the press." {seen(market_harvest_board) > 0: You think of the harvest board's columns of seven.|}
+> left: Go through them with her
+  lore +small
+  health -tiny
+  flag almanac_pages_counted
+  say: You go through the bundles until the lantern gutters, coughing in the dust, and she's right: seven, fourteen, twenty-one, always the harvest page, always cut clean. Downstairs, Mrs Quill calls up that supper's on, a little too brightly. Nessa writes it all down, and for once says nothing.
+> right: Tell her to let it lie
+  mood +tiny
+  rel nessa -tiny
+  say: "Some things are just the press," you say. Nessa looks at you over the lantern for a long moment, the way she looks at someone who's said something quotable. "That's what Mother says," she says, and puts the almanacs back, and doesn't believe either of you.
+
+# ---------------- Out in the valley ----------------
+
+@pool country_peers_out
+region: countryside
+class: routine
+weight: 8
+tags: social
+
+@event tobias_country_barrow
+title: Turnips, Mostly Free
+pool: country_peers_out
+actor: tobias
+when: met(tobias)
+tone: light
+art: leaf
+scene: A country lane, a big gentle young man pushing a barrow heaped with turnips, a small crowd of villagers each holding a turnip, a student watching.
+text: Tobias comes down the lane with a barrow of turnips he's meant to be selling, and he's selling them terribly. Anyone with a sad story gets one free, and in this valley everyone has a sad story. "Ma'll kill me," he says cheerfully, handing one to a man whose cow is poorly. "Help?"
+> left: Run the barrow properly
+  charm +small
+  gold +tiny
+  rel tobias -tiny
+  say: You take over: a fair price, no stories. You sell the lot before long and hand Tobias the takings. He looks at the coins as though they were slightly sad, and pays you your share, and is a little quiet with you on the way home.
+> right: Give them away with him
+  mood +small
+  rel tobias +small
+  say: You hand out turnips to a widow, a tinker, two children's grandmothers and a goat that asks nicely. Your pockets stay empty and your face aches from smiling. "Ma'll kill us both," Tobias says, very happy. "Worth it."
+
+@event nessa_country_green
+title: Nothing Ever Happens Here
+pool: country_peers_out
+actor: nessa
+when: met(nessa) and rel(nessa) >= 5
+slot: afternoon
+tone: eerie
+art: paper
+scene: A quiet village green in the long afternoon, a young woman sitting on a bench with a notebook shut on her knee, a student beside her, thatched cottages and a market cross behind.
+text: Nessa is sitting on a bench by the green with her notebook shut, which you've never seen. The village is having a perfect afternoon around her. "I left," she says, "because nothing here was ever news. Seven good harvests and everyone smiling, and nobody ever asked why." She opens the notebook, and closes it again. "I'm starting to think that was the news."
+> left: Say maybe it's a story
+  rel nessa +small
+  mood -tiny
+  say: "Maybe it is," you say. She looks at you as if you'd handed her a key, and then, carefully, as if it might be a trap. "Don't encourage me," she says, and opens the notebook, and writes a single word you can't read. The village goes on smiling. You find you don't like it.
+> right: Tell her she can be bored here
+  mood +small
+  rel nessa +tiny
+  say: "Be bored," you say. "With me. For one afternoon." She tries. She manages almost an hour, which is a record, watching ducks and saying nothing quotable at all. Then she sees the miller across the green and is off, notebook open, and you laugh.

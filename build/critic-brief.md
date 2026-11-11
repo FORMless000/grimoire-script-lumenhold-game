@@ -4,279 +4,145 @@ Context pack for writing events. Canon is what is written here and in the worldb
 
 ## Cast
 
-### Mabel Thistlewood (`mabel`)
+### Tobias Fennick (`tobias`)
 
-she/her · age 63 · villager · none
+he/him · age 19 · student year 1 · Rootward · romanceable
 
-*Keeper of the tea shop*
+*Farmer's son on a turnip scholarship*
 
-Forty kinds of tea, three kinds of cake, and a talent for reading your mood from the way you open her door.
+Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to answer.
 
-**Voice:** Warm and brisk; finishes your order for you. Reads moods like weather and says so. Calls students "petal" and means something different every time.
+**Voice:** Warm, slow and earnest, with farm sayings and long stories about goats. Apologises too much; laughs from the belly.
 
-**Traits:** perceptive, warm, nosy, patient · **Interests:** cooking, gossip, music
+**Traits:** kind, gentle, homesick, loyal · **Interests:** plants, animals, cooking, dancing
 
-**Stats:** arcana 14, lore 30, alchemy 36, charm 58, vigor 20, guile 40, wealth 3
+**Stats:** arcana 12, lore 14, alchemy 26, charm 18, vigor 30, guile 4, wealth 1
 
-**Schedule:** Mabel's Tea Shop (morning, noon, afternoon); The Village Square (evening)
+**Schedule:** The Greenhouses (morning, afternoon); The Refectory (noon, evening); The Familiar Stables (evening, 60% of days)
 
-**Relations:** Mr Alder Grimsby +20, Old Pell +15
+**On breaks:** The Greenhouses (afternoon); The Familiar Stables (evening, 60% of days); The Fennick Farm (noon, afternoon, evening); The Market Village (evening, 30% of days)
 
-**Facts:**
-- [surface] Keeps the tea shop in the village: forty kinds of tea, three kinds of cake. (`mabel.teashop`)
-- [personal] She reads your mood from the way you open her door, and is rarely wrong. (`mabel.door`, known when `seen(mabel_intro) > 0`)
-- [personal] She sends tins of tea up to the castle on the barge for students she's worried about, and refuses payment for them. (`mabel.tins`, known when `seen(mabel_parcel) > 0`)
-- [personal] The cups on the hooks behind her counter belong to her regulars, living and dead. She remembers every one of them. (`mabel.cups`, known when `seen(mabel_cup) > 0`)
-- [surface] Calls everyone "petal", and means it more for some than others. (`mabel.petal`)
-- [personal] Beside her three cakes there is sometimes a fourth, experimental and free, and she keeps a card on each: its name, the date, and the survivors. (`mabel.fourth_cake`, known when `seen(mabels_fourth_cake) > 0`)
-- [personal] Her range goes out whenever the wind is in the north. Anyone who helps her light it is "staff, near enough", and carries the milk. (`mabel.range`, known when `seen(mabels_cold_range) > 0`)
-
-### Mr Alder Grimsby (`grimsby`)
-
-he/him · age 72 · villager · none
-
-*Bookseller*
-
-Keeps a bookshop so crowded the shelves lean on each other. He will find anything except what you came in for, which is often what you needed.
-
-**Voice:** Vague, courteous, enthusiastic about the wrong thing. Recommends books by their smell. Remembers what you read three years ago and nothing about what you asked for today.
-
-**Traits:** eccentric, kind, distant, curious · **Interests:** books, history, maps
-
-**Stats:** arcana 20, lore 74, alchemy 12, charm 30, vigor 10, guile 22, wealth 2
-
-**Schedule:** Grimsby's Books (noon, afternoon); The Village Square (evening)
-
-**Relations:** Mabel Thistlewood +20
+**Relations:** Old Maud +20, Bram Hollis -15, Mir Ten +10
 
 **Facts:**
-- [surface] Keeps the village bookshop. He will find anything except what you came in for. (`grimsby.books`)
-- [personal] The book he gives you instead is, more often than not, the one you needed. (`grimsby.wrong`, known when `seen(grimsby_intro) > 0`)
-- [personal] He posts books to students he thinks need them, on credit, and has never once chased a debt. (`grimsby.parcels`, known when `seen(grimsby_parcel) > 0`)
-- [personal] He has a weakness for lighthouses, and when he closes the shop, it is usually to go and look at one. (`grimsby.lighthouses`, known when `seen(grimsby_mind_the_shop) > 0`)
-- [personal] He finds a book by its smell. The right book, he says, smells right. (`grimsby.nose`, known when `seen(grimsbys_by_the_nose) > 0`)
-- [personal] Above the shop is a floor of remainders nobody mentions, up a ladder whose third and fourth rungs break. (`grimsby.upper_floor`, known when `seen(grimsbys_upper_floor) > 0`)
+- [surface] A farmer's son on a turnip scholarship, built like a barn door and gentle as a lamb. (`tobias.scholarship`)
+- [surface] He talks to plants. Worryingly, they seem to answer. (`tobias.plants`)
+- [personal] His mother runs the farm alone at harvest. It's the first harvest he has ever missed. (`tobias.ma`, known when `seen(tobias_homesick) > 0`)
+- [personal] He is raising a mandrake called Gerald, who wears a knitted hat and screams softly. (`tobias.gerald`, known when `seen(tobias_godparent) > 0`)
+- [personal] The greenhouse moonflowers bloom once every eleven years. He would stand in a storm for them. (`tobias.moonflowers`, known when `rel(tobias) >= 12`)
+- [personal] He practised waltzing with a broom before the Midwinter Ball. The broom complained. (`tobias.dancing`, known when `seen(tobias_dance_lessons) > 0`)
+- [personal] His mother expects him home on the farm after graduation. It was always the plan; he isn't sure any more that it's his. (`tobias.after`, known when `seen(tobias_home_or_here) > 0`)
+- [personal] His mother says the weather first and the love last, in person as in her letters. She has never once left the love out. (`tobias.weather_first`, known when `seen(fennick_weather_first) > 0`)
+- [personal] Gerald came from a walled bed of mandrakes behind the farmhouse. Every one of them has a hat; his mother knits them all winter. (`tobias.mandrakes`, known when `seen(fennick_mandrake_bed) > 0`)
+- [personal] A man from the capital wants to buy the Fennick farm. His mother won't sell. Tobias isn't sure she can afford not to. (`tobias.offer`, known when `seen(fennick_good_boots) > 0`)
 
-### Professor Ines Marisol (`marisol`)
+### Nessa Quill (`nessa`)
 
-she/her · age 39 · professor · Faculty
+she/her · age 19 · student year 1 · Duskgate · romanceable
 
-*Professor of Tidecalling*
+*Editor of the Lumen Ledger*
 
-Teaches the tidecalling half of Evocation, waist-deep in the lake at dawn. Keeps the lake calm on exam days and reads poetry under a dry patch of air when it rains.
+Runs the student paper with a quill that writes on its own. Everyone is a story; some are just not finished yet.
 
-**Voice:** Soft and unhurried until there's weather; then she whoops. Quotes poems about water and forgets the last line. Believes cold water is good for everyone.
+**Voice:** Rapid, bossy, headline-shaped. Treats every conversation as an interview; goes very quiet when it's off the record.
 
-**Traits:** dreamy, warm, reckless, curious · **Interests:** tides, music, writing
+**Traits:** nosy, idealistic, overworked, bold · **Interests:** writing, gossip, justice
 
-**Stats:** arcana 70, lore 56, alchemy 18, charm 40, guile 20, vigor 52, wealth 2
+**Stats:** arcana 14, lore 26, alchemy 8, charm 30, vigor 12, guile 24, wealth 2
 
-**Schedule:** The Lakeshore (morning, evening); The Lecture Tower (afternoon)
+**Schedule:** The Lumen Ledger Office (afternoon, evening, night); The Courtyard (noon); The Gilded Newt (evening, 25% of days)
 
-**On breaks:** The Lakeshore (morning, evening)
+**On breaks:** The Lumen Ledger Office (afternoon); The Village Square (evening, 50% of days); The Almanac Printer's (noon, afternoon); The Market Village (evening, 40% of days)
 
-**Relations:** Professor Ottilie Vey +20, Professor Aldric Thorne +15
-
-**Facts:**
-- [surface] Teaches the tidecalling half of Evocation, waist-deep in the lake at dawn, and keeps the lake calm on exam days. (`marisol.tides`)
-- [personal] She reads poems about water in the rain, under a dry patch of air, and never remembers their last lines. (`marisol.poems`, known when `seen(marisol_intro) > 0`)
-- [personal] She goes out into the worst storms of the year on purpose. She says nobody learns tides on a calm day. (`marisol.storms`, known when `seen(marisol_storm) > 0`)
-- [personal] She wrote her own tidecalling into the margins of a book of poems when she was a student, and still teaches from it. (`marisol.margins`, known when `seen(marisol_trust) > 0`)
-- [personal] She stays in the lake when there is ice at the edges, and whoops like a child whenever a student's water rises. (`marisol.ice`, known when `seen(marisol_cold_water) > 0`)
-- [personal] She says the lake's water spirits always cheat, and that asking them nicely not to is the whole point of tidecalling. (`marisol.spirits`, known when `seen(tide_water_spirit_race) > 0`)
-
-### Professor Ottilie Vey (`vey`)
-
-she/her · age 46 · professor · Faculty
-
-*Professor of Illusion & Glamour*
-
-Teaches Illusion & Glamour and grades on whether you fooled her. She is very hard to fool, and very generous to the few who manage it.
-
-**Voice:** Amused, theatrical, a little too observant. Asks questions she already knows the answer to, to see what you'll do. Delighted by anyone who fools her.
-
-**Traits:** charming, perceptive, sly, funny · **Interests:** theatre, painting, cards
-
-**Stats:** arcana 60, lore 50, alchemy 20, charm 78, guile 70, vigor 22, wealth 3
-
-**Schedule:** The Lecture Tower (morning, afternoon); The Great Hall (noon)
-
-**On breaks:** away
-
-**Relations:** Professor Aldric Thorne +5, Professor Ines Marisol +20
+**Relations:** Bram Hollis -20, Corvin Ashby +10, Lyra Vaneshade -5
 
 **Facts:**
-- [surface] Teaches Illusion & Glamour and grades on whether you fooled her. (`vey.illusion`)
-- [personal] She tests students in corridors, unannounced, with tea that isn't there. She keeps score. (`vey.tests`, known when `seen(vey_pop_quiz) > 0`)
-- [personal] She produces the faculty revue every year, and has never once let Professor Thorne refuse a part. (`vey.revue`, known when `seen(vey_revue) > 0`)
-- [personal] She doesn't use the mirror charm in public. Once, her reflection didn't come back for a week. (`vey.mirror`, known when `seen(vey_trust) > 0`)
-- [personal] She teaches that sight is easy to fool; smell is where liars are caught. (`vey.smell`, known when `seen(illu_bread_smell) > 0`)
-- [personal] She has every student glamour their own face first: a glamour you can't hold on yourself, she says, won't hold on anyone. (`vey.own_face`, known when `seen(illu_one_small_change) > 0`)
+- [surface] Editor of the Lumen Ledger, with a quill that writes on its own. (`nessa.editor`)
+- [personal] Left unsupervised, her quill starts inventing the news. (`nessa.quill`, known when `seen(nessa_burnout) > 0`)
+- [personal] Nobody has interviewed the headmistress in twenty years. She means to be the first. (`nessa.interview`, known when `rel(nessa) >= 12`)
+- [personal] She would chain herself to the printing press before letting anyone shut the Ledger. (`nessa.press`, known when `seen(nessa_paper_threatened) > 0`)
+- [personal] She plants one error in every proof she asks you to check, to see whether you'll find it. (`nessa.planted`, known when `seen(nessa_fact_check) > 0`)
+- [personal] She learned to set type backwards before she could write forwards, above her mother's press in the countryside. At the type case she doesn't say a single headline. (`nessa.type`, known when `seen(almanac_type_case) > 0`)
+- [personal] Her first story was a notice for a lost dog called Biscuit, set when she was seven. The dog came home. She has been unbearable ever since, and says it's the job. (`nessa.first_story`, known when `seen(almanac_first_notice) > 0`)
+- [personal] She left the valley because nothing in it was ever news. Lately she wonders whether that was the news. (`nessa.why_left`, known when `seen(nessa_country_green) > 0`)
 
-### Professor Hedda Brask (`brask`)
+## Place: The Fennick Farm (`fennick_farm`)
 
-she/her · age 61 · professor · Faculty
+countryside · open noon, afternoon, evening
 
-*Professor of Beastcraft & Flight*
+Up on the upland side, past the tarn, outside the two villages: turnips, tomatoes, a mother who writes the weather first and love last, and Tobias in his oldest boots.
 
-Teaches Beastcraft & Flight and is kinder to animals than to students, though the gap closes for anyone who mucks out without being asked.
+## Already written here (75)
 
-**Voice:** Speaks to creatures in full sentences and to students in half ones. Every story ends with a bite and a moral. Laughs once a term, loudly.
-
-**Traits:** dry, gentle, stubborn, brave · **Interests:** animals, flying, history
-
-**Stats:** arcana 52, lore 48, alchemy 30, charm 16, vigor 70, guile 28, wealth 2
-
-**Schedule:** The Familiar Stables (morning, afternoon, evening); The Great Hall (noon)
-
-**On breaks:** The Familiar Stables (morning, afternoon, evening)
-
-**Relations:** Sister Amaranth +15, Old Maud +20, Professor Aldric Thorne +5
-
-**Facts:**
-- [surface] Teaches Beastcraft & Flight from the stables, and talks to every creature in them more kindly than to students. (`brask.beasts`)
-- [personal] Every one of her stories ends with a bite and a moral. She laughs out loud about once a term. (`brask.stories`, known when `seen(brask_shovel) > 0`)
-- [personal] The old barn owl in the stable loft has outlived three of her colleagues. She would not say which loss hurt most. (`brask.owl`, known when `seen(brask_night_owl) > 0`)
-- [personal] She bows to the things that live in the Whisperwood, and believes it's why they have never bitten her. Much. (`brask.courtesies`, known when `seen(brask_trust) > 0`)
-- [personal] Her barn owl moulted in the Whisperwood one winter, and she looked for the lost flight feather for a month. (`brask.feather`, known when `seen(item_quill_brask) > 0`)
-- [personal] She never thinks less of a student for asking for help. She just remembers that they asked. (`brask.asking`, known when `seen(beast_lake_flight) > 0`)
-
-### Sister Amaranth (`amaranth`)
-
-she/her · age 54 · staff · Faculty
-
-*Healer of the infirmary*
-
-Runs the infirmary with warming charms, tonics and no patience for excuses. Teaches the healing half of Alchemy & Healing.
-
-**Voice:** Short sentences, delivered while doing something else. Believes no excuse, forgives most things anyway. Praise comes as an instruction ("Keep doing that.").
-
-**Traits:** severe, honest, patient, warm · **Interests:** plants, soup, history
-
-**Stats:** arcana 40, lore 52, alchemy 80, charm 24, vigor 34, guile 30, wealth 2
-
-**Schedule:** The Alchemy Laboratory (morning); The Infirmary (afternoon, evening, night); The Great Hall (noon)
-
-**On breaks:** The Infirmary (afternoon, evening, night)
-
-**Relations:** Old Maud +25, Professor Aldric Thorne +10, Professor Hedda Brask +15
-
-**Facts:**
-- [surface] Runs the infirmary and teaches the healing half of Alchemy & Healing. Believes no excuse. (`amaranth.healer`)
-- [personal] She treats the true version of an injury faster than the story you tell her, and she always knows which one you told. (`amaranth.truth`, known when `seen(amaranth_intro) > 0`)
-- [personal] She does evening rounds of every bed herself, and has never once missed one. (`amaranth.rounds`, known when `seen(amaranth_rounds) > 0`)
-- [personal] Only a handful of students have ever been trusted with the key to her tonic cupboard. (`amaranth.key`, known when `seen(amaranth_trust) > 0`)
-- [personal] She counts every remedy twice, because the second count is the true one, and keeps a black jar on the top shelf for a curse not seen since her first year. (`amaranth.count`, known when `seen(brk_amaranth_restock) > 0`)
-- [personal] She leaves the tonic cupboard open at teatime on purpose, to see who will help themselves, and writes their names in a book. (`amaranth.cupboard`, known when `seen(infirmary_tonic_cupboard) > 0`)
-- [personal] She keeps a book of the remedies her students invented, written out in her own square hand. (`amaranth.book`, known when `seen(alch_original_remedy) > 0`)
-
-### Old Pell (`pell`)
-
-he/him · age 77 · villager · none
-
-*Apothecary of Pell & Daughters*
-
-Taught three generations of the village to count drops. His daughters run the counter now; he runs the drawers, and the drawers are never wrong.
-
-**Voice:** Gruff, precise, counts aloud. Never apologises; corrects a label instead. Trusts people who measure twice, and says so once a decade.
-
-**Traits:** exacting, proud, loyal, stubborn · **Interests:** plants, rules, money
-
-**Stats:** arcana 22, lore 46, alchemy 76, charm 14, vigor 16, guile 30, wealth 3
-
-**Schedule:** Pell & Daughters (morning, afternoon); The Village Square (evening)
-
-**Relations:** Mabel Thistlewood +15, Grisk -20
-
-**Facts:**
-- [surface] Runs the drawers at Pell & Daughters. He taught three generations of the village to count drops. (`pell.apothecary`)
-- [personal] He makes every new clerk count aloud. He trusts people who measure twice. (`pell.counting`, known when `seen(pell_count_drops) > 0`)
-- [personal] His daughters run the counter and want the shop to change; he wants it to be fifty years ago. They're all secretly proud of each other. (`pell.daughters`, known when `seen(pell_daughters) > 0`)
-- [personal] His brass measuring spoon hasn't been wrong in forty years. His daughters learned to measure on it, and say it's theirs. (`pell.spoon`, known when `seen(offer_measuring_spoon) > 0`)
-- [personal] His oldest drawer holds a yellowed card for a draught "of your own strength", in a hand older than his. He has labelled it "Not yet." (`pell.oldest_drawer`, known when `seen(pell_oldest_drawer) > 0`)
-- [personal] Some of his thousand drawers hum. He relabels them himself, in a precise hand: ASK FIRST, NOT TODAY. (`pell.humming`, known when `seen(pell_apothecary_humming_drawer) > 0`)
-
-## Already written here (46)
-
-- `amaranth_quit` Sister Amaranth's Remedy (incident)
-- `mabel_closing_up` Turning the Sign (routine)
-- `mabel_wrong_pot` The Wrong Pot (routine)
-- `mabel_empty_hook` An Empty Hook (routine)
-- `grimsby_lighthouse_walk` Gone to Look at One (routine)
-- `grimsby_read_aloud` The Small Print (routine)
-- `marisol_exam_calm` Holding the Lake Still (routine)
-- `marisol_lost_satchel` Ask, Don't Fetch (routine)
-- `vey_lunch_dare` Fool Me Once (routine)
-- `vey_rehearsal` An Audience of Nobody (routine)
-- `brask_half_sentences` Pliers. Not Those. (routine)
-- `brask_laugh` A Bite and a Moral (routine)
-- `amaranth_tea_break` Five Minutes Sitting Down (routine)
-- `pell_castle_errand` Forty Drops, Up the Hill (routine)
-- `amaranth_intro` No Excuses (routine)
-- `amaranth_rounds` Evening Rounds (routine)
-- `amaranth_orders` Doctor's Orders (routine)
-- `amaranth_trust` The Cupboard Key (milestone)
-- `brask_shovel` Hands Wanted (routine)
-- `brask_night_owl` The Sick Owl (routine)
-- `brask_trust` Old Courtesies (milestone)
-- `vey_pop_quiz` Is It There? (routine)
-- `vey_revue` The Faculty Revue (routine)
-- `vey_trust` The Mirror Trick (milestone)
-- `marisol_intro` A Dry Patch of Air (routine)
-- `marisol_cold_water` Cold Water Is Good for You (routine)
-- `marisol_storm` Weather (routine)
-- `marisol_trust` The Last Line (milestone)
-- `mabel_intro` The Way You Open a Door (routine)
-- `mabel_parcel` A Tin From Mabel (routine)
-- `mabel_cup` Your Cup on the Hook (milestone)
-- `grimsby_intro` Not That One (routine)
-- `grimsby_parcel` The Wrong Book, Posted (routine)
-- `grimsby_mind_the_shop` Mind the Shop (milestone)
-- `pell_intro` A Thousand Drawers (routine)
-- `pell_count_drops` Count Them Aloud (routine)
-- `pell_daughters` Pell & Daughters (milestone)
-- `heard_mabel_grimsby` Mabel on Grimsby (routine)
-- `heard_marisol_vey` Marisol on Vey (routine)
-- `heard_grimsby_mabel` Grimsby on Mabel (routine)
-- … and 6 more (`grim query event 'actor == "mabel"'`)
+- `tm_watering_engine` The Watering Engine (story)
+- `tobias_moonflower_vigil` Every Eleven Years (routine)
+- `tobias_moonflower_bloom` Tonight (routine)
+- `tobias_plants_vote` The Greenhouse Votes (routine)
+- `tobias_scholarship_review` The Turnip Board (routine)
+- `nessa_interview_prep` Twenty Years (routine)
+- `nessa_fact_check` Fact-Check (routine)
+- `nessa_quill_loose` The Quill Gets Loose (routine)
+- `heal_tobias_sting` Stung (windfall)
+- `ledger_pie_scoop` The Case of the Missing Pies (routine)
+- `ledger_bram_story` The Prefect's Bribes (routine)
+- `ledger_deadline` Deadline Night (routine)
+- `garden_moonflower` The Moonflower (routine)
+- `tobias_scarecrow` The Scarecrow Project (routine)
+- `tobias_dance_lessons` Two Left Feet (routine)
+- `tobias_storm_greenhouse` Storm Over the Greenhouses (routine)
+- `nessa_headmistress_interview` The Impossible Interview (routine)
+- `nessa_typo` A Catastrophic Typo (routine)
+- `nessa_burnout` The Editor Sleeps (routine)
+- `nudge_quickquill` How's My Quill? (routine)
+- `heard_nessa_isolde` Nessa on the Headmistress (routine)
+- `heard_tobias_mir` Tobias on Mir (routine)
+- `fennick_weather_first` Weather First (routine)
+- `fennick_mandrake_bed` Gerald's Relations (routine)
+- `fennick_good_boots` A Man in Good Boots (routine)
+- `fennick_top_field` Outside the Luck (routine)
+- `almanac_type_case` Backwards and Upside Down (routine)
+- `almanac_first_notice` Lost: One Brown Dog (routine)
+- `almanac_short_page` A Page Short (routine)
+- `tobias_country_barrow` Turnips, Mostly Free (routine)
+- `nessa_country_green` Nothing Ever Happens Here (routine)
+- `fennick_farm_quiet_hour` Turnips and Tomatoes (routine)
+- `tobias_intro` The Lost Boy (windfall)
+- `tobias_homesick` Homesick (routine)
+- `tobias_bad_harvest` The Harvest Failed (routine)
+- `tobias_repays` Every Crown (story)
+- `tobias_godparent` The Mandrake Baby (routine)
+- `tobias_bullied` Tobias and the Prefect (routine)
+- `tobias_confession` A Confession, With Vegetables (milestone)
+- `tobias_picnic` A Picnic in the Orchard (milestone)
+- … and 35 more (`grim query event 'place == "fennick_farm"'`)
 
 ## Lore
 
-- **Pell & Daughters** (`pell_and_daughters`, soft): The village apothecary, with a thousand labelled drawers. Old Pell taught three generations to count drops; his daughters keep the counter now, and he counts aloud behind them. It buys what foragers bring out of the Whisperwood.
-- **Professor Marisol** (`professors`, soft): Professor Marisol teaches Tidecalling and keeps the lake calm on exam days. Professor Vey teaches Illusion and grades on whether you fooled her. Professor Brask teaches Beastcraft and is kinder to animals than to students.
-- **infirmary** (`infirmary`, soft): Sister Amaranth runs the infirmary with warming charms, tonics and no patience for excuses. Lake Fever comes from swimming where you shouldn't; curse-cold comes from worse.
+- **Fennick** (`fennick_farm`, soft): The Fennick farm grows turnips, tomatoes and stubborn children. Tobias's mother runs it alone at harvest, writes weather first and love last, and expects him home after graduation; one year blight nearly ruined them. Tobias studies on an agricultural scholarship whose board reviews his marks in person. The farm lies on the upland side of the valley, outside both villages, past the tarn; a drystone wall at its top field marks where the villages' land begins. Behind the farmhouse is a walled bed of mandrakes, Gerald's relations, each in a hat Mrs Fennick knits in winter. This year a man from the capital has been buying upland farms.
+- **Quill** (`quill_press`, soft): Nessa grew up above her mother's print shop off the market green in the countryside, the Almanac Printer's, which prints the valley's almanac, its notices and its funeral cards. Mrs Quill works the hand press, ink to the elbows. Nessa set type before she could write, and her first story was a lost-dog notice for a dog called Biscuit, who came home. The attic holds a century of almanacs; every seventh year's is a page short, always the harvest page, and Mrs Quill says the old press always did that.
 
 ## Style examples
 
 ```grim
-# content/events/fixtures_2.grim:174
-@event vey_lunch_dare
-title: Fool Me Once
-class: routine
-tone: light
-trigger: social
-actor: vey
-when: rel(vey) >= 5
-weight: 10
-repeat: 3
-art: mask
-tags: social study
-scene: A long hall at lunch, a professor in a theatrical scarf leaning across a table towards a student, a salt cellar between them.
-text: {seen(vey_lunch_dare) > 1: {~Vey again, across your lunch, with the same smile. "We're even," she says, "or I'm ahead. Shall we see?"|"Pudding's in five minutes," says Professor Vey, sitting down. "That's plenty of time to deceive a professor."|Vey drops into the seat opposite with her chin on her hands. "The pudding," she says, "is a custard tart. Probably. Fool me."}|Professor Vey sits down opposite you at lunch, which nobody does. "One trick," she says. "Any trick. Fool me before the pudding and I'll owe you one." She folds her hands and watches you with enormous interest.}
-> left: Try to fool her
-  challenge deceive journeyman:
-    win:
-      rel vey +medium
-      charm +small
-      say: {~You glamour the salt cellar into a pepper pot and leave the pepper pot alone. She picks up the wrong one, tastes it and laughs out loud, and the whole table turns. "Owed," she says. "Owed."|You don't do any magic at all; you only say that you have. She spends the pudding checking everything on the table. "Oh," she says, when she realises. "Oh, that's good."|She smells the trick before she sees it, and you'd planned for that. She claps, once, delighted. "A student who knows about the nose," she says. "Come to my office hours. Bring that."}
-    lose:
-      rel vey +tiny
-      mood -tiny
-      say: {~She sniffs, smiles and taps the real salt cellar without looking. "Lavender," she says. "Your glamours always smell of lavender." She seems to like you more for trying.|"Nearly," she says, which is worse than "no". She takes your pudding as forfeit, and eats it slowly.|She sees it at once and tells you why, in detail, over the pudding. It's the most useful lesson you've had all term.}
-> right: Plead an empty head and eat your lunch
-  mood +tiny
-  rel vey -tiny
-  say: {~"A sensible answer," says Vey, "and a boring one." She steals a roll off your plate as she goes, or seems to. Later you find it still there.|She sighs theatrically and moves on to the next table, where a second-year is already sweating.|"Another time," she says. "I'll know when you're ready. You'll smell of lavender."}
+# content/events/maps/countryside_peers.grim:72
+@event fennick_top_field
+title: Outside the Luck
+pool: fennick_farm_tobias
+when: rel(tobias) >= 12
+tone: eerie
+art: leaf
+scene: A high field divided by an old drystone wall, thick golden barley on the far side, thin patchy barley on the near side, a big young man and a student standing at the wall.
+text: Tobias walks you up to the top field, where the farm meets the valley's land at an old drystone wall. On the far side the barley stands thick and gold. On the Fennick side it's thin, and patchy, and honest. "Seven good years down there," Tobias says. "Every year. Never up here." He puts his big hand flat on the wall. "Ma says the valley's luck is the valley's business."
+> left: Help him clear the stones
+  vigor +small
+  health -tiny
+  say: You pick stones out of the thin side of the wall until your back aches and the sun goes down. It's slow, plain, endless work, and Tobias hums the whole time. "Our luck's this," he says, tipping a basket. "Stones. I don't mind it. It's ours."
+> right: Ask what he thinks it is
+  lore +tiny
+  mood -tiny
+  say: He thinks about it a long time, which is how he thinks about everything. "I think they pay for it," he says at last. "I don't know what with. Nobody down there ever says." The wind goes over the barley on the far side, and none of it bends the way the near side does. You walk back uneasy.
+
+# ---------------- Nessa: the Almanac Printer's ----------------
 ```
 
 ## Rules
@@ -299,7 +165,7 @@ Validators check the first group automatically; the critic (a separate pass, wit
 - **Conflict and climax** (plot and arc cards, and any card where characters clash; `style.md`): the confrontation happens on the page, out loud, each side saying something only they would say (a clash reported afterwards or left to a hint is a fix to raise); the opposition acts, each return bolder than the last; every fight sits beside a way that isn't a fight; a loss costs something real and leaves a way back. In a climax: one card names the companions once, each planted clue or item pays off (and the beat still happens when it was missed), and the reward shows at once.
 - **Checks** (`checks.md`): the difficulty is what you're actually up against (the opponent or the obstacle), not who is on the card or when it shows; no reason counted twice (a strong foe written as `slim`, a coin toss as a high rung); a gamble is on `luck`; grandmaster+ only on story or milestone cards, with `partial:` and a route without the check; a loss that ends the run has `partial:` or `likely`+; the kind fits the action and the skill the obstacle; `using` only when it differs from the kind's default; `exam` only in a course; pure luck is `chance <word>`, and a roll a skill or relationship should move isn't a bare `chance`.
 - **Spell options** (`up[spell]`): the option does what the spell's `desc` says (`content/world/spells.grim`) and is a clean way through the scene; the text and the other options never assume the player knows the spell, so without it the card reads as an ordinary problem. Mana (and a forbidden spell's alignment) is taken automatically; prose never names it.
-- **Repeats** (pool events with `repeat:`; `pools.md`), seen 3–6 times in a run:
+- **Repeats** (pool events with `repeat:`; `pools.md`), seen several times in a run:
   - An "again" line keys on `seen(<own id>) > 1`, not on a counter other cards move; no variant assumes how an earlier showing ended, and every variant of a `say:` shows its option's cost.
   - The variation lines (`{a|b|c}`, `{&…}`, `{~…}`, `{season=…}`, `{final_year: …|…}`) make each showing read differently, and the fourth showing is still welcome: the joke doesn't wear out, nothing hinges on a one-time surprise.
   - Cast roles are re-filled each showing: a sequence that implies the same companion as last time is a bug. Classmate roles are `tagged(<role>, student)`.
