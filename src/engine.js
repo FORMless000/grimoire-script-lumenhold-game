@@ -1078,6 +1078,8 @@
     /* ---------------- Places, arcs, skills (design §6, §10.6, §8.5) ---------------- */
     presentAt(place, slot) {
       slot = slot || (this.s.cur && this.s.cur.slot) || this._slot || '';
+      // On a break, nobody is at a place on another map than yours (new maps, round 2).
+      if (place && this.phaseOf() === 'break' && this.mapOf(place) !== this.currentMap()) return [];
       return Object.keys(this.s.npcs).filter((id) => this.scheduleOf(id).some((x) => x.place === place && (!slot || x.slots.includes(slot)) && this.onSchedule(id, x, slot)));
     }
     // Where a character can be this month (M42): their break schedule on a break, if they have one.
@@ -1092,8 +1094,41 @@
       if (this.phaseOf() !== 'break') return false;
       return Object.keys(this.s.states || {}).some((k) => this.c.states[k] && this.c.states[k].kind === 'plan' && (this.c.states[k].tags || []).includes('away'));
     }
-    // Away for the break (`schedule_break: away`): reachable only by letter (M19).
-    isAway(id) { const d = this.c.npcs[id]; return !!(d && d.schedule_break && d.schedule_break.away && this.phaseOf() === 'break') || this.gone(id) || this.distant(id); }
+    // Away for the break, reachable only by letter (M19): `schedule_break: away`, or (new maps, round 2) nothing in their
+    // break schedule is on the map you're on. One schedule over places on several maps puts a character wherever you
+    // went: at the castle if you stayed, at home in the capital if you went there.
+    isAway(id) {
+      const d = this.c.npcs[id];
+      if (this.gone(id) || this.distant(id)) return true;
+      if (!d || this.phaseOf() !== 'break') return false;
+      if (d.schedule_break && d.schedule_break.away) return true;
+      const map = this.currentMap();
+      return !this.scheduleOf(id).some((x) => this.mapOf(x.place) === map);
+    }
+    // The map a place is on (the term map's id for a place without one).
+    mapOf(place) { const p = this.c.places[place]; return p && p.map ? p.map.map : this.c.game.map_id || 'campus'; }
+    // A map's region: its @map's, else its first place's.
+    mapRegion(map) {
+      const m = (this.c.maps || {})[map]; if (m && m.region) return m.region;
+      const p = Object.values(this.c.places).find((x) => x.map && x.map.map === map);
+      return p ? p.region || null : null;
+    }
+    // Away is away (new maps, round 2): while you're off campus, a card is dealt only if it belongs where you are: a
+    // letter; a card at a place on this map, or of this map's region (`region:`); a card of your plan, or of a track
+    // whose place is on this map; or one tagged with an @game `abroad:` tag (things that happen anywhere). Anything else
+    // waits until you're back. On campus everything belongs except region cards and cards at places on other maps.
+    belongsHere(e) {
+      if (e.trigger === 'letter') return true;
+      const map = this.currentMap();
+      // a card at a place belongs on that place's map, both ways: a capital scene queued for later waits for the capital
+      if (e.place) return this.mapOf(e.place) === map;
+      if (!this.offCampus()) return !e.region;
+      if (e.region && String(e.region).split(/[\s,]+/).includes(this.mapRegion(map))) return true;
+      if (e.plan && String(e.plan).split(/[\s,]+/).some((p) => this.s.states['plan_' + p])) return true;
+      if (e.track && this.c.tracks[e.track] && this.c.tracks[e.track].place && this.mapOf(this.c.tracks[e.track].place) === map) return true;
+      const abroad = this.c.game.abroad || [];
+      return (e.tags || []).some((t) => abroad.includes(t));
+    }
     // Distant (`distant: true` on the @npc, feedback 2026-10-15): a pen pal. Never on the map or `around()`, fills no
     // cast role and no `actor: any` (letters included), and reaches you only through their own cards, as letters.
     distant(id) { const d = this.c.npcs[id]; return !!(d && d.distant); }
@@ -1599,7 +1634,8 @@
             const qc = st.chanceWord ? this.likelihoodP(st.chanceWord) : st.chance;   // `chance <word>` (checks.md)
             if (qc != null) carry.chance = qc;
             if (qc != null && (st.now || (!st.window && !st.byMonth && st.delay && Math.round(this.value(st.delay, ctx.actor)) <= 0)) && this.rand() * 100 >= qc) break;
-            if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: ev, actor, src: 'queued', ...carry });
+            // `now: true`: a consequence of the card just played, which plays wherever you are (the away hold skips it)
+            if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: ev, actor, src: 'queued', now: true, ...carry });
             else if (st.window || st.byMonth) {
               // A window (design §5.3): the chance rises each month (1 / months left), forced on the last one.
               const to = st.window ? s.turn + st.window.to : s.turn + (((st.byMonth - this.monthIndex()) + this.months.length) % this.months.length || this.months.length);
@@ -1607,7 +1643,7 @@
               s.queue.push({ id: ev, actor, due: from, until: to, src: 'queued', ...carry, ...(st.tagged ? { tagged: st.tagged } : {}), ...(st.pool ? { pool: st.pool } : {}) });
             } else {
               const delay = st.delay ? Math.max(0, Math.round(this.value(st.delay, ctx.actor))) : 1;
-              if (delay === 0) s.deck.push({ id: ev, actor, src: 'queued' });
+              if (delay === 0) s.deck.push({ id: ev, actor, src: 'queued', now: true });
               else s.queue.push({ id: ev, actor, due: s.turn + delay, ...carry, ...(st.tagged ? { tagged: st.tagged } : {}), ...(st.pool ? { pool: st.pool } : {}) });
             }
             break;
@@ -2065,6 +2101,12 @@
         // `defer:` (playtest 2, I6): while it holds, a pushed card goes back to the queue for next month instead of showing.
         if (e.defer && !item.force && this.test(e.defer, item.actor || null)) {
           s.queue.push({ id: item.id, actor: item.actor || null, due: s.turn + 1, track: item.track, cast: item.cast, src: 'queued' });
+          continue;
+        }
+        // Away is away (new maps, round 2): a card that doesn't belong where you are waits (a queued one comes back next
+        // month; a drawn or auto one is simply not dealt). A card queued `now` by the one just played always plays.
+        if (!item.force && !item.now && !this.belongsHere(e)) {
+          if (item.src === 'queued' || item.src === 'arc') s.queue.push({ id: item.id, actor: item.actor || null, due: s.turn + 1, track: item.track, cast: item.cast, src: 'queued' });
           continue;
         }
         // A pushed card of a closed arc never shows (a queued follow-up included).

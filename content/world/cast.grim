@@ -23,7 +23,7 @@ interests: duelling fire books
 stats: arcana 34 lore 22 alchemy 8 charm 20 vigor 28 guile 12 wealth 5
 schedule: duel_hall@afternoon,evening refectory@noon library@night:60
 # Breaks at the Vaneshade estate (X7): reachable only by letter.
-schedule_break: away
+schedule_break: duel_hall@afternoon,evening library@night:40 vaneshade_house@noon,afternoon,evening capital_gardens@noon:40 capital_theatre@evening:30
 relations: kael:-10 bram:5 nessa:-5
 voice: Clipped and formal; sarcastic when hurt. Never says "please" first, never admits to being tired, apologises by doing something useful.
 desc: Brilliant, impatient and used to winning. She treats everyone as either a rival or furniture — and is quietly lonely about it.
@@ -46,7 +46,7 @@ stats: arcana 12 lore 14 alchemy 26 charm 18 vigor 30 guile 4 wealth 1
 schedule: greenhouses@morning,afternoon refectory@noon,evening stables@evening:60
 gone_when: flag(tobias_went_home) and since(tobias_bad_harvest) < 2
 # Breaks on the family farm (X7): reachable only by letter.
-schedule_break: away
+schedule_break: greenhouses@afternoon stables@evening:60 fennick_farm@noon,afternoon,evening home_market@evening:30
 relations: maud:20 bram:-15 mir:10
 voice: Warm, slow and earnest, with farm sayings and long stories about goats. Apologises too much; laughs from the belly.
 desc: Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to answer.
@@ -67,7 +67,7 @@ traits: dreamy distant perceptive kind
 interests: prophecy painting tarot stars
 stats: arcana 20 lore 32 alchemy 10 charm 16 vigor 8 guile 14 wealth 3
 schedule: observatory@evening,night lakeshore@afternoon library@morning:50
-schedule_break: observatory@evening,night lakeshore@afternoon
+schedule_break: observatory@evening,night lakeshore@afternoon oracle_rooms@noon,afternoon capital_cathedral@evening:40
 relations: kael:10 lyra:5
 voice: Half-sentences, finished in another week. Calm, vague, then suddenly exact about something that hasn't happened yet.
 desc: Speaks in half-sentences, as if finishing the other half in a different week. Often right. Unsettlingly often.
@@ -89,7 +89,7 @@ interests: maps locks cards money
 stats: arcana 16 lore 12 alchemy 14 charm 30 vigor 18 guile 38 wealth 1
 schedule: courtyard@noon,afternoon gargoyle_passage@night gargoyle_passage@midnight:40 gilded_newt@evening
 # Nowhere he'd go back to (X7): the Newt and the passages over breaks.
-schedule_break: gilded_newt@afternoon,evening gargoyle_passage@night gargoyle_passage@midnight:50
+schedule_break: gilded_newt@afternoon,evening gargoyle_passage@night gargoyle_passage@midnight:50 ashby_lane@evening,night capital_fish_market@noon:40 capital_docks@afternoon:40
 relations: bram:-30 nessa:10
 voice: Quick, teasing, deflecting with jokes; calls you "saint" when you're being good. When he means something, the jokes stop and so does he.
 desc: Knows every locked door in the academy and has opinions about all of them. Owes money to at least three people.
@@ -113,7 +113,7 @@ traits: chaotic curious stubborn funny
 interests: machines clocks flying
 stats: arcana 24 lore 20 alchemy 30 charm 14 vigor 10 guile 12 wealth 3
 schedule: workshop@afternoon,evening,night refectory@noon:50 lecture_tower@morning
-schedule_break: workshop@afternoon,evening,night
+schedule_break: workshop@afternoon,evening,night ten_clockworks@noon,afternoon,evening capital_bazaar@noon:30
 relations: tobias:10
 voice: Fast, enthusiastic, full of technical tangents and exclamation marks. Talks to machines more gently than to people. Says "probably" a lot.
 desc: Smells permanently of solder and ozone. Has built a clockwork owl, a self-stirring cauldron and at least one small fire.
@@ -156,7 +156,7 @@ traits: nosy idealistic overworked bold
 interests: writing gossip justice
 stats: arcana 14 lore 26 alchemy 8 charm 30 vigor 12 guile 24 wealth 2
 schedule: ledger_office@afternoon,evening,night courtyard@noon gilded_newt@evening:25
-schedule_break: ledger_office@afternoon village@evening:50
+schedule_break: ledger_office@afternoon village@evening:50 almanac_printers@noon,afternoon home_market@evening:40
 relations: bram:-20 corvin:10 lyra:-5
 voice: Rapid, bossy, headline-shaped. Treats every conversation as an interview; goes very quiet when it's off the record.
 desc: Runs the student paper with a quill that writes on its own. Everyone is a story; some are just not finished yet.
@@ -179,7 +179,7 @@ interests: rules duelling
 stats: arcana 26 lore 18 alchemy 10 charm 14 vigor 32 guile 20 wealth 4
 schedule: courtyard@morning,noon duel_hall@evening library@afternoon:50
 # A prefect who stays on campus through every break (X7).
-schedule_break: courtyard@afternoon duel_hall@evening
+schedule_break: courtyard@afternoon duel_hall@evening hollis_house@noon,afternoon,evening capital_gardens@noon:40
 relations: tobias:-15 corvin:-30 nessa:-20 lyra:5
 voice: Loud, officious, rule-quoting; demerits as punctuation. Under it, his father's voice. When he's honest, he's gruff and brief.
 desc: A prefect of your own year, with a ledger of demerits and a fondness for writing your name in it.
@@ -335,7 +335,7 @@ traits: dry gentle stubborn brave
 interests: animals flying history
 stats: arcana 52 lore 48 alchemy 30 charm 16 vigor 70 guile 28 wealth 2
 schedule: stables@morning,afternoon,evening great_hall@noon
-schedule_break: stables@morning,afternoon,evening
+schedule_break: stables@morning,afternoon,evening field_station@noon:40
 relations: amaranth:15 maud:20 thorne:5
 voice: Speaks to creatures in full sentences and to students in half ones. Every story ends with a bite and a moral. Laughs once a term, loudly.
 desc: Teaches Beastcraft & Flight and is kinder to animals than to students, though the gap closes for anyone who mucks out without being asked.
@@ -358,7 +358,7 @@ interests: theatre painting cards
 stats: arcana 60 lore 50 alchemy 20 charm 78 guile 70 vigor 22 wealth 3
 schedule: lecture_tower@morning,afternoon great_hall@noon
 # Breaks with the theatre season in the capital (X7).
-schedule_break: away
+schedule_break: capital_theatre@evening,night
 relations: thorne:5 marisol:20
 voice: Amused, theatrical, a little too observant. Asks questions she already knows the answer to, to see what you'll do. Delighted by anyone who fools her.
 desc: Teaches Illusion & Glamour and grades on whether you fooled her. She is very hard to fool, and very generous to the few who manage it.

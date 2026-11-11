@@ -1,3 +1,7 @@
+## New maps, round 2: away is away (November 11)
+
+Tracker: `docs/maps-plan.md`, "Round 2". Off campus, only what belongs there happens: letters, the cards of the map's places and region, the plan's cards, and cards tagged `abroad` (migration 0053). A campus card waits for your return. Peers follow the map: at the castle if you stay, at home in their city or valley if you go there, letters otherwise (Lyra lives at Vaneshade House in the capital). Home pins read ⌂ Home, and the arrival screen names your home and who else is around. New format (schema v1, additive): event `region:`, `@place home:`, `@game abroad:`. 18 new pins wait with placeholder cards for the batches that fill them (peers' homes, shops and services, the tide caves, heists, "The Good Year", region street cards).
+
 ## New maps, part 1: the framework (November 10)
 
 The plan, decisions, ledger and batch log are in `docs/maps-plan.md`. The breaks gain two maps, the countryside (the old `home` map, redrawn) and the capital (`city`), with Port Calder as the capital's harbour quarter.

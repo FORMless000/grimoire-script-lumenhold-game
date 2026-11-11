@@ -41,7 +41,7 @@
     // now and then (I18n.randomName). No first name of a named character or a word the content uses as a name.
     'title.names.she': 'Elowen, Isla, Maren, Briony, Clemency, Delphine, Eira, Fenella, Greer, Hesper, Imogen, Iona, Linnea, Mae, Morwenna, Sabine, Philippa, Rosalind, Saoirse, Tegan, Wilhelmina, Yseult, Aveline, Beatrix, Cordelia, Edith, Esme, Flora, Gwendolyn, Hazel, Ivy, Lettice, Lilias, Mirabel, Nell, Opal, Petra, Rhiannon, Rosamund, Thea, Verity, Winifred, Agnes, Dulcie, Effie, Honor, Leda, Clover, Bettany, Sidony',
     'title.names.he': 'Theo, Ezra, Alaric, Ambrose, Barnaby, Caspian, Cedric, Cormac, Crispin, Declan, Rupert, Emrys, Evander, Felix, Gideon, Godric, Hamish, Ignatius, Jasper, Lachlan, Lucan, Magnus, Malachy, Merrick, Oisin, Osric, Percival, Peregrine, Piers, Quentin, Rafferty, Roderick, Rufus, Silas, Tristan, Ulric, Valentine, Wystan, Augustin, Desmond, Fergus, Gareth, Leopold, Matthias, Niall, Anselm, Benedict, Hugo, Lorcan, Dorian',
-    'title.names.they': 'Wren, Ash, Rowan, Sable, Marlo, Juniper, Avery, Bryn, Ellis, Emery, Finch, Indigo, Jude, Kit, Linden, Morgan, Quinn, Robin, Sage, Shay, Sparrow, Tarn, Vale, Wynn, Arden, Blair, Briar, Cass, Darcy, Aubrey, Lark, Sorrel, Teagan, Rumer, Perry, Ainsley, Merritt, Remy, Tansy, Reese',
+    'title.names.they': 'Wren, Ash, Rowan, Sable, Marlo, Juniper, Avery, Bryn, Ellis, Emery, Finch, Indigo, Jude, Kit, Linden, Morgan, Quinn, Robin, Sage, Shay, Sparrow, Teal, Vale, Wynn, Arden, Blair, Briar, Cass, Darcy, Aubrey, Lark, Sorrel, Teagan, Rumer, Perry, Ainsley, Merritt, Remy, Tansy, Reese',
     'title.names.world_she': 'Adaeze, Amaya, Anahí, Chiyo, Esi, Farida, Haeun, Imani, Itzel, Leilani, Mei, Mirela, Parisa, Priya, Saanvi, Sakura, Shirin, Sigrún, Solveig, Tala, Thandiwe, Yara, Zainab, Zarina, Ximena, Aigerim, Nilufar, Ngaio, Aroha, Malia',
     'title.names.world_he': 'Arjun, Bao, Chidi, Dawit, Emeka, Haruto, Ilyas, Inti, Kwame, Kofi, Mateo, Nikolai, Oren, Rustam, Santiago, Tariq, Yusuf, Zoltan, Ruslan, Ikaika, Kaito, Anwar, Bayani, Matiu, Temir, Hemi, Bohdan, Farhan, Jun, Thabo',
     'title.names.world_they': 'Akira, Hikaru, Rei, Yuki, Noor, Kalani, Tenzin, Ayodele, Nima, Dara, Lumi, Rumi, Sami, Amani, Chidera, Eun, Sasha, Ariya, Sefa, Ola',
@@ -228,7 +228,7 @@
     'map.title': '{month} · Year {year} · {phase}',
     // The arrival screen (new maps, 2026-11-10): src/arrival-ui.js
     'arrive.kicker': 'You arrive', 'arrive.back': 'Back at last', 'arrive.title': 'Somewhere new', 'arrive.backTitle': 'The castle',
-    'arrive.stay': 'Staying:', 'arrive.lodging': 'Where will you stay?', 'arrive.cost': '{n} crowns', 'arrive.free': 'Free', 'arrive.monthly': '{n} more next month',
+    'arrive.stay': 'Staying:', 'arrive.home': 'Home:', 'arrive.people': 'Also here:', 'arrive.lodging': 'Where will you stay?', 'arrive.cost': '{n} crowns', 'arrive.free': 'Free', 'arrive.monthly': '{n} more next month',
     'arrive.work': 'Work going:', 'arrive.workHint': 'Ask when you visit: nobody hires from a distance.',
     'arrive.go': 'Look around', 'arrive.goLodging': 'Settle in', 'arrive.goBack': 'Back to the term',
     'arrive.goldUp': 'You came back {n} crowns richer.', 'arrive.goldDown': 'The time away cost you {n} crowns.', 'arrive.items': 'You brought back: {items}.',
@@ -247,7 +247,7 @@
     'map.open': 'open',
     'map.hinted': 'not yet found',
     'map.festival': 'festival this {slot}',
-    'map.here': 'here: {names}',
+    'map.here': 'here: {names}', 'map.home': 'Home',
     'map.new': 'something new',
     'map.shiftsLeft': 'Work · {n} left',
     'map.shiftsDone': 'Work · done this term',

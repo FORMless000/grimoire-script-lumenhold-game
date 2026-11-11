@@ -130,6 +130,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `exam` | text |  |
 |  | `spread` | text |  |
 |  | `spark_cooldown` | text |  |
+|  | `abroad` | text |  |
 |  | `off_shift` | text |  |
 |  | `appeal` | text |  |
 |  | `afford` | text |  |
@@ -265,6 +266,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `ramp` | structured |  |
 |  | `per` | text |  |
 |  | `defer` | text |  |
+|  | `region` | text |  |
 |  | `specializes` | text |  |
 |  | `pool` | text |  |
 |  | `thread` | text |  |
@@ -336,6 +338,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `draws` | text |  |
 |  | `always` | text |  |
 |  | `deprecated` | text |  |
+|  | `home` | text |  |
 | `@track id` | `kind` | text |  |
 |  | `name` | text | yes |
 |  | `skill` | structured |  |

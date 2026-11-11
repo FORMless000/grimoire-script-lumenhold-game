@@ -219,3 +219,33 @@ The generic `home_market` becomes the market village and `home_fields` the field
 - 2026-11-10 F1: lint 0 errors, zh-CN 100%, tests pass; the golden games change (118 of 120: bots now sometimes travel, and capital-born ones go home to the capital), baseline refreshed.
 - 2026-11-10 K1+K2 (`build/batches/K1K2-countryside`): the critic rejected round 1 (17 issues: repeat lines that assumed an earlier choice, night scenes without `slot:`, a hedge-born intern meeting her grandmother as a stranger, locals greeted as visitors, a duplicate market day, double field work, count contradictions), then round 2 (an `always:` group made the neighbours' favours open every fields visit); accepted round 3. The fix pattern for repeats: a flag set by the option, read by the line. Lint 0, zh-CN 100%, verify green; golden baseline refreshed.
 - 2026-11-10 K3 (`build/batches/K3-moors`): the critic rejected round 1 (14 issues: the door's "Not yet" was another card's punchline, three spells used against their canon, repeats that went stale, summer scenes in winter, the moor's "drove road" confusable with the Marsh's haunted drovers' road, lines borrowed from the Whisperwood, band 2 able to run out of cards); accepted round 2 with two engine-confirmed bugs fixed before commit (a flag set before the say that read it; band 2 still one card short). Lint 0, zh-CN 100%, verify green; golden baseline refreshed (random bots sent home 10 → 12, social and cautious unchanged).
+
+## Round 2: away is away, a bustling capital, a wide countryside, peers at home (2026-11-11)
+
+The approved plan is at `~/.claude/plans/jaunty-gathering-galaxy.md`; its order is F2 (engine), P1 capital peers, P2 countryside peers, C1 capital homes, S1 bazaar and arcade, C2 club/theatre/gardens/bridges, C3 docks/fish market/coaching yard/cathedral/Printing Row/Undercroft/Rookery, C4 tide caves, C5 heists, K4 "The Good Year", K5 countryside places and counters, T1 region street cards, lodging nights and letters, then balance and a push. It folds in the rows above still open.
+
+**Why.** An audit of 30 bot games found campus cards on the away maps: visits fell back to campus ambient cards through `draws:` tags; Hollow Star beats, intro beats, Maud's tea, Grisk's collectors and feud cards fired wherever you were; confessions came from peers back at the castle. Lyra and Tobias were `schedule_break: away` (gone even if you stayed); the other peers stayed at the castle even when you went to their city.
+
+**Decisions.**
+- Off campus a card plays only if it belongs (grimoire-script §6c, "Away is away"); a held queued or arc card waits a month, anything else is dropped. `abroad` (`@game abroad:`) marks the few that happen anywhere; migration 0053 tags them from the audit list: `night_sleep`, `break_plan`, `track_promotion`, `track_warning`, `job_term_review`, `grade_appeal`, `crisis_collapse`, `tamsin_second_letter`, `starfall_at_home`, `y3_offer_letter`, and the pools `year_recap`, `origin_funding_auto_story`, `career_letter`. It moves the four bloomer home cards from campus to `region: countryside`.
+- Event `region:` (a card of a map with no single pin) and `@place home:` (the pin reads ⌂ Home; the arrival screen names it and who is here) are schema v1 additions.
+- Break schedules span the maps: Lyra (Vaneshade House), Mir (the Ten Clockworks), Corvin (Ashby Lane), Seraphine (the Oracle's Rooms), Bram (Hollis House) in the capital; Tobias (the Fennick farm) and Nessa (the Almanac Printer's) in the countryside; Vey at the theatre, Brask at the Field Station. Kael, Ilse and Tamsin are at the castle if you stay, letters otherwise.
+- Home pins: the townhouse (noble), the counting house (merchant), the crew's loft (street), the cottage (scholar), the Marsh (hedge).
+- 18 new pins (11 capital, 7 countryside), each with a placeholder card until its batch.
+
+| Step | State | Notes |
+|---|---|---|
+| F2 away is away | done (2026-11-11) | engine hold, map-aware schedules and `presentAt`, region pools, home pins, arrival "Home:" / "Also here:", migration 0053, 18 new pins and placeholders, landmark art, `test/away.test.js` |
+| P1 capital peers | | |
+| P2 countryside peers | | |
+| C1 capital homes | | |
+| S1 bazaar and arcade | | |
+| C2 club, theatre, gardens, bridges | | |
+| C3 the rest of the capital | | |
+| C4 tide caves | | |
+| C5 heists | | |
+| K4 The Good Year | | |
+| K5 countryside places and counters | | |
+| T1 region cards, lodging nights, letters | | |
+
+- 2026-11-11 F2: lint 0 errors, zh-CN 100%, verify green. The golden games change (119 of 120: campus cards wait out the breaks away, so every run that leaves the castle reshuffles); the endings stay spread and the plot beats still play; baseline refreshed. The title screen's name pool lost "Tarn" (now a place) for "Teal".

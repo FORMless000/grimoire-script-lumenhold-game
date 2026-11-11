@@ -480,6 +480,7 @@ desc: The Crown's Office of Unseen Affairs. It has no sign, no address, and a ve
 name: The Family Townhouse
 region: capital
 map: city 420,165
+home: has(origin_noble)
 kind: plan
 discover: has(origin_noble)
 open: morning noon afternoon evening night
@@ -546,6 +547,7 @@ desc: Port Calder's wharves, where the river meets the sea: barges, cranes, gull
 name: The Counting House
 region: capital
 map: city 615,600
+home: has(origin_merchant)
 kind: plan
 discover: has(origin_merchant)
 open: morning noon afternoon evening night
@@ -557,12 +559,110 @@ desc: The family firm's house on the wharf: ledgers below, beds above, and a cle
 name: The Crew's Loft
 region: capital
 map: city 845,425
+home: has(origin_street)
 kind: plan
 discover: has(origin_street)
 open: morning noon afternoon evening night
 art: house
 draws: home danger
 desc: A loft above a chandler's in the old streets of Port Calder: hammocks, a stove, and people who knew you before you had a wand.
+
+# ---------------- The capital, round 2 (2026-11-11; docs/maps-plan.md): the peers' homes and the busy streets ----------------
+# A peer's home is found once you've met them, and they're there when you visit the capital on a break (their
+# `schedule_break:` names it beside their castle places).
+
+@place vaneshade_house
+name: Vaneshade House
+region: capital
+map: city 456,88
+discover: met(lyra)
+open: noon afternoon evening
+art: crown
+desc: Black stone on the Crescent, a black seal over the door, and a footman who looks at your boots first. Lyra lives here, in a manner of speaking.
+
+@place oracle_rooms
+name: The Oracle's Rooms
+region: capital
+map: city 656,82
+discover: met(seraphine)
+open: noon afternoon
+art: eye
+desc: Where the Oracle of Vell sits for the court in season: a hushed upper floor, a queue of anxious people in good coats, and Seraphine in a window seat.
+
+@place hollis_house
+name: Hollis House
+region: capital
+map: city 725,128
+discover: met(bram)
+open: noon afternoon evening
+art: house
+desc: A narrow, very correct house on the uptown side, with a polished plate on the door and a father inside who was once head boy.
+
+@place capital_gardens
+name: The Royal Gardens
+region: capital
+map: city 805,212
+open: morning noon afternoon
+art: flower
+desc: Gravel walks, a fountain, hothouses full of things that shouldn't grow this far north, and everyone uptown walking slowly to be seen.
+
+@place capital_cathedral
+name: The Cathedral of the Lamp
+region: capital
+map: city 345,238
+open: morning noon afternoon evening
+art: candle
+desc: A spire you can see from the sea, a lamp that has burned for four hundred years, bells that tell the whole city the time, and a crypt of archives under it all.
+
+@place capital_printing_row
+name: Printing Row
+region: capital
+map: city 548,382
+open: morning noon afternoon evening
+art: paper
+desc: A street of presses, ink and shouting, where the capital's broadsheets are set by hand and anything said by noon is news by dusk.
+
+@place capital_bridges
+name: The Lamplighters' Bridges
+region: capital
+map: city 486,440
+open: afternoon evening night
+art: lantern
+desc: The three old bridges, crowded with buskers, hawkers and couples, and lit every dusk by the lamplighters' guild one lamp at a time.
+
+@place ten_clockworks
+name: The Ten Clockworks
+region: capital
+map: city 96,520
+discover: met(mir)
+open: noon afternoon evening
+art: gear
+desc: A workshop and a house in one, among the works chimneys: forty clocks all ticking, a family at the long bench, and Mir's old room above the shop.
+
+@place capital_coaching_yard
+name: The Coaching Yard
+region: capital
+map: city 328,560
+open: morning noon afternoon evening night
+art: map
+desc: Where the coaches come in from the countryside and the north: horses, porters, travellers with all their luggage, and people who make a living off travellers.
+
+@place capital_fish_market
+name: The Fish Market
+region: capital
+map: city 641,492
+open: morning noon afternoon
+art: wave
+desc: On the quay from dawn: barrows, gulls, shouting, the night's catch on ice, and the best gossip in Port Calder before it's breakfast anywhere else.
+
+@place ashby_lane
+name: Ashby Lane
+region: capital
+map: city 762,470
+discover: met(corvin)
+open: morning noon afternoon evening night
+art: door
+desc: A crooked lane in Port Calder where the houses lean together and everyone knows the Ashbys. Corvin doesn't talk about it. Now you know why, or will.
 
 # ---------------- The countryside (map: home; new maps, 2026-11-10) ----------------
 # Two villages on one road through fen, moor and ridge. A scholar or a hedge origin goes home here; anyone may travel
@@ -593,6 +693,7 @@ desc: A huddle of cottages round a mill and a small grey chapel. The wheel turns
 name: The Family Cottage
 region: countryside
 map: home 382,470
+home: has(origin_scholar)
 kind: plan
 discover: has(origin_scholar)
 open: morning noon afternoon evening night
@@ -604,6 +705,7 @@ desc: The kitchen table, the creaky stair, the smell of whatever is in the oven.
 name: The Marsh
 region: countryside
 map: home 170,545
+home: has(origin_hedge)
 open: morning noon afternoon evening night
 art: leaf
 draws: nature mystery
@@ -661,3 +763,63 @@ closed_when: not member(intern_expedition)
 open: afternoon evening night
 art: planet
 desc: Tents on the high end of the ridge, where the air is thin and the stars are close enough to argue with.
+
+# ---------------- The countryside, round 2 (2026-11-11): wider country ----------------
+
+@place fennick_farm
+name: The Fennick Farm
+region: countryside
+map: home 300,150
+discover: met(tobias)
+open: morning noon afternoon evening
+art: leaf
+desc: Up on the upland side, past the tarn, outside the two villages: turnips, tomatoes, a mother who writes the weather first and love last, and Tobias in his oldest boots.
+
+@place almanac_printers
+name: The Almanac Printer's
+region: countryside
+map: home 665,350
+discover: met(nessa)
+open: morning noon afternoon evening
+art: paper
+desc: A crooked shop off the market green with a hand press in the window. It prints the valley's almanac, its notices and its funeral cards, and Nessa grew up above it.
+
+@place countryside_ford
+name: The Ford
+region: countryside
+map: home 445,275
+open: morning noon afternoon evening
+art: wave
+desc: Where the road meets the river: stepping stones when it's low, a ferryman's punt when it's not, and a ferryman who never seems to cross himself.
+
+@place hollin_coppice
+name: Hollin Coppice
+region: countryside
+map: home 497,562
+open: morning noon afternoon evening
+art: tree
+desc: A wood cut and grown again for longer than anyone remembers: charcoal burners' smoke, bluebells in season, and trees marked in chalk by a woodward nobody hired.
+
+@place countryside_tarn
+name: The Tarn
+region: countryside
+map: home 165,250
+open: morning noon afternoon evening
+art: moon
+desc: A small black lake high on the upland, cold even in summer, so still on calm days that the sky looks deeper in it than it does overhead.
+
+@place countryside_quarry
+name: The Quarry
+region: countryside
+map: home 97,412
+open: morning noon afternoon
+art: rune
+desc: An old stone quarry on the valley's western edge, its faces full of fossils and its echo full of opinions.
+
+@place drovers_inn
+name: The Drovers' Inn
+region: countryside
+map: home 141,318
+open: noon afternoon evening night
+art: cup
+desc: The inn on the high road west, where drovers, tinkers and anybody the coaching inn wouldn't have end up: cheap beer, a long table, and a fight most nights.

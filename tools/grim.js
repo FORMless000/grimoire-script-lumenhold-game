@@ -870,6 +870,17 @@ function lint(opts = {}) {
     for (const id of md.lodging || []) if (!content.states[id]) A.problems.push({ level: 'error', where: rel(md.file) + ':' + md.line, msg: '@map ' + md.id + ': lodging "' + id + '" is not a @state' });
     if (md.region && !((content.vocab.regions || {}).values || []).includes(md.region)) A.problems.push({ level: 'error', where: rel(md.file) + ':' + md.line, msg: '@map ' + md.id + ': region "' + md.region + '" is not in @vocab regions' });
   }
+  // Away is away (new maps, round 2): an event's `region:` names the region of a map other than the term map (a region
+  // card is drawn only there); `@game abroad:` lists tags some card carries; a place's `home:` is a condition.
+  const TERM = content.game.map_id || 'campus';
+  const AWAY_REGIONS = new Set(Object.values(content.maps || {}).filter((md) => md.id !== TERM && md.region).map((md) => md.region));
+  for (const e of Object.values(content.events)) {
+    if (!e.region) continue;
+    for (const rg of String(e.region).split(/[\s,]+/).filter(Boolean)) if (!AWAY_REGIONS.has(rg)) A.problems.push({ level: 'error', where: rel(e.file) + ':' + e.line, msg: 'event "' + e.id + '": region "' + rg + '" is not the region of a break map (' + [...AWAY_REGIONS].join(', ') + ')' });
+    if (e.place) A.problems.push({ level: 'error', where: rel(e.file) + ':' + e.line, msg: 'event "' + e.id + '": a card has a place or a region, not both' });
+  }
+  for (const tag of content.game.abroad || []) if (!Object.values(content.events).some((e) => (e.tags || []).includes(tag))) A.problems.push({ level: 'warn', where: '@game', msg: '@game abroad: no card is tagged "' + tag + '"' });
+  for (const pl of Object.values(content.places || {})) if (pl.home && !pl.home.ast) A.problems.push({ level: 'error', where: rel(pl.file) + ':' + pl.line, msg: 'place "' + pl.id + '": home: must be a condition' });
   const by = { error: [], warn: [], info: [] };
   A.problems.forEach((p) => by[p.level].push(p));
   by.error.forEach((p) => console.error(C.r + 'error ' + C.x + p.where + ': ' + p.msg));

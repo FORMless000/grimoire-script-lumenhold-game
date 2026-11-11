@@ -73,7 +73,7 @@
     /* ---------------- index (built once) ---------------- */
     directorIndex() {
       if (this._dir) return this._dir;
-      const c = this.c, ix = { legacyTrack: {}, byPlace: {}, byTrack: {}, byPlan: {}, slotBound: [], ambient: [], social: [], arc: [], personal: {}, letter: [], ramp: [], byRecipePool: {} };
+      const c = this.c, ix = { legacyTrack: {}, byPlace: {}, byTrack: {}, byPlan: {}, byRegion: {}, slotBound: [], ambient: [], social: [], arc: [], personal: {}, letter: [], ramp: [], byRecipePool: {} };
       // Pools that a day recipe names as a slot's source (threads 1): their cards are drawn by that slot alone.
       const recipes = [c.game.day_term, c.game.day_break, c.game.day_last, ...Object.values(c.states || {}).map((d) => d.day)];
       const recipePools = new Set([].concat(...recipes.filter(Boolean)).map((r) => r.source).filter((x) => this.isPoolSource(x)));
@@ -95,6 +95,8 @@
         else if (track) (ix.byTrack[track] = ix.byTrack[track] || []).push(e);
         // `plan:` may name several plans (`plan: home home_city`): one card shared by every home.
         else if (e.plan) for (const pl of String(e.plan).split(/[\s,]+/).filter(Boolean)) (ix.byPlan[pl] = ix.byPlan[pl] || []).push(e);
+        // A region's cards (new maps, round 2): drawn only on that region's map, never in the campus pools.
+        else if (e.region) for (const rg of String(e.region).split(/[\s,]+/).filter(Boolean)) (ix.byRegion[rg] = ix.byRegion[rg] || []).push(e);
         else if (e.trigger === 'social') ix.social.push(e);
         else if (e.slot) ix.slotBound.push(e);
         else ix.ambient.push(e);
@@ -153,7 +155,7 @@
         const here = found ? [...new Set(slots.flatMap((sl) => this.presentAt(p.id, sl).filter((id) => s.npcs[id] && s.npcs[id].met)))] : [];
         const ix = this.directorIndex();
         const news = found && (ix.byPlace[p.id] || []).some((e) => !s.seen[e.id] && this.eligible(e, new Set()) && this.test(e.when, null));
-        places.push({ id: p.id, name: p.name, x: p.map.x, y: p.map.y, kind: p.kind || 'public', art: p.art || null, hint: hinted ? p.hint || '' : null, state: found ? (only || open.some(Boolean) ? 'open' : 'closed') : 'hinted', open, hours: p.open || null, desc: only ? p.desc || '' : undefined, region: p.region || null,
+        places.push({ id: p.id, name: p.name, home: !!(found && p.home && this.test(p.home, null)), x: p.map.x, y: p.map.y, kind: p.kind || 'public', art: p.art || null, hint: hinted ? p.hint || '' : null, state: found ? (only || open.some(Boolean) ? 'open' : 'closed') : 'hinted', open, hours: p.open || null, desc: only ? p.desc || '' : undefined, region: p.region || null,
           // Breaks pause term obligations (B6): the place is still marked as yours, without what's due.
           // A job whose shifts are all done this term (I1) says so.
           track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' || this.c.tracks[p.track].kind === 'club' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due },
@@ -215,7 +217,10 @@
       const always = (p) => String(p.always || '').split(/[\s|,]+/).filter(Boolean);
       const work = Object.values(this.c.places || {}).filter((p) => p.map && p.map.map === to && !p.deprecated && s.places[p.id] && always(p).some((id) => this.c.events[id] && (this.c.events[id].tags || []).includes('work')))
         .map((p) => ({ id: p.id, name: p.name }));
-      return Object.assign(base, { stay: pd ? { id: plan, name: pd.name, desc: pd.desc || '' } : null, lodging, work, held: Object.keys(s.states || {}).find((k) => (def.lodging || []).includes(k)) || null });
+      // Your home on this map (`@place home:`), and the people you know who are here too (new maps, round 2).
+      const homeP = Object.values(this.c.places || {}).find((p) => p.map && p.map.map === to && !p.deprecated && p.home && this.test(p.home, null));
+      const people = Object.keys(s.npcs).filter((id) => s.npcs[id].met && !this.isAway(id)).map((id) => ({ id, name: this.c.npcs[id].short || String(this.c.npcs[id].name || id).split(/[ ·]/)[0] }));
+      return Object.assign(base, { stay: pd ? { id: plan, name: pd.name, desc: pd.desc || '' } : null, home: homeP ? { id: homeP.id, name: homeP.name } : null, people, lodging, work, held: Object.keys(s.states || {}).find((k) => (def.lodging || []).includes(k)) || null });
     },
     // Confirms the arrival screen: remembers the map, and a traveller's lodging is gained (its `on_add:` pays for it). A
     // lodging you can't pay for falls back to the first you can; with none named, the first the map lists that you can.
@@ -348,9 +353,10 @@
     // `letters`: only letter cards (M19): someone who reaches you while one of you is away writes instead.
     drawWith(id, used, dayItems, extra, letters) {
       const ix = this.directorIndex(), cands = [];
-      const pool = letters ? ix.letter.filter((x) => x.actor === id || (!this.distant(id) && (x.per || x.cast))) : (ix.personal[id] || []).concat(ix.social.filter((x) => x.per));
+      const pool = letters ? ix.letter.filter((x) => x.actor === id || (!this.distant(id) && (x.per || x.cast))) : (ix.personal[id] || []).concat(ix.social.filter((x) => x.per), this.offCampus() ? [].concat(...Object.values(ix.byRegion)).filter((x) => x.per || x.cast) : []);
       for (const e of pool) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
+        if (!letters && !this.belongsHere(e)) continue;   // away, only what belongs on this map (new maps, round 2)
         if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;
         const fit = this.timeFit(e); if (!fit) continue;
         for (const c of this.boundCandidates(e, id)) { const sc = c.w * fit * this.novelty(e) * this.variety(e, dayItems) * ((ix.personal[id] || []).includes(e) ? 2 : 1); if (sc > 0) cands.push({ ...c, w: sc }); }
@@ -676,8 +682,10 @@
       // Away on a plan tagged `away` (an internship, M16): no campus pools. Social and world cards come from the
       // plan's own pool and, when the plan's `map_id:` is a track kind, your track of that kind's events (the host's),
       // and nobody from campus comes calling.
+      // New maps, round 2: on a break map the region's own cards (`region:`) fill the slots too, street life in place of
+      // campus life.
       const away = this.offCampus(), hostKind = away && this.trackKinds().has(this.planMap()) ? this.planMap() : null;
-      const awayPool = away ? [].concat(ix.byPlan[plan.replace(/^plan_/, '')] || [], ...Object.entries(s.tracks || {}).filter(([, t]) => hostKind && t.kind === hostKind && t.status === 'member').map(([id]) => ix.byTrack[id] || [])) : null;
+      const awayPool = away ? [].concat(ix.byPlan[plan.replace(/^plan_/, '')] || [], ix.byRegion[this.mapRegion(this.currentMap())] || [], ...Object.entries(s.tracks || {}).filter(([, t]) => hostKind && t.kind === hostKind && t.status === 'member').map(([id]) => ix.byTrack[id] || [])) : null;
       const poolOf = (source) => (away && source !== 'special' ? awayPool
         : source === 'social' ? ix.social
         : source === 'special' ? ix.slotBound.filter((e) => e.slot === r.slot)
@@ -760,7 +768,11 @@
             const t = !off && p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
             const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => (!e.rank || e.rank <= s.tracks[t].rank + 1) && names(e)), used, day.concat(items), { place, track: t, prio: 'track' }))
               || this.draw((ix.byPlace[place] || []).filter(names), used, day.concat(items), { place, prio: 'ambient' })
-              || (!r.opened && this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' }));
+              // the fallback: on the term map, old tag-only ambient cards that the place `draws:`; on a break map, the
+              // region's own cards (new maps, round 2: campus life never wanders onto another map)
+              || (!r.opened && (this.mapOf(place) === (this.c.game.map_id || 'campus')
+                ? this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' })
+                : this.draw((ix.byRegion[p.region] || []).filter(names), used, day.concat(items), { place, prio: 'ambient' })));
             if (it) items.push(it);
           }
           // Track 1 (design §5.5): the people here. Being where they are warms them; sometimes a card with one of them.
@@ -817,7 +829,8 @@
           if (calls >= (brk ? FRIENDS.capBreak : FRIENDS.cap)) break;
           const p = Math.min(FRIENDS.maxP, this.pull(id) / 100) * (brk ? 0.5 : 1);
           if (p <= 0 || this.rand() >= p) continue;
-          const it = this.drawWith(id, used, day.concat(items), { prio: 'friend', src: 'friend' }, away || this.isAway(id));
+          // New maps, round 2: someone on the map you're on may come and find you there; anyone elsewhere writes.
+          const it = this.drawWith(id, used, day.concat(items), { prio: 'friend', src: 'friend' }, this.isAway(id));
           if (it) { items.push(it); withToday.add(id); calls++; }
         }
       }

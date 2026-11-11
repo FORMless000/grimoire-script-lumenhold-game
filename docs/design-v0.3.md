@@ -362,6 +362,8 @@ v0.3 ships castle, home, work on campus and internships.
 
 **The break maps** (new maps, 2026-11-10; `docs/maps-plan.md`): the countryside (map `home`: two villages, the fen, the moors, the ridge) and the capital (map `city`: uptown, the river, Port Calder's docks). Home follows the origin: noble, merchant and street in the capital, scholar and hedge in the countryside. Six internship hosts sit on the two maps (Thornwick keeps its own). Reaching another map shows an arrival screen (where you are, where you stay, which places have work going); work is offered only by visiting the place that has it, never from the break menu. Coming back to the castle shows a return screen.
 
+**Away is away** (new maps round 2, 2026-11-11). Off campus, only what belongs there happens: letters, the cards of the places and region of the map you are on, your plan's cards, and the few things that happen anywhere (sleep, the break menu, year recaps, career and funding letters). A campus scene waits for your return; the main plot pauses while you're away. Peers keep a break schedule across the maps: they stay at the castle if you do, and are at home in their own city or valley when you go there (a countryside peer is never in the capital, and the reverse); otherwise they write. Your home pin reads as Home.
+
 ### 4.4 Festivals and fixed beats
 
 - Fixed beats live in `@timeline` as dated `auto` events.

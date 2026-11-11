@@ -247,3 +247,277 @@ text: The country wakes slowly: a cart in the lane, mist on the fields, a rooste
 > right: Walk out early
   health +tiny
   say: {~You walk the lane before anyone is up. The fields are very quiet, and the scarecrows are very well dressed.|An early walk, wet boots, and the whole valley to yourself.}
+
+# ---------------- Round 2 (2026-11-11): the new pins, until their batches land ----------------
+
+@event vaneshade_house_quiet_hour
+title: The Black Seal
+pool: maps_placeholder
+place: vaneshade_house
+art: crown
+scene: A tall black-stone house on a curving uptown street, a black wax seal carved in stone over its door, a footman on the step.
+text: The footman at Vaneshade House looks at your boots, then at your face, then at your boots again. Miss Vaneshade, he says, is at her practice and not receiving.
+> left: Leave your name
+  renown -tiny
+  mood +tiny
+  say: {~He takes your name on a silver tray as if it might stain it. Somewhere upstairs, a window opens.|You leave your name. The door shuts with the soft, expensive sound of a door that has shut on better people.}
+> right: Walk on along the Crescent
+  mood +tiny
+  say: {~You walk the curve of the Crescent, all black stone and white steps, and feel underdressed in a pleasant, distant way.|You walk on. Behind you, someone in an upstairs window lets a curtain fall.}
+
+@event oracle_rooms_quiet_hour
+title: The Queue on the Stairs
+pool: maps_placeholder
+place: oracle_rooms
+art: eye
+scene: A hushed upper staircase lined with anxious, well-dressed petitioners waiting on a bench outside a closed double door.
+text: The stairs to the Oracle's Rooms are full of people in good coats pretending not to be nervous. A clerk takes names. Nobody speaks above a whisper, in case the future is listening.
+> left: Wait with them a while
+  lore +tiny
+  mood -tiny
+  say: {~You wait an hour. A man comes out white-faced and a woman comes out laughing. Neither will say what they heard.|You wait. The clerk calls a name that isn't yours, and then, oddly, looks straight at you.}
+> right: Leave them to it
+  mood +tiny
+  say: {~You go back down into the street, where the future is somebody else's business.|You leave. On the stairs, a duchess is crying quietly into a very good glove.}
+
+@event hollis_house_quiet_hour
+title: The Brass Plate
+pool: maps_placeholder
+place: hollis_house
+art: house
+scene: A narrow, immaculate uptown house with a polished brass nameplate on the door and perfectly straight window boxes.
+text: Hollis House has the straightest window boxes in the street and a brass plate polished until it squints back at you. Someone inside is practising scales on a piano, very correctly.
+> left: Knock
+  charm +tiny
+  mood -tiny
+  say: {~A maid answers, says the family is at luncheon, and shuts the door with great precision.|Nobody answers, but the piano stops, and starts again exactly where it left off.}
+> right: Pass by
+  mood +tiny
+  say: {~You pass by. The piano follows you to the corner, exactly in time.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}
+
+@event capital_gardens_quiet_hour
+title: The Promenade
+pool: maps_placeholder
+place: capital_gardens
+art: flower
+scene: A gravel promenade between clipped hedges and a fountain in a city park, fashionable walkers strolling slowly, a hothouse glittering behind.
+text: Everyone uptown walks the Royal Gardens at this hour, slowly, in their best, nodding to the people they've decided to nod to. The fountain is the only thing in a hurry.
+> left: Promenade with them
+  renown +tiny
+  mood -tiny
+  say: {~You walk the loop twice, nodding at the right moments. A dowager nods back, then asks a companion who you are.|You promenade. Your feet hurt and three people now know your face.}
+> right: Sit by the fountain
+  mood +small
+  say: {~You sit on the fountain's edge and watch the city pretend to relax.|The spray drifts over you. For a moment the capital is quiet.}
+
+@event capital_cathedral_quiet_hour
+title: Under the Lamp
+pool: maps_placeholder
+place: capital_cathedral
+art: candle
+scene: The vast dim nave of a cathedral, a single great lamp burning high above the altar, a few worshippers and visitors in the pews.
+text: The cathedral swallows the city's noise at the door. High over the altar the Lamp burns, as it has for four hundred years, and the light it gives is warmer than it has any right to be.
+> left: Sit under the Lamp
+  mood +small
+  health -tiny
+  say: {~You sit a long while on a cold pew and think about nothing useful. It's the best hour of the day, stiff back and all.|You sit until the bells ring the hour overhead and the whole building hums with it, and your knees have gone numb.}
+> right: Read the old memorials
+  lore +tiny
+  say: {~Brass plates in the floor, names worn smooth by four centuries of feet. One is a Lumenhold headmaster's.|You read the memorials along the aisle: admirals, bakers, a famous duellist, a dog.}
+
+@event capital_printing_row_quiet_hour
+title: Hot Off the Press
+pool: maps_placeholder
+place: capital_printing_row
+art: paper
+scene: A narrow street of print shops, presses thumping behind open doors, a boy running past with a stack of fresh broadsheets.
+text: Printing Row thumps like a heart. Every door has a press behind it and every press is printing something somebody will regret. A boy runs past shouting tomorrow's headline today.
+> left: Buy a broadsheet
+  gold -tiny
+  lore +tiny
+  say: {~The ink comes off on your fingers. The news is a scandal you've never heard of, involving a duke and a swan.|You read it on a step. Somebody uptown is suing somebody else for a portrait.}
+> right: Watch the presses
+  mood +tiny
+  say: {~A printer lets you watch from the door. The press bangs, the sheet lifts, and the city's morning is made.|You watch letters set backwards, very fast, by a girl who never looks down.}
+
+@event capital_bridges_quiet_hour
+title: Lamps on the Bridges
+pool: maps_placeholder
+place: capital_bridges
+art: lantern
+scene: An old stone bridge over a river at dusk crowded with buskers and walkers, a lamplighter on a ladder lighting the lamps one by one.
+text: At dusk the lamplighters come out along the bridges with their long poles, and the lamps go on one by one above the buskers, the hawkers and the couples who have come to watch them do it.
+> left: Drop a coin for a busker
+  gold -tiny
+  mood +small
+  say: {~A fiddler plays you a jig for a penny, and a whole tune for the look on your face.|You toss a coin to a juggler with five burning torches. He catches it with his teeth.}
+> right: Watch the lamps come on
+  mood +tiny
+  say: {~One by one, all the way down the river, until the water is full of lamps too.|You watch the last lamp lit. The lamplighter tips his hat to it, as if it had done him a favour.}
+
+@event ten_clockworks_quiet_hour
+title: Forty Clocks
+pool: maps_placeholder
+place: ten_clockworks
+art: gear
+scene: A cluttered clockmaker's workshop full of ticking clocks on every wall, a long workbench covered in tiny gears and brass tools.
+text: The Ten Clockworks' shop has forty clocks on its walls, and they all strike the hour within a breath of each other, which in this family counts as a disagreement.
+> left: Look at the clocks
+  arcana +tiny
+  mood -tiny
+  say: {~One clock runs backwards. A small card under it says NOT FOR SALE (A HOBBY).|You lean close to the smallest clock. It's built into a thimble, and it's right.}
+> right: Step back out
+  mood +tiny
+  say: {~You leave before the hour strikes. Behind you, forty clocks argue about it.|You go out into the works smoke. The ticking follows you down the street.}
+
+@event capital_coaching_yard_quiet_hour
+title: Coaches In
+pool: maps_placeholder
+place: capital_coaching_yard
+art: map
+scene: A busy cobbled coaching yard, horses steaming, porters hauling trunks off the roof of a mud-spattered coach, travellers milling.
+text: A coach from the north rolls in spattered to the windows, and the yard fills with trunks, horses, porters and people trying to remember which of the trunks is theirs.
+> left: Lend a porter a hand
+  vigor +tiny
+  health -tiny
+  say: {~You hoist a trunk off the roof. It's full of books, or bricks. The porter shares his tip with you.|You carry a hatbox the size of a small sheep. Its owner tips you a coin and a stern look.}
+> right: Watch the travellers
+  lore +tiny
+  say: {~A man in furs, a girl with a caged owl, a whole family of fiddlers. Everyone arriving looks lost and hopeful.|You watch them come in. Somebody always gets off looking for someone who isn't there.}
+
+@event capital_fish_market_quiet_hour
+title: The Morning Catch
+pool: maps_placeholder
+place: capital_fish_market
+art: wave
+scene: A noisy fish market on a stone quay at dawn, barrows of fish on ice, gulls wheeling, fishwives shouting prices.
+text: The fish market has been open since before the sun and has no intention of being polite about it. The catch is on ice, the gulls are on the roofs and the fishwives are on everyone.
+> left: Buy a hot fish pasty
+  gold -tiny
+  health +tiny
+  say: {~Hot, peppery and wrapped in yesterday's broadsheet. You eat it on the quay with the gulls watching.|The pasty seller calls you "my love" and gives you the one with extra pastry.}
+> right: Listen to the gossip
+  lore +tiny
+  say: {~Who's courting whom, whose boat came in light, which warehouse had the customs men in. Port Calder knows everything by breakfast.|You learn three scandals and the price of eels before you've finished walking the quay.}
+
+@event ashby_lane_quiet_hour
+title: The Crooked Lane
+pool: maps_placeholder
+place: ashby_lane
+art: door
+scene: A narrow crooked lane in an old harbour town, houses leaning together overhead, washing strung between the windows, a door with a scuffed step.
+text: Ashby Lane is so narrow the houses lean on each other for company. Washing hangs across it. A woman on a step looks at your academy coat and says, "One of Corvin's?" as if Corvin collected people.
+> left: Say you're a friend of his
+  charm +tiny
+  mood -tiny
+  say: {~"Poor you," she says, and laughs, and then doesn't. "Tell him his grandad's chair's still here."|"A friend," she repeats. "That's new." She goes in before you can ask what she means.}
+> right: Just walk through
+  mood +tiny
+  say: {~You walk the lane end to end. Two children follow you, then lose interest.|You walk on. A window above you shuts as you pass, firmly.}
+
+@event fennick_farm_quiet_hour
+title: Turnips and Tomatoes
+pool: maps_placeholder
+place: fennick_farm
+art: leaf
+scene: A small upland farm on a windy hillside, rows of turnips and staked tomatoes, a stone farmhouse with a smoking chimney.
+text: The Fennick farm sits up on the windy side of the valley, all turnip rows and tomato stakes and a farmhouse built low against the weather. A goose sees you coming and makes its views known.
+> left: Lend a hand in the rows
+  vigor +tiny
+  health -tiny
+  say: {~You weed a row and get chased by the goose. A voice from the house calls that you can stay for tea.|You stake tomatoes in the wind. Your hands smell green for a day.}
+> right: Lean on the gate
+  mood +tiny
+  say: {~From the gate you can see the whole valley, the villages very small, the moor very big.|You lean on the gate and the goose leans on the other side, both of you thinking.}
+
+@event almanac_printers_quiet_hour
+title: The Almanac Press
+pool: maps_placeholder
+place: almanac_printers
+art: paper
+scene: A cramped village print shop with a hand press in the window, stacks of thin almanacs, funeral cards and notices pegged to dry on strings.
+text: The printer's off the market green smells of ink and damp paper. This year's almanacs are stacked by the door, thin and cheerful: sowing days, saints' days, a good harvest forecast in very confident type.
+> left: Buy an almanac
+  gold -tiny
+  lore +tiny
+  say: {~Tides, sowing days, a remedy for warts. Every year in it is a good one.|You buy one. Flicking through on the step, you find a page number missing, as if a page had been printed and taken out.}
+> right: Watch the press
+  mood +tiny
+  say: {~A woman with ink to the elbow works the press without looking up, and asks if you're the one from the academy.|The press thumps. Notices go up on the strings to dry: a sale of land, a lost dog, a wedding.}
+
+@event countryside_ford_quiet_hour
+title: The Stepping Stones
+pool: maps_placeholder
+place: countryside_ford
+art: wave
+scene: A wide shallow river ford with stepping stones, a flat-bottomed punt tied to a post, an old ferryman sitting on the bank.
+text: At the ford the river runs wide and shallow over stepping stones, and an old ferryman sits by his punt for the days it doesn't. He's watching the water as if it owes him something.
+> left: Cross on the stones
+  vigor +tiny
+  health -tiny
+  say: {~You make it across with one wet boot. The ferryman nods as if he'd bet on the boot.|Halfway over a stone rocks. You don't fall, but your heart does.}
+> right: Pay for the punt
+  gold -tiny
+  mood +tiny
+  say: {~He poles you across without a word and holds out his hand for a coin. He looks at it a long time before he pockets it.|The punt is slow and dry and the ferryman hums the counting rhyme the whole way over.}
+
+@event hollin_coppice_quiet_hour
+title: Charcoal Smoke
+pool: maps_placeholder
+place: hollin_coppice
+art: tree
+scene: A coppiced woodland of thin straight trees and old stumps, blue charcoal smoke rising from a mound in a clearing.
+text: Hollin Coppice is a wood of straight young trees growing from old stumps, cut and grown again since before the villages. Blue smoke rises from a charcoal mound in a clearing, and somebody has chalked a mark on every seventh trunk.
+> left: Forage along the rides
+  alchemy +tiny
+  health -tiny
+  say: {~Wood sorrel, a handful of mushrooms and a scratch from a bramble you'll be noticing all week.|You fill your pockets. A charcoal burner watches from his smoke and doesn't wave.}
+> right: Count the chalk marks
+  lore +tiny
+  mood -tiny
+  say: {~Every seventh tree, all the way along. When you go back to check, the first mark is on the eighth.|You count them as far as the clearing, and stop counting there.}
+
+@event countryside_tarn_quiet_hour
+title: The Still Water
+pool: maps_placeholder
+place: countryside_tarn
+art: moon
+scene: A small black mountain lake high on open upland, perfectly still, reflecting the sky and clouds, a student on the stony shore.
+text: The tarn lies up on the upland in a cup of stone, black and so still that the clouds in it look deeper than the clouds above. Nothing lives on its shore but wind.
+> left: Skim stones
+  mood +small
+  say: {~Seven skips. Then six. The rings go out to the far side and the tarn takes a long time to be still again.|You skim stones until your arm aches. The tarn swallows each one politely.}
+> right: Sit and look into it
+  lore +tiny
+  mood -tiny
+  say: {~You look into the water a long time. The sky down there is a little different from this one, and you can't say how.|You sit by the tarn until you're cold. It's the quietest place you've ever been.}
+
+@event countryside_quarry_quiet_hour
+title: The Echo
+pool: maps_placeholder
+place: countryside_quarry
+art: rune
+scene: An abandoned stone quarry with tall pale rock faces streaked with fossils, rubble below, a student calling out with cupped hands.
+text: The old quarry's walls are full of fossils, shells from a sea that left before the valley had a name. The echo here is famous: call out, and the quarry answers.
+> left: Call out
+  mood +tiny
+  say: {~You shout your name. The quarry says it back three times, the last time slightly wrong.|You call "hello". The echo answers "hello", and then, after a long wait, "again?"}
+> right: Hunt for fossils
+  lore +tiny
+  health -tiny
+  say: {~You chip out a perfect little shell and bark your knuckles doing it.|A spiral fossil the size of your palm. You carry it all the way back and give it a name.}
+
+@event drovers_inn_quiet_hour
+title: The Long Table
+pool: maps_placeholder
+place: drovers_inn
+art: cup
+scene: A rough low-beamed roadside inn full of drovers, tinkers and travellers at one long table, a dog asleep by the fire.
+text: The Drovers' Inn has one long table, one fire and one rule, which nobody can remember. Drovers, tinkers and a man with a bear on a rope share it with whoever comes in.
+> left: Sit at the long table
+  charm +tiny
+  gold -tiny
+  say: {~You buy a round you can't afford and hear six stories, four of them true.|A tinker mends your bootlace for nothing and tells your fortune for a penny. It's mostly about weather.}
+> right: Have a quiet drink by the fire
+  mood +tiny
+  say: {~The dog by the fire makes room for you, grudgingly. The cider is rough and warm.|You sit by the fire and let the noise go past. Somebody starts a song nobody finishes.}

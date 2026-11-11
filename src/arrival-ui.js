@@ -28,7 +28,9 @@
       if ((g.items || []).length) rows.push(t('arrive.items', { items: g.items.join(t('list.sep')) }));
       body = rows.length ? '<ul class="arrive-ledger">' + rows.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul>' : '';
     } else {
-      if (a.stay) body += '<p class="arrive-stay"><span class="label">' + esc(t('arrive.stay')) + '</span> ' + esc(a.stay.name) + (a.stay.desc ? '<small>' + esc(a.stay.desc) + '</small>' : '') + '</p>';
+      if (a.home) body += '<p class="arrive-stay arrive-home"><span class="label">' + esc(t('arrive.home')) + '</span> ' + esc(a.home.name) + '</p>';
+      else if (a.stay) body += '<p class="arrive-stay"><span class="label">' + esc(t('arrive.stay')) + '</span> ' + esc(a.stay.name) + (a.stay.desc ? '<small>' + esc(a.stay.desc) + '</small>' : '') + '</p>';
+      if (a.people && a.people.length) body += '<p class="arrive-stay arrive-people"><span class="label">' + esc(t('arrive.people')) + '</span> ' + esc(a.people.map((x) => x.name).join(', ')) + '</p>';
       if (lodging) body += '<p class="arrive-sub">' + esc(t('arrive.lodging')) + '</p><div class="opt-grid">' + lodging.map(tile).join('') + '</div>';
       if ((a.work || []).length) body += '<p class="arrive-work"><span class="label">' + esc(t('arrive.work')) + '</span> ' + esc(a.work.map((w) => w.name).join(t('list.sep'))) + '<small>' + esc(t('arrive.workHint')) + '</small></p>';
     }

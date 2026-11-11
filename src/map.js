@@ -85,7 +85,8 @@
     }
     function marker(p) {
       const title = p.state === 'hinted' ? (p.hint || t('map.undiscovered')) : p.name + (p.visited ? ' — ' + t('map.visitedNow') : p.festLater ? ' — ' + t('map.festivalSoon', { slot: t('slot.' + p.festLater).toLowerCase() }) : p.state === 'closed' ? ' — ' + t('map.closedNow') : '') + (p.festival.length ? ' — ' + t('map.festival', { slot: t('slot.' + p.festival[0].slot) }) : '');
-      const cap = (p.state !== 'hinted' ? '<span class="mk-label">' + esc(p.name) + '</span>' : '') + badge(p) + pins(p);
+      // Home (new maps, round 2): the pin reads Home, with a house, and the place's own name beneath.
+      const cap = (p.state !== 'hinted' ? (p.home ? '<span class="mk-label mk-home"><b>⌂ ' + esc(t('map.home')) + '</b> ' + esc(p.name) + '</span>' : '<span class="mk-label">' + esc(p.name) + '</span>') : '') + badge(p) + pins(p);
       return '<button class="' + markerClass(p) + '" data-id="' + esc(p.id) + '" style="left:' + (100 * p.x / W) + '%;top:' + (100 * p.y / H) + '%" title="' + esc(title) + '" aria-label="' + esc(title) + '">' +
         '<span class="mk-dot">' + (p.state === 'hinted' ? '?' : Art.icon(p.art || 'star', 18)) + (p.news ? '<i class="mk-news">✦</i>' : '') + '</span>' +
         (cap ? '<span class="mk-cap">' + cap + '</span>' : '') + '</button>';
@@ -97,7 +98,7 @@
       if (p.present.length) states.push(t('map.here', { names: p.present.map((id) => (o.npcs[id] || {}).short || ((o.npcs[id] || {}).name || id).split(' ')[0]).join(', ') }));
       if (p.news) states.push(t('map.new'));
       const n = view.slots.length > 1 ? picks.map((x, i) => (x === p.id ? t('slot.' + view.slots[i]) : null)).filter(Boolean) : [];
-      return '<button class="ml-row ' + markerClass(p) + '" data-id="' + esc(p.id) + '"><b>' + esc(p.state === 'hinted' ? '?' : p.name) + '</b><span>' + esc(states.join(' · ')) + '</span>' + (n.length ? '<em>' + esc(n.join(', ')) + '</em>' : '') + '</button>';
+      return '<button class="ml-row ' + markerClass(p) + '" data-id="' + esc(p.id) + '"><b>' + esc(p.state === 'hinted' ? '?' : (p.home ? '⌂ ' + t('map.home') + ' · ' : '') + p.name) + '</b><span>' + esc(states.join(' · ')) + '</span>' + (n.length ? '<em>' + esc(n.join(', ')) + '</em>' : '') + '</button>';
     }
     function chips() {
       return view.slots.map((sl, i) => {

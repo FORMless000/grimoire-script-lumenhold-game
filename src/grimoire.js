@@ -230,6 +230,9 @@
       'spread',
       // the card pushed when spark crosses @balance spark_follow's cooldown mark (M37)
       'spark_cooldown',
+      // the tags of cards that happen anywhere: while you're away from campus, only these (and cards that belong where
+      // you are) are dealt (new maps, round 2)
+      'abroad',
       // the hint card on the first visit to a job's place after the term's last shift (playtest 2, I1)
       'off_shift',
       // the card pushed after a failed course, in that course's context (playtest 2, N4)
@@ -294,6 +297,9 @@
       'per',
       // `defer: <expr>`: while true, a pushed card waits in the queue a month at a time instead of showing (I6)
       'defer',
+      // `region: capital`: a card of a break map's region (new maps, round 2): drawn on that map's visits and away slots,
+      // never on campus; several regions may be listed
+      'region',
       // `specializes: <event>` (E1): this card (`actor: <npc>`) plays in place of that generic card whenever it is drawn
       // for that character, and shares its once / repeat bookkeeping
       'specializes',
@@ -325,7 +331,8 @@
     vocab: { props: ['values', 'desc'], effects: [] },
     // `deprecated: <place>` (E11): merged into that place. Kept so old saves load; never shown, offered or discovered, and
     // a save's visits, discoveries and picks move to the survivor when it loads.
-    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws', 'always', 'deprecated'], effects: [] },
+    // `home: <expr>` (new maps, round 2): while it holds, the place is your home (the map labels it Home)
+    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws', 'always', 'deprecated', 'home'], effects: [] },
     // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
     // meeting them silently.
     // `standard:` a course's rung at each level (checks.md), else @balance course_standard
@@ -364,10 +371,10 @@
   };
   // What a pool or a thread may give its cards (a bundle): where and when they're drawn, how often, how they look.
   const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order', 'arc'];
-  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
+  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed', 'home']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread', 'boost', 'lodging']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread', 'boost', 'lodging', 'abroad']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
   // The check ladder (docs/authoring/checks.md): rank words, each with a - and + rung; odds-by-nature, luck and drift words.

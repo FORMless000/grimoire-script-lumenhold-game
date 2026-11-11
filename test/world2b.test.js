@@ -526,17 +526,17 @@ test('a festival place is closed until its festival (I5)', () => {
 test('defer: a suspicion card waits until you are back on campus (I6)', () => {
   const eng = new Engine(content);
   quiet(() => { eng.newGame({ seed: 11, name: 'T' }); });
-  eng.s.turn = 5; eng.s.cur = null; eng.s.states.plan_home = { left: null };
-  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
+  eng.s.turn = 5; eng.s.cur = null; eng.s.day = null; eng.s.states.plan_home = { left: null };
+  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }, { id: 'night_sleep', src: 'auto' }];
   const r = quiet(() => eng.advance());
   assert.ok(!(r.kind === 'card' && r.view.id === 'night_suspicion'), 'not shown while away');
   assert.ok(eng.s.queue.some((q) => q.id === 'night_suspicion' && q.due === eng.s.turn + 1), 'back in the queue for next month');
   // It waits out a break at the castle too (its detention needs a term to serve), and shows in term.
-  delete eng.s.states.plan_home; eng.s.cur = null; eng.s.queue = [];
-  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
+  delete eng.s.states.plan_home; eng.s.cur = null; eng.s.day = null; eng.s.queue = [];
+  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }, { id: 'night_sleep', src: 'auto' }];
   const r2 = quiet(() => eng.advance());
   assert.ok(!(r2.kind === 'card' && r2.view.id === 'night_suspicion'), 'not shown in a break');
-  eng.s.turn = 7; eng.s.cur = null; eng.s.queue = [];
+  eng.s.turn = 7; eng.s.cur = null; eng.s.day = null; eng.s.queue = [];
   eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
   assert.equal(quiet(() => eng.advance()).view.id, 'night_suspicion', 'shown on campus in term');
 });

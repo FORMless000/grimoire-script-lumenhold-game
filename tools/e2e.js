@@ -65,9 +65,15 @@ async function playthrough(browser, lang) {
       else { const deflect = await p.$('.parley-layer [data-deflect]:not([disabled])'); if (deflect) await deflect.click(); else await p.click('.parley-layer [data-confront]'); }
       await p.waitForTimeout(80); continue;
     }
-    if (await p.$('#deck .card, .opt, #mapGo, #contBtn, #beginMonth, #again, #fightLayer')) idle = 0;
+    if (await p.$('#deck .card, .opt, #mapGo, #arriveGo, #contBtn, #beginMonth, #again, #fightLayer')) idle = 0;
     if (await p.$('#again')) { ended = true; break; }
     if (await p.$('#beginMonth')) { n.month++; await scan(); await p.click('#beginMonth'); await p.waitForTimeout(80); continue; }
+    // The arrival and return screens (new maps): a traveller's lodging tiles are .opt, so pick one first; then go on.
+    if (await p.$('#arriveGo')) {
+      n.menu++; await scan();
+      const o = await p.$$('.arrive-lodging:not([disabled])'); if (o.length) { await o[steps % o.length].click(); await p.waitForTimeout(80); }
+      await p.click('#arriveGo'); await p.waitForTimeout(200); continue;
+    }
     if (await p.$('#mapGo')) { n.map++; await scan(); if (!(await mapPick(p, steps))) break; await p.waitForTimeout(200); continue; }
     if (await p.$('#shopBuy')) {   // a shop (type: shop): its wares are .opt too, but only Buy or Leave goes on
       n.menu++; await scan();
