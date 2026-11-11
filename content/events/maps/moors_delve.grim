@@ -1,0 +1,589 @@
+# ============================================================
+#  The moors delve (new maps, 2026-11-10; docs/maps-plan.md, batch K3): past the third cairn the moor goes on longer
+#  than it should. Card by card, deeper with each one you get past, and turn back whenever you like; what you carry out
+#  (the haul) is sold at the market village or kept for study. The Whisperwood's pattern
+#  (content/events/whisperwood/delve.grim), shorter: three bands and the door in the hill.
+#
+#  Counters, reset on each entry: moor_depth (how deep), moor_haul (what you carry), moor_grace (falls you can survive:
+#  1, +1 with the hedge-witch's rue in your pocket, +1 for someone born in the valley). moor_deepest persists.
+#  Bands: 1 at depth 1–2 (the cairns, apprentice), 2 at 3–4 (the bog roads, journeyman), 3 at 5–6 (the hollow hill,
+#  adept); depth 7 is the door in the hill, shut. "The Good Year" (K4) opens it.
+#
+#  Every delve card is `thread: moor_delve`, tagged `moor`, and gates its band in `when`. Getting past one runs
+#  `moor_depth += 1` and `next`. Left always turns back (`moor_way_home`, the payout). A graced loss queues
+#  `moor_stumble` (grace, health and haul pay for it); without grace it's `moor_lost`. Fights are registered in
+#  combat/setup/foes.mjs. The moor's oddities belong to the valley's own secret; nothing here touches the Hollow Star.
+# ============================================================
+
+# ---------------- The moor by day ----------------
+
+@pool countryside_moors_routine
+place: countryside_moors
+class: routine
+repeat: 4
+weight: 10
+tags: nature
+
+@event moor_peat_cutters
+title: The Peat Banks
+pool: countryside_moors_routine
+tone: light
+art: leaf
+tags: nature social
+scene: Peat-cutters in shirtsleeves cutting dark wet turves from a long bank on open moorland, stacks of drying peat behind them, a student watching.
+text: {~The peat-cutters are working the long bank below the first cairn, slicing turves as neat as bread and stacking them to dry. Every seventh turf they cut a little cross into before they set it down.|The peat-cutters are at the long bank, and one of them holds out a spare spade to you, eyebrows up.|The cutters are resting on the bank with bread and cold tea. They make room for you, and ask {at_home(): after your family|where you're lodging}.} {season == "winter": The bank steams in the cold.|Larks go up from the heather all round.}
+> left: Cut turves with them
+  vigor +tiny
+  health -tiny
+  say: {~You cut eleven turves, badly, and get peat to the elbows and a crick in your back. They praise every one. You notice none of yours is the seventh.|Your back aches by noon. A cutter shows you how to lean on the spade, and the work goes easier.|You cut until your hands blister. When you ask how long they've cut this bank, the cutters talk about the weather.}
+> right: Ask about the moor
+  lore +tiny
+  say: {~"Past the third cairn it goes on," says the eldest. "Don't go on with it." The others laugh, and then don't.|They tell you the bog roads are older than the villages, and the cairns older than the roads. Nobody knows who built the hill.|"Keep the cairns on your left going out," a cutter says, "and on your right coming back. And come back."}
+
+@event moor_bilberries
+title: Bilberries
+pool: countryside_moors_routine
+tone: warm
+when: season != "winter"
+art: leaf
+tags: nature
+scene: A student kneeling among low bilberry bushes on a sunny moorland slope, purple-stained fingers, a tin half full, the valley far below.
+text: {The slope above the road is blue with bilberries, and nobody else is picking them.|The bilberry slope again, and still nobody picking. The shepherds say they're for the birds.|You know the best patch now, below a split rock where the berries are fat as thumbnails.}
+> left: Fill a tin
+  health +tiny
+  mood +tiny
+  gold -tiny
+  say: {You fill the tin and your mouth. Your fingers are purple for two days. You buy a pie dish at the market for them, which seems only right.|An hour of picking in the sun, with the whole valley below you and the larks going up. You buy cream for them in the village.|You eat as many as you keep. The tin of cream from the inn costs more than the tin of berries is worth, and it doesn't matter.}
+> right: Just sit in the sun
+  mood +small
+  health -tiny
+  say: {You sit in the heather and do nothing for an hour, and get sunburnt on one side.|You watch the shadows of clouds cross the valley. The wind turns cold all at once, and you walk back stiff.|You lie back and doze. When you wake, there's a sheep standing over you, and your neck is stiff.}
+
+# ---------------- The edge, the way home, and falls ----------------
+
+# The delve's start: after the moor's routine card on a visit (order: last), once a month.
+@pool countryside_moors_routine_repeat1
+place: countryside_moors
+class: routine
+repeat: 1
+tags: nature
+order: last
+
+@event moor_edge
+title: Past the Third Cairn
+pool: countryside_moors_routine_repeat1
+tone: eerie
+art: paw
+tags: danger
+scene: A tall grey cairn on open moorland, a sheep track running past it into rising fog, a student standing beside the cairn looking on.
+text: {moor_deepest == 0: A shepherd on the road tells you to stay this side of the third cairn, then walks off before you can ask why. Past it, the heather goes on, and the fog is coming up in the hollows, unhurried.|{~The third cairn, and past it the moor going on longer than it should.|The third cairn. Past it the wind changes, as if at a line.|Fog in the hollows past the third cairn, and the heather waiting.}} {flag(moor_drove_road): You know where the shepherds' trod leaves the sheep track.|}
+> left: Stay this side
+  say: {~You touch the cairn and turn back. The moor is quite big enough from here.|Not today. You watch the fog fill the hollows from the road, which is the sensible place to watch it from.|You stay this side. A sheep watches you not go, and seems satisfied.}
+> right: Go on past it
+  hint: A delve: press on card by card, turn back any time.
+  moor_haul = 0
+  moor_grace = 1
+  if flag(marsh_rue):
+    moor_grace += 1
+  if at_home():
+    moor_grace += 1
+  if flag(moor_drove_road):
+    moor_depth = 3
+  else:
+    moor_depth = 1
+  queue any in moor_delve now
+  say: {flag(moor_drove_road): You find the shepherds' trod where the shepherd showed you, and follow it straight out past the easy ground.|{at_home() and moor_deepest == 0: You go past the third cairn the way you did as a child on a dare, and this time you don't run back.|You go past the third cairn. Behind you, the road and the villages are suddenly very small.}}
+
+@event moor_way_home
+title: Off the Moor
+trigger: queued
+class: story
+tone: warm
+repeat: 1
+art: pouch
+tags: nature money
+scene: A tired student coming down off the moor onto a village road at evening, a lumpy bag over one shoulder, fog behind them on the heights.
+text: {moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
+> left: Sell it at the inn
+  hint: Crowns, by what you carry.
+  if moor_haul >= 5:
+    gold +large
+  elif moor_haul >= 3:
+    gold +medium
+  elif moor_haul >= 1:
+    gold +small
+  say: {moor_haul == 0: The landlord looks at your empty bag and gives you a hot drink anyway, on the house, and asks how far out you went.|{~The landlord of the coaching inn buys the lot for more than it's worth and wants to know exactly where you found each piece.|The landlord weighs it in his hands, pays you well, and puts it all in a box under the counter. He asks whether you'll be going out again.|The landlord pays without haggling, which is worse than haggling, and writes something in his little book.}}
+  if moor_depth > moor_deepest:
+    moor_deepest = moor_depth
+  moor_depth = 0
+  moor_haul = 0
+> right: Keep it for study
+  hint: Lore and alchemy, by what you carry.
+  if moor_haul >= 5:
+    lore +medium
+    alchemy +small
+  elif moor_haul >= 3:
+    lore +small
+    alchemy +tiny
+  elif moor_haul >= 1:
+    lore +small
+  say: {moor_haul == 0: You keep nothing but wet boots and a better idea of the moor.|{~You lay it all out on the washstand and spend the evening working out what's old, what's very old, and what shouldn't be here at all.|You clean the flints with a toothbrush and label everything. One bronze piece has a sheaf worked into it, worn almost away.|You sort it all by lamplight. The holed stone, held up to your eye, shows the room exactly as it is, which is somehow a relief.}}
+  if moor_depth > moor_deepest:
+    moor_deepest = moor_depth
+  moor_depth = 0
+  moor_haul = 0
+
+@event moor_stumble
+title: Back on Your Feet
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: hand
+tags: nature danger
+scene: A student sitting in wet heather on a foggy moor, catching their breath, a spilled bag beside them.
+on_show:
+  moor_grace -= 1
+  health -small
+  if moor_haul > 0:
+    moor_haul -= 1
+text: {~You go down hard in the heather, and something rolls out of your bag into a hag of black water.|You come to your senses face down in wet heather, with a split lip and a lighter bag.|Your foot finds the one soft place on the hill. You get free, and the bog keeps a little of what you carried.} {moor_grace > 0: You've got one more fall in you, maybe.|That was your last easy fall.}
+> left: That's enough for today
+  queue moor_way_home now
+  say: {~You pick up what's left and limp back toward the road.|You've had enough of the moor, and the moor of you.|You turn back, keeping the cairns on your right.}
+> right: Get up and go on
+  hint: Deeper: the next fall may not be kind.
+  queue any in moor_delve now
+  say: {~You wring out your sleeves and go on, a little slower.|You get up. The fog closes round again as if nothing had happened.|You go on. Somewhere behind you, a sheep bell stops.}
+
+@event moor_lost
+title: Found at Dusk
+trigger: queued
+class: story
+tone: grim
+repeat: 1
+art: lantern
+tags: nature danger
+scene: A foggy moor at dusk, a shepherd with a lantern and a dog helping a muddy, shivering student to their feet.
+on_show:
+  health -large
+  moor_haul = 0
+  if moor_depth > moor_deepest:
+    moor_deepest = moor_depth
+  moor_depth = 0
+text: {at_home() and has(origin_hedge): The fog comes down and the day goes with it. At dusk a lantern comes bobbing through the fog, and it's your grandmother, with a shawl and a flask and a face like thunder.|The fog comes down and the day goes with it. At dusk a dog finds you first, and then a shepherd with a lantern, who looks at you the way he'd look at a ewe that got itself stuck.}
+> left: Thank them and go quietly
+  say: {at_home() and has(origin_hedge): She walks you home without a word and puts you to bed with something bitter. In the morning she says, "Past the third cairn," as if that were a whole sentence, and it is.|He walks you down to the road and won't take a penny. "Past the third cairn," he says, shaking his head. "They always go past the third cairn."}
+> right: Ask how they knew to look
+  lore +tiny
+  mood -tiny
+  say: {at_home() and has(origin_hedge): "The lights were out on the drovers' road at noon," she says. "They only do that when somebody's lost." She says it as flatly as the weather.|"The sheep told me," he says. "They all stood looking the one way." He means it.}
+
+# ---------------- Band 1: the cairns (depth 1–2, apprentice) ----------------
+
+@thread moor_delve
+from: scene
+name: The moors
+premise: Past the third cairn, the moor goes on longer than it should.
+journal:
+  flag(moor_drove_road): You pulled a shepherd's ewe out of a gully. He showed you the shepherds' trod out past the cairns.
+  flag(moor_inn_key): Out on the bog road you found a traveller's satchel sunk in the peat, and a room key from the coaching inn.
+  flag(moor_new_cairn): Seven cairns ring the hollow hill. One of them is new.
+  flag(moor_ram_beaten): The black ram of the hollow hill gave way to you.
+  flag(moor_hill_door): There's a door in the side of the hollow hill, and it's shut.
+status:
+  resolved: flag(moor_hill_door)
+
+@event moor1_cairn
+title: A Stone for the Cairn
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 1 and moor_depth <= 2
+repeat: 1
+art: rune
+tags: moor nature mystery
+scene: A student setting a fist-sized stone on top of a tall moorland cairn, the next cairn faint in the fog beyond.
+text: {~Out here the cairns are close together, each just in sight of the last, and every walker who passes adds a stone. The peat-cutters say it's for luck. The shepherds say it's so the cairn knows you went by.|The next cairn, and the next. Each one taller than the last, as if more people went this far than came back from further.}
+> left: Turn back here
+  queue moor_way_home now
+  say: {~You leave the cairn as it is and turn back toward the road.|You decide the cairn is a sign, and the sign says home.}
+> right: Carry up a stone and add it
+  health -tiny
+  moor_grace += 1
+  moor_depth += 1
+  next
+  say: {~You carry a good stone up from the beck, arms aching, and set it on top. Walking on, you feel noted, which is better than unnoticed out here.|You add your stone, knuckles scraped from prising it loose. The cairn is warm under your hand, though the day is cold.}
+
+@event moor1_adders
+title: Adders in the Heather
+thread: moor_delve
+class: routine
+tone: tense
+when: moor_depth >= 1 and moor_depth <= 2 and season != "winter"
+repeat: 1
+art: paw
+tags: moor nature danger
+scene: A knot of dark zigzag-backed adders basking together on a warm flat stone across a narrow sheep track in the heather.
+text: The sheep track crosses a flat warm stone, and the stone is covered in adders, a whole knot of them basking, zigzag-backed and in no hurry. One lifts its head and tastes the air in your direction.
+> left: Back off and go home
+  queue moor_way_home now
+  say: {~You back away slowly, and give the stone a very wide berth all the way home.|You leave the stone to the adders. They have the sun; you have your ankles.}
+> right: Drive them off the track
+  hint: They come at you all at once: keep your guard up.
+  challenge combat apprentice:
+    win:
+      moor_haul += 1
+      moor_depth += 1
+      next
+      say: {~The knot comes apart and pours away into the heather. Under the stone where they lay there's a shed skin, perfect, and an old bronze pin.|You see them off the stone. A shed adder skin lies across it like a dropped glove; you take it.}
+    lose:
+      if moor_grace > 0:
+        queue moor_stumble now
+      else:
+        queue moor_lost now
+      say: {~They're faster than you are, and there are more of them. You leave the track with a swollen hand and your pride in shreds.|You never land a thing. You end up flat in the heather, heart going, hand burning.}
+> up[hoarfrost]: Chill the stone
+  moor_depth += 1
+  next
+  say: {~You lay a skin of frost across the stone. The adders go slow and sleepy and slide off into the heather, offended.|A breath of cold and the knot unwinds, sluggish, into the roots. You step over the frosted stone.}
+
+@event moor1_lost_ewe
+title: A Ewe in the Gully
+thread: moor_delve
+class: routine
+tone: warm
+when: moor_depth >= 1 and moor_depth <= 2 and not flag(moor_drove_road)
+repeat: 1
+art: paw
+tags: moor nature
+scene: A ewe with a red mark daubed on her fleece stuck on a ledge in a steep, wet moorland gully, a student leaning over the edge above her.
+text: Bleating from a gully. A ewe has got herself onto a ledge halfway down and can't get up or down. There's a red mark daubed on her fleece, a seven, very neat. Somewhere a dog is barking, too far off to help.
+> left: Fetch the shepherd instead
+  queue moor_way_home now
+  say: {~You go back down to the road and tell the first shepherd you meet. He thanks you, and goes up with his dog, not hurrying.|You turn back. The bleating follows you a long way.}
+> right: Climb down for her
+  challenge feat apprentice:
+    win:
+      flag moor_drove_road
+      vigor +tiny
+      moor_depth += 1
+      next
+      say: {~You get her up, both of you scraped and furious. Her shepherd arrives with the dog just as you top out, and in thanks shows you the shepherds' trod, which goes out past the cairns as straight as a ruler.|You haul her up by the fleece. The shepherd, when he comes, looks at the seven on her side and then at you, and tells you where the shepherds' trod runs.}
+    lose:
+      if moor_grace > 0:
+        queue moor_stumble now
+      else:
+        queue moor_lost now
+      say: {~The gully side comes away under your boot. You and a good deal of the moor go down it together.|You slip, slide, and end up on the ledge beside her. She looks at you with deep contempt.}
+
+@event moor1_peat_hag
+title: The Peat Hag
+thread: moor_delve
+class: routine
+tone: light
+when: moor_depth >= 1 and moor_depth <= 2
+repeat: 1
+art: leaf
+tags: moor nature
+scene: A deep cut bank of black peat on a moor, a student digging into its face with a trowel, flints and a bronze glint in the wet peat.
+text: {~A peat hag, a bank of black peat cut by the weather, stands across your way. In its face, where the rain has washed it, there are flints, and something that glints green.|The weather has opened the peat bank further since anyone last came. Old things stick out of it like raisins from a cake.}
+> left: Leave it and turn back
+  queue moor_way_home now
+  say: {~You leave the peat to keep what it's kept, and head back.|You turn back with clean hands, which is more than the peat-cutters ever manage.}
+> right: Dig into the face
+  health -tiny
+  moor_haul += 1
+  moor_depth += 1
+  next
+  say: {~You dig out three flints and a bronze button gone green, and cut your thumb on the last flint. You're black to the elbow and very pleased.|You work a flint scraper out of the peat, as sharp as the day it was made, as your palm finds out. The peat closes over the hole as if it minded.}
+
+@event moor1_larks
+title: Open Moor
+thread: moor_delve
+class: routine
+tone: warm
+when: moor_depth >= 1 and moor_depth <= 2
+repeat: 1
+art: star
+tags: moor nature
+scene: A student walking a sheep track across wide open moorland under a huge sky, a line of cairns marching on ahead.
+text: {~Wide moor under a huge sky, and the cairns marching on ahead.|Open moor, cotton grass nodding, and the fog keeping to the hollows.|A beck to cross on stepping stones, peat-brown and loud.} {season == "winter": Frost on the heather; a raven goes over, croaking.|Larks go up singing from the heather on every side.} For a while the moor is only a moor.
+> left: Turn back while it's easy
+  queue moor_way_home now
+  say: {~You turn round while the going is good, and are on the road before the light changes.|You turn back while the fog still keeps to its hollows.|You turn back at the beck, with dry feet and a clear head.}
+> right: Go on
+  moor_depth += 1
+  next
+  say: {~You walk on, and the moor widens round you.|You go on, out past where the cairns are close together.|You go on. Somewhere past the beck, the moor goes quiet.}
+
+# ---------------- Band 2: the bog roads (depth 3–4, journeyman) ----------------
+
+@event moor2_black_dog
+title: The Black Dog
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 3 and moor_depth <= 4
+repeat: 1
+art: paw
+tags: moor nature danger
+scene: A huge shaggy black dog with pale eyes standing on a sunken causeway across a foggy bog, blocking the way of a student with a lantern.
+text: A black dog is standing on the bog road ahead, as big as a calf, shaggy and wet, with eyes like two lamps behind glass. It isn't anybody's. When you stop, it stops; when you take a step, it takes one too, towards you.
+> left: Back away along the road
+  queue moor_way_home now
+  say: {~You back away the whole length of the bog road. It watches you go, and doesn't follow, which is somehow worse.|You turn back. When you look round, the road behind you is empty, and the fog is full of dog-shaped shadows.}
+> right: Stand and face it
+  hint: It vanishes into the fog and comes again: strike when it shows.
+  challenge combat journeyman+:
+    win:
+      renown +tiny
+      moor_depth += 1
+      next
+      say: {~It backs into the fog and is gone, leaving pawprints that fill with water and then aren't there. The peat-cutters won't believe you, and then they will.|You hold your ground until it gives way. It doesn't run; it simply isn't there, and the road goes on.}
+    lose:
+      if moor_grace > 0:
+        queue moor_stumble now
+      else:
+        queue moor_lost now
+      say: {~It comes out of the fog from the side you weren't watching. You go down in the bog, and when you get up it's gone.|It knocks you flat and stands over you, breathing cold. Then it walks away, as if it had made its point.}
+> up[starlight]: Light the road
+  moor_depth += 1
+  next
+  say: {~You raise a clean white light. The dog looks at it a long moment, then turns and pads away into the fog, unhurried.|In the starlight the dog is only a shadow, and then not even that. You walk on through where it stood. It's very cold there.}
+
+@event moor2_bog_road
+title: The Bog Road
+thread: moor_delve
+class: routine
+tone: tense
+when: moor_depth >= 3 and moor_depth <= 4
+repeat: 1
+art: frog
+tags: moor nature danger
+scene: An ancient timber trackway half-sunk in a black moorland bog, its planks slick and broken, a student testing one with a foot.
+text: The old road across the bog is made of oak planks laid end to end, older than anyone can say. Most are sound. Some are not. The water either side is black, and very still, and very patient.
+> left: Turn back
+  queue moor_way_home now
+  say: {~You don't trust the planks, and they don't seem to trust you. You go home.|You decide the bog can keep its road.}
+> right: Cross on the planks
+  challenge feat journeyman:
+    win:
+      moor_depth += 1
+      next
+      say: {~Plank by plank, testing each one, you cross. Halfway over, one sinks under you and comes up again behind you, as if it had changed its mind.|You run the last stretch and make it, wet to the shin and grinning.}
+    lose:
+      if moor_grace > 0:
+        queue moor_stumble now
+      else:
+        queue moor_lost now
+      say: {~A plank turns under your foot. You go into the bog to the waist, and it holds on to you with great affection.|You slip off the road into the black water. Getting out takes everything you've got, and one boot.}
+> up[hoarfrost]: Freeze the bog
+  moor_depth += 1
+  next
+  say: {~You breathe frost across the water either side, and walk over a road of ice. Behind you it creaks back to bog.|The bog freezes white under your spell. Something under the ice moves away from you, slowly.}
+
+@event moor2_fog
+title: Fog from Nowhere
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 3 and moor_depth <= 4
+repeat: 1
+art: rain
+tags: moor nature mystery
+scene: Thick white fog covering a moor, only the dark tops of cairns showing above it in a line, a student standing in the fog up to the chest.
+text: The fog comes up out of the ground all at once, and in a minute you can't see your own boots. Only the tops of the cairns show above it, grey heads in a white sea, in a line that leads on, or back, depending which way you count them.
+> left: Count them back to the road
+  queue moor_way_home now
+  say: {~You count the cairns back one by one and come out on the road exactly where you went in.|You keep the cairns on your right and walk out of the fog into an ordinary afternoon.}
+> right: Count them on, deeper
+  challenge research journeyman:
+    win:
+      lore +tiny
+      moor_depth += 1
+      next
+      say: {~You keep the count, cairn to cairn, and come out of the fog further on than you meant to, on a hillside you've never seen from the road.|You count them on, carefully. There's one more cairn than there should be, and you don't follow that one.}
+    lose:
+      if moor_grace > 0:
+        queue moor_stumble now
+      else:
+        queue moor_lost now
+      say: {~You lose the count at the ninth cairn, step towards a grey head in the fog, and walk straight off the edge of a peat hag.|You count wrong, or the cairns do. The cairn you were making for isn't there when you reach it, and neither is the ground.}
+> up[lodestar]: Gather a light about you
+  moor_depth += 1
+  next
+  say: {~You gather a guiding light around you, breath by breath. In its glow the fog keeps a polite distance, and the cairns come out of it one by one.|Your light gathers round you until the white thins to a ring you can walk in, and the next cairn is standing at its edge.}
+
+@event moor2_satchel
+title: A Satchel in the Peat
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 3 and moor_depth <= 4
+repeat: 1
+art: scroll
+tags: moor mystery
+scene: A good leather travelling satchel half sunk in black peat beside a moorland track, a student crouching over it holding up a brass room key on a wooden tag.
+text: {flag(moor_inn_key): The satchel is still there in the peat beside the bog road, a little deeper than you left it. Someone has buckled it shut again.|Half sunk in the peat beside the bog road there's a satchel, good leather, the kind people buy for a journey. It's been here a long while. The buckle's green. Inside, wrapped in oilcloth, there's a brass room key on a wooden tag, and the tag is burned with the coaching inn's sign.}
+> left: Leave it and turn back
+  mood -tiny
+  queue moor_way_home now
+  say: {~You put it back as you found it and walk home faster than you meant to.|You leave the satchel to the peat. All the way back you can feel where it is, behind you.}
+> right: Look inside and go on
+  mood -tiny
+  moor_depth += 1
+  next
+  say: {flag(moor_inn_key): You unbuckle it again. Empty now, except for peat water and a coaching-inn bill folded small, paid in full, for one night.|{~You pocket the key. It's heavier than a key should be. Room seven, the tag says, when you rub the peat off.|You take the key and leave the rest. Further on, you realise you've been holding it in your fist the whole way.}}
+  flag moor_inn_key
+
+@event moor2_waymarks
+title: The Waymarks
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 3 and moor_depth <= 4
+repeat: 1
+art: rune
+tags: moor nature mystery
+scene: A line of small worn standing stones marching along a sunken moorland road into the fog, each one notched along its edge, a student walking beside them.
+text: {~Little standing stones mark the bog road here, knee-high and worn, one every hundred paces.|The bog road runs on between its waymarks, firm underfoot for once.|A waymark leans across the road, and someone has propped it straight with a turf.} Each stone has notches cut down its edge, in sevens. {season == "winter": Rime on the notches makes them easy to count.|Bog cotton blows across the road like the last of a snow.}
+> left: Turn back along the road
+  queue moor_way_home now
+  say: {~You turn back, counting the stones off as you pass them, and they come out the same both ways.|You go back the way the waymarks came, which is the way they mean you to.|You leave the road to its stones and head home.}
+> right: Walk on beside them
+  moor_depth += 1
+  next
+  say: {~You walk on. The notches get fewer the further you go, as if fewer people came this way.|You go on, stone to stone. The last notch on the last one is fresh.|You walk on. The fog parts ahead of the stones and closes behind them.}
+
+# ---------------- Band 3: the hollow hill (depth 5–6, adept) ----------------
+
+@event moor3_barrow_ram
+title: The Black Ram
+thread: moor_delve
+class: routine
+tone: tense
+when: moor_depth >= 5 and moor_depth <= 6
+repeat: 1
+art: paw
+tags: moor nature danger
+scene: An enormous black ram with great curling horns standing on the green slope of a round hill in the fog, head lowered at a student below.
+text: {flag(moor_ram_beaten): The black ram is on the hill again. It lowers its head when it sees you, but slowly, as if remembering.|On the slope of the hollow hill there's a ram, black as peat, with horns curled round twice, standing square across the only way up, as if it had been set there like a gate. It isn't grazing. It lowers its head.}
+> left: Back down the hill
+  queue moor_way_home now
+  say: {~You back down the slope. The ram watches you to the bottom, then goes back to standing.|You leave the hill to its ram. It doesn't follow; it doesn't need to.}
+> right: Face it
+  hint: It scrapes before it charges: the blow comes next exchange.
+  challenge combat adept+:
+    win:
+      flag moor_ram_beaten
+      moor_haul += 1
+      moor_depth += 1
+      next
+      say: {~It lowers its great head, snorts, and walks back up the hill as if the hill had sent for it. Where it stood there's a twist of black fleece caught on a thorn, soft as smoke.|It gives way at last, with dignity. You take the tuft of fleece it leaves on the thorn, and go up the slope it was guarding.}
+    lose:
+      if moor_grace > 0:
+        queue moor_stumble now
+      else:
+        queue moor_lost now
+      say: {~You see the charge coming and still can't get out of its way. You come to at the bottom of the hill.|It butts you clean off the slope. You land in the heather a long way down, and the ram doesn't bother to look.}
+> up[candour]: Ask it what it guards
+  lore +tiny
+  moor_depth += 1
+  next
+  say: {~You ask it the right way. It doesn't speak, but the answer comes anyway, plain as a thought of your own: a door, and the ones who come to it. Then it steps aside.|You put the question to it, and the answer arrives in your head in a voice like wind over heather: the way in, and the way out, which are not the same. The ram lets you pass.}
+
+@event moor3_seven_cairns
+title: Seven Cairns
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 5 and moor_depth <= 6
+repeat: 1
+art: rune
+tags: moor mystery
+scene: Seven tall cairns standing in a ring around the foot of a round green hill on a moor, one of them pale and newly built, a student looking at it.
+text: {flag(moor_new_cairn): The seven cairns round the hollow hill again. The pale one has settled since you last saw it, and moss is starting on its north side.|Seven cairns stand round the foot of the hollow hill, evenly spaced, like the numbers on a clock with most of the numbers missing. Six are grey with lichen. The seventh is pale, the stones still sharp, the moss not started. Someone built it this year.}
+> left: Turn back
+  queue moor_way_home now
+  say: {~You leave the ring of cairns and go home the long way round.|You don't like the new cairn, and you don't stay to find out why.}
+> right: Look closely at the pale cairn
+  lore +small
+  mood -small
+  moor_depth += 1
+  next
+  say: {flag(moor_new_cairn): You look again. Someone has tied a sprig of something green to its top stone with red thread, since you were last here.|{~Among the new stones there's a coat button, brass, polished by nobody's hands. You put it back where it was.|The new cairn's top stone has a sheaf scratched into it, neat and fresh. You walk on round the hill with your hands in your pockets.}}
+  flag moor_new_cairn
+
+@event moor3_warm_turf
+title: The Warm Hill
+thread: moor_delve
+class: routine
+tone: eerie
+when: moor_depth >= 5 and moor_depth <= 6
+repeat: 1
+art: sparkle
+tags: moor mystery
+scene: A student lying with an ear pressed to the turf of a round green hill on a cold, foggy moor, steam rising faintly from the grass around them.
+text: The turf of the hollow hill is warm, the way a loaf is warm under its cloth, though the fog is cold all round it. When you kneel, you can feel something through your knees, very faint and very regular, like a great slow breath.
+> left: Get off the hill
+  queue moor_way_home now
+  say: {~You stand up very quickly and walk back down off the hill without looking round.|You leave the warm turf to whatever is warming it, and go home.}
+> right: Put your ear to the ground
+  lore +small
+  mood -tiny
+  moor_depth += 1
+  next
+  say: {~Far down, faint as a dream, you hear a fiddle playing, and plates, and a long table being laid. Someone laughs. You get up with grass marks on your cheek and walk on round the hill.|You listen. Under the hill, someone is counting, slowly and happily, and gets to six, and starts again from one.}
+> up[omen]: Foretell it, out loud
+  lore +small
+  mood -small
+  moor_depth += 1
+  next
+  say: {~You say it aloud, into the turf: "Whatever is under this hill will be found out." The warmth goes out of the grass like a held breath let go. You walk on with the words still in your mouth.|You foretell, out loud, that this hill will open. Far below, a fiddle stops in the middle of its tune, and doesn't start again while you're there.}
+
+@event moor3_bronze
+title: Bronze in the Heather
+thread: moor_delve
+class: routine
+tone: light
+when: moor_depth >= 5 and moor_depth <= 6
+repeat: 1
+art: coin
+tags: moor nature money
+scene: A scatter of old green bronze objects, a bowl, a sickle, rings, half hidden in heather on the slope of a round hill, a student kneeling over them.
+text: {flag(moor_bronze_taken): The bronze on the hill's flank is fewer pieces than you left, and not the same ones. The bowl is still there, brimming with rainwater, and beside it someone has laid a new sickle, bright as a coin.|In the heather on the hill's flank, old bronze lies about as if a cart had tipped over a thousand years ago and nobody had bothered to pick it up: a little sickle, a bowl, three rings gone green. All of it is worked with sheaves.}
+> left: Leave it and turn back
+  queue moor_way_home now
+  say: {~Some things look as if they were left for someone. You leave them, and go home.|You turn back with empty hands, which feels like the right size of hands to have out here.}
+> right: Fill your bag
+  alignment -tiny
+  flag moor_bronze_taken
+  moor_haul += 2
+  moor_depth += 1
+  next
+  say: {~You take the sickle and the rings. The bowl you leave; it feels like someone's. Walking on, the bag is heavier than bronze should be.|You fill your bag. Behind you, a sheep bell rings once, from nowhere you can see.}
+
+# ---------------- Depth 7: the door in the hill ----------------
+
+@event moor_hill_door
+title: The Door in the Hill
+thread: moor_delve
+class: story
+tone: eerie
+when: moor_depth >= 7
+repeat: 1
+art: door
+tags: moor nature mystery
+scene: A low round door of weathered oak set into the green turf side of a hill on a foggy moor, an iron knocker shaped like a sheaf of wheat, a student standing before it.
+text: {flag(moor_hill_door): The door in the hill again, low and round and shut, its sheaf knocker cold with dew.|Round the far side of the hollow hill, where nobody would see it from the road, there's a door: low and round, old oak gone silver, set into the turf as neatly as a door in a wall. Its knocker is an iron sheaf of wheat. The grass in front of it has been trodden.}
+> left: Leave it shut and go home
+  flag moor_hill_door
+  queue moor_way_home now
+  say: {~You go back round the hill and down off the moor. Halfway, you realise you've been walking on tiptoe.|You leave the door as you found it. At the third cairn you look back. The fog has hidden the hill.}
+> right: Knock
+  flag moor_hill_door
+  lore +tiny
+  mood -small
+  queue moor_way_home now
+  say: {~You lift the sheaf and let it fall. The sound goes down a long way. From very far below, something knocks back, once, and then again, slowly, as if counting, and stops at six. It seems to be waiting for you to give the seventh. You don't.|You knock. Nothing answers, but the turf under your feet goes warm, and stays warm, all the way to the road.}

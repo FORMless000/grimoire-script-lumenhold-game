@@ -115,6 +115,10 @@ export const DEFEAT={'Shadow stag':'{foe} {fv:lowers|lower} its head and {fv:ste
  'Spiderling swarm':'{foe} {fv:scatters|scatter} into a thousand cracks.',
  'The Spinner':'{foe} {fv:bows|bow} {fpos} forelegs to {name}.',
  'The Spinner, weakened':'{foe} {fv:bows|bow} {fpos} forelegs to {name}.',
+ // The moors (new maps, K3)
+ 'Peat adders':'{foe} {fv:unravels|unravel} and {fv:pours|pour} away into the heather.',
+ 'Bog hound':'{foe} {fv:backs|back} into the fog and {fv:is|are} gone.',
+ 'Barrow ram':'{foe} {fv:lowers|lower} {fpos} great head, {fv:snorts|snort}, and {fv:walks|walk} back up the hill.',
  'The Outcast':'{foe} {fv:laughs|laugh}, {fv:bows|bow}, and {fv:vanishes|vanish} into silver frost.'};
 export const ENDINGS={knockout:'{foe} can fight no more, and {name} {v:wins|win}.',decision:'Neither falls; {name} {v:wins|win} on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} {fv:yields|yield} to {name}.',
  // Told after the finishing line when both fell in the same exchange and the side that committed first won (feedback 2026-10-29).

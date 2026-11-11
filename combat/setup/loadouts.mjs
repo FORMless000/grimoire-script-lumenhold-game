@@ -38,6 +38,10 @@ export const SPECIAL_LOADOUTS={
  // Weakened (she showed you her blind side, F5.11): the same Spinner at the same level, starting hurt (`start`: the share of
  // max HP she enters with, createState's opponentStart), rather than missing a spell.
  'The Spinner, weakened':{salt:48,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,brood:1,the_long_wait:1,carapace:1},creature:true,race:'boss',strike:.55,start:{hp:.6}},
+ // The moors (new maps, K3, 2026-11-10): the countryside's delve, built from the wood's creature moves.
+ 'Peat adders':{salt:56,offsets:[-30,-30,-30,-40,-10,20],kit:{venom:1,swarm:1,burrow:1,skitter:10},creature:true,race:'critter'},
+ 'Bog hound':{salt:57,offsets:[-20,-20,-20,-20,30,20],kit:{nip:1,fade:1,filch:1,skitter:15},creature:true,race:'beast',hp:1.35},
+ 'Barrow ram':{salt:58,offsets:[-30,-30,-30,-20,40,-10],kit:{charge:1,brace:1,roar:10},creature:true,race:'monster',hp:1.75,mana:.6},
  // Forbidden practitioners (F5.11): human, so no race; generated like the forbidden classes (Hollow adept, Underground
  // tough), expanded with their own iconic spells, and carrying their worn kit (content/world/items.grim).
  // The thornwitch: a Hollow adept of the thicket, Siphon first, with Bramble and the thorn wand (on_cast forbidden spell 2).

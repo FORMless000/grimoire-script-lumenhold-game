@@ -1,0 +1,24 @@
+{
+  "batch": "K3-moors",
+  "round": 2,
+  "accept": true,
+  "summary": "Round 2 fixes the canon, spell, duplicate-punchline, season and repeat problems. The door's knocks counting to six, the shepherds' trod, the rewritten fall and way-home lines and the new waymarks card all read well. Two small mechanical bugs are left, both confirmed in the engine and both quick to fix before commit: the seven cairns' 'again' line shows on the first look, and band 2 can still run dry after three falls.",
+  "issues": [
+    {
+      "event": "moor3_seven_cairns",
+      "problem": "The right option runs `flag moor_new_cairn` before its `say:`, and that say reads flag(moor_new_cairn), so the flag is already set when the line is filled in. Run in the engine, a fresh player's first look prints \"You look again. Someone has tied a sprig of something green to its top stone with red thread, since you were last here.\" The button and sheaf discovery lines never show.",
+      "fix": "Move `flag moor_new_cairn` below the `say:` line (checklist: a say that reads a flag comes before the statement that changes it)."
+    },
+    {
+      "event": "moor2_waymarks",
+      "problem": "Band 2 can still run out of cards. Clearing depths 3 and 4 takes two passes, and a player can fall on each of the three cards with a check (dog, bog road, fog): five draws. Once the satchel has been taken, band 2 holds only four cards, each shown at most once a month. Engine check: after the dog, bog road, fog and waymarks have shown this month, a draw at depth 4 returns nothing. So a player who reaches band 2 with three graces (shepherds' trod start + rue + home, or a cairn stone on the way) and loses all three checks ends the delve with no way home, no payout and no moor_deepest update.",
+      "fix": "Add one more no-check band-2 card. Or keep moor2_satchel eligible after the key is taken, with a familiar variant (the empty satchel, sunk a little deeper) and a pass-only right option. Then the band holds five cards."
+    }
+  ],
+  "polish": [
+    "moor_edge: the random text variant \"Past it the larks stop, as if at a line\" shows in winter too, when Open Moor now has a raven instead. Give it a {season == \"winter\": …} alternative or a season-neutral sound.",
+    "moor_peat_cutters is now random, so left variant 3 (\"When you ask about the little crosses…\") can come before the player has seen the crosses, which only text variant 1 mentions. Name the crosses in the line itself (\"the little crosses on every seventh turf\").",
+    "moor1_larks: the scene still describes a skylark, which is wrong in winter. Make it season-neutral (\"a bird rising above the heather\")."
+  ],
+  "checked": "Round-1 issues 1–4 and 6–14 are fixed. The door's answer no longer echoes restricted_section_handleless_door. Candour asks and gets an answer, Omen is spoken aloud and lands, and Lodestar is a gathered light. The bronze reads its own flag in the text (set after nothing reads it). The adders are gated out of winter. 'The shepherds' trod' no longer collides with K1's drovers' road. Costs are visible in every variant. The Whisperwood copies are gone. moor2_waymarks passes retrieve related (top hits: the ridge stones, ww2_waystone, ww1_bog, all different premises) and `grim check` passes. The red-thread sprig on the pale cairn rhymes nicely with the hedge-witch's rue (K1)."
+}
