@@ -1,0 +1,28 @@
+{
+  "batch": "P1-capital-peers",
+  "accept": true,
+  "round": 2,
+  "summary": "Every round-1 issue is fixed. The home reveals play once, each home has one recurring card with three linked showings, the street cards share capital_peers_out and play once, and the two duplicate premises are gone. Both replacements are fresh and in voice: the lost ring pays off the chair's 'people still ask me where they've put things', and the boot inspection is something only Hollis House can show. The four facts now agree with their cards and canon. Four small fixes remain, all about the new variant lines: two third showings assume a warmth or a choice the player may not have, and two lines disagree with another card or their slot.",
+  "issues": [
+    {
+      "event": "hollis_inspection",
+      "problem": "The third showing assumes Bram likes you, at any rel. The card has no `when`, and Bram can be a rival or nemesis far below 0. Yet showing 3 has him step half a pace in front of you, and its say has 'Don't make it weird'. Showings 1 and 2 have him give you an apple 'which from him is a medal' and polish both your boots. Sequences count showings, not the relationship. Also, the say's 'Every morning' (and bram.sir's 'every morning') sits on a card dealt at noon, afternoon or evening, which are Hollis House's open slots.",
+      "fix": "Give the card `when: rel(bram) > -10`, as vaneshade_practice_room has. Or wrap the warm beats in `{rel(bram) >= 10: …|…}`, with a colder line for each that still shows the cost. Change 'Every morning' to 'Every time I'm home', and the fact to 'whenever he comes home'."
+    },
+    {
+      "event": "vaneshade_practice_room",
+      "problem": "Showing 3 reads as the payoff of earlier sparring and of warmth. A second rack holds 'a practice wand… that isn't hers', and she hands it to you 'as if it had always been yours. Same time tomorrow'. It shows at any rel above -10, and to a player who always picked 'Ask about the house' and never sparred. The right say's 'a little sad for her, and fond' has the same problem. Showing 2 already handles rel < 10; showing 3 doesn't.",
+      "fix": "Gate the rack, the wand and 'Same time tomorrow' on state, e.g. `{rel(lyra) >= 10 and chosen(vaneshade_practice_room, left): …|…}`. Give the other branch a neutral third visit, such as Lyra mid-drill who doesn't stop for you."
+    },
+    {
+      "event": "ashby_lost_ring",
+      "problem": "This card contradicts ashby_the_chair. The chair's third 'Ask about the old man' say ends 'Never said how… Took it with him.' Here Corvin knows exactly how: 'That's all his trick ever was. Watching.' A player who gets the chair's third showing before this card hears both.",
+      "fix": "Make Corvin's line a discovery: 'I think that's all his trick ever was. Took me years to work it out.' Or change the chair's line to 'Never said how. I had to work it out.'"
+    },
+    {
+      "event": "oracle_window_seat",
+      "problem": "On showing 3 the cost the scene shows belongs to the wrong person. 'Ask about one of them' costs `mood -tiny`, but the say gives the unease to the duke: 'he has turned and is looking up at you both, uneasily'. Showings 1 and 2 give it to you.",
+      "fix": "'…because he has turned and is looking up at you both, and you feel caught out.' Or keep any phrasing where the unease is yours."
+    }
+  ]
+}

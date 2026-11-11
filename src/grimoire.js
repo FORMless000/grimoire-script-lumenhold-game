@@ -370,7 +370,7 @@
     map: { props: ['name', 'region', 'desc', 'arrival', 'return', 'art', 'lodging'], effects: [] },
   };
   // What a pool or a thread may give its cards (a bundle): where and when they're drawn, how often, how they look.
-  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order', 'arc'];
+  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order', 'arc', 'region'];
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed', 'home']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);

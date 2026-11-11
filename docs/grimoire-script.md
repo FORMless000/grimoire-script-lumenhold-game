@@ -747,7 +747,7 @@ from: course_routine
 track: evocation
 ```
 
-A card joins with `pool: evocation_class`. It takes every property the pool (and the pools it comes `from:`) gives that it doesn't write itself; its own value wins. `when:` is ANDed (the pool's first), `tags:` come pool-first. Two sources giving one property different values is an error. A pool may hold any card property (`trigger place track level rank plan slot time class tone repeat weight priority per actor tags when defer art chain variant lesson`). A pool says nothing about when its cards are dealt: that is the cards' trigger, or an appointment. `queue any in <pool>` draws one of a pool's queued cards (as `queue any tagged` does for a tag).
+A card joins with `pool: evocation_class`. It takes every property the pool (and the pools it comes `from:`) gives that it doesn't write itself; its own value wins. `when:` is ANDed (the pool's first), `tags:` come pool-first. Two sources giving one property different values is an error. A pool may hold any card property (`trigger place track level rank plan slot time class tone repeat weight priority per actor tags when defer art chain variant lesson region`). A pool says nothing about when its cards are dealt: that is the cards' trigger, or an appointment. `queue any in <pool>` draws one of a pool's queued cards (as `queue any tagged` does for a tag).
 
 ### `@cond` — a named condition
 

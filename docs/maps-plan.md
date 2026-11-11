@@ -236,7 +236,7 @@ The approved plan is at `~/.claude/plans/jaunty-gathering-galaxy.md`; its order 
 | Step | State | Notes |
 |---|---|---|
 | F2 away is away | done (2026-11-11) | engine hold, map-aware schedules and `presentAt`, region pools, home pins, arrival "Home:" / "Also here:", migration 0053, 18 new pins and placeholders, landmark art, `test/away.test.js` |
-| P1 capital peers | | |
+| P1 capital peers | done (2026-11-11) | `maps/capital_peers.grim`, 21 cards: each home one recurring card in three showings and one-time scenes (Vaneshade House: the practice room, Mrs Callow's toast, a table for twenty, the grandmother's portrait; the Ten Clockworks: the long bench, the drawer marked M., Greta; Ashby Lane: the chair, the coins on the sill, the lost ring; the Oracle's Rooms: the window seat, an audience, the other ending; Hollis House: the inspection, the noon piano, Hester), five out in the city (`capital_peers_out`, the fish market, the cathedral). 13 facts; soft lore for the five families. `@pool` may carry `region:`. Cameos (Vey, Grimsby, Grisk) move to the batches of their places (C2, S1, C3) |
 | P2 countryside peers | | |
 | C1 capital homes | | |
 | S1 bazaar and arcade | | |
@@ -249,3 +249,4 @@ The approved plan is at `~/.claude/plans/jaunty-gathering-galaxy.md`; its order 
 | T1 region cards, lodging nights, letters | | |
 
 - 2026-11-11 F2: lint 0 errors, zh-CN 100%, verify green. The golden games change (119 of 120: campus cards wait out the breaks away, so every run that leaves the castle reshuffles); the endings stay spread and the plot beats still play; baseline refreshed. The title screen's name pool lost "Tarn" (now a place) for "Teal".
+- 2026-11-11 P1 (`build/batches/P1-capital-peers`): the critic rejected round 1 (15 issues: every card repeatable with no variation, the brother card and the supper card retelling existing premises, four facts against their cards, a fish-market card drawable at night in the lane); accepted round 2 with four polish fixes applied (an inspection gated on rel, a third showing that assumed earlier sparring, the ring card's discovery, a cost on the wrong person). Lint 0, zh-CN 100%; golden baseline refreshed (76 of 120 games change: the capital breaks now play the peers' cards).
