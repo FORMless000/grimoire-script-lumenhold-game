@@ -1,0 +1,365 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/maps/capital_heists.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event job_way_out
+# en: Gone by Morning
+title [d8c8b3] = 天亮前脱身
+# en: {job_loot == 0: You get away with nothing but your skin, and a heart going like a drum.|{job_loot <= 2: You get away with a few things under your coat, each worth more than it looks.|{job_loot <= 4: You get away with a real bundle: tea, silk, something in bottles that clinks when you walk.|You get away with more than your coat will hold, and walk very carefully.}}} Behind you the customs lamp burns on over the wharf, and the gulls are waking.
+text [eb5e94] = {job_loot == 0: 你脱了身，除了一身皮肉和一颗咚咚直跳的心，什么也没带出来。|{job_loot <= 2: 你脱了身，外套底下藏着几样东西，每样都比看上去值钱。|{job_loot <= 4: 你脱了身，带着一大包：茶叶、丝绸，还有走起来叮当响的瓶装货。|你脱了身，带的东西多得外套都装不下，走得小心翼翼。}}} 身后，海关的灯还在码头上亮着，海鸥正在醒来。
+# en: A student slipping along a dark harbour-town lane at the grey end of night, a heavy bundle under one arm, the arches of a great bridge ahead.
+scene [f09788] = 天将破晓时，一个学生沿着港城一条黑暗的小巷溜走，胳膊下夹着一个沉甸甸的包，前方是一座大桥的桥拱。
+# en: Fence it under the bridge
+opt.left.label [aa25f7] = 到桥底下销赃
+# en: Crowns, by what you carry. A little Hollow.
+opt.left.hint [28243a] = 克朗，看你带出来多少。会偏向空洞一点。
+# en: {job_loot == 0: There's nothing to fence. You go to bed as the gulls wake up, and lie there grinning anyway.|{&{flag(undercroft_known): The fence in the velvet waistcoat, in his alcove off the Undercroft's dice hall, weighs it through his loupe and pays, politely, while the river drips through the roof.|Somebody's cousin takes you down to the old cellars under the middle bridge, where a fence in a velvet waistcoat weighs it through his loupe and pays, politely.}|A fence under the middle bridge takes it all without looking and pays without counting, which means she counted before you came.|The fence pays, pours you a drink, and asks where you'll be working next. You don't tell her.}}
+opt.left.say.1 [5b0ba7] = {job_loot == 0: 没东西可销。你在海鸥醒来时上床，还是咧着嘴躺着。|{&{flag(undercroft_known): 那个穿天鹅绒背心的销赃人坐在地下赌窟赌厅旁的凹室里，透过放大镜掂量了一番，客客气气地付了钱，河水从顶上滴下来。|有人的表亲领你下到中桥底下的老地窖，一个穿天鹅绒背心的销赃人透过放大镜掂量了一番，客客气气地付了钱。}|中桥底下的一个销赃女人看也不看就全收了，付钱也不数，这说明她在你来之前就数过了。|销赃人付了钱，给你倒了杯酒，问你下一回在哪儿干活。你没告诉她。}}
+# en: Give it away down the lanes
+opt.right.label [bc4183] = 沿着小巷分给人家
+# en: Renown in Port Calder, by what you carry. No crowns.
+opt.right.hint [3814b7] = 在考尔德港的名声，看你带出来多少。没有克朗。
+# en: {job_loot == 0: There's nothing to give away but a good story, and Port Calder takes that gladly.|{&Before dawn you leave it on doorsteps along Ashby Lane and the streets round it: tea, silk, a bottle on every step. By noon all Port Calder is telling the story, and nobody tells the watch. Your purse is as light as it was.|You pawn what won't go through a letterbox and push the coins through the ones that will. Not a crown of it is yours by breakfast.|You give it to the women at the washhouse to share out, and they do, fairly, and better than you would. You keep nothing.}}
+opt.right.say.1 [0cce97] = {job_loot == 0: 没东西可分，只有一个好故事，考尔德港乐意收下。|{&天亮前你把东西放在阿什比巷和附近几条街的门阶上：茶叶、丝绸，每级台阶一瓶。到了中午，整个考尔德港都在讲这件事，却没人去告诉巡夜队。你的钱袋还是一样轻。|塞不进信箱的你拿去当了，把硬币从塞得进的信箱口塞进去。到早饭时，一个克朗也不是你的了。|你把东西交给洗衣房的女人们去分，她们分得很公道，比你分得好。你什么也没留。}}
+
+@event job_slip
+# en: Flat in the Shadows
+title [78e93b] = 贴在阴影里
+# en: {job_dropped == 1: {&You get clear, just, and something you carried doesn't: it's lying out there in the lamplight where you dropped it.|You end up flat behind a crate with your heart in your mouth and one thing fewer under your coat.|You're clear, scraped and shaking, and you've left something behind for the morning shift to find.}|{&You get clear, just, with nothing to lose but your nerve, and some of that.|You end up flat behind a crate with your heart in your mouth, glad your coat was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff in the dust.}} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text [5939bb] = {job_dropped == 1: {&你刚好脱身，可你带的一样东西没跟上：它就躺在你丢下它的灯光里。|你贴在一只板条箱后面，心提到嗓子眼，外套底下少了一样东西。|你脱身了，擦伤了，浑身发抖，还给早班的人留下了一样东西去发现。}|{&你刚好脱身，除了胆量没什么可丢的，胆量也丢了一些。|你贴在一只板条箱后面，心提到嗓子眼，庆幸外套里是空的。|你脱身了，擦伤了，浑身发抖，除了灰里的一道蹭痕什么也没留下。}} {job_cover > 0: 你大概还能再险一次。|那是你最后一次有惊无险。}
+# en: A student pressed flat into the shadow between stacked crates, holding their breath, as the glow of a watchman's lantern slides past along a warehouse floor.
+scene [4ca217] = 一个学生紧贴在堆叠的板条箱之间的阴影里，屏住呼吸，看守的灯光沿着仓库地面滑过去。
+# en: That's enough for tonight
+opt.left.label [e41fc4] = 今晚就到这儿
+# en: {&You take what's left and go, by the long way round.|You decide the night has made its point.|You go while you can.}
+opt.left.say.1 [873b72] = {&你带着剩下的东西走了，绕远路。|你认定今晚已经把话说清楚了。|你趁还能走就走。}
+# en: Wait, and go on
+opt.right.label [5458f2] = 等一等，再往前
+# en: On: the next slip may not be a near thing.
+opt.right.hint [1c2ad6] = 往前：下一次失手未必还能有惊无险。
+# en: {&You wait till the dark is quiet again, and go on.|You count to five hundred, and go on.|You go on. Somewhere behind you, a watchman is looking at the place where you were.}
+opt.right.say.1 [d357e7] = {&你等到黑暗重新安静下来，继续往前。|你数到五百，继续往前。|你继续往前。身后某处，一个看守正盯着你刚才待过的地方。}
+
+@event job_caught
+# en: The Watch
+title [25c367] = 巡夜队
+# en: A lantern comes up full in your face, and a second one behind it: the city watch. {job_loot == 0: You're inside the customs' wall at night, empty-handed, which convinces nobody.|You're inside the customs' wall at night with your arms full of the crown's goods, and they take it all back.} {job_warned == 1: The sergeant knows your face, and says so.|The sergeant looks you over, scarf and wand and all, and sighs.}
+text [e5a8c4] = 一盏灯笼迎面照得你睁不开眼，后面还有第二盏：城里的巡夜队。{job_loot == 0: 你深夜在海关的墙里，两手空空，这说服不了任何人。|你深夜在海关的墙里，怀里抱满了王室的货，他们全拿了回去。} {job_warned == 1: 巡长认得你这张脸，还说了出来。|巡长把你从头打量到脚，围巾、魔杖，一样没落，叹了口气。}
+# en: Two city watchmen with lanterns and staves cornering a student among warehouse crates at night, a sergeant with a notebook behind them.
+scene [26486a] = 夜里两个提着灯笼、拿着棍子的城市巡夜人把一个学生堵在仓库的板条箱之间，后面一个拿着本子的巡长。
+# en: Go quietly
+opt.left.label [250d1c] = 老老实实跟他们走
+# en: {job_warned == 1: A night in the cells again, and in the morning the same magistrate, who remembers you and doubles the fine. Your purse won't be the same this break.|A night in the cells with a drunk who sings, and in the morning a magistrate who fines you a sum that makes your eyes water and tells you to go back to your castle.}
+opt.left.say.1 [5ad6ab] = {job_warned == 1: 又是一夜牢房，早上又是同一个治安官，他记得你，罚金翻倍。这个假期你的钱袋是缓不过来了。|一夜牢房，同屋是个唱歌的醉汉，早上一个治安官罚了你一笔让你眼睛发酸的钱，叫你回你的城堡去。}
+# en: Run for it
+opt.right.label [38d292] = 拔腿就跑
+# en: {job_loot == 0: You run, and Port Calder's lanes hide you the way they hide everyone. You also know the sergeant saw your face.|You drop the lot and run, and Port Calder's lanes hide you the way they hide everyone. You also know the sergeant saw your face.}
+opt.right.say.1 [2634d9] = {job_loot == 0: 你跑了，考尔德港的小巷像藏所有人一样藏住了你。你也知道巡长看清了你的脸。|你扔下所有东西就跑，考尔德港的小巷像藏所有人一样藏住了你。你也知道巡长看清了你的脸。}
+# en: {job_warned == 1: You run one lane and into a third watchman. A night in the cells, a bruised jaw, and a magistrate who remembers you and doubles the fine.|You run one lane and into a third watchman. A night in the cells, a bruised jaw, and in the morning a fine that empties your purse.}
+opt.right.say.2 [23daa7] = {job_warned == 1: 你跑了一条巷子，撞上了第三个巡夜人。一夜牢房，一块青肿的下巴，还有一个记得你、罚金翻倍的治安官。|你跑了一条巷子，撞上了第三个巡夜人。一夜牢房，一块青肿的下巴，早上一笔掏空你钱袋的罚金。}
+
+@event docks_bonded_talk
+# en: The Richest Floor
+title [414180] = 全城最富的地板
+# en: An old man on a wharf bench, one leg and a crutch, sees you looking at the long wall with the broken glass on top. "The bonded warehouses," he says. "Everything that comes into Port Calder waits in there till its duty's paid. Richest floor in the city. Forty years I walked it with a lantern." He spits. "Pensioned me off with nothing. Dogs, a round every hour, and a strongroom you could live in."
+text [890812] = 码头长凳上一个独腿拄拐的老人，看见你在望那堵墙头插着碎玻璃的长墙。“保税仓库，”他说，“进考尔德港的东西，交清关税之前都在里面等着。全城最富的一层地板。我提着灯在那上面走了四十年。”他啐了一口。“打发我走，什么也没给。狗，每个钟头巡一圈，还有个大得能住人的保险库。”
+# en: An old one-legged ex-watchman on a bench on a wharf at dusk, pointing with his crutch at a long walled warehouse with broken glass along its top, a student sitting beside him.
+scene [2e6ee3] = 黄昏时码头长凳上一个独腿的退休看守，用拐杖指着一座墙头插着碎玻璃的长围墙仓库，一个学生坐在他身边。
+# en: Buy him supper for the rest
+opt.left.label [c27bfe] = 请他吃顿晚饭，听他说完
+# en: You buy him a pie and a pint, and he tells you all of it: the dogs' names, the hour the round turns, the strongroom's iron door with the crown on it. "Not that you'd do anything," he says, and winks.
+opt.left.say.1 [72c69f] = 你请他吃了个馅饼喝了一品脱，他全告诉了你：狗的名字，巡夜转弯的钟点，那扇铸着王冠的保险库铁门。“当然啦，你也不会干什么，”他说着，眨了眨眼。
+# en: Tell him you're not that sort
+opt.right.label [0fee9f] = 告诉他你不是那种人
+# en: "Course you're not," he says. "Nobody is." He tells you anyway, the dogs' names and the round and the iron door, to the gulls, loud enough for you to hear. Walking away you find you've remembered every word, and feel grubby for it.
+opt.right.say.1 [2abda5] = “当然不是，”他说，“谁都不是。”他还是讲了，狗的名字、巡夜、那扇铁门，对着海鸥讲，声音大得刚好让你听见。走开时你发现自己一个字都记住了，心里觉得有点脏。
+
+@event bonded_customs_lamp
+# en: The Customs Lamp
+title [78100e] = 海关的灯
+# en: {seen(bonded_customs_lamp) > 1: The wharf at night, the wall, the lamp, the dogs barking once at a cat and settling. The man who keeps the yard dogs comes out of a side gate for his pipe. The lantern goes round.|From the shadow of a crane on the wharf you can see the whole of it: the long wall with glass along the top, the customs house with one lamp burning, and inside the yard a watchman's lantern going round like the hand of a slow clock. A man comes out of a side gate with the yard dogs' leashes over his arm, for his pipe.}
+text [60d41f] = {seen(bonded_customs_lamp) > 1: 夜里的码头，墙，灯，狗冲一只猫叫了一声又安静下来。管看门狗的人从侧门出来抽烟斗。灯笼一圈圈地转。|从码头一架吊车的阴影里，你能看清全貌：墙头插着玻璃的长墙，海关房子里亮着一盏灯，院子里看守的灯笼一圈圈地转，像一只慢钟的指针。一个男人胳膊上搭着看门狗的皮带从侧门出来，抽烟斗。}
+# en: Night on a harbour wharf, a long warehouse wall topped with broken glass, a single lamp in a customs house window, a watchman's lantern moving inside the yard, a student in the shadow of a crane watching.
+scene [e0e681] = 夜里的港口码头，一堵墙头插着碎玻璃的长仓库墙，海关房子的窗里一盏孤灯，院子里看守的灯笼在移动，一个学生在吊车的阴影里看着。
+# en: Count the watchman's round
+opt.left.label [bb126a] = 数看守的巡夜
+# en: You stand in the cold under the crane till you've seen the lantern go round three times against the cathedral's clock: the long gap at the far end, the shorter one by the gate. Your feet have stopped being feet.
+opt.left.say.1 [7bd60d] = 你在吊车底下的寒气里站着，对着大教堂的钟看灯笼转了三圈：远端那段长空当，大门边那段短的。你的脚已经不再是脚了。
+# en: Stand the dog-man a drink
+opt.right.label [b82746] = 请管狗的人喝一杯
+# en: {flag(bonded_dogs_known): You stand the dog-man a drink at the harbour tavern. He's good company, and tells you how his dogs are, as if asking after old friends of yours.|You walk the dog-man to the harbour tavern and stand him a drink. He's good company, and fond of his dogs, who love him, he says sadly, and anyone else with a sausage, if you use their names. He tells you their names.}
+opt.right.say.1 [9efdfd] = {flag(bonded_dogs_known): 你在港口酒馆请管狗的人喝了一杯。他是个好伴儿，跟你说起他的狗近来怎样，像在打听你的老朋友。|你陪管狗的人走到港口酒馆，请他喝了一杯。他是个好伴儿，很疼他的狗，那两条狗爱他，他伤心地说，也爱任何带着香肠、叫得出它们名字的人。他把名字告诉了你。}
+
+@event bonded_enter
+# en: Over the Wall
+title [65a968] = 翻墙
+# en: {job_bonded_deepest == 0: Night on the wharf. The customs' wall runs off into the dark, glass along its top, and over it the warehouse roofs, and under those the richest floor in the city: everything that's come into Port Calder and not paid its duty yet.|{&The wall, the glass along it, the customs lamp.|The wharf at night, and the wall waiting.|Over the wall, the dogs are quiet. Over the wall, the lantern goes round.}} {flag(tide_bonded_drain): You'll go in by the culvert from the tide caves tonight, which comes up under the floor.|}
+text [afcf39] = {job_bonded_deepest == 0: 码头的夜。海关的墙一直伸进黑暗里，墙头插着玻璃，墙那边是仓库的屋顶，屋顶底下是全城最富的一层地板：进了考尔德港、还没缴关税的一切。|{&墙，墙头的玻璃，海关的灯。|夜里的码头，墙在等着。|墙那边，狗很安静。墙那边，灯笼一圈圈地转。}} {flag(tide_bonded_drain): 今晚你走潮汐洞窟那条涵洞进去，它通到地板底下。|}
+# en: A student at night throwing a sack over the broken glass on top of a high warehouse wall, a wharf and moored ships behind, the customs lamp glowing beyond.
+scene [8e005c] = 夜里一个学生把一只麻袋甩到高高的仓库墙头的碎玻璃上，身后是码头和停泊的船，远处亮着海关的灯。
+# en: Not tonight
+opt.left.label [4bf72b] = 今晚不了
+# en: {&You leave the wall to its glass and walk home along the wharf.|Not tonight. The lantern goes round without you.|You watch a while longer and go to bed with the round still turning in your head.}
+opt.left.say.1 [f4bbe6] = {&你把墙留给它的玻璃，沿着码头走回家。|今晚不了。灯笼没有你也照样转。|你又看了一会儿，上床时脑子里还转着那圈巡夜。}
+# en: Go in
+opt.right.label [7de3f2] = 进去
+# en: A heist: press on card by card, slip away with what you carry any time.
+opt.right.hint [f5be0b] = 夜盗：一张张往前走，随时可以带着手上的东西溜走。
+# en: {flag(tide_bonded_drain): You go round by the tide caves and up the culvert, lift the grating between two rounds, and come up on the warehouse floor among the crates, wet to the knees.|{&You throw a sack over the glass, go over, and drop into the yard.|You go over where the glass is broken already, which somebody else found first.|You go over the wall by the crane's shadow, as quiet as you've ever been.}}
+opt.right.say.1 [544606] = {flag(tide_bonded_drain): 你绕到潮汐洞窟，爬上涵洞，趁两圈巡夜之间掀开铁栅，从仓库地板的板条箱中间冒出来，膝盖以下全湿了。|{&你把麻袋甩到玻璃上，翻过去，跳进院子。|你从玻璃已经碎掉的地方翻过去，那是别人先发现的。|你借着吊车的阴影翻过墙，静得前所未有。}}
+
+@thread job_bonded
+# en: The bonded warehouses
+name [4c58f4] = 保税仓库
+# en: Under the crown's seal on Port Calder's wharf, the richest floor in the city waits for its duty to be paid.
+premise [f1fe0c] = 在考尔德港码头的王室封印下，全城最富的一层地板等着缴清关税。
+# en: You went over the customs' wall at night.
+journal.1 [c30afb] = 你在夜里翻过了海关的墙。
+# en: You opened the customs' strongroom.
+journal.2 [fba2ad] = 你打开了海关的保险库。
+# en: In the strongroom you found the foreman's private ledger, and the theft a crew boy went to gaol for.
+journal.3 [99d777] = 你在保险库里找到了工头的私账，还有一个街头少年为之坐牢的那桩盗窃。
+# en: You sent the foreman's ledger to the magistrate, and Jory walked out of gaol.
+journal.4 [3e00b4] = 你把工头的账本送给了治安官，乔里走出了监狱。
+
+@event bonded_dead_end
+# en: No Way Through
+title [4065c4] = 此路不通
+# en: {job_depth >= 5: The strongroom has had all the picking it'll take tonight, and somewhere a watchman's whistle is going. The only way left is out.|{&A watchman has sat down on a crate at the end of the row with his pipe, and isn't moving. The only way that's still a way is back.|The next door's barred on the far side. Whatever's past it isn't for tonight.|A stack of tea chests has come down across the row. The noise is still going round the roof.}}
+text [9b51e2] = {job_depth >= 5: 保险库今晚已经被撬够了，某处有个看守的哨子在响。只剩出去这一条路。|{&一个看守在那一排尽头的板条箱上坐下来抽烟斗，不动了。还算条路的，只有往回走。|下一扇门从那边闩上了。门后的东西不属于今晚。|一摞茶叶箱倒下来横在过道上。声响还在屋顶下回荡。}}
+# en: The end of a dark warehouse row, a watchman sitting on a crate with his pipe and lantern, a student peering round a stack of tea chests.
+scene [99704e] = 黑暗的仓库一排尽头，一个看守拿着烟斗和灯笼坐在板条箱上，一个学生从一摞茶叶箱后面偷看。
+# en: Go back with what you carry
+opt.left.label [e2014c] = 带着手上的东西回去
+# en: {job_depth >= 5: You leave the iron door to the crown and go, the long way, with what you have.|{&You turn round and go by the way you know.|You take the hint, and the long way out.|You go, before anyone comes to see what fell.}}
+opt.left.say.1 [a5d67f] = {job_depth >= 5: 你把铁门留给王室，带着手上的东西绕远路走了。|{&你转身走你认得的路。|你听懂了暗示，走那条长路出去。|趁没人来看是什么倒了，你走了。}}
+# en: Search where you stand
+opt.right.label [f7f345] = 就地搜一搜
+# en: {job_depth >= 5: By the strongroom door there's a crate of seized things waiting to go in. One small one comes with you.|{&On the nearest crate the seal's already split. Something small and good comes with you.|You feel along the stack and find a packet that's fallen behind. It comes with you.|Among the fallen chests, one has burst. You fill your pockets with tea, the good kind.}}
+opt.right.say.1 [b3c8f7] = {job_depth >= 5: 保险库门边有一箱等着入库的查没品。一件小的跟你走了。|{&最近的板条箱封条已经裂开了。一件又小又好的东西跟你走了。|你沿着货堆摸，找到一个掉到后面的小包。它跟你走了。|倒下的箱子里有一只摔破了。你往口袋里塞满茶叶，好茶叶。}}
+# en: {job_depth >= 5: You catch your hand on the strongroom's hinge in the dark, and leave it be.|{&You find nothing but splinters.|A crate shifts under your hand, and you freeze, and leave it.|You find nothing, and bark your shin finding it.}}
+opt.right.say.2 [f6d4f1] = {job_depth >= 5: 黑暗里你的手挂在保险库的门铰上，你作罢了。|{&你只找到一手木刺。|一只板条箱在你手底下挪了一下，你僵住了，作罢了。|你什么也没找到，找的时候还磕了小腿。}}
+
+@event bonded1_dogs
+# en: The Yard Dogs
+title [cb9317] = 院子里的狗
+# en: {seen(bonded1_dogs) > 1: The dogs again. One gets up, and stretches, and looks at you as if trying to remember where it's seen you.|The yard dogs are lying in the straw by the warehouse door, two of them, big as ponies in the dark. One lifts its head.} {flag(bonded_dogs_known): You know their names, and you've brought a sausage.|You don't know their names.}
+text [5d6f8c] = {seen(bonded1_dogs) > 1: 又是那两条狗。一条站起来，伸了个懒腰，看着你，像在努力回想在哪儿见过你。|看门狗躺在仓库门边的稻草里，两条，黑暗里大得像小马。一条抬起了头。} {flag(bonded_dogs_known): 你知道它们的名字，还带了根香肠。|你不知道它们的名字。}
+# en: Two big rough-coated yard dogs rising from straw by a warehouse door at night, ears up, a student frozen in the moonlit yard holding out a hand.
+scene [0ae900] = 夜里两条粗毛的大看门狗从仓库门边的稻草里站起来，竖着耳朵，一个学生僵在月光下的院子里，伸着一只手。
+# en: Back off over the wall
+opt.left.label [bc2164] = 退回去翻出墙
+# en: {seen(bonded1_dogs) > 1: You leave the dogs their straw. They watch you go without much interest.|You back away to the wall step by step and go over it the way you came.}
+opt.left.say.1 [1811f7] = {seen(bonded1_dogs) > 1: 你把稻草留给狗。它们看着你走，没什么兴趣。|你一步一步退到墙边，原路翻了出去。}
+# en: Walk past them like you belong
+opt.right.label [27b4e5] = 像自己人一样走过去
+# en: {flag(bonded_dogs_known): You say their names, softly, and hold out the sausage. Two tails go. You walk past with two large friends, who see you all the way to the door.|{seen(bonded1_dogs) > 1: You walk past as if you did it every night. The dogs decide you probably do.|You walk past slow and easy, not looking at them. One sniffs your hand and lies down again.}}
+opt.right.say.1 [67747b] = {flag(bonded_dogs_known): 你轻声叫出它们的名字，递出香肠。两条尾巴摇了起来。你带着两个大个子朋友走过去，它们一直把你送到门口。|{seen(bonded1_dogs) > 1: 你走过去，好像每晚都这么走。狗认定你大概真是。|你不紧不慢地走过去，不看它们。一条嗅了嗅你的手，又躺下了。}}
+# en: {seen(bonded1_dogs) > 1: The bigger dog takes your sleeve in its teeth and holds it, politely, and barks until somebody comes.|One of them barks, once, and every lantern in the yard turns your way.}
+opt.right.say.2 [be927c] = {seen(bonded1_dogs) > 1: 大的那条叼住你的袖子，客客气气地衔着，一直叫到有人来。|其中一条叫了一声，就一声，院子里每盏灯笼都转向了你。}
+# en: Step through the shadows past them
+opt.up.label [08bdd2] = 借着阴影从它们身边过去
+# en: {seen(bonded1_dogs) > 1: Shadow to shadow, past the straw. One dog sneezes. That's all.|You step into the crane's shadow and out of the shed's, twenty yards on. The dogs never stir.}
+opt.up.say.1 [4824ac] = {seen(bonded1_dogs) > 1: 一片阴影接一片阴影，经过稻草堆。一条狗打了个喷嚏。仅此而已。|你踏进吊车的阴影，从二十码外棚子的阴影里出来。狗动都没动。}
+
+@event bonded1_clerk_window
+# en: The Clerk's Window
+title [1f4421] = 文书的窗
+# en: {seen(bonded1_clerk_window) > 1: The clerk is at his window again, working late, and the square of light lies across the yard like a rug you have to cross.|Across the yard, in the customs house, a clerk is working late: sleeve-garters, a lamp, a ledger. Between you and the warehouse door lies the square of light from his window.}
+text [d0e6b4] = {seen(bonded1_clerk_window) > 1: 文书又在他的窗前加夜班，那块方形的光铺在院子里，像一块你得走过去的地毯。|院子对面的海关房子里，一个文书在加夜班：袖箍，一盏灯，一本账簿。你和仓库门之间，横着他窗户投下的那块方光。}
+# en: A lit window in a customs house at night, a clerk in sleeve-garters bent over a ledger by a lamp, a dark yard outside it, a student crossing the yard in the light from the window.
+scene [57462c] = 夜里海关房子一扇亮着的窗，戴袖箍的文书在灯下埋头记账，窗外是黑暗的院子，一个学生正从窗光里穿过院子。
+# en: Go back over the wall
+opt.left.label [acb651] = 翻墙回去
+# en: {seen(bonded1_clerk_window) > 1: You go, and leave the clerk to his figures. He never looks up.|You leave him to his ledger and go back over the wall.}
+opt.left.say.1 [87c184] = {seen(bonded1_clerk_window) > 1: 你走了，把文书留给他的数字。他一次也没抬头。|你把他留给他的账簿，翻墙回去了。}
+# en: Walk across as if you work here
+opt.right.label [a58770] = 像在这儿干活的人一样走过去
+# en: {seen(bonded1_clerk_window) > 1: You cross the light whistling under your breath. The clerk raises a hand without looking. You raise one back.|You walk across his light at an honest pace, as if you'd been sent for something. He looks up, sees a shape that belongs, and looks down again.}
+opt.right.say.1 [6bf40d] = {seen(bonded1_clerk_window) > 1: 你低声吹着口哨穿过那片光。文书头也不抬地举了举手。你也举了举手。|你以老实的步子穿过他的光，像是被派来取什么东西的。他抬头，看见一个像是自己人的身影，又低下了头。}
+# en: {seen(bonded1_clerk_window) > 1: You hesitate in the middle of the light, which nobody who works here would do. The window goes up. "Who's that?"|He looks up, and keeps looking, and reaches for his whistle.}
+opt.right.say.2 [f4cb32] = {seen(bonded1_clerk_window) > 1: 你在那片光中间犹豫了一下，在这儿干活的人谁也不会这样。窗子推开了。“谁在那儿？”|他抬起头，一直盯着，伸手去摸他的哨子。}
+
+@event bonded1_yard_bales
+# en: Bales in the Yard
+title [91d648] = 院子里的货包
+# en: {seen(bonded1_yard_bales) > 1: The bales in the yard again, different ones: tonight they're stamped for somewhere warm, and they smell of spice.|In the lee of the wall there are bales waiting for the morning's carts, under a tarpaulin that doesn't quite cover them. One's split, and there's bright cloth inside.}
+text [0a734c] = {seen(bonded1_yard_bales) > 1: 院子里又是货包，换了一批：今晚的货印着发往某个暖和地方的字样，闻着有香料味。|墙根背风处堆着等早上装车的货包，盖着一块没盖严的油布。有一包裂了，里面是鲜亮的布料。}
+# en: Bales of goods stacked under a tarpaulin in a dark warehouse yard, the sacking slit open on bright cloth, a student cutting a length free with a knife.
+scene [6dd61b] = 黑暗的仓库院子里，油布下堆着货包，麻布裂开露出鲜亮的布料，一个学生用刀割下一段。
+# en: Leave them and go back
+opt.left.label [c117a6] = 别碰它们，回去
+# en: {seen(bonded1_yard_bales) > 1: You go, and leave the spice to the carters.|You leave the bales for the morning's carts and slip back over the wall.}
+opt.left.say.1 [403058] = {seen(bonded1_yard_bales) > 1: 你走了，把香料留给车夫。|你把货包留给早上的车，溜回墙那边去。}
+# en: Cut a length free and go on
+opt.right.label [558914] = 割一段，继续走
+# en: {seen(bonded1_yard_bales) > 1: You cut a corner from a spice bale and fill your pockets, and tear a knuckle open on the bale's wire. Your eyes stream all the way to the warehouse door.|You cut a length of the bright cloth free and roll it under your coat, and slice your thumb on the sacking's wire. It's silk.}
+opt.right.say.1 [de93fb] = {seen(bonded1_yard_bales) > 1: 你从一包香料上割下一角，装满口袋，被货包的铁丝划开了一个指节。你一路流着眼泪走到仓库门口。|你割下一段鲜亮的布料卷进外套里，拇指被麻包的铁丝割破了。是丝绸。}
+
+@event bonded1_loading_door
+# en: The Loading Door
+title [893e00] = 装货门
+# en: {seen(bonded1_loading_door) > 1: The loading door, the gap, and the ginger cat in it, who seems to have been waiting.|The warehouse's loading door has been left a hand's width open, and a ginger cat is sitting in the gap, washing.} For a moment the yard is only a yard.
+text [e22176] = {seen(bonded1_loading_door) > 1: 装货门，那道缝，缝里的姜黄猫，好像一直在等着。|仓库的装货门留了一掌宽的缝，一只姜黄猫坐在缝里洗脸。} 有那么一会儿，院子只是个院子。
+# en: A warehouse loading door left a hand's width open at night, a ginger cat sitting in the gap, a student crouching beside it in the dark yard.
+scene [c15af9] = 夜里仓库的装货门留着一掌宽的缝，一只姜黄猫坐在缝里，一个学生蹲在黑暗的院子里它旁边。
+# en: Leave it and go back
+opt.left.label [8f0c89] = 不管它，回去
+# en: {seen(bonded1_loading_door) > 1: You go, and the cat watches you to the wall as if you'd let it down.|You leave the cat its doorway and go back over the wall.}
+opt.left.say.1 [cdb308] = {seen(bonded1_loading_door) > 1: 你走了，猫看着你一直到墙边，好像你辜负了它。|你把门口留给猫，翻墙回去了。}
+# en: Slip in past the cat
+opt.right.label [35441d] = 从猫身边溜进去
+# en: {seen(bonded1_loading_door) > 1: You go in after the cat, who goes ahead between the crates, stopping to look back.|You slip through the gap and the cat comes with you, tail up, as if showing you round.}
+opt.right.say.1 [71b6aa] = {seen(bonded1_loading_door) > 1: 你跟着猫进去，它在板条箱之间走在前面，不时停下来回头看。|你从缝里溜进去，猫竖着尾巴跟了进来，好像在带你参观。}
+
+@event bonded2_round
+# en: The Watchman's Round
+title [ef5c5f] = 看守的巡夜
+# en: {seen(bonded2_round) > 1: The lantern again, on the round. You know his cough now.|The floor goes on and on, crate on crate, and down the row comes the watchman's lantern on his round, slow, swinging, looking.} {flag(bonded_round_counted): You know where the round turns, and how long the gap is.|You don't know where the round goes next.}
+text [2a05f9] = {seen(bonded2_round) > 1: 又是那盏灯笼，在巡夜。你现在认得他的咳嗽声了。|地板一直延伸下去，箱子叠着箱子，看守的灯笼顺着这一排巡过来，慢慢的，晃着，看着。} {flag(bonded_round_counted): 你知道巡夜在哪里转弯，空当有多长。|你不知道巡夜接下来往哪儿走。}
+# en: A long warehouse floor at night between towering stacks of tea chests, a watchman's lantern coming slowly down the row, a student climbing into an empty chest.
+scene [ad8f9d] = 夜里一层长长的仓库地板，茶叶箱堆得高耸，看守的灯笼沿着这一排慢慢过来，一个学生正往一只空箱子里钻。
+# en: Back out while he's at the far end
+opt.left.label [3744da] = 趁他在远端退出去
+# en: {seen(bonded2_round) > 1: You leave the floor to the watchman and go.|You go back the way you came, behind him, step for step.}
+opt.left.say.1 [4113ae] = {seen(bonded2_round) > 1: 你把地板留给看守，走了。|你跟在他后面一步一步原路回去。}
+# en: Get into an empty tea chest
+opt.right.label [3c61b4] = 钻进一只空茶叶箱
+# en: {seen(bonded2_round) > 1: Into an empty chest, lid down, knees at your ears. The round goes by without stopping this time.|You fold yourself into an empty tea chest and pull the lid down. The lantern stops right beside it. The watchman sits on your lid, smokes half a pipe, and goes on. You come out stiff, and smelling of tea.}
+opt.right.say.1 [c86950] = {seen(bonded2_round) > 1: 钻进一只空箱子，盖上盖，膝盖顶着耳朵。这回巡夜没停就过去了。|你把自己折进一只空茶叶箱，拉下盖子。灯笼就停在箱子旁边。看守坐在你的盖子上，抽了半斗烟，走了。你爬出来时浑身僵硬，一身茶味。}
+# en: {seen(bonded2_round) > 1: The chest's bottom gives way under you with a crack like a shot.|The lid won't sit flat over your elbow. The lantern stops, and a hand lifts it.}
+opt.right.say.2 [c8684f] = {seen(bonded2_round) > 1: 箱底在你身下咔嚓一声塌了，像开了一枪。|盖子压不平你的胳膊肘。灯笼停下来，一只手掀开了它。}
+
+@event bonded2_seals
+# en: The Crown's Seals
+title [e28c03] = 王室的封印
+# en: {seen(bonded2_seals) > 1: The silk under the crown's seals again, a new cargo of it. The wax is fresh.|Here the silk is, the best of the floor: bales corded and sealed with red wax and the crown, every one. Break a seal and the morning shift will know by breakfast.}
+text [b40fa2] = {seen(bonded2_seals) > 1: 王室封印下的丝绸又来了一批新货。蜡还是新的。|丝绸在这儿，整层地板上最好的货：一包包都捆着绳、封着印着王冠的红蜡。弄破一个封印，早班的人吃早饭前就会知道。}
+# en: Bales of silk on a warehouse floor at night, each corded and fixed with a red wax customs seal stamped with a crown, a student working a thin knife under one of the seals.
+scene [328958] = 夜里仓库地板上的丝绸包，每包都捆着绳、封着印有王冠的红色海关蜡封，一个学生把一把薄刀插到一个封印底下。
+# en: Leave the seals and go back
+opt.left.label [620b59] = 别碰封印，回去
+# en: {seen(bonded2_seals) > 1: You go back the way you came, and the seals stay whole.|You leave the crown its wax and go.}
+opt.left.say.1 [62a431] = {seen(bonded2_seals) > 1: 你原路回去，封印完好无损。|你把蜡留给王室，走了。}
+# en: Lift a seal without breaking it
+opt.right.label [6648fa] = 揭起封印而不弄破
+# en: {seen(bonded2_seals) > 1: You lift the seal with a hot knife, take your silk and put it back. It's horribly easy, which you try not to think about.|You warm the knife in your hand and slide it under the wax, slow as a clock, and the seal lifts whole. You take two lengths and press the wax back. Nobody will know till the bale's weighed.}
+opt.right.say.1 [df1ee8] = {seen(bonded2_seals) > 1: 你用热刀揭起封印，拿了丝绸，再把它放回去。容易得吓人，你尽量不去想。|你把刀在手里焐热，慢得像钟表一样插到蜡下面，封印完整地揭了起来。你拿了两段，又把蜡按回去。不到称重谁也不会知道。}
+# en: {seen(bonded2_seals) > 1: The knife slips and the cord parts and the whole bale slumps open across the floor.|The wax cracks in half with a noise like a shot, in the silence.}
+opt.right.say.2 [e8e8c1] = {seen(bonded2_seals) > 1: 刀一滑，绳子断了，整包货在地板上瘫开。|一片寂静里，蜡裂成两半，响得像开了一枪。}
+# en: Cut it, take it, seal it again
+opt.up.label [39ccb2] = 割开，拿走，再封上
+# en: {seen(bonded2_seals) > 1: You take your silk and seal the bale behind you, neater than the customs did.|You cut the cord, take two lengths, and close the bale again with a word. The wax flows back together, crown and all. The crown will never know.}
+opt.up.say.1 [bc55f3] = {seen(bonded2_seals) > 1: 你拿了丝绸，在身后把货包封好，比海关封得还整齐。|你割断绳子，拿了两段，念一个词把货包重新封上。蜡流回原处，王冠也在。王室永远不会知道。}
+
+@event bonded2_crane_loft
+# en: The Crane Gantry
+title [5c7d64] = 吊车轨架
+# en: {seen(bonded2_crane_loft) > 1: The gantry again. Somebody's left a hook swinging on its chain, slowly, as if somebody had just gone by.|The quick way across the floor is overhead: the iron gantry the cranes run on, under the roof, with chains and hooks hanging from it into the dark.}
+text [c62a69] = {seen(bonded2_crane_loft) > 1: 又是轨架。有人留了一只钩子在链子上慢慢地晃，好像刚有人经过。|穿过地板最快的路在头顶：屋顶下吊车跑的铁轨架，链子和钩子垂进黑暗里。}
+# en: An iron crane gantry running high under a warehouse roof at night, chains and hooks hanging, a student edging along it above a dark floor of crates.
+scene [a8f970] = 夜里仓库屋顶下高高的铁制吊车轨架，挂着链子和钩子，一个学生沿着它挪过黑暗的板条箱地面上方。
+# en: Stay on the ground and go back
+opt.left.label [275b11] = 待在地上，回去
+# en: {seen(bonded2_crane_loft) > 1: You go back. The hook goes on swinging.|You leave the gantry to the pigeons and go back the long way, on the ground.}
+opt.left.say.1 [d7e993] = {seen(bonded2_crane_loft) > 1: 你回去了。钩子还在晃。|你把轨架留给鸽子，在地上绕远路回去。}
+# en: Go along the gantry
+opt.right.label [4399f4] = 沿着轨架过去
+# en: {seen(bonded2_crane_loft) > 1: You cross on the iron, quick and quiet, and drop down past the round without it knowing.|You go along the gantry hand over hand, over the whole floor and the watchman's lantern, and drop down by the far wall soft as a cat.}
+opt.right.say.1 [f7f205] = {seen(bonded2_crane_loft) > 1: 你在铁架上又快又静地过去，从巡夜的头顶落下，它毫无察觉。|你手攀手沿着轨架过去，越过整层地板和看守的灯笼，在远处的墙边像猫一样轻轻落地。}
+# en: {seen(bonded2_crane_loft) > 1: You slip, and hang by your hands, and when you drop the crate you land on goes over.|A chain swings into you and its hook rings off the iron like a gong, over the whole floor.}
+opt.right.say.2 [a15046] = {seen(bonded2_crane_loft) > 1: 你一滑，吊在半空，松手落下时踩翻了脚下的板条箱。|一根链子荡过来撞上你，钩子敲在铁架上像敲锣，响遍整层地板。}
+# en: Run it
+opt.up.label [430853] = 跑过去
+# en: {seen(bonded2_crane_loft) > 1: You run the iron, quick as thought. The pigeons don't even wake.|You go faster than the gantry can creak, the length of the roof in a breath, and drop down at the far wall.}
+opt.up.say.1 [25ec7c] = {seen(bonded2_crane_loft) > 1: 你在铁架上跑，快如念头。鸽子都没醒。|你跑得比轨架嘎吱响得还快，一口气跑完屋顶，在远处墙边落下。}
+
+@event bonded2_spirit_floor
+# en: The Spirit Floor
+title [c6e3cb] = 烈酒层
+# en: {seen(bonded2_spirit_floor) > 1: The spirit floor again. The fumes are worse tonight; somebody's cask is weeping.|The spirit floor: casks of rum and brandy racked to the roof, every one with the crown burned into its head, and the air so thick with fumes your eyes water.}
+text [a329e8] = {seen(bonded2_spirit_floor) > 1: 又是烈酒层。今晚酒气更重了；有个桶在渗。|烈酒层：朗姆和白兰地的桶一直码到屋顶，每个桶头都烙着王冠，空气里的酒气浓得你眼睛流泪。}
+# en: Rows of great casks of rum and brandy on racks in a dark warehouse, a student drawing spirit from a cask through a gimlet hole into a flask, coughing at the fumes.
+scene [a6e815] = 黑暗仓库里一排排架子上的朗姆和白兰地大桶，一个学生从桶上的钻孔往小酒壶里放酒，被酒气呛得直咳。
+# en: Hold your breath and go back
+opt.left.label [35ae3f] = 屏住气回去
+# en: {seen(bonded2_spirit_floor) > 1: You leave the casks to the crown and go, eyes streaming.|You go back, breathing through your sleeve.}
+opt.left.say.1 [ec241f] = {seen(bonded2_spirit_floor) > 1: 你把酒桶留给王室，走了，眼泪直流。|你隔着袖子呼吸，回去了。}
+# en: Fill two flasks and go on
+opt.right.label [2d172c] = 灌两壶，继续走
+# en: {seen(bonded2_spirit_floor) > 1: You fill your flasks from the rum. Your head swims for the length of the floor.|You bore a hole low in a brandy cask, fill two flasks, and stop it with a peg. The fumes go straight to your head, and you walk on a little wider than you meant to.}
+opt.right.say.1 [f43dcc] = {seen(bonded2_spirit_floor) > 1: 你从朗姆桶里灌满了酒壶。走完这一层，你的头一直在晕。|你在一只白兰地桶底部钻了个孔，灌满两壶，用木塞堵上。酒气直冲脑门，你往前走时步子比想的宽了些。}
+
+@event bonded2_tea_floor
+# en: The Tea Floor
+title [80c8c0] = 茶叶层
+# en: {seen(bonded2_tea_floor) > 1: The tea floor, and the dust, and the lantern at the end of the row. Your nose remembers.|The tea floor: chests stacked to the roof, and tea dust hanging in the dark so fine you can feel it in your nose. At the end of the row the lantern's coming.}
+text [76376f] = {seen(bonded2_tea_floor) > 1: 茶叶层，灰尘，还有这一排尽头的灯笼。你的鼻子记得。|茶叶层：箱子码到屋顶，茶灰悬在黑暗里，细得你能在鼻子里感觉到。这一排尽头，灯笼过来了。}
+# en: Tea chests stacked to the roof of a dark warehouse floor, fine dust in the air, a student holding their nose to stop a sneeze while a lantern passes at the end of the row.
+scene [19a14f] = 黑暗仓库里茶叶箱码到屋顶，空气里飘着细灰，一个学生捏着鼻子忍住喷嚏，一盏灯笼从这一排尽头经过。
+# en: Back out before you sneeze
+opt.left.label [affca0] = 趁打喷嚏之前退出去
+# en: {seen(bonded2_tea_floor) > 1: You go, holding your nose, and sneeze into the river.|You back out with your sleeve over your face and get as far as the wharf before you sneeze.}
+opt.left.say.1 [0d853c] = {seen(bonded2_tea_floor) > 1: 你捏着鼻子走了，冲着河打了个喷嚏。|你用袖子捂着脸退出去，一直到码头才打出喷嚏。}
+# en: Fill your pockets and hold it in
+opt.right.label [2c453a] = 装满口袋，忍住
+# en: {seen(bonded2_tea_floor) > 1: You take your tea and fight your nose all the way down the row. Your nose nearly wins.|You fill your pockets with the best tea in Port Calder and stand absolutely still, eyes streaming, through the whole of the lantern going by. It's the longest minute of your life.}
+opt.right.say.1 [af5883] = {seen(bonded2_tea_floor) > 1: 你拿了茶叶，一路和自己的鼻子较劲走完这一排。鼻子差点赢了。|你往口袋里装满考尔德港最好的茶叶，一动不动地站着，眼泪直流，熬过灯笼经过的整段时间。这是你这辈子最长的一分钟。}
+
+@event bonded_strongroom
+# en: The Crown's Strongroom
+title [9dbe17] = 王室保险库
+# en: {seen(bonded_strongroom) > 1: The strongroom's iron door again, the crown on it, the same padlock.|At the end of the floor, behind an iron door with the crown cast on it, is the customs' strongroom: everything the crown has seized, waiting for auction. The padlock is the size of your two fists.} {flag(bonded_strongroom): You've had it open before.|}
+text [b2a7f0] = {seen(bonded_strongroom) > 1: 又是保险库的铁门，上面的王冠，同一把挂锁。|地板尽头，一扇铸着王冠的铁门后面是海关的保险库：王室查没的一切，等着拍卖。挂锁有你两个拳头那么大。} {flag(bonded_strongroom): 你以前打开过它。|}
+# en: A heavy iron door with a crown cast on it at the end of a dark warehouse floor, a big padlock, a student kneeling at the lock with a lantern shaded under their coat.
+scene [e7991a] = 黑暗仓库地板尽头一扇铸着王冠的沉重铁门，一把大挂锁，一个学生跪在锁前，外套底下遮着一盏灯。
+# en: Leave it and get out
+opt.left.label [25b9d8] = 别碰它，出去
+# en: {seen(bonded_strongroom) > 1: You leave the crown its strongroom and go while the round's at the far end.|You leave the iron door alone and go, by the long way, with what you have.}
+opt.left.say.1 [bab835] = {seen(bonded_strongroom) > 1: 你把保险库留给王室，趁巡夜在远端时走了。|你没碰那扇铁门，带着手上的东西绕远路走了。}
+# en: Work the padlock
+opt.right.label [6234b1] = 对付那把挂锁
+# en: {flag(bonded_strongroom): The padlock gives again. Inside, the seized goods have changed, and the pick of them comes with you.|The padlock gives with a sound like a cough. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked.}
+opt.right.say.1 [03c812] = {flag(bonded_strongroom): 挂锁又开了。里面的查没品换了，最好的几样跟你走了。|挂锁咳嗽似的响了一声，开了。里面的架子上：查没的首饰，一箱决斗手枪，几匹走私的蕾丝，还有一个没上锁的抽屉。}
+# en: {seen(bonded_strongroom) > 1: The padlock won't move, and you work at it too long. The round comes back early.|The pick snaps in the lock, and the iron door booms when you knock it, and a whistle answers.}
+opt.right.say.2 [ad2b88] = {seen(bonded_strongroom) > 1: 挂锁纹丝不动，你弄得太久了。巡夜提前回来了。|撬针在锁里断了，你碰到铁门时它嗡地一响，一声哨子应了过来。}
+# en: Pick it with the proper tools
+opt.up.label [f35e05] = 用正经工具撬
+# en: {flag(bonded_strongroom): Eleven picks, and you know which one now. The door opens on the crown's newest seizures.|Eleven picks and a tension wrench, and the padlock opens on the fourth. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked.}
+opt.up.say.1 [6ed246] = {flag(bonded_strongroom): 十一根撬针，你现在知道是哪一根了。门开了，里面是王室最新的查没品。|十一根撬针加一把张力扳手，挂锁在第四根上开了。里面的架子上：查没的首饰，一箱决斗手枪，几匹走私的蕾丝，还有一个没上锁的抽屉。}
+# en: {seen(bonded_strongroom) > 1: Even with the proper picks the old lock fights you, and the round comes back before it gives.|The fourth pick bends, then the fifth, and while you fumble for the sixth a whistle goes at the end of the floor.}
+opt.up.say.2 [012658] = {seen(bonded_strongroom) > 1: 就算用正经的撬针，那把老锁也跟你较劲，它还没开，巡夜就回来了。|第四根撬针弯了，接着是第五根，你摸第六根时，这层地板尽头响起了哨子。}
+
+@event bonded_ledger
+# en: The Foreman's Ledger
+title [f0e921] = 工头的账本
+# en: In the unlocked drawer there's a ledger in the warehouse foreman's hand. Two columns for every cargo: what came in, and what the crown was told came in. The difference goes out by a side door, month after month. One night is circled: a crate gone that the foreman had sold already, {has(origin_street): and Jory caught on the floor that night with nothing in his hands, and sent down for the lot.|and a young man from one of Port Calder's street crews, caught on the floor that night, sent to gaol for the lot.}
+text [eb666f] = 没上锁的抽屉里有一本账簿，是仓库工头的笔迹。每批货两栏：进了多少，报给王室进了多少。差额从一扇侧门出去，月复一月。有一夜被圈了出来：丢了一箱工头早就卖掉的货，{has(origin_street): 那晚乔里两手空空地在地板上被抓，替整批货坐了牢。|那晚一个考尔德港街头帮伙的年轻人在地板上被抓，替整批货进了监狱。}
+# en: A student in a dark strongroom reading a ledger by a shaded lantern, two columns of figures in the same hand, a page with a date circled.
+scene [0febe7] = 黑暗的保险库里，一个学生借着遮光灯读一本账簿，同一个笔迹的两栏数字，一页上圈着一个日期。
+# en: Send it to the magistrate
+opt.left.label [44328d] = 把它送给治安官
+# en: Before dawn you leave the ledger wrapped in oilcloth on the magistrate's own doorstep, unsigned. Within the week the foreman's in the cells{has(origin_street): and Jory's out of them, blinking at the daylight on the loft step.|, and the young crew boy who took his blame walks out of gaol.} Nobody knows who sent it. You lose the ledger's price, and don't miss it.
+opt.left.say.1 [9b2cea] = 天亮前你把账本用油布包好，放在治安官自家门阶上，不署名。不到一周工头就进了牢房{has(origin_street): ，乔里出来了，在阁楼台阶上对着天光眨眼。|，替他背黑锅的那个帮伙少年走出了监狱。}没人知道是谁送的。你丢了账本能卖的价钱，并不心疼。
+# en: Sell it back to the foreman
+opt.right.label [149b97] = 把它卖回给工头
+# en: You send the foreman one page of his own ledger and a time. He comes alone, pays in gold without a word, and burns the book in front of you. {has(origin_street): Jory stays where he is.|The crew boy who took his blame stays where he is.} The gold is heavy in your pocket all the way home.
+opt.right.say.1 [90c44f] = 你给工头送去他自己账本的一页，约了个时间。他一个人来，一言不发地付了金子，当着你的面烧了账本。{has(origin_street): 乔里还待在原地。|替他背黑锅的那个帮伙少年还待在原地。}一路回家，口袋里的金子沉甸甸的。
+
+@event crew_loft_jory_home
+# en: Jory Home
+title [386a16] = 乔里回家
+# en: {seen(crew_loft_empty_hammock) > 0: The empty hammock isn't empty. Jory's in it, thinner,|There's a face in the loft you know only from the foreman's ledger: Jory, back from a year in the city gaol, in his own hammock, thinner,} with a bowl of soup and the whole loft finding reasons to walk past him. "Somebody sent the magistrate a book," he tells you. "Nobody knows who." Across the stove Nan Merrow looks at you once, and goes back to dealing.
+text [b35b44] = {seen(crew_loft_empty_hammock) > 0: 那张空吊床不空了。乔里躺在里面，瘦了，|阁楼里有一张你只在工头账本上见过的面孔：乔里，在城里监狱待了一年回来了，躺在自己的吊床里，瘦了，}捧着一碗汤，整个阁楼的人都找着理由从他身边走过。“有人给治安官寄了本书，”他告诉你，“没人知道是谁。”炉子对面，南·梅罗看了你一眼，又接着发牌。
+# en: A harbour-town loft with a row of hammocks, a thin young man sitting up in one eating soup, a sharp-eyed older woman and a student at the stove, the crew round a card table.
+scene [f9ae4f] = 港城的一间阁楼，一排吊床，一个瘦削的年轻人坐在其中一张里喝汤，炉边一个目光锐利的年长女人和一个学生，伙伴们围着牌桌。
+# en: Stand the loft a round
+opt.left.label [a0dc18] = 请全阁楼喝一轮
+# en: You buy the loft a round, and then another, and Jory tells the whole room about the gaol's food till they beg him to stop. Nan says nothing at all to you all night, which in the loft is the highest thing she has to give.
+opt.left.say.1 [68f957] = 你请全阁楼喝了一轮，又一轮，乔里给满屋子人讲监狱的伙食，讲到他们求他别说了。南整晚一句话也没对你说，在阁楼里这是她能给的最高的东西。
+# en: Sit with Jory a while
+opt.right.label [11758f] = 陪乔里坐一会儿
+# en: You sit up with Jory by the stove till the small hours, talking about nothing, while he eats everything in reach. In the morning he's asleep in his own hammock for the first time in a year, and you're grey with tiredness.
+opt.right.say.1 [6a25fc] = 你陪乔里在炉边坐到后半夜，聊些有的没的，他把够得着的东西全吃了。早上他一年来头一回睡在自己的吊床里，你累得脸色发灰。

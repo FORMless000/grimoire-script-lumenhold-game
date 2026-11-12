@@ -1,0 +1,580 @@
+# ============================================================
+#  The capital's heists (new maps, round 2, batch C5; docs/maps-plan.md): night jobs in the city, on the castle heists'
+#  pattern (content/events/heists/shared.grim): card by card, deeper with each one you get past, and slip away with
+#  what you carry whenever you like. Guile against watchmen, dogs and locks; never a fight. Night only.
+#
+#  Counters, reset on entry: job_where (1 the bonded warehouses), job_depth (how deep), job_loot (what you carry),
+#  job_cover (slips you can survive: 1, +1 for a Port Calder childhood, +1 for knowing the watchman's round).
+#  job_bonded_deepest persists. A lost check queues job_slip while cover lasts, else job_caught: the city watch, a
+#  night in the cells and the magistrate's fine, heavier for a face the watch already knows (job_watch_record).
+#  The way out fences the loot under the middle bridge (crowns, a little Hollow) or gives it away along Port Calder's
+#  lanes (renown there, no Hollow: what you stole goes to people with less).
+#
+#  The bonded warehouses: found at the docks, by a Port Calder childhood, by the crew's old job or by the tide caves'
+#  culvert (tide_bonded_drain), which also starts you on the floor (depth 3). Band 1 the yard (depth 1–2, apprentice),
+#  band 2 the floor (3–4, journeyman), depth 5 the crown's strongroom and the foreman's ledger: the theft a crew boy
+#  went to gaol for (lore crew_loft). Plot safety: nothing here touches the Hollow Star.
+# ============================================================
+
+# ---------------- The shared shape ----------------
+
+@event job_way_out
+title: Gone by Morning
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: pouch
+tags: danger money
+scene: A student slipping along a dark harbour-town lane at the grey end of night, a heavy bundle under one arm, the arches of a great bridge ahead.
+text: {job_loot == 0: You get away with nothing but your skin, and a heart going like a drum.|{job_loot <= 2: You get away with a few things under your coat, each worth more than it looks.|{job_loot <= 4: You get away with a real bundle: tea, silk, something in bottles that clinks when you walk.|You get away with more than your coat will hold, and walk very carefully.}}} Behind you the customs lamp burns on over the wharf, and the gulls are waking.
+> left: Fence it under the bridge
+  hint: Crowns, by what you carry. A little Hollow.
+  if job_loot >= 1:
+    alignment -tiny
+  if job_loot >= 6:
+    gold +huge
+  elif job_loot >= 4:
+    gold +large
+  elif job_loot >= 2:
+    gold +medium
+  elif job_loot >= 1:
+    gold +small
+  say: {job_loot == 0: There's nothing to fence. You go to bed as the gulls wake up, and lie there grinning anyway.|{&{flag(undercroft_known): The fence in the velvet waistcoat, in his alcove off the Undercroft's dice hall, weighs it through his loupe and pays, politely, while the river drips through the roof.|Somebody's cousin takes you down to the old cellars under the middle bridge, where a fence in a velvet waistcoat weighs it through his loupe and pays, politely.}|A fence under the middle bridge takes it all without looking and pays without counting, which means she counted before you came.|The fence pays, pours you a drink, and asks where you'll be working next. You don't tell her.}}
+  if job_where == 1 and job_depth > job_bonded_deepest:
+    job_bonded_deepest = job_depth
+  job_depth = 0
+  job_loot = 0
+> right: Give it away down the lanes
+  hint: Renown in Port Calder, by what you carry. No crowns.
+  if job_loot >= 5:
+    renown +medium
+  elif job_loot >= 3:
+    renown +small
+  elif job_loot >= 1:
+    renown +tiny
+  say: {job_loot == 0: There's nothing to give away but a good story, and Port Calder takes that gladly.|{&Before dawn you leave it on doorsteps along Ashby Lane and the streets round it: tea, silk, a bottle on every step. By noon all Port Calder is telling the story, and nobody tells the watch. Your purse is as light as it was.|You pawn what won't go through a letterbox and push the coins through the ones that will. Not a crown of it is yours by breakfast.|You give it to the women at the washhouse to share out, and they do, fairly, and better than you would. You keep nothing.}}
+  if job_where == 1 and job_depth > job_bonded_deepest:
+    job_bonded_deepest = job_depth
+  job_depth = 0
+  job_loot = 0
+
+@event job_slip
+title: Flat in the Shadows
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: lantern
+tags: danger
+scene: A student pressed flat into the shadow between stacked crates, holding their breath, as the glow of a watchman's lantern slides past along a warehouse floor.
+on_show:
+  job_cover -= 1
+  health -tiny
+  job_dropped = 0
+  if job_loot > 0:
+    job_loot -= 1
+    job_dropped = 1
+text: {job_dropped == 1: {&You get clear, just, and something you carried doesn't: it's lying out there in the lamplight where you dropped it.|You end up flat behind a crate with your heart in your mouth and one thing fewer under your coat.|You're clear, scraped and shaking, and you've left something behind for the morning shift to find.}|{&You get clear, just, with nothing to lose but your nerve, and some of that.|You end up flat behind a crate with your heart in your mouth, glad your coat was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff in the dust.}} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+> left: That's enough for tonight
+  queue job_way_out now
+  say: {&You take what's left and go, by the long way round.|You decide the night has made its point.|You go while you can.}
+> right: Wait, and go on
+  hint: On: the next slip may not be a near thing.
+  queue any in job_bonded now
+  say: {&You wait till the dark is quiet again, and go on.|You count to five hundred, and go on.|You go on. Somewhere behind you, a watchman is looking at the place where you were.}
+
+@event job_caught
+title: The Watch
+trigger: queued
+class: story
+tone: grim
+repeat: 1
+art: eye
+tags: danger crisis
+scene: Two city watchmen with lanterns and staves cornering a student among warehouse crates at night, a sergeant with a notebook behind them.
+on_show:
+  if job_where == 1 and job_depth > job_bonded_deepest:
+    job_bonded_deepest = job_depth
+  job_depth = 0
+  job_warned = 0
+  if flag(job_watch_record):
+    job_warned = 1
+text: A lantern comes up full in your face, and a second one behind it: the city watch. {job_loot == 0: You're inside the customs' wall at night, empty-handed, which convinces nobody.|You're inside the customs' wall at night with your arms full of the crown's goods, and they take it all back.} {job_warned == 1: The sergeant knows your face, and says so.|The sergeant looks you over, scarf and wand and all, and sighs.}
+> left: Go quietly
+  mood -small
+  if job_warned == 1:
+    gold -large
+  else:
+    gold -medium
+  job_loot = 0
+  say: {job_warned == 1: A night in the cells again, and in the morning the same magistrate, who remembers you and doubles the fine. Your purse won't be the same this break.|A night in the cells with a drunk who sings, and in the morning a magistrate who fines you a sum that makes your eyes water and tells you to go back to your castle.}
+  flag job_watch_record
+> right: Run for it
+  challenge feat using guile journeyman:
+    win:
+      health -tiny
+      mood -small
+      say: {job_loot == 0: You run, and Port Calder's lanes hide you the way they hide everyone. You also know the sergeant saw your face.|You drop the lot and run, and Port Calder's lanes hide you the way they hide everyone. You also know the sergeant saw your face.}
+      job_loot = 0
+      flag job_watch_record
+    lose:
+      health -small
+      mood -small
+      if job_warned == 1:
+        gold -large
+      else:
+        gold -medium
+      job_loot = 0
+      say: {job_warned == 1: You run one lane and into a third watchman. A night in the cells, a bruised jaw, and a magistrate who remembers you and doubles the fine.|You run one lane and into a third watchman. A night in the cells, a bruised jaw, and in the morning a fine that empties your purse.}
+      flag job_watch_record
+
+# ---------------- The bonded warehouses: found, watched and entered ----------------
+
+@event docks_bonded_talk
+title: The Richest Floor
+pool: capital_docks_life
+tone: tense
+time: afternoon evening
+weight: 20
+when: not flag(bonded_known) and not has(origin_street) and not flag(tide_bonded_drain) and not flag(crew_job_done)
+art: lock
+scene: An old one-legged ex-watchman on a bench on a wharf at dusk, pointing with his crutch at a long walled warehouse with broken glass along its top, a student sitting beside him.
+text: An old man on a wharf bench, one leg and a crutch, sees you looking at the long wall with the broken glass on top. "The bonded warehouses," he says. "Everything that comes into Port Calder waits in there till its duty's paid. Richest floor in the city. Forty years I walked it with a lantern." He spits. "Pensioned me off with nothing. Dogs, a round every hour, and a strongroom you could live in."
+> left: Buy him supper for the rest
+  gold -tiny
+  say: You buy him a pie and a pint, and he tells you all of it: the dogs' names, the hour the round turns, the strongroom's iron door with the crown on it. "Not that you'd do anything," he says, and winks.
+  flag bonded_known
+  flag bonded_dogs_known
+  flag bonded_round_counted
+> right: Tell him you're not that sort
+  alignment +tiny
+  mood -tiny
+  say: "Course you're not," he says. "Nobody is." He tells you anyway, the dogs' names and the round and the iron door, to the gulls, loud enough for you to hear. Walking away you find you've remembered every word, and feel grubby for it.
+  flag bonded_known
+  flag bonded_dogs_known
+  flag bonded_round_counted
+
+@pool capital_bonded_life
+place: capital_bonded_warehouses
+class: routine
+repeat: 3
+weight: 10
+tags: money danger
+
+@event bonded_customs_lamp
+title: The Customs Lamp
+pool: capital_bonded_life
+tone: tense
+art: lantern
+scene: Night on a harbour wharf, a long warehouse wall topped with broken glass, a single lamp in a customs house window, a watchman's lantern moving inside the yard, a student in the shadow of a crane watching.
+text: {seen(bonded_customs_lamp) > 1: The wharf at night, the wall, the lamp, the dogs barking once at a cat and settling. The man who keeps the yard dogs comes out of a side gate for his pipe. The lantern goes round.|From the shadow of a crane on the wharf you can see the whole of it: the long wall with glass along the top, the customs house with one lamp burning, and inside the yard a watchman's lantern going round like the hand of a slow clock. A man comes out of a side gate with the yard dogs' leashes over his arm, for his pipe.}
+> left: Count the watchman's round
+  guile +tiny
+  health -tiny
+  say: You stand in the cold under the crane till you've seen the lantern go round three times against the cathedral's clock: the long gap at the far end, the shorter one by the gate. Your feet have stopped being feet.
+  flag bonded_round_counted
+> right: Stand the dog-man a drink
+  gold -tiny
+  mood +tiny
+  say: {flag(bonded_dogs_known): You stand the dog-man a drink at the harbour tavern. He's good company, and tells you how his dogs are, as if asking after old friends of yours.|You walk the dog-man to the harbour tavern and stand him a drink. He's good company, and fond of his dogs, who love him, he says sadly, and anyone else with a sausage, if you use their names. He tells you their names.}
+  flag bonded_dogs_known
+
+# The heist's start: after the wharf's routine card on a night visit (order: last), once a month.
+@pool capital_bonded_entry
+place: capital_bonded_warehouses
+class: routine
+repeat: 1
+order: last
+
+@event bonded_enter
+title: Over the Wall
+pool: capital_bonded_entry
+tone: tense
+art: lock
+tags: danger
+scene: A student at night throwing a sack over the broken glass on top of a high warehouse wall, a wharf and moored ships behind, the customs lamp glowing beyond.
+text: {job_bonded_deepest == 0: Night on the wharf. The customs' wall runs off into the dark, glass along its top, and over it the warehouse roofs, and under those the richest floor in the city: everything that's come into Port Calder and not paid its duty yet.|{&The wall, the glass along it, the customs lamp.|The wharf at night, and the wall waiting.|Over the wall, the dogs are quiet. Over the wall, the lantern goes round.}} {flag(tide_bonded_drain): You'll go in by the culvert from the tide caves tonight, which comes up under the floor.|}
+> left: Not tonight
+  say: {&You leave the wall to its glass and walk home along the wharf.|Not tonight. The lantern goes round without you.|You watch a while longer and go to bed with the round still turning in your head.}
+> right: Go in
+  hint: A heist: press on card by card, slip away with what you carry any time.
+  flag bonded_tried
+  job_where = 1
+  job_loot = 0
+  job_cover = 1
+  if has(origin_street):
+    job_cover += 1
+  if flag(bonded_round_counted):
+    job_cover += 1
+  if flag(tide_bonded_drain):
+    job_depth = 3
+  else:
+    job_depth = 1
+  queue any in job_bonded now
+  say: {flag(tide_bonded_drain): You go round by the tide caves and up the culvert, lift the grating between two rounds, and come up on the warehouse floor among the crates, wet to the knees.|{&You throw a sack over the glass, go over, and drop into the yard.|You go over where the glass is broken already, which somebody else found first.|You go over the wall by the crane's shadow, as quiet as you've ever been.}}
+
+@thread job_bonded
+from: scene
+name: The bonded warehouses
+premise: Under the crown's seal on Port Calder's wharf, the richest floor in the city waits for its duty to be paid.
+journal:
+  flag(bonded_tried): You went over the customs' wall at night.
+  flag(bonded_strongroom): You opened the customs' strongroom.
+  flag(bonded_ledger): In the strongroom you found the foreman's private ledger, and the theft a crew boy went to gaol for.
+  flag(jory_freed): You sent the foreman's ledger to the magistrate, and Jory walked out of gaol.
+status:
+  resolved: flag(bonded_strongroom)
+
+# No way through: a step for any depth, drawn rarely (weight 1), and always when nothing else is left at this depth
+# (a slip at the strongroom, or a band's cards used up), so a night never ends without the way out.
+@event bonded_dead_end
+title: No Way Through
+thread: job_bonded
+class: routine
+tone: tense
+when: job_depth >= 1 and (job_depth <= 4 or (seen(bonded_strongroom) > 0 and since(bonded_strongroom) == 0))
+repeat: 1
+weight: 1
+art: lantern
+tags: heist
+scene: The end of a dark warehouse row, a watchman sitting on a crate with his pipe and lantern, a student peering round a stack of tea chests.
+text: {job_depth >= 5: The strongroom has had all the picking it'll take tonight, and somewhere a watchman's whistle is going. The only way left is out.|{&A watchman has sat down on a crate at the end of the row with his pipe, and isn't moving. The only way that's still a way is back.|The next door's barred on the far side. Whatever's past it isn't for tonight.|A stack of tea chests has come down across the row. The noise is still going round the roof.}}
+> left: Go back with what you carry
+  queue job_way_out now
+  say: {job_depth >= 5: You leave the iron door to the crown and go, the long way, with what you have.|{&You turn round and go by the way you know.|You take the hint, and the long way out.|You go, before anyone comes to see what fell.}}
+> right: Search where you stand
+  challenge feat using guile apprentice:
+    win:
+      job_loot += 1
+      say: {job_depth >= 5: By the strongroom door there's a crate of seized things waiting to go in. One small one comes with you.|{&On the nearest crate the seal's already split. Something small and good comes with you.|You feel along the stack and find a packet that's fallen behind. It comes with you.|Among the fallen chests, one has burst. You fill your pockets with tea, the good kind.}}
+    lose:
+      health -tiny
+      say: {job_depth >= 5: You catch your hand on the strongroom's hinge in the dark, and leave it be.|{&You find nothing but splinters.|A crate shifts under your hand, and you freeze, and leave it.|You find nothing, and bark your shin finding it.}}
+  queue job_way_out now
+
+# ---------------- Band 1: the yard (depth 1–2, apprentice) ----------------
+
+@event bonded1_dogs
+title: The Yard Dogs
+thread: job_bonded
+class: routine
+tone: tense
+when: job_depth >= 1 and job_depth <= 2
+repeat: 1
+art: paw
+tags: heist danger
+scene: Two big rough-coated yard dogs rising from straw by a warehouse door at night, ears up, a student frozen in the moonlit yard holding out a hand.
+text: {seen(bonded1_dogs) > 1: The dogs again. One gets up, and stretches, and looks at you as if trying to remember where it's seen you.|The yard dogs are lying in the straw by the warehouse door, two of them, big as ponies in the dark. One lifts its head.} {flag(bonded_dogs_known): You know their names, and you've brought a sausage.|You don't know their names.}
+> left: Back off over the wall
+  queue job_way_out now
+  say: {seen(bonded1_dogs) > 1: You leave the dogs their straw. They watch you go without much interest.|You back away to the wall step by step and go over it the way you came.}
+> right: Walk past them like you belong
+  challenge feat using guile apprentice +1 if flag(bonded_dogs_known):
+    win:
+      job_depth += 1
+      next
+      say: {flag(bonded_dogs_known): You say their names, softly, and hold out the sausage. Two tails go. You walk past with two large friends, who see you all the way to the door.|{seen(bonded1_dogs) > 1: You walk past as if you did it every night. The dogs decide you probably do.|You walk past slow and easy, not looking at them. One sniffs your hand and lies down again.}}
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded1_dogs) > 1: The bigger dog takes your sleeve in its teeth and holds it, politely, and barks until somebody comes.|One of them barks, once, and every lantern in the yard turns your way.}
+> up[shadowstep]: Step through the shadows past them
+  job_depth += 1
+  next
+  say: {seen(bonded1_dogs) > 1: Shadow to shadow, past the straw. One dog sneezes. That's all.|You step into the crane's shadow and out of the shed's, twenty yards on. The dogs never stir.}
+
+@event bonded1_clerk_window
+title: The Clerk's Window
+thread: job_bonded
+class: routine
+tone: tense
+when: job_depth >= 1 and job_depth <= 2
+repeat: 1
+art: candle
+tags: heist danger
+scene: A lit window in a customs house at night, a clerk in sleeve-garters bent over a ledger by a lamp, a dark yard outside it, a student crossing the yard in the light from the window.
+text: {seen(bonded1_clerk_window) > 1: The clerk is at his window again, working late, and the square of light lies across the yard like a rug you have to cross.|Across the yard, in the customs house, a clerk is working late: sleeve-garters, a lamp, a ledger. Between you and the warehouse door lies the square of light from his window.}
+> left: Go back over the wall
+  queue job_way_out now
+  say: {seen(bonded1_clerk_window) > 1: You go, and leave the clerk to his figures. He never looks up.|You leave him to his ledger and go back over the wall.}
+> right: Walk across as if you work here
+  challenge deceive apprentice:
+    win:
+      job_depth += 1
+      next
+      say: {seen(bonded1_clerk_window) > 1: You cross the light whistling under your breath. The clerk raises a hand without looking. You raise one back.|You walk across his light at an honest pace, as if you'd been sent for something. He looks up, sees a shape that belongs, and looks down again.}
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded1_clerk_window) > 1: You hesitate in the middle of the light, which nobody who works here would do. The window goes up. "Who's that?"|He looks up, and keeps looking, and reaches for his whistle.}
+
+@event bonded1_yard_bales
+title: Bales in the Yard
+thread: job_bonded
+class: routine
+tone: light
+when: job_depth >= 1 and job_depth <= 2
+repeat: 1
+art: coin
+tags: heist money
+scene: Bales of goods stacked under a tarpaulin in a dark warehouse yard, the sacking slit open on bright cloth, a student cutting a length free with a knife.
+text: {seen(bonded1_yard_bales) > 1: The bales in the yard again, different ones: tonight they're stamped for somewhere warm, and they smell of spice.|In the lee of the wall there are bales waiting for the morning's carts, under a tarpaulin that doesn't quite cover them. One's split, and there's bright cloth inside.}
+> left: Leave them and go back
+  queue job_way_out now
+  say: {seen(bonded1_yard_bales) > 1: You go, and leave the spice to the carters.|You leave the bales for the morning's carts and slip back over the wall.}
+> right: Cut a length free and go on
+  health -tiny
+  job_loot += 1
+  job_depth += 1
+  next
+  say: {seen(bonded1_yard_bales) > 1: You cut a corner from a spice bale and fill your pockets, and tear a knuckle open on the bale's wire. Your eyes stream all the way to the warehouse door.|You cut a length of the bright cloth free and roll it under your coat, and slice your thumb on the sacking's wire. It's silk.}
+
+@event bonded1_loading_door
+title: The Loading Door
+thread: job_bonded
+class: routine
+tone: warm
+when: job_depth >= 1 and job_depth <= 2
+repeat: 1
+art: door
+tags: heist
+scene: A warehouse loading door left a hand's width open at night, a ginger cat sitting in the gap, a student crouching beside it in the dark yard.
+text: {seen(bonded1_loading_door) > 1: The loading door, the gap, and the ginger cat in it, who seems to have been waiting.|The warehouse's loading door has been left a hand's width open, and a ginger cat is sitting in the gap, washing.} For a moment the yard is only a yard.
+> left: Leave it and go back
+  queue job_way_out now
+  say: {seen(bonded1_loading_door) > 1: You go, and the cat watches you to the wall as if you'd let it down.|You leave the cat its doorway and go back over the wall.}
+> right: Slip in past the cat
+  job_depth += 1
+  next
+  say: {seen(bonded1_loading_door) > 1: You go in after the cat, who goes ahead between the crates, stopping to look back.|You slip through the gap and the cat comes with you, tail up, as if showing you round.}
+
+# ---------------- Band 2: the floor (depth 3–4, journeyman) ----------------
+
+@event bonded2_round
+title: The Watchman's Round
+thread: job_bonded
+class: routine
+tone: tense
+when: job_depth >= 3 and job_depth <= 4
+repeat: 1
+art: lantern
+tags: heist danger
+scene: A long warehouse floor at night between towering stacks of tea chests, a watchman's lantern coming slowly down the row, a student climbing into an empty chest.
+text: {seen(bonded2_round) > 1: The lantern again, on the round. You know his cough now.|The floor goes on and on, crate on crate, and down the row comes the watchman's lantern on his round, slow, swinging, looking.} {flag(bonded_round_counted): You know where the round turns, and how long the gap is.|You don't know where the round goes next.}
+> left: Back out while he's at the far end
+  queue job_way_out now
+  say: {seen(bonded2_round) > 1: You leave the floor to the watchman and go.|You go back the way you came, behind him, step for step.}
+> right: Get into an empty tea chest
+  challenge feat using guile journeyman +1 if flag(bonded_round_counted):
+    win:
+      job_depth += 1
+      next
+      say: {seen(bonded2_round) > 1: Into an empty chest, lid down, knees at your ears. The round goes by without stopping this time.|You fold yourself into an empty tea chest and pull the lid down. The lantern stops right beside it. The watchman sits on your lid, smokes half a pipe, and goes on. You come out stiff, and smelling of tea.}
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded2_round) > 1: The chest's bottom gives way under you with a crack like a shot.|The lid won't sit flat over your elbow. The lantern stops, and a hand lifts it.}
+
+@event bonded2_seals
+title: The Crown's Seals
+thread: job_bonded
+class: routine
+tone: tense
+when: job_depth >= 3 and job_depth <= 4
+repeat: 1
+art: lock
+tags: heist money
+scene: Bales of silk on a warehouse floor at night, each corded and fixed with a red wax customs seal stamped with a crown, a student working a thin knife under one of the seals.
+text: {seen(bonded2_seals) > 1: The silk under the crown's seals again, a new cargo of it. The wax is fresh.|Here the silk is, the best of the floor: bales corded and sealed with red wax and the crown, every one. Break a seal and the morning shift will know by breakfast.}
+> left: Leave the seals and go back
+  queue job_way_out now
+  say: {seen(bonded2_seals) > 1: You go back the way you came, and the seals stay whole.|You leave the crown its wax and go.}
+> right: Lift a seal without breaking it
+  challenge feat using guile journeyman:
+    win:
+      job_loot += 2
+      job_depth += 1
+      next
+      say: {seen(bonded2_seals) > 1: You lift the seal with a hot knife, take your silk and put it back. It's horribly easy, which you try not to think about.|You warm the knife in your hand and slide it under the wax, slow as a clock, and the seal lifts whole. You take two lengths and press the wax back. Nobody will know till the bale's weighed.}
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded2_seals) > 1: The knife slips and the cord parts and the whole bale slumps open across the floor.|The wax cracks in half with a noise like a shot, in the silence.}
+> up[seal]: Cut it, take it, seal it again
+  job_loot += 2
+  job_depth += 1
+  next
+  say: {seen(bonded2_seals) > 1: You take your silk and seal the bale behind you, neater than the customs did.|You cut the cord, take two lengths, and close the bale again with a word. The wax flows back together, crown and all. The crown will never know.}
+
+@event bonded2_crane_loft
+title: The Crane Gantry
+thread: job_bonded
+class: routine
+tone: tense
+when: job_depth >= 3 and job_depth <= 4
+repeat: 1
+art: rune
+tags: heist danger
+scene: An iron crane gantry running high under a warehouse roof at night, chains and hooks hanging, a student edging along it above a dark floor of crates.
+text: {seen(bonded2_crane_loft) > 1: The gantry again. Somebody's left a hook swinging on its chain, slowly, as if somebody had just gone by.|The quick way across the floor is overhead: the iron gantry the cranes run on, under the roof, with chains and hooks hanging from it into the dark.}
+> left: Stay on the ground and go back
+  queue job_way_out now
+  say: {seen(bonded2_crane_loft) > 1: You go back. The hook goes on swinging.|You leave the gantry to the pigeons and go back the long way, on the ground.}
+> right: Go along the gantry
+  challenge feat journeyman:
+    win:
+      job_depth += 1
+      next
+      say: {seen(bonded2_crane_loft) > 1: You cross on the iron, quick and quiet, and drop down past the round without it knowing.|You go along the gantry hand over hand, over the whole floor and the watchman's lantern, and drop down by the far wall soft as a cat.}
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded2_crane_loft) > 1: You slip, and hang by your hands, and when you drop the crate you land on goes over.|A chain swings into you and its hook rings off the iron like a gong, over the whole floor.}
+> up[haste]: Run it
+  job_depth += 1
+  next
+  say: {seen(bonded2_crane_loft) > 1: You run the iron, quick as thought. The pigeons don't even wake.|You go faster than the gantry can creak, the length of the roof in a breath, and drop down at the far wall.}
+
+@event bonded2_spirit_floor
+title: The Spirit Floor
+thread: job_bonded
+class: routine
+tone: light
+when: job_depth >= 3 and job_depth <= 4
+repeat: 1
+art: potion
+tags: heist money
+scene: Rows of great casks of rum and brandy on racks in a dark warehouse, a student drawing spirit from a cask through a gimlet hole into a flask, coughing at the fumes.
+text: {seen(bonded2_spirit_floor) > 1: The spirit floor again. The fumes are worse tonight; somebody's cask is weeping.|The spirit floor: casks of rum and brandy racked to the roof, every one with the crown burned into its head, and the air so thick with fumes your eyes water.}
+> left: Hold your breath and go back
+  queue job_way_out now
+  say: {seen(bonded2_spirit_floor) > 1: You leave the casks to the crown and go, eyes streaming.|You go back, breathing through your sleeve.}
+> right: Fill two flasks and go on
+  health -tiny
+  job_loot += 1
+  job_depth += 1
+  next
+  say: {seen(bonded2_spirit_floor) > 1: You fill your flasks from the rum. Your head swims for the length of the floor.|You bore a hole low in a brandy cask, fill two flasks, and stop it with a peg. The fumes go straight to your head, and you walk on a little wider than you meant to.}
+
+@event bonded2_tea_floor
+title: The Tea Floor
+thread: job_bonded
+class: routine
+tone: light
+when: job_depth >= 3 and job_depth <= 4
+repeat: 1
+art: leaf
+tags: heist money
+scene: Tea chests stacked to the roof of a dark warehouse floor, fine dust in the air, a student holding their nose to stop a sneeze while a lantern passes at the end of the row.
+text: {seen(bonded2_tea_floor) > 1: The tea floor, and the dust, and the lantern at the end of the row. Your nose remembers.|The tea floor: chests stacked to the roof, and tea dust hanging in the dark so fine you can feel it in your nose. At the end of the row the lantern's coming.}
+> left: Back out before you sneeze
+  queue job_way_out now
+  say: {seen(bonded2_tea_floor) > 1: You go, holding your nose, and sneeze into the river.|You back out with your sleeve over your face and get as far as the wharf before you sneeze.}
+> right: Fill your pockets and hold it in
+  mood -tiny
+  job_loot += 1
+  job_depth += 1
+  next
+  say: {seen(bonded2_tea_floor) > 1: You take your tea and fight your nose all the way down the row. Your nose nearly wins.|You fill your pockets with the best tea in Port Calder and stand absolutely still, eyes streaming, through the whole of the lantern going by. It's the longest minute of your life.}
+
+# ---------------- Depth 5: the crown's strongroom ----------------
+
+@event bonded_strongroom
+title: The Crown's Strongroom
+thread: job_bonded
+class: story
+tone: tense
+when: job_depth >= 5
+repeat: 1
+art: lock
+tags: heist money
+scene: A heavy iron door with a crown cast on it at the end of a dark warehouse floor, a big padlock, a student kneeling at the lock with a lantern shaded under their coat.
+text: {seen(bonded_strongroom) > 1: The strongroom's iron door again, the crown on it, the same padlock.|At the end of the floor, behind an iron door with the crown cast on it, is the customs' strongroom: everything the crown has seized, waiting for auction. The padlock is the size of your two fists.} {flag(bonded_strongroom): You've had it open before.|}
+> left: Leave it and get out
+  queue job_way_out now
+  say: {seen(bonded_strongroom) > 1: You leave the crown its strongroom and go while the round's at the far end.|You leave the iron door alone and go, by the long way, with what you have.}
+> right: Work the padlock
+  challenge feat using guile adept- +1 if flag(bonded_round_counted):
+    win:
+      job_loot += 3
+      say: {flag(bonded_strongroom): The padlock gives again. Inside, the seized goods have changed, and the pick of them comes with you.|The padlock gives with a sound like a cough. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked.}
+      if flag(bonded_ledger):
+        queue job_way_out now
+      else:
+        queue bonded_ledger now
+      flag bonded_strongroom
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded_strongroom) > 1: The padlock won't move, and you work at it too long. The round comes back early.|The pick snaps in the lock, and the iron door booms when you knock it, and a whistle answers.}
+> up[item:lockpick_roll]: Pick it with the proper tools
+  challenge feat using guile adept- likely:
+    win:
+      job_loot += 3
+      say: {flag(bonded_strongroom): Eleven picks, and you know which one now. The door opens on the crown's newest seizures.|Eleven picks and a tension wrench, and the padlock opens on the fourth. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked.}
+      if flag(bonded_ledger):
+        queue job_way_out now
+      else:
+        queue bonded_ledger now
+      flag bonded_strongroom
+    lose:
+      if job_cover > 0:
+        queue job_slip now
+      else:
+        queue job_caught now
+      say: {seen(bonded_strongroom) > 1: Even with the proper picks the old lock fights you, and the round comes back before it gives.|The fourth pick bends, then the fifth, and while you fumble for the sixth a whistle goes at the end of the floor.}
+
+@event bonded_ledger
+title: The Foreman's Ledger
+trigger: queued
+class: story
+tone: grim
+repeat: 1
+art: paper
+tags: heist mystery
+scene: A student in a dark strongroom reading a ledger by a shaded lantern, two columns of figures in the same hand, a page with a date circled.
+text: In the unlocked drawer there's a ledger in the warehouse foreman's hand. Two columns for every cargo: what came in, and what the crown was told came in. The difference goes out by a side door, month after month. One night is circled: a crate gone that the foreman had sold already, {has(origin_street): and Jory caught on the floor that night with nothing in his hands, and sent down for the lot.|and a young man from one of Port Calder's street crews, caught on the floor that night, sent to gaol for the lot.}
+> left: Send it to the magistrate
+  alignment +small
+  say: Before dawn you leave the ledger wrapped in oilcloth on the magistrate's own doorstep, unsigned. Within the week the foreman's in the cells{has(origin_street): and Jory's out of them, blinking at the daylight on the loft step.|, and the young crew boy who took his blame walks out of gaol.} Nobody knows who sent it. You lose the ledger's price, and don't miss it.
+  flag bonded_ledger
+  flag jory_freed
+  queue job_way_out now
+> right: Sell it back to the foreman
+  gold +medium
+  alignment -small
+  say: You send the foreman one page of his own ledger and a time. He comes alone, pays in gold without a word, and burns the book in front of you. {has(origin_street): Jory stays where he is.|The crew boy who took his blame stays where he is.} The gold is heavy in your pocket all the way home.
+  flag bonded_ledger
+  queue job_way_out now
+
+# ---------------- Jory home (the crew's loft, for a Port Calder childhood) ----------------
+
+@event crew_loft_jory_home
+title: Jory Home
+pool: capital_crew_loft_home
+tone: warm
+when: flag(jory_freed)
+art: bed
+scene: A harbour-town loft with a row of hammocks, a thin young man sitting up in one eating soup, a sharp-eyed older woman and a student at the stove, the crew round a card table.
+text: {seen(crew_loft_empty_hammock) > 0: The empty hammock isn't empty. Jory's in it, thinner,|There's a face in the loft you know only from the foreman's ledger: Jory, back from a year in the city gaol, in his own hammock, thinner,} with a bowl of soup and the whole loft finding reasons to walk past him. "Somebody sent the magistrate a book," he tells you. "Nobody knows who." Across the stove Nan Merrow looks at you once, and goes back to dealing.
+> left: Stand the loft a round
+  gold -small
+  mood +small
+  say: You buy the loft a round, and then another, and Jory tells the whole room about the gaol's food till they beg him to stop. Nan says nothing at all to you all night, which in the loft is the highest thing she has to give.
+> right: Sit with Jory a while
+  mood +small
+  health -tiny
+  say: You sit up with Jory by the stove till the small hours, talking about nothing, while he eats everything in reach. In the morning he's asleep in his own hammock for the first time in a year, and you're grey with tiredness.

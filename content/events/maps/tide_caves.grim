@@ -1,0 +1,649 @@
+# ============================================================
+#  The tide caves (new maps, round 2, batch C4; docs/maps-plan.md): the capital's delve, under the headland past
+#  Port Calder's breakwater, open only at low water (noon and afternoon). The moors' pattern (moors_delve.grim): card
+#  by card, deeper with each one you get past, and turn back whenever you like; what you carry out (the haul) goes to
+#  the marine-store dealer on the quay or is kept for study.
+#
+#  Counters, reset on each entry: tide_depth (how deep), tide_haul (what you carry), tide_grace (falls you can survive:
+#  1, +1 for someone raised in Port Calder, +1 in a courier's oilskin). tide_deepest persists.
+#  Bands: 1 at depth 1–2 (the drowned stair, apprentice), 2 at 3–4 (the smugglers' galleries, journeyman), 3 at 5–6
+#  (the sea's halls, adept); depth 7 is the sea's door. Reading the tide ladder (band 1) starts later delves at depth 3.
+#  The galleries' culvert under the bonded warehouses (flag tide_bonded_drain) is a way in for the warehouse heist (C5).
+#
+#  Every delve card is `thread: tide_delve`, tagged `tide`, and gates its band in `when`. Getting past one runs
+#  `tide_depth += 1` and `next`. Left always turns back (`tide_way_out`, the payout). A graced loss queues `tide_soaked`
+#  (grace, health and haul pay for it); without grace it's `tide_fished_out`. Fights are registered in
+#  combat/setup/foes.mjs. Nothing here touches the Hollow Star: no bells, no frost, no stars.
+# ============================================================
+
+# ---------------- Found at the docks ----------------
+
+@event docks_sea_back_door
+title: The Sea's Back Door
+pool: capital_docks_life
+tone: eerie
+time: noon afternoon
+weight: 20
+when: not flag(tide_caves_known) and not has(origin_street)
+art: wave
+scene: An old docker with a clay pipe at the end of a stone breakwater, pointing across the water to a rocky headland with a dark cave mouth at its foot, a student beside him.
+text: An old docker on the breakwater sees you looking at the headland and takes his pipe out. "The sea's back door," he says. "Under there. Open at low water, noon and after, and shut the rest. Smugglers' road in my grandad's time. Still is, some say." The pipe goes back in. "The sea lets you in easy. It's coming out that wants thinking about."
+> left: Buy him a pint for the way
+  gold -tiny
+  say: You stand him a pint, and he walks you out to the end of the breakwater and points the way with his pipe stem: along the rocks, past a white mark painted high on one, down the steps. "Out by the time the water's at the mark," he says. "Not after."
+  flag tide_caves_known
+> right: Go and find it yourself
+  health -tiny
+  say: You scramble off the end of the breakwater and over the weedy rocks beyond, slip twice, bark a shin, and find it: a dark mouth under the headland, with cold air coming out of it like a cellar's.
+  flag tide_caves_known
+
+# ---------------- The shore under the headland ----------------
+
+@pool capital_tide_caves_life
+place: capital_tide_caves
+class: routine
+repeat: 4
+weight: 10
+tags: nature
+
+@event tide_rock_pools
+title: The Rock Pools
+pool: capital_tide_caves_life
+tone: light
+art: wave
+scene: Rock pools on a wet rocky shore under a headland at low tide, anemones and weed, a student crouching over a pool, a small boy with a jam-jar further off, a dark cave mouth behind.
+text: {&At low water the headland shows its feet: black rock, weed like wet hair, and rock pools full of anemones that shut when your shadow falls on them. Behind them the cave mouth is a black slot in the rock.|The rock pools again. A shrimp the colour of glass, a crab backing into a crack, a hermit crab trying on a new shell. The tide's still going out.|The pools are clear as glass today. A small boy with a jam-jar is working the far ones, very seriously, and tells you not to touch his.}
+> left: Poke about the pools
+  lore +tiny
+  health -tiny
+  say: {&You learn the anemones by poking them, which they don't like, and the barnacles by kneeling on them, which you don't. Your knees bleed a little.|You lift weed and watch the pools empty of everything, fast. A crab gets your thumb and keeps it a while.|You and the boy compare jars. His is better. You cut your knee on the rock, kneeling to admit it.}
+> right: Pick mussels for supper
+  health +small
+  mood -tiny
+  say: {&You fill your hat with mussels off the rocks and soak both sleeves to the shoulder in cold water. Cooked on the quay with an onion, they're the best thing you've eaten in the capital.|You pick mussels with numb fingers while the sea comes back, and get your boots full running from it. Supper's good. Your feet aren't.|You pick a hatful. The boy says the ones by the outfall make you ill. You throw half back, sulking, and eat the rest.}
+
+@event tide_bait_diggers
+title: The Bait-Diggers
+pool: capital_tide_caves_life
+tone: warm
+art: hand
+tags: nature social
+scene: Men and women with forks and buckets digging for worms on wet sand under a rocky headland at low tide, an old woman pointing up at a white mark painted on a rock, a student watching.
+text: {&Bait-diggers are out on the sand below the headland, turning it over with forks for lugworm. An old woman among them keeps glancing up at a white mark painted high on a rock. When the sea touches that, she says, you want to be on the sand, not under the headland.|The bait-diggers again, and the old woman watching her white mark. "Going in, are you?" she asks. "You'll have heard what they say on the docks. Out by the mark."|The diggers are resting on their buckets. The old woman offers you a fork and a bucket, then her flask, in that order.}
+> left: Dig bait with them
+  gold +tiny
+  health -tiny
+  say: {&You dig till your back's a knot and sell your bucket of worms to an angler on the breakwater for a few coins. The old woman says you dig like a gentleman, which isn't praise.|An hour of forking wet sand. The bucket fetches a few coins on the breakwater; your back will fetch you nothing but trouble tomorrow.|You dig with them till the sea turns, and come away with coins in your pocket, sand where sand shouldn't go and a back like a plank.}
+> right: Ask about the caves
+  lore +tiny
+  mood -tiny
+  say: {&"Free traders," she says. "My mother's brothers ran brandy through there under the customs men's feet. Some still do. The sea takes its share." She won't say more, and you feel uneasy all afternoon.|"There's a door at the far end," she says, "on the sea side. You'll know it." She looks at you as if you're already wet.|"The ones that don't come out," she says, "the sea gives back at the breakwater, after." Then she offers you the flask again. You don't want it now.}
+
+# ---------------- The cave mouth, the way out, and falls ----------------
+
+# The delve's start: after the shore's routine card on a visit (order: last), once a month.
+@pool capital_tide_caves_life_repeat1
+place: capital_tide_caves
+class: routine
+repeat: 1
+tags: nature
+order: last
+
+@event tide_cave_mouth
+title: The Cave Mouth
+pool: capital_tide_caves_life_repeat1
+tone: eerie
+art: wave
+tags: danger
+scene: A tall dark cave mouth at the foot of a rocky headland at low tide, wet steps cut in the rock going down into it, a student with a lantern at the entrance, the harbour behind.
+text: {tide_deepest == 0: Under the headland the cave mouth stands open at low water, tall as a church door, breathing out cold and the smell of weed. Steps cut in the rock lead down into it, worn hollow by feet that went down a long time ago. The sea's a long way out. It's coming back.|{&The cave mouth, and the steps going down, and the cold breath out of it.|The cave mouth at low water. Somewhere far inside, the sea is talking to itself.|The cave mouth. The white mark on the rock is dry, for now.}} {flag(tide_calder_run): You know which gallery the smugglers' run takes.|}
+> left: Stay out on the rocks
+  say: {&You stay out on the rocks in the sun and let the cave keep its cold.|Not today. You watch the sea come back from the dry side of it.|You stay out. The cave breathes at you, and you breathe back, from a distance.}
+> right: Go down the steps
+  hint: A delve: press on card by card, turn back any time.
+  tide_haul = 0
+  tide_swam = 0
+  tide_grace = 1
+  if has(origin_street):
+    tide_grace += 1
+  if has_item(oilskin_coat):
+    tide_grace += 1
+  if flag(tide_calder_run):
+    tide_depth = 3
+  else:
+    tide_depth = 1
+  queue any in tide_delve now
+  say: {flag(tide_calder_run): You take the smugglers' run, straight past the easy caves, reading the tide ladder's hooks as you go.|{has(origin_street) and tide_deepest == 0: You went in here once at eleven, on a dare from the crew, and came out at a run. You go in at a walk this time.|You go down the steps into the cold. Behind you the daylight gets small and square.}}
+
+@event tide_way_out
+title: Back in the Daylight
+trigger: queued
+class: story
+tone: warm
+repeat: 1
+art: pouch
+tags: nature money
+scene: A tired, wet student climbing out of a sea cave into daylight on a rocky shore, a dripping sack over one shoulder, a quay and a cluttered junk shop behind.
+text: {tide_swam == 1: You stand dripping on the breakwater among the anglers, with what the sea let you keep. They want to see it.|{tide_haul == 0: You come up out of the caves with nothing but wet boots and the sea's voice in your ears.|{tide_haul <= 2: You come up into the daylight with a light, dripping bag: a copper nail, sea-glass, an old coin gone green.|{tide_haul <= 4: You come up with a bag that clinks: old coin, a brass fitting, bottles with something still in them.|You come up bent under a heavy, dripping sack, and the sea comes in behind you as if it had been waiting.}}}} {tide_depth >= 5: Salt has dried white on your sleeves.|}
+> left: Sell it on the quay
+  hint: Crowns, by what you carry.
+  if tide_haul >= 5:
+    gold +large
+  elif tide_haul >= 3:
+    gold +medium
+  elif tide_haul >= 1:
+    gold +small
+  say: {tide_haul == 0: The marine-store dealer on the quay looks at your empty hands and laughs until he coughs.|{&The marine-store dealer on the quay weighs it all on a scale meant for anchors and pays by the pound, asking nothing, which is how Port Calder likes it.|The dealer tips your bag out on his counter, sorts it with one finger, and pays. "Further in," he says, "it's worth more. So I hear."|The dealer pays without looking up. Half his shop, you realise, came out of those caves.}}
+  if tide_depth > tide_deepest:
+    tide_deepest = tide_depth
+  tide_depth = 0
+  tide_haul = 0
+  tide_swam = 0
+> right: Keep it for study
+  hint: Alchemy and lore, by what you carry.
+  if tide_haul >= 5:
+    alchemy +medium
+    lore +small
+  elif tide_haul >= 3:
+    alchemy +small
+    lore +tiny
+  elif tide_haul >= 1:
+    alchemy +small
+  say: {tide_haul == 0: You keep nothing but the cold, and a better idea of the caves.|{&You lay it all out on a table: salt crusted on everything, sea-glass, a phial of something that was a cure for something once. You spend the night working out what.|You scrape the salt off every piece and keep it in a jar. It's purer than anything in the bazaar.|You sort it all by lamplight. One old coin has a ship on one side and nothing at all on the other.}}
+  if tide_depth > tide_deepest:
+    tide_deepest = tide_depth
+  tide_depth = 0
+  tide_haul = 0
+  tide_swam = 0
+
+@event tide_soaked
+title: Soaked to the Skin
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: wave
+tags: nature danger
+scene: A student sitting soaked on a wet rock ledge in a dim sea cave, coughing, a spilled bag beside them, sea water swirling below.
+on_show:
+  tide_grace -= 1
+  health -small
+  if tide_haul > 0:
+    tide_haul -= 1
+text: {&A wave you never saw slaps you off the ledge into the swirl, and something rolls out of your bag and is gone.|You come up coughing on a ledge with a cut hand and a lighter bag. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down, and the pool keeps a little of what you carried.} {tide_grace > 0: You've got one more ducking in you, maybe.|That was your last easy fall.}
+> left: That's enough for today
+  queue tide_way_out now
+  say: {&You wring out what's left and feel your way back toward the light.|You've had enough of the sea, and the sea of you, for now.|You turn back, following the drip of fresh water toward the light.}
+> right: Get up and go on
+  hint: Deeper: the next fall may not be kind.
+  queue any in tide_delve now
+  say: {&You wring out your sleeves and go on, squelching.|You get up. The sea draws back from the ledge as if nothing had happened.|You go on. Behind you, the water has covered the step you came by.}
+
+@event tide_fished_out
+title: Fished Out
+trigger: queued
+class: story
+tone: grim
+repeat: 1
+art: lantern
+tags: nature danger
+scene: A rocky shore under a headland in grey evening light, a man in a small rowing boat hauling a half-drowned, shivering student out of the water with a boathook.
+on_show:
+  health -large
+  tide_haul = 0
+  if tide_depth > tide_deepest:
+    tide_deepest = tide_depth
+  tide_depth = 0
+text: {at_home() and has(origin_street): The tide comes in faster than you can go out. You end up on a ledge in the dark with the water at your chin, until a rope comes down out of nowhere, and at the top of it is Nan Merrow, swearing.|The tide comes in faster than you can go out. You spend hours on a ledge with the sea at your chest, until it turns and lets you crawl for the mouth, and a lighterman out after driftwood hauls you into his boat with a boathook.}
+> left: Thank them and go quietly
+  say: {at_home() and has(origin_street): She walks you back to the loft by the scruff and sits you by the stove in the crew's worst blanket. "Through the caves," she tells the room, "on the flood," and the whole loft groans.|He rows you to the harbour steps and won't take a coin. "On the flood," he says, shaking his head. "They always go in on the ebb and think it'll last."}
+> right: Ask how they knew to look
+  lore +tiny
+  mood -tiny
+  say: {at_home() and has(origin_street): "The gulls went in," she says. "They only go in after something that's drowning." She says it as flat as a price.|"Gulls," he says. "They sit on the headland and watch the mouth when someone's in. Waiting to see." He means it.}
+
+# ---------------- Band 1: the drowned stair (depth 1–2, apprentice) ----------------
+
+@thread tide_delve
+from: scene
+name: The tide caves
+premise: Under Port Calder's headland, the caves go further in than the tide does.
+journal:
+  flag(tide_calder_run): You read the smugglers' tide ladder in the caves, and know their run past the easy ground.
+  flag(tide_bonded_drain): A culvert from the smugglers' galleries climbs to a grating under the bonded warehouses.
+  flag(tide_conger_beaten): The conger in the sump gave way to you.
+  flag(tide_sea_door): At the far end of the caves you stood in the sea's door.
+status:
+  resolved: flag(tide_sea_door)
+
+@event tide1_drowned_stair
+title: The Drowned Stair
+thread: tide_delve
+class: routine
+tone: tense
+when: tide_depth >= 1 and tide_depth <= 2
+repeat: 1
+art: wave
+tags: tide nature danger
+scene: Narrow steps cut into wet rock, spiralling down inside a sea cave, slick with green weed, sea water moving at the bottom, a student edging down with a lantern.
+text: {seen(tide1_drowned_stair) > 1: The drowned stair again. The sea has left a new skin of weed on every step.|Past the mouth the steps go on down, cut into the rock in a tight turn, every one dipped in the middle and slick with weed. At the bottom, water is moving in the dark.}
+> left: Turn back here
+  queue tide_way_out now
+  say: {seen(tide1_drowned_stair) > 1: You decide the stair has made its point, and climb back to the sun.|You go back up into the daylight, one careful step at a time.}
+> right: Climb down
+  challenge feat apprentice:
+    win:
+      tide_depth += 1
+      next
+      say: {seen(tide1_drowned_stair) > 1: You take the stair at a crouch and land in ankle-deep water, cold enough to make you gasp, but upright.|You go down sideways like a crab, a hand on the wall, and reach the bottom with all your bones. Somebody has carved a hand on the last step, pointing on.}
+    lose:
+      if tide_grace > 0:
+        queue tide_soaked now
+      else:
+        queue tide_fished_out now
+      say: {seen(tide1_drowned_stair) > 1: A step crumbles. You hit the water at the bottom with a noise the whole cave repeats.|Your heel finds the weed. You go down the rest of the stair on your back, faster than any smuggler ever did.}
+
+@event tide1_gull_cave
+title: The Gull Cave
+thread: tide_delve
+class: routine
+tone: light
+when: tide_depth >= 1 and tide_depth <= 2
+repeat: 1
+art: feather
+tags: tide nature
+scene: A high sea cave full of shrieking gulls on white-streaked ledges, daylight through a crack in the roof, a student running through with an arm over their head.
+text: {seen(tide1_gull_cave) > 1: The gull cave. They remember you. You can tell.|The passage runs through a high cave, white to the roof, and every ledge in it has a gull on it, and every gull has an opinion. The way on is through the middle of them.}
+> left: Back out quietly
+  queue tide_way_out now
+  say: {seen(tide1_gull_cave) > 1: You leave the gulls their cave. One follows you to the mouth to make sure.|You back out under a hail of remarks and go home the way you came.}
+> right: Run through them
+  health -tiny
+  mood -tiny
+  tide_depth += 1
+  next
+  say: {seen(tide1_gull_cave) > 1: You run with your collar up and your head down. They aim well, and often.|You run through with your arm over your head. The gulls mob you the whole way, beak and wing and worse, and you come out the far side pecked and plastered.}
+> up[ward]: Ward your head and walk
+  tide_depth += 1
+  next
+  say: {seen(tide1_gull_cave) > 1: Ward up, you walk through. Everything the gulls contribute runs off the shell like rain off a window.|You raise a pale shell over your head and walk through at a stroll. Everything they throw slides off it. The gulls are outraged.}
+
+@event tide1_tide_ladder
+title: The Tide Ladder
+thread: tide_delve
+class: routine
+tone: eerie
+when: tide_depth >= 1 and tide_depth <= 2 and not flag(tide_calder_run)
+repeat: 1
+art: rune
+tags: tide mystery
+scene: The wall of a sea cave scored with a tall ladder of old notches, a hooked mark beside each, a high-water line of weed across them, a student holding a lantern up to read them.
+text: {seen(tide1_tide_ladder) > 1: The tide ladder again, half under water today. The notches above the waterline point to a gallery you've never taken.|On the passage wall someone has cut a ladder of notches, one above another like the rungs of a ladder, each with a mark cut beside it, a hook to the left or a hook to the right: at this height of water, this gallery. The smugglers kept their tide-table where they needed it.}
+> left: Leave it and turn back
+  queue tide_way_out now
+  say: {seen(tide1_tide_ladder) > 1: You turn back. Every hook on the wall seems to point the other way.|You leave the notches to the next smuggler and head back to the light.}
+> right: Work out the ladder
+  challenge research apprentice:
+    win:
+      lore +tiny
+      tide_depth += 1
+      next
+      say: {seen(tide1_tide_ladder) > 1: You read the ladder from the bottom up, the way it was cut, and all at once you know the way the smugglers walked.|It takes an hour and most of your patience, but it comes clear: at this water, the left-hand gallery, then the dry crawl. It's the smugglers' run, and it goes straight past the easy caves.}
+      flag tide_calder_run
+    lose:
+      mood -tiny
+      tide_depth += 1
+      next
+      say: {seen(tide1_tide_ladder) > 1: You squint at the notches until they swim. It means something, to someone. Not to you, not today.|The hooks contradict each other and half the notches are worn smooth. You go on the slow way with a headache.}
+
+@event tide1_wreck_ribs
+title: Ship's Ribs
+thread: tide_delve
+class: routine
+tone: eerie
+when: tide_depth >= 1 and tide_depth <= 2
+repeat: 1
+art: wave
+tags: tide nature
+scene: The black curved ribs of an old wooden boat jammed between rocks deep in a sea cave, green copper nails in the timbers, a student working one loose with a knife.
+text: {seen(tide1_wreck_ribs) > 1: The wreck in the passage, a little more broken than last time. The sea is taking it back plank by plank.|Jammed across the passage, where some great sea must have thrown it, are the ribs of a boat: black oak, green copper nails, the stump of a mast. Whoever was in it isn't.}
+> left: Leave it be and turn back
+  queue tide_way_out now
+  say: {seen(tide1_wreck_ribs) > 1: You turn back. Behind you the old timbers creak as the water lifts them.|You leave the wreck to the sea and go back toward the light.}
+> right: Strip the copper
+  health -tiny
+  tide_haul += 1
+  tide_depth += 1
+  next
+  say: {seen(tide1_wreck_ribs) > 1: You prise a brass rowlock off the gunwale and gash your palm doing it. The wreck groans as you climb over it.|You work the green nails out of the oak with your knife and a stone, and take the skin off two knuckles. Copper's copper, the dealers say.}
+
+@event tide1_blowhole
+title: The Blowhole
+thread: tide_delve
+class: routine
+tone: warm
+when: tide_depth >= 1 and tide_depth <= 2
+repeat: 1
+art: wave
+tags: tide nature
+scene: A long sea cave passage lit by a shaft of daylight falling through a hole in the roof, spray drifting up through the light, a student walking through it.
+text: {&A long passage, lit from above: a hole in the roof lets down a shaft of daylight, and every wave that comes in somewhere below sends a breath of spray up through it, glittering.|The blowhole passage. The spray hangs in the light like dust.|Daylight from the roof, and voices somewhere ahead that are seals, or sound like seals.} For a while the caves are only caves.
+> left: Turn back while it's easy
+  queue tide_way_out now
+  say: {&You turn round while the going is good, and are out on the rocks before the light changes.|You turn back under the blowhole, with dry feet and a clear head.|You turn back. The seal voices follow you a while, then stop.}
+> right: Go on
+  tide_depth += 1
+  next
+  say: {&You walk on through the spray, and the passage climbs into the dark.|You go on, out past where the daylight reaches.|You go on toward the voices. Somewhere past the blowhole, they stop.}
+
+# ---------------- Band 2: the smugglers' galleries (depth 3–4, journeyman) ----------------
+
+@event tide2_lookout
+title: The Lookout
+thread: tide_delve
+class: routine
+tone: tense
+when: tide_depth >= 3 and tide_depth <= 4
+repeat: 1
+art: lantern
+tags: tide danger
+scene: A rough man with a shuttered lantern and a cheap wand standing in a dry rock gallery stacked with casks inside a sea cave, glaring at a student who has just come round the corner.
+text: {seen(tide2_lookout) > 1: The lookout again, or another one. He knows what you are now, and doesn't bother asking.|Up here, above the tide, the galleries are dry, and somebody uses them: fresh rope, a stack of casks, a pipe still warm on a ledge. And a lookout, coming round the corner with a shuttered lantern, who sees you and sets it down very carefully, to free his wand hand.}
+> left: Back off the way you came
+  queue tide_way_out now
+  say: {seen(tide2_lookout) > 1: You go back the way you came. He watches you to the end of the gallery, wand out.|You back away round the corner with your hands up, and he lets you, which is the best offer you'll get today.}
+> right: Fight your way past
+  hint: He fights dirty, with the forbidden kind of magic.
+  challenge combat journeyman:
+    win:
+      tide_haul += 1
+      tide_depth += 1
+      next
+      say: {seen(tide2_lookout) > 1: You leave him sitting against the wall holding his head. On the ledge behind him, under the dust, someone long gone left a brass lantern. You take it.|He goes down among his own casks, and stays down. In the scuffle a brass spyglass has rolled out from under the casks, dusty, nobody's for years. It's going to the dealer on the quay.}
+    lose:
+      if tide_grace > 0:
+        queue tide_soaked now
+      else:
+        queue tide_fished_out now
+      say: {seen(tide2_lookout) > 1: Something nasty and quick comes off his wand and you go down, and he rolls you back down the gallery like a cask, into the sea.|He's had more fights in the dark than you've had lessons. You come to at the bottom of the gallery, by the water, with a lump and no lantern.}
+> up[glamour]: Pass for a new hand
+  tide_depth += 1
+  next
+  say: {seen(tide2_lookout) > 1: You smile, and he decides he likes you. He even tells you to mind the step.|You put on a little more charm than you have and tell him you're the new hand. He looks you up and down, grunts, and waves you on past the casks. He won't remember why.}
+
+@event tide2_casks
+title: The Cask Gallery
+thread: tide_delve
+class: routine
+tone: tense
+when: tide_depth >= 3 and tide_depth <= 4
+repeat: 1
+art: coin
+tags: tide money
+scene: A long dry rock gallery inside sea caves stacked with barrels, oilcloth bales and tea chests, ropes and a block-and-tackle, a student with a lantern looking at a cut customs seal.
+text: {seen(tide2_casks) > 1: The cask gallery again. The stacks have changed since last time: the trade goes on.|A long dry gallery, stacked to the roof: casks, oilcloth bales, tea chests with the customs seals neatly cut. Somebody's whole business, waiting for a dark night. Nobody's minding it this minute.}
+> left: Leave it and turn back
+  queue tide_way_out now
+  say: {seen(tide2_casks) > 1: You leave the stacks to their owners and head back to the light.|You touch nothing and go back the way you came, which is what smugglers like best in a visitor.}
+> right: Help yourself and go on
+  alignment -tiny
+  tide_haul += 2
+  tide_depth += 1
+  next
+  say: {seen(tide2_casks) > 1: You take your pick of the new stacks: tea, and a case of something from over the sea. It's stealing, and you know it, and you take it anyway.|You fill your bag from a tea chest and a case of something in bottles. It's stealing from thieves, but it's stealing, and you go on quickly.}
+
+@event tide2_culvert
+title: The Culvert
+thread: tide_delve
+class: routine
+tone: eerie
+when: tide_depth >= 3 and tide_depth <= 4
+repeat: 1
+art: key
+tags: tide mystery
+scene: A brick-lined culvert climbing steeply from a sea cave gallery up to an iron grating, lamplight and stencilled crates visible through the bars above, a student lying in the culvert looking up.
+text: {seen(tide2_culvert) > 1: The culvert again, and the grating at the top, and through it the warehouse floor: crates stencilled with the customs crown, a watchman's boots going by on his round.|Off the gallery a brick culvert climbs steeply, much newer than the caves, built to drain something. At the top there's an iron grating, and through the bars, lamplight, crates stencilled with the customs crown, and a watchman's boots going by. The bonded warehouses, from underneath.}
+> left: Leave it and turn back
+  queue tide_way_out now
+  say: {seen(tide2_culvert) > 1: You leave the warehouse to its watchman and go back down to the sea.|You climb back down very quietly and go home with the grating in your head.}
+  flag tide_bonded_drain
+> right: Lie under it and watch
+  mood -tiny
+  tide_depth += 1
+  next
+  say: {flag(bonded_round_counted): You count the watchman's round again from under the grating, cramped and cold: the same slow circuit, the same long gap at the far end. Then you climb down and go on.|You lie in the culvert under the grating, cramped and cold, and count the watchman's round: a slow circuit, then a long gap at the far end of the floor. Nobody looks down. Then you climb back and go on.}
+  flag tide_bonded_drain
+  flag bonded_round_counted
+
+@event tide2_turning
+title: The Turn of the Tide
+thread: tide_delve
+class: routine
+tone: tense
+when: tide_depth >= 3 and tide_depth <= 4
+repeat: 1
+art: wave
+tags: tide nature danger
+scene: Sea water surging up a narrow rock gallery in a sea cave, white foam in lantern light, a student running uphill ahead of it.
+text: {seen(tide2_turning) > 1: The tide again, early again. You know the sound now, and so do your legs.|From behind you comes a sound like a long breath drawn in. The tide has turned, early, and the water is coming up the gallery faster than walking pace. Ahead, the gallery climbs. Behind is the way out, and it's filling.}
+> left: Run back out while you can
+  health -tiny
+  queue tide_way_out now
+  say: {seen(tide2_turning) > 1: You splash out the way you came, against the sea, and fall out of the mouth onto the rocks soaked to the neck.|You run back down into the rising water and fight it to the mouth, waist-deep at the end, coughing salt.}
+> right: Race it uphill
+  challenge feat journeyman:
+    win:
+      tide_depth += 1
+      next
+      say: {seen(tide2_turning) > 1: You beat it by a step and sit on the dry rock above, laughing at it.|You go up the gallery at a run with the sea at your heels and scramble onto a dry ledge as it slaps the rock below you. It sulks there a while, then sinks back.}
+    lose:
+      if tide_grace > 0:
+        queue tide_soaked now
+      else:
+        queue tide_fished_out now
+      say: {seen(tide2_turning) > 1: The water's quicker. You end up wrapped round a rock with the sea pulling at your bag.|It catches you halfway, knocks your feet from under you, and you go tumbling back down the gallery in a smother of foam.}
+> up[tailwind]: Let the wind take you
+  tide_depth += 1
+  next
+  say: {seen(tide2_turning) > 1: You call the wind and run. The sea arrives at the top to find you sitting there, dry.|A wind gets behind you and you go up the gallery like a cork out of a bottle, well ahead of the sea.}
+
+@event tide2_parlour
+title: The Smugglers' Parlour
+thread: tide_delve
+class: routine
+tone: warm
+when: tide_depth >= 3 and tide_depth <= 4
+repeat: 1
+art: candle
+tags: tide
+scene: A small rock chamber in a sea cave fitted out as a room: benches, a rough table with a game board cut into it, a hearth with a kettle hook, shelves of old bottles, a student with a lantern looking round.
+text: {seen(tide2_parlour) > 1: The smugglers' parlour. Somebody has played a game of fox-and-geese since you were here, and the geese won.|Off the gallery there's a room: a chamber in the rock fitted out like a parlour, with benches, a hearth and a kettle hook, a fox-and-geese board cut into the table, and shelves of dusty bottles. A chimney goes up into the headland. Somebody lived down here, between tides.}
+> left: Leave it and turn back
+  queue tide_way_out now
+  say: {seen(tide2_parlour) > 1: You turn back. The parlour's chimney sighs as you go.|You leave the parlour as you found it and go back toward the sea.}
+> right: Search the shelves
+  health -tiny
+  tide_haul += 1
+  tide_depth += 1
+  next
+  say: {seen(tide2_parlour) > 1: You go along the shelves and find a tin of old tobacco and a brass tinder-box, and splinters in both hands from the rotten wood.|You go along the shelves, and one comes down on your head, bottles and all. Two are still whole, and still full. You take them and go on, rubbing your skull.}
+
+# ---------------- Band 3: the sea's halls (depth 5–6, adept) ----------------
+
+@event tide3_conger
+title: The Conger
+thread: tide_delve
+class: routine
+tone: tense
+when: tide_depth >= 5 and tide_depth <= 6
+repeat: 1
+art: wave
+tags: tide nature danger
+scene: An enormous grey conger eel, thick as a man's leg, rearing out of a black pool in a sea cave with its jaws open, a student on the narrow rock ledge beside the pool.
+text: {seen(tide3_conger) > 1: The sump, and the conger in it. It comes up to look at you, slow and grey, and remembers.|The only way on is a ledge round a black sump pool, and something lives in the pool. A grey head comes up out of it, then more of it, and more, thick as a man's leg, jaws working. A conger, longer than a rowing boat, between you and the rest of the caves.}
+> left: Back off the ledge
+  queue tide_way_out now
+  say: {seen(tide3_conger) > 1: You leave the conger its pool. All the way out you can feel the water behind you, deciding.|You back off the ledge very slowly. The conger watches you all the way, then sinks.}
+> right: Fight it off the ledge
+  hint: It strikes from its hole and drags back into it: hit it when it shows.
+  challenge combat adept+:
+    win:
+      tide_haul += 1
+      tide_depth += 1
+      next
+      say: {seen(tide3_conger) > 1: You drive it down into the black water and the pool goes still. Crossing the ledge with your back to the wall, you pick up a tooth it left on the rock, as long as your finger.|It slides back into its hole and stays there, sulking, one eye on you. On the ledge where it struck there's a tooth as long as your finger. You take it.}
+      flag tide_conger_beaten
+    lose:
+      if tide_grace > 0:
+        queue tide_soaked now
+      else:
+        queue tide_fished_out now
+      say: {seen(tide3_conger) > 1: It catches your sleeve and pulls, and you leave the sleeve with it, and a good deal of skin.|It comes up out of the pool faster than anything that size should, and you go into the water. You get out. You don't remember how.}
+> up[seal]: Seal it in its hole
+  tide_depth += 1
+  next
+  say: {seen(tide3_conger) > 1: You seal its hole with a word. Something thumps against the seal from below, hard, twice, and then you're past.|You close the mouth of its hole with a word, long enough to cross. The pool heaves once, twice, and lies still, and you go round the ledge with the conger thumping somewhere under your feet.}
+
+@event tide3_glow_pool
+title: The Shining Pool
+thread: tide_delve
+class: routine
+tone: eerie
+when: tide_depth >= 5 and tide_depth <= 6
+repeat: 1
+art: potion
+tags: tide nature
+scene: A dark sea cave chamber with a still pool glowing soft blue-green with tiny living lights, a student kneeling at the edge filling a glass phial with glowing water.
+text: {seen(tide3_glow_pool) > 1: The shining pool again. It flares where your shadow falls on it.|In the dark beyond the sump there's a pool that shines: a soft blue-green light coming up out of the water, brighter where you stir it, as if the pool were full of sparks that mind being touched.}
+> left: Leave it shining and turn back
+  queue tide_way_out now
+  say: {seen(tide3_glow_pool) > 1: You turn back. Behind you the pool settles, and dims, and waits.|You leave the pool to its light. All the way out, the dark seems darker.}
+> right: Fill a phial and go on
+  health -tiny
+  tide_haul += 1
+  tide_depth += 1
+  next
+  say: {seen(tide3_glow_pool) > 1: You fill a phial. The water is so cold your fingers stop working, but the glass in your bag lights your way on.|You fill a phial. The light in it swirls, then settles, still glowing. Your hand, where it touched the water, stings and glows faintly for an hour.}
+
+@event tide3_figurehead
+title: The Figurehead
+thread: tide_delve
+class: routine
+tone: eerie
+when: tide_depth >= 5 and tide_depth <= 6
+repeat: 1
+art: lantern
+tags: tide mystery
+scene: A carved wooden ship's figurehead of a woman holding up a brass lamp, her paint gone and her gilt flaking, wedged high in the rock of a sea cave, a student looking up at her with a lantern.
+text: {flag(tide_figurehead_stripped): The figurehead looks down the passage at you, her fist empty where the lamp was, as she has done for a hundred years.|{seen(tide3_figurehead) > 1: The figurehead looks down the passage at you, lamp up, as she has done for a hundred years.|High in the rock, where no ship could have put her, is a figurehead: a carved woman holding up a lamp, her paint long gone and her gilt flaking, looking straight down the passage at whoever comes. The lamp in her fist is real brass.}}
+> left: Leave her be and turn back
+  queue tide_way_out now
+  say: {seen(tide3_figurehead) > 1: You turn back. Her eyes are only paint. You check twice.|You leave her to her watch and go back the way you came. You don't look round.}
+> right: Climb up and strip her brass
+  health -tiny
+  mood -tiny
+  tide_haul += 2
+  tide_depth += 1
+  next
+  say: {flag(tide_figurehead_stripped): You climb her and scrape away what gilt the sea has left her, grazing both hands. She doesn't seem to mind, which is somehow worse.|You climb her and work the lamp out of her wooden fist, splinters in both palms. It comes away with a crack. Walking on, you keep feeling her looking at the back of your neck.}
+  flag tide_figurehead_stripped
+> up[mend]: Mend her
+  mood +small
+  tide_depth += 1
+  next
+  say: You knit the cracks in her face and arm with Mend, and a little of the paint comes back, where it can. You think she's smiling. You're probably wrong, but you walk on lighter.
+
+@event tide3_sea_hall
+title: The Sea's Hall
+thread: tide_delve
+class: routine
+tone: tense
+when: tide_depth >= 5 and tide_depth <= 6
+repeat: 1
+art: wave
+tags: tide nature danger
+scene: An enormous sea cave as tall as a cathedral, waves booming in from a distant opening, a narrow wet ledge along one wall, a tiny student with a lantern edging along it.
+text: {seen(tide3_sea_hall) > 1: The great hall of the sea, booming. The ledge is wetter than last time.|The passage opens into a cave as big as the cathedral, and louder: every wave that comes in from somewhere ahead goes off in it like a cannon. The only way across is a ledge along the wall, a foot wide and wet with spray.}
+> left: Turn back
+  queue tide_way_out now
+  say: {seen(tide3_sea_hall) > 1: You go back. The hall doesn't notice. It's busy with the sea.|You turn back with the boom of the hall in your chest, and it follows you most of the way out.}
+> right: Edge along the ledge
+  challenge feat adept:
+    win:
+      tide_depth += 1
+      next
+      say: {seen(tide3_sea_hall) > 1: You cross timing the swell, a step between each wave. The spray soaks you, and doesn't stop you.|You go along the ledge with your face to the rock, counting the waves, moving between them. At the far end you sit down hard and laugh with your whole body.}
+    lose:
+      if tide_grace > 0:
+        queue tide_soaked now
+      else:
+        queue tide_fished_out now
+      say: {seen(tide3_sea_hall) > 1: You lose the count. A big one finds you halfway, and the hall's floor is a long way down, and wet.|A wave bigger than the others comes in and takes you off the ledge as easily as a hand wiping a table.}
+> up[brace]: Brace against the swell
+  tide_depth += 1
+  next
+  say: {seen(tide3_sea_hall) > 1: You brace and cross. The sea slams into you twice and both times it's the sea that gives.|You plant your feet and hold, and when the waves hit you they land soft. You cross the ledge one braced step at a time, soaked and steady.}
+
+@event tide3_strongbox
+title: The Strongbox
+thread: tide_delve
+class: routine
+tone: light
+when: tide_depth >= 5 and tide_depth <= 6
+repeat: 1
+art: coin
+tags: tide money
+scene: An iron-bound strongbox half sunk in the sand of a clear rock pool in a sea cave, a rusted padlock on it, a student kneeling at the edge with a knife.
+text: {seen(tide3_strongbox) > 1: Another strongbox in another pool, or the same one shifted by the sea. The caves keep a lot of somebody's money.|At the bottom of a clear pool, sunk in sand, there's a strongbox, iron-bound, its padlock furred with rust. Somebody hid it where only the lowest water shows it, and never came back.}
+> left: Leave it and turn back
+  queue tide_way_out now
+  say: {seen(tide3_strongbox) > 1: You turn back. Somebody might still be coming for it. Not you.|You leave the box to whoever's coming back for it, and head for the light.}
+> right: Prise it open
+  health -small
+  tide_haul += 2
+  tide_depth += 1
+  next
+  say: {seen(tide3_strongbox) > 1: You prise the lid in the freezing water till your hands are raw. Inside, wrapped in oilcloth, some dead smuggler's savings.|You wade in to the waist in ice-cold water and work at the hasp with your knife for half an hour, and it gives, and so does the knife, into your hand. Inside: coin, black with salt, and a lot of it.}
+> up[item:lockpick_roll]: Pick the lock
+  health -tiny
+  tide_haul += 2
+  tide_depth += 1
+  next
+  say: {seen(tide3_strongbox) > 1: You pick it standing knee-deep in the pool, fishing the box up with a hooked pick. Your legs go numb. The bazaar seller would be proud.|Eleven picks, and the eighth does it, after a cold half-hour kneeling in the pool. The rusted padlock opens with a sigh.}
+
+# ---------------- Depth 7: the sea's door ----------------
+
+@event tide_sea_door
+title: The Sea's Door
+thread: tide_delve
+class: story
+tone: warm
+when: tide_depth >= 7
+repeat: 1
+art: wave
+tags: tide nature
+scene: A huge natural rock arch at the far end of a sea cave, opening onto the bright open sea at the foot of tall cliffs, waves rolling in through it, a ship carved over the arch, a student standing small inside it.
+text: {flag(tide_sea_door): The sea's door again: the arch, the light, the open sea rolling in under the carved ship. The gulls on the cliff know you now.|At the far end of the caves the dark gives out all at once into light: a great arch in the cliff's foot, open on the sea, the waves rolling in through it green and white. Somebody, a very long time ago, cut a step into each side of it and carved a ship over the top. This is the sea's door, and the caves were its hall.}
+> left: Look your fill and go back
+  mood +small
+  health -tiny
+  queue tide_way_out now
+  say: {flag(tide_sea_door): You stand in the arch till the spray soaks you through, then turn back into the dark for the long way home, cold and happy.|You stand in the door of the sea until you're soaked with spray and the light has filled you up. Then you go back the long way through the dark, cold to the bone and grinning.}
+  flag tide_sea_door
+> right: Swim out round the headland
+  hint: The quick way home, if you're strong enough.
+  challenge feat adept:
+    win:
+      vigor +small
+      renown +tiny
+      tide_swam = 1
+      queue tide_way_out now
+      say: {flag(tide_sea_door): You swim out through the door and round in the cold green water{tide_haul > 0: , letting the heaviest of your bag go to stay afloat,|} and the anglers on the breakwater cheer you in like an old friend.|You go out through the door with a wave and round the headland in the cold green water{tide_haul > 0: , letting the heaviest of your bag go to the sea to stay afloat,|} and come ashore on the breakwater before a dozen anglers who've heard of swimming the door and never seen it done.}
+      if tide_haul > 0:
+        tide_haul -= 1
+      flag tide_sea_door
+    lose:
+      health -small
+      queue tide_way_out now
+      say: {flag(tide_sea_door): The sea throws you back into the arch like a cat with a mouse. You go home the long way, dripping and humble.|The sea outside the door is stronger than it looks. It throws you back into the arch twice, and the second time you take the hint and walk home the long way, bruised and dripping.}
+      flag tide_sea_door

@@ -691,6 +691,30 @@ art: raven
 draws: danger
 desc: The rooftops of Port Calder, where the houses lean so close you can cross a street without touching it: chimney-pots, washing lines, the crews' old routes and the whole city spread out below.
 
+@place capital_tide_caves
+name: The Tide Caves
+region: capital
+map: city 904,590
+discover: has(origin_street) or flag(tide_caves_known)
+hint: On the docks, old men talk about the sea's back door.
+hinted_when: visits_to(capital_docks) >= 1
+open: noon afternoon
+art: wave
+draws: nature danger mystery
+desc: Under the headland past Port Calder's breakwater, the sea has hollowed the rock into caves that open only at low water: the smugglers' old road, and the sea's door at the far end.
+
+@place capital_bonded_warehouses
+name: The Bonded Warehouses
+region: capital
+map: city 765,612
+discover: has(origin_street) or flag(bonded_known) or flag(tide_bonded_drain) or flag(crew_job_done)
+hint: On the docks, people talk about the bonded warehouses the way sailors talk about reefs.
+hinted_when: visits_to(capital_docks) >= 1
+open: night
+art: lock
+draws: money danger
+desc: The customs' warehouses on Port Calder's wharf, where goods wait under the crown's seal until their duty is paid: a glass-topped wall, yard dogs, a watchman's round and the richest floor in the city.
+
 # ---------------- The countryside (map: home; new maps, 2026-11-10) ----------------
 # Two villages on one road through fen, moor and ridge. A scholar or a hedge origin goes home here; anyone may travel
 # here on a break; two internship hosts are here. Everything looks fine.

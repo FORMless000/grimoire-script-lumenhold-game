@@ -119,6 +119,8 @@ export const DEFEAT={'Shadow stag':'{foe} {fv:lowers|lower} its head and {fv:ste
  'Peat adders':'{foe} {fv:unravels|unravel} and {fv:pours|pour} away into the heather.',
  'Bog hound':'{foe} {fv:backs|back} into the fog and {fv:is|are} gone.',
  'Barrow ram':'{foe} {fv:lowers|lower} {fpos} great head, {fv:snorts|snort}, and {fv:walks|walk} back up the hill.',
+ // The tide caves (new maps, round 2, C4)
+ 'Conger':'{foe} {fv:slides|slide} back into {fpos} hole and {fv:stays|stay} there.',
  'The Outcast':'{foe} {fv:laughs|laugh}, {fv:bows|bow}, and {fv:vanishes|vanish} into silver frost.'};
 export const ENDINGS={knockout:'{foe} can fight no more, and {name} {v:wins|win}.',decision:'Neither falls; {name} {v:wins|win} on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} {fv:yields|yield} to {name}.',
  // Told after the finishing line when both fell in the same exchange and the side that committed first won (feedback 2026-10-29).

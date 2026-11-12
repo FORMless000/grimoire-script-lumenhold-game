@@ -1,0 +1,25 @@
+{
+  "batch": "C5a-bonded-warehouses",
+  "round": 2,
+  "accept": true,
+  "summary": "Accepted: all seven round-1 issues are fixed as described. Familiarity now reads seen() or a flag, the strongroom shows the drawer on the first opening, the lockpick option trades, knowing the round is one flag, and the canon is fixed for Jory and the crew. The engine still ends every simulated night at the way out or the watch. What remains is small polish.",
+  "issues": [],
+  "polish": [
+    "crew_loft_jory_home: the unseen-hammock branch says 'a face in the loft you don't know: Jory', but a street-raised player has just read his name in the foreman's ledger ('and Jory caught on the floor that night'), whose text treats him as known. 'a face you know only from the foreman's ledger' or 'Jory, whom you last saw as a boy' would square the two.",
+    "Shared cards (job_way_out, job_caught, job_slip): still hard-code the warehouses (the customs lamp, the customs' wall, queue any in job_bonded). The author has deferred this to C5b, which merges into this file; branch them on job_where then.",
+    "bonded_customs_lamp right: on later showings the dog-man 'tells you their names' again. That's harmless, but once bonded_dogs_known is set the line could be {flag(bonded_dogs_known): he talks about the dogs, whose names you know already|…}."
+  ],
+  "checked": [
+    "Round 1 fixes re-read in full in content/events/maps/capital_heists.grim:",
+    "1. docks_bonded_talk: both options now set bonded_dogs_known and bonded_round_counted. The right shows its mood cost ('feel grubby for it'); the left no longer claims a cost it doesn't carry.",
+    "2. bonded_customs_lamp: the text is {seen(...) > 1: …|…} and the says assume no history. The drink now carries mood +tiny shown as good company, so it trades after the flag is set.",
+    "3. Knowing the round reads bonded_round_counted alone, in bonded_enter's cover, bonded2_round's check and its text. tide2_culvert's right option sets it (tide_caves.grim:416). The culvert line in bonded_enter now says you'll go by it, not 'Or…'.",
+    "4. bonded_strongroom: the win says key on flag(bonded_strongroom), with the flag set after the say and the queue, so the first opening always shows the drawer that bonded_ledger opens on. lockpick_roll is now 'challenge feat using guile adept- likely', with slip/caught lose lines.",
+    "5. All nine band cards use {seen(own id) > 1: again|first}, and the payoff-assuming lines are reworded ('Into an empty chest', 'It's horribly easy').",
+    "6. bonded_ledger: without a Port Calder childhood, the man is 'a young man from one of Port Calder's street crews' / 'the young crew boy', which fits the crew_loft and bonded_warehouses soft canon.",
+    "7. crew_loft_jory_home: the text branches on seen(crew_loft_empty_hammock) > 0.",
+    "Polish taken: the Undercroft fence variant is gated on flag(undercroft_known), with an unnamed-cellars fallback; the giveaway reaches renown +medium at loot 5+; the bell-pull is now a whistle and the bell a gong (no bell motifs left); the spice say shows a torn knuckle for its health cost.",
+    "Engine (node 24): re-ran the 900-night simulation. Every night ended at job_way_out (564) or job_caught (336) with depth 0, and no band ran dry. grim lint: 0 errors. test/capital-heists.test.js: 7/7 pass.",
+    "zh-CN translation is still pending (lint: 160 strings untranslated); the validators own that."
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "name": "C4-tide-caves",
+  "at": 1794518863695,
+  "files": [
+    "content/events/maps/tide_caves.grim"
+  ],
+  "events": [
+    "docks_sea_back_door",
+    "tide_rock_pools",
+    "tide_bait_diggers",
+    "tide_cave_mouth",
+    "tide_way_out",
+    "tide_soaked",
+    "tide_fished_out",
+    "tide1_drowned_stair",
+    "tide1_gull_cave",
+    "tide1_tide_ladder",
+    "tide1_wreck_ribs",
+    "tide1_blowhole",
+    "tide2_lookout",
+    "tide2_casks",
+    "tide2_culvert",
+    "tide2_turning",
+    "tide2_parlour",
+    "tide3_conger",
+    "tide3_glow_pool",
+    "tide3_figurehead",
+    "tide3_sea_hall",
+    "tide3_strongbox",
+    "tide_sea_door"
+  ],
+  "contentHash": "4d24dc",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 195,
+      "total": 195
+    }
+  },
+  "critic": {
+    "batch": "C4-tide-caves",
+    "round": 2,
+    "accept": true,
+    "summary": "Round 2 fixes all eight round-1 issues, and I checked the key ones in the engine. The band cards now key their 'again' variants on their own seen count, so a third visit no longer reads as a first meeting. The figurehead keeps her empty fist, and the swim out of the sea's door ends on the breakwater. The delve reads cleanly and every choice trades. Only small polish is left.",
+    "issues": [],
+    "polish": [
+      "tide_sea_door: the swim's win line always says 'letting the heaviest of your bag go to the sea', but a player can reach the door carrying nothing (blowhole, ladder, culvert, the spell routes). Gate the clause on the haul. Test `tide_haul` in the say before the `tide_haul -= 1`, or move the decrement below the say.",
+      "tide2_culvert: the right option's 'You count the watchman's round again' is keyed on flag(tide_bonded_drain), which turning back also sets, so a player who only glimpsed the grating last time reads 'again'. Key that variant on flag(bonded_round_counted) instead.",
+      "tide3_figurehead: once she's stripped, every later strip takes 'her brass collar and the last of her gilt' again. Harmless; a third variant or a second flag would end it.",
+      "tide_swam is reset only by tide_way_out. That's safe, because the swim always queues it now. Resetting it at the cave mouth too (beside tide_haul = 0) would guard against a visit that ends before the way out shows.",
+      "For C5, not this batch: capital_heists.grim treats `flag(bonded_round_counted) or flag(tide_bonded_drain)` as knowing the round (the watchman card's 'You know where the round turns', and job_cover). That still rewards a player who turned back at the culvert without counting it. If the round is meant to be earned, read bonded_round_counted alone there."
+    ],
+    "checked": "Read the whole file again. In the engine on round 2: tide3_figurehead, tide3_conger and tide1_tide_ladder rendered at seen 1/2/3 show the first-meeting text once, then the 'again' text for good. The figurehead with tide_figurehead_stripped shows 'her fist empty where the lamp was'. tide_way_out with tide_swam = 1 opens 'You stand dripping on the breakwater among the anglers'. The swim and both way-out options reset tide_swam. On a fresh engine each band still draws 5 (band 1 draws 4 once the ladder is read, depth 7 only the door). The `when` gates are unchanged, so the round-1 dry-run search (no band runs dry, grace 1–3, a fall on every check card) still holds. Every flag-reading say comes before its flag (figurehead strip, culvert, sea door). Every option line stands alone except the culvert polish above. Lookout loot is unowned. The lockpick shows its health cost in both lines. The soaked line no longer credits the bait-diggers. The docker's pipe stem replaces the drawn map, so docks_undercroft_word's beat isn't repeated. The repeated phrases are gone, the starfish is a hermit crab, and 'nasty and quick' replaces 'nasty and cold'. The ladder's hooks agree with the cave mouth's 'reading the tide ladder's hooks'. `grim lint` reports 0 errors (the 8 warnings are in other files) and test/tide.test.js passes."
+  },
+  "spotCheck": [
+    "tide3_sea_hall",
+    "tide1_tide_ladder",
+    "tide_soaked"
+  ],
+  "accepted": true
+}

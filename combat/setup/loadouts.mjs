@@ -42,6 +42,9 @@ export const SPECIAL_LOADOUTS={
  'Peat adders':{salt:56,offsets:[-30,-30,-30,-40,-10,20],kit:{venom:1,swarm:1,burrow:1,skitter:10},creature:true,race:'critter'},
  'Bog hound':{salt:57,offsets:[-20,-20,-20,-20,30,20],kit:{nip:1,fade:1,filch:1,skitter:15},creature:true,race:'beast',hp:1.35},
  'Barrow ram':{salt:58,offsets:[-30,-30,-30,-20,40,-10],kit:{charge:1,brace:1,roar:10},creature:true,race:'monster',hp:1.75,mana:.6},
+ // The tide caves (new maps, round 2, C4, 2026-11-12): the capital's delve. The conger lunges from its hole (Maul) and drops back
+ // into the black water (Fade, Burrow).
+ 'Conger':{salt:59,offsets:[-30,-30,-30,-20,40,0],kit:{maul:1,fade:1,burrow:10},creature:true,race:'monster',hp:1.9,mana:.6},
  // Forbidden practitioners (F5.11): human, so no race; generated like the forbidden classes (Hollow adept, Underground
  // tough), expanded with their own iconic spells, and carrying their worn kit (content/world/items.grim).
  // The thornwitch: a Hollow adept of the thicket, Siphon first, with Bramble and the thorn wand (on_cast forbidden spell 2).
