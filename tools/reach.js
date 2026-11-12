@@ -101,6 +101,8 @@ function reach(content) {
   // seed: hooks, resource on_zero, origins (the start menu grants them), npcs met on stage
   for (const h of Object.values(c.hooks)) produce(h.do || h.effects);
   for (const r of Object.values(c.resources)) produce(r.on_zero);
+  // a traveller's lodging is gained on the arrival screen from the map's `lodging:` (new maps, 2026-11-10)
+  for (const m of Object.values(c.maps || {})) for (const id of m.lodging || []) if (c.states[id]) produce([{ t: 'gain', state: id }]);
 
   // options whose own gate can't open yet produce nothing; they are re-checked every round
   const opened = new Set();

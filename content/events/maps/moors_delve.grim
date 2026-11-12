@@ -5,7 +5,7 @@
 #  (content/events/whisperwood/delve.grim), shorter: three bands and the door in the hill.
 #
 #  Counters, reset on each entry: moor_depth (how deep), moor_haul (what you carry), moor_grace (falls you can survive:
-#  1, +1 with the hedge-witch's rue in your pocket, +1 for someone born in the valley). moor_deepest persists.
+#  1, +1 with the hedge-witch's rue in your pocket, +1 with a shepherd's crook, +1 for someone born in the valley). moor_deepest persists.
 #  Bands: 1 at depth 1–2 (the cairns, apprentice), 2 at 3–4 (the bog roads, journeyman), 3 at 5–6 (the hollow hill,
 #  adept); depth 7 is the door in the hill, shut. "The Good Year" (K4) opens it.
 #
@@ -84,6 +84,8 @@ text: {moor_deepest == 0: A shepherd on the road tells you to stay this side of 
   moor_haul = 0
   moor_grace = 1
   if flag(marsh_rue):
+    moor_grace += 1
+  if has_item(shepherds_crook):
     moor_grace += 1
   if at_home():
     moor_grace += 1

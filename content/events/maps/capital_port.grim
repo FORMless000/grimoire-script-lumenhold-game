@@ -1,0 +1,542 @@
+# The capital's working city (maps round 2, C3; docs/maps-plan.md): the Docks, the Fish Market, the Coaching Yard,
+# the Cathedral of the Lamp, Printing Row, and two places found by asking, the Undercroft under the middle bridge
+# (`undercroft_known`) and the Rookery over Port Calder's roofs (`rookery_known`, or a street childhood). Each place
+# has a recurring card in cycled showings (its old placeholder retired) and scenes once each; the fish market has a
+# counter.
+
+# ---------------- The Docks ----------------
+
+@pool capital_docks_life
+place: capital_docks
+class: routine
+weight: 10
+tags: money danger
+
+@event docks_day_labour
+title: Hands Wanted
+pool: capital_docks_life
+repeat: 3
+tone: light
+time: morning noon afternoon
+art: house
+scene: A busy harbour wharf, cranes and barrels, a foreman with a slate shouting for day labourers, a line of dockers, a student rolling up their sleeves.
+text: {&A foreman on the wharf is shouting for hands: a ship from somewhere hot is in with a hold of oranges, and the tide won't wait. Day rates, cash at the gangplank. The dockers look at your academy scarf and grin.|"Hands wanted," shouts a foreman on the wharf. "Barrels! Mind your toes!" He sees your scarf. "A wizard. Can you lift, wizard?"|A wool ship from the north is in, the crane on her berth has stuck, and her foreman jerks a thumb at the hold for anybody standing still. You're standing still.}
+> left: Work the hold
+  gold +small
+  health -tiny
+  say: {&You carry oranges up the gangplank until your arms forget being arms. At the end the foreman pays you in coin and three oranges. The dockers have stopped grinning and started calling you by name.|Barrels all afternoon. You float one with a spell when no one's looking, and the foreman sees, and says nothing, and pays you a little extra. Your back aches anyway.|You unstick the crane with a word and a shove, and the whole wharf cheers. Then you carry wool till dusk. The pay is good, the ache is honest.}
+> right: Sit on a bollard and watch the ships
+  mood +small
+  study -tiny
+  say: {&You sit on a bollard and watch ships from places you've only seen on maps unload things you can't name. You learn nothing useful, and you forget a lecture's worth of something else. It's a fine way to lose a day.|The barrels go up, the gulls come down. You watch the whole thing with a pastry and a clear conscience, and the book you brought stays shut in your bag.|You watch the northern ship unload, and the crane stick, and somebody else unstick it. You're happy. Your notes are sliding out of your head.}
+
+@event docks_northern_ship
+title: Frost on the Rigging
+pool: capital_docks_life
+tone: eerie
+time: morning noon
+art: snow
+scene: A tall sailing ship at a harbour quay with frost thick on its rigging though the day is mild, northern sailors in furs unloading crates, one old sailor beckoning a student closer.
+text: A ship in from the far North is tied up on the quay, and though the morning is mild, there's frost on her rigging still, white to the crosstrees. Her sailors wear furs and say little. One old sailor sees your academy scarf and beckons. "Lumenhold," he says. "You want to buy a northern thing? Not cheap. Not safe either."
+> left: See what he's selling
+  gold -small
+  arcana +small
+  say: It's a lump of ice that doesn't melt, wrapped in sealskin, for "keeping things cold that should stay cold". In your room it frosts the window in a pattern like writing, and by the break's end it has melted to nothing, at last. Studying it, you learn more about cold than a term of lectures.
+> right: Ask about the North instead
+  lore +small
+  mood -tiny
+  say: He tells you about the ice roads and the long night and the lights that sing over the glaciers, and he doesn't smile once. When he's done the mild morning feels thin, as if something had been let in. You walk away cold.
+
+@event docks_undercroft_word
+title: Where the Dice Are
+pool: capital_docks_life
+tone: tense
+time: afternoon evening
+art: dice
+when: not flag(undercroft_known)
+scene: A harbour tavern doorway at dusk, a weathered docker with a dice-cup leaning out to talk to a student, the arches of a great bridge visible upriver.
+text: A docker coming off shift jingles a dice-cup at you. "You play? Not here. Under the middle bridge, in the old cellars. The Undercroft. Cards, dice, a pit on fight nights. Bring coin, leave your wand in your pocket." He looks you over. "Or don't go. Smarter."
+> left: Ask him the way in
+  flag undercroft_known
+  alignment -tiny
+  say: He draws it in spilled beer on a barrel-top: the third arch, the iron door, the word for the doorman. "Tell him the docks sent you," he says. Then he rubs the map out with his sleeve. You know the way now, and you know you shouldn't.
+> right: Thank him and stay out of it
+  mood -tiny
+  say: You thank him and walk on. "Third arch," he calls after you anyway, laughing, "iron door!" All the way home you look at the middle bridge, and wonder what's under it.
+  flag undercroft_known
+
+@event docks_roof_runner
+title: Over the Roofs
+pool: capital_docks_life
+tone: tense
+time: evening
+when: not flag(rookery_known) and not has(origin_street)
+art: raven
+scene: A narrow harbour alley, a young woman in a patched coat dropping off a low roof at a run with two watchmen behind her, a student in her path.
+text: Somebody drops off a low roof into the alley in front of you, a young woman in a patched coat, and two watchmen come pounding round the corner after her. "Leg up," she says to you, already reaching for the gutter. "Quick, and I'll show you the best view in the city."
+> left: Give her the leg up
+  flag rookery_known
+  alignment -tiny
+  vigor +tiny
+  say: You boost her, and she pulls you after, and you run over three streets of Port Calder's roofs without touching the ground, the watch shouting below. On a ridge by a chimney she stops, and the whole city's there in the dusk. "The Rookery," she says. "Don't tell." Then she's gone.
+> right: Step aside for the watch
+  alignment +tiny
+  mood -tiny
+  say: You step aside. She makes the gutter on her own, just, and turns on the ridge to shout down at you, "The Rookery! Come and see it, coward!" The watchmen thank you. You feel righteous, and also as if you'd been shown a way up and stayed on the ground.
+  flag rookery_known
+
+# ---------------- The Fish Market ----------------
+
+@event shop_fish_market
+title: The Fish Market's Barrows
+place: capital_fish_market
+type: shop
+class: routine
+tone: warm
+repeat: 1
+weight: 10
+art: wave
+tags: money shop
+scene: A dawn quay market of fish on ice, gulls on every roof, barrows steaming with hot food, a fishwife ladling soup for a student.
+text: {~The fish market is all ice, shouting and gulls, and the barrows at the end of the quay feed the people who've been up since three: chowder, hot pasties, oysters on a plate of seaweed.|The barrows steam at the quay's end. A fishwife ladles chowder with one hand and fights off a gull with the other.}
+> chowder: A bowl of quay chowder
+  hint: Health; it ends a hungry month.
+  gold -tiny
+  health +small
+  lose hungry
+  say: {~Chowder thick enough to stand a spoon in, and a heel of bread to fight the gulls for. You eat it on the quay wall with the dockers, and you're warm to the toes.|The fishwife puts in extra mussels "for the scarf". You eat it standing, scalding your mouth, very happy.}
+> oysters: A dozen oysters at the stand
+  hint: Mood, and a little Health.
+  gold -small
+  mood +small
+  health +tiny
+  say: {~A dozen on seaweed, a squeeze of lemon. The oyster-man opens them faster than you can eat them, and calls you a lord for paying.|You eat them watching the boats come in, and the oyster-man tells you which bay each one's from, as if introducing them.}
+> gossip: Buy a fishwife a cup and listen
+  hint: The quay's gossip: Lore, and the city's news before it's printed.
+  gold -tiny
+  lore +tiny
+  guile +tiny
+  say: {~For the price of a cup of tea, a fishwife tells you who drowned, who eloped, which ship's late and why, all before breakfast. Printing Row will have it by dusk, wrong.|The fishwives tell you the bonded warehouses doubled their dogs. They tell you everything. You realise they'll tell everyone about you, too.}
+> look: Walk the quay and smell the sea
+  say: {~You walk the length of the quay past the ice and the shouting, and buy nothing, and smell of fish till noon.|The gulls follow you the whole way, sure you've got something. You haven't.}
+
+@pool capital_fish_market_life
+place: capital_fish_market
+class: routine
+weight: 10
+tags: social
+
+@event fish_market_auction
+title: The Dawn Auction
+pool: capital_fish_market_life
+slot: morning
+tone: tense
+art: scales
+scene: A crowded dawn fish auction on a quay, buyers in aprons making tiny hand signals at an auctioneer on a crate, crates of silver fish on ice, a student with a hand half-raised.
+text: The dawn auction is held by hand-signals, too fast to follow: a finger is a crown, a tug of the ear is ten, and a scratch of the nose has ruined people. The auctioneer's on his crate. A whole crate of mackerel is going cheap, if you can bid without buying the boat by mistake.
+> left: Bid for the crate
+  challenge deceive journeyman:
+    win:
+      gold +small
+      guile +tiny
+      say: You keep your hands in your pockets till the last moment and take the crate with one finger. Before the sun's up you sell it on to a barrow for twice what you paid. The auctioneer winks at you. The buyers pretend not to have noticed you.
+    lose:
+      gold -small
+      mood -tiny
+      say: You scratch your nose. You now own a crate of mackerel, a crate of herring, and very nearly a boat. You sell them on for less than you paid, smelling of fish, and the buyers clap you on the back.
+> right: Watch the hands
+  guile +small
+  health -tiny
+  say: You stand on a bollard and watch nothing but the buyers' hands for an hour. By the end you can follow the auction, just, and you've learned that the quietest buyer in the market is the one who owns it. Your feet are frozen.
+
+@event fish_market_gull_war
+title: The Gull War
+pool: capital_fish_market_life
+tone: light
+art: raven
+scene: A fish market quay under attack by a mob of gulls, fishwives swinging brooms, a huge one-eyed gull on a barrow holding a whole fish, a student caught in the middle.
+text: The fish market is at war with the gulls, and today the gulls are winning. Their general is a huge one-eyed bird the fishwives call the bishop, for the way he blesses the barrows, and he has just taken a whole salmon off a barrow and is standing on it, daring anyone. The fishwives look at you. "Wizard," says one. "Do something."
+> left: Drive the gulls off with a spell
+  challenge spell apprentice:
+    win:
+      renown +tiny
+      mood +small
+      say: A clap of light and wind sends the whole flock up off the quay at once. The one-eyed gull goes last, without the salmon, and gives you a look that promises a long war. The fishwives give you the salmon.
+    lose:
+      mood -small
+      say: Your spell scatters the fishwives. The gulls stay. The one-eyed gull finishes the salmon and is sick on your boot, deliberately, you're sure of it.
+> right: Bribe the general
+  gold -tiny
+  charm +tiny
+  say: You buy a herring and offer it, very respectfully, to the one-eyed gull. He considers it, takes it, and leads the whole flock off to the roofs. The fishwives call it shameful. It's a truce. It lasts till noon.
+
+@event fish_market_golden_fish
+title: Throw It Back
+pool: capital_fish_market_life
+tone: eerie
+art: wave
+scene: A fish market stall at dawn, a small fish with golden scales gasping on the ice, old fishwives gathered around it uneasily, one holding out the fish to a student.
+text: On a barrow at the end of the quay, among the silver, lies a small fish with scales like coins. The fishwives won't touch it. "That one goes back," says the oldest. "Always. My gran's gran said so." She lifts it in her apron and puts it into your hands. "You're the stranger. You do it." A buyer from uptown is already waving a fistful of money at you for it.
+> left: Throw it back yourself
+  alignment +tiny
+  mood +small
+  say: You carry it in your cupped hands to the quay's end and let it go into the grey water. It turns once, a flash of gold, and is gone. The fishwives nod. That night you dream of coins under the sea, quietly, and wake rested.
+> right: Sell it to the uptown buyer
+  gold +small
+  mood -small
+  alignment -tiny
+  say: The buyer pays you for it, in front of the fishwives, and carries it off for his aquarium. The fishwives turn their backs on you. Nothing happens. Nothing happens all break, and you can't stop waiting for it.
+
+# ---------------- The Coaching Yard ----------------
+
+@pool capital_coaching_yard_life
+place: capital_coaching_yard
+class: routine
+weight: 10
+tags: social money
+
+@event coaching_yard_arrivals
+title: The Coach Is In
+pool: capital_coaching_yard_life
+repeat: 3
+time: morning noon afternoon evening
+tone: light
+art: house
+scene: A busy coaching inn yard, a mud-spattered coach just arrived, porters unloading trunks, travellers milling, an anxious old traveller holding a parcel out to a student.
+text: {&A coach from the north rolls in spattered to the windows, and the yard fills with trunks, horses, porters and people trying to remember which trunk is theirs. An old woman holds out a parcel. "Can you carry this to the Crescent, dear? I'll pay."|The coach from the coast, late and muddy. A clerk with a parcel he can't leave the yard to deliver looks at you hopefully.|The mail coach swings in with its horn blowing. The guard tosses down a sack of letters, and one parcel addressed in a hand that's clearly urgent.}
+> left: Carry the parcel across the city
+  gold +small
+  health -tiny
+  say: {&The Crescent is at the top of the steepest hill in the capital. You deliver the parcel to a butler who signs for it with tremendous gravity. The old woman pays you double. Your legs complain all evening.|You carry the clerk's parcel to a counting house in Port Calder, the far end of the city, and get paid at both ends. You're footsore.|You run the urgent parcel to a doctor's door in midtown. He pays you, and then runs, too. You never find out what was in it. Your feet ache.}
+> right: Help the porters with the trunks
+  vigor +small
+  health -tiny
+  say: {&Trunks, hatboxes, a birdcage and somebody's harp. The porters let you carry the harp. By the end your arms ache and you know every hotel in the city.|You heave trunks off the roof of the coach with the porters, who are delighted to have a wizard who doesn't use magic. By the end, you wish you had.|Mail sacks, trunks, a crate that growls. You leave the crate to the porters. You carry everything else, and ache for it.}
+
+@event coaching_yard_wrong_trunk
+title: The Wrong Trunk
+pool: capital_coaching_yard_life
+tone: tense
+time: morning noon afternoon
+art: house
+scene: A coaching yard with trunks piled high, a smooth porter in a borrowed cap wheeling away a fine trunk on a barrow, a flustered traveller searching the pile, a student watching.
+text: In the bustle of the yard you see a porter in a cap that doesn't fit him swap the label on a fine leather trunk for a scruffy one, and wheel the fine one briskly towards the gate. Its owner, a flustered governess off the coast coach, is still searching the pile for it. Nobody else has noticed. The gate is twenty yards away.
+> left: Go after the porter
+  challenge feat journeyman:
+    win:
+      alignment +small
+      vigor +tiny
+      gold +tiny
+      say: You catch him at the gate and put a hand on the barrow. He looks at your wand, decides against it, and runs, leaving the trunk. The governess nearly weeps; everything she owns is in it. She insists on giving you a coin, and a lecture on punctuality.
+    lose:
+      health -small
+      say: You catch him at the gate, and he shoves you into a horse trough and is gone into the street with the trunk. The governess helps you out, which is kind of her, considering. You're soaked and bruised, and her trunk is gone.
+> right: Tell the yard-master
+  alignment +tiny
+  mood -tiny
+  say: You find the yard-master, who finds the constable, who finds the barrow in an alley with the trunk forced open and half its contents gone. The governess thanks you for trying. It was the sensible thing, and it was too slow.
+
+@event coaching_yard_travellers_tale
+title: Off the Southern Coach
+pool: capital_coaching_yard_life
+tone: warm
+art: map
+scene: A coaching inn's crowded taproom, a sun-browned traveller with a battered trunk telling a story to a ring of listeners, a student leaning in.
+text: The southern coach brings a sun-browned traveller with a battered trunk covered in labels from a dozen ports. In the coaching inn's taproom he's telling the whole room about a city where the streets are canals and the wizards wear masks to work. He wants an audience, and a drink.
+> left: Buy him a drink and listen
+  gold -tiny
+  lore +small
+  say: You buy him a drink, and he tells you the whole south: the canal city, the masked wizards, a market that floats and a duel fought in gondolas. Some of it is even true, probably. You walk home with your head full of water and lanterns.
+> right: Tell him about Lumenhold instead
+  charm +small
+  mood -tiny
+  say: You tell him about a castle on a lake, moving staircases and a cat who files the library. He's delighted, and writes it all in a little book for his next audience. You realise, walking home, that you've just become somebody's traveller's tale, and you miss the castle.
+
+# ---------------- The Cathedral of the Lamp ----------------
+
+@pool capital_cathedral_life
+place: capital_cathedral
+class: routine
+weight: 10
+tags: social
+
+@event cathedral_under_the_lamp
+title: Under the Lamp
+pool: capital_cathedral_life
+repeat: 3
+tone: warm
+art: candle
+scene: The vast nave of a cathedral, a great lamp burning high over the altar, warm golden light, a student sitting alone on a pew, a few worshippers kneeling.
+text: {&The cathedral swallows the city's noise at the door. High over the altar the Lamp burns, as it has for four hundred years, and the light it gives is warmer than it has any right to be.|The Lamp burns steady over an empty nave. A verger is trimming the candles below it, very slowly, as if there were all the time in the world.|The city's too loud today, and the nave is cool. The Lamp burns, and a choir somewhere is rehearsing one phrase over and over.}
+> left: Sit under the Lamp a while
+  mood +small
+  study -tiny
+  say: {&You sit an hour in the warm light and think about nothing at all. You come out lighter, and with everything you were meant to be revising gone soft at the edges.|You sit and watch the verger trim the candles. It takes him an hour. It's the most restful hour of the break, and the chapter you meant to read stays unread.|You sit while the choir gets the phrase right at last, and the whole nave rings with it. Your homework can wait. It does.}
+> right: Read the old memorials
+  lore +small
+  mood -tiny
+  say: {&The walls are thick with brass memorials: drowned admirals, a bishop who saw a dragon, a lamplighter who kept the Lamp lit through the great flood. You read them all, and come out a little sad.|You read the floor, the old names worn smooth by four hundred years of feet. Most of them were young.|You find a memorial to a Lumenhold student, two hundred years ago, "who loved the city and was lost in it". You stand in front of it a long time.}
+
+@event cathedral_crypt_archive
+title: The Crypt Archive
+pool: capital_cathedral_life
+tone: eerie
+time: morning noon afternoon
+art: book
+scene: A vaulted cathedral crypt lined with shelves of ancient ledgers and scrolls, a very old archivist with a candle leading a student between the tombs.
+text: Under the cathedral, among the tombs, is an archive older than the Royal Library's: four hundred years of baptisms, burials and the bishops' private letters. The archivist, who is nearly as old as some of it, will let a scholar in for an hour, for a donation to the Lamp, or for a morning's copying.
+> left: Make a donation and read
+  gold -small
+  lore +medium
+  say: An hour among the bishops' letters, by candle: quarrels with kings, a recipe for the Lamp's oil, a love letter nobody burned. You come up blinking into the nave with a head full of the city's oldest secrets, and lighter in the purse.
+> right: Copy a ledger for him
+  lore +small
+  health -tiny
+  say: The archivist sets you to copying a burial register that's falling apart. Four hours of cramped names by candlelight in the cold. He checks every line, says "Legible," and lets you read one letter of your choice. Your back and your eyes are sore.
+
+@event cathedral_ringing_chamber
+title: The Ringing Chamber
+pool: capital_cathedral_life
+tone: light
+time: morning noon afternoon
+art: bell
+scene: A cathedral bell-ringing chamber high in a tower, a circle of bell ropes with striped grips, ringers in shirtsleeves, a tower captain holding out a rope to a student.
+text: Up a stair of three hundred steps is the cathedral's ringing chamber, a circle of ropes with striped grips hanging from the dark. The ringers are one short for the full peal the city expects on a saint's day, and the tower captain has come down to the nave to find anybody with strong arms. He hands you a rope. "Pull when I say. Let go when I say. Never otherwise."
+> left: Ring the peal
+  challenge feat journeyman:
+    win:
+      renown +tiny
+      mood +small
+      say: Three hours of pull and let go, in time with seven strangers, while the whole tower shakes and the capital below hears every change. When the last bell stops the ringers clap you on the back and write your name in the peal book, in ink.
+    lose:
+      health -small
+      say: You pull when he doesn't say, and the rope takes you up off your feet towards the ceiling before you let go. The captain catches the rope, and the peal, and you, in that order. You sit out the rest on the bench with rope-burned hands.
+> right: Climb on up to the spire
+  mood +small
+  health -tiny
+  say: You leave the ringers to it and climb on, up past the bells to a little room under the spire where the window looks out over the whole city to the sea. The bells start below you and the floor hums. Your legs ache all the way back down.
+
+@event cathedral_sanctuary
+title: Sanctuary
+pool: capital_cathedral_life
+slot: evening
+tone: tense
+art: door
+scene: A cathedral's great door at dusk, a desperate young man clinging to the iron door-ring, two bailiffs on the steps below, a student standing in the doorway.
+text: At dusk a young man runs up the cathedral steps and grabs the great iron ring on the door, two bailiffs behind him. Whoever holds the ring has sanctuary, the old law says, but the bailiffs are already climbing, and the verger is nowhere. "Debt," the young man gasps. "Just debt. Please."
+> left: Stand between him and the bailiffs
+  alignment +small
+  health -tiny
+  say: You stand in the doorway with your wand out and recite the old law at the bailiffs, word for word, until the verger comes running. The bailiffs leave, swearing, and one of them shoves you into the doorpost on the way. The young man has sanctuary, and you have a bruise.
+> right: Pay his debt
+  gold -medium
+  alignment +small
+  say: "How much?" you ask the bailiffs. They tell you. It's more than you'd like and less than a life. You count it into the sergeant's hand on the cathedral steps, and the young man lets go of the ring and sits down on the step and cries. You walk home a good deal lighter.
+
+# ---------------- Printing Row ----------------
+
+@pool capital_printing_row_life
+place: capital_printing_row
+class: routine
+weight: 10
+tags: social
+
+@event printing_row_broadsheets
+title: Hot Off the Press
+pool: capital_printing_row_life
+repeat: 3
+tone: light
+art: paper
+scene: A narrow street of printing presses, ink-stained printers' devils running with bundles of fresh broadsheets, a student buying a damp sheet from a boy on a corner.
+text: {&Printing Row thumps like a heart. Every door has a press behind it and every press is printing something somebody will regret. A printer's devil runs past shouting tomorrow's headline today.|Printing Row smells of ink and hot metal. A broadsheet headline in letters a hand high: SCANDAL AT THE CLUB.|Printing Row at full roar. Two rival broadsheets are printing the same story with opposite endings, and selling both from the same corner.}
+> left: Buy every broadsheet on the Row
+  gold -tiny
+  lore +small
+  say: {&You read them all on a step, ink coming off on your fingers: a duel, a drowned ship, a minister's debts, an advertisement for a hair tonic with a lion in it. You know the capital better by the end, and believe less of it.|You read about the club scandal in five versions. In three of them the guilty party is a duke. In one it's the porter.|You read both endings of the same story and decide, on balance, that neither happened. You know a great deal of nonsense now, and some of it is true.}
+> right: Sell them a story
+  challenge perform apprentice:
+    win:
+      gold +small
+      say: {&You tell an editor about a gull that steals salmon at the fish market. He buys it, and by dusk it's a sea monster. Your name is spelt wrong in the paper, which is probably for the best.|You sell a story about a ghost at the theatre. The paper prints it as an omen. People at the theatre now look at you oddly.|You sell a story about a student who can walk through walls. They print it about somebody else entirely, and pay you anyway.}
+    lose:
+      mood -tiny
+      say: {&The editor listens, yawns, and says he had it yesterday, better.|"Nobody believes academy students," the editor says. "That's what makes them news, but not today."|The editor buys nothing, and then prints your story anyway, under a rival's name. You can't prove it.}
+
+@event printing_row_your_name
+title: Your Name in Print
+pool: capital_printing_row_life
+tone: tense
+when: renown >= 25
+art: paper
+scene: A printing shop, a printer holding up a wet proof sheet, a student reading their own name in the headline with alarm, an editor smirking behind them.
+text: In a printing shop on the Row a proof sheet is drying on the line, and your own name is in the headline: something you did at the academy, told badly and made worse, ready for the morning edition. The editor smirks. "Unless," he says, "you'd care to give us something better."
+> left: Give him a better story
+  renown +small
+  alignment -small
+  say: You give him a better story, true but sharper, about somebody else. He tears down your proof and sets theirs. In the morning the city's talking about you anyway, kindly this time, and about them, not kindly at all.
+> right: Let them print it
+  renown -small
+  mood -small
+  alignment +tiny
+  say: You tell him to print and be damned. He does. In the morning the whole capital reads the worst version of you over breakfast, and a fishwife at the quay asks if it's true. You tell her it isn't, quite, and find you can live with that.
+
+@event printing_row_jammed_press
+title: The Jammed Press
+pool: capital_printing_row_life
+tone: light
+time: morning noon afternoon
+art: gear
+scene: A printing shop in chaos, a big iron press jammed mid-edition with paper crumpled in its jaws, a frantic printer with inky hands waving a student over, stacks of half-printed broadsheets.
+text: A great iron press has jammed in a shop on the Row halfway through the evening edition, with a broadsheet chewed up in its jaws and four hundred more to go. The printer, inky to the shoulders, sees your academy scarf through the window and comes out into the street after you. "Can you fix machines? Can you fix anything? Please?"
+> left: Work it by hand with him
+  vigor +small
+  gold +tiny
+  health -tiny
+  say: You and the printer clear the jaws, ink the forme by hand and pull the edition one sheet at a time, all four hundred, on the old hand-lever. By dusk you're black to the elbows and your shoulders are on fire, and the papers are on the street. He pays you in coin and a copy.
+> right: Coax the press with a spell
+  challenge spell apprentice:
+    win:
+      arcana +small
+      gold +small
+      say: You find the bent pin in the gearing by feel and a word, and ease it straight. The press shudders, groans and starts again, faster than before. The printer pays you double and puts your name in the edition's corner, very small, for luck.
+    lose:
+      mood -small
+      say: Your spell unjams the press, and it runs, and runs, and won't stop, and prints the same page two hundred times before the printer gets a crowbar into it. He pays you nothing, and you go home with ink in your hair.
+
+# ---------------- The Undercroft ----------------
+
+@pool capital_undercroft_life
+place: capital_undercroft
+class: routine
+weight: 10
+tags: money danger
+
+@event undercroft_dice
+title: The Dice Under the Bridge
+pool: capital_undercroft_life
+repeat: 3
+tone: tense
+art: dice
+scene: A vaulted brick cellar lit by lanterns, river water dripping from the arches, a crowd around a long dice table, a croupier with a rake, a student with a stake in hand.
+text: {&Under the middle bridge the old cellars ring with dice. River water drips through the vaults; nobody looks up. At the long table a croupier with a rake calls the throws, and a seat is open, for anyone with coin and nerve.|The Undercroft's long table is quiet tonight, a few serious players and a croupier who rakes you a seat without a word. The drip from the vault lands, steadily, on the croupier's hat.|The dice table is three deep tonight; a ship's in, and its crew are losing their wages with great cheer. The croupier finds you a seat anyway.}
+> left: Play the dice
+  gold -small
+  challenge deceive journeyman unlikely luck:
+    win:
+      gold +medium
+      say: {&You read the table, the croupier's rake, the man who's sure he's lucky. You win twice, and quit while it's true. The croupier nods at you as if you'd done something rude.|You win, and the croupier, dripped on again, rakes your winnings over with a sigh. You tip him, which he didn't expect.|You win the sailors' wages off them, and then, because they're so cheerful about it, buy their supper. You still come out ahead.}
+    lose:
+      mood -small
+      say: {&You lose your stake in three throws, all of them close. The croupier rakes it away without looking, like a man brushing crumbs.|You lose, and the croupier's hat, dripped on again, seems to cheer up.|The sailors win everything tonight, including your stake. They're very sorry about it, and buy you a drink.}
+> right: Mind the door for the house
+  gold +small
+  alignment -tiny
+  mood -tiny
+  say: {&The house pays a coin a night for a pair of eyes on the iron door. You stand in the drip with the doorman, saying the word to people who know it and "No" to people who don't. A fence buys a ship's clock off a sailor right in front of you. You take the coin, and feel dirtier for it.|You mind the door. A man in a magistrate's coat comes in with his collar up and nods to you, as if you'd agreed never to have seen him. You're paid; you're cold.|A watchman comes down the steps, takes his envelope from the doorman, and goes out again without looking at the tables. You get paid too. It's an education, and a cold one.}
+
+@event undercroft_pit
+title: Fight Night
+pool: capital_undercroft_life
+tone: tense
+time: night
+art: duel
+scene: A sawdust fighting pit in a brick cellar under a bridge, two bare-knuckle prize-fighters circling, a roaring crowd waving betting slips, a bookmaker taking a student's coin.
+text: It's fight night in the Undercroft. In the sawdust pit a dock giant with fists like mallets is facing a small, quiet woman who keeps her hands low. The bookmaker is offering long odds on the woman, which means he knows something, or wants you to think he does.
+> left: Bet on the small woman
+  gold -small
+  chance unlikely:
+    gold +medium
+    say: She lets the giant swing himself tired for two rounds, then puts him in the sawdust with one short punch. The cellar goes silent, then mad. The bookmaker pays you with a face like a wet week.
+  else:
+    mood -small
+    say: The giant catches her in the second round and that's that. She's up again before they count her out, and bows to him. You've lost your stake. You find you don't mind as much as you should.
+> right: Go and see the fighters after
+  vigor +small
+  health -tiny
+  say: You go round the back after the bout. The small woman, it turns out, was a sailor, and a duellist's bodyguard, and is now a fishwife on weekdays. She shows you how to stand, and pushes you over to prove you're standing wrong. Your shoulder aches for a day.
+
+@event undercroft_fence
+title: No Questions
+pool: capital_undercroft_life
+tone: tense
+art: scales
+scene: A dim cellar alcove under a bridge, a soft-spoken fence in a velvet waistcoat behind a table of watches, rings and silver, holding a jeweller's loupe, looking at a student.
+text: In an alcove off the dice hall sits the Undercroft's fence, a soft-spoken man in a velvet waistcoat with a table of watches, rings and candlesticks that all used to belong to someone. He looks you over through his loupe. "Academy," he says. "I could use a pair of young eyes. Somebody to tell me which of these are enchanted. Paid, of course. No questions."
+> left: Appraise his stock for him
+  gold +small
+  arcana +tiny
+  alignment -small
+  say: You go through his table with a fingertip and a word, sorting the enchanted from the merely stolen: a ring that warms, a watch that runs backwards, a candlestick that remembers its family. He pays well, and politely, and you can't stop thinking about the family.
+> right: Turn him down
+  mood -tiny
+  say: "No," you say. He smiles, unoffended, and goes back to his loupe. "Everybody says no once," he says. You walk out past the dice knowing he'll be in that alcove, with that loupe, whenever you change your mind.
+
+# ---------------- The Rookery ----------------
+
+@pool capital_rookery_life
+place: capital_rookery
+class: routine
+weight: 10
+tags: danger
+
+@event rookery_rooftops
+title: The Roofs of Port Calder
+pool: capital_rookery_life
+repeat: 3
+tone: warm
+art: raven
+scene: The crowded rooftops of an old harbour town at dusk, chimney-pots and washing lines, a student sitting on a roof ridge looking out over a lamp-lit city and the sea.
+text: {&Up on the Rookery the city is a different place: chimney-pots and washing lines, gutters for roads, and below, the whole capital lighting itself for the night, from the cathedral's spire to the masts in the harbour.|The way up to the Rookery is the water-butt, the outhouse roof and the drainpipe that holds if you don't trust it too long. At the top, washing lines and a cat who owns the street.|On the Rookery tonight there's mist on the sea and the lamps of the bridges are coming on one by one, upriver. Somebody's chalked a star on the nearest chimney.}
+> left: Run the old routes
+  challenge feat journeyman:
+    win:
+      vigor +small
+      mood +small
+      say: {&You run the routes across three streets without touching the ground: gutter, ridge, a jump over an alley that's wider than it looks. You land laughing on the last roof, and a cat applauds.|You run the long way, past the cat, and take the long jump at the dyers' yard. The washing on the lines flaps at you like a crowd.|You run the Rookery end to end and back again in the mist, by memory, and never slip once.}
+    lose:
+      health -small
+      say: {&A slate slides under your boot and you go down the roof on your back into a gutter full of leaves. Bruised, filthy, alive.|You misjudge the dyers' yard and land in the washing. The washing comes down with you. A dyer shouts things.|You slip in the mist and catch a chimney-pot, and the chimney-pot holds, just. You climb down very slowly.}
+> right: Sit on the ridge and watch the city
+  mood +small
+  study -tiny
+  say: {&You sit on the ridge with your knees up and watch the capital light itself, street by street, until it's all lamps. You'll never see it like this from the ground. Your lessons feel very far away.|You sit and watch the ships come in under lamps, and the castle and its lessons feel a long way off. Up here it's all just lights.|You sit in the mist with the bridges coming on upriver, and think about nothing you're meant to be thinking about, for a long time.}
+
+@event rookery_old_marks
+title: Chalk on the Chimneys
+pool: capital_rookery_life
+tone: warm
+art: map
+scene: A rooftop at night, faded chalk symbols on a brick chimney, a student tracing them with a finger, the lit city below.
+text: {has(origin_street): On a chimney by the old crossing, still there under the soot, are the chalk marks your crew left when you were small, a star for a safe roof, a cross for a loose slate, and your own mark, the one you made up at nine. Somebody has gone over them since, to keep them fresh.|On a chimney by an old crossing are chalk marks, layers of them, years deep, stars and crosses and arrows and a little drawn eye. The crews' code. Someone keeps them fresh.}
+> left: Check the roof the marks promise
+  alignment +tiny
+  health -tiny
+  say: {has(origin_street): One of the stars, fresh, says the roof past the chimney is sound. You know that roof, and test it, and it isn't: two slates go under your boot. You rub the star out and chalk a cross. Somebody from the loft will be glad, and never know why. Your shin is scraped.|One star says the roof beyond is sound. You test it, carefully, and a slate slides out under your boot into the street. You rub out the star and draw the only mark you're sure of, a cross. Your shin is scraped.}
+> right: Learn to read them
+  guile +small
+  mood -tiny
+  say: {has(origin_street): You sit by the chimney and read the marks again, slowly, the way you used to. Some are new. One says a roof you loved has gone loose. One says the watch has a new man on the quay. You feel nine years old and far from home.|You sit for an hour working the marks out against the roofs around you: stars where the slates are sound, crosses where they aren't. By the end you can read a little of the crews' code. It feels like eavesdropping.}
+
+@event rookery_watch_guide
+title: The Watch Wants a Guide
+pool: capital_rookery_life
+tone: tense
+time: night
+art: lantern
+scene: A rooftop at night, a burly watch sergeant with a lantern hauling himself onto the roofs from a ladder, holding out a coin to a student by a chimney, the lit city below.
+text: Lanterns on the ladder at the end of the street: the watch is coming up onto the Rookery, which it hardly ever does. Somebody robbed a house on the Crescent tonight. The sergeant heaves himself onto the roof, sees you, and holds out a coin. "You know these roofs," he says. "Show us the ways across. The crews' ways."
+> left: Lead them the long way round
+  challenge deceive journeyman:
+    win:
+      guile +small
+      alignment -tiny
+      say: You lead the watch along every gutter but the right ones, with great earnestness, for an hour, until the sergeant is stuck astride a ridge and swearing. Somewhere far off, a skylight closes. The sergeant never works out what you did. He thanks you.
+    lose:
+      renown -tiny
+      mood -small
+      say: The sergeant is no fool. Two roofs in he stops, looks at the chalk on a chimney, looks at you, and sends you down the ladder with a long stare. By morning Port Calder knows the academy student wouldn't help the watch, and the watch knows it too.
+> right: Show them the crews' ways
+  gold +tiny
+  alignment +tiny
+  mood -small
+  say: You show them: the dyers' yard jump, the sailmaker's skylight, the chimney with the star. They catch nobody tonight, but now they know. The sergeant pays you. Every chalk mark you pass on the way down looks at you.

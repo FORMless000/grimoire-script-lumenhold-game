@@ -655,6 +655,7 @@ region: capital
 map: city 641,492
 open: morning noon afternoon
 art: wave
+always: shop_fish_market
 desc: On the quay from dawn: barrows, gulls, shouting, the night's catch on ice, and the best gossip in Port Calder before it's breakfast anywhere else.
 
 @place ashby_lane
@@ -666,13 +667,37 @@ open: morning noon afternoon evening night
 art: door
 desc: A crooked lane in Port Calder where the houses lean together and everyone knows the Ashbys. Corvin doesn't talk about it. Now you know why, or will.
 
+@place capital_undercroft
+name: The Undercroft
+region: capital
+map: city 528,478
+discover: flag(undercroft_known)
+hint: Dockers talk about somewhere under the middle bridge where the dice never stop.
+hinted_when: visits_to(capital_bridges) + visits_to(capital_docks) >= 1
+open: evening night
+art: dice
+draws: money danger
+desc: The old cellars under the middle bridge, where the river drips through the vaults: dice, cards, a pit with sawdust on the floor, and people who buy things without asking where they came from.
+
+@place capital_rookery
+name: The Rookery
+region: capital
+map: city 893,368
+discover: has(origin_street) or flag(rookery_known)
+hint: In Port Calder, people look up at the roofs a lot.
+hinted_when: visits_to(capital_docks) + visits_to(ashby_lane) >= 1
+open: evening night
+art: raven
+draws: danger
+desc: The rooftops of Port Calder, where the houses lean so close you can cross a street without touching it: chimney-pots, washing lines, the crews' old routes and the whole city spread out below.
+
 # ---------------- The countryside (map: home; new maps, 2026-11-10) ----------------
 # Two villages on one road through fen, moor and ridge. A scholar or a hedge origin goes home here; anyone may travel
 # here on a break; two internship hosts are here. Everything looks fine.
 
 @place home_market
 name: The Market Village
-always: market_inn_hands
+always: market_inn_hands shop_country_market
 region: countryside
 map: home 615,300
 kind: plan
@@ -710,6 +735,7 @@ map: home 170,545
 home: has(origin_hedge)
 open: morning noon afternoon evening night
 art: leaf
+always: shop_hedge_door
 draws: nature mystery
 desc: Reed beds and black water where the river gives up. Lights move out there at dusk. A hedge-witch keeps a house on stilts at the edge.
 

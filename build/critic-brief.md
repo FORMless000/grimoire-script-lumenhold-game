@@ -2,147 +2,80 @@
 
 Context pack for writing events. Canon is what is written here and in the worldbook; anything new must be added as soft lore. Facts are included up to tier **personal**.
 
-## Cast
+## Place: The Docks (`capital_docks`)
 
-### Tobias Fennick (`tobias`)
+capital · open morning, noon, afternoon, evening, night
 
-he/him · age 19 · student year 1 · Rootward · romanceable
+Port Calder's wharves, where the river meets the sea: barges, cranes, gulls and men who can lift a crate and a purse in one movement.
 
-*Farmer's son on a turnip scholarship*
+## Already written here (5)
 
-Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to answer.
-
-**Voice:** Warm, slow and earnest, with farm sayings and long stories about goats. Apologises too much; laughs from the belly.
-
-**Traits:** kind, gentle, homesick, loyal · **Interests:** plants, animals, cooking, dancing
-
-**Stats:** arcana 12, lore 14, alchemy 26, charm 18, vigor 30, guile 4, wealth 1
-
-**Schedule:** The Greenhouses (morning, afternoon); The Refectory (noon, evening); The Familiar Stables (evening, 60% of days)
-
-**On breaks:** The Greenhouses (afternoon); The Familiar Stables (evening, 60% of days); The Fennick Farm (noon, afternoon, evening); The Market Village (evening, 30% of days)
-
-**Relations:** Old Maud +20, Bram Hollis -15, Mir Ten +10
-
-**Facts:**
-- [surface] A farmer's son on a turnip scholarship, built like a barn door and gentle as a lamb. (`tobias.scholarship`)
-- [surface] He talks to plants. Worryingly, they seem to answer. (`tobias.plants`)
-- [personal] His mother runs the farm alone at harvest. It's the first harvest he has ever missed. (`tobias.ma`, known when `seen(tobias_homesick) > 0`)
-- [personal] He is raising a mandrake called Gerald, who wears a knitted hat and screams softly. (`tobias.gerald`, known when `seen(tobias_godparent) > 0`)
-- [personal] The greenhouse moonflowers bloom once every eleven years. He would stand in a storm for them. (`tobias.moonflowers`, known when `rel(tobias) >= 12`)
-- [personal] He practised waltzing with a broom before the Midwinter Ball. The broom complained. (`tobias.dancing`, known when `seen(tobias_dance_lessons) > 0`)
-- [personal] His mother expects him home on the farm after graduation. It was always the plan; he isn't sure any more that it's his. (`tobias.after`, known when `seen(tobias_home_or_here) > 0`)
-- [personal] His mother says the weather first and the love last, in person as in her letters. She has never once left the love out. (`tobias.weather_first`, known when `seen(fennick_weather_first) > 0`)
-- [personal] Gerald came from a walled bed of mandrakes behind the farmhouse. Every one of them has a hat; his mother knits them all winter. (`tobias.mandrakes`, known when `seen(fennick_mandrake_bed) > 0`)
-- [personal] A man from the capital wants to buy the Fennick farm. His mother won't sell. Tobias isn't sure she can afford not to. (`tobias.offer`, known when `seen(fennick_good_boots) > 0`)
-
-### Nessa Quill (`nessa`)
-
-she/her · age 19 · student year 1 · Duskgate · romanceable
-
-*Editor of the Lumen Ledger*
-
-Runs the student paper with a quill that writes on its own. Everyone is a story; some are just not finished yet.
-
-**Voice:** Rapid, bossy, headline-shaped. Treats every conversation as an interview; goes very quiet when it's off the record.
-
-**Traits:** nosy, idealistic, overworked, bold · **Interests:** writing, gossip, justice
-
-**Stats:** arcana 14, lore 26, alchemy 8, charm 30, vigor 12, guile 24, wealth 2
-
-**Schedule:** The Lumen Ledger Office (afternoon, evening, night); The Courtyard (noon); The Gilded Newt (evening, 25% of days)
-
-**On breaks:** The Lumen Ledger Office (afternoon); The Village Square (evening, 50% of days); The Almanac Printer's (noon, afternoon); The Market Village (evening, 40% of days)
-
-**Relations:** Bram Hollis -20, Corvin Ashby +10, Lyra Vaneshade -5
-
-**Facts:**
-- [surface] Editor of the Lumen Ledger, with a quill that writes on its own. (`nessa.editor`)
-- [personal] Left unsupervised, her quill starts inventing the news. (`nessa.quill`, known when `seen(nessa_burnout) > 0`)
-- [personal] Nobody has interviewed the headmistress in twenty years. She means to be the first. (`nessa.interview`, known when `rel(nessa) >= 12`)
-- [personal] She would chain herself to the printing press before letting anyone shut the Ledger. (`nessa.press`, known when `seen(nessa_paper_threatened) > 0`)
-- [personal] She plants one error in every proof she asks you to check, to see whether you'll find it. (`nessa.planted`, known when `seen(nessa_fact_check) > 0`)
-- [personal] She learned to set type backwards before she could write forwards, above her mother's press in the countryside. At the type case she doesn't say a single headline. (`nessa.type`, known when `seen(almanac_type_case) > 0`)
-- [personal] Her first story was a notice for a lost dog called Biscuit, set when she was seven. The dog came home. She has been unbearable ever since, and says it's the job. (`nessa.first_story`, known when `seen(almanac_first_notice) > 0`)
-- [personal] She left the valley because nothing in it was ever news. Lately she wonders whether that was the news. (`nessa.why_left`, known when `seen(nessa_country_green) > 0`)
-
-## Place: The Fennick Farm (`fennick_farm`)
-
-countryside · open noon, afternoon, evening
-
-Up on the upland side, past the tarn, outside the two villages: turnips, tomatoes, a mother who writes the weather first and love last, and Tobias in his oldest boots.
-
-## Already written here (75)
-
-- `tm_watering_engine` The Watering Engine (story)
-- `tobias_moonflower_vigil` Every Eleven Years (routine)
-- `tobias_moonflower_bloom` Tonight (routine)
-- `tobias_plants_vote` The Greenhouse Votes (routine)
-- `tobias_scholarship_review` The Turnip Board (routine)
-- `nessa_interview_prep` Twenty Years (routine)
-- `nessa_fact_check` Fact-Check (routine)
-- `nessa_quill_loose` The Quill Gets Loose (routine)
-- `heal_tobias_sting` Stung (windfall)
-- `ledger_pie_scoop` The Case of the Missing Pies (routine)
-- `ledger_bram_story` The Prefect's Bribes (routine)
-- `ledger_deadline` Deadline Night (routine)
-- `garden_moonflower` The Moonflower (routine)
-- `tobias_scarecrow` The Scarecrow Project (routine)
-- `tobias_dance_lessons` Two Left Feet (routine)
-- `tobias_storm_greenhouse` Storm Over the Greenhouses (routine)
-- `nessa_headmistress_interview` The Impossible Interview (routine)
-- `nessa_typo` A Catastrophic Typo (routine)
-- `nessa_burnout` The Editor Sleeps (routine)
-- `nudge_quickquill` How's My Quill? (routine)
-- `heard_nessa_isolde` Nessa on the Headmistress (routine)
-- `heard_tobias_mir` Tobias on Mir (routine)
-- `fennick_weather_first` Weather First (routine)
-- `fennick_mandrake_bed` Gerald's Relations (routine)
-- `fennick_good_boots` A Man in Good Boots (routine)
-- `fennick_top_field` Outside the Luck (routine)
-- `almanac_type_case` Backwards and Upside Down (routine)
-- `almanac_first_notice` Lost: One Brown Dog (routine)
-- `almanac_short_page` A Page Short (routine)
-- `tobias_country_barrow` Turnips, Mostly Free (routine)
-- `nessa_country_green` Nothing Ever Happens Here (routine)
-- `fennick_farm_quiet_hour` Turnips and Tomatoes (routine)
-- `tobias_intro` The Lost Boy (windfall)
-- `tobias_homesick` Homesick (routine)
-- `tobias_bad_harvest` The Harvest Failed (routine)
-- `tobias_repays` Every Crown (story)
-- `tobias_godparent` The Mandrake Baby (routine)
-- `tobias_bullied` Tobias and the Prefect (routine)
-- `tobias_confession` A Confession, With Vegetables (milestone)
-- `tobias_picnic` A Picnic in the Orchard (milestone)
-- … and 35 more (`grim query event 'place == "fennick_farm"'`)
-
-## Lore
-
-- **Fennick** (`fennick_farm`, soft): The Fennick farm grows turnips, tomatoes and stubborn children. Tobias's mother runs it alone at harvest, writes weather first and love last, and expects him home after graduation; one year blight nearly ruined them. Tobias studies on an agricultural scholarship whose board reviews his marks in person. The farm lies on the upland side of the valley, outside both villages, past the tarn; a drystone wall at its top field marks where the villages' land begins. Behind the farmhouse is a walled bed of mandrakes, Gerald's relations, each in a hat Mrs Fennick knits in winter. This year a man from the capital has been buying upland farms.
-- **Quill** (`quill_press`, soft): Nessa grew up above her mother's print shop off the market green in the countryside, the Almanac Printer's, which prints the valley's almanac, its notices and its funeral cards. Mrs Quill works the hand press, ink to the elbows. Nessa set type before she could write, and her first story was a lost-dog notice for a dog called Biscuit, who came home. The attic holds a century of almanacs; every seventh year's is a page short, always the harvest page, and Mrs Quill says the old press always did that.
+- `docks_day_labour` Hands Wanted (routine)
+- `docks_northern_ship` Frost on the Rigging (routine)
+- `docks_undercroft_word` Where the Dice Are (routine)
+- `docks_roof_runner` Over the Roofs (routine)
+- `capital_docks_quiet_hour` Gulls and Cranes (routine)
 
 ## Style examples
 
 ```grim
-# content/events/maps/countryside_peers.grim:72
-@event fennick_top_field
-title: Outside the Luck
-pool: fennick_farm_tobias
-when: rel(tobias) >= 12
-tone: eerie
-art: leaf
-scene: A high field divided by an old drystone wall, thick golden barley on the far side, thin patchy barley on the near side, a big young man and a student standing at the wall.
-text: Tobias walks you up to the top field, where the farm meets the valley's land at an old drystone wall. On the far side the barley stands thick and gold. On the Fennick side it's thin, and patchy, and honest. "Seven good years down there," Tobias says. "Every year. Never up here." He puts his big hand flat on the wall. "Ma says the valley's luck is the valley's business."
-> left: Help him clear the stones
-  vigor +small
-  health -tiny
-  say: You pick stones out of the thin side of the wall until your back aches and the sun goes down. It's slow, plain, endless work, and Tobias hums the whole time. "Our luck's this," he says, tipping a basket. "Stones. I don't mind it. It's ours."
-> right: Ask what he thinks it is
-  lore +tiny
-  mood -tiny
-  say: He thinks about it a long time, which is how he thinks about everything. "I think they pay for it," he says at last. "I don't know what with. Nobody down there ever says." The wind goes over the barley on the far side, and none of it bends the way the near side does. You walk back uneasy.
+# content/events/maps/placeholders.grim:123
+@event capital_docks_quiet_hour
+title: Gulls and Cranes
+when: false
+pool: maps_placeholder
+place: capital_docks
+art: wave
+scene: Busy harbour wharves at the river's mouth, cranes swinging crates off a tall ship, gulls wheeling over stacked barrels.
+text: Port Calder's docks never stop: cranes, barrels, a ship from somewhere hot unloading something that smells of oranges. A boy offers to mind your bag for a penny, which is how bags go missing.
+> left: Pay the boy
+  gold -tiny
+  mood +tiny
+  say: {~He minds it beautifully and tells you which ships are smuggling. All of them, apparently.|Your bag comes back with everything in it and one extra orange. Business is business.}
+> right: Keep your bag
+  guile +tiny
+  say: {~You keep your bag and watch the boy offer the same deal to a sailor, who laughs and pays. You learn something.|"Suit yourself." He's gone before you see him go.}
+```
 
-# ---------------- Nessa: the Almanac Printer's ----------------
+```grim
+# content/events/maps/capital_port.grim:15
+@event docks_day_labour
+title: Hands Wanted
+pool: capital_docks_life
+repeat: 3
+tone: light
+time: morning noon afternoon
+art: house
+scene: A busy harbour wharf, cranes and barrels, a foreman with a slate shouting for day labourers, a line of dockers, a student rolling up their sleeves.
+text: {&A foreman on the wharf is shouting for hands: a ship from somewhere hot is in with a hold of oranges, and the tide won't wait. Day rates, cash at the gangplank. The dockers look at your academy scarf and grin.|"Hands wanted," shouts a foreman on the wharf. "Barrels! Mind your toes!" He sees your scarf. "A wizard. Can you lift, wizard?"|A wool ship from the north is in, the crane on her berth has stuck, and her foreman jerks a thumb at the hold for anybody standing still. You're standing still.}
+> left: Work the hold
+  gold +small
+  health -tiny
+  say: {&You carry oranges up the gangplank until your arms forget being arms. At the end the foreman pays you in coin and three oranges. The dockers have stopped grinning and started calling you by name.|Barrels all afternoon. You float one with a spell when no one's looking, and the foreman sees, and says nothing, and pays you a little extra. Your back aches anyway.|You unstick the crane with a word and a shove, and the whole wharf cheers. Then you carry wool till dusk. The pay is good, the ache is honest.}
+> right: Sit on a bollard and watch the ships
+  mood +small
+  study -tiny
+  say: {&You sit on a bollard and watch ships from places you've only seen on maps unload things you can't name. You learn nothing useful, and you forget a lecture's worth of something else. It's a fine way to lose a morning.|The barrels go up, the gulls come down. You watch the whole thing with a pastry and a clear conscience.|You watch the northern ship unload, and the crane stick, and somebody else unstick it. You're happy. Your notes are sliding out of your head.}
+```
+
+```grim
+# content/events/maps/capital_port.grim:33
+@event docks_northern_ship
+title: Frost on the Rigging
+pool: capital_docks_life
+tone: eerie
+time: morning noon
+art: snow
+scene: A tall sailing ship at a harbour quay with frost thick on its rigging though the day is mild, northern sailors in furs unloading crates, one old sailor beckoning a student closer.
+text: A ship in from the far North is tied up on the quay, and though the morning is mild, there's frost on her rigging still, white to the crosstrees. Her sailors wear furs and say little. One old sailor sees your academy scarf and beckons. "Lumenhold," he says. "You want to buy a northern thing? Not cheap. Not safe either."
+> left: See what he's selling
+  gold -small
+  arcana +small
+  say: It's a lump of ice that doesn't melt, wrapped in sealskin, for "keeping things cold that should stay cold". In your room it frosts the window in a pattern like writing. You study it all break and learn more about cold than a term of lectures.
+> right: Ask about the North instead
+  lore +small
+  mood -tiny
+  say: He tells you about the ice roads and the long night and the houses that keep their old families' names, and he doesn't smile once. When he's done the mild morning feels thin, as if something had been let in. You walk away cold.
 ```
 
 ## Rules
