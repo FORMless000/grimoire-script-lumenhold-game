@@ -22,12 +22,12 @@ scene: A vast empty dining hall with a single long table at one end, a handful o
 text: {season == "winter": The Great Hall has given up on house tables for the break. Everyone left eats at one long table by the fire: a handful of students, two professors and a cook who sits down with you, which nobody has ever seen.|Half the candles are out for the summer. The few of you left eat at one long table under the one lit chandelier, and the cook brings out whatever she likes.} {~Someone has started a game of passing the salt without asking.|A professor tells a story about the founders that is almost certainly libel.|The cook asks everyone what they'd change about her soup. Only one answer is the right one.}
 > left: Stay for the whole evening
   mood +small
-  study -tiny
-  say: {~You stay until the fire is embers, and learn more about the staff in one evening than in a term. Your reading waits on the bench, unread.|You stay and talk until the cook throws you all out. It's the best supper of the year, and your essay notes never leave your bag.|You stay, and the table gets louder and warmer, and you forget the work you came down meaning to do.}
-> right: Eat, then go and work
-  study +tiny
+  health -tiny
+  say: {~You stay until the fire is embers, and learn more about the staff in one evening than in a term. The cook's mulled cider is stronger than it tastes, and you feel it in the morning.|You stay and talk until the cook throws you all out at two. It's the best supper of the year, and you're grey with tiredness the next day.|You stay, and the table gets louder and warmer, and there's a third helping of pudding you'll regret.}
+> right: Eat, then go and read
+  lore +tiny
   mood -tiny
-  say: {~You eat fast and go back to your books. Through the floor, later, you can hear them laughing.|You take your bowl up to the library. The laughter follows you up the stairs, then thins.|You thank the cook, slip out, and get a good evening's work done in the quiet. It is very quiet.}
+  say: {~You eat fast and go back to your books. Through the floor, later, you can hear them laughing.|You take your bowl up to the library. The laughter follows you up the stairs, then thins.|You thank the cook, slip out, and get a good evening's reading done in the quiet. It is very quiet.}
 
 @event brk_kitchen_pie
 title: The Cook's Holiday Pie
