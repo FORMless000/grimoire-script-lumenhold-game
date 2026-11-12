@@ -103,3 +103,58 @@ test('bonded warehouses: the ledger frees Jory or buys the foreman\'s silence', 
   play(x, 'bonded_ledger', 'right');
   assert.ok(x.s.flags.bonded_ledger && !x.s.flags.jory_freed);
 });
+
+// C5b: the house on the Crescent, during a ball (job_where 2).
+const csteps = Object.values(content.events).filter((e) => e.thread === 'job_crescent');
+const cpool = (depth) => {
+  const e = fresh();
+  Object.assign(e.s.vals, { job_depth: depth, job_where: 2 });
+  const ids = new Set();
+  for (let i = 0; i < 120; i++) { const id = e.drawTagged('heist', new Set()); if (id && content.events[id].thread === 'job_crescent') ids.add(id); }
+  return [...ids];
+};
+
+test('crescent house: an evening and night place uptown, found at the club or the Undercroft', () => {
+  const p = content.places.capital_crescent_house;
+  assert.ok(p && p.map && p.map.map === 'city');
+  assert.deepEqual([...p.open].sort(), ['evening', 'night']);
+  assert.ok(content.events.club_gala_card && content.events.undercroft_crescent_tip && content.events.crescent_enter);
+});
+
+test('crescent house: every step reads the depth and can slip away; each depth draws its band; depth 5 is the safe', () => {
+  assert.ok(csteps.length >= 11, csteps.length + ' steps');
+  for (const e of csteps) {
+    const left = e.options.find((o) => o.key === 'left');
+    assert.ok(left && !left.when, e.id + ' has an unconditional left');
+    let out = false;
+    G.walkEffects(left.effects, (st) => { if (st.t === 'queue' && st.event === 'job_way_out') out = true; });
+    assert.ok(out, e.id + ': left slips away');
+  }
+  const b1 = cpool(1).filter((id) => id !== 'crescent_dead_end'), b2 = cpool(3).filter((id) => id !== 'crescent_dead_end');
+  assert.ok(b1.length >= 4 && b1.every((id) => /^crescent1_/.test(id)), 'band 1: ' + b1);
+  assert.ok(b2.length >= 5 && b2.every((id) => /^crescent2_/.test(id)), 'band 2: ' + b2);
+  assert.deepEqual(cpool(5), ['crescent_safe_card']);
+});
+
+test('crescent house: cover reads the invitation and the servants\' hour; a slip goes on in the house', () => {
+  const enter = (flags) => {
+    const e = fresh();
+    Object.assign(e.s.flags, flags);
+    play(e, 'crescent_enter', 'right');
+    return [e.s.vals.job_cover, e.s.vals.job_depth, e.s.vals.job_where];
+  };
+  assert.deepEqual(enter({}), [1, 1, 2]);
+  assert.deepEqual(enter({ crescent_invited: true, crescent_servants_hour: true }), [3, 1, 2]);
+  const e = fresh();
+  Object.assign(e.s.vals, { job_where: 2, job_depth: 3, job_cover: 2, job_loot: 1 });
+  play(e, 'job_slip', 'right');
+  const next = e.s.deck.find((x) => x.src === 'queued' || x.now) || {};
+  assert.ok(!next.id || content.events[next.id].thread === 'job_crescent', 'slip goes on in the house: ' + next.id);
+});
+
+test('crescent house: the way out remembers the Crescent\'s depth', () => {
+  const e = fresh();
+  Object.assign(e.s.vals, { job_where: 2, job_depth: 4, job_loot: 2, job_crescent_deepest: 1, job_bonded_deepest: 0 });
+  play(e, 'job_way_out', 'left');
+  assert.deepEqual([e.s.vals.job_crescent_deepest, e.s.vals.job_bonded_deepest], [4, 0]);
+});

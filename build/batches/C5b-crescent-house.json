@@ -1,0 +1,101 @@
+{
+  "name": "C5b-crescent-house",
+  "at": 1794520422327,
+  "files": [
+    "content/events/maps/capital_heists.grim"
+  ],
+  "events": [
+    "job_way_out",
+    "job_slip",
+    "job_caught",
+    "docks_bonded_talk",
+    "bonded_customs_lamp",
+    "bonded_enter",
+    "bonded_dead_end",
+    "bonded1_dogs",
+    "bonded1_clerk_window",
+    "bonded1_yard_bales",
+    "bonded1_loading_door",
+    "bonded2_round",
+    "bonded2_seals",
+    "bonded2_crane_loft",
+    "bonded2_spirit_floor",
+    "bonded2_tea_floor",
+    "bonded_strongroom",
+    "bonded_ledger",
+    "crew_loft_jory_home",
+    "club_gala_card",
+    "undercroft_crescent_tip",
+    "crescent_gala_lights",
+    "crescent_enter",
+    "crescent_dead_end",
+    "crescent1_footman",
+    "crescent1_quadrille",
+    "crescent1_supper_table",
+    "crescent1_conservatory",
+    "crescent2_back_stairs",
+    "crescent2_lapdog",
+    "crescent2_dressing_room",
+    "crescent2_writing_desk",
+    "crescent2_balcony",
+    "crescent_safe_card"
+  ],
+  "contentHash": "00cc93",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 288,
+      "total": 288
+    }
+  },
+  "critic": {
+    "batch": "C5b-crescent-house",
+    "round": 2,
+    "accept": true,
+    "summary": "Accepted: all seven round-1 issues and all the listed polish are fixed as described, and nothing new turned up. Both city heists still end every simulated night cleanly. Two tiny wording notes remain.",
+    "issues": [],
+    "polish": [
+      "undercroft_crescent_tip: both options now give the same flags, so the only trade is alignment -tiny (asking how) against mood -tiny (hedging). That is a fair conscience-versus-spirits trade. If you want the hedge to cost a little more, the say could show it plainly ('…and you feel bought already').",
+      "job_caught, Crescent, empty-handed: 'in a house on the Crescent during a ball, empty-handed, which convinces nobody' reads oddly for a ball, where guests are empty-handed. 'somewhere in the house no guest has any reason to be' would carry the suspicion better."
+    ],
+    "checked": [
+      "1. undercroft_crescent_tip: the right is now 'Say you'll think about it' with its own reply. It sets crescent_servants_hour, since the say gives the hour. Nothing of docks_bonded_talk's 'not that sort / Nobody is' remains in the Crescent cards.",
+      "2. crescent_enter: 'the fence said' is gone; the first-visit text reads 'during a ball everybody's somebody'.",
+      "3. job_caught: the Crescent branch reads 'in a house on the Crescent' and 'somebody else's things', which fits a catch at any depth.",
+      "4. crescent2_writing_desk: the repeat text and the repeat win branch on flag(jory_freed). With the foreman jailed there are no new letters, only the old bundle and a letter naming a ship. The say still reads flag(crescent_letters) before setting it.",
+      "5. crescent_gala_lights: the left say branches on season (numb hands / midges), and the link-boy option now carries mood +tiny, so it trades after the flag.",
+      "6. crescent1_conservatory: the text and the left say branch on season (hot as a kitchen, out into the warm night).",
+      "7. crescent2_lapdog: 'challenge soothe journeyman' (charm, calming a creature).",
+      "Polish taken: 'every week he's in town' replaces 'the season' (club card, fence, thread premise, header); the safe no longer raises the depth; the balcony crosses to a dark bedroom's balcony, not the study's; the dressing room's label is 'Take what she didn't wear'; the Crescent giveaway line is 'a silver spoon or a ring on every step'; counting the windows gives guile; the header's cover line describes both heists.",
+      "Engine (node 24): re-simulated 900 nights each for the Crescent (way out 536, caught 364) and the warehouses (564 and 336). Every night ended at the way out or the watch with depth 0, and no band ran dry.",
+      "test/capital-heists.test.js: 11/11 pass. grim lint: 0 errors. The zh-CN stale-token warnings are the expected outstanding translation."
+    ]
+  },
+  "spotCheck": [
+    "job_slip",
+    "crescent_safe_card",
+    "bonded1_yard_bales",
+    "crescent2_writing_desk"
+  ],
+  "accepted": true
+}
