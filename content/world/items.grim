@@ -175,3 +175,86 @@ slot: trinket
 art: book
 worn: cost forbidden -2, on_cast forbidden spell 2
 desc: A black-bound book of forbidden practice in a cramped, elegant hand. Its pages are cold, and some of them are blank until midnight.
+
+# ---------------- The capital (maps round 2, S1) ----------------
+# Sold in the capital: the wandwright's in the Arcade of Services (the wands), the Grand Bazaar (the rest), its curio
+# stall one piece per visit in turn. Each is worth its price for a worn effect nothing else gives, or for the options it
+# opens on other cards (`up[item:…]`), listed in docs/maps-plan.md (S1).
+
+@item glasscore_wand
+name: Glasscore Wand
+slot: wand
+art: wand
+price: medium
+worn: on_cast any spell 1
+desc: Pale birch around a thread of capital glass, from the wandwright in the Arcade of Services. Every spell you cast through it throws a spark of its own.
+
+@item tidewood_wand
+name: Tidewood Wand
+slot: wand
+art: wand
+price: small
+worn: cost ward -1, taken -1 from flame
+desc: Driftwood from the Port Calder breakwater, salt-hardened and re-cored by the wandwright. Wards come off it smooth as a wave going out, and fire hisses out against it.
+
+@item oilskin_coat
+name: Courier's Oilskin
+slot: robe
+art: rain
+price: small
+worn: hp +2, cost tailwind -1
+desc: A long waxed coat of the kind the capital's couriers wear, with a hood like a coal-scuttle. Rain gives up on it.
+
+@item duellist_silk
+name: Duellist's Silk
+slot: robe
+art: duel
+price: medium
+worn: hp +1, cost haste -1, on_defend strike 1
+desc: Close-cut grey silk from the bazaar's fencing-master's stall, made for the capital's dawn duels. It moves before you do, and stings whatever blocks you.
+
+@item lockpick_roll
+name: Lockpick Roll
+slot: trinket
+art: key
+price: small
+desc: A roll of soft leather with eleven picks and a tension wrench, sold at the bazaar "for locksmiths". The seller didn't ask whether you were one.
+
+@item pocket_orrery
+name: Pocket Orrery
+slot: trinket
+art: planet
+price: medium
+worn: cost starlight -1, cost lodestar -1
+desc: A brass orrery the size of a walnut, wound with a key. Its planets keep the true sky's time, clouds or no clouds.
+
+@item storm_glass
+name: Storm-Glass
+slot: trinket
+art: rain
+price: small
+worn: taken -1 from forbidden
+desc: A sealed glass tear of camphor and salts that clouds before weather turns. Forbidden things, the stall-keeper swore, cloud it too.
+
+@item ivory_dice
+name: Gambler's Ivory Dice
+slot: trinket
+art: cards
+price: small
+desc: A pair of old ivory dice from the bazaar's curio stall, yellow as teeth. They aren't loaded. They're only lucky, which the curio-seller says is worse.
+
+@item clockwork_songbird
+name: Clockwork Songbird
+slot: trinket
+art: feather
+price: small
+worn: mana +1
+desc: A brass linnet from the curio stall, with a key in its back and twelve songs in its chest. It sings the thirteenth when it thinks it's alone.
+
+@item sea_glass_charm
+name: Sea-Glass Charm
+slot: trinket
+art: snow
+price: medium
+worn: hp +2, taken -1 from hoarfrost rime
+desc: A green knot of sea-glass on a sailor's cord, from the curio stall. It is always cold, and colder things leave it alone.

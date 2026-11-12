@@ -1,0 +1,439 @@
+# The capital's two markets (maps round 2, S1; docs/maps-plan.md). The Grand Bazaar sells things and the Arcade of
+# Services sells everything that isn't a thing. Each counter is its place's `always:` card, a shop (`type: shop`)
+# priced in tier words with one way out. The bazaar's curio stall turns one rare piece over per visit. The arcade's tutor, scribe and
+# wandwright are counters of their own, queued from the arcade's. The items are in content/world/items.grim (the
+# capital); the options they open on other cards are listed in the tracker. Each market also has scenes of its own.
+
+# ---------------- The Grand Bazaar ----------------
+
+@event shop_bazaar
+title: The Grand Bazaar
+place: capital_bazaar
+type: shop
+class: routine
+tone: light
+repeat: 1
+weight: 10
+art: coin
+tags: money shop
+scene: A vast covered market under a glass roof, aisles of stalls selling spices, coats, brass instruments and curios, crowds moving between them.
+text: {~The Grand Bazaar is one long noise under a glass roof, a hundred stalls deep, and every stall-keeper has decided you look like money.|The bazaar is all spice-dust in the light, a coat-seller shouting about rain and brass things ticking on velvet, while gulls rattle the glass roof.} {~At the curio stall at the end of the aisle, the old curio-seller turns her cloth over for every visitor, and there's always one rare thing on it.|The curio-seller lifts a hand to you from the end of the aisle, over a cloth with one rare thing on it.}
+> almonds: A paper of sugared almonds
+  hint: A little Mood.
+  gold -tiny
+  mood +small
+  say: {~Warm sugared almonds in a paper twist. You eat them all before the next aisle.|The almond-seller throws in a burnt one "for luck". It's the best.}
+> reagents: Rare reagents from the spice aisle
+  hint: Alchemy XP: things the village apothecary has never stocked.
+  gold -small
+  alchemy +small
+  say: {~Dragon-pepper, salt from a dead sea, a twist of something blue that smells like thunder. You spend the evening finding out what they do.|The spice-seller weighs you a pinch of six things and names none of them. You work out four by supper.}
+> oilskin: The courier's oilskin
+  hint: A robe for fights: more Health, and Tailwind costs less. Rain and storm cards open up to you.
+  when: not has_item(oilskin_coat)
+  gold -medium
+  give oilskin_coat
+  say: {~The coat-seller throws a bucket of water at you to prove it. Not a drop gets through. Your boots are another matter.|It smells of wax and smoke and the road. You feel faster in it at once, and slightly like a highwayman.}
+> silk: The duellist's silk
+  hint: A robe for fights: a little more Health, Haste costs less, and whatever blocks you is stung.
+  when: not has_item(duellist_silk)
+  gold -large
+  give duellist_silk
+  say: {~The fencing-master's widow fits it with pins in her mouth and slaps your sword arm. "Dawn duels," she says. "Don't get blood on the cuffs."|It's cut so close you have to learn to breathe in it. Then you learn you can move in it like water.}
+> lockpicks: A lockpick roll "for locksmiths"
+  hint: A roll of picks, and the doors on some cards open for you. The seller doesn't ask.
+  when: not has_item(lockpick_roll)
+  gold -small
+  alignment -tiny
+  give lockpick_roll
+  say: {~"For locksmiths," says the seller, and looks at your academy scarf, and adds nothing.|Eleven picks in soft leather. Your fingers already know where each one goes, which is a thing to think about.}
+> orrery: The pocket orrery
+  hint: A trinket for fights: Starlight and Lodestar cost less. Star and telescope cards open up to you.
+  when: not has_item(pocket_orrery)
+  gold -large
+  give pocket_orrery
+  say: {~The instrument-maker winds it with a key the size of a pin. The tiny planets swing round and settle exactly where the sky has them tonight.|It ticks in your pocket like a second heart, keeping time with stars you can't see from under the glass roof.}
+> stormglass: The storm-glass
+  hint: A trinket for fights: forbidden spells hurt you less. It clouds before weather, on the cards where that matters.
+  when: not has_item(storm_glass)
+  gold -small
+  give storm_glass
+  say: {~The stall-keeper holds it up to the roof. It's clear today. "Tomorrow, rain," she says, "and it'll know before the gulls do."|A glass tear of salts on a brass stand. It clouds over in your hand, faintly, as you pass a stair going down under the bridges.}
+> dice: The curio: a pair of ivory dice
+  hint: Old lucky dice; card and dice games on other cards open up to you.
+  when: visits_to(capital_bazaar) % 3 == 0 and not has_item(ivory_dice)
+  gold -medium
+  give ivory_dice
+  say: The curio-seller rolls them once on her cloth: two sixes. She rolls again: two sixes. "They're not loaded," she says. "They're lucky. Mind how you use that."
+> songbird: The curio: a clockwork songbird
+  hint: A trinket for fights: a little more Mana. It sings on the cards where a song is wanted.
+  when: visits_to(capital_bazaar) % 3 == 1 and not has_item(clockwork_songbird)
+  gold -medium
+  give clockwork_songbird
+  say: The curio-seller winds the brass linnet and it sings over the whole aisle until the stall-keepers stop haggling to listen. "Twelve songs," she says. "Thirteen if it likes you."
+> seaglass: The curio: a sea-glass charm
+  hint: A trinket for fights: more Health, and frost spells hurt you less.
+  when: visits_to(capital_bazaar) % 3 == 2 and not has_item(sea_glass_charm)
+  gold -large
+  give sea_glass_charm
+  say: The curio-seller drops the green knot of glass into your palm. It's cold as the bottom of the harbour. "Off a drowned sailor's neck," she says. "He didn't need it any more."
+> look: Just walk the aisles
+  say: {~You walk the length of the bazaar with your hand on your purse and buy nothing at all. It takes the whole afternoon.|You watch a duchess's footman and a docker haggle over the same lemon. The docker wins.}
+
+@pool capital_bazaar_life
+place: capital_bazaar
+class: routine
+weight: 10
+tags: money social
+
+@event bazaar_grimsby_book_stalls
+title: The Book Stalls
+pool: capital_bazaar_life
+tone: warm
+when: met(grimsby)
+art: book
+scene: The book aisle of a vast covered market, an old bookseller in a travelling hat and half-moon glasses arguing over a battered logbook with a stall-keeper.
+text: At the far end of the bazaar, where the book stalls are, you hear a voice you know: Mr Grimsby, in a travelling hat, holding a battered logbook to his chest. "A lighthouse keeper's," he tells you, "forty years of weather in one hand." The dealer wants more than Grimsby has brought, and won't come down for an old man's face.
+> left: Make up the difference
+  gold -small
+  rel grimsby +medium
+  say: You count out what he's short. Grimsby goes pink and says he'll pay you back. On the coach home, you suspect, he'll read it twice.
+> right: Find the logbook's faults
+  challenge research journeyman:
+    win:
+      rel grimsby +small
+      lore +tiny
+      say: You find the water-stain on page nine, the missing month and a mistake about a tide, and the price comes down to what Grimsby has. He pays in coins warm from his pocket, and tells you every tide in the book, all afternoon.
+    lose:
+      mood -tiny
+      say: The dealer has heard every trick in the bazaar and both of yours. Grimsby thanks you anyway and puts the logbook back with great tenderness. "It'll be here next year," he says. It won't.
+
+@event bazaar_gentleman_thief
+title: Beautiful Manners
+pool: capital_bazaar_life
+tone: light
+art: coin
+scene: A crowded market aisle, an elegant elderly man in a silk cravat with his hand caught at the wrist by a student, smiling apologetically.
+text: In the press by the spice aisle you feel a touch at your pocket and catch a wrist: an elderly gentleman in a silk cravat, holding your purse with great delicacy. "My dear," he says, "how quick you are. I've been forty years at this and I'm getting slow. Shall we say no harm done? Or shall I show you how it's really done, for your trouble?"
+> left: Call the constable
+  alignment +tiny
+  mood -tiny
+  say: You hold on until a constable shoulders through. The old man is led off apologising to everyone he passes, with great charm. You feel right, and also oddly as if you'd kicked a cat.
+> right: Let him show you
+  guile +small
+  alignment -tiny
+  say: For an hour he walks you round the bazaar, explaining every purse in it: the bump, the turn, the thank-you. At the end he gives you your purse back, and you realise he'd taken it again. "Lesson two," he says, tipping his hat.
+
+@event bazaar_bird_seller
+title: Birds in Other Languages
+pool: capital_bazaar_life
+tone: warm
+art: feather
+scene: A market stall hung with dozens of wicker cages of small bright birds, one plain brown bird singing at a student who has stopped to listen.
+text: The bird-seller's stall is a wall of cages, every bird singing in a different language, she swears, and most of them in a hurry. One plain brown bird at the bottom isn't. It sings slowly, the same few notes, and stops when you stop. "That one's from over the sea," says the seller. "Nobody buys a brown bird."
+> left: Buy it and let it go
+  gold -small
+  alignment +tiny
+  mood +small
+  say: You carry the cage to the bridges and open it. The brown bird sits on the rail for a long minute, sings its few notes once more, all the way through, and goes out over the river towards the sea.
+> right: Learn its song
+  lore +small
+  mood -tiny
+  say: You stand at the stall an hour writing the notes down, and the brown bird sings them for you, again and again, as if it wanted somebody to have them. The seller charges you nothing and calls you a strange one. You're stiff and cold, and you have a song nobody else in the capital knows.
+
+@event bazaar_hat_bet
+title: The Hatter's Bet
+pool: capital_bazaar_life
+tone: light
+art: crown
+scene: A hat stall piled with plumed and feathered hats, a grinning hatter with a gold tooth holding one out, a crowd gathering to watch a student bargain.
+text: The hatter with the gold tooth has a standing bet: anyone who can talk his best plumed hat down by a third walks off in it for nothing, and anyone who can't buys it at full price in front of the whole aisle. A crowd gathers before you've said yes. He sets the hat on your head and names his price.
+> left: Take the bet
+  challenge appeal journeyman:
+    win:
+      renown +tiny
+      charm +tiny
+      say: You admire the plume, doubt the stitching, mention three rival hatters by name and sigh at the right moment. The crowd counts with you. At a third off he throws up his hands, and you walk the length of the bazaar in a hat the whole aisle cheered.
+    lose:
+      gold -small
+      mood -tiny
+      say: He has an answer for everything, including your sigh. You pay full price in front of the aisle, and the crowd claps him, not you. The hat is magnificent. That makes it worse.
+> right: Watch somebody else try
+  charm +tiny
+  mood -tiny
+  say: A fishwife takes the bet after you decline and wins it in four sentences, none of them polite. She wears the plumes home over her fish. You learn more from her than from a term of manners, and spend the walk home wishing it had been you.
+
+@event bazaar_map_dealer
+title: A Coast Nobody Has Sailed
+pool: capital_bazaar_life
+tone: eerie
+art: map
+scene: A map-dealer's stall of rolled charts in a market aisle, a yellowed sea chart spread out under brass weights showing an unknown coastline.
+text: The map-dealer spreads a chart under brass weights: a long coast with bays and a river mouth, soundings in fathoms, a harbour marked with a little anchor. It's a coast you've never seen on any map. "Nobody has," he says. "Nobody's sailed it. The man who drew it was very definite. Want it?"
+> left: Buy the chart
+  gold -small
+  lore +small
+  say: You pin it over your bed. The soundings are exact, the hand is steady and the river mouth has a name in a script you can't read. Some nights you'd swear the coastline has moved a little.
+> right: Copy it while he talks
+  lore +small
+  alignment -tiny
+  say: You let him talk about the man who drew it, and copy the coast into your notebook while he does. He sees, and only smiles. "Everyone copies it," he says. "Nobody sails it."
+
+# ---------------- The Arcade of Services ----------------
+
+@event shop_arcade
+title: The Arcade of Services
+place: capital_arcade
+type: shop
+class: routine
+tone: light
+repeat: 1
+weight: 10
+art: scroll
+tags: money shop
+scene: A long stone colonnade of open doors with polished brass nameplates, steam from a bathhouse arch, a scribe's desk in a window, a fortune-teller's beaded curtain.
+text: {~The Arcade of Services sells everything that isn't a thing. Brass plates down the colonnade: PHYSICIAN. TUTOR. SCRIBE. BATHS. PORTRAITS. WANDS RE-CORED. And one plate that says only "FORTUNES, BY APPOINTMENT, MOSTLY".|The arcade's brass plates shine down the colonnade: the physician's queue, the scribe writing somebody's love letter in the window, the wandwright's sparks, and the fortune-teller's curtain moving though there's no wind.}
+> physician: The physician
+  hint: Cures sickness and injury at once, and a little Health.
+  when: has(sick) or has(injured)
+  gold -small
+  lose sick
+  lose injured
+  health +small
+  say: {~The physician listens to your chest through a brass trumpet, says "Hm" four times and gives you something green. By evening you're mended.|A tidy little man with very cold hands sets what needs setting and doses what needs dosing. You walk out well, and lighter in the purse.}
+> baths: An afternoon at the baths
+  hint: Health and Mood, and it ends exhaustion.
+  gold -tiny
+  health +tiny
+  mood +small
+  lose exhausted
+  say: {~Hot room, steam room, cold plunge, a slab in the warm. You come out new, and slightly pink.|The bathhouse is full of retired admirals telling each other about storms. You sleep in the warm room through three of them.}
+> tutor: The tutor's door
+  hint: A tutor for an afternoon, in the skill you choose: a good deal of XP, at a high fee.
+  queue arcade_tutor now
+  say: {~The tutor's plate says ALL SUBJECTS, ALL LEVELS, NO EXCUSES.|You knock on the tutor's door. Several voices inside stop arguing.}
+> scribe: The scribe's window
+  hint: Letters to the friends who aren't in the capital, or a letter of good character.
+  when: seen(arcade_scribe) == 0 or since(arcade_scribe) >= 1
+  queue arcade_scribe now
+  say: {~The scribe dips her pen before you've said a word.|The scribe looks up from somebody's love letter and gestures at the chair.}
+> portrait: Sit for the portraitist
+  hint: Renown: a likeness hung in the arcade's window for the capital to see.
+  when: not flag(arcade_portrait)
+  gold -medium
+  renown +small
+  flag arcade_portrait
+  say: You sit for three hours under a skylight while the portraitist makes you look as if you'd done something. For the rest of the break your face hangs in the arcade's window, and people in the street look at you twice.
+> fortune: The fortune-teller's curtain
+  hint: A reading: she may point you towards something worth finding.
+  gold -small
+  if met(mir) and year >= 2 and not has_item(ashwood_wand) and not clue(lead_offer_ashwood):
+    find lead_offer_ashwood
+    say: She turns a card with a black wand on it. "A thing that bites," she says, "under a cloth, in a little square by a lake. It is waiting for a hand that won't flinch." Then she charges you and closes the curtain.
+  else:
+    if year >= 2 and not has_item(measuring_spoon) and not clue(lead_offer_spoon):
+      find lead_offer_spoon
+      say: She turns a card with a spoon on it, which you didn't know was a card. "An old man counting aloud," she says. "Count with him and something of his will be yours." Then she charges you.
+    else:
+      if not has_item(pocket_almanac) and not clue(lead_offer_almanac):
+        find lead_offer_almanac
+        say: She turns a card with a lighthouse on it. "A little book of tides," she says, "kept by a man who loves the sea and lives inland. Ask him about the light." Then she charges you.
+      else:
+        mood +small
+        say: She turns three cards, looks at them a long time and turns them back over. "You'll be fine," she says, which she has never said to anyone, according to her face. It's worth the money.
+> wandwright: The wandwright
+  hint: New wands, re-cored in the capital, and a fair trade for the academy's loaner.
+  queue arcade_wandwright now
+  say: {~The wandwright's door is scorched round the handle. Inside, sparks.|The wandwright looks up through a pair of smoked spectacles. "Come in. Don't touch anything that's humming."}
+> look: Read the plates and walk on
+  say: {~You read every plate twice. One just says "No."|You walk the colonnade end to end and keep your coins. A tutor calls a fact after you, for free, out of habit.}
+
+@event arcade_tutor
+title: The Tutor's Room
+place: capital_arcade
+trigger: queued
+type: shop
+class: routine
+tone: light
+repeat: 1
+art: book
+tags: money shop study
+scene: A book-lined room off a colonnade, three tutors in shabby gowns at three desks, each pointing at a different chair.
+text: Three tutors share the room and the rent: a thin one for spells and stars, a stout one for books and potions and a fierce small woman for "everything else, which is most things". They charge like surgeons. They're worth it, they say, and the queue outside suggests they might be.
+> arcana: Spellwork with the thin one
+  hint: Arcana XP: a good deal of it.
+  gold -large
+  arcana +medium
+  say: He makes you cast the same light forty times, each a little cleaner, until your wand hand shakes and the fortieth light is the best you've ever made.
+> lore: Books with the stout one
+  hint: Lore XP: a good deal of it.
+  gold -large
+  lore +medium
+  say: He gives you three books, reads you the important page of each aloud and makes you argue with all three. You leave with a headache and a great deal more history.
+> alchemy: Potions with the stout one
+  hint: Alchemy XP: a good deal of it.
+  gold -large
+  alchemy +medium
+  say: He brews in a teacup, at speed, talking all the while, and makes you do it after him. By the third cup you know more than a term of the textbook told you.
+> charm: Manners with the fierce one
+  hint: Charm XP: a good deal of it.
+  gold -large
+  charm +medium
+  say: She makes you walk into the room nine times until you do it right, then teaches you to say no so that people thank you for it. You leave walking differently.
+> vigor: The fierce one's drills
+  hint: Vigor XP: a good deal of it.
+  gold -large
+  vigor +medium
+  say: She runs you up and down the colonnade until the bathhouse admirals come out to watch. You'll ache for a week, and you could climb a wall after it.
+> guile: The fierce one's other lessons
+  hint: Guile XP: a good deal of it.
+  gold -large
+  guile +medium
+  say: She shuts the door and teaches you, briskly, how a liar's eyes move and how to keep your own still. "For your protection," she says, and charges extra.
+> leave: Too dear today
+  say: The three tutors go back to arguing about which of them you'd have chosen.
+
+@event arcade_scribe
+title: The Scribe's Window
+place: capital_arcade
+trigger: queued
+type: shop
+class: routine
+tone: warm
+repeat: 1
+art: scroll
+tags: money shop social
+scene: A scribe's desk in a sunny arcade window, inkpots and sealing wax, a woman with ink to the elbows writing a letter while a student dictates.
+text: The scribe writes in a hand that makes "Dear" look like a promise. She'll write to anyone you name, in any style, and send it by the morning post. She'll also write you a letter of good character, she says, very quietly, if you need one and don't ask what it's worth.
+> tobias: A letter to Tobias
+  hint: Tobias is away from the capital; a letter keeps you close.
+  when: met(tobias) and not around(tobias) and rel(tobias) >= 5 and apart(tobias) >= 2
+  gold -tiny
+  rel tobias +small
+  say: You tell him the capital's weather first, the way his mother would. His answer has a pressed flower in it and a long paragraph about mud, and you read it twice.
+> nessa: A letter to Nessa
+  hint: Nessa is away from the capital; a letter keeps you close.
+  when: met(nessa) and not around(nessa) and rel(nessa) >= 5 and apart(nessa) >= 2
+  gold -tiny
+  rel nessa +small
+  say: You send her the best gossip of the arcade, scribe's honour. Her answer asks for sources, dates and spellings, and says it's the best letter she's had all break.
+> kael: A letter to Kael
+  hint: Kael is away from the capital; a letter keeps you close.
+  when: met(kael) and not around(kael) and rel(kael) >= 5 and apart(kael) >= 2
+  gold -tiny
+  rel kael +small
+  say: The scribe asks if the North gets letters at all. It does: Kael's answer comes with frost on the envelope and three careful lines, which from Kael is a great deal.
+> ilse: A letter to Ilse
+  hint: Ilse is away from the capital; a letter keeps you close.
+  when: met(ilse) and not around(ilse) and not flag(ilse_taken) and rel(ilse) >= 5 and apart(ilse) >= 2
+  gold -tiny
+  rel ilse +small
+  say: You write to Ilse and the scribe makes it warmer than you dared. Ilse's answer is one line, "You're strange," and a snowflake pressed between two sheets that hasn't melted.
+> character: A letter of good character
+  hint: A forged reference from a respectable name: the prefect watching you stops. It's forgery.
+  when: has(watched)
+  gold -small
+  alignment -small
+  lose watched
+  say: The scribe writes you a reference from a magistrate who has never heard of you, in a magistrate's hand, with a magistrate's seal. Back at the castle the prefect reads it twice and stops following you about. Your conscience follows instead.
+> own: Write your own, at home
+  say: You thank her and go. She goes back to the love letter in the window, which is going very well.
+
+@event arcade_wandwright
+title: The Wandwright's
+place: capital_arcade
+trigger: queued
+type: shop
+class: routine
+tone: light
+repeat: 1
+art: wand
+tags: money shop magic
+scene: A cramped workshop of wand blanks and humming racks, sparks in the air, a wandwright in smoked spectacles holding a pale wand up to the light.
+text: The wandwright has burns on every finger and two wands behind the counter worth the trip: a glasscore, pale birch around a thread of capital glass that sparks with every spell, and a tidewood, salt-hard driftwood from the breakwater, re-cored, that makes a ward come smooth. "And I'll take the academy's loaners off you," she says. "They make good kindling."
+> glasscore: The glasscore wand
+  hint: A wand for fights: every spell you cast also throws a spark of damage.
+  when: not has_item(glasscore_wand)
+  gold -large
+  give glasscore_wand
+  say: She puts it in your hand and says "Cast." You light a candle and a second spark leaps off the tip and lights the next one too. "It does that," she says. "Every time."
+> tidewood: The tidewood wand
+  hint: A wand for fights: Ward costs less, and fire hurts you less.
+  when: not has_item(tidewood_wand) and not has_item(borrowed_wand)
+  gold -medium
+  give tidewood_wand
+  say: It's heavy for driftwood and smells of the harbour. You raise a ward with it and the ward comes up smooth and cool, like a wave going out.
+> tidewood_swap: The tidewood, for your borrowed wand
+  hint: She takes the academy's loaner in part-exchange: Ward costs less, and fire hurts you less.
+  when: not has_item(tidewood_wand) and has_item(borrowed_wand)
+  gold -small
+  take borrowed_wand
+  give tidewood_wand
+  say: She snaps the borrowed wand's chipped tip off between finger and thumb, sniffs it and throws it on the kindling. The tidewood comes up smooth in your hand. "Better," she says. "Anything was."
+> leave: Just watch the sparks
+  say: You watch her re-core a duchess's wand with tweezers and a bad temper. It's the best free thing in the capital.
+
+@pool capital_arcade_life
+place: capital_arcade
+class: routine
+weight: 10
+tags: money social
+
+@event arcade_waiting_room
+title: Waiting to Hear It
+pool: capital_arcade_life
+tone: warm
+art: eye
+scene: A small waiting room behind a beaded curtain, three people on a bench, a widow in black, an old sea captain and a nervous young clerk, all turning to look at a student.
+text: The fortune-teller's waiting room has three people on its bench: a widow, an old sea captain and a clerk. The captain says they're here every week, all three, waiting to hear the same thing they heard last week. "What are you waiting to hear?" the widow asks you. They all lean in.
+> left: Tell them the truth
+  mood +small
+  charm +tiny
+  say: You tell them, and it's more than you meant to. The captain nods. The widow pats your hand. The clerk tells you his, which is about a girl at the post office. Nobody goes in when the curtain opens. You talk till the arcade shuts, and you feel lighter.
+> right: Read their palms yourself
+  challenge perform journeyman:
+    win:
+      gold +tiny
+      renown +tiny
+      alignment -tiny
+      say: You read the captain's palm with great conviction: a long voyage, a dry harbour. The widow wants hers. The clerk pays you. The fortune-teller puts her head out, looks at you for a long moment, and goes back in.
+    lose:
+      mood -small
+      say: You tell the widow she'll marry soon. The captain coughs. The widow, it emerges, has been married three times and is here about the fourth. Everyone is very kind about it, which is the worst part.
+
+@event arcade_rival_tutors
+title: Two Tutors, Facing
+pool: capital_arcade_life
+tone: light
+art: book
+scene: Two tutors in shabby gowns in facing doorways across a stone colonnade, each shouting a free lesson at a student caught in the middle.
+text: Two tutors with doors facing across the colonnade have been feuding for twenty years, the bath-keeper tells you, over a pupil they once shared, who rose to be the Crown's chancellor and thanked only one of them in her memoirs. Each now shouts free sample lessons across the arcade at passing customers to show the other up. You are the passing customer. They both start at once.
+> left: Stand in the middle and take both lessons
+  lore +small
+  health -tiny
+  say: Two lectures at once, at full volume, on the law of the tides, the chancellor's favourite subject, from opposite sides. You come out knowing more about tides than any sailor, with a ringing in your ears that lasts till supper.
+> right: Ask which of them she thanked
+  charm +small
+  mood -tiny
+  say: Both stop. Neither, it turns out, has read the memoirs. They spend an hour looking for the page together in the bath-keeper's copy, and you spend the hour holding the lamp. She thanked the bath-keeper. They go out for a drink together, appalled.
+
+@event arcade_admirals_hot_room
+title: The Admirals' Bench
+pool: capital_arcade_life
+tone: light
+art: cup
+scene: A tiled bathhouse hot room thick with steam, a row of red-faced retired admirals in towels on a bench, one making room for a student.
+text: In the bathhouse's hot room, a bench of retired admirals in towels are having their weekly wager: who can stay longest in the heat. The oldest moves up to make room for you. "Fresh blood," he says. "The academy, eh? Let's see what they're teaching you."
+> left: Sit it out with them
+  challenge feat journeyman:
+    win:
+      renown +tiny
+      mood +small
+      say: You outlast four admirals and a commodore and stagger out last into the cold plunge, to applause. The oldest admiral writes your name on the bathhouse slate, under three admirals and a duke, and invites you to dinner.
+    lose:
+      health -small
+      say: You last until the room starts to spin, and are carried out to the cold plunge by two admirals who tell you about the time they were carried out too. You lie in the cool room for an hour, pink and humbled.
+> right: Go straight to the cold plunge
+  health +tiny
+  mood -tiny
+  say: You take the cold plunge instead, with a yell the admirals applaud. It's like being hit by the sea. You come out awake to your fingertips and a little ashamed you didn't stay.

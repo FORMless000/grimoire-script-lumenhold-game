@@ -39,8 +39,10 @@ text: The townhouse is quiet this afternoon: the family is out calling, the cook
   health +tiny
   say: {~Your old room, a cool sheet, the clock in the hall. You sleep an hour you didn't plan.|The house is so quiet you can hear the clock two floors down. You rest, and nobody asks you anything.}
 
+# Retired (C2): the place has its own cards (maps/capital_society.grim).
 @event capital_club_quiet_hour
 title: The Porter's Look
+when: false
 pool: maps_placeholder
 place: capital_club
 art: cup
@@ -54,8 +56,10 @@ text: The members' club has a porter whose whole job is to decide who you are. H
   mood -tiny
   say: {~"Another time," he says, which means never, said kindly.|You leave. Through the window, someone laughs in a chair that costs more than your year.}
 
+# Retired (S1): the bazaar and the arcade have their own cards (maps/capital_markets.grim).
 @event capital_bazaar_quiet_hour
 title: A Hundred Stalls
+when: false
 pool: maps_placeholder
 place: capital_bazaar
 art: coin
@@ -68,8 +72,10 @@ text: The Grand Bazaar is one long noise under a glass roof: spice-sellers, map-
 > right: Keep your hand on your purse
   say: {~You walk the length of it with a hand on your purse and see almost nothing. Your purse thanks you.|You watch a pickpocket work a whole aisle. Educational.}
 
+# Retired (S1): the bazaar and the arcade have their own cards (maps/capital_markets.grim).
 @event capital_arcade_quiet_hour
 title: Brass Plates
+when: false
 pool: maps_placeholder
 place: capital_arcade
 art: scroll
@@ -83,8 +89,10 @@ text: The arcade sells everything that isn't a thing: a physician, a tutor, a sc
   mood +tiny
   say: {~"Teeth drawn, letters written, futures read." You admire the ambition and walk on.|You read every plate twice. One just says "No."}
 
+# Retired (C2): the place has its own cards (maps/capital_society.grim).
 @event capital_theatre_quiet_hour
 title: Gilt and Draughts
+when: false
 pool: maps_placeholder
 place: capital_theatre
 art: mask
@@ -127,34 +135,35 @@ text: Port Calder's docks never stop: cranes, barrels, a ship from somewhere hot
   say: {~You keep your bag and watch the boy offer the same deal to a sailor, who laughs and pays. You learn something.|"Suit yourself." He's gone before you see him go.}
 
 @event capital_counting_house_quiet_hour
-title: The Ledgers Below
+title: The Tide Under the Floor
 pool: maps_placeholder
+time: evening night
 place: capital_counting_house
 art: coin
-scene: A counting house on a wharf, high desks and tall ledgers below, a staircase rising to living rooms above, a clerk with an ink-stained cuff.
-text: Below, the clerks are at their ledgers; above, your old room. The old clerk at the end desk has been here longer than the door, and looks at you as if you're a column that doesn't add up.
-> left: Help with a column
-  gold +tiny
-  mood -tiny
-  say: {~You find the error. He finds two more of yours. Honours even, and a coin for the trouble.|An hour of numbers. The old clerk says "Hm" at the end, which from him is a medal.}
+scene: A counting house on a wharf after hours, the high desks empty, an old night porter lighting a lantern by the door, water glinting through gaps in the floorboards.
+text: After hours the counting house is yours again: empty desks, the smell of ink, and at high water the tide coming right in under the floor, slapping the piles. The night porter is lighting his lantern for his round of the moorings. He's been doing it since you were small enough to carry it.
+> left: Walk the moorings with him
+  mood +small
+  health -tiny
+  say: {~You carry the lantern again, as if you were eight. He tells you which ropes are new and which ships are late. The wind off the water gets into your bones.|The round of the moorings, rope by rope. The porter's knees are worse; your lantern is steadier. The cold walks home with you.}
 > right: Go up and rest
   health +tiny
-  say: {~Your old room still smells of ink. You sleep to the sound of the tide.|Upstairs, the noise of the wharf is a lullaby you'd forgotten.}
+  say: {~Your old room still smells of ink. You sleep to the sound of the tide under the floor.|Upstairs, the noise of the wharf is a lullaby you'd forgotten.}
 
 @event capital_crew_loft_quiet_hour
-title: The Old Stove
+title: The Chandler's Downstairs
 pool: maps_placeholder
 place: capital_crew_loft
 art: house
-scene: A loft above a chandler's shop, hammocks slung between beams, a pot-bellied stove, young people playing cards in its warmth.
-text: The crew's loft is the same as ever: hammocks, a stove that smokes, a card game that has been going on since you left. "Look who it is," says someone, "the wizard."
-> left: Sit in on the game
-  gold -tiny
-  mood +small
-  say: {~You lose two hands and win back one, and they all pretend you cheated. It's the best evening in months.|They deal you in like you never left. You lose, on purpose, mostly.}
+scene: A chandler's shop under a loft, coils of rope and barrels of tar, an old chandler at his counter pointedly not looking up at the ceiling, which creaks.
+text: Under the loft is the chandler's: rope, tar, lamp-oil and an old man who has spent thirty years not knowing what goes on over his ceiling. He nods to you as if you'd been out for bread. "They're up there," he says. "I don't know anything about it."
+> left: Mind his counter an hour
+  gold +tiny
+  mood -tiny
+  say: {~You sell a coil of rope, two lamps and a tin of tar to a captain who calls you "boy" and "miss" in the same sentence. The chandler gives you a coin and a look of mild surprise.|An hour behind the counter, measuring rope by the fathom. Your hands smell of tar till morning, and there's a coin in it.}
 > right: Sleep in your old hammock
   health +tiny
-  say: {~The hammock still knows your shape. You sleep through the card game, the stove and an argument about a dog.|You sleep like you used to, with one hand on your boots.}
+  say: {~The hammock still knows your shape. You sleep through the stove smoke and an argument about a dog.|You sleep like you used to, with one hand on your boots.}
 
 @event countryside_mill_quiet_hour
 title: The Turning Wheel
@@ -295,8 +304,10 @@ text: Hollis House has the straightest window boxes in the street and a brass pl
   mood +tiny
   say: {~You pass by. The piano follows you to the corner, exactly in time.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}
 
+# Retired (C2): the place has its own cards (maps/capital_society.grim).
 @event capital_gardens_quiet_hour
 title: The Promenade
+when: false
 pool: maps_placeholder
 place: capital_gardens
 art: flower
@@ -340,8 +351,10 @@ text: Printing Row thumps like a heart. Every door has a press behind it and eve
   mood +tiny
   say: {~A printer lets you watch from the door. The press bangs, the sheet lifts, and the city's morning is made.|You watch letters set backwards, very fast, by a girl who never looks down.}
 
+# Retired (C2): the place has its own cards (maps/capital_society.grim).
 @event capital_bridges_quiet_hour
 title: Lamps on the Bridges
+when: false
 pool: maps_placeholder
 place: capital_bridges
 art: lantern

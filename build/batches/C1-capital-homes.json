@@ -1,0 +1,102 @@
+{
+  "name": "C1-capital-homes",
+  "at": 1794471318130,
+  "files": [
+    "content/events/maps/capital_homes.grim"
+  ],
+  "events": [
+    "townhouse_dinner",
+    "townhouse_calling_cards",
+    "townhouse_suitable_tea",
+    "townhouse_family_silver",
+    "counting_house_end_desk",
+    "counting_house_damp_grain",
+    "counting_house_violets",
+    "crew_loft_long_game",
+    "crew_loft_one_job",
+    "crew_loft_empty_hammock"
+  ],
+  "contentHash": "05a8ea",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "alarms": [
+        "truant: ending_archmage is 43% of headlines (> 35%)",
+        "aggressive: mood lasts the run, health the run (design: breaks down by 5 / 9)",
+        "168 event(s) never seen by any play style: between_likes_your_suitor, between_suitors_compare, between_couple_bubble, lyra_become_close, bram_become_close, ilse_become_close, corvin_locked_out, corvin_bad_odds, ilse_frost_door, ilse_contempt, choose_origin, career_return_royal_library, career_return_conclave, career_return_observatory, career_return_field_station, career_return_unseen, hs_kael_sister, elixir_finals_buyers, grisk_elixir_favour, wd_bright_grisk, crisis_probation, starfall_on_internship, mabel_wrong_pot, mabel_empty_hook, grimsby_lighthouse_walk, marisol_storm, marisol_trust, mabel_cup, grimsby_mind_the_shop, picture_lyra, picture_bram, picture_maud, picture_thorne, picture_brask, heist_caught, st_dead_end, st1_library_rounds, st1_catalogue, st2_breathing, st2_charging_book, st2_other_lamp, st3_mirror_desk, st3_no_lamp, st3_glass_case, st_vault, tw_dead_end, tw1_one_shoulder, tw1_someone_else, tw1_spyhole, tw2_exam_cupboard, tw2_telling_floor, tw3_no_wind, tw3_orrery, tw3_portrait_eyes, tw_masters_study, hs_go_down_early, hs_key_recover, hs_aftermath_quiet, hs_aftermath_freed, donate_greenhouse_glass, xchg_farewell, intro_lunch, nudge_footnote, nudge_two_taps, nudge_red_ink, item_hazel_tuned, item_hazel_water, item_ashwood_lyra, item_frost_ward_cold, item_frost_ward_thread, item_star_coin_turning, item_almanac_lighthouse, item_spoon_daughters, item_honey_bees, moor_lost, countryside_mill_quiet_hour, countryside_marsh_quiet_hour, countryside_moors_quiet_hour, countryside_ridge_quiet_hour, midnight_newt_cards, midnight_restricted_stacks, hint_silk_light, headmistress_tower_window_boxes, headmistress_tower_waiting_bench, cartographers_inking_night, mir_date_invention, intern_expedition_new_star, letter_corvin_no_jokes, letter_mir_ticking, restricted_page_buyer, courier_loft_quiet_hour, headmistress_tower_quiet_hour, ledger_office_quiet_hour, flight_field_quiet_hour, gig_library_stocktake, gig_library_lost_shelf, gig_library_last_day, gig_newt_rush, gig_newt_brawl, gig_newt_fire, gig_pell_remedy_rush, gig_pell_night_knock, gig_pell_ledger, gig_post_storm_run, gig_post_wrong_parcel, gig_post_last_parcel, break_work_opening_up, break_work_regular, intern_expedition_thin_air, intern_field_station_count, probation_advisor, probation_letter, owl_six_oclock, duelling_captain_injury, lumen_ledger_editor_threat, library_senior_banned_book, library_senior_night_flood, courier_chief_urgent_crossing, grisk_settle_early, lyra_partner_neglect, seraphine_confess_generic, mir_notebooks, mir_tinkering_evenings, mir_not_a_hobby, mir_family_summons, mir_ex, scandal_flourish_hurt, scandal_ex_tells_all, evo_final_practical, soc_make_peace, jealousy_two_invitations, jealousy_seen_together, jealousy_cold_supper, fame_after_you, spot_witness_promise, spot_legend_burden, ww_tree_bram, grimsbys_field_guide, maud_worse_out, ww_mastery_map, offer_spinner_silk_robe, item_quill_brask, item_tine_brask, item_heartwood_tobias, item_thorn_wants, item_thorn_brask, item_locket_midnight, item_silk_corvin, item_grimoire_isolde, ww3_shadow_stag_fight, ww_hush_gate, ww4_silence, ww4_rime_hollow, ww4_web_halls, ww4_last_witch, ww4_moonpetal_bloom, ww4_spinner_court, ww_hush_heart, ww_spinner_meet, ww_spinner_fight, ww_spinner_fight_weak, ww_spinner_hoard, ww_cocooned, ww_outcast_meet, ww_outcast_table, ww_outcast_fight, ww_outcast_victory, ww_outcast_loss"
+      ]
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 72,
+      "total": 72
+    }
+  },
+  "critic": {
+    "batch": "C1-capital-homes",
+    "accept": false,
+    "summary": "Well-written and on-tone homes with real trades and good origin hooks (the allowance, the suitable match, the family firm, the crew). Rejected because both new recurring cards restage the live placeholder at the same place, and half the cards need a fix: two bare chances where skill should count, a cycle that culminates and then resets, the merchant firm run by the wrong parent, and a new surname one letter from Professor Brask.",
+    "issues": [
+      {
+        "event": "counting_house_end_desk",
+        "problem": "Duplicate premise at the same place: capital_counting_house_quiet_hour (still live, weight 2, placeholders.grim) is the same scene. The old clerk at the end desk who 'has been here longer than the door' looks at you 'as if you're a column that doesn't add up', and you find his error. This card's first text variant even reuses the line ('as if you were a column that won't add').",
+        "fix": "Keep a home fallback, but don't stage the scene twice. Either rewrite the placeholder's text and left option so they no longer stage the clerk's column test (for example the tide under your old room and the scratch of pens, with rest against a tiny chore elsewhere), or retire it with `when: false` and a '# Retired (C1)' comment, as the placeholders.grim header asks. If you retire it, add a second repeatable card to the counting-house pool so a second visit in a break isn't empty (`report --gaps`)."
+      },
+      {
+        "event": "crew_loft_long_game",
+        "problem": "Duplicate premise at the same place: capital_crew_loft_quiet_hour (still live) is 'a card game that has been going on since you left', '\"the wizard\"', and its left option is 'Sit in on the game'. This card opens with the same game 'going since before you left' and the same 'The wizard' greeting.",
+        "fix": "Do what the end-desk fix does for the loft's placeholder: rewrite it to a distinct quiet scene (the hammock and the stove, with no card game and no 'wizard' greeting), or retire it and give the loft a second repeatable card."
+      },
+      {
+        "event": "crew_loft_long_game",
+        "problem": "Checks: 'Put a coin in' is a bare `chance even`, but this is a card game against a loft of sharps and Nan, 'who has never lost to anyone'. A street-raised player's guile should move it (checks.md: a roll a skill should move isn't a bare chance), and every other card game in the book is a check (life_card_game, gilded_newt_card_game).",
+        "fix": "Use `challenge deceive apprentice+ luck:` (dockside card players; `luck`, because it's a wager) with `win:` and `lose:` in place of `chance even:`/`else:`, keeping the gold and the say lines."
+      },
+      {
+        "event": "crew_loft_one_job",
+        "problem": "Checks: the job is a bare `chance likely`, but opening a wharf lock without a shutter opening across the way is skill (sneaking and noticing). The heists write the same thing as `challenge feat using guile`.",
+        "fix": "Replace `chance likely:`/`else:` with `challenge feat using guile journeyman likely:` (the watch on the wharf; `likely` because Nan picked the night) and `win:`/`lose:`. Keep `alignment -small` and `flag crew_job_done` outside the check, as now."
+      },
+      {
+        "event": "counting_house_end_desk",
+        "problem": "Repeats: variant 3 is a culmination ('The real ones, this time', the firm's own books, his hands 'not quite steady any more', '\"I've kept it so forty years.\" ... you've been shown something'), but the card is a `{&}` cycle. With `repeat: 3` a merchant who goes home every break gets a fourth showing, which goes back to variant 1's first test ('Find me the error. There is always an error'), as if the trust and the ageing had never happened. Smaller point: the card has no time, so the clerks at their desks and the haggling at the wharf door can come up at night.",
+        "fix": "Make it a sequence (`{a|b|c}`, the last step sticks) and write variant 3 so it can repeat (for example 'The firm's own books again, which nobody else may touch'), with a say line that doesn't re-reveal the forty years each time. Or keep the cycle and cut the culmination from variant 3. Add `time: morning noon afternoon`."
+      },
+      {
+        "event": "counting_house_damp_grain",
+        "problem": "Canon consistency: in the merchant canon the company is your mother's: trading_report ('your mother's compliments', 'Your mother writes that the company cannot spare anything') and choose_origin ('your mother's disappointed face'). Here your father decides the firm's fraud and tears up the bill.",
+        "fix": "Make it your mother ('\"Mix it in with the good,\" your mother says...'; 'She looks at you a long while'; 'she passes you the bread first'), and in the scene line 'a merchant mother'."
+      },
+      {
+        "event": "crew_loft_long_game",
+        "problem": "Canon/naming (lore crew_loft): 'Nan Brack' is one letter from Professor Brask, a recurring faculty member, and in zh-CN 南·布拉克 sits beside 布拉斯克教授. Players and translators will confuse the two. The name is new and nothing saved references it yet.",
+        "fix": "Give Nan a surname that isn't one letter from an existing one, and change it in one go: the `@lore crew_loft` keys and text, the three loft cards, the zh-CN .lang and the GLOSSARY line."
+      },
+      {
+        "event": "crew_loft_empty_hammock",
+        "problem": "Small: if this or crew_loft_one_job comes before the long game, 'Nan' is never introduced (here just '\"Jory,\" says Nan'). And 'Took a fall' reads as modern crime slang, or as a literal fall.",
+        "fix": "Introduce her the first time on both cards ('says Nan Brack, who runs the loft'). Write 'Got caught at the bonded warehouses, and the watch had him.'"
+      }
+    ]
+  },
+  "spotCheck": [
+    "counting_house_violets"
+  ],
+  "accepted": false
+}

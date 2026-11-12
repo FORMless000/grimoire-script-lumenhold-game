@@ -1,0 +1,216 @@
+# Your home in the capital (new maps round 2, 2026-11-11; docs/maps-plan.md, batch C1): the noble's family
+# townhouse uptown, the merchant's counting house on the wharf, the street-raised player's crew loft in Port Calder.
+# Each home pin is found only by its origin and reads as Home (`home:` in content/world/places.grim). One recurring
+# card per home in three showings, and one-time scenes. The crew: lore/soft/places.grim (`crew_loft`).
+
+# ---------------- The family townhouse (noble) ----------------
+
+@pool capital_townhouse_home
+place: capital_townhouse
+class: routine
+weight: 12
+when: has(origin_noble)
+tags: home
+
+@event townhouse_dinner
+title: Every Word Noticed
+pool: capital_townhouse_home
+repeat: 3
+slot: evening
+tone: tense
+art: meal
+scene: A candlelit formal dining room in an uptown townhouse, silver on the table, elegant older relatives watching a student at the middle of the table.
+text: {&Dinner at the townhouse means silver, candles, an uncle, two aunts and your mother at the head of the table, and every word you say weighed like coin. "So," says an aunt, "the academy. Are they teaching you anything useful, or only magic?"|Dinner again, and the aunts again, comparing you, gently, with a cousin who has just married well. The soup is excellent. Nobody tastes it.|Another dinner, and your mother proposes a toast to the family's name and looks at you while she does it, which is either a compliment or an instruction.}
+> left: Say all the right things
+  charm +small
+  mood -small
+  say: {&You answer like a diplomat for three courses, modest, witty and never quotable. The aunts approve. Your face aches from the effort of it, and so does something else.|You praise the cousin, the match and the soup, in that order. Your mother's eyebrow says well done. The rest of you is exhausted.|You return the toast with a little speech so correct it might have been engraved. Your mother nods, once, and it will be repeated in letters for a month. You go up to bed hollowed out.}
+> right: Say something true
+  mood +small
+  gold -small
+  say: {&"They're teaching me to think," you say. "It's very inconvenient." Silence; then one uncle laughs. Next morning your allowance turns out to be a little smaller, for reasons nobody gives.|You say you're glad for the cousin but you'd rather choose for yourself. The aunts look at your mother. Your mother looks at the soup. The next draft from the family bank is lighter.|You raise your glass "to whatever the name turns out to mean". It's the best moment of the break, and it costs you: the next letter from home brings less money and more underlining.}
+
+@event townhouse_calling_cards
+title: Cards on the Salver
+pool: capital_townhouse_home
+tone: light
+art: letter
+scene: A silver salver on a hall table heaped with engraved calling cards, a hopeful footman standing beside it, a student on the stairs.
+text: The silver salver in the hall is heaped with calling cards, and half of them are for you: word has gone round uptown that the family's student is home from the academy. A footman stands beside them looking hopeful. Every card is an afternoon. Every card is a door.
+> left: Return the calls
+  renown +small
+  mood -small
+  say: You spend three days in other people's drawing rooms drinking other people's tea and saying "the academy is very old" in every one. By the end your name is said kindly on four streets, and you never want to see a teacup again.
+> right: Feed them to the fire
+  mood +small
+  renown -tiny
+  say: You feed them one by one into the drawing-room fire while the footman watches in silent anguish. Uptown notices, a little, that you didn't call. The fire is very cheerful.
+
+@event townhouse_suitable_tea
+title: A Suitable Tea
+pool: capital_townhouse_home
+when: year >= 2
+slot: afternoon
+tone: light
+art: cup
+scene: An uptown drawing room set for tea, a pleasant, nervous young heir in good clothes and a student exchanging a conspiratorial look over the cake stand, a watchful mother at the window.
+text: Your mother has invited someone to tea: a pleasant, nervous heir of twenty-two from a very good family, whom you are clearly meant to find suitable. They are clearly meant to find you suitable too. Halfway through the cake you catch each other's eye, and it's plain that neither of you wants to be here.
+> left: Conspire to be unsuitable
+  charm +small
+  mood +small
+  gold -tiny
+  say: In whispers over the cake you agree a plan, and spend the rest of tea being charmingly, impeccably unsuitable together: wrong forks, strong opinions, an unwise interest in goats. Your mother is furious. You've made a friend, and the next allowance is a little lighter.
+> right: Be politely dull
+  gold +small
+  mood -small
+  say: You talk about the weather for an hour. So do they. Your mother is delighted, and so is theirs, and the next draft from the family bank is unusually generous. You both leave feeling slightly smaller.
+
+@event townhouse_family_silver
+title: The Family Silver
+pool: capital_townhouse_home
+slot: night
+tone: warm
+art: candle
+scene: A dim pantry at night, an old footman wrapping silver candlesticks in a blanket, startled, a student in the doorway holding a candle.
+text: Late, going down for a glass of water, you find the old footman in the pantry wrapping the second-best candlesticks in a blanket. He goes white. "Your mother's instructions," he whispers. "The pawnbroker by the bridges. We do it most breaks, and buy them back when the rents come in." The house, it turns out, is poorer than it looks.
+> left: Keep the secret
+  guile +small
+  mood -tiny
+  say: You help him carry the candlesticks to the door and say nothing to anyone. At breakfast your mother is magnificent, and you look at the silver on the table and wonder which of it is coming back. The name, you think, is expensive.
+> right: Give him your allowance
+  gold -small
+  alignment +tiny
+  mood +small
+  say: You give the footman what's left of your allowance, to keep the candlesticks at home. He looks at you as if you'd grown. Your mother never mentions it. The next letter from home has an extra line in it, in her own hand, and no underlining at all.
+
+# ---------------- The counting house (merchant) ----------------
+
+@pool capital_counting_house_home
+place: capital_counting_house
+class: routine
+weight: 12
+when: has(origin_merchant)
+tags: home money
+
+@event counting_house_end_desk
+title: The End Desk
+pool: capital_counting_house_home
+repeat: 3
+time: morning noon afternoon
+tone: light
+art: book
+scene: A long counting room of high desks and ledgers on a harbour wharf, an old clerk in spectacles at the last desk pushing a ledger towards a student.
+text: {&The old clerk at the end desk has kept the firm's books since before your parents married, and he looks up as you come down as if you were a column that won't add. "This one," he says, and pushes a ledger at you. "Find me the error. There is always an error."|The end desk again. The old clerk has saved you a ledger with an error in it, the way a cat saves a mouse. He watches you over his spectacles and doesn't blink.|The end desk, and a ledger already waiting, with a peppermint beside it, which from the old clerk is either a kindness or bait. "Same as ever," he says. "Find it."}
+> left: Find the error
+  lore +small
+  health -tiny
+  say: {&Two hours of columns until your eyes cross. You find it, a seven that should be a one. The clerk nods, once, and writes something in a small private book.|You find two errors, and he's annoyed, because he only planted one. The other is real. He fixes it without a word and gives you a peppermint, grudgingly. Your head aches.|You find it in an hour, faster than last time, and your neck aches from the stooping. He takes the ledger back without a word and pushes the peppermint across the desk.}
+> right: Deal at the door for the firm
+  charm +small
+  gold +tiny
+  mood -tiny
+  say: {&A carter at the wharf door wants double for the rope. You talk him down to fair and he calls you a robber, cheerfully. The firm tips you a coin, and the end desk a nod. It's exhausting.|A sailmaker with a sad story and a high price. You get the price down and the story longer. Your cut is small and your nerves are frayed.|A rival firm's man tries to buy the whole of your fleet's tea before it lands. You send him off with a worse offer than he came with, and the end desk actually smiles. You're shaking a little after.}
+
+@event counting_house_damp_grain
+title: Sound, More or Less
+pool: capital_counting_house_home
+when: year >= 2
+tone: tense
+art: scales
+scene: A dim wharf warehouse stacked with grain sacks, some dark with damp, a merchant mother holding out a bill of sale and a pen to a student.
+text: A ship came in this morning with half its grain gone damp. The firm has a buyer upriver, paid in advance, who won't open the sacks until they're milled. "Mix it in with the good," your mother says, not quite looking at you, "and nobody's the worse." She holds out the bill of sale for you to sign as witness. You're family now.
+> left: Refuse to sign
+  alignment +small
+  gold -small
+  say: You won't sign. Your mother looks at you a long while, then tears up the bill, and the damp grain goes to the pig farmers at a loss. Your share of the season is smaller for it. At supper she says nothing, but she passes you the bread first, which she never does.
+> right: Sign it
+  alignment -small
+  gold +small
+  say: You sign. The grain goes upriver mixed with the good, and your share of the season is better for it. Nobody is the worse, probably. You keep thinking about the miller who'll open the sacks.
+
+@event counting_house_violets
+title: A Room Full of Violets
+pool: capital_counting_house_home
+tone: light
+art: flower
+scene: A small attic bedroom above a counting house crammed with wooden crates of perfume bottles, a student sitting on a narrow bed holding their nose.
+text: Your old room above the counting house is exactly as you left it, except that the firm has been storing something in it: forty crates of a very cheap violet perfume that nobody could sell. The whole room smells of violets. Through the floor you can hear the ledgers being kept, as you always could, the scratch of pens like rain.
+> left: Sell the violets on the wharf
+  charm +small
+  gold +tiny
+  mood -tiny
+  say: You take a crate down to the wharf and sell violet perfume to sailors, who buy it for sweethearts and, in one case, a parrot. You come home hoarse and fed up, smelling of violets, with a pocket of coins the firm says you can keep.
+> right: Sleep in the violets
+  health +small
+  mood -tiny
+  say: You sleep, eventually, in a cloud of violets, and dream of nothing but flowers. You wake rested, sneezing, and thoroughly sick of violets, with the scratch of pens below already going.
+
+# ---------------- The crew's loft (street) ----------------
+
+@pool capital_crew_loft_home
+place: capital_crew_loft
+class: routine
+weight: 12
+when: has(origin_street)
+tags: home danger
+
+@event crew_loft_long_game
+title: The Game That Never Ended
+pool: capital_crew_loft_home
+repeat: 3
+tone: warm
+art: cards
+scene: A smoky harbour-town loft with hammocks and a pot-bellied stove, a rough crowd around a chipped card table, a sharp-eyed older woman dealing a hand to a student.
+text: {&The card game in the loft has been going since before you left; some of the players have changed, and the pot hasn't. Nan Merrow, who runs the loft and most of the street, deals you in without asking. "The wizard," she says. "Show us what they taught you, or put a coin in."|The game again, the same chipped table and the same stove smoke. Somebody has carved your initials into the table's edge, with a little star, as a joke. "Coin or trick," says Nan.|The game, the loft, and someone you don't know asking who you are. "One of ours," says Nan Merrow, before you can answer. "Coin or trick."}
+> left: Put a coin in
+  challenge deceive apprentice+ wild:
+    win:
+      gold +small
+      say: {&You win a hand on nerve and a pair of nothing, and the loft cheers. Nan looks at you as if you'd paid a debt.|You win, and the loft groans, and somebody accuses you of using magic, which this time you didn't.|You win, and the loft bangs the table for you, and Nan pours you a drink from the bottle she keeps for funerals and weddings.}
+    lose:
+      gold -small
+      say: {&You lose a crown to a man with no front teeth, who says thank you every time. Nan laughs.|You lose, cleanly, to Nan herself, who has never lost to anyone in the loft. "Some things don't change," she says.|You lose your stake, and the loft cheers anyway, because you played.}
+> right: Show them a trick
+  arcana +small
+  mana -tiny
+  say: {&You make the stove smoke into a little dragon that chases the cat. The loft goes silent, then wild. Nan watches with narrowed eyes, as if pricing it.|You light every candle in the loft with a snap. Somebody starts to ask whether you could do that to a lock. Nan kicks them under the table.|You make the cards deal themselves. The loft is delighted. Nan isn't. "Don't go showing that round the docks," she says quietly. "People will want it."}
+
+@event crew_loft_one_job
+title: One Job, Like Old Times
+pool: capital_crew_loft_home
+slot: evening
+tone: tense
+art: lock
+scene: A harbour-town rooftop at dusk with pigeon cages, a sharp-eyed older woman pointing across the wharves to a warehouse door, a student beside her, lamps coming on below.
+text: Nan Merrow, who runs the loft and most of the street, takes you up on the roof, where the loft keeps its pigeons and its secrets. "There's a door on the wharf," she says, "with a lock nobody here can open. You could. One job, like old times. Nobody hurt, nobody the wiser, a fair cut." Below, Port Calder's lamps are coming on. She waits.
+> left: Turn her down
+  mood -small
+  say: "Not any more," you say. Nan looks at you a long moment, and then, surprisingly, smiles. "Good," she says. "Somebody from this loft ought to get out clean." She doesn't ask again. You feel as if you'd passed something, and lost something.
+> right: Do the job
+  alignment -small
+  flag crew_job_done
+  challenge feat using guile journeyman:
+    win:
+      gold +medium
+      say: The lock takes you one breath and a little magic. Nobody's hurt; nobody's the wiser; your cut is fair and heavy. Walking back over the roofs with Nan, you feel twelve years old again, and not in a good way.
+    lose:
+      health -small
+      renown -tiny
+      say: The lock opens, and so does a shutter across the wharf. You run, the watch behind you, and lose your hat, some skin and the whole cut in the river. Nan hauls you in through the loft window. "Some things don't change," she says, not unkindly.
+
+@event crew_loft_empty_hammock
+title: The Empty Hammock
+pool: capital_crew_loft_home
+tone: warm
+art: bed
+scene: A harbour-town loft with a row of hammocks, one empty with a worn coat hanging over it, a sharp-eyed older woman and a student looking at it.
+text: There's a hammock in the loft with nobody in it and a coat still hanging over it. You ask. "Jory," says Nan Merrow, who runs the loft, after a while. "Got caught at the bonded warehouses and the watch had him. The city gaol, a year of it." Somebody has been taking him bread on Sundays, and it's getting harder.
+> left: Take him the bread yourself
+  alignment +tiny
+  mood -small
+  say: You carry the loft's bread to the gaol yourself and wait out the visiting queue. Jory is thinner and pretends he isn't. He wants to hear about magic, all of it, and listens with his face to the bars like someone at a sweetshop window. Leaving him there is the hardest thing you do all break.
+> right: Pay his bread for the year
+  gold -small
+  alignment +tiny
+  mood +tiny
+  say: You give Nan enough to keep Jory in bread and blankets for the rest of his year. She counts it twice and puts it away without thanks, which is how the loft says it. That night somebody has mended your coat.

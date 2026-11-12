@@ -128,6 +128,15 @@ text: {There's a card game in the back room of the Gilded Newt, and an empty cha
   guile +small
   mood -tiny
   say: {You spend the evening watching. The man who shuffles like a conjuror scratches his ear when he lies.|You learn a great deal about bluffing and nothing about having fun.|Someone asks if you're playing or haunting. You leave before you have to answer.}
+> up[item:ivory_dice]: Suggest dice instead, your dice
+  gold -small
+  chance likely:
+    gold +medium
+    alignment -tiny
+    say: You roll the curio-seller's ivory dice out on the scarred table. Two sixes. Two sixes again. The table goes quiet, then laughs, then pays, and somebody asks very politely to see them. They aren't loaded. You feel as if they were.
+  else:
+    mood -tiny
+    say: You roll the ivory dice and for once they come up ones, and keep coming up ones. The table is delighted. Lucky dice, the curio-seller said, and you remember she didn't say lucky for whom.
 
 @event gilded_newt_corner_table
 time: evening night

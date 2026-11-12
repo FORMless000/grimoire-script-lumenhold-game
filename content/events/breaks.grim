@@ -332,6 +332,12 @@ text: {season == "winter": Sleet on the roof all day, and nobody going anywhere.
   lore +small
   mood -tiny
   say: {~You read by the rain-streaked window while the cards go on behind you. Every so often someone asks you to settle an argument, and you lose your page.|You get through a whole book while the storm goes over. Somebody saves you the last biscuit, and somebody else eats it.}
+> up[item:storm_glass]: Show them the storm-glass
+  when: not flag(storm_glass_home)
+  mood +small
+  lore +tiny
+  say: You set the storm-glass on the table and the whole family watches it cloud and clear with the rain on the roof. By evening your family is predicting the weather from it with total confidence, and getting it wrong, and nobody minds.
+  flag storm_glass_home
 
 @event home_cottage_photograph
 title: The Picture on the Mantel

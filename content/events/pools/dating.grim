@@ -229,6 +229,12 @@ text: {Lyra's idea of a romantic afternoon is a duel in the empty courtyard, "to
   rel lyra -tiny
   mood +small
   say: {She knows the moment you drop your guard. "Don't you dare," she says, and then kisses you, furious, and then makes you do it again properly.|She's outraged. She's also, for the rest of the day, unusually soft.|"I said I'd know," she says, the moment you drop your guard. She makes you start again, and this time you don't dare.}
+> up[item:duellist_silk]: Duel her in the duellist's silk
+  when: not flag(lyra_saw_silk)
+  spark lyra +small
+  health -tiny
+  say: You turn up in the capital's dawn-duel silk and Lyra stops halfway through her bow. "Where," she says, "did you get that." She fights you harder than she ever has, and you move like water and still lose, just, and she asks for the stall's name twice.
+  flag lyra_saw_silk
 
 @event tobias_date_greenhouse_supper
 title: Lunch Among the Tomatoes

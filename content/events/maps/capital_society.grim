@@ -1,0 +1,356 @@
+# The capital's society (maps round 2, C2; docs/maps-plan.md): the Members' Club, the Theatre, the Royal Gardens and
+# the Lamplighters' Bridges. Each place has one recurring card in three showings (its old placeholder retired) and
+# scenes once each. Professor Vey spends her breaks on the theatre's season (her `schedule_break`), so her card is
+# there, in the evening.
+
+# ---------------- The Members' Club ----------------
+
+@pool capital_club_life
+place: capital_club
+class: routine
+weight: 10
+tags: social money
+
+@event club_porter
+title: The Porter's Lodge
+pool: capital_club_life
+repeat: 3
+tone: light
+art: door
+scene: A members' club's marble hall, a stately porter in a braided coat at his lodge window looking a student up and down, leather chairs and lamplight beyond a half-open door.
+text: {&The club's porter looks at your boots, then your face, then your boots again. "Members and their guests," he says. Beyond the inner door are leather chairs, low lamps and the sort of people whose names are in the newspapers on purpose.|The porter again. He has decided, it seems, that you're a recurring weather condition. "Members and their guests," he says, with less conviction.|"You again," says the porter, almost warmly. Through the inner door you can hear a minister losing at cards.}
+> left: Talk your way in as somebody's guest
+  challenge deceive journeyman:
+    win:
+      renown +tiny
+      mood +small
+      say: {&You name a member you read about in the paper, with total confidence, and the porter waves you through. You spend hours in a leather chair overhearing two bankers decide the price of bread. Nobody asks who you are. Everyone nods.|You say you're expected by "the admiral", and there is, it turns out, an admiral, asleep. You sit near him for hours, a guest in good standing.|This time you just walk in as if you'd always been a member. The porter, defeated, takes your coat. A duchess asks your opinion on a war.}
+    lose:
+      mood -small
+      say: {&The member you name died last winter. The porter tells you so, kindly, and shows you the street.|"The admiral," says the porter, "is in the next room, and has never heard of you. I asked." You leave with your ears hot.|The porter doesn't even look up. "No," he says. You go.}
+> right: Sit in the lodge and let him talk
+  guile +small
+  mood -tiny
+  say: {&The porter, it turns out, knows everything about everyone in the building, and has been waiting thirty years for someone to tell. An hour later you know who owes whom, who isn't speaking to whom and who is wearing a wig. Your ears ache.|The porter has a stool by his lodge fire and a fresh list of scandals. You learn how a general cheats at cards and how an archdeacon tips. It's a long hour.|He pours you a cup from his own pot and tells you which members are about to be ruined. You suspect he's guessing. He's never wrong. You leave weighed down by it.}
+
+@event club_card_room
+title: Stakes of Another Kind
+pool: capital_club_life
+tone: tense
+time: evening night
+art: cards
+scene: A green-baize card room in a members' club, a white-moustached retired general with one empty sleeve pinned up dealing one-handed at a corner table, an empty chair opposite him.
+text: In the club's card room, a retired general with one sleeve pinned up is short of a fourth at his table. He doesn't play for crowns, he tells you, he has enough of those. He plays for favours. "If you win, I'll owe you one, and I'm worth owing. If you lose, you'll owe me one. I collect at once."
+> left: Take the empty chair
+  challenge deceive journeyman:
+    win:
+      renown +small
+      gold +small
+      say: You hold your nerve through four rubbers and take the last trick with a card he didn't know you had. The general laughs, writes your name in a little book and pays your table share himself. "I owe you," he says. "People will hear about it."
+    lose:
+      mood -small
+      health -tiny
+      say: He takes the last trick with a card you didn't know he had. "You owe me a favour," he says, "and I collect at once." The favour is reading his memoirs aloud to him till the club shuts, all four campaigns. You go home hoarse, at two in the morning.
+> right: Thank him and stay a spectator
+  lore +small
+  mood -tiny
+  say: You watch from a chair by the fire as he wins a promise from a magistrate, a horse from a shipowner and a vote from an alderman, smiling throughout. It's the most frightening thing you've seen in the capital, and you learn a great deal.
+
+@event club_blackball
+title: White and Black
+pool: capital_club_life
+tone: tense
+art: scales
+scene: A members' club committee room, a mahogany ballot box, a bowl of white and black balls, an elderly member handing one of each to a student by mistake.
+text: The club is voting on a new member: a shipbuilder who made his money with his own hands, the members murmur, as if that were catching. The ballot box goes round the room, and an elderly member, deaf and in a hurry, presses a white ball and a black one into your hand, taking you for somebody's nephew. One ball in the box. Nobody will ever know which.
+> left: Drop in the white ball
+  alignment +tiny
+  mood -tiny
+  say: The white ball drops with a little click. When the count is read he's in by one, and a red-faced member demands a recount, and stares about the room for the traitor. You keep your face very still. You were the one.
+> right: Drop in the black ball
+  renown +tiny
+  alignment -small
+  say: The black ball drops. He's kept out by one. The members are delighted with each other, and one claps you on the shoulder and asks you to dine, taking you for somebody's nephew still, and tells the room your name. You walk home past the shipyards and can't look at them.
+
+@event club_reading_room
+title: The Explorer in the Reading Room
+pool: capital_club_life
+tone: warm
+time: afternoon
+art: map
+scene: A hushed club reading room of leather armchairs and tall windows, a very old explorer with a white beard and a stick beckoning a student towards a globe.
+text: In the club's reading room, where nobody may speak above a whisper, a very old explorer beckons you over to the globe with his stick. He's been everywhere, he whispers, and nobody here will listen any more. He spins the globe and stops it with one finger on a blank patch of ocean. "There's something there," he whispers. "I'll tell you about it. It'll take a while."
+> left: Let him tell you
+  lore +small
+  health -tiny
+  say: It takes all afternoon, in whispers, standing, because he doesn't sit. An island that wasn't on the charts, a lighthouse with no keeper, a song from under the water. By the end your legs ache, your head is full of salt, and the reading room has fallen asleep around you.
+> right: Ask him what he'd do next
+  charm +small
+  mood -tiny
+  say: Nobody has asked him that in years. He thinks for a long time, then whispers a list: a mountain, a river mouth, a woman in a port he should have married. You help him write it out in a fair hand. He folds it into his waistcoat. You walk out a little sad, and he walks out lighter.
+
+# ---------------- The Theatre ----------------
+
+@pool capital_theatre_life
+place: capital_theatre
+class: routine
+weight: 10
+tags: social
+
+@event theatre_the_gods
+title: Up in the Gods
+pool: capital_theatre_life
+repeat: 3
+time: evening night
+tone: light
+art: mask
+scene: The steep top gallery of a gilded theatre, crowded benches of rowdy theatregoers leaning over the rail, a stage far below, a student squeezed among them.
+text: {&The cheapest seats in the theatre are up in the gods: benches under the roof, where the crowd shouts advice to the actors and throws nuts at the villain. Tonight it's a tragedy about a king who loses everything. The gods are on his side, loudly.|Up in the gods again. Tonight it's a comedy about twins, and the gallery is already ahead of the plot.|The gods are packed for a melodrama about a shipwreck, with real water. The front row has brought umbrellas.}
+> left: Pay for a bench
+  gold -tiny
+  mood +small
+  say: {&You cry when the king dies and boo his daughters, and so does everyone in the gods, and the actor playing the king bows to the gallery last, as if you'd been the only ones watching.|You laugh till you ache. The gallery guesses the twist an act early and cheers the actors anyway when they get there.|The water comes over the stage rail in the second act and over the front row in the third. You come out damp and delighted.}
+> right: Slip in at the interval
+  guile +tiny
+  alignment -tiny
+  say: {&At the interval you walk in backwards among the smokers coming out, as if you were leaving. It works. You see the second half free, standing, and feel only slightly like a thief.|You come in with the orange-sellers, holding a borrowed tray. The usher waves you through. You sell two oranges by accident.|You tag along behind a party of sailors who are very sure they've already paid. So, now, are you.}
+
+@event theatre_vey_ghost
+title: The Ghost Has the Mumps
+pool: capital_theatre_life
+slot: evening
+when: met(vey)
+tone: light
+art: mask
+scene: A theatre's backstage corridor at curtain-up, a sharp, amused professor in a velvet coat with a script under her arm grabbing a student by the sleeve, costumed actors rushing past.
+text: Backstage, Professor Vey grabs your sleeve. She spends every break on the theatre's season, it turns out, and the ghost in tonight's tragedy has the mumps. "You," she says. "You can hold a glamour. Can you hold it for three hours, in front of eleven hundred people, and walk through a wall at the end of act two? Don't answer. You can."
+> left: Go on as the ghost
+  challenge perform journeyman:
+    win:
+      rel vey +medium
+      renown +small
+      say: You hold the glamour for three hours, pale and see-through, and walk through the wall on cue, and the gods scream. At the curtain Vey is delighted. "I was watching for the join all night," she says, "and I never found it." The papers mention the ghost.
+    lose:
+      rel vey +tiny
+      mood -small
+      say: The glamour slips in act two and the ghost briefly has your face and your boots. The gods love it. Vey, in the wings, laughs until she has to sit on a costume trunk. "Next season," she says, wiping her eyes, "we'll write that in."
+> right: Watch from her box instead
+  rel vey +tiny
+  lore +small
+  mood -tiny
+  say: You watch from Vey's box while she whispers every trick of the trade, how the wall works, why the gods scream, where the ghost stood when the glamour faltered. The understudy's ghost is dreadful. You wish, by the end, that you'd said yes.
+
+@event theatre_opera_glasses
+title: The Boxes Watch the Boxes
+pool: capital_theatre_life
+tone: light
+time: evening night
+art: eye
+scene: A gilded theatre box at night, a student with opera glasses looking not at the stage but at the other boxes, where elegant people are whispering behind fans.
+text: An usher offers you an empty box for a coin, and with it a pair of opera glasses, or there's standing room at the back of the stalls for nothing. From the box you can see the stage, and every other box in the house: who came with whom, who isn't speaking, who is passing notes behind a fan. Nobody uptown comes here for the play.
+> left: Watch the boxes
+  gold -tiny
+  guile +small
+  say: Through the glasses you watch a betrothal end, an alliance begin and a minister's wife pass a note to an actor. By the last act you know more about the capital than the papers do. You missed the whole play.
+> right: Stand at the back of the stalls
+  mood +small
+  health -tiny
+  say: You leave the box to someone who wants it and stand at the back of the stalls for three acts, watching the play. It's a fine play. Your feet are sore by the end, and you're the only person in the house who could tell anyone how it ended.
+
+@event theatre_stage_door
+title: The Stage Door
+pool: capital_theatre_life
+tone: warm
+time: evening night
+art: door
+scene: A theatre's stage door in a lamp-lit alley after a show, a crowd of admirers with flowers waiting, a tired leading actress in a hooded cloak beckoning a student into a side doorway.
+text: After the show the alley by the stage door is packed with admirers holding flowers, and one of them, a viscount's son, has been there every night for a month with a poem. The leading lady, hooded and very tired, catches your sleeve in the side doorway. "You're the academy one," she says. "Get me home without him seeing. Please."
+> left: Glamour her into someone else
+  challenge spell journeyman:
+    win:
+      charm +small
+      say: A plain face, a plainer cloak: you walk her out through the middle of the crowd, past the viscount's son and his poem, and nobody looks twice. At her door she laughs for the first time all night and gives you two seats for tomorrow, which you can't use, and keep.
+    lose:
+      mood -small
+      say: The glamour slips halfway down the alley, and she's herself again, in the lamplight, in front of everybody. The viscount's son reads her the whole poem. She listens to it all with perfect manners and never speaks to you again.
+> right: Go out front and distract him
+  charm +small
+  mood -tiny
+  say: You go out to the viscount's son and ask about his poem, and he reads it to you, all of it, twice, while she slips away down the alley behind him. It's a very long poem. It rhymes "heart" with "art" nine times. You hear it in your sleep.
+
+# ---------------- The Royal Gardens ----------------
+
+@pool capital_gardens_life
+place: capital_gardens
+class: routine
+weight: 10
+tags: social
+
+@event gardens_promenade
+title: Being Seen
+pool: capital_gardens_life
+repeat: 3
+time: morning noon
+tone: light
+art: flower
+scene: A broad gravel walk in a formal city garden, elegant people strolling slowly in their best clothes and nodding to each other, a fountain beyond.
+text: {&Everyone uptown walks the Royal Gardens before luncheon, slowly, in their best, nodding to the people they've decided to nod to. Nobody looks at the flowers. Everybody looks at everybody.|The promenade again. You've learned the rules: one nod for a cousin, two for a duke, none at all for anyone in trade.|The gardens before luncheon, the gravel raked, the nods exchanged. Somebody you don't know nods to you first.}
+> left: Walk the promenade
+  renown +tiny
+  mood -tiny
+  say: {&You walk the long gravel loop twice, nodding, and are nodded at by a general and a girl in a hat like a ship. Your face is tired from the effort of seeming not to try.|You nod to a duke twice and a cousin once, and only get one wrong. By the fountain someone asks your name. Your feet ache from walking slowly.|You walk, and on the second loop a lady you've never met stops you to ask whether you're the academy student everyone's talking about. You aren't, quite. You say yes. It's tiring, being someone.}
+> right: Sit by the fountain and watch them
+  mood +small
+  renown -tiny
+  say: {&You sit on the fountain's rim with a pastry and watch uptown walk past nodding. It's better than the theatre. A lady's hat blows into the fountain and nobody helps her, so you do, and she cuts you dead for it.|You count nods. A duke gives forty-one before luncheon. Nobody nods at you. It's restful.|The fountain, a pastry, and the whole of uptown going round and round like the planets in an orrery. You're happy and invisible, and nobody will remember you were there.}
+
+@event gardens_dawn_duel
+title: Wands at Dawn
+pool: capital_gardens_life
+slot: morning
+tone: tense
+art: duel
+scene: A misty formal garden at dawn, two young nobles in shirtsleeves facing each other across a fountain with wands raised, a nervous second, a student arriving through the hedge.
+text: At dawn, by the fountain, two young nobles in shirtsleeves are about to duel with wands over an insult neither can quite remember, and the duel is not for practice. One second has fainted. The other spots your academy scarf. "You," he hisses. "You can witness. It's legal if there's a witness." Both duellists look terrified.
+> left: Stand witness and let them fight
+  renown +tiny
+  alignment -tiny
+  say: You stand witness. They cast, both miss on purpose, both claim satisfaction and shake hands, and one of them faints. The other asks your name for the club book. You walk away with your heart going hard, and somebody's honour on your conscience.
+> right: Raise a ward between them
+  challenge spell journeyman:
+    win:
+      alignment +small
+      renown +tiny
+      say: You raise a ward across the fountain just as they cast, and both spells hit it and fizzle into steam. In the silence they look at each other, then at you, and start to laugh. They take you to breakfast and argue all the way about who's paying.
+    lose:
+      mood -small
+      say: Your ward is a heartbeat late. Both spells cross over the fountain and hit the bronze king, who loses an ear. Everyone runs, including you. By noon the gardens are full of constables looking for an ear.
+
+@event gardens_night_vine
+title: Once in Ten Years
+pool: capital_gardens_life
+tone: warm
+art: flower
+scene: A tall glass hothouse full of tropical plants, a vast pale vine in flower, a long quiet queue of people waiting their turn to see it, a gardener with a lantern.
+text: In the Royal Gardens' great hothouse, a southern vine that flowers once in ten years has opened overnight, and the queue to see it goes twice round the glasshouse. An under-gardener at the door is quietly selling cuttings to anyone who asks the right way. It shouldn't grow this far north. Nothing in here should.
+> left: Queue to see it
+  lore +small
+  mood +small
+  health -small
+  say: You queue in the wet heat for three hours, and when you get there it's a single white flower the size of a dinner plate, and it smells like the sea at night. Nobody in the queue speaks for a while after. You come out light-headed and very glad.
+> right: Buy a cutting from the under-gardener
+  gold -small
+  alchemy +small
+  alignment -tiny
+  say: Behind a palm the under-gardener sells you a cutting wrapped in wet moss, and tells you how to keep it, and how to brew from it if it doesn't take. It doesn't take. You brew it, and the brew is extraordinary, and slightly illegal.
+
+@event gardens_thornwick_dare
+title: The Bronze King's Horse
+pool: capital_gardens_life
+tone: light
+art: duel
+scene: A formal garden with a great bronze statue of a king on a rearing horse, a group of smirking students in Thornwick colours pointing at it and at a student in Lumenhold colours.
+text: Under the bronze statue of the old king on his rearing horse, a knot of students in Thornwick colours spot your Lumenhold scarf. "Lumenhold," says their leader. "We've heard you can animate things. Make the horse walk. One lap of the fountain. Or we tell everyone at Thornwick you couldn't."
+> left: Make the horse walk
+  challenge spell adept-:
+    win:
+      renown +small
+      alignment -tiny
+      say: The bronze horse shakes its mane, steps down off its plinth with the king still aboard and walks one stately lap of the fountain while uptown screams. It climbs back up and rears again, exactly as before. The Thornwick students say nothing at all, and buy you an ice.
+    lose:
+      gold -small
+      mood -small
+      say: The horse lifts one hoof, thinks better of it and puts it down on a flowerbed. The Thornwick students cheer. A gardener presents you with the bill for the tulips.
+> right: Refuse, and make them laugh instead
+  charm +small
+  renown -tiny
+  say: You tell them the horse is on strike for better oats, and do the horse's voice, and the king's, and by the end they're laughing too hard to remember the dare. They'll still tell Thornwick you wouldn't. They'll also tell them you were funny.
+
+# ---------------- The Lamplighters' Bridges ----------------
+
+@pool capital_bridges_life
+place: capital_bridges
+class: routine
+weight: 10
+tags: social money
+
+@event bridges_lamplighters
+title: The Lamplighters' Guild
+pool: capital_bridges_life
+repeat: 2
+slot: evening
+tone: warm
+art: lantern
+scene: Three old stone bridges over a river at dusk, lamplighters in guild coats at work along the parapets, a guild-master in a cocked hat calling to a student for help.
+text: {&At dusk the lamplighters' guild comes out on the bridges. Tonight the oldest lamp on the middle bridge, the one they say the guild's founder lit, keeps going out the moment it's lit, and the guild-master is offering a coin to anyone who can make it stay.|Fog off the sea tonight, and the lamplighters' guild has to light the bridges early and fast or the barges will hit the piers. The guild-master is short-handed and shouting for anyone with two arms.|The lamplighters' guild has a boat, it turns out, for the lamps under the arches that can only be reached from the water. Tonight its oarsman is sick, and the guild-master is looking hopefully at the crowd on the bank.}
+> left: Lend the guild a hand
+  gold +small
+  health -tiny
+  say: {&You stand by the old lamp all evening, relighting it and shielding it, and learn at last that a gull has been nesting in the cowl and fanning it out. You move the gull. The lamp stays lit. The guild-master pays you, and the gull bites you.|You run the length of all three bridges in the fog with a pole and a lantern, and the lamps go on just ahead of the barges. The guild-master pays you and gives you a guild armband to keep. Your lungs burn.|You row the guild's boat from arch to arch while a lamplighter stands in the bow and lights the lamps under the bridges, one by one, upside down in the water too. Your hands blister. The pay is honest.}
+> right: Buy chestnuts and watch
+  gold -tiny
+  mood +small
+  say: {&You lean on the parapet with a paper of hot chestnuts and watch the lamps go on one by one along all three bridges until the river is full of their reflections. The old lamp goes out twice, and comes back twice, and the crowd cheers it.|You watch from the bank as the lamps come on in the fog, a string of soft gold, and eat your chestnuts slowly, to make them last.|You watch the guild's boat go from arch to arch, lighting the river from underneath. It's the most beautiful thing in the capital, and it's free, except for the chestnuts.}
+
+@event bridges_busking
+title: An Empty Hat on the Span
+pool: capital_bridges_life
+repeat: 2
+tone: light
+time: afternoon evening
+art: music
+scene: A crowded old stone bridge, buskers and hawkers along the parapets, a student with an upturned hat performing street magic for a gathering crowd.
+text: {&The bridges are the capital's stage: a fire-eater, a fiddler, a man with a dog that counts. There's a free stretch of parapet between a juggler and a woman selling ribbons. You have a wand, an empty hat and a bridge full of people.|The bridges are thick with people, a ship's in and its crew are spending. The only free stretch of parapet is beside the ribbon-seller, who looks at your wand with suspicion.|The juggler on the middle bridge is packing up, and offers you his pitch, the best on the river, for the rest of the light.}
+> left: Put on a show
+  challenge perform journeyman:
+    win:
+      gold +small
+      renown +tiny
+      say: {&You make birds out of lamp-smoke and send them round the crowd's heads, and the hat fills with coins and one button. The juggler shakes your hand. The bridges have a new act.|You make a smoke dragon that chases the man with the counting dog round the parapet. The dog counts it: one. The sailors roar, and the hat fills.|On the juggler's pitch the crowd is three deep, and somebody's grandmother asks for a dragon. You make her one. The hat's too heavy to lift with one hand.}
+    lose:
+      mood -small
+      say: {&Your smoke birds come out as smoke. The crowd drifts to the fiddler. The juggler gives you one of his coins, out of pity, which is worse than nothing.|The dragon comes out the size of a sparrow and flies into the river. A child laughs. Nobody else does.|The wind takes your smoke the wrong way, all of it, into the ribbon-seller's face. She moves her whole stall away from you, very pointedly.}
+> right: Watch the professionals
+  guile +tiny
+  mood -tiny
+  say: {&You watch the juggler work the crowd for an hour: where he looks, when he drops a ball on purpose, how the hat goes round. It's better than a lecture, and less fun than doing it.|You watch the man with the counting dog. The dog, you're fairly sure, is counting him.|You stand at the back and study the fire-eater's patter, line by line. You'll use it one day. Tonight you just get cold.}
+
+@event bridges_span_duel
+title: The Middle of the Middle Bridge
+pool: capital_bridges_life
+slot: night
+tone: tense
+art: wand
+scene: The middle of an old stone bridge at night, lamps lit along both parapets, a young duellist in a sailor's coat with a raised wand of light facing a student, a small crowd gathering.
+text: There's an old custom on the middle bridge: at night, a wand drawn on the very middle span is a challenge, and the duel is a duel of lights, first to put out the other's. A young duellist in a sailor's coat, off a ship in the harbour, is standing there with a wand alight, waiting for anyone. The crowd has noticed your scarf. "Academy," someone says. Everybody steps back.
+> left: Draw your wand on the span
+  challenge spell adept-:
+    win:
+      renown +small
+      arcana +tiny
+      say: Your light and theirs, a long white minute over the dark river, and then theirs gutters and goes out. The sailor bows, lights their wand from yours, which is the custom, and walks off without a word. The crowd talks about it for the rest of the break.
+    lose:
+      renown -tiny
+      mood -small
+      say: Theirs is brighter, and steadier, and yours goes out with a little sound like a sigh. They bow and offer you their light, which is the custom. The crowd is kind about it. The sailors on the quay won't be.
+> right: Walk round by the old bridge
+  mood -tiny
+  renown -tiny
+  say: You walk round by the old bridge, the long way, as somebody in the crowd mutters "academy" in a disappointed voice. Behind you, the sailor's wand stays lit on the middle span till midnight, waiting for anyone.
+
+@event bridges_mudlark
+title: The Mudlark's Find
+pool: capital_bridges_life
+tone: warm
+time: afternoon
+art: bottle
+scene: A river at low tide under an old stone bridge, an old mudlark woman with a sack holding up a muddy sealed bottle and a ring to a student on the river stairs.
+text: At low tide the mudlarks come out under the middle bridge with sacks and sieves, and an old mudlark calls you down the river stairs to show you today's best: a sealed green bottle with a letter inside, and a ring with a name and a street engraved in it. "The bottle's for sale," she says. "The ring wants taking home, and my knees won't do the hill."
+> left: Buy the bottle
+  gold -tiny
+  lore +small
+  say: You break the seal on the bridge. The letter is a hundred years old, from a lighthouse keeper's wife to a sailor who never came back, and it's so plainly in love that you have to stop reading twice. You keep it. You'll never find out how it ended.
+> right: Take the ring home for her
+  alignment +small
+  health -tiny
+  say: The street is at the top of the steepest hill in uptown. The old woman who opens the door turns the ring over and sits down on her own step. It was her mother's, lost off the bridge sixty years ago. She gives you tea. Your legs ache all the way back down.

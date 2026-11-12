@@ -149,6 +149,15 @@ text: {Astromancy II needs exact positions, and that means a night on the great 
   lore +small
   mood -small
   say: {You leave the telescope to its moods and work the positions out by candlelight from the old tables. It takes until dawn.|Pages of sums by candle. The telescope watches over your shoulder, pointedly.|You use the tables and let the telescope drift where it likes. Your positions are good, and you're in bed by midnight.}
+> up[item:pocket_orrery]: Set the orrery by the eyepiece
+  challenge research standard likely:
+    win:
+      lore +small
+      say: You wind the pocket orrery and set it on the eyepiece shelf, and swing the great telescope to where the little brass planet says your star is. It settles there with a creak, as if embarrassed. You're in bed before midnight.
+    lose:
+      mood -small
+      health -tiny
+      say: The orrery says your star is there; the telescope says it would rather look at the lake. You spend half the night between the two of them, cold, and write down a position you don't trust.
 
 @event astro_long_watch
 title: Keeping the Light

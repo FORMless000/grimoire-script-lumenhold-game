@@ -214,6 +214,20 @@ text: {seen(tw2_exam_cupboard) > 1: {flag(heist_papers_taken): The examiner's cu
       else:
         queue heist_caught now
       say: {~The lock gives, and so does the cupboard, slowly, forward, onto the floor.|The pick snaps, and the cupboard door swings out and bangs like a shot.}
+> up[item:lockpick_roll]: Open it properly, with the roll
+  challenge feat using guile journeyman likely:
+    win:
+      heist_loot += 2
+      heist_depth += 1
+      say: You unroll the bazaar picks and the old lock gives without a sound, as a lock should for a proper tool. You take the two bundles with the best seals and close the doors behind you.
+      flag heist_papers_taken
+      next
+    lose:
+      if heist_cover > 0:
+        queue heist_slip now
+      else:
+        queue heist_caught now
+      say: The proper picks are quiet, but the cupboard isn't: its doors swing out on their own and bang like a shot.
 
 @event tw2_telling_floor
 title: The Telling Floor
