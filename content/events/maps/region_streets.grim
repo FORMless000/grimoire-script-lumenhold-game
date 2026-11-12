@@ -1,0 +1,453 @@
+# Region cards for the away maps (maps round 2, T1; docs/maps-plan.md): the capital's streets and the countryside's
+# lanes. They have no place: on a break away, the social and world slots draw them alongside the plan's own cards, in
+# place of campus life (grimoire-script §6c, "Away is away"): a visit falls back on them once a place's own cards are
+# spent. Once each. The lodging nights are the travel plans' morning cards, by where you slept (`lodged_rough`, the
+# decent rooms, `lodged_fine`).
+
+# ---------------- The capital's streets ----------------
+
+@pool capital_streets
+region: capital
+class: routine
+weight: 8
+tags: social
+
+@event streets_sea_fog
+title: The Sea Fog
+pool: capital_streets
+tone: eerie
+time: morning noon afternoon
+when: slot != "night"
+art: lantern
+scene: A city street swallowed by thick white sea fog, lamps lit, figures looming out of the mist, a student guiding an old blind man by the arm.
+text: A sea fog rolls up the river and swallows the capital whole. The lamplighters come out hours early; carriages crawl with men walking at the horses' heads; the bells sound like they're ringing underwater. At a corner an old man with a white stick is standing quite still. "I know these streets blind," he says. "But not like this. Nobody does."
+> left: Walk him home through the fog
+  alignment +small
+  health -tiny
+  say: He knows the way by the sound of things: the bakery's oven door, the drip of a certain gutter, a parrot in a window. You're his eyes for traffic and he's yours for everything else. It takes two hours. At his door he gives you a toffee, and you walk back through the fog chilled to the bone.
+> right: Wait it out in a coffee house
+  mood +small
+  gold -tiny
+  say: You duck into a coffee house where half the street has had the same idea, and spend the fog, and a few coppers, in a fug of coffee and strangers' stories. When it lifts the city looks washed, and nobody wants to leave.
+
+@event streets_balloon
+title: The Ascent
+pool: capital_streets
+tone: light
+time: noon afternoon
+when: slot != "night"
+art: sparkle
+scene: A great striped hot-air balloon tethered in a city square, a crowd watching, an aeronaut in goggles selling places in the basket, a student at the rope barrier.
+text: An aeronaut in goggles has a great striped balloon tethered in a square in midtown, swelling over the crowd, and he's selling places in the basket for one ascent on a rope, as high as the cathedral's spire and back down. "Only the brave," he shouts. "Or the rich. Ideally both."
+> left: Buy a place in the basket
+  gold -small
+  mood +medium
+  say: The ground lets go of you all at once. Up and up, past the chimneys, past the bells, until the whole capital lies under you like a map, the river a silver thread to the sea. The basket creaks. Nobody speaks. You'll remember it all your life.
+> right: Hold a guy-rope for the aeronaut
+  vigor +small
+  health -tiny
+  say: He's short a rope-hand, and you spend the ascent leaning back on a guy-rope with three porters while the balloon tugs at you like a kite the size of a church. Your hands are rope-burned. The aeronaut lets you keep his spare goggles.
+
+@event streets_ballad_seller
+title: A Song About the Academy
+pool: capital_streets
+tone: light
+art: music
+scene: A busy city corner, a ballad-seller in a battered hat singing from a sheet with more sheets pegged on a string behind him, a crowd laughing, a student listening with folded arms.
+text: On a street corner a ballad-seller is singing the latest broadside, a penny a sheet, to a laughing crowd. It's about your academy: a hundred verses of wizards in towers, a lake with a monster in it, and a headmistress who eats students who are late. The crowd wants to know if it's true. Several of them are looking at your scarf.
+> left: Buy a sheet and sing the chorus
+  gold -tiny
+  renown +tiny
+  say: You buy a sheet, learn the chorus and sing it back at him louder. The crowd roars. By evening the ballad has a new verse, about a student with a scarf who sings out of tune, and it sells better than ever.
+> right: Ask him where he got it
+  lore +tiny
+  mood -tiny
+  say: Between songs he tells you: from a printer's devil, who had it from a sailor, whose cousin was at the academy for one term and left in a hurry. "Every verse is true somewhere," he says. You walk on wondering which verse the cousin ran from, and can't shake it all day.
+
+@event streets_chimney_fire
+title: Fire in the Chimney
+pool: capital_streets
+tone: tense
+art: flame
+scene: A narrow city street with smoke and flame pouring from a chimney stack, neighbours forming a bucket chain from a pump, a student running towards it.
+text: Smoke and then flame come out of a chimney in a crowded street, and in a moment the whole street is out with buckets. The pump's at the far end; the chain is too short; sparks are falling on the next roof. Somebody spots your academy scarf and shouts, "Wizard!" as if it were an instruction.
+> left: Join the bucket chain
+  mood +small
+  health -tiny
+  say: You take your place in the chain and pass buckets till your arms shake and your sleeves are soaked. The fire goes out in the chimney before it gets to the roof. A woman with a soot-blackened face brings everybody tea. Your hands are blistered from the handles.
+> right: Smother it with a spell
+  challenge spell journeyman:
+    win:
+      renown +small
+      arcana +tiny
+      say: You stand in the street and close your hand, and the fire in the chimney goes out like a snuffed candle. The street cheers. The sweep, arriving late, is furious, and the householder kisses you on both cheeks.
+    lose:
+      health -small
+      say: Your spell meets the fire and makes it angrier, and a gout of soot comes down the street like a black wave. The bucket chain puts it out. You're black from head to foot and coughing, and nobody's quite sure whose side you were on.
+
+@event streets_omnibus
+title: On Top of the Omnibus
+pool: capital_streets
+tone: warm
+time: morning noon afternoon evening
+art: house
+scene: The open top deck of a horse-drawn omnibus crossing a city, passengers on benches, a student squeezed between a clerk and a woman with a basket of eggs, rooftops passing.
+text: The horse omnibus crosses the whole capital for a penny, uptown to Port Calder, and the best seats are on the open roof, where the wind is and the gossip is. Today the roof is full: clerks, a fishwife, a curate, a woman with a basket of eggs, and one seat left between two people already arguing about the price of coal.
+> left: Take the last seat and listen
+  lore +small
+  mood -tiny
+  say: You ride the whole route with your elbows in, while the city goes past and the roof argues about coal, the war, a duke's divorce and whether wizards should pay tax. You learn the capital from top to bottom, and you're very, very squashed.
+> right: Give up your seat
+  alignment +tiny
+  health -tiny
+  say: You give up the seat and stand at the back rail, holding on through every corner. The woman with the eggs tells everybody you're a credit to your mother. You arrive in Port Calder windblown and with an aching grip.
+
+@event streets_preacher
+title: The Preacher Against Wizards
+pool: capital_streets
+tone: tense
+art: candle
+scene: A city square, a fervent street preacher on a box with a lantern, a small crowd listening, a student in an academy scarf at the edge of the crowd being pointed at.
+text: In a square a street preacher on a box is warning the crowd against wizards: they bend the world out of true, he says, they answer to nobody, they take the light of the Lamp and use it for their own ends. Then he sees your scarf, and points. "Ask that one," he says. "Ask what they're learning up there in their castle."
+> left: Answer him in front of the crowd
+  challenge appeal journeyman:
+    win:
+      renown +tiny
+      say: You step up and answer him honestly: you're learning to mend, to ward, to keep a fever down. Some of what he fears is real. Most of it is lessons. The crowd listens, and when you finish the preacher, to everyone's surprise, shakes your hand.
+    lose:
+      mood -small
+      say: You answer him, and he has a reply for every word, and the crowd likes his better. You walk away with your scarf feeling very bright and the square's eyes on your back.
+> right: Walk on
+  mood -tiny
+  say: You walk on with your face hot. Behind you the preacher tells the crowd that's how they always are, and some of them agree, and you think about it the rest of the day.
+
+@event streets_flower_seller
+title: Hothouse Violets
+pool: capital_streets
+tone: warm
+time: noon
+when: slot == "noon" or slot == "afternoon"
+art: flower
+scene: A city street corner at midday, an old flower seller in a shawl with baskets of violets, a heavy flower cart half-unloaded, a student stopping.
+text: On a street corner an old flower seller is unloading baskets of hothouse violets from the last market cart of the morning, too slowly, and the carter is shouting that he has six more streets to do. The violets smell of spring, whatever the month. She looks up at you, and then at the baskets, and doesn't ask.
+> left: Unload the cart for her
+  alignment +tiny
+  health -tiny
+  say: You carry her baskets down from the cart, eight of them, wet and heavy, while the carter drums his fingers. She gives you a bunch of violets for your trouble and a blessing in a language you don't know. Your back aches and your coat smells of violets all day.
+> right: Buy a bunch of violets
+  gold -tiny
+  mood +small
+  say: You buy a bunch for a penny, and she wraps them in a twist of newspaper. You carry them about all day and they make every room you walk into smell like spring.
+
+@event streets_downpour
+title: Under the Same Awning
+pool: capital_streets
+tone: warm
+time: afternoon evening
+art: rain
+scene: A sudden city downpour, rain bouncing off the cobbles, a crowd of strangers sheltering under a shop awning, a student among them.
+text: The heavens open over midtown, and a dozen strangers run for the same shop awning: a soldier, two seamstresses, a man with a cello case, a very wet dog. The rain shows no sign of stopping. The man with the cello case looks at the others, and at his case, and at you, and says, "Well. We might as well."
+> left: Stay and listen
+  mood +medium
+  gold -tiny
+  say: He takes out the cello and plays under the awning while the rain comes down, and the seamstresses sing, and the soldier knows the words. The dog howls along on the high notes. Everyone drops a coin in his open case, and so do you. It's still raining an hour later, and nobody wants it to stop.
+> right: Run for it through the rain
+  vigor +tiny
+  health -tiny
+  say: You run for it, through rivers in the gutters and rain like thrown gravel, and arrive at your door soaked to the skin and laughing. Behind you, faintly, a cello starts to play.
+
+@event streets_automaton
+title: The Writing Automaton
+pool: capital_streets
+tone: eerie
+art: gear
+scene: A clockmaker's shop window with a crowd outside, a brass automaton boy at a tiny desk writing with a quill, a student pressed close to the glass.
+text: A crowd has gathered at a clockmaker's window, where a brass automaton in a velvet coat sits at a little desk and writes with a real quill, a new line every hour. People wait all day to see what it writes. As you press closer the brass head turns, slowly, towards the glass, and the quill begins to move.
+> left: Wait to read what it writes
+  lore +small
+  mood -small
+  say: It writes, in a beautiful copperplate hand, "Good afternoon," and then a word you don't know, and then, quite clearly, your initials. The crowd turns to look at you. The clockmaker insists it writes random letters. You don't sleep well.
+> right: Ask the clockmaker how it works
+  arcana +small
+  gold -tiny
+  say: The clockmaker shows you the back of it for a penny: four hundred cams, a drum of brass pegs, and no magic whatsoever, he swears. You spot one cam that isn't brass. He sees you see it, and closes the case, and offers you a peppermint.
+
+@event streets_procession
+title: The Royal Coach
+pool: capital_streets
+tone: light
+time: noon afternoon
+when: slot != "night"
+art: crown
+scene: A broad city avenue lined with cheering crowds and flags, a gilded royal coach with outriders passing, a student up on a lamp-post above the crowd.
+text: The avenue is packed for the royal coach, which goes from the palace to the cathedral twice a year for no reason anybody can remember, with outriders, trumpets and a great deal of gilt. Children are on shoulders, old men on boxes, and the only free view is from the top of a lamp-post.
+> left: Climb the lamp-post
+  challenge feat apprentice:
+    win:
+      mood +small
+      renown +tiny
+      say: You shin up the lamp-post as the trumpets sound and see the whole procession go by beneath you, plumes and gilt and a pale royal hand at the coach window that, you'd swear, waves at you. The crowd below cheers you down.
+    lose:
+      health -small
+      say: You get halfway up the lamp-post and slide down it with your arms round it, burning your palms, just as the coach goes past. You see a wheel. It's a very fine wheel.
+> right: Watch the crowd for pickpockets
+  guile +small
+  alignment +tiny
+  mood -tiny
+  say: You don't watch the coach. You watch the crowd, and spot three pickpockets working the edge, and stand very obviously beside each of their marks until they give up. You miss the whole procession, and feel quietly useful.
+
+# ---------------- The countryside's lanes ----------------
+
+@pool country_lanes
+region: countryside
+class: routine
+weight: 8
+tags: social nature
+
+@event lanes_carrier
+title: The Carrier's Cart
+pool: country_lanes
+tone: light
+when: slot != "night"
+art: house
+scene: A slow carrier's cart on a country lane piled with hampers, parcels and a crate of indignant geese, a stout carrier on the box offering a student a lift.
+text: The valley carrier comes up behind you on the lane, his cart piled with hampers, a coffin-shaped parcel and a crate of very indignant geese. "Going my way?" he says. "Everybody is, there's only the one road. Hop on the tail. Mind the geese. Or, if you're walking anyhow, there's a parcel for the farm at the top that's a day late."
+> left: Ride on the tail, minding the geese
+  mood +small
+  health -tiny
+  say: You ride the tailboard with your feet dangling and the geese hissing at your back, the whole valley going past at a walking pace. Somewhere past the mill the biggest goose gets your ear through the slats. The carrier says it's a sign she likes you.
+> right: Carry the late parcel up
+  gold +tiny
+  health -tiny
+  say: You carry the parcel up the long hill to the top farm, where the farmer's wife opens it on the step: a new teapot, in one piece. She gives you a coin and a slice of seed cake, and makes you drink the first cup out of it, sitting on the step with a stitch in your side.
+
+@event lanes_flock
+title: The Flock in the Lane
+pool: country_lanes
+tone: light
+time: morning noon afternoon
+when: slot != "night"
+art: paw
+scene: A narrow country lane completely filled with a flock of sheep, a young shepherd and a black-and-white dog working them, a student stuck in the middle.
+text: The lane is suddenly full of sheep, three hundred of them, wall to wall, being moved down from the upland by a young shepherd and a black-and-white dog who are both doing all the work. You're in the middle of the flock. The shepherd waves his crook at you, either hello or get out of the way.
+> left: Help turn them at the gate
+  vigor +small
+  mood -tiny
+  say: The dog does the clever part and you do the running about with your arms out, which the sheep ignore until, suddenly, they don't. They pour through the gate like water. The shepherd laughs at you, kindly, and the dog doesn't look at you at all.
+> right: Stand still and let them flow past
+  mood +small
+  say: You stand very still and the flock parts round you like a river round a stone, three hundred woolly backs and the smell of lanolin, for ten whole minutes. By the end you've forgotten what you were walking somewhere to do.
+
+@event lanes_wedding
+title: A Wedding on the Road
+pool: country_lanes
+tone: warm
+time: noon afternoon
+when: season == "summer"
+art: flower
+scene: A country wedding procession on a lane, a bride and groom with flower crowns, a fiddler, villagers dancing, one of them pulling a student into the dance.
+text: A wedding party is coming down the lane from the chapel, bride and groom in flower crowns, a fiddler in front, half the village dancing behind. You stand aside to let them pass. You're not allowed to. The bride's grandmother takes you by both hands. {at_home(): "Home for a wedding and standing in a hedge?" she says. "Dance."|"A stranger at a wedding is good luck," she says. "Dance."}
+> left: Dance with the wedding
+  mood +small
+  health -tiny
+  say: You dance the length of the lane and three times round the green, and are fed cake and cider and kissed by a great many aunts. Your feet are wrecked. Somebody tucks a flower from the bride's crown into your buttonhole for luck.
+> right: Give the couple a gift and go
+  gold -tiny
+  mood +tiny
+  say: You press a coin into the groom's hand for luck, as the custom is, and the bride laughs and gives you a flower in exchange. The fiddler plays you a few bars down the lane as you go, and you hear it a long way.
+
+@event lanes_thunderstorm
+title: Storm Over the Valley
+pool: country_lanes
+tone: eerie
+time: afternoon evening
+when: season == "summer" and slot != "night"
+art: bolt
+scene: A wide valley under a towering thunderstorm, lightning striking the ridge's standing stones, a student sheltering in the doorway of a stone barn with cows inside.
+text: A summer thunderstorm comes over the valley, black as a bruise, and the lightning goes straight for the ridge. You run for the nearest barn. Inside there are cows, warm and unbothered. Outside, the lightning keeps striking the standing stones up on the ridge, one after another, as if it were counting them.
+> left: Watch the stones from the doorway
+  lore +small
+  mood -small
+  say: You count the strikes. The lightning hits every stone on the ridge, once each, in order. When it's done, the storm goes over as if it had finished a job. You walk home past the ridge in the clean air and don't look up at it. You're on edge all evening.
+> right: Sit with the cows until it passes
+  mood +small
+  health -tiny
+  say: You sit in the straw with the cows, who are entirely unbothered, and eat the apples you were saving, and listen to the rain on the slates. When it's over you're damp and smell of cow, and quite peaceful.
+
+@event lanes_milestone
+title: To the Hill, Seven
+pool: country_lanes
+tone: eerie
+art: rune
+scene: An old mossy milestone at a fork in a country lane, carved with worn directions, a student crouching to read it, the lane forking away into mist.
+text: At a fork in the lane there's an old milestone, mossy and leaning, carved with distances. One arm says the market village, two. The other says the mill, three. And a third face, half under the moss, says only TO THE HILL, VII, and points at a field with no gate, towards the moors.
+> left: Walk a little way that way
+  lore +small
+  mood -small
+  say: You climb the stile into the field and walk towards nothing in particular. Seven fields on there's a hedge too thick to pass, and over it the hill on the moors, much nearer than it has any right to be. You go back to the road, and it's back where it belongs. Your skin prickles all the way back.
+> right: Clear the moss and copy it down
+  lore +tiny
+  health -tiny
+  say: You scrape the moss off with your thumbnail and copy the old letters into your notebook. Under TO THE HILL someone has scratched a later line, very small: NOT THIS YEAR. Your thumbnail is torn.
+
+@event lanes_well_dressing
+title: Dressing the Well
+pool: country_lanes
+tone: warm
+time: morning noon afternoon
+when: season == "summer" and not at_home()
+art: flower
+scene: A village well decorated with a huge picture made of pressed flower petals in clay, villagers adding petals, an old woman handing a student a basket of petals.
+text: The mill village is dressing its well: a great picture in wet clay on a board, filled in petal by petal, every colour from the hedgerows. This year it's the harvest, sheaves and a sun, with a figure at the edge that nobody seems to want to name. An old woman hands you a basket of buttercups. "Every visitor puts in a petal," she says.
+> left: Put in your petals
+  charm +small
+  health -tiny
+  say: You press buttercups into the clay for an hour beside the villagers, who tell you where to put each one and correct you when you get it wrong. When it's done the picture glows. Your knees are stiff. The figure at the edge is the only part nobody let you touch.
+> right: Ask who the figure is
+  lore +tiny
+  mood -small
+  say: The old woman looks at the figure, and then at you, and smiles very warmly. "Oh, just somebody," she says, and goes back to her petals. Then she gives you a buttercup to put in its hand. You do. You can't say why your skin crawls.
+
+@event lanes_barn_owl
+title: The White Owl
+pool: country_lanes
+tone: eerie
+time: evening
+art: owl
+scene: A country lane at nightfall, a pale barn owl gliding low over the hedgerow, a ruined stone barn in a field beyond, a student watching.
+text: A barn owl comes along the lane, low over the hedge, pale as paper and quite silent, and turns its white face to look at you as it passes. It lands on the gable of a ruined barn in the next field and waits there, as if it expected you to follow.
+> left: Follow it to the barn
+  arcana +small
+  health -tiny
+  say: You cross the field in the half-dark and turn your ankle in a rabbit hole on the way. In the barn there are nests in every rafter, all empty, and the owl, watching you from the highest beam. You stand there under it a long while, and the air feels charged, like before a spell.
+> right: Stand still and watch it hunt
+  mood +small
+  say: You stand very still in the lane while it quarters the field in what light there is, once, twice, and drops into the grass like a falling sheet, and rises with something. It's the most beautiful thing you've seen all week.
+
+# ---------------- Lodging nights ----------------
+
+@pool lodging_nights_city
+plan: travel_city
+class: routine
+weight: 6
+tags: home
+
+@event lodging_doss_house_night
+title: A Night at the Doss-House
+pool: lodging_nights_city
+tone: tense
+when: lodged_rough()
+art: bed
+scene: A crowded doss-house dormitory at night, rows of slung hammocks, sleepers in their clothes, a thin figure creeping between the beds towards a student's boots.
+text: The doss-house is a long room of hammocks slung in rows, free to anyone, sleepers in their clothes, a smell of wet wool and a man by the door who snores like a saw. In the small hours you wake to a soft sound and see a thin shape creeping along the row, hand out, towards the boots under your hammock, where your purse is.
+> left: Catch his wrist
+  challenge feat apprentice:
+    win:
+      alignment +tiny
+      health -tiny
+      say: You catch the wrist in the dark and hold on. It's a boy of eighteen or so, all bones, who stops struggling the moment he sees your face. You let him go, purse untouched, with a look he won't forget. He disappears. You lie awake, stiff and cold, till morning.
+    lose:
+      gold -small
+      health -tiny
+      say: You grab for the wrist and get a sleeve, and he twists out of it like an eel, purse and all, and is gone down the row. You bark your shin on the hammock-post going after him. Nobody in the room wakes up, or admits to it.
+> right: Roll over loudly
+  mood -small
+  alignment -tiny
+  say: You roll over with a great snore and a kick, and the shape melts away down the row, to someone else's boots. In the morning a carter by the door is shouting about his purse. You don't look at him, and it sits on you all day.
+
+@event lodging_sailors_inn_night
+title: Songs at the Sailors' Inn
+pool: lodging_nights_city
+tone: warm
+when: lodged_decent()
+art: music
+scene: A low-beamed harbour inn at night, sailors singing around a table with tankards raised, a student in the doorway in a nightshirt.
+text: Your room at the sailors' inn is over the taproom, and the taproom is singing. It's a ship's crew paid off today, and they're singing every song they know, and they know a great many, and they're getting to the ones about mermaids. The floor shakes with it. Sleep is not going to happen.
+> left: Go down and join them
+  mood +small
+  health -tiny
+  say: You go down in your coat and they make room on the bench and teach you the chorus about the mermaid and the bosun, which has seventeen verses. You go to bed at dawn, hoarse and happy, and sleep through breakfast.
+> right: Bet them they can't sing quietly
+  challenge appeal apprentice:
+    win:
+      charm +small
+      gold +tiny
+      say: You go down and bet the bosun a coin his crew can't sing the next one in a whisper. They can't, but they try, all of them, at the tops of their whispers, and it's so funny they give up singing altogether and pay up. You sleep.
+    lose:
+      gold -tiny
+      health -tiny
+      say: You bet the bosun a coin they can't sing in a whisper. They can, it turns out, beautifully, and then go straight back to roaring. You pay up, and lie awake till dawn with the floor shaking.
+
+@event lodging_fine_room_night
+title: The Best Room in the House
+pool: lodging_nights_city
+tone: warm
+when: lodged_fine()
+art: bed
+scene: A grand hotel bedroom at night, a canopied bed, a fire burning, a bell-pull by the bed, a porter at the door with a silver tray, a student in a dressing gown.
+text: The best room in the house has a bed with a canopy, a fire somebody else lit and a bell-pull by the pillow with a little brass card: RING FOR ANYTHING. It is very late. You look at the bell-pull. You have never in your life been allowed to ring for anything.
+> left: Ring for supper
+  gold -small
+  mood +medium
+  say: You ring. Ten minutes later a porter arrives with a silver tray: soup, a cold chicken, a slice of cake the size of a book and hot chocolate, all for the price of a week's bread. You eat it in bed in front of the fire, and feel, for one night, like a duke.
+> right: Sleep in the great bed
+  health +small
+  say: You sleep in the great canopied bed like a stone dropped in a well, and wake at noon to the fire relaid and a can of hot water steaming by the basin.
+
+@pool lodging_nights_country
+plan: travel_country
+class: routine
+weight: 6
+tags: home
+
+@event lodging_hayloft_night
+title: A Night in the Hayloft
+pool: lodging_nights_country
+tone: eerie
+when: lodged_rough()
+art: bed
+scene: A hayloft at night under a farm barn roof, moonlight through the slats, a student burrowed in the hay, a barn cat and an owl on a beam watching.
+text: The hayloft costs nothing but a word with the farmer: warm hay, a slatted roof with moonlight coming through, a barn cat who considers you part of the arrangement. Towards midnight you wake to the cat sitting bolt upright, staring at the ladder. Something is coming up it, slowly, a rung at a time.
+> left: Look over the edge
+  mood +tiny
+  health -tiny
+  say: You look. It's the farmer's old dog, who has climbed the ladder to sleep beside the stranger because that's what she does. She lies down against your back with a groan. You don't get back to sleep, but you're warmer, and you scratched your arm on a nail looking.
+> right: Pull the hay over your head
+  lore +tiny
+  mood -small
+  health -tiny
+  say: You pull the hay over your head and wait. Whatever it is reaches the top of the ladder and stops there all night, breathing. In the morning there's nothing on the ladder but straw. You've lost the whole night's sleep, you ache from lying rigid, and you know now that a hayloft is never quite empty.
+
+@event lodging_inn_common_night
+title: The Inn's Common Room
+pool: lodging_nights_country
+tone: warm
+when: lodged_decent()
+art: cup
+scene: A coaching inn's common room late at night, a dying fire, an old drover telling a story to a few guests, a student in a chair with a mug.
+text: Late in the coaching inn's common room the fire's burning down and an old drover is telling stories to whoever is still up: the high road in the old days, a highwayman who robbed only in rhyme, a winter when the river froze so hard they drove cattle over it. He looks over at you. "Do they tell stories at your castle?" he asks.
+> left: Trade him a story
+  charm +small
+  health -tiny
+  say: You tell him about a moving staircase and a cat who files the library, and he tells you about the highwayman in rhyme, and neither of you believes the other, and it's two in the morning before either of you notices. You're tired all the next day.
+> right: Go up early and sleep
+  health +small
+  mood -tiny
+  say: You say goodnight and go up while he's still talking. Through the floor you can hear him starting on the winter of the frozen river, and you fall asleep halfway through it, and wonder all the next day how it ended.
+
+@event lodging_best_room_country_night
+title: The Feather Bed
+pool: lodging_nights_country
+tone: eerie
+when: lodged_fine()
+art: bed
+scene: A coaching inn's best bedroom at night, a deep feather bed, a window looking out to a ridge of standing stones under the moon, a student at the window.
+text: The inn's best room has a feather bed so deep you sink to the ears, a jug of fresh milk by the bed and a window that looks out over the whole valley to the ridge, where the standing stones are black against the moon. Somebody has left a sprig of rowan on the pillow. Nobody at the inn knows anything about it.
+> left: Keep the rowan by you
+  health +small
+  mood -tiny
+  say: You put the rowan under your pillow and sleep like the dead. Twice in the night you half wake to a sound at the window, like fingers on the glass. In the morning a wet reed from the marsh lies on the outside sill, two floors up, and the rowan has gone brown. You're uneasy all morning.
+> right: Watch the stones a while
+  lore +small
+  health -tiny
+  say: You sit at the window with the milk and watch the stones on the ridge. Around midnight a light moves between them, slowly, stone to stone, and goes out. You sit up till dawn, waiting for it to come back. It doesn't. You're grey with tiredness all the next day.

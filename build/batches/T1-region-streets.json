@@ -1,0 +1,102 @@
+{
+  "name": "T1-region-streets",
+  "at": 1794488304435,
+  "files": [
+    "content/events/maps/region_streets.grim"
+  ],
+  "events": [
+    "streets_sea_fog",
+    "streets_balloon",
+    "streets_ballad_seller",
+    "streets_chimney_fire",
+    "streets_omnibus",
+    "streets_preacher",
+    "streets_flower_seller",
+    "streets_downpour",
+    "streets_automaton",
+    "streets_procession",
+    "lanes_carrier",
+    "lanes_flock",
+    "lanes_wedding",
+    "lanes_thunderstorm",
+    "lanes_milestone",
+    "lanes_well_dressing",
+    "lanes_barn_owl",
+    "lodging_doss_house_night",
+    "lodging_sailors_inn_night",
+    "lodging_fine_room_night",
+    "lodging_hayloft_night",
+    "lodging_inn_common_night",
+    "lodging_best_room_country_night"
+  ],
+  "contentHash": "f18002",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 166,
+      "total": 166
+    }
+  },
+  "critic": {
+    "batch": "T1-region-streets",
+    "round": 2,
+    "accept": true,
+    "summary": "All 15 round-1 issues are fixed, including the lint-driven changes in the addendum (the doss-house's 'Roll over loudly', the hayloft's lore). The frost is gone, every cost now exists on a break, the pedlar is replaced, season, slot and home gates are in place, and the bets and catches are real checks. Three polish items remain: one say over the 300-character limit, and two small fixes.",
+    "issues": [
+      {
+        "event": "lodging_hayloft_night",
+        "problem": "Polish. The right option's say grew to 331 characters with the added lore line (lint warns at line 416; the limit is 300).",
+        "fix": "Trim it, e.g. drop 'and the cat won't come near you' or shorten the ending to 'You ache from lying rigid, and you know now a hayloft is never quite empty.'"
+      },
+      {
+        "event": "lanes_carrier",
+        "problem": "Polish. 'Carry the late parcel up' (a parcel up the long hill, a coin, 'your legs know about the hill all evening') echoes C3's coaching_yard_arrivals left option ('Carry the parcel across the city': the Crescent at the top of the steepest hill, paid, 'your legs complain all evening'). That card is on the other map and the carrier's premise and punchline (the geese, the teapot) are its own, so this isn't blocking. The card also has no slot gate, but a carrier on his round reads as daytime.",
+        "fix": "Give the right option a different errand, e.g. 'Walk the geese crate down at the ford' or holding the horse's head through the ford while he shifts the load, or at least a different closing line than tired legs. Add `when: slot != \"night\"`."
+      },
+      {
+        "event": "streets_sea_fog, streets_flower_seller",
+        "problem": "Polish. With the hours cut, both cards can still be drawn at a night visit (x0.3), where 'the lamplighters come out hours early' and 'the last market cart of the morning' don't fit.",
+        "fix": "`when: slot != \"night\"` on the sea fog, and `when: slot == \"noon\" or slot == \"afternoon\"` on the flower seller."
+      }
+    ],
+    "checked": [
+      "lodging_best_room_country_night: no frost and no season claim; a marsh reed on the sill is a valley sign that never touches the Hollow Star; both says under 300; the right option costs health -tiny, as its say shows.",
+      "Study costs: none remain in the batch; downpour left gold -tiny (a coin in the cello case); flock, owl and fine room have honest free options.",
+      "lodging_hayloft_night: left mood +tiny/health -tiny against right lore +tiny/mood -small/health -tiny, a real trade.",
+      "lodging_doss_house_night (addendum): hammocks match the state; the catch is a feat check (win: alignment +tiny for letting him go, health -tiny for the cold sleepless night; lose: purse gone, a barked shin); 'Roll over loudly' sends the thief on to someone else's purse, so alignment -tiny is a real moral cost and the say shows it.",
+      "lodging_sailors_inn_night: the bet is a check with a shown loss; lodged_decent() is used on both decent cards.",
+      "lanes_carrier: retrieve related's top hits (mill_miller_sacks, porters' crates, post-gig parcels) differ in premise; no other carrier card exists.",
+      "lanes_well_dressing: summer and not at_home(); 'for an hour'; the answer is an evasion, no longer spelling out the custom; knees show health.",
+      "lanes_wedding: summer; the at_home() line is right for natives; the gift is mood, not alignment.",
+      "lanes_thunderstorm (summer, not night), balloon, procession and flock (not night), owl (no dusk hour, no nest count), milestone (TO THE HILL, towards the moors, no surf; it hints without explaining).",
+      "streets_chimney_fire and streets_preacher: alignment removed; the labels are all under 36.",
+      "lint: 0 errors, one length warning (above); zh-CN region_streets.lang 166/166, 0 stale."
+    ]
+  },
+  "spotCheck": [
+    "streets_ballad_seller",
+    "streets_downpour",
+    "lanes_carrier"
+  ],
+  "accepted": true
+}
