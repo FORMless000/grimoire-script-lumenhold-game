@@ -1,0 +1,106 @@
+{
+  "name": "T2-region-streets",
+  "at": 1794550534721,
+  "files": [
+    "content/events/maps/region_streets_2.grim"
+  ],
+  "events": [
+    "streets_chestnuts",
+    "streets_water_cart",
+    "streets_bolting_horse",
+    "streets_pavement_artist",
+    "streets_monkey",
+    "streets_lost_child",
+    "streets_runaway_bride",
+    "streets_pieman",
+    "streets_paint_pot",
+    "streets_fountain",
+    "streets_chess_hustler",
+    "streets_rag_and_bone",
+    "streets_mistaken",
+    "streets_soup_kitchen",
+    "streets_top_hat",
+    "streets_shoeblack",
+    "streets_knife_thrower",
+    "streets_crooked_scales",
+    "streets_sleeping_cabby",
+    "streets_muffin_men",
+    "lanes_strawberries",
+    "lanes_shearing",
+    "lanes_cricket",
+    "lanes_glow_worms",
+    "lanes_thatcher",
+    "lanes_bull",
+    "lanes_new_gate",
+    "lanes_poacher",
+    "lanes_sheepdog_trial",
+    "lanes_hedger",
+    "lanes_wassail",
+    "lanes_mummers",
+    "lanes_signpost",
+    "lanes_rainbow",
+    "lanes_lost_walker",
+    "lanes_hayrick",
+    "lanes_fallen_tree"
+  ],
+  "contentHash": "7831ec",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 273,
+      "total": 273
+    }
+  },
+  "critic": {
+    "batch": "T2-region-streets",
+    "round": 2,
+    "accept": true,
+    "summary": "All round-1 issues are fixed. The rope swing and the farrier are replaced by new premises (the hayrick, the rainbow), the cricket no longer drafts you into the team, and the paint pot and the scales no longer copy other cards. The pieman has a free option, the stand-in device is down to the knife-thrower and the shearers, and every minor item is done (fmt is canonical, lint shows 0 errors, labels are under 36). What remains is polish: the two reworked texts that call you 'the stranger' don't fit a valley-born player, and both now run past 400 characters. The cricket's honest option reads as the better deal.",
+    "issues": [
+      {
+        "event": "lanes_cricket, lanes_sheepdog_trial",
+        "problem": "Polish. Both new premises rest on you being an outsider: 'the one person on the green with no side' and 'picking the one stranger on the wall'. The country pools also serve valley-born players (`at_home()`), for whom one of the two villages is their own. Both texts also grew past the 400-character limit (cricket 411, sheepdog 424; the lint warns only at 480).",
+        "fix": "Add a variant, e.g. cricket: '{at_home(): Both captains turn and look at you: away at the academy so long that neither village counts you any more.|Both captains turn and look at the one person on the green with no side.}', and for the dog trial '{at_home(): \"You,\" says the judge, picking the one on the wall who's been away long enough to count as nobody's.|…}'. Or gate both cards `not at_home()`. Trim a clause from each text, e.g. 'and so out of the question' and 'and the whole valley on the wall watching and arguing'."
+      },
+      {
+        "event": "lanes_cricket",
+        "problem": "Polish. The right option's 'You say, truthfully, you were watching a swallow' makes 'Rule it a catch' read as a ruling on a ball you didn't see, but the left carries no alignment and the scene doesn't say whether you saw it. Its trade is also thin beside the right: renown +tiny for 'Half the green carries you round on its shoulders', against mood -small. The right gives lore +tiny for mood -tiny.",
+        "fix": "Say in the text or the left say that you did see it, more or less ('It looked like a catch to you, mostly'), and drop 'truthfully' from the right. Or make the left renown +small to match being carried round the green."
+      }
+    ],
+    "checked": [
+      "Round-1 blocking items. lanes_rope_swing → lanes_hayrick: related's top hits (lodging_hayloft_night, a night's lodging; countryside_ridge_quiet_hour, a `when: false` placeholder; moor_bilberries) differ, and a nap on a hayrick, or reading the valley from its top, is new. lanes_farrier → lanes_rainbow: related and `search \"chasing the end of a rainbow for gold\"` find nothing close (the downpour, the pond and the weather cards differ). lanes_cricket now asks you to rule on a catch. Its top hit, spot_settle_dispute (the famous student settling a field booking between two clubs), differs in setting, stakes and outcome, and lesson_omen (making up the team's numbers) is no longer echoed. streets_paint_pot is a feat catch or a shouted warning, with nothing shared with the bolting horse or the hat. streets_pieman's 'Watch the others call it' is free (lore +small, mood -tiny, shown by walking on hungry).",
+      "streets_crooked_scales is now a deceive check (your finger on the other pan) with a loss where he cries 'Cheat!'. nm_moon_scales's call-out isn't repeated, and the right option is unchanged.",
+      "Stand-ins: the thatcher invites you up to see the roof (lore +small, a grazed shin), so its options trade by cost (health or gold) for the same lore. The dog trial wants a neutral gate-keeper, and by custom the mummers' Doctor is somebody from the crowd. The knife-thrower and the shearers remain, which is fine on its own.",
+      "Minor fixes verified: the poacher has a `{slot == \"night\"}` variant and its left option now pairs lore +small with mood -tiny, matching 'not quite sure you did right'. The mistaken identity has alignment -tiny on the lie and 'best tea you've had in weeks'. The scarf is gone, the gate grazes a shin, and the wassail has numb feet and cold through the wet. The fallen tree takes 'the rest of the day', and the shearing is gated to noon and afternoon. The chess text says 'five to one', the walker comes on the coach, and the water cart no longer makes the chestnut seller's offer (its run now costs a barked knee). The bolting horse's win takes health -tiny. The labels are 'Hoist them up and shout' and 'Fill your hat for the children'.",
+      "Checks: `grim fmt --check` shows 0 non-canonical; `grim lint` shows 0 errors and no warnings on these cards. No say is over 300 characters and no label over 36. Every card still has an option without gold. No stars, bells, frost or sevens remain ('seventy' went with the old cricket card). There are no new proper nouns. zh-CN follows acceptance, per the coordinator."
+    ]
+  },
+  "spotCheck": [
+    "streets_chess_hustler",
+    "streets_top_hat",
+    "lanes_fallen_tree",
+    "lanes_bull"
+  ],
+  "accepted": true
+}

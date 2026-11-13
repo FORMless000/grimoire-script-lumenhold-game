@@ -1,0 +1,712 @@
+# More region cards for the away maps (maps round 2, T2; docs/maps-plan.md): the capital's streets and the
+# countryside's lanes, in T1's pools (`capital_streets`, `country_lanes`, in region_streets.grim), so they share its
+# wiring: no place, drawn by the away plans' social and world slots and as a visit's fallback. Once each. Breaks fall
+# in deep winter and high summer; an internship away can fall in any month, so a card that needs a season says so.
+
+# ---------------- The capital's streets ----------------
+
+@event streets_chestnuts
+title: Hot Chestnuts
+pool: capital_streets
+tone: warm
+when: season == "winter" and slot != "night"
+art: flame
+scene: A winter city street corner, a chestnut seller's glowing brazier, paper cones of roast chestnuts, a student warming their hands at the coals.
+text: On the corner a chestnut seller's brazier glows like a little forge, and half the street has stopped to warm its hands at it. The chestnuts split and smoke in the pan. "A penny a cone," says the seller, "or mind the coals for me while I fetch another sack, and eat what you like."
+> left: Buy a cone
+  gold -tiny
+  mood +small
+  say: You pay your penny and walk on with a hot paper cone in both hands, peeling chestnuts with your fingertips and burning your tongue on every one. For half a street the winter can't touch you.
+> right: Mind the brazier for him
+  mood +small
+  health -tiny
+  say: You stand at the coals for half an hour, shaking the pan, selling cones and eating every third chestnut. When the seller comes back with his sack he's delighted with the takings. Your fingertips are scorched pink.
+
+@event streets_water_cart
+title: The Water Cart
+pool: capital_streets
+tone: light
+when: season == "summer" and (slot == "noon" or slot == "afternoon")
+art: rain
+scene: A dusty summer city street, a horse-drawn water cart spraying the cobbles from a pierced pipe, barefoot children dancing in the spray, a student about to join them.
+text: It's so hot the cobbles shimmer. Down the street comes the water cart, laying the dust with a fan of spray from a pipe at its tail, and behind it every child in the street is dancing in the wet, shrieking. The driver grins down at you. "Fill her up at the pump for me after," he says, "and you can ride the tail."
+> left: Run through the spray
+  mood +small
+  health -tiny
+  say: You run through the spray with the children, twice, and come out the far side soaked, cool and laughing, and skid on the wet cobbles and bark your knee, while a clerk on the pavement watches you with open envy.
+> right: Work the pump for him
+  vigor +small
+  health -tiny
+  say: You pump the cart full at the corner, stroke after stroke, in the full sun, while the horse drinks from the trough beside you. Then he lets you ride the tail once round the block, wet to the knees. Your arms ache all evening.
+
+@event streets_bolting_horse
+title: The Bolting Horse
+pool: capital_streets
+tone: tense
+when: slot != "night"
+art: bolt
+scene: A busy city street, a cab horse bolting with its empty cab swinging behind it, people scattering, an old woman frozen at a crossing, a student lunging for the bridle.
+text: A coal wagon tips its load with a roar, and a cab horse bolts. It comes down the street with the empty cab swinging behind it like a toy, people scattering, the cabby running behind shouting. At the crossing an old woman with a basket has stopped dead in the road.
+> left: Go for the bridle
+  challenge feat journeyman:
+    win:
+      renown +small
+      vigor +tiny
+      health -tiny
+      say: You catch the bridle as it passes and hang on, dragged three strides, until the horse's head comes round and it stands, shaking. The cabby arrives, wheezing thanks, and the street claps. Your shoulder will feel it tomorrow, and you don't care.
+    lose:
+      health -small
+      say: You get a hand to the bridle and the horse takes you off your feet and drops you in the gutter. It goes on round the corner, where a drayman stops it. You limp off with grazed palms and torn knees.
+> right: Pull the old woman clear
+  alignment +small
+  health -tiny
+  say: You get to the crossing first and pull her out of the road, basket and all, and you both go over in the gutter as the cab rattles past. She's unhurt and furious about her eggs. You've skinned both elbows.
+
+@event streets_pavement_artist
+title: The Pavement Artist
+pool: capital_streets
+tone: warm
+when: slot != "night"
+art: sparkle
+scene: A city pavement covered with a huge chalk drawing of a stormy sea and a ship, a chalk artist on his knees finishing a corner, dark rain clouds gathering overhead, a student watching.
+text: A pavement artist has spent the whole day on his knees drawing the sea in chalk, a ship in a storm so real the passers-by step round the waves. He's on the last corner. Overhead the sky has gone the colour of slate, and the first fat drop lands in his sea.
+> left: Hold your coat over the last corner
+  mood +small
+  health -tiny
+  say: You hold your coat out over him like a tent while the rain comes down, and he finishes the last wave with chalk running off his fingers. Then the sea washes away into the gutter, all of it, and he laughs. You're wet to the skin.
+> right: Hold off the rain with a spell
+  challenge spell journeyman:
+    win:
+      renown +tiny
+      arcana +tiny
+      say: You hold your hand up and the rain parts over the pavement, a dry hole in the downpour, for the whole quarter of an hour it takes him to finish. A crowd gathers in the wet to watch the dry sea. Then you let go, and it all washes away.
+    lose:
+      mood -small
+      say: The spell catches the rain and drops it all at once, a bucket's worth, square on the drawing. The sea runs into the gutter in a grey stream. The artist only shrugs. "It always goes," he says. You feel awful about it all day.
+
+@event streets_monkey
+title: The Organ-Grinder's Monkey
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: paw
+scene: A city street, an organ-grinder turning the handle of a barrel organ, a small monkey in a red waistcoat and cap scampering off with a coin purse, a student giving chase.
+text: An organ-grinder is playing a waltz on the corner, and his monkey, in a red waistcoat and a tiny cap, comes round with a tin cup. It doffs the cap to you very politely. Then it unbuttons your coat pocket with two quick fingers and is off down the street with your purse.
+> left: Chase it
+  challenge feat apprentice:
+    win:
+      mood +small
+      say: You run it down by the cab rank, where it stops to inspect your purse, and it gives it back with an air of having been about to. The organ-grinder laughs so hard he stops playing. You walk on with your purse and a story.
+    lose:
+      gold -tiny
+      mood -tiny
+      say: It goes up a drainpipe and along a gutter and is gone. When you get back the organ-grinder hands back your purse, lighter by a coin "for the monkey's trouble". You can't prove a thing.
+> right: Pay the grinder for its return
+  gold -tiny
+  lore +tiny
+  say: You put a coin in the grinder's cup, and he whistles, and the monkey comes back and drops your purse in your hand. He tells you, while it eats a nut on his shoulder, how he won it from a sailor in a card game. You're a coin poorer and know far too much about monkeys.
+
+@event streets_lost_child
+title: Lost in the Crowd
+pool: capital_streets
+tone: warm
+when: slot != "night"
+art: hand
+scene: A crowded city market street, a small tearful child in a too-big cap standing still in the middle of the crowd, a student crouching down to talk to them.
+text: In the thick of a market street a small child in a cap too big for them is standing quite still and crying without making a sound, while the crowd parts round them like water round a post. Nobody stops. They're about five, and holding a paper bag of sugared almonds very tight.
+> left: Hoist them up and shout
+  alignment +small
+  health -tiny
+  say: You put them on your shoulders, almonds and all, and walk the street shouting, and the child points and shouts too. A frantic woman comes running from three streets away. By the time she's done thanking you your neck has a crick in it and your hair is full of sugar.
+> right: Walk them to the watch house
+  alignment +tiny
+  mood -tiny
+  say: You take a small sticky hand and walk them to the watch house, where a sergeant who has clearly done this a hundred times sits them on the desk with a biscuit. They don't look at you as you go. You worry about it all the way home.
+
+@event streets_runaway_bride
+title: Drive, Anywhere
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: heart
+scene: A city street, a young woman in a wedding dress and veil climbing into a hackney cab, a student holding the cab door, a church in the background with people running out of it.
+text: You've just hailed a cab when a young woman in a wedding dress comes running down the steps of a church across the road, her veil streaming, and jumps into it ahead of you. "Drive!" she tells the cabby. "Anywhere!" Then she looks at you, holding the door. "Well? Are you coming or not?"
+> left: Give her the cab, and walk
+  mood +small
+  health -tiny
+  say: You shut the door on her and slap the cab's side, and it rattles off with the veil streaming out of the window like a flag. Behind you a groom's party comes running down the steps and stops, defeated, beside you. It's a long walk home.
+> right: Ride along and hear her out
+  gold -tiny
+  lore +small
+  say: You split the fare to the coaching yard. On the way she tells you everything: a match her father made with a man of fifty and a brewery, and a ticket north she's had sewn in her hem for a month. You wave her off on the night coach, with your purse lighter.
+
+@event streets_pieman
+title: The Pieman's Toss
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: meal
+scene: A city street, a pieman with a tray of hot pies on his head and a coin spinning in the air above his hand, a laughing crowd, a student calling it.
+text: The pieman's tray of hot pies smells of pepper and gravy, and he has a game: he'll toss you for it. Call it right and the pie's free. Call it wrong and you pay double. "Fair as the King's justice," he says, flipping the coin, "and twice as quick."
+> left: Toss him for it
+  chance even:
+    mood +small
+    health +tiny
+    say: Heads, you call, and heads it is. He hands over the pie with a groan for the crowd, and you eat it standing in the street, scalding your mouth, the finest pie you've ever eaten for nothing.
+  else:
+    gold -small
+    health +tiny
+    say: Tails. You pay double, and he bows to the crowd. The pie's good, which almost makes up for it. Almost.
+> right: Watch the others call it
+  lore +small
+  mood -tiny
+  say: You stand and watch the next dozen tosses, and see it: he calls the coin while it's still in the air and catches it the way he likes. You walk on hungry, with the smell of pepper and gravy following you down the street.
+
+@event streets_paint_pot
+title: Green Paint
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: hand
+scene: A city street, a house painter on high scaffolding fumbling a pot of bright green paint, the pot tipping, a lady in a large hat walking below, a student reaching up.
+text: A painter on the scaffolding outside a bank fumbles his pot. It turns over once in the air, very slowly, full of bright green paint, straight above a lady in an enormous hat.
+> left: Catch the pot
+  challenge feat journeyman:
+    win:
+      renown +tiny
+      mood +small
+      say: You step in and take it out of the air in both hands, upright, with hardly a splash. The lady never knows. The painter comes down the ladder to shake your green hand, and the street, which saw, gives you a round.
+    lose:
+      mood -small
+      say: You get your fingers to it and turn it over again, and it empties itself down your front, collar to boots. The lady walks on, unspotted, quite unaware. People stare at you all the way home.
+> right: Shout a warning
+  alignment +tiny
+  mood -tiny
+  say: You shout, and she looks up and steps back, and the pot bursts on the pavement where she'd have been. The painter's whole morning of paint is in the gutter, and he swears at you from the scaffolding as if it were all your fault.
+
+@event streets_fountain
+title: The Heatwave
+pool: capital_streets
+tone: light
+when: season == "summer" and (slot == "noon" or slot == "afternoon")
+art: wave
+scene: A city square in a summer heatwave, clerks and shop girls with their shoes off paddling in a big public fountain, a watchman pretending not to see, a student sitting on the rim.
+text: It's the hottest day anyone remembers, and the city has given up. In the square the big fountain is full of people paddling: clerks with their trousers rolled, shop girls holding their skirts, an alderman in his hat. The watchman on the corner is studiously looking the other way.
+> left: Take your shoes off and paddle
+  mood +small
+  renown -tiny
+  say: You sit on the rim and put your feet in, and the cold goes all the way up. Then a sketch artist from Printing Row draws the whole fountain for tomorrow's broadsheet, and you're in it, quite recognisably, with your trousers rolled to the knee.
+> right: Find a cool church porch
+  lore +tiny
+  mood -tiny
+  say: You sit out the heat in the porch of an old church, where the stone is cold, and read the memorial tablets on the walls: merchants, sea captains, a famous dog. It's cool, and quiet, and you can hear the fun in the square the whole time.
+
+@event streets_chess_hustler
+title: Three Boards at Once
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: rune
+scene: A city pavement, an old man at a folding table playing three chess games at once against three challengers, a tin of coins beside him, a student sitting down at the empty fourth board.
+text: An old man with a folding table is playing three games of chess at once on the pavement, a coin a game, five to one to anyone who beats him, and winning all three while eating a sausage. There's a fourth board, empty. "Sit," he says, without looking up. "You've a face for losing."
+> left: Play him for a coin
+  challenge research journeyman:
+    win:
+      gold +small
+      lore +tiny
+      say: You play slow and careful, and he plays fast and careless, and on the fortieth move he looks at the board for the first time and laughs and tips his king. "Come back when you're good," he says, paying you, "and I'll take it all back."
+    lose:
+      gold -tiny
+      say: He mates you in eleven moves without breaking off his sausage. You put your coin in his tin. He tells you what you did wrong, in detail, and he's right about all of it.
+> right: Watch and learn his trick
+  lore +small
+  mood -tiny
+  say: You stand behind him through six games and see it: he lets every opponent take the same pawn, and they all do. After the sixth he turns round and glares at you until you go away, feeling as if you'd stolen something.
+
+@event streets_rag_and_bone
+title: The Rag-and-Bone Cart
+pool: capital_streets
+tone: warm
+when: slot != "night"
+art: book
+scene: A rag-and-bone man's cart in a city lane piled with junk, a tired pony, a box of water-stained old spellbooks among the rags, a student lifting one out.
+text: The rag-and-bone man's cart comes down the lane, piled with broken chairs, old boots and a birdcage, and in a box on top, among the rags, a set of old spellbooks, water-stained, the real thing. "House clearance," he says. "Some old wizard's. Penny a pound."
+> left: Buy the box
+  gold -small
+  arcana +small
+  say: You pay by the pound and carry the box home in your arms. The books are a dead wizard's working copies, crammed with notes in the margins, half of them corrections to the text and some of them very rude. It cost more than you meant to spend.
+> right: Tell him what they're worth
+  alignment +tiny
+  mood -tiny
+  say: You tell him the truth: take them to the book stalls at the bazaar and they'll pay twenty times his price. He looks at you a long while, then at the books, and drives off to the bazaar without selling you so much as a page.
+
+@event streets_mistaken
+title: You're the One
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: mask
+scene: A busy city street, an excited woman with a parasol clutching a student's arm and talking at them, passers-by turning to look.
+text: A woman with a parasol seizes your arm in the middle of the street. "It's you!" she says. "From the play! At the theatre! You were wonderful, you were the villain!" She is quite sure. Passers-by are turning to see who you are.
+> left: Play along
+  challenge deceive journeyman:
+    win:
+      mood +small
+      alignment -tiny
+      say: You were the villain, you agree, and you tell her how the trapdoor works, and how the leading lady is in private, and she buys you tea and cake and makes you sign her programme. It's the best tea you've had in weeks, and every crumb of it a lie.
+    lose:
+      renown -tiny
+      mood -tiny
+      say: You get halfway through the trapdoor before she says, "But the villain was a man of sixty," and lets go of your arm, and tells the whole street what you are, at length.
+> right: Tell her the truth
+  alignment +tiny
+  mood -tiny
+  say: You tell her, gently, you've never been on a stage in your life. She doesn't believe you. She thinks you're being modest. She walks off telling her friend she met the villain and the villain was very modest, and you're left a little sorry not to be.
+
+@event streets_soup_kitchen
+title: Soup Under the Arch
+pool: capital_streets
+tone: warm
+when: slot == "night" or slot == "evening"
+art: meal
+scene: A soup kitchen at night under a stone arch by the river, a great steaming copper pot, night-workers and the poor queuing with bowls, a student ladling soup.
+text: Under an arch by the river there's a soup kitchen that opens when the night does: a copper pot as big as a bath, steam going up in the lamplight, a queue of night-workers, watchmen and people with nowhere else. The woman ladling has been at it since six and drops the ladle when she sees you. "Hands," she says. "Thank the Lamp."
+> left: Take the ladle for an hour
+  alignment +small
+  health -tiny
+  say: You ladle for an hour, and then another, and learn the queue's names and who's to have extra. By the end your wrist aches and your clothes smell of onions. The woman makes you eat the last bowl yourself, standing up.
+> right: Eat with the night-workers
+  gold -tiny
+  lore +tiny
+  mood +small
+  say: You put a coin in the box and take a bowl and sit with the lamplighters and a night-watchman on an upturned crate. They tell you the city by night: who's out, what's open, which bridge to keep off. It's the best soup in the capital.
+
+@event streets_top_hat
+title: The Runaway Hat
+pool: capital_streets
+tone: light
+when: slot != "night"
+art: sparkle
+scene: A windy city street, a tall black top hat bowling along the cobbles towards the river, a portly gentleman running after it, a student giving chase.
+text: A gust comes up the street off the river and takes a gentleman's top hat clean off his head. It bowls away down the cobbles on its brim like a hoop, faster than he can run, towards the embankment and the water.
+> left: Run it down
+  vigor +small
+  health -tiny
+  gold +tiny
+  say: You catch it at the very last bollard, on your knees, an inch from the river. The gentleman arrives purple and wheezing and gives you a coin, and then brushes the hat very carefully and puts it back on, and the wind takes it again. You leave him to it, nursing a skinned knee.
+> right: Call it back with a spell
+  challenge spell apprentice:
+    win:
+      renown +tiny
+      mood +small
+      say: You hook a finger, and the hat stops, turns round on its brim and bowls back up the street to its owner, who catches it, stares at it and at you, and lifts it to you very formally before he puts it on.
+    lose:
+      mood -small
+      say: Your spell catches the hat and lifts it, beautifully, over the embankment wall, and drops it in the river. It sails away towards the sea upright. The gentleman watches it go and then looks at you for a long, long time.
+
+@event streets_shoeblack
+title: The Shoeblack
+pool: capital_streets
+tone: warm
+when: slot != "night"
+art: house
+scene: A city street corner, a small shoeblack boy with his box and brushes, a student sitting on the box blacking the boy's own worn boots, passers-by amused.
+text: A shoeblack boy on the corner, all elbows and cheek, offers to black your boots and tell you the street's news, both for one coin. His own boots, you notice, are grey with dust and have never seen a brush in their lives.
+> left: Pay for the shine and the news
+  gold -tiny
+  lore +small
+  say: He blacks your boots till you can see your face in them and tells you the street as he goes: who owes who, whose shop is going under, which watchman takes a pie on Fridays. You walk away shining and much better informed, a coin lighter.
+> right: Black his boots instead
+  alignment +tiny
+  mood +small
+  health -tiny
+  say: You sit him on his own box and kneel on the cobbles and black his boots, while the street stops to laugh. He sits like a duke the whole time, very straight. When you stand up your knees are aching and your hands are black, and he's grinning from ear to ear.
+
+@event streets_knife_thrower
+title: A Volunteer, Please
+pool: capital_streets
+tone: tense
+when: slot != "night"
+art: mask
+scene: A street performance in a city square, a knife-thrower in spangles holding three knives, a painted wooden board with an outline of a person on it, a crowd, a student stepping forward.
+text: A knife-thrower in spangles is working the square, and his assistant hasn't turned up. He needs a volunteer for the board, the one with the painted outline, and he's looking straight at your scarf. "A wizard," he tells the crowd. "If I miss, they can fix it."
+> left: Stand at the board
+  renown +small
+  mood -small
+  say: You stand against the board and he throws: left ear, right ear, between your knees, and one an inch over your head. The crowd goes wild. You walk away to a great deal of applause, with your legs not quite working and your heart going like a drum.
+> right: Pass the hat for him instead
+  gold +tiny
+  mood -tiny
+  say: You beg off the board and take the hat round instead, and he gives you a cut. The square is mean with its coins and a man in a good coat tells you to get a proper job. A girl from the crowd stands at the board and is far braver than you.
+
+@event streets_crooked_scales
+title: A Thumb on the Scale
+pool: capital_streets
+tone: tense
+when: slot != "night"
+art: scales
+scene: A city market stall, a smiling trader weighing tea on brass scales with his thumb resting on the pan, an old woman counting coins, a student watching closely.
+text: At a market stall a trader is weighing tea for an old woman, and smiling, and his thumb is resting very lightly on the pan. She's counting out coppers she can't spare for a quarter she isn't getting. Nobody else in the queue has noticed.
+> left: Lean on the other pan
+  challenge deceive journeyman:
+    win:
+      alignment +small
+      say: You lean on the counter, chatting, with one finger resting on the other pan, just as light as his. The scales come level. He can't say a word without saying why. The old woman gets her full quarter, and he watches you go with murder in his eyes.
+    lose:
+      mood -small
+      say: He sees your finger, and shouts "Cheat!" at the top of his voice, and the whole queue turns on you. You leave fast, red to the ears, and the old woman still pays for her short quarter.
+> right: Quietly make up her difference
+  gold -tiny
+  alignment +tiny
+  say: You catch her at the end of the street and press a coin into her hand for the missing ounce, saying she dropped it. She looks at you sharply and doesn't believe a word, and takes it anyway. The trader goes on smiling.
+
+@event streets_sleeping_cabby
+title: The Horse Knows the Way
+pool: capital_streets
+tone: warm
+when: slot == "night"
+art: lantern
+scene: A city street late at night, a hackney cab under a gas lamp with its cabby fast asleep on the box, the old horse patiently waiting, a student looking up at the cabby.
+text: Late at night, under a lamp, there's a hackney cab waiting with its cabby fast asleep on the box, snoring, his whip in his lap. The old horse looks round at you with great patience. It seems to be asking whether you're going its way.
+> left: Wake him and take the cab home
+  gold -tiny
+  health +tiny
+  say: You shake his boot, and he wakes, embarrassed, and takes you home at a stately walk, apologising the whole way. You fall into bed with your feet still fresh, a coin poorer.
+> right: Climb up and let the horse drive
+  mood +small
+  health -tiny
+  say: You climb up beside the sleeping cabby and say "Home," to the horse, and it walks off through the empty streets on its own, the long way, past the river and the dark markets, and stops at its own stable. The cabby never wakes. You walk the rest of the way back, chilled.
+
+@event streets_muffin_men
+title: The Muffin Men
+pool: capital_streets
+tone: light
+when: season == "winter" and slot != "night"
+art: meal
+scene: A winter city street, two muffin men with trays on their heads, shouting at each other from opposite pavements, a laughing crowd, a student caught in the middle.
+text: Two muffin men have met in the same street, one on each pavement, trays on their heads, and neither will give way. They're out-shouting each other: "Hot muffins!" "Hotter muffins!" The street has stopped to watch. Then both of them point at you. "You," they say. "Judge."
+> left: Judge for one of them
+  renown +tiny
+  mood -tiny
+  say: You taste one of each, very gravely, and give it to the one on the left, whose muffin is better and whose shouting is worse. The street cheers. The one on the right tells you exactly what he thinks of academies, all the way down the street.
+> right: Buy from both and refuse to choose
+  gold -tiny
+  health +tiny
+  say: You buy a muffin from each of them and eat them both, one in each hand, and declare it a draw. Both are disgusted with you. They go off down the street together, complaining about you, and by the corner they're friends.
+
+# ---------------- The countryside's lanes ----------------
+
+@event lanes_strawberries
+title: Wild Strawberries
+pool: country_lanes
+tone: warm
+when: season == "summer" and slot != "night"
+art: leaf
+scene: A sunny bank under a country hedge, tiny wild strawberries hidden in the grass, a student kneeling and picking them into a hat.
+text: The bank under the hedge is warm with sun, and when you look down it's red with wild strawberries, tiny ones, hidden among the grass and the nettles, sweeter than any in a shop.
+> left: Pick and eat them where you are
+  mood +small
+  health -tiny
+  say: You lie on the bank and eat them one by one as you find them, warm from the sun, till your fingers are red and you can't find any more. The nettles have got both your wrists.
+> right: Fill your hat for the children
+  alignment +tiny
+  health -tiny
+  say: You fill your hat, carefully, without eating more than one in five, and carry it to the farm gate, where three small children fall on it like starlings. You've been stung from your knuckles to your elbows.
+
+@event lanes_shearing
+title: The Shearers
+pool: country_lanes
+tone: light
+when: season == "summer" and (slot == "noon" or slot == "afternoon")
+art: paw
+scene: A farmyard in summer, sheep being shorn in the shade of a barn, a champion shearer with a fleece coming off in one piece, wool everywhere, a student holding a pair of shears.
+text: The shearers have come to a farm by the lane, and the yard is all bleating and wool. The champion of the valley is taking a fleece off in one piece, quick as peeling an orange. He holds the shears out to you, grinning. "Your go," he says. "Mind her, she's got opinions."
+> left: Shear a ewe
+  challenge feat journeyman:
+    win:
+      renown +tiny
+      vigor +tiny
+      say: It takes you four times as long as him, and the fleece comes off in three pieces, but it comes off, and the ewe trots away looking quite pleased with herself. The yard applauds. The champion says you've the makings, with practice. Thirty years of it.
+    lose:
+      health -tiny
+      mood -tiny
+      say: The ewe has her opinions, all of them, and you end up underneath her in the straw with the shears somewhere else. The yard laughs till it cries. The champion takes her off you and finishes in a minute flat. You're bruised all down one side.
+> right: Roll fleeces for them
+  vigor +small
+  health -tiny
+  say: You spend the afternoon rolling fleeces and stuffing them into the long wool sacks, greasy to the elbows with lanolin. Your hands are softer than they've ever been, and your back is killing you.
+
+@event lanes_cricket
+title: Was It Out?
+pool: country_lanes
+tone: light
+when: season == "summer" and (slot == "noon" or slot == "afternoon")
+art: sparkle
+scene: A village cricket match on a green in summer, two teams in white arguing round a fielder holding up a ball, both captains turning to a student standing at the boundary rope.
+text: The two villages are playing their annual match on the green, and it comes down to the last ball: a catch, or a bounce, nobody's sure. The umpire is the miller's brother, so he won't do. {at_home(): Both captains turn and look at you: away at the academy so long, you hardly count as anybody's.|Both captains turn and look at the one person on the green with no side.}
+> left: Rule it a catch
+  renown +small
+  mood -small
+  say: You say it was a catch. Half the green carries you round on its shoulders and the other half won't speak to you, and at the inn the visiting side drinks in the far corner with its back to you, very pointedly, all evening.
+> right: Say you couldn't see
+  lore +tiny
+  mood -tiny
+  say: You say, truthfully, you were watching a swallow. Both captains are disgusted with you, and they argue it out themselves for an hour while you listen, and you learn the whole history of the two villages' feud, back to a stolen pig.
+
+@event lanes_glow_worms
+title: Glow-Worms
+pool: country_lanes
+tone: eerie
+when: season == "summer" and (slot == "evening" or slot == "night")
+art: sparkle
+scene: A dark country lane on a warm summer night, dozens of tiny green glow-worm lights in the grass of the verges, a student kneeling to look closely.
+text: The lane's verges are lit up in the dark: dozens of tiny cold green lights in the grass, steady and still, like somebody has scattered embers that don't burn. Glow-worms. You didn't know there were so many in the world.
+> left: Lie in the verge and watch them
+  mood +small
+  health -tiny
+  say: You lie in the long grass at the edge of the lane with the green lights all round you, and lose track of time completely. When you get up the dew has soaked right through to your skin.
+> right: Catch one to look at closely
+  lore +small
+  mood -tiny
+  say: You cup one in your hand and look: a small, plain, wingless thing with its light in its tail. In your hand it goes dark at once. You put it back in the grass, and it takes a long while to light again, and you feel like a thief.
+
+@event lanes_thatcher
+title: The Thatcher
+pool: country_lanes
+tone: warm
+when: slot != "night"
+art: house
+scene: A thatcher working high on the roof of a country cottage, bundles of straw stacked against the wall, a student at the top of the ladder looking at the old layers of thatch.
+text: A thatcher is on the roof of a cottage by the lane, laying new straw over old. He sees you looking. "Come up and see," he calls down. "I'll show you how old this roof is, and you'll not believe me."
+> left: Climb up and look
+  lore +small
+  health -tiny
+  say: You go up the ladder and he lifts the top coat for you: under it the roof is four hundred years old, layer on layer, and the bottom straw is black as coal and full of old wasps' nests. Coming down, you miss a rung and graze your shins.
+> right: Stand him a drink for the story
+  gold -tiny
+  lore +small
+  say: You buy him a jug of cider from the cottage, and he sits on the ridge drinking it and tells you about every roof in the valley: the oldest, the haunted one, the one with a gold coin in it for luck. You're a coin down and none the wiser about thatching.
+
+@event lanes_bull
+title: The Bull in the Field
+pool: country_lanes
+tone: tense
+when: slot != "night"
+art: paw
+scene: A green meadow with a footpath across it, a huge red bull standing in the middle looking at a student who has just climbed over the stile, the far stile a long way off.
+text: The footpath crosses a meadow, the short way to where you're going. You're over the stile before you see the bull: huge and red, standing in the middle of the path, chewing slowly, looking at you. The far stile is a very long way off.
+> left: Walk across, slow and calm
+  challenge soothe journeyman:
+    win:
+      mood +small
+      say: You walk slowly, talking to him the whole way in a low, dull voice about nothing, and he watches you, chewing, and lets you by. At the far stile he blows through his nose at you, quite friendly. Your heart is going like a hammer.
+    lose:
+      health -small
+      say: Halfway across he lowers his head. You don't remember the rest of the field. You go over the far stile head first into a ditch full of water, and he stands at the stile, satisfied, and goes back to his grass.
+> right: Go the long way round
+  lore +tiny
+  health -tiny
+  say: You climb back over and take the long way round, two miles of lane, and find an old lime kiln in the hedge you'd never have seen, with a date carved over its arch. Your feet are sore by the time you get there.
+
+@event lanes_new_gate
+title: Private, By Order
+pool: country_lanes
+tone: tense
+when: slot != "night"
+art: key
+scene: A country footpath blocked by a brand new padlocked gate with a painted sign reading PRIVATE, an old path beaten into the grass on both sides of it, a student considering climbing it.
+text: Across the old footpath, the one everybody uses, somebody has put up a new gate with a padlock and a fresh-painted sign: PRIVATE. BY ORDER. The path is worn into the grass on both sides of it, a hundred years deep.
+> left: Climb over and walk on
+  mood +small
+  health -tiny
+  say: You climb over, which is what the path's for, and walk on. On the far side a whole row of village boots has gone over the gate before you: the top bar's already muddy. You graze your shin on the new wire.
+> right: Take the sign to the village
+  renown +tiny
+  mood -tiny
+  say: You unscrew the sign and carry it into the village and put it on the bar of the inn, and the whole taproom has an opinion about it, and a meeting is called, and you're made to stand on a chair and say where you found it. You're there half the evening.
+
+@event lanes_poacher
+title: Not Seeing Things
+pool: country_lanes
+tone: tense
+when: slot == "evening" or slot == "night"
+art: paw
+scene: A country lane at dusk, a thin poacher in a patched coat with a bulging sack over his shoulder, a pair of pheasants' tails sticking out, frozen in the hedge gap, a student facing him.
+text: {slot == "night": In the dark|At dusk} a man comes through the hedge into the lane in front of you, thin, in a patched coat, with a sack over his shoulder and two pheasants' tails sticking out of the top. He stops dead. So do you. "I've five at home," he says, low. "And the keeper's up at the big house."
+> left: Keep his secret
+  lore +small
+  mood -tiny
+  say: You say you didn't see a thing. He nods, and then shows you, before he goes, where the keeper sets his traps along the hedges, so you'll know where not to walk. You go home not quite sure you did right.
+> right: Turn him in at the big house
+  gold +tiny
+  alignment -tiny
+  say: You go up to the big house and tell the keeper. There's a reward, a coin, and he pays it gladly. Walking home, you think about five children and two pheasants for a long time.
+
+@event lanes_sheepdog_trial
+title: The Dog Trial
+pool: country_lanes
+tone: light
+when: season == "summer" and (slot == "noon" or slot == "afternoon")
+art: paw
+scene: A sheepdog trial on a summer hillside, a handler with a crook whistling, a black-and-white dog crouched behind three sheep, a small pen with a gate, a student holding the pen gate rope.
+text: There's a dog trial on the hillside above the lane: one dog, three sheep, a course of gates and a little pen at the end, and the whole valley on the wall. Neither village will trust the other's man on the pen gate. "You," says the judge, picking {at_home(): the one face on the wall that's been away at school|the one stranger on the wall}. "Hold the gate rope. Shut it when they're in, and not before."
+> left: Hold the pen gate
+  challenge feat apprentice:
+    win:
+      mood +small
+      renown +tiny
+      say: The sheep come in at a run, the dog flat behind them, and you shut the gate on the last tail exactly as it clears. The wall roars. The handler shakes your hand as if you'd done it all, and the dog looks at you with something like respect.
+    lose:
+      mood -small
+      say: You shut it a heartbeat early and the last ewe turns and bolts, and the dog has to fetch her back from halfway up the hill. The handler loses on points. He doesn't say a word to you, which is worse.
+> right: Sit on the wall and pick a winner
+  gold -tiny
+  lore +tiny
+  say: You sit on the wall among the farmers and put a coin on a grey-muzzled old dog everybody says is past it, and learn more about sheep than you meant to. It comes third. Your coin's gone, and you'd do it again.
+
+@event lanes_hedger
+title: Laying the Hedge
+pool: country_lanes
+tone: warm
+when: season == "winter" and slot != "night"
+art: leaf
+scene: A winter country lane, an old hedger in a leather apron and gauntlets laying a hawthorn hedge with a billhook, the half-cut stems bent over and woven between stakes, a student watching.
+text: An old hedger in a leather apron is laying the hedge along the lane: cutting each stem nearly through with his billhook, bending it over, weaving it between stakes, so it grows again thick and sideways. He's been at it since dawn and is about a third of the way along.
+> left: Ask him to teach you the cut
+  lore +small
+  health -tiny
+  say: He shows you, patient as a stone, and lets you lay three stems. Two of them break. The third bends just right and he grunts, which is a great deal from him. The hawthorn has had its way with your hands.
+> right: Share his tea at the fire
+  mood +small
+  health -tiny
+  say: You sit with him at his little brushwood fire on the verge while he drinks black tea out of a can, and he talks about the valley's hedges like old friends: which are a hundred years old and which are a thousand. Your feet go numb sitting there.
+
+@event lanes_wassail
+title: Wassailing the Orchard
+pool: country_lanes
+tone: warm
+when: season == "winter" and (slot == "evening" or slot == "night")
+art: flame
+scene: A winter orchard at night lit by lanterns and a bonfire, villagers singing round the oldest apple tree, pieces of toast hung in its branches, cider poured on its roots, a student holding the wassail bowl.
+text: In an orchard off the lane the farm is wassailing its trees: lanterns in the branches, a bonfire, everybody singing to the oldest apple tree to make it bear. Toast soaked in cider is hung in its branches for the robins. They need a guest to pour the cider on its roots, and you're the only guest there.
+> left: Sing with them
+  mood +small
+  health -tiny
+  say: You sing every verse, badly, and drink from the bowl when it comes round, and bang a saucepan with a spoon at the end to wake the tree. By the time the bonfire's down your feet are numb with cold and you're very happy.
+> right: Pour the cider on the roots
+  renown +tiny
+  health -tiny
+  say: You pour the bowl over the old tree's roots while the whole orchard sings to you, and the farmer's wife hangs the last of the toast. You're splashed to the knees, and the cold gets into you through the wet. Everybody tells you the tree will bear like never before.
+
+@event lanes_mummers
+title: The Mummers
+pool: country_lanes
+tone: light
+when: season == "winter" and slot != "noon"
+art: mask
+scene: A farmyard in winter lit by lanterns, mummers in costumes made of paper strips, their faces hidden behind paper fringes, performing a play, a knight lying on the ground, a student being handed a doctor's top hat and a bottle.
+text: The mummers have come round to the farm by the lane in their costumes of paper strips: a knight, a dragon, a king, and a man with a sword who keeps killing everybody. By custom the Doctor is always somebody from the crowd. A mummer holds out a battered top hat and a bottle to you. "Quack doctor," he says. "Bring him back to life."
+> left: Play the Doctor
+  challenge perform journeyman:
+    win:
+      renown +small
+      mood +small
+      say: You doff the hat, uncork the bottle and declare your cures, louder and sillier with every line, and pour a drop in the knight's mouth, and he leaps up to a great cheer. The mummers make you come with them to three more farms.
+    lose:
+      mood -small
+      say: You forget the lines, and the ones you make up don't rhyme, and the knight has to bring himself back to life out of pity. The yard is kind about it. Nobody asks you to the next farm.
+> right: Put a coin in the hat
+  gold -tiny
+  mood +small
+  say: You put a coin in the hat to be let off, and watch from the back while the farmer's wife plays the Doctor instead, far better than you would have. The dragon gives you a paper strip off its tail.
+
+@event lanes_signpost
+title: The Turned Signpost
+pool: country_lanes
+tone: light
+when: slot != "night"
+art: key
+scene: A country crossroads, an old wooden fingerpost signpost twisted round on its post so its arms point the wrong ways, two boys giggling behind a wall, a student looking up at it.
+text: The fingerpost at the crossroads has been twisted round on its post, so the market village is up the farm track and the mill is in a pond. From behind the wall comes a lot of giggling. A carter has just taken the wrong road and is coming back, swearing.
+> left: Turn it back the right way
+  alignment +tiny
+  health -tiny
+  say: You put your shoulder to the post and heave it round, rasping your palms, while the boys behind the wall groan. The carter thanks you, and then goes and tells the boys' mothers, which you hadn't meant at all.
+> right: Follow it anyway, for fun
+  mood +small
+  health -small
+  say: You follow the sign to the market village, up the farm track, over two fields, round a pond, and come out, astonishingly, at the market village, the long way. The boys run after you to see. Your boots are full of mud and your legs are done.
+
+@event lanes_rainbow
+title: Where the Rainbow Ends
+pool: country_lanes
+tone: light
+when: slot != "night"
+art: rain
+scene: A wet country lane after a shower, a vivid rainbow coming down into a field a little way off, two village children running towards it, a student watching.
+text: A shower comes over and goes, and behind it there's a rainbow so bright it looks painted, coming down, quite plainly, into the next field but one. Two village children are already running for it. "There's gold!" one shouts back at you. "Under the end! Everyone knows!"
+> left: Run for the end with them
+  mood +small
+  health -tiny
+  say: You run with them through two wet fields, and the end of the rainbow keeps exactly one field ahead, and then fades out over a pond. The children are disgusted. You're soaked to the knees, and laughing so hard you have to sit down on a wet stile.
+> right: Stay and watch it from the lane
+  lore +small
+  health -tiny
+  say: You lean on the gate and watch it fade, band by band, the red going last. A shepherd going by tells you, quite seriously, that there's a rainbow over that field most wet days and nobody's ever got to the end of it. Your boots are full of water from the lane.
+
+@event lanes_lost_walker
+title: The Wrong Map
+pool: country_lanes
+tone: light
+when: slot != "night"
+art: scroll
+scene: A country lane, a tall man in tweeds and walking boots from the city holding a large unfolded map upside down, looking lost, a student pointing the right way.
+text: A tall man in brand-new walking tweeds is standing in the lane with an enormous map, turning it round and round. He's come up from the capital on the coach to see the view from the ridge, he says, and the map says the ridge is exactly where he's standing, in a ditch.
+> left: Walk him to the ridge path
+  gold +tiny
+  health -tiny
+  say: You walk him the two miles to the ridge path and point him up it. He insists on paying you for the trouble, very formally, and strides off up the hill with his map upside down again. Your feet feel the extra miles.
+> right: Correct his map for him
+  lore +tiny
+  mood -tiny
+  say: You borrow his pencil and draw the real lanes on his map, and he argues with every line: the map was very expensive. In the end he goes the way the map says. You see him an hour later, from the ridge, still in the ditch.
+
+@event lanes_hayrick
+title: The Hayrick
+pool: country_lanes
+tone: warm
+when: season == "summer" and (slot == "noon" or slot == "afternoon")
+art: sun
+scene: A tall golden hayrick in a summer field by a lane, a ladder against its side, a student lying on top in the sun with the whole valley spread out below.
+text: There's a new hayrick in the field by the lane, tall as a cottage and still warm through, smelling of summer, with the farmer's ladder left against its side. Nobody's about. The whole afternoon is lying there, unclaimed.
+> left: Climb up and sleep in the sun
+  mood +small
+  health -tiny
+  say: You climb up and lie on the top in the sweet hay and are asleep in a minute. You wake an hour later with the sun gone round, the back of your neck burnt red and hay in every seam you own.
+> right: Climb up and look at the valley
+  lore +small
+  mood -tiny
+  say: From the top you can see the whole valley at once: both villages, the mill race, the ford, the moor's dark edge, the road you came in by. You sit and learn it like a map until the farmer comes and shouts you down, very rudely.
+
+@event lanes_fallen_tree
+title: The Tree Across the Lane
+pool: country_lanes
+tone: tense
+when: slot != "night"
+art: tree
+scene: A country lane completely blocked by a huge fallen ash tree after a gale, a carter's cart stuck behind it, the carter with a bow saw, a student looking at the trunk.
+text: Last night's gale has brought a great ash down across the lane, roots and all, and a carter's milk cart is stuck behind it, the churns going warm. The carter has a bow saw and a look of a man facing a day's work. "Unless," he says, looking at your scarf, "you know a trick."
+> left: Take the other end of the saw
+  vigor +small
+  health -tiny
+  say: You saw for two hours, turn and turn about, till the trunk is in three pieces and the two of you can roll the middle one into the ditch. The carter shares his bread and cheese. You have blisters on both palms.
+> right: Shift it with a spell
+  challenge spell journeyman:
+    win:
+      renown +tiny
+      arcana +tiny
+      say: You set your feet and lift, and the whole trunk rolls slowly over, groaning, and settles in the ditch with its roots in the air. The carter takes his hat off to you and drives on without a word, which in the valley is a great compliment.
+    lose:
+      health -tiny
+      mood -tiny
+      say: The trunk shifts, slides and settles back, harder, onto your end of the lane, pinning your coat. The carter saws you free, very patient about it, and then saws the tree. It takes the rest of the day and you're scraped and filthy.
