@@ -13,11 +13,15 @@ test('styles: the nightlife regular and combatmaxx play to the end, deterministi
 test('styles: the nightlife regular goes out every night it can, takes the company, and fights at the ring', slow, () => {
   for (const eng of games('nightlife')) {
     const nights = cards(eng).filter((h) => h.id === 'night_out');
-    // per month played: the ring's fights (played since 2026-10-18) can send a run home early
-    assert.ok(nights.length >= 0.35 * eng.s.turn && nights.every((h) => h.choice === 'right'), 'out every night: ' + nights.length + ' in ' + eng.s.turn + ' months');
+    // per month played: the ring's fights (played since 2026-10-18) can send a run home early. No night out comes
+    // before the first term's unlock, on a break away (it goes home every break) or under detention or suspicion, so
+    // one seed's count swings with the deck (2026-11-13: 15 of 48 after the maps' new cards, 18 before); the mean
+    // over the seeds below is the firmer check.
+    assert.ok(nights.length >= 0.3 * eng.s.turn && nights.every((h) => h.choice === 'right'), 'out every night: ' + nights.length + ' in ' + eng.s.turn + ' months');
     assert.equal(chose(eng, 'newt_company', 'right') + chose(eng, 'newt_company_regular', 'right'), 0, 'never refuses the company');
     for (const h of cards(eng).filter((x) => /^ring_bout_\d$/.test(x.id))) assert.ok(['left', 'right'].includes(h.choice));
   }
+  assert.ok(mean('nightlife', (e) => cards(e).filter((h) => h.id === 'night_out').length / e.s.turn) >= 0.38, 'out most nights on average');
   assert.ok(mean('nightlife', (e) => cards(e).filter((h) => /^ring_bout_\d$/.test(h.id)).length) >= 5, 'sees the ring bouts');
   assert.ok(mean('nightlife', (e) => chose(e, 'newt_company', 'left') + chose(e, 'newt_company_regular', 'left')) >= 3, 'works the Newt\'s upstairs room');
   assert.ok(mean('nightlife', (e) => e.s.vals.gold) > mean('balanced', (e) => e.s.vals.gold), 'the night pays');
