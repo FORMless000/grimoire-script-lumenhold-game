@@ -44,6 +44,8 @@ export const SPECIAL_LOADOUTS={
  'Barrow ram':{salt:58,offsets:[-30,-30,-30,-20,40,-10],kit:{charge:1,brace:1,roar:10},creature:true,race:'monster',hp:1.75,mana:.6},
  // The tide caves (new maps, round 2, C4, 2026-11-12): the capital's delve. The conger lunges from its hole (Maul) and drops back
  // into the black water (Fade, Burrow).
+ // The Good Year (new maps, round 2, K4): the Tenant under the hollow hill, a harvest lord, built from the oaks' moves.
+ 'The Tenant':{salt:60,offsets:[-10,-10,-20,-10,40,-10],kit:{root:1,bough:1,bark:1,roar:10},creature:true,race:'boss',hp:2,mana:.6,strike:.55},
  'Conger':{salt:59,offsets:[-30,-30,-30,-20,40,0],kit:{maul:1,fade:1,burrow:10},creature:true,race:'monster',hp:1.9,mana:.6},
  // Forbidden practitioners (F5.11): human, so no race; generated like the forbidden classes (Hollow adept, Underground
  // tough), expanded with their own iconic spells, and carrying their worn kit (content/world/items.grim).

@@ -1,0 +1,100 @@
+{
+  "name": "K4-good-year",
+  "at": 1794546793826,
+  "files": [
+    "content/events/maps/good_year.grim"
+  ],
+  "events": [
+    "gy_seventh_year",
+    "gy_fern_hunter",
+    "gy_guest_book",
+    "gy_scarecrow_names",
+    "gy_miller_tally",
+    "gy_almanac_page",
+    "gy_agent_drovers",
+    "old_hall_gates",
+    "gy_hall_papers",
+    "gy_ottilie_gone",
+    "gy_witch_truth",
+    "gy_hill_door_open",
+    "gy_tenant_hall",
+    "gy_after_broken",
+    "gy_after_renewed",
+    "gy_after_sold",
+    "gy_thin_harvest",
+    "gy_hill_turf"
+  ],
+  "contentHash": "e76ed6",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 157,
+      "total": 157
+    }
+  },
+  "critic": {
+    "batch": "K4-good-year",
+    "round": 2,
+    "accept": true,
+    "summary": "Round 1's blocking issues are fixed. The rewritten lore makes the full hall and the freed crowd consistent, the bell is gone, the bargain now pays off the clues (harder than the fight without them, easier with all three), the thread closes at gy_done, and the door after a broken bargain is only turf. Two small history slips remain.",
+    "issues": [
+      {
+        "event": "gy_tenant_hall",
+        "problem": "History: the bargain's win say always opens 'You name its guests, from the book and the collars', but the check can be won without gy_guest_book or gy_coats (grim odds: 4–64% passive, 23–93% focused with no steps).",
+        "fix": "Vary it on the flags, e.g. `{flag(gy_guest_book) or flag(gy_coats): You name its guests, from {flag(gy_guest_book): the book|the collars}, and offer better:|You offer it better:}` and keep the rest."
+      },
+      {
+        "event": "gy_thin_harvest",
+        "problem": "History: 'The landlord doesn't stand you a pie on the house any more' is an ungated callback to market_inn_welcome's free plate, a routine card the player may never have drawn.",
+        "fix": "Gate it: `{seen(market_inn_welcome) > 0: The landlord doesn't stand you a pie on the house any more.|The landlord serves you without a word.}`"
+      }
+    ],
+    "polish": [
+      "Record the lore change against docs/maps-plan.md ('The lent come back seven years later') in its deviations: the lent now stay at the supper while the bargain holds.",
+      "gy_seventh_year: both says still call it 'a warm, loud, happy evening' (and the scene is dusk), but home_market is open at noon. Use a time-neutral word, or `time: evening`.",
+      "gy_fern_hunter: 'The landlord asked you, too, how long you were staying' still asserts an offscreen moment on the start's right option; gate it on `seen(market_inn_welcome) > 1` or `chosen(gy_seventh_year, left)`.",
+      "gy_witch_truth and gy_seventh_year test `at_home() and has(origin_hedge)`, while the aftermaths test `has(origin_hedge)` alone; use one test (the latter) for a hedge-origin intern on this map.",
+      "Scenes behind their texts: gy_agent_drovers' scene still says 'drinking alone' (the text now has a clerk); gy_thin_harvest's scene says 'the first mark of a new column' and its title is 'The Eighth Column', the multi-year wording the says dropped; gy_miller_tally's scene says night, though the card is evening only.",
+      "gy_hall_papers still opens 'Night at the old hall.' at evening, and on a repeat after a bite the dog is again 'not as asleep as it looked'.",
+      "gy_after_renewed: the text is at dusk, then the right say opens 'By noon' (say 'By noon the next day').",
+      "old_hall_gates keeps the agent's carriage and papers after gy_done (plausible, since he still owns the hall, but a `flag(gy_broken)` line would land the ending there too).",
+      "land_agent's key 'the company' is generic (merchant cards: 'The company's share'); 'the land agent's company' would be safer.",
+      "Lengths over the style's 400/300 (lint is clean at 480): gy_witch_truth text 441/415, gy_tenant_hall text 425, gy_agent_drovers text 401, gy_fern_hunter left say 312.",
+      "grim leads still lists gy_fern_hunter → gy_ottilie_gone and gy_tenant_hall → gy_thin_harvest without a lead. The thread journal covers the first; the second is a consequence, not a hint, so both are fine as they are.",
+      "i18n zh-CN is 0/157 (the validator fails it)."
+    ],
+    "checked": [
+      "Re-read all 19 cards (including the new gy_hill_turf), the gy_open cond, the rewritten soft lore good_year, the_tenant, old_hall and land_agent, the new lead_marsh_rue, and moor_hill_door's new when.",
+      "Each round-1 issue against the new text: canon (the keepers' lie in the lore, the witch and the miller; the hall, the freed crowd, the witch's supper), the bell, the bargain's rung, steps and loss, the thread gate, the fight loss, the dominated options, the again-lines, history (agent, collars, the Marsh, the room line, the thin harvest), pacing, season, the miller's slot and origin line, the multi-year wording, the door and the turf, the hedge-origin lines, the lore keys.",
+      "Engine: test/good-year.test.js passes (4/4). Simulated 15 dedicated games across all five origins: 15/15 completed. The start's queued gy_fern_hunter lands on the next countryside month (it never showed off the map; when the start came in a break's last month, she was drawn on a later visit). gy_ottilie_gone waits a month after meeting her, and gy_thin_harvest arrives only in summer.",
+      "grim odds gy_tenant_hall: fight 14/28/52/85 passive, 51/72/88/97 focused; bargain 4/9/25/64 and 23/43/69/93 with no steps, 31/53/77/95 and 76/89/96/98 with all three clue steps. Neither ending dominates any more.",
+      "Plot safety: no bell, frost, star, rime or chime in the cards; no arc clues and no advance.",
+      "grim batch: build, lint (0 warnings), dupes and canon pass; only i18n fails."
+    ]
+  },
+  "spotCheck": [
+    "gy_thin_harvest",
+    "gy_after_sold"
+  ],
+  "accepted": true
+}

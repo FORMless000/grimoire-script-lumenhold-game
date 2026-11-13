@@ -71,6 +71,8 @@ export const PERSONAS={
  'Barrow ram':{charge:12,roar:6,brace:6,strike:4},
  // The tide caves (new maps, round 2, C4)
  'Conger':{maul:12,fade:10,burrow:6,strike:4},
+ // The Good Year (new maps, round 2, K4)
+ 'The Tenant':{bough:12,root:10,bark:6,roar:6,strike:4},
  'The Outcast':{heartprice:8,compel:10,siphon:8,eclipse:8,extraction:8,torment:6},
  // The Hollow Star's Night (v2)
  'Madame Dumont':{compel:14,rime:12,eclipse:9},
@@ -142,7 +144,9 @@ export const FOES={
  barrow_ram:{name:'the barrow ram',loadout:'Barrow ram',context:'real_conflict'},
  // The tide caves (new maps, round 2, C4, 2026-11-12): a smugglers' lookout (a forbidden caster, as in the ring) and the conger
  cave_lookout:{name:'the smugglers’ lookout',loadout:'Underground tough',context:'real_conflict',pronouns:'he'},
- conger:{name:'the conger',loadout:'Conger',context:'real_conflict'}
+ conger:{name:'the conger',loadout:'Conger',context:'real_conflict'},
+ // The Good Year (new maps, round 2, K4, 2026-11-12)
+ the_tenant:{name:'the Tenant',loadout:'The Tenant',context:'real_conflict'}
 };
 
 // Every current combat card, by event/option. play: a minigame fight against `foe` (several foes: matched to the card's
@@ -204,6 +208,8 @@ export const EVENTS={
  // The tide caves (new maps, round 2, C4): under the headland nobody watches.
  'tide2_lookout/right':{play:'cave_lookout',observers:false,witnesses:false},
  'tide3_conger/right':{play:'conger',observers:false,witnesses:false},
+ // The Good Year (new maps, round 2, K4): under the hill, at its own table; the guests don't report.
+ 'gy_tenant_hall/fight':{play:'the_tenant',observers:false,witnesses:false},
  'duel_practice_bout/left':{play:'quick_fourth_year',firstLeader:1,setup:'Hold your ground: the fourth-year leads every exchange (firstLeader 1)',observers:false,witnesses:true},
  'duel_practice_bout/right':{play:'quick_fourth_year',firstLeader:0,setup:'Go on the attack: you lead the first exchange (firstLeader 0)',observers:false,witnesses:true},
  'duel_bram_hazing/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},

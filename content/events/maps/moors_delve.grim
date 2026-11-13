@@ -573,7 +573,7 @@ title: The Door in the Hill
 thread: moor_delve
 class: story
 tone: eerie
-when: moor_depth >= 7
+when: moor_depth >= 7 and (not flag(gy_truth) or flag(gy_done)) and not flag(gy_broken)
 repeat: 1
 art: door
 tags: moor nature mystery
