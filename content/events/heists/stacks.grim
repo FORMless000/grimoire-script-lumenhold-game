@@ -99,7 +99,7 @@ text: {heist_depth >= 7: The goblin over the vault door is still muttering, and 
       say: {heist_depth >= 7: Among the crates stacked outside the vault door, one lid is loose. Something small and old comes with you.|{~The shelf that closed the aisle has a gap in it, and in the gap a small book nobody's missed. You take it up with you.|You run your hand along the closed shelf and find one spine that's loose. It comes with you.|Behind the fallen shelf, a sheaf of loose pages, very old. You roll them into your sleeve.}}
     lose:
       health -tiny
-      say: {heist_depth >= 7: The goblin catches you at the crates and says so. You leave them be.|{~The shelf leans on you, very gently, until you stop.|You find nothing but dust, and a splinter.|The shelf breathes in, and you jump back, and leave it be.}}
+      say: {heist_depth >= 7: The goblin catches you at the crates and shrieks so close to your ear that you crack your head on a lid. You leave them be.|{~The shelf leans on you, very gently, until something in your shoulder twinges and you stop.|You find nothing but dust, and a splinter.|The shelf breathes in and you jump back, too late for your fingers. You leave it be.}}
   queue heist_way_out now
 
 # ---------------- Band 1: the chained shelves (depth 1–2, apprentice) ----------------
@@ -227,7 +227,7 @@ repeat: 1
 art: book
 tags: heist magic danger
 scene: An open black book on a lectern in a dark library stack, a single drop of blood on the corner of its page, a student's pricked finger held above it.
-text: {seen(st2_charging_book) > 1: The book that charges is open on its lectern again, at the page where you stopped, and it hasn't forgotten what you owe.|On a lectern in the dark is a book with a duellist's hand on the cover, a forbidden manual from some war nobody teaches. When you turn its page, the corner pricks your finger and takes a drop. The next page will cost another. It charges its reader for everything it teaches.}
+text: {seen(st2_charging_book) > 1: The book that charges is open on its lectern again, at the page where you stopped, its corner turned up and waiting for a finger.|On a lectern in the dark is a book with a duellist's hand on the cover, a forbidden manual from some war nobody teaches. When you turn its page, the corner pricks your finger and takes a drop. The next page will cost another. It charges its reader for everything it teaches.}
 > left: Close it, and slip away
   queue heist_way_out now
   say: {~You close it. It lets you, this time. You suck your finger all the way back up the stair.|You leave the book on its lectern, owed nothing.}
@@ -343,7 +343,7 @@ text: {seen(st3_no_lamp) > 1: The dark at the bottom again, where your candle gi
       heist_loot += 1
       heist_depth += 1
       next
-      say: {~Spine by spine, in a dark like deep water. Your hand closes on a small book lying loose on a shelf, and you take it, and keep going.|You count the shelves by touch, and at the end of the count, a door.}
+      say: {~Spine by spine, in a dark like deep water. Your hand closes on a small book lying loose on a shelf, and you take it, and keep going.|You count the shelves by touch, and pocket a little book lying across the end of one. At the end of the count, a door.}
     lose:
       queue heist_caught now
       say: {~You lose the spines, then the floor, then the way. When the lantern finds you, you're sitting in the dark holding a book you can't see, nowhere near anywhere.|Something in the dark takes your hand and leads you, kindly, all the way to the prefects' door.}
@@ -358,7 +358,7 @@ repeat: 1
 art: book
 tags: heist magic money
 scene: A small glass display case in a dark library, full of tiny leather-bound books no bigger than a thumb, a faint shimmer of a charm over its lock.
-text: {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): The glass case again, a few books fewer, and the charm on its lock rewoven tighter than before. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}|In an alcove stands a glass case of grimoires no bigger than your thumb, each with a clasp of gold, a hundred spells to a book. The lock has no keyhole, only a charm laid over it that hums when your breath fogs the glass. Any collector would sell their mother for one of them.}
+text: {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): The glass case again, a few books fewer, and the charm on its lock rewoven, new thread laid over the old. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}|In an alcove stands a glass case of grimoires no bigger than your thumb, each with a clasp of gold, a hundred spells to a book. The lock has no keyhole, only a charm laid over it that hums when your breath fogs the glass. Any collector would sell their mother for one of them.}
 > left: Leave them under glass
   queue heist_way_out now
   say: {~You leave the little books to their glass and go back up the way you came.|You fog the glass once more, for the pleasure of it, and go.}
@@ -390,7 +390,7 @@ repeat: 1
 art: door
 tags: heist money danger
 scene: An iron-banded oak door in a dark library basement, a heavy prefects' padlock on it, crates labelled for confiscation stacked outside, a student kneeling at the lock with picks.
-text: At the bottom of the deep stacks, a door with a prefects' padlock and crates outside labelled for the confiscation vault. Behind it, three hundred years of everything the faculty ever took off a student. {flag(vault_catalogued): You catalogued half of it yourself, in detention. You know which shelf is which.|You've no idea what's where.} {flag(elixir_confiscated): Somewhere in there is the bottle the prefects took from your trunk.|}
+text: At the bottom of the deep stacks, a door with a prefects' padlock and crates outside labelled for the confiscation vault. Behind it, three hundred years of everything the faculty ever took off a student. {flag(vault_catalogued): You catalogued half of it yourself, in detention. You know which shelf is which.|You've no idea what's where.} {flag(elixir_confiscated): {flag(confiscated_owls_ink) and flag(confiscated_brightwater): Somewhere in there are the two bottles the prefects took from your trunk.|Somewhere in there is the bottle the prefects took from your trunk.}|}
 > leave: Leave it locked, and go
   queue heist_way_out now
   say: {~You leave the vault to its padlock. Getting here was the heist.|You touch the padlock once, for luck, and go back up.}
@@ -401,14 +401,14 @@ text: At the bottom of the deep stacks, a door with a prefects' padlock and crat
       heist_loot += 3
       heist_depth += 1
       queue heist_way_out now
-      say: {~The padlock gives with a click like a knuckle. Inside, a century of contraband on shelves: charmed dice, love letters, a stuffed owl that blinks. You fill your shirt with the small valuable things and lock it again behind you.|You go straight to the shelf you catalogued in detention and take the three best things on it. The padlock clicks shut after you as if nothing happened.}
+      say: {~The padlock gives with a click like a knuckle. Inside, a century of contraband on shelves: charmed dice, love letters, a stuffed owl that blinks. You fill your shirt with the small valuable things and lock it again behind you.|{flag(vault_catalogued): You go straight to the shelf you catalogued in detention|You go shelf by shelf by candlelight until you find the good one} and take the three best things on it. The padlock clicks shut after you as if nothing happened.}
     lose:
       if heist_cover > 0:
         queue heist_slip now
       else:
         queue heist_caught now
       say: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
-> bottle: Pick the lock for your own bottle back
+> bottle: Pick the lock for what's yours
   when: flag(elixir_confiscated)
   challenge feat using guile adept- +2 if flag(vault_catalogued):
     win:
@@ -425,7 +425,7 @@ text: At the bottom of the deep stacks, a door with a prefects' padlock and crat
       heist_loot += 1
       heist_depth += 1
       queue heist_way_out now
-      say: {~The padlock gives. Your things are on a shelf with a label in a prefect's neat hand, your name spelled right. You take them back, and one small thing more for the trouble.|Inside, a shelf of confiscated elixirs, gold and black, each labelled with a name. You find what's yours, and leave the rest to their owners' consciences.}
+      say: {~The padlock gives. Your things are on a shelf with a label in a prefect's neat hand, your name spelled right. You take them back, and one small thing more for the trouble.|Inside, a shelf of confiscated elixirs, gold and black, each labelled with a name. You find what's yours, pocket a little silver hip flask nobody will come back for, and leave the rest to their owners' consciences.}
     lose:
       if heist_cover > 0:
         queue heist_slip now

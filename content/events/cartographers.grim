@@ -48,7 +48,7 @@ actor: corvin
 art: map
 tags: club mystery
 scene: A huge map in shifting silver ink spread on the stone floor of a secret passage, weighted with candle stubs, two regions of it completely blank.
-text: {seen(carto_map_blanks) > 1: Corvin has the Master Map out again, and the two blanks are still white as snow. "Still thirty years," he says. "Still yours if you want them."|Corvin has the Master Map out on the passage floor, weighted with candle stubs: silver lines that move a little, like breathing, and two great blanks. One is under the library, below the last chained shelf; one is inside the seventh tower's wall. "The last Keeper left it to me this summer," he says. "Two lines on those, and you keep it with me. Fancy it?"}
+text: {seen(carto_map_blanks) > 1: Corvin has the Master Map out again, and the two blanks are still white as snow. "Still thirty years," he says. "Still yours if you want them."|Corvin has the Master Map out on the passage floor, weighted with candle stubs: silver lines that move a little, like breathing, and two great blanks. One is under the library, below the last chained shelf; one is inside the seventh tower's wall. "The last Keeper left it to me," he says. "Two lines on those, and you keep it with me. Fancy it?"}
 > left: "Show me where to start."
   flag carto_map_chain
   find lead_master_map
@@ -156,7 +156,7 @@ text: The old classrooms in the seventh tower each had a fireplace, and the fire
     lose:
       health -small
       mood -tiny
-      say: Halfway up the chimney narrows, and so do you, and for a long minute neither of you gives. You come down the way you went up, black from head to foot.
+      say: Halfway up the chimney narrows, and so do you, and for a long minute neither of you gives, and you very nearly panic. You come down the way you went up, elbows scraped raw, black from head to foot.
   next
 > right: Send a lantern up on a cord
   lore +tiny
@@ -165,6 +165,7 @@ text: The old classrooms in the seventh tower each had a fireplace, and the fire
 @event carto_map_keeper
 title: The Keeping of the Map
 thread: carto_master_map
+when: not flag(carto_map_done)
 tone: warm
 actor: corvin
 art: map
@@ -185,7 +186,7 @@ text: The Cartographers gather round the Master Map with candles. {(flag(heist_s
 > right: "It's yours, Corvin. Keep it."
   flag carto_map_done
   rel corvin +medium
-  say: Corvin looks at you for a long moment, then rolls the map back up and tucks it into his coat, where it has lived since the summer. He looks relieved, and then embarrassed about looking relieved.
+  say: Corvin looks at you for a long moment, then rolls the map back up and tucks it into his coat, where it has lived since the last Keeper left it. He looks relieved, and then embarrassed about looking relieved.
 
 # ---------------- The society's other nights (track: cartographers) ----------------
 
@@ -258,7 +259,7 @@ text: Corvin hands you a black card, blank but for a silver line that wanders. "
 > left: Slip it under {pick}'s door
   rel pick +small
   queue night_suspicion chance slim
-  say: You slide the card under {pick}'s door at midnight and run. Three nights later {pick} comes in under the gargoyle with a candle and a look you'll remember: someone finding out the castle is bigger than they thought.
+  say: You slide the card under {pick}'s door at midnight and run. Three nights later {pick} comes in under the gargoyle with a candle, just to look, and with a look you'll remember: someone finding out the castle is bigger than they thought.
 > right: "Nobody I'd trust with it."
   rel corvin -tiny
   guile +tiny
@@ -286,7 +287,7 @@ text: Midnight under the gargoyle, and the headcount comes up one short. {~Someo
     lose:
       health -small
       queue night_suspicion chance unlikely
-      say: {~The passages turn you round twice, and a prefect's lantern turns you round a third time. The missing member gets back on their own at dawn, grinning.|You never find the dumbwaiter's shaft, and a prefect nearly finds you. They come back at dawn, floury and triumphant.|You search every passage but the right one. At dawn they wake in their own bed, with no idea anyone looked.}
+      say: {~The passages turn you round twice, and a prefect's lantern turns you round a third time. The missing member gets back on their own at dawn, grinning, and you've had no sleep at all.|You never find the dumbwaiter's shaft, and a prefect nearly finds you. They come back at dawn, floury and triumphant. You've barked both shins in the dark.|You search every passage but the right one. At dawn they wake in their own bed, with no idea anyone looked. You have a cold by breakfast.}
 > right: Wait with the others
   mood -small
   say: {~You sit in the circle with the gap in it, and at dawn they climb back out of the wall, filthy and triumphant. The waiting was worse than going.|At dawn they come back through the wall, floury to the elbows, with a story nobody believes. The waiting was worse than going.|At dawn somebody finds them asleep in the library. The waiting was worse than going.}
@@ -315,4 +316,4 @@ text: {~A second-year Cartographer dropped their copy of the kitchens' passages,
 > right: Redraw the routes instead
   lore +tiny
   mood -small
-  say: {~The club spends the night changing every route to the kitchens: new chalk, new turnings, a passage given up for good.|The club gives up the old boathouse route for good, and spends the night finding a worse one.|The club spends the night redrawing everything the lost map showed. By dawn it's worth nothing to anyone.}
+  say: {~The club spends the night changing every route to the kitchens: new chalk, new turnings, a passage given up for good.|The club gives up the old boathouse route for good, and spends the night finding a worse one.|The club spends the night giving up every route the lost map showed and chalking new ones. By dawn it's a map of passages nobody uses.}

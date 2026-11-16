@@ -7,7 +7,7 @@
 
 @pool detention
 class: routine
-when: has(detention)
+when: has(detention) and term
 repeat: 3
 weight: 10
 
@@ -23,7 +23,7 @@ text: {Detention in the confiscation vault, among three hundred years of everyth
   lore +small
   mood -tiny
   flag vault_catalogued
-  say: {You write up forty things by candlelight, and by the end you know where the vault keeps what. Your eyes feel sandpapered.|Shelf by shelf. You find where this year's confiscations go, by the door, and where nothing has been touched since before Maud was a student. Your wrist aches.|Today it's the love potions, shelf after shelf of them. It's dull work, and you now know the vault better than the prefects do.}
+  say: {You write up forty things by candlelight, and by the end you know where the vault keeps what. Your eyes feel sandpapered, and the work is very dull.|Shelf by shelf. You find where this year's confiscations go, by the door, and where nothing has been touched since before Maud was a student. Your wrist aches, and so does your patience.|Today it's the love potions, shelf after shelf of them. It's dull work, and you now know the vault better than the prefects do.}
 > right: Read what students left behind
   mood +small
   alignment -tiny
@@ -44,12 +44,12 @@ text: {Your detention is clerking. The prefects' demerit ledger has to be copied
   mood -tiny
   flag prefect_rota
   say: {You copy the ledger faithfully, and the rota into your head while you're at it. Now you know who walks the east stair, and when the library goes unwatched. Your hand cramps by the end.|Every name, every crime, and in the back of your mind the rota, quarter-hour by quarter-hour. It's the dullest useful {slot == "evening": evening|afternoon} you've had.|You copy the week out neatly. A fresh rota is pinned up; you learn it without moving your lips.}
-> right: Leave {other}'s name out
+> right: Lose one of {other}'s lines
   alignment -tiny
   challenge deceive apprentice:
     win:
       rel other +small
-      say: {You copy everything but one line. Nobody checks. {other} never knows why their week was so quiet, and you never say.|One name fewer in the clean copy. The prefect signs it without reading. {other} buys you a cup of tea a week later, for no reason they can name.|You leave out {other}'s line. The ledger is lighter by one insolence, and you feel lighter by none.}
+      say: {You copy everything but one of {other}'s lines. Nobody checks. {other} never knows why their week was a little quieter, and you never say.|One line fewer in the clean copy. The prefect signs it without reading. {other} buys you a cup of tea a week later, for no reason they can name.|You leave out {other}'s line. The ledger is lighter by one insolence, and you feel lighter by none.}
     lose:
       mood -small
       say: {The prefect checks your copy against the old one, finds the gap, and writes {other}'s name back in, and yours underneath.|"You missed a line," says the prefect, and reads it aloud. You copy it in, in your best hand, while they watch.|A prefect reads over your shoulder. "Friend of yours?" They put the name back in red, and stay to watch you finish.}
@@ -66,7 +66,7 @@ text: {Detention, and a note pinned to the desk. A letter of apology, four hundr
   alignment +tiny
   charm +small
   mood -small
-  say: {You write it plainly, and it's harder than lying would have been. The professor reads it, folds it, and says "thank you", and means it.|You find you are sorry, about two hundred words in. The rest come slowly. The professor keeps the letter, which feels worse than if they'd burned it.|It doesn't get easier to mean it; you only get better at it. The professor nods at the last line and doesn't make you read it aloud.}
+  say: {You write it plainly, and it's harder than lying would have been. The professor reads it, folds it, and says "thank you", and means it.|You find you are sorry, about two hundred words in. The rest come slowly. The professor keeps the letter, which feels worse than if they'd burned it.|It isn't easy to mean it, and it isn't meant to be. The professor nods at the last line and doesn't make you read it aloud.}
 > right: Write a magnificent one
   alignment -tiny
   challenge deceive adept- wild:
@@ -77,7 +77,7 @@ text: {Detention, and a note pinned to the desk. A letter of apology, four hundr
     lose:
       health -tiny
       mood -small
-      say: {"This is a performance," says the professor, and hands it back. "Again. Sincerely, this time." You're there until the lamps go out.|The professor reads one line aloud, flatly, and the whole thing sounds as hollow as it is. You start again on a fresh sheet, until your hand cramps and the room goes cold.|"Very pretty," says the professor. "Now the real one." You write the real one, late, with cold feet.}
+      say: {"This is a performance," says the professor, and hands it back. "Once more. Sincerely, this time." You're there until the lamps go out, and your hand cramps long before.|The professor reads one line aloud, flatly, and the whole thing sounds as hollow as it is. You start over on a fresh sheet, until your hand cramps and the room goes cold.|"Very pretty," says the professor. "Now the real one." You write the real one, late, with cold feet.}
 
 @event det_candle_wax
 title: Wax on the Long Tables
@@ -112,7 +112,7 @@ text: {Detention in the observatory. The great telescope's brass and its lens ar
 > left: Polish every inch of it
   lore +small
   health -tiny
-  say: {You polish the brass until it gleams and the lens until it disappears. Your fingers are numb. The keeper of the dome checks it and says nothing, which here is praise.|You learn the telescope's whole body by polishing it, every screw and gear. You also learn how cold a brass dome can get.|An hour of small circles. When you climb down, the lens is so clean the sky looks closer.}
+  say: {You polish the brass until it gleams and the lens until it disappears. Your fingers are numb. The keeper of the dome checks it and says nothing, which here is praise.|You learn the telescope's whole body by polishing it, every screw and gear. You also learn how cold a brass dome can get.|An hour of small circles, until your fingers are numb. When you climb down, the lens is so clean the sky looks closer.}
 > right: Look through it instead
   mood +small
   study -tiny
@@ -129,7 +129,7 @@ text: {Detention on the Flight Field. Every bad landing of the week has left a d
 > left: Fill every last one
   vigor +small
   health -tiny
-  say: {You dig and stamp and dig until the field is level and your blisters have blisters.|By the last divot you can lift a full barrow one-handed. You mean to be proud of that once your arms stop shaking.|You fill the field flat. The next practice lands on it and makes new divots before you've left the fence.}
+  say: {You dig and stamp and dig until the field is level and your blisters have blisters.|By the last divot you can lift a full barrow one-handed. You mean to be proud of that once your arms stop shaking.|You fill the field flat, and your back aches all the way up the hill. The next practice lands on it and makes new divots before you've left the fence.}
 > right: Borrow a broom while nobody's looking
   challenge deceive apprentice wild:
     win:
@@ -139,7 +139,7 @@ text: {Detention on the Flight Field. Every bad landing of the week has left a d
     lose:
       mood -small
       renown -tiny
-      say: {The prefect turns round just as you take off. The whole race team, arriving for practice, sees you marched back to your barrow.|You're spotted halfway down the field. The prefect makes you fill the divot you made landing.|You get as far as the fence. The prefect is waiting there with your spade, and the team cheers, sarcastically.}
+      say: {The prefect turns round just as you take off. The whole race team, arriving for practice, sees you marched back to your barrow.|You're spotted halfway down the field, by the prefect and half the race team. The prefect makes you fill the divot you made landing.|You get as far as the fence. The prefect is waiting there with your spade, and the team cheers, sarcastically.}
 
 @event det_inkwells
 title: Three Hundred Inkwells
@@ -175,8 +175,8 @@ text: {Detention on the north parapet. The gargoyles, a bucket and a brush, and 
 > left: Scrub them till they grin
   vigor +small
   health -tiny
-  say: {You scrub until every face along the parapet is clean and grinning. Your knuckles are raw and you smell of pigeon.|A whole row of clean gargoyles. The pigeons are already lining up to undo it.|You scrub hard and fast in the wind. By the end you're freezing and the gargoyles look delighted.}
+  say: {You scrub until every face along the parapet is clean and grinning. Your knuckles are raw and you smell of pigeon.|A whole row of clean gargoyles, and your arms ache from fighting the wind. The pigeons are already lining up to undo it.|You scrub hard and fast in the wind. By the end you're freezing and the gargoyles look delighted.}
 > right: Linger at the third gargoyle
   guile +small
   health -tiny
-  say: {member(cartographers): {You check the chalk mark behind the third gargoyle is still fresh while you scrub, and smudge it a little, so it looks old.|You give the third gargoyle a very thorough wash, and the passage behind it a very thorough look. All clear.|You scrub the third gargoyle last and slowest, and leave it shining as if it had nothing to hide.}|{You scrub around the draught slowly, and it comes from no wall. You feel for the edge of something.|The stone behind the third one is warmer than it should be. You don't find a door. You're nearly sure there is one.|You spend so long on the third gargoyle that the prefect asks if you're in love with it. You learn nothing, and suspect a great deal.}}
+  say: {member(cartographers): {You check the chalk mark behind the third gargoyle is still fresh while you scrub, and smudge it a little, so it looks old. The wind has your fingers numb.|You give the third gargoyle a very thorough wash, and the passage behind it a very thorough look. All clear, and you're chilled to the bone.|You scrub the third gargoyle last and slowest, and leave it shining as if it had nothing to hide, your knuckles raw.}|{You scrub around the draught slowly, and it comes from no wall. You feel for the edge of something with frozen fingers.|The stone behind the third one is warmer than it should be. You don't find a door. You're nearly sure there is one.|You spend so long on the third gargoyle that the prefect asks if you're in love with it. You learn nothing but how cold the parapet gets, and suspect a great deal.}}

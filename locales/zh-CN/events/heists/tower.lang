@@ -65,8 +65,8 @@ opt.left.say.1 [1f2d1e] = {heist_depth >= 7: 你把决斗师的门留给它的�
 opt.right.label [f7f345] = 就地搜一搜
 # en: {heist_depth >= 7: Behind the stacked desks by the study door, a drawer has come loose. Something small and old comes with you.|{~Under a loose board on the landing, a tin of old marbles and a note that just says "Sorry about the frog". You take the tin.|In a niche in the wall, a brass bell-pull handle, very fine. It comes down with you.|On the window ledge, a pair of spectacles with gold rims, left a century ago. You take them.}}
 opt.right.say.1 [a3d5ab] = {heist_depth >= 7: 书房门边摞着的课桌里，有一个抽屉松了。一样又小又旧的东西跟你走了。|{~平台上一块松动的木板底下，有一铁盒旧弹珠和一张纸条，上面只写着“青蛙的事，对不起”。你拿了那个铁盒。|墙上一个壁龛里，有一个黄铜拉铃把手，非常精致。它跟你下来了。|窗台上，一副金边眼镜，一百年前落下的。你拿走了。}}
-# en: {heist_depth >= 7: The desks shift as you reach in, and the whole heap groans. You leave them be.|{~You find a splinter, and dust, and nothing.|A board gives under your knee, and you leave the landing alone.|The ledge is crumbling, and so, briefly, are you.}}
-opt.right.say.2 [0dbb42] = {heist_depth >= 7: 你一伸手，课桌就挪了，整堆都在呻吟。你不再碰它们。|{~你找到一根木刺，一些灰尘，别的什么也没有。|一块木板在你膝盖下塌了，你不再碰这个平台。|窗台在碎，有那么一会儿，你也是。}}
+# en: {heist_depth >= 7: The desks shift as you reach in, and the heap comes down on your arm. You pull it free, bruised, and leave them be.|{~You find a splinter, and dust, and nothing.|A board gives under your knee, and you leave the landing alone.|The ledge is crumbling, and so, briefly, are you.}}
+opt.right.say.2 [130463] = {heist_depth >= 7: 你一伸手，课桌就挪了，整堆压在你胳膊上。你把胳膊抽出来，青了一块，不再碰它们。|{~你找到一根木刺，一些灰尘，别的什么也没有。|一块木板在你膝盖下塌了，你不再碰这个平台。|窗台在碎，有那么一会儿，你也是。}}
 
 @event tw1_one_shoulder
 # en: One Shoulder Wide
@@ -131,8 +131,8 @@ text [07642f] = {seen(tw2_exam_cupboard) > 1: {flag(heist_papers_taken): 又是�
 scene [8baa9f] = 夜里一间落满灰的旧教室，一个高高的上锁柜子开着一条缝，里面是用缎带扎着的发黄考卷。
 # en: Leave the papers, and go
 opt.left.label [22a7fb] = 别管考卷，走吧
-# en: {~You leave the past's exams to the past.|You go back down the wall stair with clean hands and nothing in them.}
-opt.left.say.1 [828ad0] = {~你把过去的考试留给过去。|你空着干净的手，顺着墙里的楼梯下去了。}
+# en: {~You leave the past's exams to the past.|You go back down the wall stair with clean hands, the papers left where they were.}
+opt.left.say.1 [a0303c] = {~你把过去的考试留给过去。|你手上干干净净，顺着墙里的楼梯下去了，试卷原样留在那里。}
 # en: Pick the cupboard's lock
 opt.right.label [546d5e] = 撬开柜子的锁
 # en: {~The old lock gives in a puff of dust. You take the two bundles with the best seals, a century of sweat in faded ink.|Inside, the papers, and on top, a marked script with a teacher's note: "See me." You take that one, and two bundles more.}
@@ -203,8 +203,8 @@ opt.right.say.2 [03922a] = {~你的鞋吱了一声。在那样的寂静里，那
 @event tw3_orrery
 # en: The Orrery
 title [e04159] = 太阳系仪
-# en: {seen(tw3_orrery) > 1: {flag(heist_pearl_taken): The orrery is still turning, one planet short where you took the pearl.|The orrery is still turning, the pearl still riding its little arm.}|The astronomy classroom's brass orrery is still turning, a century after anyone wound it, its planets on long arms going round and round in the dark. The smallest planet is a pearl. It would come off its arm, if you were quick, and the orrery wouldn't stop.}
-text [7d7740] = {seen(tw3_orrery) > 1: {flag(heist_pearl_taken): 太阳系仪还在转，在你取走珍珠的地方少了一颗行星。|太阳系仪还在转，珍珠还骑在它的小臂上。}|天文教室里的黄铜太阳系仪还在转，一百年没人上过发条了，行星在长臂上一圈又一圈地在黑暗中转着。最小的那颗行星是一颗珍珠。手快的话，它能从臂上取下来，而仪器不会停。}
+# en: {seen(tw3_orrery) > 1: The orrery is still turning, the pearl still riding its little arm.|The astronomy classroom's brass orrery is still turning, a century after anyone wound it, its planets on long arms going round and round in the dark. The smallest planet is a pearl. It would come off its arm, if you were quick, and the orrery wouldn't stop.}
+text [3cfcfe] = {seen(tw3_orrery) > 1: 太阳系仪还在转，珍珠还骑在它的小臂上。|天文教室里的黄铜太阳系仪还在转，一百年没人上过发条了，行星在长臂上一圈又一圈地在黑暗中转着。最小的那颗行星是一颗珍珠。手快的话，它能从臂上取下来，而仪器不会停。}
 # en: An abandoned astronomy classroom at night, a large brass orrery of planets on arms still slowly turning in the dark, a student reaching carefully toward one small planet.
 scene [cf692b] = 夜里一间废弃的天文教室，一台大型黄铜太阳系仪的行星在臂上于黑暗中缓缓转动，一个学生小心地伸手去够一颗小行星。
 # en: Leave it turning
@@ -249,8 +249,8 @@ opt.left.label [3030c9] = 把书房留给决斗师
 opt.left.say.1 [5ea37b] = {~你摸了一下铜牌就下去了。能走到这儿就够了。|你没碰那扇门。有些房间是有理由关着的。}
 # en: Pick the lock and search the study
 opt.right.label [d89aeb] = 撬开锁，搜一搜书房
-# en: In a glass case lies a notebook the master confiscated from a student duellist long ago, its ink faded brown. In a neat and terrible hand it tells how to reach into someone and take their magic for yours. You read it through, and close it with a strength in your hands that isn't yours. Extraction.
-opt.right.say.1 [d58513] = 玻璃盒里放着一本笔记本，是决斗师很久以前从一个学生决斗者那里没收来的，墨迹已经褪成褐色。它用工整而可怕的笔迹写着，怎样伸进别人体内，把他们的魔力据为己有。你把它读完，合上时，手里有了一股不属于你的力量。汲取。
+# en: In a glass case lies a notebook the master confiscated from a student duellist long ago, its ink faded brown. In a neat and terrible hand it tells how to reach into someone and take their magic for yours. You read it through, and close it with a strength in your hands that isn't yours. Extraction. His silver inkstand and a box of his medals go into your shirt.
+opt.right.say.1 [932ca3] = 玻璃盒里放着一本笔记本，是决斗师很久以前从一个学生决斗者那里没收来的，墨迹已经褪成褐色。它用工整而可怕的笔迹写着，怎样伸进别人体内，把他们的魔力据为己有。你把它读完，合上时，手里有了一股不属于你的力量。汲取。他的银墨水台和一盒奖章也进了你的衬衫。
 # en: The confiscated notebook is in its glass case, and you know already what it says. You leave it, and take the master's silver inkstand and a box of old duelling medals instead.
 opt.right.say.2 [3999db] = 那本没收来的笔记本在玻璃盒里，你已经知道里面写的是什么。你没碰它，拿走了决斗师的银墨水台和一盒旧决斗奖章。
 # en: {~The old lock is warded, and it rings like a struck sword.|The door gives, and so does its top hinge, and it comes down on the desks with a crash that wakes everything.}

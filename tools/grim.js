@@ -1047,8 +1047,10 @@ function lintReview(content, problems, queued) {
       if (top || gated) continue;
       let nested = false;
       G.walkEffects(o.effects, (st) => { if (['challenge', 'chance'].includes(st.t)) G.walkEffects([st], (x) => { if (x.t === 'delta' && x.name === 'gold' && x.sign < 0) nested = true; }); });
-      // an `if` that itself reads gold is its own gate
-      if (nested && !(o.effects || []).some((st) => st.t === 'if' && st.branches.some((b) => /\bgold\b/.test((b.cond && b.cond.src) || '')))) P('warn', e, 'option "' + o.key + '" can lose gold in a check or branch with no price up front and no gold gate (an empty purse makes the wager free)');
+      // an `if` that itself reads gold is its own gate (at the top, or inside the check around the loss)
+      let ifGold = false;
+      G.walkEffects(o.effects, (st) => { if (st.t === 'if' && st.branches.some((b) => /\bgold\b/.test((b.cond && b.cond.src) || ''))) ifGold = true; });
+      if (nested && !ifGold) P('warn', e, 'option "' + o.key + '" can lose gold in a check or branch with no price up front and no gold gate (an empty purse makes the wager free)');
     }
     // study on a break
     let study = false;

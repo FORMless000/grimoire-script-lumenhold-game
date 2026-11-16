@@ -39,11 +39,11 @@ weight: 8
 art: cup
 tags: social village
 scene: A tea shop counter, a woman in an apron frowning at a teapot as if it had betrayed her, a student holding a cup that isn't what they wanted.
-text: Mabel brings you a pot of the calm blend before you've sat down, as she always does. But you came in wanting ginger, the courage one, and for once she didn't see it. She looks at the pot, then at you, and her face goes very still. "Well," she says. "That's never happened."
+text: Mabel brings you a pot before you've sat down, the calm blend, as sure of herself as she always is with a guess. But you came in wanting ginger, the courage one, and for once she didn't see it. She looks at the pot, then at you, and her face goes very still. "Well," she says. "That's never happened."
 > left: Tell her she got it wrong
   rel mabel +small
   mood -tiny
-  say: She laughs, a little too long, and goes to make the ginger. When she brings it she sits down across from you. "You've changed, petal," she says. "I was reading last year's you." She doesn't charge for either pot, and she looks at you differently for the rest of the afternoon.
+  say: She laughs, a little too long, and goes to make the ginger. When she brings it she sits down across from you. "You've changed, petal," she says. "I was reading the you I'd got used to." She doesn't charge for either pot, and she looks at you differently for the rest of the afternoon.
 > right: Drink it and say it's perfect
   mood +small
   rel mabel -tiny
@@ -60,12 +60,12 @@ weight: 10
 art: cup
 tags: social village
 scene: A row of cups on hooks behind a tea-shop counter, one hook empty, a woman in an apron looking at it instead of at the customers.
-text: Mabel stops you in the square. One of her regulars hasn't been in for a week: an old man who has had the same pot at the same table every afternoon for thirty years. His cup is still on its hook. "His cottage is up the hill past the mill," she says. "I can't leave the shop, petal. Would you look in on him?"
+text: Mabel stops you in the square. One of her regulars hasn't been in for a week: an old man who has had the same pot at the same table every afternoon for thirty years. His cup isn't on its hook: she took it down on Monday to wash it, and hasn't had the heart to hang it back. "His cottage is up the hill past the mill," she says. "I can't leave the shop, petal. Would you look in on him?"
 > left: Walk up the hill and look in on him
   health -tiny
   rel mabel +small
   mood +small
-  say: He's in bed with a cold and a bad temper, and very pleased to be found. You light his fire, fetch his post and stay for an hour of complaints about the weather. When you tell Mabel, she takes down his cup and fills it, and sends you back up the hill with it, wrapped in a cloth.
+  say: He's in bed with a cold and a bad temper, and very pleased to be found. You light his fire, fetch his post and stay for an hour of complaints about the weather. When you tell Mabel, she fetches his cup from under the counter and fills it, and sends you back up the hill with it, wrapped in a cloth.
 > right: Say you've a lecture to get to
   study +tiny
   rel mabel -tiny
@@ -100,7 +100,7 @@ class: routine
 tone: warm
 trigger: social
 actor: grimsby
-when: rel(grimsby) >= 6
+when: rel(grimsby) >= 6 and term
 weight: 10
 repeat: 3
 art: book
@@ -183,13 +183,13 @@ repeat: 3
 art: mask
 tags: social study
 scene: A long hall at lunch, a professor in a theatrical scarf leaning across a table towards a student, a salt cellar between them.
-text: {seen(vey_lunch_dare) > 1: {~Vey sits down across your lunch with the same smile as last time. "Shall we?" she says.|"Pudding's in five minutes," says Professor Vey, sitting down. "That's plenty of time to deceive a professor."|Vey drops into the seat opposite with her chin on her hands. "The pudding," she says, "is a custard tart. Probably. Fool me."}|Professor Vey sits down opposite you at lunch, which nobody does. "One trick," she says. "Any trick. Fool me before the pudding and I'll owe you one." She folds her hands and watches you with enormous interest.}
+text: {seen(vey_lunch_dare) > 1: {~Vey sits down across your lunch with the same smile as last time. "Shall we?" she says.|"Pudding's in five minutes," says Professor Vey, sitting down. "That's plenty of time to deceive a professor."|Vey drops into the seat opposite with her chin on her hands. "The pudding," she says, "is a custard tart. Probably. Fool me."}|Professor Vey sits down opposite you at lunch, which nobody does. "One trick," she says. "Any trick. Fool me before the pudding and you can have mine." She folds her hands and watches you with enormous interest.}
 > left: Try to fool her
   challenge deceive vs vey.guile -3:
     win:
       rel vey +medium
       charm +small
-      say: {~You glamour the salt cellar into a pepper pot and leave the pepper pot alone. She picks up the wrong one, tastes it and laughs out loud, and the whole table turns. "Owed," she says. "Owed."|You don't do any magic at all; you only say that you have. She spends the pudding checking everything on the table. "Oh," she says, when she realises. "Oh, that's good."|She smells the trick before she sees it, and you'd planned for that. She claps, once, delighted. "A student who knows about the nose," she says. "Come to my office hours. Bring that."}
+      say: {~You glamour the salt cellar into a pepper pot and leave the pepper pot alone. She picks up the wrong one, tastes it and laughs out loud, and the whole table turns. She pushes her pudding across to you without a word.|You don't do any magic at all; you only say that you have. She spends the pudding checking everything on the table. "Oh," she says, when she realises. "Oh, that's good."|She smells the trick before she sees it, and you'd planned for that. She claps, once, delighted. "A student who knows about the nose," she says. "Come to my office hours. Bring that."}
     lose:
       rel vey +tiny
       mood -tiny
@@ -228,7 +228,7 @@ place: stables
 class: routine
 tone: tense
 actor: brask
-when: met(brask) and rel(brask) >= 3
+when: met(brask) and rel(brask) >= 3 and term
 weight: 8
 repeat: 2
 art: paw
@@ -244,11 +244,11 @@ text: {~Professor Brask has a hippogriff's wing pinned open with both arms and a
     lose:
       health -small
       rel brask +tiny
-      say: {~You hand her the wrong pliers and the hippogriff takes the opportunity to bite you. Brask gets the splinter out one-handed and says, "Moral there."|You hold the paw where she wasn't looking. The griffin explains your mistake with its other paw. Brask finishes the job and binds your hand too, briskly.|The owl gets loose and spends ten minutes on the beams, and so do you. Brask fixes the feather when it comes down, and two words on you, both short.}
+      say: {~You hand her the wrong pliers and the hippogriff takes the opportunity to bite you. Brask gets the splinter out one-handed and says, "Moral there."|You hold the paw where she wasn't looking. The griffin explains your mistake with its other paw. Brask finishes the job and binds your hand too, briskly.|The owl gets loose and spends ten minutes on the beams, and so do you, until a rafter takes the skin off your shin. Brask fixes the feather when it comes down, and two words on you, both short.}
 > right: Ask her to say the whole sentence
   rel brask +tiny
   study -tiny
-  say: {~"Hm," says Brask, and tells you, slowly, all of it, with the history of every tool and the creature it was last used on. You never forget it. You are late for everything.|She says the whole sentence, and the next three, and the next thirty, and the splinter comes out while she's talking. Your afternoon goes with it. She doesn't think less of you for asking. She does remember that you asked.|"Oh," she says, surprised. "The splint. Obviously." Then she explains why it's obvious for half an hour.}
+  say: {~"Hm," says Brask, and tells you, slowly, all of it, with the history of every tool and the creature it was last used on. You never forget it. You are late for everything.|She says the whole sentence, and the next three, and the next thirty, and the thorn comes out while she's talking. Your afternoon goes with it. She doesn't think less of you for asking. She does remember that you asked.|"Oh," she says, surprised. "The splint. Obviously." Then she explains why it's obvious for half an hour.}
 
 @event brask_laugh
 title: A Bite and a Moral
@@ -273,7 +273,7 @@ text: Professor Brask is leaning on the paddock fence beside you, which she does
       say: {~She listens all the way through and says, "No bite." Then she tells you the same story properly, with a bite, and it is much better, and she doesn't laugh at all.|"Moral's in the wrong place," says Brask. "Should be after the bite. Never before." She tells you three of hers to show you. You're both quite pleased by the end.|She doesn't laugh, but she nods, which is a start. "Practise on the goats," she says. "They're honest."}
 > right: Ask for one of hers instead
   lore +small
-  say: {~She tells you about a student who fed a dragon a pear in 1971. The bite is at the end. So is the student. The moral is about pears.|Brask tells you the one about the griffin and the bishop. You'll never be able to look at a bishop again.|She tells you a story about the old barn owl that ends with a bite and no moral at all, then walks off before you can ask about it.}
+  say: {~She tells you about a student who fed a dragon a pear in 1971. The bite is at the end. So is the student. The moral is about pears.|Brask tells you the one about the griffin and the bishop. You'll never be able to look at a bishop again.|She tells you a story about the old barn owl that ends with a bite and no moral. "You supply it," she says, and walks off. You're still working on it at supper.}
 
 # ---------------- Amaranth ----------------
 
@@ -283,7 +283,7 @@ class: routine
 tone: warm
 trigger: social
 actor: amaranth
-when: rel(amaranth) >= 8
+when: rel(amaranth) >= 8 and term
 weight: 10
 repeat: 2
 art: cup
@@ -294,7 +294,7 @@ text: {seen(amaranth_tea_break) > 1: {~Sister Amaranth is sitting down again, sh
   mood +small
   rel amaranth +small
   study -tiny
-  say: {~You sit. She tells you about the first patient she ever lost, in four short sentences, and then about a cat she had as a girl, in a great many, and the evening you'd meant for your notes goes by. "Keep doing that," she says at last, and you're not sure what she means.|Five minutes stretch to forty, and your reading waits. She talks about her mother, who was a healer too and believed no excuse either. When the bell goes she stands, and is Sister Amaranth again, and sends you off with a list of things to eat.|You don't talk about your health. You talk about the weather, and the bread, and a book she read twice, for longer than you had. When you leave, she's asleep sitting up, with the cup still level in her hands. You take it gently and put it on the shelf.}
+  say: {~You sit. She tells you about the first patient she ever lost, in four short sentences, and then about a cat she had as a girl, in a great many, and the evening you'd meant for your notes goes by. "Keep doing that," she says at last, and you're not sure what she means.|Five minutes stretch to forty, and your reading waits. She talks about her mother, who was a healer too and believed no excuse either. When the bell goes she stands, and is Sister Amaranth again, and sends you off with a list of things to eat.|You don't talk about your health. You talk about the weather, and the bread, and a book she read twice, for longer than you had, and the notes you meant to copy stay uncopied. When you leave, she's asleep sitting up, with the cup still level in her hands. You take it gently and put it on the shelf.}
 > right: Leave her to rest
   rel amaranth +tiny
   say: {~"Wise," she says, and closes her eyes. You close the door very quietly.|You back out. In the morning, there's a note on your bedside table: "For not talking."|You leave. From the corridor you hear her sigh, a long one, the kind she never lets anyone hear.}
@@ -307,7 +307,7 @@ class: routine
 tone: warm
 trigger: social
 actor: pell
-when: rel(pell) >= 4
+when: rel(pell) >= 4 and term
 weight: 10
 repeat: 3
 art: bottle

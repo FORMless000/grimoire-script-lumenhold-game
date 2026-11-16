@@ -97,7 +97,7 @@ text: {heist_depth >= 7: The study's lock won't take another try tonight, and ev
       say: {heist_depth >= 7: Behind the stacked desks by the study door, a drawer has come loose. Something small and old comes with you.|{~Under a loose board on the landing, a tin of old marbles and a note that just says "Sorry about the frog". You take the tin.|In a niche in the wall, a brass bell-pull handle, very fine. It comes down with you.|On the window ledge, a pair of spectacles with gold rims, left a century ago. You take them.}}
     lose:
       health -tiny
-      say: {heist_depth >= 7: The desks shift as you reach in, and the whole heap groans. You leave them be.|{~You find a splinter, and dust, and nothing.|A board gives under your knee, and you leave the landing alone.|The ledge is crumbling, and so, briefly, are you.}}
+      say: {heist_depth >= 7: The desks shift as you reach in, and the heap comes down on your arm. You pull it free, bruised, and leave them be.|{~You find a splinter, and dust, and nothing.|A board gives under your knee, and you leave the landing alone.|The ledge is crumbling, and so, briefly, are you.}}
   queue heist_way_out now
 
 # ---------------- Band 1: the wall stair (depth 1–2, apprentice) ----------------
@@ -199,7 +199,7 @@ scene: A dusty old classroom at night, a tall locked cupboard with its doors ope
 text: {seen(tw2_exam_cupboard) > 1: {flag(heist_papers_taken): The examiner's cupboard again, its lock scratched now, a bundle or two lighter than it was.|The examiner's cupboard again, locked as ever, the ribbons still tied.}|The first classroom off the landing still has its examiner's cupboard, locked, and through the crack in the doors, bundles of exam papers tied with faded ribbon, a century of them, answers and all. Collectors pay for old papers. Historians pay more.}
 > left: Leave the papers, and go
   queue heist_way_out now
-  say: {~You leave the past's exams to the past.|You go back down the wall stair with clean hands and nothing in them.}
+  say: {~You leave the past's exams to the past.|You go back down the wall stair with clean hands, the papers left where they were.}
 > right: Pick the cupboard's lock
   challenge feat using guile journeyman:
     win:
@@ -261,7 +261,7 @@ title: The Last Register
 thread: heist_tower
 class: routine
 tone: eerie
-when: heist_depth >= 3 and heist_depth <= 4
+when: heist_depth >= 3 and heist_depth <= 4 and not flag(heist_register_taken)
 repeat: 1
 art: book
 tags: heist mystery
@@ -273,6 +273,7 @@ text: {seen(tw2_class_register) > 1: The register still lies open at its last da
 > right: Take the register
   challenge feat using guile journeyman:
     win:
+      flag heist_register_taken
       heist_loot += 1
       heist_depth += 1
       next
@@ -316,12 +317,12 @@ title: The Orrery
 thread: heist_tower
 class: routine
 tone: eerie
-when: heist_depth >= 5 and heist_depth <= 6
+when: heist_depth >= 5 and heist_depth <= 6 and not flag(heist_pearl_taken)
 repeat: 1
 art: star
 tags: heist money
 scene: An abandoned astronomy classroom at night, a large brass orrery of planets on arms still slowly turning in the dark, a student reaching carefully toward one small planet.
-text: {seen(tw3_orrery) > 1: {flag(heist_pearl_taken): The orrery is still turning, one planet short where you took the pearl.|The orrery is still turning, the pearl still riding its little arm.}|The astronomy classroom's brass orrery is still turning, a century after anyone wound it, its planets on long arms going round and round in the dark. The smallest planet is a pearl. It would come off its arm, if you were quick, and the orrery wouldn't stop.}
+text: {seen(tw3_orrery) > 1: The orrery is still turning, the pearl still riding its little arm.|The astronomy classroom's brass orrery is still turning, a century after anyone wound it, its planets on long arms going round and round in the dark. The smallest planet is a pearl. It would come off its arm, if you were quick, and the orrery wouldn't stop.}
 > left: Leave it turning
   queue heist_way_out now
   say: {~You watch it go round once more and leave it to its century.|You leave the planets where they are. Somebody should.}
@@ -394,7 +395,7 @@ text: At the top of the old classrooms, the stair is choked with stacked desks, 
         learn_spell extraction
         flag heist_tower_extraction
         alignment -small
-        say: In a glass case lies a notebook the master confiscated from a student duellist long ago, its ink faded brown. In a neat and terrible hand it tells how to reach into someone and take their magic for yours. You read it through, and close it with a strength in your hands that isn't yours. Extraction.
+        say: In a glass case lies a notebook the master confiscated from a student duellist long ago, its ink faded brown. In a neat and terrible hand it tells how to reach into someone and take their magic for yours. You read it through, and close it with a strength in your hands that isn't yours. Extraction. His silver inkstand and a box of his medals go into your shirt.
       else:
         say: The confiscated notebook is in its glass case, and you know already what it says. You leave it, and take the master's silver inkstand and a box of old duelling medals instead.
       queue heist_way_out now

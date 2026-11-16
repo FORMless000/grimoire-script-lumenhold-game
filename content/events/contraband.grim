@@ -15,7 +15,7 @@ trigger: auto
 type: menu
 class: routine
 tone: tense
-when: (has(brightwater_bottle) and not has(brightwater)) or (has(owls_ink_bottle) and not has(owls_ink))
+when: has(brightwater_bottle) or has(owls_ink_bottle)
 repeat: 1
 art: bottle
 tags: danger
@@ -80,7 +80,7 @@ text: {other} has been glowing for a week: sleeping well, laughing loudly, top o
 title: Not Your Bottle
 class: routine
 tone: tense
-when: turn >= 6 and not off_campus
+when: turn >= 6 and not off_campus and not has(owls_ink_bottle)
 weight: 6
 cast:
   other: any where met(other) and tagged(other, student)
@@ -135,7 +135,7 @@ cast:
 art: bottle
 tags: danger study money
 scene: A student in a dormitory doorway holding out a small black bottle in an open palm, a second identical bottle in the other hand, looking embarrassed.
-text: {~{other} catches you on the dormitory stairs, pale and sheepish. In a panic about finals {they} bought two bottles of Owl's Ink from someone behind the refectory, and now want{s} rid of the second. "At cost," {they} say{s}. "Please. I can't have both in my trunk."|{other} sits down next to you in the library and slides a black bottle across the desk behind a book. A cousin in the village sent two. "I only need one to pass," {they} whisper{s}. "At cost. Please."|{other} finds you after supper with a black bottle in each coat pocket, bought off a fifth-year at the Newt at a terrible price. "I panicked," {they} say{s}. "Take one off me at cost? Please?"}
+text: {~{other} catches you on the dormitory stairs, pale and sheepish. In a panic about finals {they} bought two bottles of Owl's Ink from someone behind the refectory, and now want{s} rid of the second. "At cost," {they} say{s}. "Please. I can't have both in my trunk."|{other} sits down next to you in the library and slides a black bottle across the desk behind a book. A cousin in the village sent two. "I only need one to pass," {they} whisper{s}. "At cost. Please."|{other} finds you after supper with a black bottle in each coat pocket, bought off a former student at the Newt at a terrible price. "I panicked," {they} say{s}. "Take one off me at cost? Please?"}
 > left: Take it off {their} hands
   flag elixir_known elixir_kept
   gold -small
@@ -212,10 +212,10 @@ weight: 12
 art: bottle
 tags: money danger
 scene: A goblin in a velvet waistcoat on a midnight jetty holding up a small bottle between two fingers, a ledger open on a crate beside him.
-text: Grisk has a bottle and a favour, and they come as a pair. {&"Watch the jetty for an hour, and see nothing."|"Keep a crate under your bed till Thursday."|"A kind word to a prefect, about a friend of mine."} {before_finals() or has(brightwater_want) or has(owls_ink_want): "And a few crowns on delivery," he adds. "{before_finals(): Ink is dear this close to finals.|You look like someone who needs a friend, and friends are dear.}"|He smiles. "Small things."}
+text: Grisk has a bottle and a favour, and they come as a pair. {&"Watch the jetty for an hour, and see nothing."|"Keep a crate under your bed till Thursday."|"Tell a prefect a friend of mine was with you on Tuesday night."} {before_finals() or has(brightwater_want) or has(owls_ink_want): "And a few crowns on delivery," he adds. "{before_finals(): Ink is dear this close to finals.|You look like someone who needs a friend, and friends are dear.}"|He smiles. "Small things."}
 > ink: Owl's Ink, for the favour
   hint: A few crowns more before finals, and when he knows you need it.
-  when: not has(owls_ink_bottle)
+  when: not has(owls_ink_bottle) and (gold > 0 or not (before_finals() or has(brightwater_want) or has(owls_ink_want)))
   meet grisk
   alignment -tiny
   challenge deceive apprentice:
@@ -223,14 +223,14 @@ text: Grisk has a bottle and a favour, and they come as a pair. {&"Watch the jet
       gain owls_ink_bottle
       if before_finals() or has(brightwater_want) or has(owls_ink_want):
         gold -small
-      say: {&You stand on the jetty for an hour and see nothing, very carefully. At dawn there's a black bottle on your windowsill, with a note that says "Friends."|The crate sits under your bed till Thursday, humming faintly. Then it's gone, and a black bottle is where it stood.|You put in Grisk's word with a prefect, and it lands. The black bottle arrives in your shoe, which you don't like thinking about.}
+      say: {&You stand on the jetty for an hour and see nothing, very carefully. At dawn there's a black bottle on your windowsill, with a note that says "Friends."|The crate sits under your bed till Thursday, humming faintly. Then it's gone, and a black bottle is where it stood.|You tell a prefect that Grisk's friend spent Tuesday night revising with you, and keep the story straight through three questions. The black bottle arrives in your shoe, which you don't like thinking about.}
     lose:
       gain watched
       mood -small
       say: {&A prefect's lantern comes down the lawn while you're watching the jetty. You're in their notebook before you've thought of a reason. No bottle; Grisk doesn't pay for failures.|A prefect doing rounds finds the crate under your bed and asks what's in it. You don't know, which is the worst answer. The crate goes, and no bottle comes.|The prefect hears you out, then asks who put you up to it. You don't say, and your name goes in the notebook anyway. Grisk sends only his regrets.}
 > bright: Brightwater, for the favour
   hint: A few crowns more before finals, and when he knows you need it.
-  when: not has(brightwater_bottle)
+  when: not has(brightwater_bottle) and (gold > 0 or not (before_finals() or has(brightwater_want) or has(owls_ink_want)))
   meet grisk
   alignment -tiny
   challenge deceive apprentice:
@@ -238,7 +238,7 @@ text: Grisk has a bottle and a favour, and they come as a pair. {&"Watch the jet
       gain brightwater_bottle
       if before_finals() or has(brightwater_want) or has(owls_ink_want):
         gold -small
-      say: {&You stand on the jetty for an hour and see nothing, very carefully. At dawn there's a gold bottle on your windowsill, with a note that says "Friends."|The crate sits under your bed till Thursday, humming faintly. Then it's gone, and a gold bottle is where it stood.|You put in Grisk's word with a prefect, and it lands. The gold bottle arrives in your shoe, which you don't like thinking about.}
+      say: {&You stand on the jetty for an hour and see nothing, very carefully. At dawn there's a gold bottle on your windowsill, with a note that says "Friends."|The crate sits under your bed till Thursday, humming faintly. Then it's gone, and a gold bottle is where it stood.|You tell a prefect that Grisk's friend spent Tuesday night revising with you, and keep the story straight through three questions. The gold bottle arrives in your shoe, which you don't like thinking about.}
     lose:
       gain watched
       mood -small
@@ -265,7 +265,7 @@ tone: tense
 art: eye
 tags: crisis
 scene: A dormitory corridor at dawn, two prefects in red sashes going through an open school trunk, students in nightclothes watching from their doors.
-text: The prefects are going down your corridor at dawn, trunk by trunk, sniffing bottles. {has(brightwater_bottle) or has(owls_ink_bottle): There is a bottle in yours.|Your trunk is clean, nearly, but you know what has been through your hands lately, and the prefect sniffing at the lid looks as if they know it too.}
+text: The prefects are going down your corridor at dawn, trunk by trunk, sniffing bottles. {has(brightwater_bottle) or has(owls_ink_bottle): There {has(brightwater_bottle) and has(owls_ink_bottle): are two bottles|is a bottle} in yours.|Your trunk is clean, nearly, but you know what has been through your hands lately, and the prefect sniffing at the lid looks as if they know it too.}
 > left: Bluff it out
   challenge deceive journeyman:
     win:
@@ -281,7 +281,7 @@ text: The prefects are going down your corridor at dawn, trunk by trunk, sniffin
         if has(brightwater_bottle):
           flag confiscated_brightwater
         gain detention
-        say: They find it in under a minute. The bottle goes into a bag labelled for the confiscation vault, your name goes into a notebook, and the whole corridor watches you go red.
+        say: {has(brightwater_bottle) and has(owls_ink_bottle): They find both in under a minute. The bottles go|They find it in under a minute. The bottle goes} into a bag labelled for the confiscation vault, your name goes into a notebook, and the whole corridor watches you go red.
       else:
         say: There's nothing in the trunk to find, but your face gives you away. You get a warning, a line in the prefect's notebook, and a long look from the whole corridor.
       lose brightwater_bottle
@@ -295,7 +295,7 @@ text: The prefects are going down your corridor at dawn, trunk by trunk, sniffin
       flag confiscated_owls_ink
     if has(brightwater_bottle):
       flag confiscated_brightwater
-    say: You hand it over before they reach your trunk. The prefect bags it for the confiscation vault, looks at you for a long moment, and writes only a warning. It still stings.
+    say: You hand {has(brightwater_bottle) and has(owls_ink_bottle): both bottles|it} over before they reach your trunk. The prefect bags {has(brightwater_bottle) and has(owls_ink_bottle): them|it} for the confiscation vault, looks at you for a long moment, and writes only a warning. It still stings.
   else:
     say: You tell them before they ask. With nothing to confiscate, the prefect writes only a warning, and gives you a long look. It still stings.
   lose brightwater_bottle
@@ -400,18 +400,18 @@ actor: grisk
 when: met(grisk) and not flag(grisk_gone) and not has(brightwater_bottle)
 art: bottle
 tags: danger money
-scene: A goblin in a velvet waistcoat sitting uninvited on a student's bed at night, a gold bottle held up to the candle.
-text: Grisk is sitting on your bed. You didn't leave the window open. He holds a gold bottle up to the candle and turns it. "You look peaky," he says kindly. "I have just the thing." {flag(grisk_supply): "The price has gone up, of course. Everything has."|"Not a friend's price, I'm afraid. You never did come to see me."}
+scene: A student's coat pocket at night, a gold bottle wrapped in a folded note in tidy sloping handwriting, candlelight, a shaking hand.
+text: Your hands have been shaking since supper, and somebody noticed. In your coat pocket, where nobody put it while you watched, is a gold bottle wrapped in a note in a tidy, sloping hand: "On approval. You looked peaky at supper. Leave the price under the boathouse step by dawn, or leave the bottle. G." Underneath, a figure. {flag(grisk_supply): "The price has gone up, of course. Everything has."|"Not a friend's price, I'm afraid. You never did come to see me."}
 > buy: Pay what he asks
   meet grisk
   gold -medium
   gain brightwater_bottle
   alignment -tiny
-  say: You pay. He counts it twice, sets the bottle on your pillow like a mint, and leaves by the window.
-> no: Show him the window
+  say: You leave the coins under the boathouse step, more than you meant to spend this month. Out on the water a lamp dips once, as if someone had nodded, and the bottle in your pocket is yours.
+> no: Leave the bottle under the step
   meet grisk
   mood -small
-  say: "Another night," says Grisk, quite unbothered, and goes out the way he came. You don't sleep, but you didn't buy it.
+  say: You carry it down to the boathouse unopened and put it under the step, and the walk back up the lawn is very long. A lamp on the water dips once, quite unbothered. You don't sleep, but you didn't buy it.
 
 @event wd_ink_blank
 title: A Blank Page
@@ -421,7 +421,7 @@ tone: grim
 art: paper
 tags: danger study
 scene: A student in a lecture hall staring at a completely blank page, quill hovering, the lecturer's words filling the board.
-text: In the lecture, the words go past you like carriages. Two months ago you could have recited them back. Now your page is blank, and the lecturer is already on the next board.
+text: In the lecture, the words go past you like carriages. While the ink was in you, you could have recited them back. Now your page is blank, and the lecturer is already on the next board.
 > stare: Sit it out, blank
   study -small
   say: You sit through the hour writing nothing. At the end you have the date at the top of the page, and that's all.
@@ -512,7 +512,7 @@ text: Sister Amaranth looks at you once, the way she looks at a fever chart. "Si
   health -small
   mood -small
   alignment +tiny
-  say: A week of bitter mornings, and her hand held out each time for any bottle you still have. On the eighth day the world comes back in colour. "Drink it all," she says, "and don't come back for the same thing."
+  say: A week of bitter mornings that turn your stomach and leave you shaking till noon, and her hand held out each time for any bottle you still have. On the eighth day the world comes back in colour. "Drink it all," she says, "and don't come back for the same thing."
 > right: "It's just a cold, Sister."
   meet amaranth
   rel amaranth -tiny

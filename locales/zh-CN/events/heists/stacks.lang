@@ -67,8 +67,8 @@ opt.left.say.1 [90b637] = {heist_depth >= 7: 你让地精自己嘟囔去，带�
 opt.right.label [f7f345] = 就地搜一搜
 # en: {heist_depth >= 7: Among the crates stacked outside the vault door, one lid is loose. Something small and old comes with you.|{~The shelf that closed the aisle has a gap in it, and in the gap a small book nobody's missed. You take it up with you.|You run your hand along the closed shelf and find one spine that's loose. It comes with you.|Behind the fallen shelf, a sheaf of loose pages, very old. You roll them into your sleeve.}}
 opt.right.say.1 [2854f4] = {heist_depth >= 7: 没收库门外堆着的木箱里，有一个箱盖松了。一样又小又旧的东西跟你走了。|{~挡住过道的那排书架上有个缺口，缺口里有一本没人惦记的小书。你把它带了上去。|你的手沿着合上的书架摸过去，摸到一根松动的书脊。它跟你走了。|倒下的书架后面有一叠散页，非常旧。你把它们卷进了袖子。}}
-# en: {heist_depth >= 7: The goblin catches you at the crates and says so. You leave them be.|{~The shelf leans on you, very gently, until you stop.|You find nothing but dust, and a splinter.|The shelf breathes in, and you jump back, and leave it be.}}
-opt.right.say.2 [96fb4c] = {heist_depth >= 7: 你在木箱边被地精逮了个正着，它还大声说了出来。你不再碰它们。|{~书架非常轻地压在你身上，直到你停手。|你什么也没找到，只有灰尘和一根木刺。|书架吸了一口气，你往后一跳，不再碰它。}}
+# en: {heist_depth >= 7: The goblin catches you at the crates and shrieks so close to your ear that you crack your head on a lid. You leave them be.|{~The shelf leans on you, very gently, until something in your shoulder twinges and you stop.|You find nothing but dust, and a splinter.|The shelf breathes in and you jump back, too late for your fingers. You leave it be.}}
+opt.right.say.2 [5e1005] = {heist_depth >= 7: 你在木箱边被地精逮了个正着，它贴着你的耳朵尖叫，吓得你一头撞上箱盖。你不再碰它们。|{~书架非常轻地压在你身上，直到你肩膀一阵抽痛，你才停手。|你什么也没找到，只有灰尘和一根木刺。|书架吸了一口气，你往后一跳，手指却没来得及躲开。你不再碰它。}}
 
 @event st1_taut_chains
 # en: The Chains Pull Taut
@@ -145,8 +145,8 @@ opt.right.say.2 [8f8ded] = {~你晚了一口气。书架轻轻地、全方位地
 @event st2_charging_book
 # en: The Book That Charges
 title [de4687] = 收费的书
-# en: {seen(st2_charging_book) > 1: The book that charges is open on its lectern again, at the page where you stopped, and it hasn't forgotten what you owe.|On a lectern in the dark is a book with a duellist's hand on the cover, a forbidden manual from some war nobody teaches. When you turn its page, the corner pricks your finger and takes a drop. The next page will cost another. It charges its reader for everything it teaches.}
-text [11c30c] = {seen(st2_charging_book) > 1: 那本收费的书又摊在读经台上，停在你上次停下的那一页，它没忘记你还欠它什么。|黑暗中的一个读经台上放着一本书，封面上是一只决斗者的手，是某场没人讲授的战争留下的禁用手册。你翻页时，页角刺破你的手指，取走一滴血。下一页还要再收一滴。它教你的一切，都要读者付钱。}
+# en: {seen(st2_charging_book) > 1: The book that charges is open on its lectern again, at the page where you stopped, its corner turned up and waiting for a finger.|On a lectern in the dark is a book with a duellist's hand on the cover, a forbidden manual from some war nobody teaches. When you turn its page, the corner pricks your finger and takes a drop. The next page will cost another. It charges its reader for everything it teaches.}
+text [cfeacc] = {seen(st2_charging_book) > 1: 那本收费的书又摊在读经台上，停在你上次停下的那一页，页角翘着，等着一根手指。|黑暗中的一个读经台上放着一本书，封面上是一只决斗者的手，是某场没人讲授的战争留下的禁用手册。你翻页时，页角刺破你的手指，取走一滴血。下一页还要再收一滴。它教你的一切，都要读者付钱。}
 # en: An open black book on a lectern in a dark library stack, a single drop of blood on the corner of its page, a student's pricked finger held above it.
 scene [71442a] = 黑暗书库里的读经台上摊着一本黑书，书页一角有一滴血，一个学生被刺破的手指悬在书上方。
 # en: Close it, and slip away
@@ -219,16 +219,16 @@ opt.left.label [34f4ba] = 趁还认得路，回头
 opt.left.say.1 [ab4e71] = {~你在黑暗中转过身，顺着认得的书脊走回去。|你认定这里的黑暗属于别人，不属于你。}
 # en: Go on by touch
 opt.right.label [d375da] = 摸着往前走
-# en: {~Spine by spine, in a dark like deep water. Your hand closes on a small book lying loose on a shelf, and you take it, and keep going.|You count the shelves by touch, and at the end of the count, a door.}
-opt.right.say.1 [19fd2f] = {~在深水般的黑暗里一根书脊一根书脊地摸过去。你的手碰到书架上一本松放着的小书，你拿上它，继续走。|你凭手感数着书架，数到头，是一扇门。}
+# en: {~Spine by spine, in a dark like deep water. Your hand closes on a small book lying loose on a shelf, and you take it, and keep going.|You count the shelves by touch, and pocket a little book lying across the end of one. At the end of the count, a door.}
+opt.right.say.1 [db467a] = {~在深水般的黑暗里一根书脊一根书脊地摸过去。你的手碰到书架上一本松放着的小书，你拿上它，继续走。|你凭手感数着书架，顺手把横放在一排书架尽头的一本小书揣进口袋。数到头，是一扇门。}
 # en: {~You lose the spines, then the floor, then the way. When the lantern finds you, you're sitting in the dark holding a book you can't see, nowhere near anywhere.|Something in the dark takes your hand and leads you, kindly, all the way to the prefects' door.}
 opt.right.say.2 [85499b] = {~你摸丢了书脊，接着是地面，接着是路。提灯找到你时，你正坐在黑暗里，抱着一本看不见的书，离哪儿都很远。|黑暗里有个东西握住你的手，好心地领着你，一路领到了级长的门口。}
 
 @event st3_glass_case
 # en: The Glass Case
 title [5a3f24] = 玻璃柜
-# en: {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): The glass case again, a few books fewer, and the charm on its lock rewoven tighter than before. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}|In an alcove stands a glass case of grimoires no bigger than your thumb, each with a clasp of gold, a hundred spells to a book. The lock has no keyhole, only a charm laid over it that hums when your breath fogs the glass. Any collector would sell their mother for one of them.}
-text [3f9d80] = {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): 又是那个玻璃柜，小书少了几本，锁上的咒语比以前织得更紧了。有人注意到了。|又是那个玻璃柜，每本小书都还在原处，咒语照旧嗡嗡作响。}|一个壁龛里立着一个玻璃柜，里面的魔法书都不比你的拇指大，每本都有金扣，一本里有一百个法术。锁没有钥匙孔，只覆着一道咒语，你的呼吸在玻璃上起雾时，它就嗡嗡作响。随便哪个收藏家都愿意为其中一本卖掉亲娘。}
+# en: {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): The glass case again, a few books fewer, and the charm on its lock rewoven, new thread laid over the old. Someone has noticed.|The glass case again, every little book where it was, the charm humming as before.}|In an alcove stands a glass case of grimoires no bigger than your thumb, each with a clasp of gold, a hundred spells to a book. The lock has no keyhole, only a charm laid over it that hums when your breath fogs the glass. Any collector would sell their mother for one of them.}
+text [ff5efd] = {seen(st3_glass_case) > 1: {flag(heist_glass_robbed): 又是那个玻璃柜，小书少了几本，锁上的咒语重新织过了，新线压着旧线。有人注意到了。|又是那个玻璃柜，每本小书都还在原处，咒语照旧嗡嗡作响。}|一个壁龛里立着一个玻璃柜，里面的魔法书都不比你的拇指大，每本都有金扣，一本里有一百个法术。锁没有钥匙孔，只覆着一道咒语，你的呼吸在玻璃上起雾时，它就嗡嗡作响。随便哪个收藏家都愿意为其中一本卖掉亲娘。}
 # en: A small glass display case in a dark library, full of tiny leather-bound books no bigger than a thumb, a faint shimmer of a charm over its lock.
 scene [516541] = 黑暗图书馆里一个小小的玻璃陈列柜，里面满是不比拇指大的皮面小书，锁上微微闪着一道咒语的光。
 # en: Leave them under glass
@@ -245,8 +245,8 @@ opt.right.say.2 [62016a] = {~咒语反咬了一口，一道白光，玻璃像被
 @event st_vault
 # en: The Confiscation Vault
 title [404008] = 没收库
-# en: At the bottom of the deep stacks, a door with a prefects' padlock and crates outside labelled for the confiscation vault. Behind it, three hundred years of everything the faculty ever took off a student. {flag(vault_catalogued): You catalogued half of it yourself, in detention. You know which shelf is which.|You've no idea what's where.} {flag(elixir_confiscated): Somewhere in there is the bottle the prefects took from your trunk.|}
-text [bd1ad3] = 深层书库的最底下，一扇挂着级长挂锁的门，门外堆着标明送往没收库的木箱。门后是三百年来教职员从学生身上收走的一切。{flag(vault_catalogued): 其中一半是你关禁闭时亲手登记的。你知道哪个架子放着什么。|你完全不知道什么在哪儿。} {flag(elixir_confiscated): 级长从你箱子里拿走的那只瓶子，就在里面某处。|}
+# en: At the bottom of the deep stacks, a door with a prefects' padlock and crates outside labelled for the confiscation vault. Behind it, three hundred years of everything the faculty ever took off a student. {flag(vault_catalogued): You catalogued half of it yourself, in detention. You know which shelf is which.|You've no idea what's where.} {flag(elixir_confiscated): {flag(confiscated_owls_ink) and flag(confiscated_brightwater): Somewhere in there are the two bottles the prefects took from your trunk.|Somewhere in there is the bottle the prefects took from your trunk.}|}
+text [424baa] = 深层书库的最底下，一扇挂着级长挂锁的门，门外堆着标明送往没收库的木箱。门后是三百年来教职员从学生身上收走的一切。{flag(vault_catalogued): 其中一半是你关禁闭时亲手登记的。你知道哪个架子放着什么。|你完全不知道什么在哪儿。} {flag(elixir_confiscated): {flag(confiscated_owls_ink) and flag(confiscated_brightwater): 级长从你箱子里拿走的那两只瓶子，就在里面某处。|级长从你箱子里拿走的那只瓶子，就在里面某处。}|}
 # en: An iron-banded oak door in a dark library basement, a heavy prefects' padlock on it, crates labelled for confiscation stacked outside, a student kneeling at the lock with picks.
 scene [3bf709] = 黑暗图书馆地下室里一扇包铁的橡木门，门上挂着沉重的级长挂锁，门外堆着标明没收的木箱，一个学生拿着撬锁针跪在锁前。
 # en: Leave it locked, and go
@@ -255,14 +255,14 @@ opt.leave.label [676cf0] = 让它锁着，走吧
 opt.leave.say.1 [36e663] = {~你把没收库留给它的挂锁。能走到这儿，就算偷成了。|你为了运气摸了一下挂锁，然后回上去了。}
 # en: Pick the lock for the crates
 opt.crates.label [0733ae] = 撬锁去拿箱子里的东西
-# en: {~The padlock gives with a click like a knuckle. Inside, a century of contraband on shelves: charmed dice, love letters, a stuffed owl that blinks. You fill your shirt with the small valuable things and lock it again behind you.|You go straight to the shelf you catalogued in detention and take the three best things on it. The padlock clicks shut after you as if nothing happened.}
-opt.crates.say.1 [e8e5d3] = {~挂锁咔哒一声开了，像掰响指节。里面是一个世纪又一个世纪的违禁品摆在架子上：施了咒的骰子，情书，一只会眨眼的猫头鹰标本。你把值钱的小东西塞满衬衫，出来时又把门锁上了。|你直奔关禁闭时登记过的那个架子，拿走上面最好的三样东西。挂锁在你身后咔哒锁上，像什么也没发生过。}
+# en: {~The padlock gives with a click like a knuckle. Inside, a century of contraband on shelves: charmed dice, love letters, a stuffed owl that blinks. You fill your shirt with the small valuable things and lock it again behind you.|{flag(vault_catalogued): You go straight to the shelf you catalogued in detention|You go shelf by shelf by candlelight until you find the good one} and take the three best things on it. The padlock clicks shut after you as if nothing happened.}
+opt.crates.say.1 [31320a] = {~挂锁咔哒一声开了，像掰响指节。里面是一个世纪又一个世纪的违禁品摆在架子上：施了咒的骰子，情书，一只会眨眼的猫头鹰标本。你把值钱的小东西塞满衬衫，出来时又把门锁上了。|{flag(vault_catalogued): 你直奔关禁闭时登记过的那个架子|你借着烛光一个架子一个架子地找，终于找到了好的那一个}，拿走上面最好的三样东西。挂锁在你身后咔哒锁上，像什么也没发生过。}
 # en: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
 opt.crates.say.2 [864544] = {~撬锁针断在锁里，在这下面响得像一声枪响。|没收库的警报器，一只嗓门非常大的地精，醒过来了，还大声说了出来。}
-# en: Pick the lock for your own bottle back
-opt.bottle.label [89f81b] = 撬锁拿回你自己的瓶子
-# en: {~The padlock gives. Your things are on a shelf with a label in a prefect's neat hand, your name spelled right. You take them back, and one small thing more for the trouble.|Inside, a shelf of confiscated elixirs, gold and black, each labelled with a name. You find what's yours, and leave the rest to their owners' consciences.}
-opt.bottle.say.1 [46f990] = {~挂锁开了。你的东西在一个架子上，标签是某位级长工整的笔迹，你的名字拼得一字不差。你把它们拿了回来，又顺手拿了一件小东西，算是辛苦费。|里面有一架子没收来的药水，金的黑的，每瓶都标着名字。你找到了属于你的，其余的留给它们主人的良心。}
+# en: Pick the lock for what's yours
+opt.bottle.label [9c3ecf] = 撬锁拿回属于你的东西
+# en: {~The padlock gives. Your things are on a shelf with a label in a prefect's neat hand, your name spelled right. You take them back, and one small thing more for the trouble.|Inside, a shelf of confiscated elixirs, gold and black, each labelled with a name. You find what's yours, pocket a little silver hip flask nobody will come back for, and leave the rest to their owners' consciences.}
+opt.bottle.say.1 [72c029] = {~挂锁开了。你的东西在一个架子上，标签是某位级长工整的笔迹，你的名字拼得一字不差。你把它们拿了回来，又顺手拿了一件小东西，算是辛苦费。|里面有一架子没收来的药水，金的黑的，每瓶都标着名字。你找到了属于你的，又揣起一只不会有人回来认领的小银酒壶，其余的留给它们主人的良心。}
 # en: {~The pick snaps in the lock, with a sound like a shot down here.|The vault's alarm, a very loud goblin, wakes up and says so.}
 opt.bottle.say.2 [864544] = {~撬锁针断在锁里，在这下面响得像一声枪响。|没收库的警报器，一只嗓门非常大的地精，醒过来了，还大声说了出来。}
 # en: Fetch Corvin's grandfather's deck
