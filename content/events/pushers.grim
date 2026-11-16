@@ -180,7 +180,7 @@ text: The list for Friday's demonstration before the whole year is up on the cla
       renown +small
       arcana +small
       rel lyra -tiny
-      say: {~She's brilliant, and the hall applauds, and then you're better. Not by much. Enough. On the way out she says, without turning round, "Again. Next term." It's the nearest she has to a compliment.|You match her flame for flame. The professor, confused, gives you both full marks. Lyra looks at the marks as if they'd insulted her family.}
+      say: {~She's brilliant, and the hall applauds, and then it's your turn, and you're good: clean, steady, entirely your own, and the hall applauds again. On the way out she says, without turning round, "Next term." It's the nearest she has to a compliment.|Your flame comes up steady and does exactly what was asked of it. The professor gives you full marks, the same as hers. Lyra looks at the marks as if they'd insulted her family.}
     lose:
       renown -small
       mood -small
@@ -270,13 +270,13 @@ when: not flag(owes_grisk)
 tone: tense
 art: pouch
 scene: A goblin in a velvet waistcoat at a tavern table, tearing one small square out of a ledger page with great care.
-text: Grisk waves you over at the Newt and slides this month's envelope back across the table to you, unopened. "You have been very regular," he purrs. "I like regular. So this month, as a friend, I'll take nothing at all." He holds up one square of ledger paper. "In return, you'll owe me one small kindness. When I ask. A friendship goes both ways."
+text: Grisk waves you over at the Newt and slides this month's envelope back across the table to you, short the coin he has already palmed. "You have been very regular," he purrs. "I like regular. So this month, as a friend, I'll take a coin for the ink and nothing more." He holds up one square of ledger paper. "In return, you'll owe me one small kindness. When I ask. A friendship goes both ways."
 > left: Take the month off
   gold +small
   gold +tiny
   flag owes_grisk
   queue grisk_names_favour in 1
-  say: He tears the square out and folds it into his waistcoat pocket, next to his heart, if goblins keep them there. The envelope goes back in your purse. You can feel the folded paper all the way back up the hill.
+  say: He tears the square out and folds it into his waistcoat pocket, next to his heart, if goblins keep them there. The envelope goes back in your purse, a coin lighter. You can feel the folded paper all the way back up the hill.
 > right: Pay as usual
   rel grisk -tiny
   mood +tiny
@@ -351,7 +351,7 @@ pool: grisk_dunning
 tone: eerie
 art: chain
 cast:
-  friend: any where tagged(friend, peer) and rel(friend) >= 10
+  friend: any where tagged(friend, peer) and rel(friend) >= 10 and around(friend)
 scene: A goblin in a velvet waistcoat taking his receipt with a little bow, saying something pleasant, a student's smile frozen.
 text: Grisk takes this month's payment with a bow. "And do give my regards to {friend}," he adds. "Such a good friend to you. It would be a pity if {they} heard about our little friendship from anyone but you." He says it like a remark about the weather.
 > left: Tell {friend} yourself
@@ -392,6 +392,7 @@ text: Ember has followed you into the library, which she has never done, and fou
   mood -tiny
   say: You get her under your arm before anything happens and walk out with your books abandoned on the table. Ember sulks all the way back to the tower. Footnote, the librarian tells you later, sat on your notes until closing, out of victory.
 > right: Let them settle it
+  when: gold > 0
   chance even:
     mood +small
     renown +tiny
@@ -431,7 +432,7 @@ text: Ember went out of the window at midnight, as she does. She isn't back. It'
   health -small
   study -tiny
   mood +small
-  say: You find her in the bracken beside the smoke, which is only her, curled up and asleep with three wild foxes of her own colour, all of them smouldering gently. She wakes, looks at you and yawns, then walks home at your heels as if it had been your idea.
+  say: You find her in the bracken beside the smoke, which is only her, curled up asleep with three wild foxes of her colour, all smouldering gently. She wakes, looks at you and yawns, then walks home at your heels as if it had been your idea. You've missed a lecture, and the bracken has scratched your arms.
 > right: Wait, and go back to bed
   health +tiny
   mood -small
@@ -465,7 +466,7 @@ text: Ember squeezes out from behind a corridor tapestry with dust on her whiske
 > left: Sell it in the village
   gold +small
   mood -tiny
-  say: Grimsby turns it over and says it's older than his oldest book, and sends you to the pawnbroker, who pays well and asks where you found it. You say a fox. He writes that down.
+  say: Grimsby turns it over and says it's older than his oldest book, and sends you to the pawnbroker, who pays well and asks where you found it. You say a fox. He writes that down. Ember sulks under the bed for two days, and you miss the coin more than you expected.
 > right: Keep it on the sill for luck
   mood +small
   lore +tiny
