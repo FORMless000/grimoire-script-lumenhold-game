@@ -22,7 +22,7 @@ text: Seraphine stops {o} on the landing, puts a hand on {o.their} sleeve, and s
   rel seraphine +small
   npc_rel seraphine o +small
   mood -tiny
-  say: {o} takes the south stair, feeling silly. Nothing happens on the north stair, as far as anyone can tell. But that evening {o} sits beside Seraphine at supper, and she finishes {o.their} sentence for {o.them}, and {o} doesn't mind.
+  say: {o} takes the south stair, feeling silly, and you spend the morning wondering what was on the north one. Nothing happens on the north stair, as far as anyone can tell. But that evening {o} sits beside Seraphine at supper, and she finishes {o.their} sentence for {o.them}, and {o} doesn't mind.
 > right: "Nobody knows what she means."
   rel o +small
   rel seraphine -tiny
@@ -47,7 +47,7 @@ text: {~{o} has started a sentence three times today, and Seraphine has finished
   rel seraphine +small
   rel o -tiny
   mood -tiny
-  say: {~You tell Seraphine, gently, that {o} likes to say {o.their} own endings. "Oh," she says, "{o} will. On Thursday." She says nothing else all evening, and looks pleased about it.|Seraphine listens to you, nods, and then, very carefully, lets {o} finish every sentence for a week. It's somehow more unnerving.|"Today," Seraphine repeats, as if it were a foreign word. "I'll try." She manages most of a lunch.}
+  say: {~You tell Seraphine, gently, that {o} likes to say {o.their} own endings. "Oh," she says, "{o} will. On Thursday." She says nothing else all evening, and looks pleased about it. {o} is put out that you went behind {o.their} back, and you feel a fool.|Seraphine listens to you, nods, and then, very carefully, lets {o} finish every sentence for a week. It's somehow more unnerving, for both of you, and {o} wishes you hadn't.|"Today," Seraphine repeats, as if it were a foreign word. "I'll try." She manages most of a lunch. {o} says, a bit stiffly, that {o} could have asked her, and you feel a fool.}
 
 # ---------------- Tobias ----------------
 
@@ -61,27 +61,28 @@ cast:
 per: tobias
 when: seen(tobias_between_sayings) == 0
 art: leaf
-scene: A refectory table, a big broad-shouldered student laughing along a little too hard while a classmate across from him does an impression with a pretend pitchfork.
-text: Tobias said, at supper, that the soup "wanted more rain on it", which is what his mother says. {o} has been saying it all week, in a farmer's voice, with a pretend pitchfork. Tobias laughs from the belly every time. He's the only one who doesn't look like he's laughing.
-> left: Tell {o} to drop it
+scene: A refectory table at breakfast, a big broad-shouldered student laughing a little too hard over a newspaper column, a classmate across from him basking in praise.
+text: The Ledger's new column of country sayings is a hit: "the soup wants more rain on it", "a frost in the cream". They're Tobias's mother's sayings, every one, and the name at the bottom is {o}'s. Tobias read it at breakfast and laughed from the belly. He's the only one who doesn't look like he's laughing.
+> left: Tell {o} whose sayings they are
   rel tobias +small
   rel o -small
   npc_rel tobias o -tiny
   alignment +tiny
-  say: "That's his mum you're doing," you say. {o} goes red and stops. Tobias tells you, later, that he didn't mind, really, and apologises for you having to say anything, and then thanks you three times.
-> right: Ask Tobias for the rest of the sayings
+  say: "Those are his mum's," you tell {o}, in front of the table. {o} goes red. The next column ends "with thanks to Tobias's mother". Tobias tells you he didn't mind, really, and then thanks you three times.
+> right: Get Tobias to write one himself
   challenge appeal apprentice:
     win:
       npc_rel tobias o +small
       rel tobias +small
-      say: You ask Tobias what else his mother says. He tells you, for an hour, with goats. By the end, {o} is laughing with him instead of at him, and asking what "a frost in the cream" means.
+      say: You talk Tobias into writing a column himself. It's about goats, and it's better than all of {o}'s. The Ledger runs it the next week, and {o}, sheepish, asks him what "a frost in the cream" actually means.
     lose:
       rel tobias -tiny
-      say: Tobias tries, and {o} does the voice again, and the table laughs again. Tobias laughs too. He eats the rest of his supper very fast and goes to the greenhouses.
+      say: Tobias gets as far as "Dear Ledger" and gives up. {o}'s column runs again on Friday. Tobias laughs about it at supper, eats very fast, and goes to the greenhouses.
 
 @event tobias_between_supper
 title: Proper Food
 pool: between
+when: term
 tone: warm
 cast:
   tobias: tobias where met(tobias) and around(tobias) and rel(tobias) >= 6
@@ -119,7 +120,7 @@ text: {o} knocked over a tray of seedlings in the greenhouse last week, and swor
   rel tobias +small
   rel o +small
   npc_rel tobias o +small
-  say: {o} kneels by the bench, mortified, while you hold the watering can and Tobias coaches in a whisper: "Lower. They like it lower." By the end of the lesson one fern has uncurled. Tobias claps {o} on the back hard enough to rattle the glass.
+  say: {o} kneels by the bench, mortified, and so do you, in the wet, because Tobias says the ferns need a witness. He coaches in a whisper: "Lower. They like it lower." By the end of the lesson one fern has uncurled. Tobias claps {o} on the back hard enough to rattle the glass.
 > right: Tell {o} it's only plants
   rel o +small
   rel tobias -small
@@ -135,7 +136,7 @@ cast:
   maud: maud where met(maud) and around(maud)
   o: any where classmate_here(o) and rel(o) >= 4
 per: maud
-when: seen(maud_between_soup) == 0
+when: seen(maud_between_soup) == 0 and term
 art: cup
 scene: An old woman in a garden apron handing a covered pot to a student at her cottage door, the lamp lit behind her.
 text: Old Maud catches you on the path with a covered pot. "{o}'s abed with a chill, dearie, and too proud to say so. Take this up. Hot, mind. And sit with {o.them} till it's eaten. That's the important bit, the sitting. Soup's just the excuse."
@@ -143,7 +144,7 @@ text: Old Maud catches you on the path with a covered pot. "{o}'s abed with a ch
   study -small
   rel o +medium
   rel maud +small
-  say: You carry the pot up three flights without spilling, and sit on the end of {o}'s bed while {o} eats it. {o} talks, eventually, about being ill and far from home. The soup does what Maud's soup does. So, you think, does the sitting.
+  say: You carry the pot up three flights without spilling, and sit on the end of {o}'s bed while {o} eats it, your essay forgotten. {o} talks, eventually, about being ill and far from home. The soup does what Maud's soup does. So, you think, does the sitting.
 > right: Leave it at {o}'s door
   rel o +tiny
   rel maud -tiny
@@ -173,10 +174,10 @@ text: Someone cut through Maud's garden in the dark and took out a whole row of 
       say: {o} won't. "She'll tell the headmistress." She wouldn't, you know she wouldn't, but {o} won't hear it. Maud re-stakes the beans herself, slowly, and you feel every pole.
 > right: Re-stake them yourself
   vigor +tiny
-  study -tiny
+  health -tiny
   rel maud +small
   rel o +small
-  say: You come back at dawn and re-stake the row before Maud's up. She finds you at it. "Funny," she says, "how a person's bean rows mend themselves." She doesn't ask. She gives you a jar of honey, and another one "for your friend".
+  say: You come back at dawn and re-stake the row before Maud's up, and your back complains about it all day. She finds you at it. "Funny," she says, "how a person's bean rows mend themselves." She doesn't ask. She gives you a jar of honey, and another one "for your friend".
 
 @event maud_between_advice
 title: Two Weeks Later
@@ -228,7 +229,7 @@ text: Thorne has handed {o}'s essay back for the third week running, more red in
   study -tiny
   rel o +small
   arcana +tiny
-  say: You go through it line by line with {o}. Half of it, you point out, is Thorne arguing with {o}'s ideas, which he only does with ideas he thinks are worth it. {o} looks at the essay differently after that. So, for a moment, do you.
+  say: You go through it line by line with {o}, through the evening you'd meant for your own essay. Half of it, you point out, is Thorne arguing with {o}'s ideas, which he only does with ideas he thinks are worth it. {o} looks at the essay differently after that. So, for a moment, do you.
 
 @event thorne_between_flattery
 title: Allergic
@@ -299,4 +300,4 @@ text: {o} has written a complaint about a lecturer who marks unfairly, and has a
 > right: Help {o} rewrite it once more
   study -tiny
   rel o +small
-  say: You sit with {o} and cut the letter down to six lines, all of them true. {o} goes in alone, in the end, and comes out ten minutes later, astonished. "She read every line. Then she asked about the third one."
+  say: You sit up with {o}, your own reading abandoned, and cut the letter down to six lines, all of them true. {o} goes in alone, in the end, and comes out ten minutes later, astonished. "She read every line. Then she asked about the third one."

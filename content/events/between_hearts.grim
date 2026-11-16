@@ -47,7 +47,7 @@ cast:
   a: any where classmate_here(a) and rel(a) >= 10 and fancy_free(a)
   b: any where classmate_here(b) and rel(b) >= 4 and fancy_free(b) and not at_odds(a, b)
 per: a
-when: seen(between_love_note) == 0
+when: seen(between_love_note) == 0 and term
 art: letter
 scene: A student pressing a folded note sealed with a blob of candle wax into a friend's hand, looking over their shoulder.
 text: {a} presses a folded note into your hand, sealed with candle wax and, by the look of it, a great deal of worry. "For {b}. Don't read it. Don't let {b.them} open it in front of anyone. Don't say it's from me." You point out that {b} will know who it's from. {a} looks stricken.
@@ -117,27 +117,29 @@ per: a
 time: evening
 when: seen(between_setup_supper) == 0
 art: meal
-scene: Two students at a small refectory table being very polite over their soup, a third watching anxiously from across the hall.
-text: It was your idea that {a} and {b} share the little table by the window at supper. Twenty minutes in they have covered the weather, the soup, and the weather again. {a} keeps looking at you across the hall like someone going under for the third time.
-> left: Go over and rescue it
+scene: Two students at a small refectory table by a window, one gazing hopefully, the other with a textbook open beside the soup, a third watching anxiously from across the hall.
+text: It was your idea that {a} and {b} share the little table by the window at supper, and it's going beautifully, as far as {a} is concerned. {b}, it's now clear from the textbook open beside the soup, thinks this is a revision session, because that is what you told {b.them}.
+> left: Tell {b} what it really is
+  alignment +tiny
   challenge appeal apprentice:
     win:
       npc_rel a b +small
-      rel a +tiny
       rel b +tiny
-      say: You sit down for five minutes and tell the story about the goat and the Lumen Ledger. Somewhere in the middle they start finishing it for you. You leave, and neither of them notices.
+      say: You lean over and say it quietly. {b} closes the textbook, looks at {a}, and laughs. "You could have just asked." They stay past the candles, and the textbook stays shut.
     lose:
       npc_rel a b -tiny
-      mood -tiny
-      say: You sit down and the silence grows to fit three people. {b} remembers an essay. {a} thanks you for trying, in the voice of someone who wishes you hadn't.
-> right: Let it run its course
+      rel b -small
+      say: {b} closes the textbook very slowly, says it was a kind thought, and goes back to revising, at another table. {a} doesn't look at you for the rest of supper.
+> right: Let {a} carry it off
+  alignment -tiny
   mood +tiny
   chance unlikely:
     npc_rel a b +small
-    say: You eat your own supper in peace. By pudding they've found something, possibly cheese, to disagree about cheerfully. It goes on past the candles.
+    say: You eat your own supper and leave them to it. Somewhere around pudding {b} works it out and decides, to everyone's surprise, not to mind. It goes on past the candles.
   else:
     npc_rel a b -tiny
-    say: You eat your own supper in peace. They part at the door with a handshake, which is the saddest thing you have seen all term.
+    rel b -tiny
+    say: You leave them to it. At pudding {b} works it out, says "oh", and asks {a} a question about the reading. They part at the door with a handshake, and {b} gives you a look.
 
 @event between_match_made
 title: Going Well
@@ -152,6 +154,7 @@ text: {npc} finds you {~after class|on the stairs|at breakfast} with the look of
 > left: Tell just a few people
   renown +tiny
   rel npc +small
+  alignment -tiny
   flag matchmaker
   say: You tell exactly two people. By the end of the week you are the castle's matchmaker, whether you like it or not, and {npc} has forgiven you, mostly.
 > right: "It was all you."
@@ -185,15 +188,15 @@ tone: light
 cast:
   a: any where classmate_here(a) and rel(a) >= 0
 per: a
-when: flag(matchmaker)
+when: flag(matchmaker) and term
 art: flower
 scene: A student sitting down opposite a friend at a library table with a folded list of names, looking hopeful.
-text: {~{a} corners you after class. There's someone in the year below, and {a} has heard you're the person to ask.|There's a note under your door, from {a}: "I hear you do introductions."|{a} sits down next to you at lunch with a list. It is a list of names. {a} would like your opinion on all of them.}
+text: {~{a} corners you after class. There's someone in another house, and {a} has heard you're the person to ask.|There's a note under your door, from {a}: "I hear you do introductions."|{a} sits down next to you at lunch with a list. It is a list of names. {a} would like your opinion on all of them.}
 > left: Take the case
   rel a +small
   renown +tiny
   study -tiny
-  say: {~You spend an evening on it, and arrange a chance meeting by the owlery that goes off almost by chance. {a} owes you a cake.|You write back: Thursday, the library, the second window. You'll never know if it worked, but {a} smiles at you in corridors now.|You go through the list, crossing out, with commentary. {a} laughs so much that the list ends up being beside the point.}
+  say: {~You spend an evening you'd meant for revision on it, and arrange a chance meeting by the owlery that goes off almost by chance. {a} owes you a cake.|You write back, between two pages of an essay: Thursday, the library, the second window. You'll never know if it worked, but {a} smiles at you in corridors now.|You go through the list instead of your notes, crossing out, with commentary. {a} laughs so much that the list ends up being beside the point.}
 > right: "I'm retired."
   mood +tiny
   rel a -tiny
@@ -236,7 +239,7 @@ time: evening night
 when: seen(between_partner_meets_ex) == 0
 art: candle
 scene: A common room in the evening, two people on opposite sides of the fire turning at the same moment to look at a third coming through the door.
-text: The common room has a fire, a kettle and, tonight, both {a} and {b}. Your partner and your ex. They have never properly met. By the look on {b}'s face, that is about to change.
+text: The common room has a fire, a kettle and, tonight, both {a} and {b}. Your partner and your ex, by the same fire, for the first time since things changed. By the look on {b}'s face, somebody is about to say something.
 > left: Introduce them properly
   challenge appeal apprentice+:
     win:
@@ -329,7 +332,7 @@ text: "You can't tell anyone," says {a}, and then tells you anyway: {b} failed l
   study -small
   rel b +small
   queue between_did_they_tell within 1..3 with b
-  say: You start turning up where {b} revises, with your notes, as if by accident. {b} doesn't ask why. The practical gets easier, for both of you.
+  say: You start turning up where {b} revises, with your notes, as if by accident, and spend your own revision hours on {b}'s practical. {b} doesn't ask why. It gets easier for {b}. Your own work slips a little.
 
 @event between_did_they_tell
 title: Somebody Told You
@@ -380,6 +383,7 @@ text: {~You mentioned, once, in passing, that {a} had lent {b} a scarf. By suppe
   rel b -tiny
   npc_rel a b +tiny
   mood +tiny
+  alignment -tiny
   say: {~It's quite funny, the first week. {a} doesn't find it funny at all. {b} starts wearing the scarf.|The details get better. {a} stops sitting with you. {b} seems, oddly, not to mind.|By the end of the month nobody can remember whether it was true, including, it seems, {a} and {b}.}
 
 @event between_overheard
@@ -388,22 +392,27 @@ pool: between
 tone: tense
 cast:
   a: any where classmate_here(a)
-  b: any where tagged(b, peer) and met(b) and rel(b) >= 12 and not get_along(a, b)
+  b: any where tagged(b, peer) and met(b) and rel(b) >= 12 and at_odds(a, b)
 per: a
 when: seen(between_overheard) < 2
 art: mask
 scene: A student holding court at a refectory table, mid-impression, the others laughing, a fourth student behind them stopping still with a tray.
-text: {~Behind the library shelves, {a} is telling a little group exactly what {a.they} think{a.s} of {b}. It isn't kind, and it isn't true.|On the stairs, {a} is doing an impression of {b}. It's a good impression. People are laughing.|{a} is holding court at the refectory table: {b}'s spells, {b}'s family, {b}'s hair.} {b} is a friend of yours, and isn't here.
-> left: Speak up
-  rel a -small
+text: {~Behind the library shelves, {a} is telling a little group exactly what {a.they} think{a.s} of {b}. It isn't kind, and it isn't true.|On the stairs, {a} is doing an impression of {b}. It's a good impression. People are laughing.|{a} is holding court at the refectory table: {b}'s spells, {b}'s family, {b}'s hair.} {b} is a friend of yours, and isn't here to hear it.
+> left: Tell {b} what {a} said
   rel b +small
-  npc_rel a b -tiny
-  alignment +small
-  say: {~"That isn't true, and you know it." The group goes quiet. {a} looks at you as if you've changed sides in a war you didn't know about. Word gets back to {b}, eventually.|"Do me next," you say. Nobody laughs. {a} stops. It gets back to {b} by the end of the week.|You put your tray down at the table and say {b}'s name kindly, once, and leave it there. {a} finds someone else to talk about.}
-> right: Say nothing
-  mood -small
-  alignment -tiny
-  say: {~You keep walking. The laughing follows you down the aisle. You sit with {b} at supper and don't mention it, and it sits between you.|You laugh, a little, because everyone is. You think about it for the rest of the day.|You eat your lunch somewhere else. It doesn't help as much as you'd like.}
+  npc_rel a b -small
+  mood -tiny
+  say: {~You tell {b}, that evening, word for word. {b} goes very quiet, then thanks you. It's a hard thing to hear, and it was a hard thing to say.|You tell {b} about the impression. {b} laughs, then doesn't. "Was it good?" It was. You both wish it hadn't been.|You tell {b} what {a} said at the table. {b} nods, slowly, and sits somewhere else at supper for a week. You aren't sure you did {b} a kindness.}
+> right: Take it up with {a}, alone
+  challenge appeal apprentice:
+    win:
+      rel a +tiny
+      npc_rel a b +tiny
+      alignment +tiny
+      say: {~You find {a} later, alone, and say only that {b} is your friend. {a} goes red, and says it got out of hand. The next time {b}'s name comes up, {a} changes the subject.|"You do a very good {b}," you tell {a}, alone. "Do it to {b.their} face, or don't." {a} doesn't.|You catch {a} after supper. {a} listens, shrugs, and then, a week later, passes {b} the salt without being asked.}
+    lose:
+      rel a -small
+      say: {~{a} tells you to mind your own business, and makes sure {b} hears you were listening.|{a} does an impression of you, on the spot. It's also good.|{a} hears you out, smiles, and tells the table at supper exactly what you said, in your voice.}
 
 @event between_betting_book
 title: The Book on Them
@@ -434,6 +443,7 @@ text: There's a book running in the common room, and the odds are on {a} and {b}
 @event between_couple_bubble
 title: Party of Two
 pool: between
+when: term
 tone: warm
 cast:
   a: any where classmate_here(a) and rel(a) >= 10

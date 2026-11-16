@@ -113,7 +113,7 @@ cast:
   b: any where classmate_here(b) and rel(b) >= 4 and at_odds(a, b)
 per: a
 art: sparkle
-scene: A corridor where one student's boots are jigging along the flagstones on their own, the student in them furious, another student by a pillar looking innocent.
+scene: A corridor where one student's boots have plainly been hexed, the student in them furious, another student by a pillar looking innocent.
 text: {~{b}'s boots have started to dance, on their own, in the middle of the corridor.|{b}'s boots squelch at every step, though it hasn't rained for a week.|{b}'s laces have tied themselves together, in a bow, very neatly.} You saw {a} flick a wand at them. So did nobody else. "Who did this?" {b} demands, of the corridor, and then of you.
 > left: Tell {b} the truth
   rel b +small
@@ -158,7 +158,7 @@ cast:
   a: any where classmate_here(a) and rel(a) >= 8
   b: any where classmate_here(b) and at_odds(a, b)
 per: a
-when: seen(between_peace_offering) == 0
+when: seen(between_peace_offering) == 0 and term
 art: cup
 scene: A student holding out a small wrapped parcel and a folded letter, looking anywhere but at the person they're handing it to.
 text: {a} has a parcel in one hand and a letter in the other, and the look of someone who's been carrying both for days. "It's for {b}. I was out of order. I said something I can't take back." {They} hold{s} them out. "Would you give {b.them} these? I can't face it."
@@ -299,12 +299,12 @@ text: {~{b} says "the goose" and {a} has to sit down on the stairs.|{a} hums fou
 > left: Laugh along anyway
   mood +tiny
   rel a -tiny
-  say: {~You laugh. {a} can tell you've no idea, and it's somehow worse than not laughing.|You laugh along, too late and a bit too loud. {b} pats your shoulder, kindly.|You laugh. They stop. "You don't know, do you," says {a}, delighted.}
+  say: {~You laugh. {a} can tell you've no idea, and it's somehow worse than not laughing.|You laugh along, too late and a bit too loud. {b} pats your shoulder, kindly. {a} looks a little let down.|You laugh. They stop. "You don't know, do you," says {a}, delighted, and doesn't tell you either.}
 > right: "All right. What's the joke?"
   rel a +small
   rel b +tiny
   mood -tiny
-  say: {~It takes ten minutes to explain, involves a professor and a pond, and is about half as funny told. But now it's yours too, and the next time someone says "the goose" you're the one on the stairs.|They explain. It's about you, a little, from your first week. You laugh anyway. It is quite funny.|"You had to be there," says {b}. Then they make you be there, re-enacting the whole thing on the landing. You're in it now.}
+  say: {~It takes ten minutes to explain, involves a professor and a pond, and is about half as funny told. But now it's yours too, and the next time someone says "the goose" you're the one on the stairs.|They explain. It's about you, a little, from your first week. You laugh anyway. It is quite funny.|"You had to be there," says {b}. Then they make you be there, re-enacting the whole thing on the landing, where you bark your shin. You're in it now.}
 
 @event between_cover_roll
 title: Answering for Two
@@ -331,6 +331,7 @@ text: Roll call. {b}'s seat is empty, and {a} leans over. "{b}'s not ill, {b}'s 
       rel b +tiny
       mood -small
       alignment -tiny
+      gain detention
       say: The lecturer looks up. "Remarkable, how {b} has your face." It's a detention for you and the letter home for {b} anyway. {b} is grateful, which almost makes it worse.
 > right: Stay quiet
   rel a -small
@@ -403,7 +404,7 @@ text: {a} and {b} have fallen out, properly, over something neither will name. E
       npc_rel a b +medium
       rel a +small
       rel b +small
-      say: You book the window seat in the library and send each of them a note that says the other one is sorry. Neither was. By the time they've worked that out, they're arguing about you instead, and it's over.
+      say: You book the window seat in the library, ask them both to come, and say plainly that you won't take sides. Neither wants to be the one who leaves first. By the time the candle's burned down, they're arguing about you instead, and it's over.
     lose:
       npc_rel a b -small
       rel a -tiny

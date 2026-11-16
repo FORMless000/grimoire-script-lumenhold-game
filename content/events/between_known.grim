@@ -106,7 +106,7 @@ text: {~{o} has been trying to make friends with Kael for weeks. Every time {o} 
   rel o +small
   npc_rel kael o +small
   mood -tiny
-  say: {~You bring {o} down to the boathouse, where Kael goes in the evenings. Nobody talks much. {o} learns that this is how Kael says yes.|You take the three of you down to the water. Kael shows {o} how to skip a stone, without a word. That is apparently a friendship now.|At the boathouse, Kael is all elbows and silence for an hour. Then he tells {o} the name for snow that falls upward. It is the most you've ever heard him say.}
+  say: {~You bring {o} down to the boathouse, where Kael goes in the evenings. Nobody talks much, for a long, cold, awkward hour. {o} learns that this is how Kael says yes.|You take the three of you down to the water, and step in up to the knee. Kael shows {o} how to skip a stone, without a word. That is apparently a friendship now.|At the boathouse, Kael is all elbows and silence for an hour, and you run out of things to say in ten minutes. Then he tells {o} the name for snow that falls upward. It is the most you've ever heard him say.}
 
 @event kael_between_steps_in
 title: Frost on the Floor
@@ -199,9 +199,9 @@ cast:
   bram: bram where met(bram) and around(bram) and rel(bram) >= 0
   o: any where classmate_here(o) and rel(o) >= 4 and not at_odds(bram, o)
 per: bram
-when: seen(bram_between_coaching) == 0
+when: seen(bram_between_coaching) == 0 and (slot == "evening" or slot == "night")
 art: duel
-scene: A duelling floor late at night, a prefect patiently correcting a younger student's stance, both freezing as a third student opens the door.
+scene: A duelling floor late in the evening, a prefect patiently correcting a younger student's stance, both freezing as a third student opens the door.
 text: You go into the duelling hall late and find Bram there, without his sash, patiently correcting {o}'s footwork. {o} is terrible. Bram is being kind about it. They both freeze when they see you. "Prefect's business," says Bram, too quickly.
 > left: Tease him about it
   rel o +tiny
@@ -260,7 +260,7 @@ text: Corvin owes {o} eight crowns, and has owed it since the leaves turned. {o}
   gold -small
   rel o +small
   rel corvin +small
-  say: You pay {o} and tell Corvin he owes you now. "Saint," he says, appalled and touched in equal measure. "Who does that?" He pays you back three weeks later, in coins and a very good story about where he got them.
+  say: You pay {o} and tell Corvin he owes you now. "Saint," he says, appalled and touched in equal measure. "Who does that?" He swears he'll pay you back. Three weeks later he gives you a very good story about where the money went instead.
 > right: Get Corvin to pay
   challenge appeal apprentice+:
     win:
@@ -357,6 +357,7 @@ text: The Lumen Ledger is launching "Match of the Month", anonymous and entirely
   renown +tiny
   rel nessa +small
   rel o -small
+  alignment -small
   say: You write a name down. On Friday the whole castle reads that "a certain student in the year" is pining for "a certain other student", with details. {o} recognises every detail. So does the other student, it turns out, and the next week they're seen at the Gilded Newt together. {o} is still furious with you.
 > right: Tell Nessa it's not yours to print
   rel nessa -tiny
@@ -373,7 +374,7 @@ cast:
   mir: mir where met(mir) and around(mir) and seen(mir_owl_gift) > 0
   o: any where classmate_here(o) and rel(o) >= 4
 per: mir
-when: seen(mir_between_owl) == 0
+when: seen(mir_between_owl) == 0 and term
 art: gear
 scene: A clockwork owl perched on a workshop lamp, glaring with brass eyes at a student who is ducking, while its maker apologises with both hands.
 text: Mir's clockwork owl, which remembers deadlines, birthdays and, slightly, grudges, has taken against {o}. It hoots when {o} comes in. It drops screws on {o} from the rafters. "It's not personal!" says Mir. "Probably. It might be personal. I didn't build it to be personal."
@@ -401,6 +402,7 @@ cast:
   mir: mir where met(mir) and around(mir)
   o: any where classmate_here(o) and rel(o) >= 6 and not at_odds(mir, o)
 per: mir
+when: term
 art: gear
 scene: A workshop bench strewn with gears, an artificer talking excitedly to a half-built machine while a classmate stands to one side, looking hurt.
 text: {~{o} asked to help Mir in the workshop. Mir said, cheerfully, "No, you'll touch things," and then talked to a gearbox for ten minutes.|{o} showed Mir a design. Mir said, "That'll explode," with total delight, and went back to the lathe.|{o} has been holding the same lamp for Mir for an hour. Mir has thanked the lamp twice and {o} not once.} {o} finds you afterwards. "Do they even like me?"
@@ -408,7 +410,7 @@ text: {~{o} asked to help Mir in the workshop. Mir said, cheerfully, "No, you'll
   rel o +small
   npc_rel mir o +small
   study -tiny
-  say: {~You explain that "you'll touch things" is high praise from Mir; it means you'd be interested. {o} goes back. Mir gives {o} a screwdriver of {o.their} very own, which is practically a ring.|"It'll explode" means "I'd want to watch," you tell {o}. {o} brings the design back, and Mir spends three hours making it explode properly.|You tell {o} that Mir thanks lamps because lamps can't be hurt. {o} laughs. The next time, Mir, prompted by you, thanks {o}, and then the lamp, in that order.}
+  say: {~It takes the evening you'd meant for revision. You explain that "you'll touch things" is high praise from Mir; it means you'd be interested. {o} goes back. Mir gives {o} a screwdriver of {o.their} very own, which is practically a ring.|Over your revision hour, you tell {o} that "it'll explode" means "I'd want to watch." {o} brings the design back, and Mir spends three hours making it explode properly.|You give up a lecture's notes to tell {o} that Mir thanks lamps because lamps can't be hurt. {o} laughs. The next time, Mir, prompted by you, thanks {o}, and then the lamp, in that order.}
 > right: Tell Mir directly
   challenge appeal apprentice:
     win:

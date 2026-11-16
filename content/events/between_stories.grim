@@ -21,6 +21,7 @@ journal:
   flag(feud_ledger_gone): Bram's ledger vanished, and you let it stay vanished. The castle held its breath for a week.
   flag(feud_locked_in): The headmistress set them to clear the confiscation vault together. You locked the door on them for an hour.
   flag(feud_by_the_rules): The headmistress set them to clear the confiscation vault together, and you watched them by the rules.
+  flag(feud_lock_tried): The headmistress set them to clear the confiscation vault together. You tried to lock them in; Corvin had the lock open before you'd let go of the key.
   flag(feud_truce): Bram and Corvin shook hands in the vault doorway. Neither will say who offered first.
   flag(feud_cold): Bram and Corvin came out of the vault still enemies, if quieter ones.
 status:
@@ -78,7 +79,7 @@ title: A Week in the Vault
 thread: bram_corvin_feud
 trigger: queued
 tone: light
-defer: not (around(bram) and around(corvin))
+defer: break or not (around(bram) and around(corvin))
 art: key
 scene: A cluttered vault of confiscated oddities, two students glaring at each other over a crate, a third leaning in the doorway with a lantern.
 text: The headmistress has had enough of both of them. Bram and Corvin will clear out the confiscation vault together, every evening for a week, and you, having been seen in the middle of all of it, are to watch them. Twenty minutes in, Bram is labelling things. Corvin is unlabelling them.
@@ -91,7 +92,7 @@ text: The headmistress has had enough of both of them. Bram and Corvin will clea
       queue feud_end in 1
       say: You step out "for a lantern" and turn the key. When you open the door an hour later they're sitting on the same crate, arguing about a confiscated board game, and Bram is winning, and Corvin is letting him.
     lose:
-      flag feud_locked_in
+      flag feud_lock_tried
       rel bram -small
       rel corvin -tiny
       queue feud_end in 1
@@ -148,8 +149,10 @@ journal:
   flag(tm_ask_yourself): Mir wondered if Tobias only liked the engine. You told Mir to ask him.
   flag(tm_together): Tobias and Mir turned up at the orchard together. Whatever it is, it's their business, and it's going well.
   flag(tm_friends): Tobias and Mir are the best of friends, and the greenhouse is the best-watered in the country.
+  flag(tm_begun) and seen(tm_invitation) == 0 and not (fancy_free(tobias) and fancy_free(mir)): Then your own heart got in the way, and you left Tobias and Mir to sort themselves out.
 status:
   resolved: flag(tm_together) or flag(tm_friends)
+  let_go: seen(tm_invitation) == 0 and not (fancy_free(tobias) and fancy_free(mir))
 members:
   start tm_watering_engine
 
@@ -158,7 +161,7 @@ title: The Watering Engine
 trigger: social
 actor: tobias
 tone: light
-when: met(tobias) and met(mir) and around(tobias) and around(mir) and fancy_free(tobias) and fancy_free(mir) and turn >= 5 and not flag(tm_begun)
+when: met(tobias) and met(mir) and around(tobias) and around(mir) and fancy_free(tobias) and fancy_free(mir) and turn >= 5 and term and not flag(tm_begun)
 repeat: 3
 weight: 12
 art: gear
@@ -181,7 +184,7 @@ thread: tobias_mir
 trigger: queued
 tone: warm
 when: fancy_free(tobias) and fancy_free(mir)
-defer: season == "winter"
+defer: season == "winter" or break
 art: flower
 scene: A big student sitting on an upturned flowerpot, turning his cap round and round in his hands, asking a friend for advice.
 text: Tobias corners you by the potting benches, turning his cap round and round in his big hands. "I'd like to ask Mir to the orchard on Sunday," he says. "To see the bees. Only, without it being a thing. Unless it's a thing. How do you do that?"
@@ -235,7 +238,7 @@ title: The Orchard
 thread: tobias_mir
 trigger: queued
 tone: warm
-defer: season == "winter" or not (around(tobias) and around(mir))
+defer: season == "winter" or break or not (around(tobias) and around(mir))
 art: flower
 scene: An orchard on a sunny afternoon, two friends on a blanket among beehives, one in goggles, one with a jar of honey, laughing.
 text: Sunday, the orchard, the bees. {npc_rel(tobias, mir) >= 30: Tobias and Mir arrive together, carrying a picnic between them and arguing happily about bees.|Tobias and Mir arrive separately, and spend the afternoon talking about the engine.} They've saved you a corner of the blanket, though you weren't sure you were invited.
@@ -271,9 +274,9 @@ tags: story between
 name: The Thursday Circle
 premise: A study circle that started with two chairs and a borrowed lamp.
 journal:
-  flag(circle_begun): You and a friend started meeting in the library on Thursdays, with one lamp between you.
-  flag(circle_open): Someone nobody much liked asked to join. You said yes, and the circle got bigger.
-  flag(circle_closed): Someone nobody much liked asked to join. The circle said no, and stayed cosy.
+  flag(circle_begun): A friend pinned a card by the library door: Thursday circle, all welcome, bring a lamp.
+  flag(circle_open): The librarian said the circle was too loud. You all moved up to the cold reading room, together.
+  flag(circle_closed): The librarian said the circle was too loud. It split into two tables, and got more done.
   flag(circle_held): The night before exams, the circle nearly came apart. You held it together.
   flag(circle_split): The night before exams, the circle came apart, and put itself back together after.
   flag(circle_done): The Thursday Circle has its own table now, and a name carved under it.
@@ -293,42 +296,40 @@ when: term and not wrapup and turn >= 3 and not flag(circle_begun)
 repeat: 3
 weight: 10
 art: lantern
-scene: A library alcove in the evening, two students sharing a single lamp over open books, an empty third chair pulled up.
-text: {o} drops into the chair across from you in the library with a stack of books and a borrowed lamp. "I can't revise alone. I just read the same page. What if we did this every week? Thursdays. You and me, and whoever else."
-> left: "Thursdays, then."
+scene: A library alcove in the evening, two students sharing a single lamp over open books, one of them holding up a hand-lettered card.
+text: You and {o} keep ending up at the same library table on Thursdays, sharing a lamp. Tonight {o} has written a card for the board by the door: THURSDAY CIRCLE, ALL WELCOME, BRING A LAMP. "Shall I pin it up?" {o} asks. "Or is it nicer, just us?"
+> left: "Pin it up."
   flag circle_begun
   study +small
   rel o +small
   queue circle_newcomer within 1..2
-  say: You shake on it over the lamp. The first Thursday you get through a chapter each and an argument about it. The second Thursday someone else asks if the third chair is taken.
-> right: "I work better alone."
+  say: {o} pins it up by the door. The first Thursday a third chair fills, and you get through a chapter each and an argument about it. The second Thursday a fourth, and a dispute about whose lamp is whose.
+> right: "Just us."
   lore +small
-  rel o -tiny
-  say: {o} nods, and takes the lamp to another alcove. You get a great deal done. Every Thursday after that you see the lamp lit in the far alcove, and sometimes two heads under it.
+  rel o +tiny
+  say: {o} folds the card in half and uses it as a bookmark. Thursdays stay quiet: two chairs, one lamp, and more read in an evening than you'd ever manage in a crowd.
 
 @event circle_newcomer
-title: The Fourth Chair
+title: Too Many for One Table
 thread: study_circle
 trigger: queued
+defer: break
 tone: tense
-cast:
-  n: any where classmate_here(n) and rel(n) <= 5
-when: term
 art: book
-scene: A library table with three students around a lamp, a fourth standing a little way off with books clutched to their chest.
-text: The circle is four now, sometimes five. Tonight {n} is hovering at the end of the table with an armful of books: {n}, whom nobody in the circle much likes, and who has, it turns out, failed the last two practicals. "Could I sit in?" {n} asks. The others look at you.
-> left: "Pull up a chair."
+scene: A crowded library table round a lamp, a stern librarian standing over it pointing towards a stair, the students looking at one another.
+text: The circle is five now, sometimes six, and tonight the librarian comes over with a face like a shut book. Too many, too loud. Split into two tables, down here, or take the whole circle up to the north reading room, where nobody minds the noise because nobody can bear the cold. The others look at you.
+> left: Up to the cold room, all of us
   flag circle_open
-  rel n +medium
+  mood +small
+  health -tiny
+  queue circle_exam_night within 1..2
+  say: You carry the lamp up four flights and the circle follows, in scarves. It's freezing. The next week someone brings a blanket, then a kettle, and by the end of the month it's the best room in the castle.
+> right: Two tables, then
+  flag circle_closed
+  study +small
   mood -tiny
   queue circle_exam_night within 1..2
-  say: {n} sits down. It's stiff for a week. Then {n} explains, better than any of you, the one thing all of you had wrong, and the circle shifts round to make room.
-> right: "We're full, sorry."
-  flag circle_closed
-  rel n -small
-  study +small
-  queue circle_exam_night within 1..2
-  say: {n} says "of course" and goes. The circle stays as it was, cosy and quick. You see {n} revising alone the next Thursday, at the far end of the room.
+  say: You split it, the quick ones and the slow ones, though nobody says so. Your table gets twice as much done. You can hear the other one laughing.
 
 @event circle_exam_night
 title: The Night Before
@@ -368,6 +369,7 @@ text: The night before exams the circle sits till the lamps are trimmed, and it 
 title: The Carved Table
 thread: study_circle
 trigger: queued
+defer: break
 tone: warm
 art: book
 scene: A library table in the evening, a group of students round a lamp, one of them carving something small into the underside of the table with a penknife.
