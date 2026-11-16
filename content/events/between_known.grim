@@ -106,7 +106,7 @@ text: {~{o} has been trying to make friends with Kael for weeks. Every time {o} 
   rel o +small
   npc_rel kael o +small
   mood -tiny
-  say: {~You bring {o} down to the boathouse, where Kael goes in the evenings. Nobody talks much, for a long, cold, awkward hour. {o} learns that this is how Kael says yes.|You take the three of you down to the water, and step in up to the knee. Kael shows {o} how to skip a stone, without a word. That is apparently a friendship now.|At the boathouse, Kael is all elbows and silence for an hour, and you run out of things to say in ten minutes. Then he tells {o} the name for snow that falls upward. It is the most you've ever heard him say.}
+  say: {~You bring {o} down to the boathouse, where Kael goes in the evenings. Nobody talks much, for a long, cold, awkward hour. {o} learns that this is how Kael says yes.|You take the three of you down to the water, and say something about the weather that nobody answers. Kael shows {o} how to skip a stone, without a word. That is apparently a friendship now.|At the boathouse, Kael is all elbows and silence for an hour, and you run out of things to say in ten minutes. Then he tells {o} the name for snow that falls upward. It is the most you've ever heard him say.}
 
 @event kael_between_steps_in
 title: Frost on the Floor
@@ -199,7 +199,7 @@ cast:
   bram: bram where met(bram) and around(bram) and rel(bram) >= 0
   o: any where classmate_here(o) and rel(o) >= 4 and not at_odds(bram, o)
 per: bram
-when: seen(bram_between_coaching) == 0 and (slot == "evening" or slot == "night")
+when: seen(bram_between_coaching) == 0 and slot == "evening"
 art: duel
 scene: A duelling floor late in the evening, a prefect patiently correcting a younger student's stance, both freezing as a third student opens the door.
 text: You go into the duelling hall late and find Bram there, without his sash, patiently correcting {o}'s footwork. {o} is terrible. Bram is being kind about it. They both freeze when they see you. "Prefect's business," says Bram, too quickly.
@@ -388,7 +388,7 @@ text: Mir's clockwork owl, which remembers deadlines, birthdays and, slightly, g
     lose:
       rel mir +tiny
       study -tiny
-      say: You and Mir take the owl apart and put it back together and it is still furious with {o}. "It's a feature now," Mir decides. {o} starts wearing a hat.
+      say: You and Mir take the owl apart and put it back together and it is still furious with {o}. "It's a feature now," Mir decides. You lose an evening's revision to it. {o} starts wearing a hat.
 > right: Tell {o} to apologise to it
   rel o +small
   npc_rel mir o +tiny

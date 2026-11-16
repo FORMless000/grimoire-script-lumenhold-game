@@ -18,10 +18,10 @@ tags: mystery hollowstar
 scene: A student on a lamplit staircase looking at their own shadow on the wall, which is still raising its hand after theirs has dropped.
 text: On the stairs by lamplight you wave to a friend and drop your hand, and your shadow on the wall goes on waving a moment longer. Then it lowers its hand, slowly, as if it had only just noticed you were watching. You stand on the stair for a long time. It doesn't move again. Neither do you.
 > left: Find Seraphine, now
-  meet seraphine
   rel seraphine +small
   mood -small
-  say: She opens her door before you knock, already in her coat. "Yours too," she says. "I painted it last winter. I didn't know whose it was." She won't show you the painting. She does walk you back to your room and makes you leave the lamp lit.
+  say: {met(seraphine): She opens her door before you knock, already in her coat.|You've never spoken to the seer, only heard where she rooms, but you go. She opens her door before you knock, already in her coat.} "Yours too," she says. "I painted it last winter. I didn't know whose it was." She won't show you the painting. She does walk you back to your room and makes you leave the lamp lit.
+  meet seraphine
 > right: Blow the lamp out
   mood -tiny
   health -tiny
@@ -82,7 +82,7 @@ text: Noon, the courtyard full, and the man in grey walks in through the gate as
   challenge deceive expert -1 if flag(confronted_grey):
     win:
       guile +small
-      say: You duck into the crowd and the crowd closes behind you; a dozen first-years suddenly need to cross the courtyard all at once. By the time he has walked through them, you're three corridors away {flag(star_key): with the key|with Kael}, and the bell for lessons is ringing.
+      say: You duck into the crowd and the crowd closes behind you; a dozen first-years suddenly need to cross the courtyard all at once. By the time he has walked through them, you're three corridors away{flag(star_key):  with the key|, and he's no nearer finding Kael}, and the bell for lessons is ringing.
     lose:
       if flag(star_key):
         unflag star_key
@@ -141,16 +141,16 @@ text: The man in grey has the star key, and by now the whole academy knows it. H
       say: The landing creaks. He says "Good evening" through the closed door, and the cold comes under it like water. You run, and slip on the stairs, and get back to the castle with a sprained wrist and nothing else.
 > family: Ask a Dumont where he'd keep it
   hint: Charm. Kael or Ilse know how the families hide things.
-  when: flag(kael_ally) or flag(ilse_saved)
+  when: (flag(kael_ally) and around(kael)) or (flag(ilse_saved) and around(ilse))
   challenge negotiate adept likely:
     win:
       unflag key_taken
       flag star_key
       find star_key
-      say: "Snow," says {flag(ilse_saved): Ilse|Kael}, at once. "He'll keep it in snow, so it can't call to anyone." It's on his windowsill, in a dish of it. The Dumont who told you stands lookout in the lane while you climb, and doesn't say a word on the way home.
+      say: "Snow," says {flag(ilse_saved) and around(ilse): Ilse|Kael}, at once. "He'll keep it in snow, so it can't call to anyone." It's on his windowsill, in a dish of it. The Dumont who told you stands lookout in the lane while you climb, and doesn't say a word on the way home.
     lose:
       mood -small
-      say: "I don't know," {flag(ilse_saved): Ilse|Kael} says, too quickly, and won't look at you. Whatever the families do with what they take, it isn't something they want to tell you. Not yet.
+      say: "I don't know," {flag(ilse_saved) and around(ilse): Ilse|Kael} says, too quickly, and won't look at you. Whatever the families do with what they take, it isn't something they want to tell you. Not yet.
 > wand: Let Edmund's wand find it
   hint: Arcana. The wand hums near anything the founders made.
   when: has_item(edmunds_silver_wand)

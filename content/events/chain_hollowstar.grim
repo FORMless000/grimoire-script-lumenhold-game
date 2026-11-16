@@ -290,26 +290,26 @@ art: mask
 tags: mystery hollowstar danger
 thread: hs_investigation
 # hs_grey_offer's follow-up (feedback 2026-10-16): the man in grey comes back with a first, small ask.
-scene: A grey-coated man on a frozen garden bench, a sealed letter held out between two gloved fingers, the fountain beside him iced over.
-text: {flag(hollow_tempted): The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You liked what you tasted," he says. "Here is how it continues." He holds out a sealed letter. "Leave this under the third plank of the boathouse jetty. Nothing more."|The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You told me to get out," he says, pleasantly. "I did. Now a small thing, and I'll stay out." He holds out a sealed letter. "The third plank of the boathouse jetty. Nothing more."}
-> left: Take the letter to the jetty
+scene: A grey-coated man on a frozen garden bench, one gloved finger raised as if marking a beat, the fountain beside him iced over.
+text: {chosen(hs_grey_offer, right): The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You liked what you tasted," he says. "Here is how it continues. Tonight, at midnight, stop the great clock in the entrance hall. One minute. Nothing more."|The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You told me to get out," he says, pleasantly. "I did. Now a small thing, and I'll stay out. Tonight, at midnight, stop the great clock in the entrance hall. One minute."}
+> left: Stop the clock at midnight
   hint: Hollow. He pays in what he promised.
   alignment -small
   flag hollow_tempted grey_errand
   gold +medium
   gain star_taste
-  say: You do it at midnight, with the lake breathing under the planks. In the morning there's a purse on your pillow and the cold dreams are back, sweeter than before.
+  say: At midnight you put one finger on the pendulum, and the whole castle holds its breath for a minute. In the morning there's a purse on your pillow and the cold dreams are back, sweeter than before.
   # Threads 1: the main plot teaches Eclipse (the forest's Outcast no longer does).
   if spell_level(eclipse) < 1:
     learn_spell eclipse
     say: In the purse, under the coins, a slip of black paper with a few lines on it. You read them once, and a bruise on your wrist stops hurting and starts to hum. Pain taken, power held: Eclipse.
-> right: Drop it in the fountain unread
+> right: Tell him the clock keeps its time
   hint: Lumen. He won't thank you.
   alignment +small
   mood -small
   lose star_taste
   gain grey_watching
-  say: You break the ice and push the letter under. The ink runs blue. He watches it sink, then you, and then he isn't there, and the fountain starts to splash again as if nothing had happened.
+  say: "The clock keeps its own time," you say. He watches you for a long moment, and then he isn't there, and the fountain starts to splash again as if nothing had happened.
 
 @event hs_grey_invitation
 time: evening night
@@ -668,10 +668,10 @@ text: Beyond the wall, the round door, open a crack, and through the crack the H
   queue hs_aftermath_bargain in 1
   if alignment <= -30:
     mood +medium
-    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and pours itself into your hands.
+    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and pours itself into your hands: Eclipse, coin, a crown of points on your palm.
   else:
     mood -large
-    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and pours itself into your hands, and you can't stop shaking.
+    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and pours itself into your hands: Eclipse, coin, a crown of points on your palm. You can't stop shaking.
 > open: Open the door
   hint: It wants out. Only one already deep in the Hollow could walk through beside it.
   when: alignment <= -60 or flag(hollow_tempted)

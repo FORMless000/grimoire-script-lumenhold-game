@@ -57,7 +57,7 @@ pool: between_once
 tone: tense
 cast:
   tobias: tobias where met(tobias) and around(tobias)
-  o: any where classmate_here(o) and rel(o) >= 0 and not get_along(tobias, o)
+  o: any where classmate_here(o) and rel(o) >= 0 and not get_along(tobias, o) and not npc_is(nessa) and not npc_is(bram)
 per: tobias
 when: seen(tobias_between_sayings) == 0
 art: leaf

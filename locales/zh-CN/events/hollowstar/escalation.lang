@@ -13,8 +13,8 @@ text [e248d2] = 灯光下的楼梯上，你朝一个朋友挥手，然后放下�
 scene [6adf27] = 灯光照亮的楼梯上，一个学生看着墙上自己的影子，自己的手已经放下了，影子的手还举着。
 # en: Find Seraphine, now
 opt.left.label [0da869] = 现在就去找瑟拉芬
-# en: She opens her door before you knock, already in her coat. "Yours too," she says. "I painted it last winter. I didn't know whose it was." She won't show you the painting. She does walk you back to your room and makes you leave the lamp lit.
-opt.left.say.1 [a97a5d] = 你还没敲门，她就开了门，已经穿好了外套。“你的也是，”她说，“去年冬天我画过它。我不知道是谁的。”她不肯给你看那幅画。不过她一路把你送回房间，让你别熄灯。
+# en: {met(seraphine): She opens her door before you knock, already in her coat.|You've never spoken to the seer, only heard where she rooms, but you go. She opens her door before you knock, already in her coat.} "Yours too," she says. "I painted it last winter. I didn't know whose it was." She won't show you the painting. She does walk you back to your room and makes you leave the lamp lit.
+opt.left.say.1 [94921b] = {met(seraphine): 你还没敲门，她就开了门，已经穿好了外套。|你从没和那位先知说过话，只听说过她住在哪儿，但你还是去了。你还没敲门，她就开了门，已经穿好了外套。}“你的也是，”她说，“去年冬天我画过它。我不知道是谁的。”她不肯给你看那幅画。不过她一路把你送回房间，让你别熄灯。
 # en: Blow the lamp out
 opt.right.label [956508] = 吹灭灯
 # en: In the dark there are no shadows, and you go up to bed without looking at the walls. You sleep badly. In the morning the frost on your window has melted in the shape of a hand, on the inside of the glass.
@@ -43,8 +43,8 @@ opt.fight.say.4 [1eed80] = 你隔着冻住的喷泉和他对攻，撑得比任�
 opt.hide.label [90131f] = 带上他要的东西，跑
 # en: Guile. Half the school is between you and the gate{flag(confronted_grey): , and he knows your face|}.
 opt.hide.hint [2fedb0] = 诡计。你和大门之间隔着半个学校的人{flag(confronted_grey): ，而他认得你的脸|}。
-# en: You duck into the crowd and the crowd closes behind you; a dozen first-years suddenly need to cross the courtyard all at once. By the time he has walked through them, you're three corridors away {flag(star_key): with the key|with Kael}, and the bell for lessons is ringing.
-opt.hide.say.1 [01312d] = 你钻进人群，人群在你身后合拢；一打一年级生突然同时需要穿过庭院。等他走过他们，你已经{flag(star_key): 带着钥匙|带着凯尔}跑出了三条走廊，上课铃正在响。
+# en: You duck into the crowd and the crowd closes behind you; a dozen first-years suddenly need to cross the courtyard all at once. By the time he has walked through them, you're three corridors away{flag(star_key):  with the key|, and he's no nearer finding Kael}, and the bell for lessons is ringing.
+opt.hide.say.1 [4c12c6] = 你钻进人群，人群在你身后合拢；一打一年级生突然同时需要穿过庭院。等他走过他们，你已经跑出了三条走廊{flag(star_key): ，钥匙还在你身上|，而他离找到凯尔一点也没更近}，上课铃正在响。
 # en: He doesn't chase you. He simply arrives, at the end of the corridor, ahead of you. {flag(key_taken): He holds out his hand, and the key leaves your pocket on its own and goes to him.|"Tell him she's coming," he says, and leaves you shaking.}
 opt.hide.say.2 [8f5ca1] = 他没有追你。他只是先到了，在走廊尽头，在你前面。{flag(key_taken): 他伸出手，钥匙自己离开你的口袋，到了他那里。|“告诉他，她要来了。”他说完就走了，留下你发抖。}
 # en: Shout for the headmistress
@@ -81,10 +81,10 @@ opt.steal.say.2 [98ff28] = 楼梯平台嘎吱一响。他隔着关着的门说�
 opt.family.label [b1704d] = 问杜蒙家的人他会藏在哪儿
 # en: Charm. Kael or Ilse know how the families hide things.
 opt.family.hint [ca6a0c] = 魅力。凯尔或伊尔泽知道那些家族怎么藏东西。
-# en: "Snow," says {flag(ilse_saved): Ilse|Kael}, at once. "He'll keep it in snow, so it can't call to anyone." It's on his windowsill, in a dish of it. The Dumont who told you stands lookout in the lane while you climb, and doesn't say a word on the way home.
-opt.family.say.1 [d0043f] = “雪里，”{flag(ilse_saved): 伊尔泽|凯尔}立刻说，“他会把它放在雪里，这样它就没法呼唤任何人。”它就在他的窗台上，放在一碟雪里。告诉你的那个杜蒙在巷子里替你望风，回去的路上一句话也没说。
-# en: "I don't know," {flag(ilse_saved): Ilse|Kael} says, too quickly, and won't look at you. Whatever the families do with what they take, it isn't something they want to tell you. Not yet.
-opt.family.say.2 [5629f1] = “我不知道。”{flag(ilse_saved): 伊尔泽|凯尔}说得太快了，也不看你。不管那些家族怎么处置他们拿走的东西，那都不是他们想告诉你的事。还不是时候。
+# en: "Snow," says {flag(ilse_saved) and around(ilse): Ilse|Kael}, at once. "He'll keep it in snow, so it can't call to anyone." It's on his windowsill, in a dish of it. The Dumont who told you stands lookout in the lane while you climb, and doesn't say a word on the way home.
+opt.family.say.1 [d93e5f] = “雪里，”{flag(ilse_saved) and around(ilse): 伊尔泽|凯尔}立刻说，“他会把它放在雪里，这样它就没法呼唤任何人。”它就在他的窗台上，放在一碟雪里。告诉你的那个杜蒙在巷子里替你望风，回去的路上一句话也没说。
+# en: "I don't know," {flag(ilse_saved) and around(ilse): Ilse|Kael} says, too quickly, and won't look at you. Whatever the families do with what they take, it isn't something they want to tell you. Not yet.
+opt.family.say.2 [42ef27] = “我不知道。”{flag(ilse_saved) and around(ilse): 伊尔泽|凯尔}说得太快了，也不看你。不管那些家族怎么处置他们拿走的东西，那都不是他们想告诉你的事。还不是时候。
 # en: Let Edmund's wand find it
 opt.wand.label [724195] = 让埃德蒙的魔杖去找
 # en: Arcana. The wand hums near anything the founders made.

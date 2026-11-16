@@ -1,0 +1,57 @@
+{
+  "batch": "repair-between-2026-11-16",
+  "accept": false,
+  "summary": "31 of the 33 Nov 15 findings are fixed. Two are only partly fixed: between-stories #1 (tm_invitation) and between-hearts #3 (between_partner_meets_ex). The between_inside_joke repair also trades one unshown cost for one filed under the wrong resource. Costs are now shown in the player's own say lines, honest acts carry alignment, and study cards wait for term. The five re-premised cards are clearly distinct from tobias_bullied, soc_rumour, date_meet_friends, soc_study_session, between_closed_table and library_shared_table, and each trades fairly. The study circle and the vault lock no longer lose a step. The Tobias and Mir thread still strands, though. Its new let_go reads spark, which fades or is cooled, so the story returns to ongoing with nothing queued, and the let-go Journal line can be stamped before an invitation that then plays (both reproduced with engine fixtures). Separately, the new vault Journal line was inserted mid-list. Journal stamps are keyed by line index, so saves in progress now show a false 'you tried to lock them in'. The rest are small: a half-fixed introduction, two bodily hurts charged as mood, a cast that can make Nessa plagiarise in her own paper, an off-schedule slot, an unshown study cost, a split circle later spoken of as one table, and two zh-CN slips.",
+  "issues": [
+    {
+      "event": "tm_invitation",
+      "problem": "Blocking. The original strand (between-stories finding #1) isn't really fixed. fancy_free includes spark < 30, and spark fades 15% a month and is zeroed when the player turns down the spark_cooldown card. The new let_go and Journal line read that live condition. Fixture 1: tm_invitation comes due while spark(mir) is 32 and is dropped, so status is let_go. Spark then falls to 0, the status goes back to 'ongoing', and nothing is queued. Fixture 2: the invitation is still queued when spark briefly passes 30. The line 'Then your own heart got in the way, and you left Tobias and Mir to sort themselves out' is stamped. Spark fades, the invitation plays, and the Journal reads 'left them to sort themselves out' followed by 'Tobias asked how to invite Mir…'.",
+      "fix": "Base the drop and the let-go on the permanent bond, and only delay for spark. In tm_invitation, use 'when: courting(tobias) and courting(mir)' and 'defer: season == \"winter\" or break or (courting(tobias) and courting(mir) and (spark(tobias) >= 30 or spark(mir) >= 30))'. In the thread, use 'let_go: seen(tm_invitation) == 0 and not (courting(tobias) and courting(mir))', and give the Journal line the same condition with flag(tm_begun). A passing crush then only postpones the invitation. Becoming a partner, or an ex, closes the thread for good."
+    },
+    {
+      "event": "feud_vault",
+      "problem": "Blocking for live saves. The new journal line flag(feud_lock_tried) was inserted between feud_by_the_rules and feud_truce. The engine stamps Journal lines as '<thread>#<index>' (engine.js stampJournal and journal()), so every later line shifted by one. Fixture: a pre-commit save with by_the_rules at #4 and truce at #5 now shows 'You tried to lock them in; Corvin had the lock open…' at the truce's turn. The truce line is then re-stamped at the current turn. The game is live, so saves in progress are affected.",
+      "fix": "Move the feud_lock_tried line to the end of the bram_corvin_feud journal list, after feud_cold. The Journal sorts entries by turn, so its position in the source changes nothing players see. In locales/zh-CN/events/between_stories.lang, put the truce and cold lines back on their old keys and give the new line the last key. Then re-run i18n zh-CN."
+    },
+    {
+      "event": "between_partner_meets_ex",
+      "problem": "Between-hearts finding #3 is only half fixed. The text no longer says they've never met, but the left label 'Introduce them properly' and the win say 'You make the introductions…' still treat {a} and {b} as strangers. The cast allows pairs who already know each other (Corvin and Nessa, +10).",
+      "fix": "Relabel it 'Sit down with them both'. Win say: 'You sit down between them as if it were the most ordinary thing in the world. By the second cup they've found common ground: you, and a shared low opinion of your singing.' Update zh-CN to match."
+    },
+    {
+      "event": "between_inside_joke",
+      "problem": "The new cost for the right-hand option, third variant, is 'where you bark your shin'. That is an injury, which costs.md files under health, but the option charges mood. In the left-hand option's third variant, {a} is still 'delighted' while the option takes rel a. Adding 'doesn't tell you either' reads as teasing, not cooling.",
+      "fix": "Right, variant 3: 're-enacting the whole thing on the landing, with you as the goose, while half the house files past. You're in it now.' Left, variant 3: '\"You don't know, do you,\" says {a}, and the fun goes out of it. {a} doesn't tell you either.' Update zh-CN to match."
+    },
+    {
+      "event": "kael_between_kindness",
+      "problem": "Variant 2 of 'Bring them both to the boathouse' shows its mood cost as 'step in up to the knee'. Getting wet is a health cost in costs.md. In zh-CN, '你一脚踩进水里，没到膝盖' is ambiguous: '没到' also reads as 'didn't reach the knee'.",
+      "fix": "Use an awkward beat instead, e.g. 'You take the three of you down to the water and skip one stone, badly, three times running, while they both watch.' If the wet knee stays, change the cost to health -tiny. In zh-CN, if the knee stays, write '水一直没过膝盖'."
+    },
+    {
+      "event": "tobias_between_sayings",
+      "problem": "The re-premise is distinct from tobias_bullied and scandal_credit_taken, and it trades fairly. But the cast lets o be Nessa (no feelings either way with Tobias). Nessa is the idealistic editor of the Ledger, and she would be running a plagiarised column under her own byline in her own paper. o can also be Bram, whom Nessa (-20) is unlikely to give a column.",
+      "fix": "Add 'and not npc_is(nessa) and not npc_is(bram)' to o's cast filter, as nessa_between_story does for Bram."
+    },
+    {
+      "event": "bram_between_coaching",
+      "problem": "The new gate is 'slot == \"evening\" or slot == \"night\"'. Bram's schedule puts him in the Duelling Hall only in the evening, so a night showing has him off schedule with no reason given.",
+      "fix": "Gate on 'slot == \"evening\"' only. The scene already says 'late in the evening'."
+    },
+    {
+      "event": "mir_between_owl",
+      "problem": "The card was touched (it now needs term), but the losing branch of 'Help Mir find out why' still takes study -tiny. Its say, 'You and Mir take the owl apart and put it back together…', never shows the work given up.",
+      "fix": "'You and Mir take the owl apart and put it back together, which eats the evening you'd set aside for revision, and it is still furious with {o}.' Update zh-CN to match."
+    },
+    {
+      "event": "circle_exam_night",
+      "problem": "Continuity with the new circle_newcomer. After 'Two tables, then' (circle_closed), the circle is two tables. The next step still says 'Half the table is on its feet' as if it were one, and circle_last says 'It has its own table now'.",
+      "fix": "Open circle_exam_night's text with '{flag(circle_closed): The night before exams the two tables push back together and sit|The night before exams the circle sits} till the lamps are trimmed…'. Optionally add ', both halves of it' to circle_last's 'its own table' under the same flag. Update zh-CN to match."
+    },
+    {
+      "event": "feud_vault",
+      "problem": "zh-CN: the new journal line reads '院长罚他们俩一起清理没收物品库房'. The glossary fixes the confiscation vault as '没收库' and says not to write '没收品库'. The sibling lines (journal.4, journal.5) read '院长让他们俩一起清理没收库'.",
+      "fix": "Use '院长让他们俩一起清理没收库。你想把他们锁在里面；你还没松开钥匙，科尔文就把锁打开了。'"
+    }
+  ]
+}

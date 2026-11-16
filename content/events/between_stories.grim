@@ -21,9 +21,9 @@ journal:
   flag(feud_ledger_gone): Bram's ledger vanished, and you let it stay vanished. The castle held its breath for a week.
   flag(feud_locked_in): The headmistress set them to clear the confiscation vault together. You locked the door on them for an hour.
   flag(feud_by_the_rules): The headmistress set them to clear the confiscation vault together, and you watched them by the rules.
-  flag(feud_lock_tried): The headmistress set them to clear the confiscation vault together. You tried to lock them in; Corvin had the lock open before you'd let go of the key.
   flag(feud_truce): Bram and Corvin shook hands in the vault doorway. Neither will say who offered first.
   flag(feud_cold): Bram and Corvin came out of the vault still enemies, if quieter ones.
+  flag(feud_lock_tried): The headmistress set them to clear the confiscation vault together. You tried to lock them in; Corvin had the lock open before you'd let go of the key.
 status:
   resolved: flag(feud_truce) or flag(feud_cold)
 members:
@@ -149,10 +149,10 @@ journal:
   flag(tm_ask_yourself): Mir wondered if Tobias only liked the engine. You told Mir to ask him.
   flag(tm_together): Tobias and Mir turned up at the orchard together. Whatever it is, it's their business, and it's going well.
   flag(tm_friends): Tobias and Mir are the best of friends, and the greenhouse is the best-watered in the country.
-  flag(tm_begun) and seen(tm_invitation) == 0 and not (fancy_free(tobias) and fancy_free(mir)): Then your own heart got in the way, and you left Tobias and Mir to sort themselves out.
+  flag(tm_begun) and seen(tm_invitation) == 0 and not (courting(tobias) and courting(mir)): Then your own heart got in the way, and you left Tobias and Mir to sort themselves out.
 status:
   resolved: flag(tm_together) or flag(tm_friends)
-  let_go: seen(tm_invitation) == 0 and not (fancy_free(tobias) and fancy_free(mir))
+  let_go: flag(tm_begun) and seen(tm_invitation) == 0 and not (courting(tobias) and courting(mir))
 members:
   start tm_watering_engine
 
@@ -183,8 +183,8 @@ title: Not a Thing
 thread: tobias_mir
 trigger: queued
 tone: warm
-when: fancy_free(tobias) and fancy_free(mir)
-defer: season == "winter" or break
+when: courting(tobias) and courting(mir)
+defer: season == "winter" or break or spark(tobias) >= 30 or spark(mir) >= 30
 art: flower
 scene: A big student sitting on an upturned flowerpot, turning his cap round and round in his hands, asking a friend for advice.
 text: Tobias corners you by the potting benches, turning his cap round and round in his big hands. "I'd like to ask Mir to the orchard on Sunday," he says. "To see the bees. Only, without it being a thing. Unless it's a thing. How do you do that?"
@@ -342,7 +342,7 @@ when: term
 defer: not (month == 4 or month == 10)
 art: candle
 scene: A library table late at night strewn with notes and cold tea, students glaring at each other across it, one of them on their feet.
-text: The night before exams the circle sits till the lamps are trimmed, and it goes wrong. {w} hasn't done the notes {w.they} promised, and somebody says so, loudly, and {w} says some things back. Half the table is on its feet.
+text: The night before exams {flag(circle_closed): both tables of the circle push together and sit|the circle sits} till the lamps are trimmed, and it goes wrong. {w} hasn't done the notes {w.they} promised, and somebody says so, loudly, and {w} says some things back. Half the table is on its feet.
 > left: Hold it together
   challenge appeal journeyman:
     win:
@@ -373,7 +373,7 @@ defer: break
 tone: warm
 art: book
 scene: A library table in the evening, a group of students round a lamp, one of them carving something small into the underside of the table with a penknife.
-text: The Thursday Circle has outlasted the term. It has its own table now, and its own lamp, which the librarian pretends not to know about. Someone has brought a penknife and suggests, in a whisper, that the table should have a name on it. Underneath, where nobody will see.
+text: The Thursday Circle has outlasted the term. {flag(circle_closed): It has two tables now, side by side,|It has its own table now,} and its own lamp, which the librarian pretends not to know about. Someone has brought a penknife and suggests, in a whisper, that the table should have a name on it. Underneath, where nobody will see.
 > left: Carve it
   mood +small
   flag circle_done

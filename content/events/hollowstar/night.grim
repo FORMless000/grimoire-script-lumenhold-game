@@ -73,7 +73,7 @@ text: The boathouse hatch is open, and the steps go down into blue light. {night
   hint: Every fight is yours alone. Nobody you love goes under the lake.
   alignment +tiny
   queue hs_night_cult now
-  say: You tell them to guard the towers, and close the hatch on their protests. The steps are slick and the dark is very quiet, and it's the bravest and loneliest thing you've ever done.
+  say: {night_kael() or night_ilse() or night_maud() or night_isolde(): You tell them to guard the towers, and close the hatch on their protests.|You pull the hatch shut behind you yourself.} The steps are slick and the dark is very quiet, and it's the bravest and loneliest thing you've ever done.
 
 @event hs_night_cult
 title: The Circle on the Ice
@@ -87,7 +87,7 @@ tags: mystery hollowstar danger
 # The Dumonts' mother leads the cult's circle (decision 2026-10-26): the family's conflict, out loud on the ice. It pays
 # off kael_family (said to your face) and codex_names (the names, spoken or read off the furs).
 scene: A ring of figures in black furs with lanterns on a frozen lake at night, and at its centre a tall woman in white furs with a pale, proud face, her wand raised.
-text: The tunnel comes up through the ice inside a ring of lanterns: twelve figures in black furs, chanting{flag(hs_early): , half the lanterns not yet lit|}. At the centre stands a tall woman in white with Kael's face, thirty years on{flag(hs_early): , snow from the North still on her shoulders|}. Madame Dumont. {flag(night_kael): "My son. You came after all." "You never came for me," Kael shouts. "You came for the door!"|{flag(night_ilse): "Ilse," she says, the way you'd call a dog. "I'm not yours to call," says Ilse, white to the lips.|{flag(night_isolde): "Headmistress," she says. "Still guarding a hole in the ground." "Still trying to open one, Madame," says the headmistress.|"Kael's little friend," she says. "Step aside."}}}
+text: The tunnel comes up through the ice inside a ring of lanterns: {flag(hs_early): six figures in black furs, chanting, half the lanterns not yet lit|twelve figures in black furs, chanting}. At the centre stands a tall woman in white with Kael's face, thirty years on{flag(hs_early): , snow from the North still on her shoulders|}. Madame Dumont. {flag(night_kael): "My son. You came after all." "You never came for me," Kael shouts. "You came for the door!"|{flag(night_ilse): "Ilse," she says, the way you'd call a dog. "I'm not yours to call," says Ilse, white to the lips.|{flag(night_maud): "The groundskeeper," she says. "Come to stare at the door again?" "I lost one to it," says Maud, quite steady. "Not this one."|{flag(night_isolde): "Headmistress," she says. "Still guarding a hole in the ground." "Still trying to open one, Madame," says the headmistress.|"Kael's little friend," she says. "Step aside."}}}}
 > fight: Break the circle by force
   hint: Combat against her{flag(hs_early): . Half her circle isn't here.|.}
   queue hs_tunnel now with npc
@@ -227,7 +227,7 @@ text: Where the tunnel narrows, your lantern throws your shadow onto the wet sto
     win:
       flag shadow_beaten
       find second_shadow
-      say: It fights with your spells, in your order, and it is a beat late, every time, the way it was on the stairs. You use the beat. It breaks against the wall like water, and your own shadow lies down on the floor where it belongs.
+      say: It fights with your spells, in your order, and it is a beat late, every time{seen(hs_shadow_late) > 0: , the way it was on the stairs|; it takes you three spells to see it}. You use the beat. It breaks against the wall like water, and your own shadow lies down on the floor where it belongs.
     lose:
       night_hurt += 1
       find second_shadow
@@ -271,7 +271,7 @@ on_show:
     health -medium
   else:
     health -small
-text: You wake with the Star's gift already in you. Eclipse, a spell you never studied, sits in your hands like an old habit. There's a purse on your pillow heavy with coins nobody gave you. The mark on your palm has grown a crown of points, and a voice at the back of your mind says, pleasantly, "Good morning." {flag(ilse_taken): Ilse went north before dawn, with the man in grey.|}
+text: A month on, the Star's gift is part of you. Eclipse sits in your hands like an old habit, deeper than any lesson took it. The purse it left you is lighter than it was, and refills when you aren't looking. The mark on your palm has grown a crown of points, and a voice at the back of your mind says, pleasantly, "Good morning." {flag(ilse_taken): Ilse went north before dawn, with the man in grey.|}
 > left: Use it
   hint: The Star likes to be used.
   alignment -small
@@ -298,7 +298,7 @@ on_show:
     health -medium
   elif night_hurt >= 1:
     health -small
-text: The lake glitters as if nothing happened. Most of the academy believes there was a strange spring frost. {flag(night_ilse): Ilse is at the end of the jetty, boots off, feet in water that is only water now.|{flag(night_maud): Maud waves from her step, two mugs of tea beside her.|{flag(night_isolde): Across the courtyard, the headmistress inclines her head to you, once.|Nobody knows where you were last night. Nobody thanks you.}}} {flag(ilse_taken): Ilse went north before dawn, with the man in grey.|}
+text: The lake glitters as if nothing happened. Most of the academy believes there was a strange spring frost. {flag(night_ilse): Ilse is at the end of the jetty, boots off, feet in water that is only water now.|{flag(night_maud): Maud waves from her step, two mugs of tea beside her.|{flag(night_isolde): Across the courtyard, the headmistress inclines her head to you, once.|Nobody knows where you were that night. Nobody thanks you.}}} {flag(ilse_taken): Ilse went north before dawn, with the man in grey.|}
 > left: Go and sit with someone
   mood +medium
   if flag(night_ilse):
@@ -324,7 +324,9 @@ scene: An academy at dawn with every window dark, students on the lawns staring 
 on_show:
   if night_hurt >= 2:
     health -medium
-text: Every candle in Lumenhold went out at midnight and didn't come back until dawn. The lake is blue and empty and very deep. On your pillow there's a letter with a black-star seal: "The families thank you. Your seat at our table is waiting." At breakfast the headmistress looks at you once, and then never again. {flag(ilse_taken): The room above the bakery is empty; Ilse went north before dawn.|}
+  elif night_hurt >= 1:
+    health -small
+text: On the night of the door, every candle in Lumenhold went out at midnight and didn't come back until dawn. The lake is blue and empty and very deep. On your pillow there's a letter with a black-star seal: "The families thank you. Your seat at our table is waiting." At breakfast the headmistress looks at you once, and then never again. {flag(ilse_taken): The room above the bakery is empty; Ilse went north before dawn.|}
 > left: Answer the letter
   hint: They'd be glad of you.
   alignment -small
@@ -355,7 +357,7 @@ text: The headmistress {flag(night_isolde): stayed at the door when you ran|went
   meet isolde
   rel isolde +small
   mood -medium
-  say: "Everyone runs, the first time," she says. "Most don't come back down. You may yet." She gives you a silver ring without a word, and a rota with your name on it, and you take both.
+  say: "Everyone runs, the first time," she says. "Most don't come back down. You may yet." She pours you a cup of tea without a word, and pulls a chair to her window, and you take both.
 > right: Say nothing
   meet isolde
   mood -small
