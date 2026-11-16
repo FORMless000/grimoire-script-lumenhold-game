@@ -13,8 +13,8 @@ text [36014a] = 皇家图书馆的书库楼上，有一间阅览室，谁只要�
 scene [dc629b] = 玻璃穹顶下宽敞的阅览室，长桌上亮着绿色台灯，几位读者在静谧中埋头看书。
 # en: Read a while
 opt.left.label [f39033] = 读一会儿书
-# en: {~An hour with a book you couldn't get at Lumenhold. Your neck aches; your head is full.|You read until the librarian's look becomes a cough. It was worth it.}
-opt.left.say.1 [2694dc] = {~一个钟头，读了一本在流明霍尔德借不到的书。脖子酸了，脑子满了。|你一直读到图书管理员的眼神变成一声咳嗽。值了。}
+# en: {~An hour with a book you couldn't get at Lumenhold, and then the closing bell, three chapters from the end. You'll never know how it ends.|You read until the librarian's look becomes a cough, and the cough becomes your name, said aloud to the whole silent room. It was nearly worth it.}
+opt.left.say.1 [b4768c] = {~一个钟头，读了一本在流明霍尔德借不到的书，然后闭馆铃响了，离结尾还有三章。你永远不会知道结局了。|你一直读到图书管理员的眼神变成一声咳嗽，咳嗽又变成你的名字，当着整个安静的阅览室念了出来。差不多值了。}
 # en: Just look at the dome
 opt.right.label [359107] = 只看看穹顶
 # en: {~You stand under the dome until your neck aches, then go out into the noise again.|Light falls through the glass in long dusty bars. You leave without reading a word.}
@@ -23,14 +23,14 @@ opt.right.say.1 [830ac3] = {~你站在穹顶下一直看到脖子发酸，然后
 @event capital_townhouse_quiet_hour
 # en: The Front Steps
 title [caee80] = 门前台阶
-# en: The townhouse is quiet this afternoon: the family is out calling, the cook is at the market and the steps have just been scrubbed. You could sit on them, if anyone sat on steps uptown.
-text [5d369a] = 今天下午宅子里很安静：家里人出门拜客，厨子去了集市，台阶刚刚刷洗过。你可以坐在上面——如果上城有人坐台阶的话。
+# en: The townhouse is quiet: the family is out, the cook has gone to her sister's and the steps have just been scrubbed. You could sit on them, if anyone sat on steps uptown.
+text [94b5f1] = 宅子里很安静：家里人出门了，厨子去了她姐姐家，台阶刚刚刷洗过。你可以坐在上面——如果上城有人坐台阶的话。
 # en: Polished front steps of a tall uptown townhouse, a brass knocker shaped like a crest, the street busy with carriages below.
 scene [b5bbef] = 上城一座高大宅邸前擦得锃亮的台阶，门环是一枚家徽的形状，下面的街上马车来来往往。
 # en: Sit on the steps anyway
 opt.left.label [6ee811] = 照样坐下
-# en: {~You sit. Two carriages slow down to look. You wave. They don't.|The step is warm in the sun. A neighbour's footman pretends not to see you, very loudly.}
-opt.left.say.1 [6b8c8c] = {~你坐下了。两辆马车放慢速度来看你。你挥手。他们没有。|台阶被太阳晒得暖暖的。邻居家的男仆假装没看见你，假装得非常大声。}
+# en: {~You sit. Two carriages slow down to look. You wave. They don't.|The step is still warm from the day. A neighbour's footman pretends not to see you, very loudly.}
+opt.left.say.1 [80d0ad] = {~你坐下了。两辆马车放慢速度来看你。你挥手。他们没有。|台阶还留着白天的余温。邻居家的男仆假装没看见你，假装得非常大声。}
 # en: Go in and rest
 opt.right.label [c8b03f] = 进屋歇会儿
 # en: {~Your old room, a cool sheet, the clock in the hall. You sleep an hour you didn't plan.|The house is so quiet you can hear the clock two floors down. You rest, and nobody asks you anything.}
@@ -295,18 +295,18 @@ opt.right.say.1 [96fc81] = {~你回到街上，那里的未来是别人的事。
 @event hollis_house_quiet_hour
 # en: The Brass Plate
 title [8ce7f5] = 铜牌
-# en: Hollis House has the straightest window boxes in the street and a brass plate polished until it squints back at you. Someone inside is practising scales on a piano, very correctly.
-text [516edc] = 霍利斯宅的窗台花箱是整条街最直的，门上的铜牌擦得锃亮，亮得朝你眯眼。屋里有人在弹钢琴音阶，弹得一丝不苟。
+# en: Hollis House has the straightest window boxes in the street and a brass plate polished until it squints back at you. {slot == "noon": Someone inside is practising scales on a piano, very correctly.|Behind the curtains, someone is reading aloud, very correctly.}
+text [2aa7ce] = 霍利斯宅的窗台花箱是整条街最直的，门上的铜牌擦得锃亮，亮得朝你眯眼。{slot == "noon": 屋里有人在弹钢琴音阶，弹得一丝不苟。|窗帘后面有人在朗读，读得一丝不苟。}
 # en: A narrow, immaculate uptown house with a polished brass nameplate on the door and perfectly straight window boxes.
 scene [b5f473] = 上城一座窄窄的、整洁无瑕的房子，门上一块擦亮的铜名牌，窗台花箱摆得笔直。
 # en: Knock
 opt.left.label [60f31f] = 敲门
-# en: {~A maid answers, says the family is at luncheon, and shuts the door with great precision.|Nobody answers, but the piano stops, and starts again exactly where it left off.}
-opt.left.say.1 [6442ce] = {~一个女仆开了门，说全家正在用午餐，然后极其精确地关上了门。|没人应门，可钢琴停了，然后又从刚才停下的地方接着弹起来。}
+# en: {~A maid answers, says the family is at {slot == "noon": luncheon|{slot == "evening": dinner|tea}}, and shuts the door with great precision.|Nobody answers, but the {slot == "noon": piano|reading} stops, and starts again exactly where it left off.}
+opt.left.say.1 [c986da] = {~一个女仆开了门，说全家正在用{slot == "noon": 午餐|{slot == "evening": 晚餐|下午茶}}，然后极其精确地关上了门。|没人应门，可{slot == "noon": 钢琴声|朗读声}停了，然后又从刚才停下的地方接着响起来。}
 # en: Pass by
 opt.right.label [f4e8a5] = 走过去
-# en: {~You pass by. The piano follows you to the corner, exactly in time.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}
-opt.right.say.1 [766a60] = {~你走过去。钢琴声跟着你到了街角，拍子分毫不差。|你继续走。连门外的鹅卵石都像是被人叮嘱过要坐直。}
+# en: {~You pass by. The {slot == "noon": piano follows you to the corner, exactly in time|reading voice follows you to the corner, not missing a comma}.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}
+opt.right.say.1 [adb4f9] = {~你走过去。{slot == "noon": 钢琴声跟着你到了街角，拍子分毫不差|朗读声跟着你到了街角，一个逗号都没落下}。|你继续走。连门外的鹅卵石都像是被人叮嘱过要坐直。}
 
 @event capital_gardens_quiet_hour
 # en: The Promenade
@@ -445,8 +445,8 @@ text [64e96c] = 芬尼克农场坐落在山谷有风的那一侧，满是一垄�
 scene [f77ffc] = 有风的山坡上一座小小的高地农场，一垄垄芜菁和搭着支架的番茄，一座烟囱冒烟的石头农舍。
 # en: Lend a hand in the rows
 opt.left.label [0f3375] = 帮着干干地里的活
-# en: {~You weed a row and get chased by the goose. A voice from the house calls that you can stay for tea.|You stake tomatoes in the wind. Your hands smell green for a day.}
-opt.left.say.1 [d490d7] = {~你除了一垄草，被鹅追着跑。屋里有个声音喊你留下来喝茶。|你在风里给番茄搭架子。你的手有一天都是青草味。}
+# en: {~You weed a row and get chased by the goose. A voice from the house calls that you can stay for tea.|{season == "winter": You help lift frozen turnips in the wind until your fingers stop working. Your hands smell of earth for a day.|You stake tomatoes in the wind until your arms ache. Your hands smell green for a day.}}
+opt.left.say.1 [9f14e5] = {~你除了一垄草，被鹅追着跑。屋里有个声音喊你留下来喝茶。|{season == "winter": 你在风里帮着挖冻住的芜菁，挖到手指都不听使唤了。你的手有一天都是泥土味。|你在风里给番茄搭架子，搭到胳膊发酸。你的手有一天都是青草味。}}
 # en: Lean on the gate
 opt.right.label [d163c0] = 靠在门边
 # en: {~From the gate you can see the whole valley, the villages very small, the moor very big.|You lean on the gate and the goose leans on the other side, both of you thinking.}

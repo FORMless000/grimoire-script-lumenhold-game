@@ -19,7 +19,7 @@ text: Upstairs from the archives, the Royal Library keeps a reading room for any
 > left: Read a while
   lore +tiny
   mood -tiny
-  say: {~An hour with a book you couldn't get at Lumenhold. Your neck aches; your head is full.|You read until the librarian's look becomes a cough. It was worth it.}
+  say: {~An hour with a book you couldn't get at Lumenhold, and then the closing bell, three chapters from the end. You'll never know how it ends.|You read until the librarian's look becomes a cough, and the cough becomes your name, said aloud to the whole silent room. It was nearly worth it.}
 > right: Just look at the dome
   mood +tiny
   say: {~You stand under the dome until your neck aches, then go out into the noise again.|Light falls through the glass in long dusty bars. You leave without reading a word.}
@@ -30,11 +30,11 @@ pool: maps_placeholder
 place: capital_townhouse
 art: house
 scene: Polished front steps of a tall uptown townhouse, a brass knocker shaped like a crest, the street busy with carriages below.
-text: The townhouse is quiet this afternoon: the family is out calling, the cook is at the market and the steps have just been scrubbed. You could sit on them, if anyone sat on steps uptown.
+text: The townhouse is quiet: the family is out, the cook has gone to her sister's and the steps have just been scrubbed. You could sit on them, if anyone sat on steps uptown.
 > left: Sit on the steps anyway
   mood +tiny
   renown -tiny
-  say: {~You sit. Two carriages slow down to look. You wave. They don't.|The step is warm in the sun. A neighbour's footman pretends not to see you, very loudly.}
+  say: {~You sit. Two carriages slow down to look. You wave. They don't.|The step is still warm from the day. A neighbour's footman pretends not to see you, very loudly.}
 > right: Go in and rest
   health +tiny
   say: {~Your old room, a cool sheet, the clock in the hall. You sleep an hour you didn't plan.|The house is so quiet you can hear the clock two floors down. You rest, and nobody asks you anything.}
@@ -140,6 +140,7 @@ text: Port Calder's docks never stop: cranes, barrels, a ship from somewhere hot
 title: The Tide Under the Floor
 pool: maps_placeholder
 time: evening night
+when: slot == "evening" or slot == "night"
 place: capital_counting_house
 art: coin
 scene: A counting house on a wharf after hours, the high desks empty, an old night porter lighting a lantern by the door, water glinting through gaps in the floorboards.
@@ -269,8 +270,8 @@ art: crown
 scene: A tall black-stone house on a curving uptown street, a black wax seal carved in stone over its door, a footman on the step.
 text: The footman at Vaneshade House looks at your boots, then at your face, then at your boots again. Miss Vaneshade, he says, is at her practice and not receiving.
 > left: Leave your name
-  renown -tiny
-  mood +tiny
+  charm +tiny
+  mood -tiny
   say: {~He takes your name on a silver tray as if it might stain it. Somewhere upstairs, a window opens.|You leave your name. The door shuts with the soft, expensive sound of a door that has shut on better people.}
 > right: Walk on along the Crescent
   mood +tiny
@@ -297,14 +298,14 @@ pool: maps_placeholder
 place: hollis_house
 art: house
 scene: A narrow, immaculate uptown house with a polished brass nameplate on the door and perfectly straight window boxes.
-text: Hollis House has the straightest window boxes in the street and a brass plate polished until it squints back at you. Someone inside is practising scales on a piano, very correctly.
+text: Hollis House has the straightest window boxes in the street and a brass plate polished until it squints back at you. {slot == "noon": Someone inside is practising scales on a piano, very correctly.|Behind the curtains, someone is reading aloud, very correctly.}
 > left: Knock
   charm +tiny
   mood -tiny
-  say: {~A maid answers, says the family is at luncheon, and shuts the door with great precision.|Nobody answers, but the piano stops, and starts again exactly where it left off.}
+  say: {~A maid answers, says the family is at {slot == "noon": luncheon|{slot == "evening": dinner|tea}}, and shuts the door with great precision.|Nobody answers, but the {slot == "noon": piano|reading} stops, and starts again exactly where it left off.}
 > right: Pass by
   mood +tiny
-  say: {~You pass by. The piano follows you to the corner, exactly in time.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}
+  say: {~You pass by. The {slot == "noon": piano follows you to the corner, exactly in time|reading voice follows you to the corner, not missing a comma}.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}
 
 # Retired (C2): the place has its own cards (maps/capital_society.grim).
 @event capital_gardens_quiet_hour
@@ -383,7 +384,6 @@ scene: A cluttered clockmaker's workshop full of ticking clocks on every wall, a
 text: The Ten Clockworks' shop has forty clocks on its walls, and they all strike the hour within a breath of each other, which in this family counts as a disagreement.
 > left: Look at the clocks
   arcana +tiny
-  mood -tiny
   say: {~One clock runs backwards. A small card under it says NOT FOR SALE (A HOBBY).|You lean close to the smallest clock. It's built into a thimble, and it's right.}
 > right: Step back out
   mood +tiny
@@ -448,7 +448,7 @@ text: The Fennick farm sits up on the windy side of the valley, all turnip rows 
 > left: Lend a hand in the rows
   vigor +tiny
   health -tiny
-  say: {~You weed a row and get chased by the goose. A voice from the house calls that you can stay for tea.|You stake tomatoes in the wind. Your hands smell green for a day.}
+  say: {~You weed a row and get chased by the goose. A voice from the house calls that you can stay for tea.|{season == "winter": You help lift frozen turnips in the wind until your fingers stop working. Your hands smell of earth for a day.|You stake tomatoes in the wind until your arms ache. Your hands smell green for a day.}}
 > right: Lean on the gate
   mood +tiny
   say: {~From the gate you can see the whole valley, the villages very small, the moor very big.|You lean on the gate and the goose leans on the other side, both of you thinking.}

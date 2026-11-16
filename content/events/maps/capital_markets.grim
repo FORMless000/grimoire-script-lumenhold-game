@@ -17,7 +17,7 @@ weight: 10
 art: coin
 tags: money shop
 scene: A vast covered market under a glass roof, aisles of stalls selling spices, coats, brass instruments and curios, crowds moving between them.
-text: {~The Grand Bazaar is one long noise under a glass roof, a hundred stalls deep, and every stall-keeper has decided you look like money.|The bazaar is all spice-dust in the light, a coat-seller shouting about rain and brass things ticking on velvet, while gulls rattle the glass roof.} {~At the curio stall at the end of the aisle, the old curio-seller turns her cloth over for every visitor, and there's always one rare thing on it.|The curio-seller lifts a hand to you from the end of the aisle, over a cloth with one rare thing on it.}
+text: {~The Grand Bazaar is one long noise under a glass roof, a hundred stalls deep, and every stall-keeper has decided you look like money.|The bazaar is all spice-dust in the light, a coat-seller shouting about rain and brass things ticking on velvet, while gulls rattle the glass roof.} {(visits_to(capital_bazaar) % 3 == 0 and not has_item(ivory_dice)) or (visits_to(capital_bazaar) % 3 == 1 and not has_item(clockwork_songbird)) or (visits_to(capital_bazaar) % 3 == 2 and not has_item(sea_glass_charm)): {~At the curio stall at the end of the aisle, the old curio-seller turns her cloth over for every visitor, and there's always one rare thing on it.|The curio-seller lifts a hand to you from the end of the aisle, over a cloth with one rare thing on it.}|{~At the curio stall at the end of the aisle, the cloth is bare today but for a card that says BACK SOON, in a hand that means it.|The curio-seller lifts a hand to you from the end of the aisle, over an empty cloth. "Nothing for you today," she calls. "Come back."}}
 > almonds: A paper of sugared almonds
   hint: A little Mood.
   gold -tiny
@@ -97,7 +97,7 @@ text: At the far end of the bazaar, where the book stalls are, you hear a voice 
 > left: Make up the difference
   gold -small
   rel grimsby +medium
-  say: You count out what he's short. Grimsby goes pink and says he'll pay you back. On the coach home, you suspect, he'll read it twice.
+  say: You count out what he's short. Grimsby goes pink and starts to say he'll pay you back, and you won't hear of it. On the coach home, you suspect, he'll read it twice.
 > right: Find the logbook's faults
   challenge research journeyman:
     win:
@@ -149,15 +149,17 @@ art: crown
 scene: A hat stall piled with plumed and feathered hats, a grinning hatter with a gold tooth holding one out, a crowd gathering to watch a student bargain.
 text: The hatter with the gold tooth has a standing bet: anyone who can talk his best plumed hat down by a third walks off in it for nothing, and anyone who can't buys it at full price in front of the whole aisle. A crowd gathers before you've said yes. He sets the hat on your head and names his price.
 > left: Take the bet
+  hint: The price goes on his counter as your stake.
+  gold -small
   challenge appeal journeyman:
     win:
+      gold +small
       renown +tiny
       charm +tiny
-      say: You admire the plume, doubt the stitching, mention three rival hatters by name and sigh at the right moment. The crowd counts with you. At a third off he throws up his hands, and you walk the length of the bazaar in a hat the whole aisle cheered.
+      say: You admire the plume, doubt the stitching, mention three rival hatters by name and sigh at the right moment. The crowd counts with you. At a third off he throws up his hands, pushes your stake back across the counter, and you walk the length of the bazaar in a hat the whole aisle cheered.
     lose:
-      gold -small
       mood -tiny
-      say: He has an answer for everything, including your sigh. You pay full price in front of the aisle, and the crowd claps him, not you. The hat is magnificent. That makes it worse.
+      say: He has an answer for everything, including your sigh. Your stake stays on his counter as full price, in front of the aisle, and the crowd claps him, not you. The hat is magnificent. That makes it worse.
 > right: Watch somebody else try
   charm +tiny
   mood -tiny
@@ -289,7 +291,7 @@ text: Three tutors share the room and the rent: a thin one for spells and stars,
   hint: Guile XP: a good deal of it.
   gold -large
   guile +medium
-  say: She shuts the door and teaches you, briskly, how a liar's eyes move and how to keep your own still. "For your protection," she says, and charges extra.
+  say: She shuts the door and teaches you, briskly, how a liar's eyes move and how to keep your own still. "For your protection," she says, and counts your coins twice before she lets you go.
 > leave: Too dear today
   say: The three tutors go back to arguing about which of them you'd have chosen.
 
@@ -322,7 +324,7 @@ text: The scribe writes in a hand that makes "Dear" look like a promise. She'll 
   when: met(kael) and not around(kael) and rel(kael) >= 5 and apart(kael) >= 2
   gold -tiny
   rel kael +small
-  say: The scribe asks if the North gets letters at all. It does: Kael's answer comes with frost on the envelope and three careful lines, which from Kael is a great deal.
+  say: The scribe addresses it to the academy and asks whether anyone is there over the break. Someone is: Kael's answer comes with frost on the envelope and three careful lines, which from Kael is a great deal.
 > ilse: A letter to Ilse
   hint: Ilse is away from the capital; a letter keeps you close.
   when: met(ilse) and not around(ilse) and not flag(ilse_taken) and rel(ilse) >= 5 and apart(ilse) >= 2

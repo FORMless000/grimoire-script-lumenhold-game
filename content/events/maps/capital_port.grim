@@ -37,15 +37,15 @@ tone: eerie
 time: morning noon
 art: snow
 scene: A tall sailing ship at a harbour quay with frost thick on its rigging though the day is mild, northern sailors in furs unloading crates, one old sailor beckoning a student closer.
-text: A ship in from the far North is tied up on the quay, and though the morning is mild, there's frost on her rigging still, white to the crosstrees. Her sailors wear furs and say little. One old sailor sees your academy scarf and beckons. "Lumenhold," he says. "You want to buy a northern thing? Not cheap. Not safe either."
-> left: See what he's selling
+text: A ship in from the far North is tied up on the quay, and though the day is mild, there's frost on her rigging still, white to the crosstrees. Her sailors wear furs and say little. One old sailor sees your academy scarf, beckons, and opens a sealskin bundle on a barrel: a lump of ice that has come all the way from the North without melting. "Lumenhold," he says. "You want it? Not cheap. Not safe either."
+> left: Buy the northern ice
   gold -small
   arcana +small
-  say: It's a lump of ice that doesn't melt, wrapped in sealskin, for "keeping things cold that should stay cold". In your room it frosts the window in a pattern like writing, and by the break's end it has melted to nothing, at last. Studying it, you learn more about cold than a term of lectures.
+  say: You pay, and he wraps it back in its sealskin, for "keeping things cold that should stay cold". In your room it frosts the window in a pattern like writing, and by the break's end it has melted to nothing, at last. Studying it, you learn more about cold than a term of lectures.
 > right: Ask about the North instead
   lore +small
   mood -tiny
-  say: He tells you about the ice roads and the long night and the lights that sing over the glaciers, and he doesn't smile once. When he's done the mild morning feels thin, as if something had been let in. You walk away cold.
+  say: He tells you about the ice roads and the long night and the lights that sing over the glaciers, and he doesn't smile once. When he's done the mild day feels thin, as if something had been let in. You walk away cold.
 
 @event docks_undercroft_word
 title: Where the Dice Are
@@ -56,12 +56,12 @@ art: dice
 when: not flag(undercroft_known)
 scene: A harbour tavern doorway at dusk, a weathered docker with a dice-cup leaning out to talk to a student, the arches of a great bridge visible upriver.
 text: A docker coming off shift jingles a dice-cup at you. "You play? Not here. Under the middle bridge, in the old cellars. The Undercroft. Cards, dice, a pit on fight nights. Bring coin, leave your wand in your pocket." He looks you over. "Or don't go. Smarter."
-> left: Ask him the way in
+> left: Stand him a drink for the way in
   flag undercroft_known
-  alignment -tiny
-  say: He draws it in spilled beer on a barrel-top: the third arch, the iron door, the word for the doorman. "Tell him the docks sent you," he says. Then he rubs the map out with his sleeve. You know the way now, and you know you shouldn't.
+  gold -tiny
+  guile +tiny
+  say: You stand him a beer, and he draws the way in its spillings on a barrel-top: the third arch, the iron door, the word for the doorman. "Tell him the docks sent you," he says. Then he rubs the map out with his sleeve. You know the way now, and the word, and you haven't decided what to do with either.
 > right: Thank him and stay out of it
-  mood -tiny
   say: You thank him and walk on. "Third arch," he calls after you anyway, laughing, "iron door!" All the way home you look at the middle bridge, and wonder what's under it.
   flag undercroft_known
 
@@ -97,7 +97,7 @@ repeat: 1
 weight: 10
 art: wave
 tags: money shop
-scene: A dawn quay market of fish on ice, gulls on every roof, barrows steaming with hot food, a fishwife ladling soup for a student.
+scene: A busy quay market of fish on ice, gulls on every roof, barrows steaming with hot food, a fishwife ladling soup for a student.
 text: {~The fish market is all ice, shouting and gulls, and the barrows at the end of the quay feed the people who've been up since three: chowder, hot pasties, oysters on a plate of seaweed.|The barrows steam at the quay's end. A fishwife ladles chowder with one hand and fights off a gull with the other.}
 > chowder: A bowl of quay chowder
   hint: Health; it ends a hungry month.
@@ -116,9 +116,9 @@ text: {~The fish market is all ice, shouting and gulls, and the barrows at the e
   gold -tiny
   lore +tiny
   guile +tiny
-  say: {~For the price of a cup of tea, a fishwife tells you who drowned, who eloped, which ship's late and why, all before breakfast. Printing Row will have it by dusk, wrong.|The fishwives tell you the bonded warehouses doubled their dogs. They tell you everything. You realise they'll tell everyone about you, too.}
+  say: {~For the price of a cup of tea, a fishwife tells you who drowned, who eloped, which ship's late and why, all before your cup's gone cold. Printing Row will have it by dusk, wrong.|The fishwives tell you the bonded warehouses doubled their dogs. They tell you everything. You realise they'll tell everyone about you, too.}
 > look: Walk the quay and smell the sea
-  say: {~You walk the length of the quay past the ice and the shouting, and buy nothing, and smell of fish till noon.|The gulls follow you the whole way, sure you've got something. You haven't.}
+  say: {~You walk the length of the quay past the ice and the shouting, and buy nothing, and smell of fish till nightfall.|The gulls follow you the whole way, sure you've got something. You haven't.}
 
 @pool capital_fish_market_life
 place: capital_fish_market
@@ -149,7 +149,7 @@ text: When the late boats come in, the auction is held by hand-signals, too fast
 > right: Watch the hands
   guile +small
   health -tiny
-  say: You stand on a bollard and watch nothing but the buyers' hands for an hour. By the end you can follow the auction, just, and you've learned that the quietest buyer in the market is the one who owns it. Your feet are frozen.
+  say: You stand on a bollard and watch nothing but the buyers' hands for an hour. By the end you can follow the auction, just, and you've learned that the quietest buyer in the market is the one who owns it. {season == "winter": Your feet are frozen.|Your feet ache from the bollard.}
 
 @event fish_market_gull_war
 title: The Gull War
@@ -177,7 +177,7 @@ title: Throw It Back
 pool: capital_fish_market_life
 tone: eerie
 art: wave
-scene: A fish market stall at dawn, a small fish with golden scales gasping on the ice, old fishwives gathered around it uneasily, one holding out the fish to a student.
+scene: A fish market stall at midday, a small fish with golden scales gasping on the ice, old fishwives gathered around it uneasily, one holding out the fish to a student.
 text: On a barrow at the end of the quay, among the silver, lies a small fish with scales like coins. The fishwives won't touch it. "That one goes back," says the oldest. "Always. My gran's gran said so." She lifts it in her apron and puts it into your hands. "You're the stranger. You do it." A buyer from uptown is already waving a fistful of money at you for it.
 > left: Throw it back yourself
   alignment +tiny
@@ -487,8 +487,8 @@ pool: capital_rookery_life
 repeat: 3
 tone: warm
 art: raven
-scene: The crowded rooftops of an old harbour town at dusk, chimney-pots and washing lines, a student sitting on a roof ridge looking out over a lamp-lit city and the sea.
-text: {&Up on the Rookery the city is a different place: chimney-pots and washing lines, gutters for roads, and below, the whole capital lighting itself for the night, from the cathedral's spire to the masts in the harbour.|The way up to the Rookery is the water-butt, the outhouse roof and the drainpipe that holds if you don't trust it too long. At the top, washing lines and a cat who owns the street.|On the Rookery tonight there's mist on the sea and the lamps of the bridges are coming on one by one, upriver. Somebody's chalked a star on the nearest chimney.}
+scene: The crowded rooftops of an old harbour town in the lamplight, chimney-pots and washing lines, a student sitting on a roof ridge looking out over a lamp-lit city and the sea.
+text: {&Up on the Rookery the city is a different place: chimney-pots and washing lines, gutters for roads, and below, the whole capital in its lamps, from the cathedral's spire to the masts in the harbour.|The way up to the Rookery is the water-butt, the outhouse roof and the drainpipe that holds if you don't trust it too long. At the top, washing lines and a cat who owns the street.|On the Rookery tonight there's mist on the sea and the lamps of the bridges are coming on one by one, upriver. Somebody's chalked a star on the nearest chimney.}
 > left: Run the old routes
   challenge feat journeyman:
     win:
@@ -497,11 +497,11 @@ text: {&Up on the Rookery the city is a different place: chimney-pots and washin
       say: {&You run the routes across three streets without touching the ground: gutter, ridge, a jump over an alley that's wider than it looks. You land laughing on the last roof, and a cat applauds.|You run the long way, past the cat, and take the long jump at the dyers' yard. The washing on the lines flaps at you like a crowd.|You run the Rookery end to end and back again in the mist, by memory, and never slip once.}
     lose:
       health -small
-      say: {&A slate slides under your boot and you go down the roof on your back into a gutter full of leaves. Bruised, filthy, alive.|You misjudge the dyers' yard and land in the washing. The washing comes down with you. A dyer shouts things.|You slip in the mist and catch a chimney-pot, and the chimney-pot holds, just. You climb down very slowly.}
+      say: {&A slate slides under your boot and you go down the roof on your back into a gutter full of leaves. Bruised, filthy, alive.|You misjudge the dyers' yard and land in the washing, and through it, hard, onto the yard. The washing comes down with you. A dyer shouts things at your bruises.|You slip in the mist and catch a chimney-pot with both hands, wrenching your shoulder, and the chimney-pot holds, just. You climb down very slowly, one-armed.}
 > right: Sit on the ridge and watch the city
   mood +small
   health -tiny
-  say: {&You sit on the ridge with your knees up and watch the capital light itself, street by street, until it's all lamps. You'll never see it like this from the ground. The slates are cold, and you stay far too long.|You sit and watch the ships come in under lamps, and the castle feels a long way off. Up here it's all just lights, and a wind off the sea that gets into your bones.|You sit in the mist with the bridges coming on upriver, for a long time. You climb down damp through, sneezing.}
+  say: {&You sit on the ridge with your knees up and count the capital's lamps, street by street, until you lose count. You'll never see it like this from the ground. The slates are cold, and you stay far too long.|You sit and watch the ships come in under lamps, and the castle feels a long way off. Up here it's all just lights, and a wind off the sea that gets into your bones.|You sit in the mist with the bridges coming on upriver, for a long time. You climb down damp through, sneezing.}
 
 @event rookery_old_marks
 title: Chalk on the Chimneys

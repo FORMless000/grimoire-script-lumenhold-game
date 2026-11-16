@@ -1,0 +1,27 @@
+{
+  "batch": "repair-shared",
+  "accept": false,
+  "summary": "Every original finding is fixed: the empty-haul falls and rescues, the Good Year haul, the empty way-outs and Corvin's tin, heist_slip's bodily cost, heist_caught's loot test, job_caught's booked/known split, the noon moves and the paid-up-front auction stake. No card in knowing, second_hand, full_picture or nudge relied on recurring (no seen(self), sequences or recurrence-dependent 'again'). The rewritten job_slip is no longer a copy of heist_slip and retrieval finds no duplicate premise, but its fixed opening now contradicts most of the failure lines that queue it. The other three issues are small polish.",
+  "issues": [
+    {
+      "event": "job_slip",
+      "problem": "The old opening was a neutral 'you get clear, just'. The new one sets a fresh scene that assumes nobody has seen you yet ('the watchman's dog finds your trail before the watchman does'; a footman who has only 'heard something'). Most of the 15 lost checks that queue it have already had you seen or grabbed: bonded2_round ('a hand lifts' the lid), bonded1_dogs (the dog holds your sleeve and barks), crescent2_writing_desk (a maid screams), crescent1_quadrille ('Everybody's looking at you now'), crescent2_balcony (someone in the street points and shouts). The bonded right label 'Wait under the chests, then on' also contradicts the text, which puts you up and over the chests with the watchman 'below you'.",
+      "fix": "Open each place variant with the getaway from what just went wrong, then the new beat. Crescent: 'You twist away and bolt for the back stair, and a footman with a candle comes round the turn of it...' with 'he's heard the commotion' instead of 'heard something'. Bonded: 'You tear loose and run, and the watchman's dog is after you before the watchman is. You go up and over a stack of tea chests...'. Relabel the bonded right option 'Lie flat up there, then on', and change its say to 'You lie flat on top of the chests...'."
+    },
+    {
+      "event": "gy_after_broken",
+      "problem": "The fix itself is right, and the same issue applies to gy_after_renewed and gy_after_sold: the haul is kept and settled by queuing moor_way_home. But moor_way_home then opens with 'You come down off the moor with a bag...' just after the aftermath narrated the descent. Its 'Sell it at the inn' variants also have the coaching inn's landlord, the bargain's keeper, cheerfully buying 'for more than it's worth' moments after gy_after_broken leaves his 'kind face gone grey' and nobody speaking to you.",
+      "fix": "In each aftermath's on_show, set a marker (say moor_after_gy = 1, cleared by moor_way_home). In moor_way_home, give the text a variant on it, e.g. 'Only later do you remember the bag still over your shoulder, with everything you picked up on the hill.' Give the inn say a {flag(gy_broken): The landlord buys it without a word or a smile, and pays the bare price.|...} branch."
+    },
+    {
+      "event": "gardens_dawn_duel",
+      "problem": "The oversleeping line covers the move to noon, but noon is when 'everyone uptown walks the Royal Gardens before luncheon' (the gardens' own promenade card). The text and scene still read as a deserted duel by the fountain, while the lose say assumes a crowd ('Everyone runs'). The text is at 397 of 400 characters.",
+      "fix": "Swap ', and honour won't wait till tomorrow, and the duel is not for practice' for ', and honour won't wait, though half of uptown is watching from the paths', which stays under 400. Add strolling onlookers to the scene line."
+    },
+    {
+      "event": "fish_market_auction",
+      "problem": "Since the move from dawn to noon, the right option's closing 'Your feet are frozen.' reads oddly on a summer break, and capital visits happen on any break.",
+      "fix": "Make it seasonal: '{season == \"winter\": Your feet are frozen.|The sun has had the back of your neck.}'."
+    }
+  ]
+}

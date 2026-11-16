@@ -105,7 +105,7 @@ repeat: 1
 art: pouch
 tags: nature money
 scene: A tired student coming down off the moor onto a village road at evening, a lumpy bag over one shoulder, fog behind them on the heights.
-text: {moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
+text: {moor_after_story == 1: Later, with the green quiet again, you tip out the bag you carried all the way down off the hill: {moor_haul <= 2: a flint or two and something old.|{moor_haul <= 4: flints, old bronze, a stone with a hole in it.|more than you remember picking up.}}|{moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
 > left: Sell it at the inn
   hint: Crowns, by what you carry.
   if moor_haul >= 5:
@@ -114,11 +114,12 @@ text: {moor_haul == 0: You come down off the moor with nothing but wet boots and
     gold +medium
   elif moor_haul >= 1:
     gold +small
-  say: {moor_haul == 0: The landlord looks at your empty bag and gives you a hot drink anyway, on the house, and asks how far out you went.|{~The landlord of the coaching inn buys the lot for more than it's worth and wants to know exactly where you found each piece.|The landlord weighs it in his hands, pays you well, and puts it all in a box under the counter. He asks whether you'll be going out again.|The landlord pays without haggling, which is worse than haggling, and writes something in his little book.}}
+  say: {flag(gy_broken) and moor_after_story == 1: The landlord buys it without a word, and counts the coins onto the bar one at a time, as if they were the last good money the valley will see.|{moor_haul == 0: The landlord looks at your empty bag and gives you a hot drink anyway, on the house, and asks how far out you went.|{~The landlord of the coaching inn buys the lot for more than it's worth and wants to know exactly where you found each piece.|The landlord weighs it in his hands, pays you well, and puts it all in a box under the counter. He asks whether you'll be going out again.|The landlord pays without haggling, which is worse than haggling, and writes something in his little book.}}}
   if moor_depth > moor_deepest:
     moor_deepest = moor_depth
   moor_depth = 0
   moor_haul = 0
+  moor_after_story = 0
 > right: Keep it for study
   hint: Lore and alchemy, by what you carry.
   if moor_haul >= 5:
@@ -134,6 +135,7 @@ text: {moor_haul == 0: You come down off the moor with nothing but wet boots and
     moor_deepest = moor_depth
   moor_depth = 0
   moor_haul = 0
+  moor_after_story = 0
 
 @event moor_stumble
 title: Back on Your Feet

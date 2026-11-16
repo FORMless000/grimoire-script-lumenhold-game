@@ -437,12 +437,14 @@ text: You lead them down off the moor in the late light: Ottilie in her sun hat,
   renown +small
   say: You walk them into the market village at dusk, and the whole green comes out to see. The landlord stands in his doorway with a glass in his hand and his kind face gone grey. Nobody says a word to you. They don't need to: the next mark on the harvest board will say it for them.
   if moor_haul > 0:
+    moor_after_story = 1
     queue moor_way_home now
 > right: Take them to the Marsh first
   mood +medium
   alignment +small
   say: You take them down the causeway to {at_home() and has(origin_hedge): your grandmother|the hedge-witch}, who has a pot on and blankets out as if she'd expected all of them for supper. She counts them as they come in, all of them, and then she sits down on her step and cries, which you'd never have thought she could.
   if moor_haul > 0:
+    moor_after_story = 1
     queue moor_way_home now
 
 @event gy_after_renewed
@@ -464,12 +466,14 @@ text: The lent walk down off the moor with you at dusk, Ottilie among them compl
   gold -tiny
   say: You stand the landlord a pint at his own bar and tell him: every seventh year, the whole valley up the hill for one night, and home by morning. He drinks it slowly. "Better," he says at last, and puts the guest book on the fire, and you both watch it burn.
   if moor_haul > 0:
+    moor_after_story = 1
     queue moor_way_home now
 > right: Leave it to the valley
   mood +small
   lore +tiny
   say: You leave them to it. By morning the green's arguing about who'll bring what to the supper under the hill in seven years' time, as if it were a wedding. The harvest board's next mark is a good one, and next to it somebody has chalked a fiddle.
   if moor_haul > 0:
+    moor_after_story = 1
     queue moor_way_home now
 
 @event gy_after_sold
@@ -491,12 +495,14 @@ text: The man in good boots is waiting at the old hall's gate at dusk, as if he'
   alignment -small
   say: You take it. It's heavier than anything you've carried out of the moor. Walking back to the village you pass {at_home() and has(origin_hedge): your grandmother|the hedge-witch} on the causeway, and she spits on the ground at your feet and doesn't say a word.
   if moor_haul > 0:
+    moor_after_story = 1
     queue moor_way_home now
 > right: Throw it at his feet
   mood -small
   alignment +tiny
   say: You throw it in the road. He picks it up without a word, brushes it off and puts it away, still smiling, and that's worse. It's done. Your gold or his, the Tenant will have a guest every year now, and Ottilie is still at the table.
   if moor_haul > 0:
+    moor_after_story = 1
     queue moor_way_home now
 
 @event gy_thin_harvest

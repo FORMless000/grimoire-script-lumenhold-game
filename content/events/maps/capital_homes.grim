@@ -28,7 +28,7 @@ text: {&Dinner at the townhouse means silver, candles, an uncle, two aunts and y
 > right: Say something true
   mood +small
   gold -small
-  say: {&"They're teaching me to think," you say. "It's very inconvenient." Silence; then one uncle laughs. Next morning your allowance turns out to be a little smaller, for reasons nobody gives.|You say you're glad for the cousin but you'd rather choose for yourself. The aunts look at your mother. Your mother looks at the soup. The next draft from the family bank is lighter.|You raise your glass "to whatever the name turns out to mean". It's the best moment of the break, and it costs you: the next letter from home brings less money and more underlining.}
+  say: {&"They're teaching me to think," you say. "It's very inconvenient." Silence; then one uncle laughs. Next morning the pocket money your mother leaves on the hall table for you is a little smaller, for reasons nobody gives.|You say you're glad for the cousin but you'd rather choose for yourself. The aunts look at your mother. Your mother looks at the soup. The purse she hands you for the rest of the break is lighter than the one she'd shown you before dinner.|You raise your glass "to whatever the name turns out to mean". It's the best moment of the break, and it costs you: the theatre money she gave you this morning goes back into her reticule, without a word.}
 
 @event townhouse_calling_cards
 title: Cards on the Salver
@@ -59,11 +59,11 @@ text: Your mother has invited someone to tea: a pleasant, nervous heir of twenty
   charm +small
   mood +small
   gold -tiny
-  say: In whispers over the cake you agree a plan, and spend the rest of tea being charmingly, impeccably unsuitable together: wrong forks, strong opinions, an unwise interest in goats. Your mother is furious. You've made a friend, and the next allowance is a little lighter.
+  say: In whispers over the cake you agree a plan, and spend the rest of tea being charmingly, impeccably unsuitable together: wrong forks, strong opinions, an unwise interest in goats. Your mother is furious. You've made a friend, and your mother takes back the money she'd given you for a new coat.
 > right: Be politely dull
   gold +small
   mood -small
-  say: You talk about the weather for an hour. So do they. Your mother is delighted, and so is theirs, and the next draft from the family bank is unusually generous. You both leave feeling slightly smaller.
+  say: You talk about the weather for an hour. So do they. Your mother is delighted, and so is theirs, and at the door she presses a purse into your hand, unusually generous. You both leave feeling slightly smaller.
 
 @event townhouse_family_silver
 title: The Family Silver
@@ -104,12 +104,12 @@ text: {&The old clerk at the end desk has kept the firm's books since before you
 > left: Find the error
   lore +small
   health -tiny
-  say: {&Two hours of columns until your eyes cross. You find it, a seven that should be a one. The clerk nods, once, and writes something in a small private book.|You find two errors, and he's annoyed, because he only planted one. The other is real. He fixes it without a word and gives you a peppermint, grudgingly. Your head aches.|You find it in an hour, faster than last time, and your neck aches from the stooping. He takes the ledger back without a word and pushes the peppermint across the desk.}
+  say: {&Two hours of columns until your eyes cross. You find it, a seven that should be a one. The clerk nods, once, and writes something in a small private book.|You find two errors, and he's annoyed, because he only planted one. The other is real. He fixes it without a word and gives you a peppermint, grudgingly. Your head aches.|You find it in an hour, a decimal point hiding in plain sight, and your neck aches from the stooping. He takes the ledger back without a word and pushes the peppermint across the desk.}
 > right: Deal at the door for the firm
   charm +small
   gold +tiny
   mood -tiny
-  say: {&A carter at the wharf door wants double for the rope. You talk him down to fair and he calls you a robber, cheerfully. The firm tips you a coin, and the end desk a nod. It's exhausting.|A sailmaker with a sad story and a high price. You get the price down and the story longer. Your cut is small and your nerves are frayed.|A rival firm's man tries to buy the whole of your fleet's tea before it lands. You send him off with a worse offer than he came with, and the end desk actually smiles. You're shaking a little after.}
+  say: {&A carter at the wharf door wants double for the rope. You talk him down to fair and he calls you a robber, cheerfully. The firm tips you a coin, and the end desk a nod. It's exhausting.|A sailmaker with a sad story and a high price. You get the price down and the story longer. Your cut is small and your nerves are frayed.|A rival firm's man tries to buy the whole of your fleet's tea before it lands. You send him off with a worse offer than he came with, and the end desk actually smiles and slides you a coin for it. You're shaking a little after.}
 
 @event counting_house_damp_grain
 title: Sound, More or Less
@@ -163,13 +163,14 @@ art: cards
 scene: A smoky harbour-town loft with hammocks and a pot-bellied stove, a rough crowd around a chipped card table, a sharp-eyed older woman dealing a hand to a student.
 text: {&The card game in the loft has been going since before you left; some of the players have changed, and the pot hasn't. Nan Merrow, who runs the loft and most of the street, deals you in without asking. "The wizard," she says. "Show us what they taught you, or put a coin in."|The game again, the same chipped table and the same stove smoke. Somebody has carved your initials into the table's edge, with a little star, as a joke. "Coin or trick," says Nan.|The game, the loft, and someone you don't know asking who you are. "One of ours," says Nan Merrow, before you can answer. "Coin or trick."}
 > left: Put a coin in
+  hint: Your stake goes in the pot.
+  gold -small
   challenge deceive apprentice+ wild:
     win:
-      gold +small
+      gold +medium
       say: {&You win a hand on nerve and a pair of nothing, and the loft cheers. Nan looks at you as if you'd paid a debt.|You win, and the loft groans, and somebody accuses you of using magic, which this time you didn't.|You win, and the loft bangs the table for you, and Nan pours you a drink from the bottle she keeps for funerals and weddings.}
     lose:
-      gold -small
-      say: {&You lose a crown to a man with no front teeth, who says thank you every time. Nan laughs.|You lose, cleanly, to Nan herself, who has never lost to anyone in the loft. "Some things don't change," she says.|You lose your stake, and the loft cheers anyway, because you played.}
+      say: {&You lose your crown to a man with no front teeth, who says thank you every time. Nan laughs.|You lose, cleanly, to Nan herself, who has never lost to anyone in the loft. "Some things don't change," she says.|You lose your stake, and the loft cheers anyway, because you played.}
 > right: Show them a trick
   arcana +small
   mana -tiny

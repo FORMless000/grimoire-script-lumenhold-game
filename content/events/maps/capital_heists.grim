@@ -84,18 +84,18 @@ on_show:
   if job_loot > 0:
     job_loot -= 1
     job_dropped = 1
-text: {job_where == 2: A footman with a candle comes round the turn of the back stair, and you go backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} The candle stops outside the door. He's young, and nervous, and he's heard something.|The watchman's dog finds your trail before the watchman does. You go up and over a stack of tea chests and skin your knuckles on the iron hoops{job_dropped == 1:, and something you were carrying drops into the black gap between the chests and stays there|}. Below you, the watchman calls the dog, and the dog doesn't come.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You run before anyone gets a proper look, up and over a stack of tea chests, skinning your knuckles on the iron hoops{job_dropped == 1:, and something you were carrying drops into the dark and stays there|}, and down into the black gap behind them. Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
 > left: {job_where == 2: Wait in the furs, then go|Over the back wall, and away}
   queue job_way_out now
   say: {job_where == 2: You wait among the furs until the candle goes back down the stair, then let yourself out by the servants' door into the mews, limping a little.|You go over the back wall onto the wharf with your knuckles bleeding, and leave the dog barking at the place where you were.}
-> right: {job_where == 2: Lie to him, and go on|Wait under the chests, then on}
+> right: {job_where == 2: Lie to him, and go on|Wait in the gap, then on}
   hint: {job_where == 2: On, by a lie: the next slip may not be a near thing.|On: the next slip may not be a near thing.}
   if job_where == 2:
     alignment -tiny
     queue any in job_crescent now
   else:
     queue any in job_bonded now
-  say: {job_where == 2: You step out with your best guest's smile and ask him, a little drunkenly, where the cloakroom is. He shows you, very politely, and you're back in the house before he thinks to wonder which cloakroom you had been in.|You lie in the dark between the chests, smelling tea and your own skinned knuckles, until the watchman drags the dog off to finish his round. Then you go on.}
+  say: {job_where == 2: You step out with your best guest's smile and ask him, a little drunkenly, where the cloakroom is. He shows you, very politely, and you're back in the house before he thinks to wonder which cloakroom you had been in.|You lie in the dark gap behind the chests, smelling tea and your own skinned knuckles, while the dog snuffles along the row and the watchman drags it off to finish his round. Then you go on.}
 
 @event job_caught
 title: The Watch
@@ -234,7 +234,7 @@ from: scene
 name: The bonded warehouses
 premise: Under the crown's seal on Port Calder's wharf, the richest floor in the city waits for its duty to be paid.
 journal:
-  flag(bonded_tried): You went over the customs' wall at night.
+  flag(bonded_tried): You broke into the bonded warehouses at night.
   flag(bonded_strongroom): You opened the customs' strongroom.
   flag(bonded_ledger): In the strongroom you found the foreman's private ledger, and the theft a crew boy went to gaol for.
   flag(jory_freed): You sent the foreman's ledger to the magistrate, and Jory walked out of gaol.
@@ -265,7 +265,7 @@ text: {job_depth >= 5: The strongroom has had all the picking it'll take tonight
       say: {job_depth >= 5: By the strongroom door there's a crate of seized things waiting to go in. One small one comes with you.|{&On the nearest crate the seal's already split. Something small and good comes with you.|You feel along the stack and find a packet that's fallen behind. It comes with you.|Among the fallen chests, one has burst. You fill your pockets with tea, the good kind.}}
     lose:
       health -tiny
-      say: {job_depth >= 5: You catch your hand on the strongroom's hinge in the dark, and leave it be.|{&You find nothing but splinters.|A crate shifts under your hand, and you freeze, and leave it.|You find nothing, and bark your shin finding it.}}
+      say: {job_depth >= 5: You catch your hand on the strongroom's hinge in the dark, and leave it be.|{&You find nothing but splinters.|A crate shifts under your hand and pins your fingers against the next one before you can free them, and you leave it.|You find nothing, and bark your shin finding it.}}
   queue job_way_out now
 
 # ---------------- Band 1: the yard (depth 1–2, apprentice) ----------------
@@ -366,7 +366,7 @@ text: {seen(bonded1_loading_door) > 1: The loading door, the gap, and the ginger
 > right: Slip in past the cat
   job_depth += 1
   next
-  say: {seen(bonded1_loading_door) > 1: You go in after the cat, who goes ahead between the crates, stopping to look back.|You slip through the gap and the cat comes with you, tail up, as if showing you round.}
+  say: {seen(bonded1_loading_door) > 1: You go after the cat, who goes ahead along the wall towards the warehouse proper, stopping to look back.|You crouch to the gap and the cat comes with you, tail up, as if showing you round, along the wall to where the yard ends at the warehouse proper.}
 
 # ---------------- Band 2: the floor (depth 3–4, journeyman) ----------------
 
@@ -523,7 +523,7 @@ text: {seen(bonded_strongroom) > 1: The strongroom's iron door again, the crown 
   challenge feat using guile adept- +1 if flag(bonded_round_counted):
     win:
       job_loot += 3
-      say: {flag(bonded_strongroom): The padlock gives again. Inside, the seized goods have changed, and the pick of them comes with you.|The padlock gives with a sound like a cough. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked.}
+      say: {flag(bonded_strongroom): The padlock gives again. Inside, the seized goods have changed, and you fill your coat with the pick of them.|The padlock gives with a sound like a cough. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked. You fill your coat with the best of the jewellery before you look at the drawer.}
       if flag(bonded_ledger):
         queue job_way_out now
       else:
@@ -539,7 +539,7 @@ text: {seen(bonded_strongroom) > 1: The strongroom's iron door again, the crown 
   challenge feat using guile adept- likely:
     win:
       job_loot += 3
-      say: {flag(bonded_strongroom): Eleven picks, and you know which one now. The door opens on the crown's newest seizures.|Eleven picks and a tension wrench, and the padlock opens on the fourth. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked.}
+      say: {flag(bonded_strongroom): Eleven picks, and you know which one now. The door opens on the crown's newest seizures, and you fill your coat with the best of them.|Eleven picks and a tension wrench, and the padlock opens on the fourth. Inside, on shelves: seized jewellery, a case of duelling pistols, bolts of contraband lace, and a drawer nobody has locked. You fill your coat with the best of the jewellery before you look at the drawer.}
       if flag(bonded_ledger):
         queue job_way_out now
       else:
@@ -700,7 +700,7 @@ from: scene
 name: The house on the Crescent
 premise: The tallest house on the Crescent gives a ball every week its owner is in town, and has a safe in the study the size of a wardrobe.
 journal:
-  flag(crescent_tried): You went into the ball on the Crescent with nobody's invitation.
+  flag(crescent_tried): You went into the ball on the Crescent, to rob it.
   flag(crescent_letters): In the shipowner's writing desk you read his letters to a warehouse foreman on the wharf.
   flag(crescent_safe): You opened the safe in the shipowner's study.
 status:
@@ -743,7 +743,7 @@ repeat: 1
 art: mask
 tags: heist danger
 scene: A tall footman in powdered wig and livery at the door of a ballroom, looking down his nose at a student in evening clothes, dancers whirling beyond.
-text: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|At the ballroom doors a footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}
+text: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|Past the hall, at the ballroom doors, a second footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}
 > left: Back out into the night
   queue job_way_out now
   say: {seen(crescent1_footman) > 1: You leave the footman to his doors and go home.|You turn back as if you'd forgotten your gloves, and keep going, out of the house.}
@@ -783,7 +783,7 @@ text: {seen(crescent1_quadrille) > 1: The old lady in diamonds again, and the qu
     win:
       job_depth += 1
       next
-      say: {seen(crescent1_quadrille) > 1: You get through the quadrille without disgrace, and she lets go of you by the stairs. "Nearly adequate," she says.|You get the figures right, mostly, and she's delighted, and leaves you at the foot of the stairs with a rap of her fan and the word "adequate". Nobody sees you go up.}
+      say: {seen(crescent1_quadrille) > 1: You get through the quadrille without disgrace, and she lets go of you by the stairs. "Nearly adequate," she says.|You get the figures right, mostly, and she's delighted, and leaves you at the foot of the stairs with a rap of her fan and the word "adequate". Nobody is watching the stairs.}
     lose:
       if job_cover > 0:
         queue job_slip now
@@ -802,7 +802,7 @@ art: meal
 tags: heist money
 scene: A long supper table under candelabra laid with silver, oysters and towers of ices, guests crowding it, a student slipping a silver spoon into a sleeve.
 text: {seen(crescent1_supper_table) > 1: The supper table again. The butter swan is a butter stag tonight.|The supper room: a table the length of a barge, oysters on ice, a swan carved out of butter, and more silver than you've seen in your life, being used by people who don't notice it.}
-> left: Eat an ice and leave
+> left: Eat something and leave
   queue job_way_out now
   say: {seen(crescent1_supper_table) > 1: You take an oyster, and then your leave.|You eat an ice the size of your fist, for courage, and go home instead.}
 > right: Pocket a little silver
@@ -827,7 +827,7 @@ text: {seen(crescent1_conservatory) > 1: The conservatory again, the orchids, th
   queue job_way_out now
   say: {seen(crescent1_conservatory) > 1: You leave the orchids to the couple and go home.|You go back through the ballroom and out, {season == "winter": warm from the hothouse, into the cold|smelling of orchids, into the warm night}.}
 > right: Take the iron stair
-  job_depth += 1
+  job_depth = 3
   next
   say: {seen(crescent1_conservatory) > 1: Up the iron stair, quiet as you can on iron, and out behind the curtain.|You go up the little iron stair among the hanging ferns, and come out on the upper floor behind a curtain.}
 
@@ -843,7 +843,7 @@ repeat: 1
 art: meal
 tags: heist danger
 scene: A narrow servants' staircase in a grand house, maids and footmen hurrying up and down with trays, a student in evening clothes carrying a tray among them.
-text: {seen(crescent2_back_stairs) > 1: The back stairs, busier than ever. Somebody's left a full tray on the landing.|The back stairs, where the servants run: trays going up, trays coming down, a cook shouting from below. The study is at the top.} {flag(crescent_servants_hour): It's nearly eleven, and they're changing over.|}
+text: {seen(crescent2_back_stairs) > 1: The back stairs, busier than ever. Somebody's left a full tray on the landing.|The back stairs, where the servants run: trays going up, trays coming down, a cook shouting from below. The study is at the top.} {flag(crescent_servants_hour): The eleven o'clock changeover is still going on, and nobody is sure who should be where.|}
 > left: Go down and out by the mews
   queue job_way_out now
   say: {seen(crescent2_back_stairs) > 1: You slip down the back stairs and out into the mews, and breathe.|You go down with the empty trays and out by the mews door.}
@@ -926,13 +926,13 @@ text: {seen(crescent2_writing_desk) > 1: {flag(jory_freed): The writing desk aga
 > left: Leave the letters and go
   queue job_way_out now
   say: {seen(crescent2_writing_desk) > 1: You leave the desk to its secrets and slip away.|You put the letters back exactly as they were and go.}
-> right: Read them through
+> right: Read them, and keep one
   challenge research journeyman:
     win:
       job_loot += 1
       job_depth += 1
       next
-      say: {flag(crescent_letters): {flag(jory_freed): You read what's left of the old bundle for anything you missed, and keep a letter that names a ship. Somebody would pay for it.|You read the new bundle. Same foreman, same side door, a bigger cargo. You keep one, and go on.}|It comes clear as you read: the warehouse foreman on the wharf, two sets of figures, and everything the side door let out came up the hill to this house. You keep the best letter. Somebody would pay for it.}
+      say: {flag(crescent_letters): {flag(jory_freed): You read what's left of the old bundle for anything you missed, and keep a letter that names a ship. Somebody would pay for it.|You read the new bundle. Same foreman, same side door, a bigger cargo. You keep one, and go on.}|It comes clear as you read: the warehouse foreman on the wharf, two sets of figures, and everything the side door let out came up the hill to this house. One letter grumbles that the master sets his safe by his first ship's launching day, and names the day. You keep the best letter. Somebody would pay for it.}
       flag crescent_letters
     lose:
       if job_cover > 0:
@@ -992,7 +992,7 @@ text: {seen(crescent_safe_card) > 1: The study, the wardrobe of a safe, the bras
   challenge feat using guile adept- +1 if flag(crescent_letters):
     win:
       job_loot += 3
-      say: {flag(crescent_safe): The tumblers fall for you again. The safe has been refilled since; the shipowner has had a good season.|You turn the dial with your ear to the iron until the tumblers fall, one, two, three, four. The door swings out, heavy as a ship's. Inside: bearer bonds, a rope of pearls and a cash box. You take what you can carry.}
+      say: {flag(crescent_safe): The tumblers fall for you again. The safe has been refilled since; the shipowner has had a good season.|{flag(crescent_letters): You start from the launching day the foreman's letter let slip, and turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.|You turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.} The door swings out, heavy as a ship's. Inside: bearer bonds, a rope of pearls and a cash box. You take what you can carry.}
       flag crescent_safe
       queue job_way_out now
     lose:

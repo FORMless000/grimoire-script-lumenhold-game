@@ -7,8 +7,8 @@
 @event shop_bazaar
 # en: The Grand Bazaar
 title [6263b9] = 大集市
-# en: {~The Grand Bazaar is one long noise under a glass roof, a hundred stalls deep, and every stall-keeper has decided you look like money.|The bazaar is all spice-dust in the light, a coat-seller shouting about rain and brass things ticking on velvet, while gulls rattle the glass roof.} {~At the curio stall at the end of the aisle, the old curio-seller turns her cloth over for every visitor, and there's always one rare thing on it.|The curio-seller lifts a hand to you from the end of the aisle, over a cloth with one rare thing on it.}
-text [1c6a08] = {~大集市是玻璃顶棚下一整片连绵不断的喧闹，一百个摊位那么深，每个摊主都认定你看上去像钱。|大集市里光线中飘着香料粉尘，卖大衣的人在吆喝下雨，丝绒上的黄铜玩意儿滴答作响，海鸥把玻璃顶棚敲得哗哗响。} {~过道尽头的古玩摊上，年老的古玩摊主给每位来客都翻一遍她的布，布上总有一件稀罕物。|古玩摊主在过道尽头冲你抬了抬手，她的布上摆着一件稀罕物。}
+# en: {~The Grand Bazaar is one long noise under a glass roof, a hundred stalls deep, and every stall-keeper has decided you look like money.|The bazaar is all spice-dust in the light, a coat-seller shouting about rain and brass things ticking on velvet, while gulls rattle the glass roof.} {(visits_to(capital_bazaar) % 3 == 0 and not has_item(ivory_dice)) or (visits_to(capital_bazaar) % 3 == 1 and not has_item(clockwork_songbird)) or (visits_to(capital_bazaar) % 3 == 2 and not has_item(sea_glass_charm)): {~At the curio stall at the end of the aisle, the old curio-seller turns her cloth over for every visitor, and there's always one rare thing on it.|The curio-seller lifts a hand to you from the end of the aisle, over a cloth with one rare thing on it.}|{~At the curio stall at the end of the aisle, the cloth is bare today but for a card that says BACK SOON, in a hand that means it.|The curio-seller lifts a hand to you from the end of the aisle, over an empty cloth. "Nothing for you today," she calls. "Come back."}}
+text [2c834e] = {~大集市是玻璃顶棚下一整片连绵不断的喧闹，一百个摊位那么深，每个摊主都认定你看上去像钱。|大集市里光线中飘着香料粉尘，卖大衣的人在吆喝下雨，丝绒上的黄铜玩意儿滴答作响，海鸥把玻璃顶棚敲得哗哗响。} {(visits_to(capital_bazaar) % 3 == 0 and not has_item(ivory_dice)) or (visits_to(capital_bazaar) % 3 == 1 and not has_item(clockwork_songbird)) or (visits_to(capital_bazaar) % 3 == 2 and not has_item(sea_glass_charm)): {~过道尽头的古玩摊上，年老的古玩摊主给每位来客都翻一遍她的布，布上总有一件稀罕物。|古玩摊主在过道尽头冲你抬了抬手，她的布上摆着一件稀罕物。}|{~过道尽头的古玩摊上，今天布上空空的，只有一张卡片写着“马上回来”，字迹看得出是当真的。|古玩摊主在过道尽头冲你抬了抬手，她的布上空无一物。“今天没有你的东西，”她喊道，“改天再来。”}}
 # en: A vast covered market under a glass roof, aisles of stalls selling spices, coats, brass instruments and curios, crowds moving between them.
 scene [70624c] = 玻璃顶棚下巨大的室内集市，一排排摊位卖着香料、大衣、黄铜器械和古玩，人群在其间穿行。
 # en: A paper of sugared almonds
@@ -85,8 +85,8 @@ text [95a4de] = 在大集市尽头的旧书摊那边，你听见一个熟悉的�
 scene [0d339c] = 巨大室内集市的书摊过道，一位戴旅行帽和半月形眼镜的老书商正和摊主争论一本破旧的日志。
 # en: Make up the difference
 opt.left.label [6eafbe] = 替他补上差价
-# en: You count out what he's short. Grimsby goes pink and says he'll pay you back. On the coach home, you suspect, he'll read it twice.
-opt.left.say.1 [509d0a] = 你数出他缺的钱。格林斯比脸红了，说会还你。你猜，回去的马车上他会把它读两遍。
+# en: You count out what he's short. Grimsby goes pink and starts to say he'll pay you back, and you won't hear of it. On the coach home, you suspect, he'll read it twice.
+opt.left.say.1 [bebc3c] = 你数出他缺的钱。格林斯比脸红了，刚开口说要还你，你就不让他说下去。你猜，回去的马车上他会把它读两遍。
 # en: Find the logbook's faults
 opt.right.label [d63b39] = 找出日志的毛病
 # en: You find the water-stain on page nine, the missing month and a mistake about a tide, and the price comes down to what Grimsby has. He pays in coins warm from his pocket, and tells you every tide in the book, all afternoon.
@@ -135,10 +135,12 @@ text [d01ab1] = 镶金牙的帽匠有个长年赌约：谁能把他最好的那�
 scene [3c22f9] = 堆满羽饰帽子的帽摊，一个镶金牙的帽匠咧嘴递出一顶，一群人围过来看一个学生讨价还价。
 # en: Take the bet
 opt.left.label [8a4d52] = 接下赌约
-# en: You admire the plume, doubt the stitching, mention three rival hatters by name and sigh at the right moment. The crowd counts with you. At a third off he throws up his hands, and you walk the length of the bazaar in a hat the whole aisle cheered.
-opt.left.say.1 [9c1ab3] = 你夸那根羽毛，怀疑那道针脚，点了三家对手帽匠的名字，又在恰当的时候叹了口气。人群跟着你一起数。降到三分之一时，他两手一摊，你戴着一顶整条过道都为之欢呼的帽子，走完了整个集市。
-# en: He has an answer for everything, including your sigh. You pay full price in front of the aisle, and the crowd claps him, not you. The hat is magnificent. That makes it worse.
-opt.left.say.2 [105b27] = 他什么都有话回，连你的叹气也有。你当着整条过道付了全价，人群为他鼓掌，不是为你。帽子华丽极了。这反而更糟。
+# en: The price goes on his counter as your stake.
+opt.left.hint [d42c37] = 这顶帽子的价钱先押在他柜台上，当你的赌注。
+# en: You admire the plume, doubt the stitching, mention three rival hatters by name and sigh at the right moment. The crowd counts with you. At a third off he throws up his hands, pushes your stake back across the counter, and you walk the length of the bazaar in a hat the whole aisle cheered.
+opt.left.say.1 [7dd3cb] = 你夸那根羽毛，怀疑那道针脚，点了三家对手帽匠的名字，又在恰当的时候叹了口气。人群跟着你一起数。降到三分之一时，他两手一摊，把你的赌注推回柜台这边，你戴着一顶整条过道都为之欢呼的帽子，走完了整个集市。
+# en: He has an answer for everything, including your sigh. Your stake stays on his counter as full price, in front of the aisle, and the crowd claps him, not you. The hat is magnificent. That makes it worse.
+opt.left.say.2 [820934] = 他什么都有话回，连你的叹气也有。你的赌注就当着整条过道算成了全价，留在了他的柜台上，人群为他鼓掌，不是为你。帽子华丽极了。这反而更糟。
 # en: Watch somebody else try
 opt.right.label [113188] = 看别人来试
 # en: A fishwife takes the bet after you decline and wins it in four sentences, none of them polite. She wears the plumes home over her fish. You learn more from her than from a term of manners, and spend the walk home wishing it had been you.
@@ -261,8 +263,8 @@ opt.vigor.say.1 [f7d0ca] = 她让你在柱廊里来回跑，跑到浴场的海�
 opt.guile.label [cf3d0f] = 凶的那位的另一种课
 # en: Guile XP: a good deal of it.
 opt.guile.hint [1a7f9d] = 诡计经验：很多。
-# en: She shuts the door and teaches you, briskly, how a liar's eyes move and how to keep your own still. "For your protection," she says, and charges extra.
-opt.guile.say.1 [8552dd] = 她关上门，干脆利落地教你说谎者的眼睛怎么动，以及怎样让自己的眼睛不动。“为了保护你自己，”她说，然后多收了钱。
+# en: She shuts the door and teaches you, briskly, how a liar's eyes move and how to keep your own still. "For your protection," she says, and counts your coins twice before she lets you go.
+opt.guile.say.1 [82bb75] = 她关上门，干脆利落地教你说谎者的眼睛怎么动，以及怎样让自己的眼睛不动。“为了保护你自己，”她说，把你的钱数了两遍才放你走。
 # en: Too dear today
 opt.leave.label [5593e2] = 今天太贵了
 # en: The three tutors go back to arguing about which of them you'd have chosen.
@@ -291,8 +293,8 @@ opt.nessa.say.1 [6d958f] = 你把拱廊里最好的八卦寄给她，以代笔�
 opt.kael.label [0244c6] = 写给凯尔
 # en: Kael is away from the capital; a letter keeps you close.
 opt.kael.hint [1c7af0] = 凯尔不在王都；写封信，保持亲近。
-# en: The scribe asks if the North gets letters at all. It does: Kael's answer comes with frost on the envelope and three careful lines, which from Kael is a great deal.
-opt.kael.say.1 [cf1b5b] = 代笔人问北方到底收不收得到信。收得到：凯尔的回信信封上结着霜，里面写了仔细的三行——对凯尔来说，这已经很多了。
+# en: The scribe addresses it to the academy and asks whether anyone is there over the break. Someone is: Kael's answer comes with frost on the envelope and three careful lines, which from Kael is a great deal.
+opt.kael.say.1 [75cb71] = 代笔人把信寄往学院，问假期里那儿还有没有人。有：凯尔的回信信封上结着霜，里面写了仔细的三行——对凯尔来说，这已经很多了。
 # en: A letter to Ilse
 opt.ilse.label [d067a2] = 写给伊尔泽
 # en: Ilse is away from the capital; a letter keeps you close.
