@@ -35,7 +35,7 @@ text: {~The peat-cutters are working the long bank below the first cairn, slicin
 > left: Cut turves with them
   vigor +tiny
   health -tiny
-  say: {~You cut eleven turves, badly, and get peat to the elbows and a crick in your back. They praise every one. You notice none of yours is the seventh.|Your back aches by noon. A cutter shows you how to lean on the spade, and the work goes easier.|You cut until your hands blister. When you ask how long they've cut this bank, the cutters talk about the weather.}
+  say: {~You cut eleven turves, badly, and get peat to the elbows and a crick in your back. They praise every one. You notice none of yours is the seventh.|Your back aches inside the hour. A cutter shows you how to lean on the spade, and the work goes easier.|You cut until your hands blister. When you ask how long they've cut this bank, the cutters talk about the weather.}
 > right: Ask about the moor
   lore +tiny
   say: {~"Past the third cairn it goes on," says the eldest. "Don't go on with it." The others laugh, and then don't.|They tell you the bog roads are older than the villages, and the cairns older than the roads. Nobody knows who built the hill.|"Keep the cairns on your left going out," a cutter says, "and on your right coming back. And come back."}
@@ -105,7 +105,7 @@ repeat: 1
 art: pouch
 tags: nature money
 scene: A tired student coming down off the moor onto a village road at evening, a lumpy bag over one shoulder, fog behind them on the heights.
-text: {moor_after_story == 1: Later, with the green quiet again, you tip out the bag you carried all the way down off the hill: {moor_haul <= 2: a flint or two and something old.|{moor_haul <= 4: flints, old bronze, a stone with a hole in it.|more than you remember picking up.}}|{moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
+text: {moor_after_story == 1: Later, when it's all quieter, you tip out the bag you carried all the way down off the hill: {moor_haul <= 2: a flint or two and something old.|{moor_haul <= 4: flints, old bronze, a stone with a hole in it.|more than you remember picking up.}}|{moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
 > left: Sell it at the inn
   hint: Crowns, by what you carry.
   if moor_haul >= 5:
@@ -529,7 +529,7 @@ title: The Warm Hill
 thread: moor_delve
 class: routine
 tone: eerie
-when: moor_depth >= 5 and moor_depth <= 6
+when: moor_depth >= 5 and moor_depth <= 6 and not flag(gy_broken)
 repeat: 1
 art: sparkle
 tags: moor mystery

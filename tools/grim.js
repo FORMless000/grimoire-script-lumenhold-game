@@ -958,8 +958,8 @@ function lintMenus(content, problems) {
 // - break study: a study change on a card that can play on a break (study only counts in term);
 // - child: a word for a child (children may only be background: style.md).
 const TIME_WORDS = { dawn: ['morning'], morning: ['morning'], breakfast: ['morning'], luncheon: ['noon'], noon: ['noon'], midday: ['noon'], afternoon: ['afternoon'], dusk: ['evening'], sunset: ['evening'], evening: ['evening'], night: ['night', 'midnight'], 'after hours': ['night', 'midnight'] };
-const TIME_RE = /(\b(?:this|last|tomorrow|yesterday|every|all|one|that|each|next|by|till|until|the other|good|by|of the|in the)\s+)?\b(dawn|morning|luncheon|noon|midday|afternoon|dusk|sunset|evening|night|after hours)\b/gi;
-const AGAIN_RE = /\b(again|this time|last time)\b/i;
+const TIME_RE = /(\b(?:this|last|tomorrow|yesterday|every|all|one|that|each|next|by|till|until|the other|good|by|of the|in the)\s+)?\b(dawn|morning|luncheon|noon|midday|afternoon|dusk|sunset|evening|night|after hours)\b(?! (?:clothes|dress|wear|edition|paper|papers|post|star|prayers|air))/gi;
+const AGAIN_RE = /\b(?<!(?:back|out|up|down|off|round|over) )(again|this time|last time)\b/i;
 const CHILD_RE = /\b(child|children|boy|boys|girl|girls|baby|babies|kid|kids|infant|toddler|newborn)\b/i;
 const TERM_MONTHS = new Set([1, 2, 3, 4, 7, 8, 9, 10]);
 function eventStrings(e) {
@@ -1033,7 +1033,7 @@ function lintReview(content, problems) {
       if (hits.length) P('warn', e, '"' + hits[0] + '" in a variant that can show before the thing it remembers (key it on seen/since/chosen or a flag, or reword)');
     }
     // unfunded wager
-    if (!['incident', 'crisis'].includes(e.class)) for (const o of e.options || []) {
+    if (!['incident', 'crisis'].includes(e.class) && !(e.tags || []).includes('crisis')) for (const o of e.options || []) {
       const top = (o.effects || []).some((st) => st.t === 'delta' && st.name === 'gold' && st.sign < 0);
       const gated = /\bgold\b/.test((o.when && o.when.src) || '') || /\bgold\b/.test(when);
       if (top || gated) continue;

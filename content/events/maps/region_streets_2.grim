@@ -28,12 +28,12 @@ pool: capital_streets
 tone: light
 when: season == "summer" and (slot == "noon" or slot == "afternoon")
 art: rain
-scene: A dusty summer city street, a horse-drawn water cart spraying the cobbles from a pierced pipe, barefoot children dancing in the spray, a student about to join them.
-text: It's so hot the cobbles shimmer. Down the street comes the water cart, laying the dust with a fan of spray from a pipe at its tail, and behind it every child in the street is dancing in the wet, shrieking. The driver grins down at you. "Fill her up at the pump for me after," he says, "and you can ride the tail."
+scene: A dusty summer city street, a horse-drawn water cart spraying the cobbles from a pierced pipe, apprentices and passers-by dancing in the spray, a student about to join them.
+text: It's so hot the cobbles shimmer. Down the street comes the water cart, laying the dust with a fan of spray from a pipe at its tail, and behind it half the street is dancing in the wet: apprentices, a fishwife, two clerks with their trousers rolled, all shrieking. The driver grins down at you. "Fill her up at the pump for me after," he says, "and you can ride the tail."
 > left: Run through the spray
   mood +small
   health -tiny
-  say: You run through the spray with the children, twice, and come out the far side soaked, cool and laughing, and skid on the wet cobbles and bark your knee, while a clerk on the pavement watches you with open envy.
+  say: You run through the spray with the apprentices, twice, and come out the far side soaked, cool and laughing, and skid on the wet cobbles and bark your knee, while a clerk on the pavement watches you with open envy.
 > right: Work the pump for him
   vigor +small
   health -tiny
@@ -88,7 +88,7 @@ text: A pavement artist has spent the whole day on his knees drawing the sea in 
 title: The Organ-Grinder's Monkey
 pool: capital_streets
 tone: light
-when: slot != "night"
+when: slot != "night" and gold > 0
 art: paw
 scene: A city street, an organ-grinder turning the handle of a barrel organ, a small monkey in a red waistcoat and cap scampering off with a coin purse, a student giving chase.
 text: An organ-grinder is playing a waltz on the corner, and his monkey, in a red waistcoat and a tiny cap, comes round with a tin cup. It doffs the cap to you very politely. Then it unbuttons your coat pocket with two quick fingers and is off down the street with your purse.
@@ -112,16 +112,16 @@ pool: capital_streets
 tone: warm
 when: slot != "night"
 art: hand
-scene: A crowded city market street, a small tearful child in a too-big cap standing still in the middle of the crowd, a student crouching down to talk to them.
-text: In the thick of a market street a small child in a cap too big for them is standing quite still and crying without making a sound, while the crowd parts round them like water round a post. Nobody stops. They're about five, and holding a paper bag of sugared almonds very tight.
-> left: Hoist them up and shout
+scene: A crowded city market street, a very old man in a too-big coat standing lost in the middle of the crowd, a student taking his arm.
+text: In the thick of a market street a very old man in a coat too big for him is standing quite still and crying without making a sound, while the crowd parts round him like water round a post. Nobody stops. He's holding a paper bag of sugared almonds very tight, and he can't remember which street is his.
+> left: Take his arm and call out
   alignment +small
   health -tiny
-  say: You put them on your shoulders, almonds and all, and walk the street shouting, and the child points and shouts too. A frantic woman comes running from three streets away. By the time she's done thanking you your neck has a crick in it and your hair is full of sugar.
-> right: Walk them to the watch house
+  say: You take his arm, almonds and all, and walk him up and down the street calling out, and he points at windows and calls too. A frantic woman, his daughter, comes running from three streets away. By the time she's done thanking you your arm aches from his weight and your sleeve is sticky with sugar.
+> right: Walk him to the watch house
   alignment +tiny
   mood -tiny
-  say: You take a small sticky hand and walk them to the watch house, where a sergeant who has clearly done this a hundred times sits them on the desk with a biscuit. They don't look at you as you go. You worry about it all the way home.
+  say: You take a thin, sticky hand and walk him to the watch house, where a sergeant who has clearly done this a hundred times sits him by the stove with a biscuit. He doesn't look at you as you go. You worry about it all the way home.
 
 @event streets_runaway_bride
 title: Drive, Anywhere
@@ -149,14 +149,16 @@ art: meal
 scene: A city street, a pieman with a tray of hot pies on his head and a coin spinning in the air above his hand, a laughing crowd, a student calling it.
 text: The pieman's tray of hot pies smells of pepper and gravy, and he has a game: he'll toss you for it. Call it right and the pie's free. Call it wrong and you pay double. "Fair as the King's justice," he says, flipping the coin, "and twice as quick."
 > left: Toss him for it
+  hint: Double the price goes on his tray first.
+  gold -small
   chance even:
+    gold +small
     mood +small
     health +tiny
-    say: Heads, you call, and heads it is. He hands over the pie with a groan for the crowd, and you eat it standing in the street, scalding your mouth, the finest pie you've ever eaten for nothing.
+    say: Heads, you call, and heads it is. He hands back your coins and the pie with a groan for the crowd, and you eat it standing in the street, scalding your mouth, the finest pie you've ever eaten for nothing.
   else:
-    gold -small
     health +tiny
-    say: Tails. You pay double, and he bows to the crowd. The pie's good, which almost makes up for it. Almost.
+    say: Tails. He keeps the double price off his tray, and bows to the crowd. The pie's good, which almost makes up for it. Almost.
 > right: Watch the others call it
   lore +small
   mood -tiny
@@ -210,14 +212,15 @@ art: rune
 scene: A city pavement, an old man at a folding table playing three chess games at once against three challengers, a tin of coins beside him, a student sitting down at the empty fourth board.
 text: An old man with a folding table is playing three games of chess at once on the pavement, a coin a game, five to one to anyone who beats him, and winning all three while eating a sausage. There's a fourth board, empty. "Sit," he says, without looking up. "You've a face for losing."
 > left: Play him for a coin
+  hint: A coin in his tin to sit down.
+  gold -tiny
   challenge research journeyman:
     win:
-      gold +small
+      gold +medium
       lore +tiny
-      say: You play slow and careful, and he plays fast and careless, and on the fortieth move he looks at the board for the first time and laughs and tips his king. "Come back when you're good," he says, paying you, "and I'll take it all back."
+      say: You play slow and careful, and he plays fast and careless, and on the fortieth move he looks at the board for the first time and laughs and tips his king. "Come back when you're good," he says, paying you five to one, "and I'll take it all back."
     lose:
-      gold -tiny
-      say: He mates you in eleven moves without breaking off his sausage. You put your coin in his tin. He tells you what you did wrong, in detail, and he's right about all of it.
+      say: He mates you in eleven moves without breaking off his sausage. Your coin stays in his tin. He tells you what you did wrong, in detail, and he's right about all of it.
 > right: Watch and learn his trick
   lore +small
   mood -tiny
@@ -249,10 +252,10 @@ art: mask
 scene: A busy city street, an excited woman with a parasol clutching a student's arm and talking at them, passers-by turning to look.
 text: A woman with a parasol seizes your arm in the middle of the street. "It's you!" she says. "From the play! At the theatre! You were wonderful, you were the villain!" She is quite sure. Passers-by are turning to see who you are.
 > left: Play along
+  alignment -tiny
   challenge deceive journeyman:
     win:
       mood +small
-      alignment -tiny
       say: You were the villain, you agree, and you tell her how the trapdoor works, and how the leading lady is in private, and she buys you tea and cake and makes you sign her programme. It's the best tea you've had in weeks, and every crumb of it a lie.
     lose:
       renown -tiny
@@ -261,7 +264,7 @@ text: A woman with a parasol seizes your arm in the middle of the street. "It's 
 > right: Tell her the truth
   alignment +tiny
   mood -tiny
-  say: You tell her, gently, you've never been on a stage in your life. She doesn't believe you. She thinks you're being modest. She walks off telling her friend she met the villain and the villain was very modest, and you're left a little sorry not to be.
+  say: You tell her, gently, that you've never been in that play, and were nobody's villain. She doesn't believe you. She thinks you're being modest. She walks off telling her friend she met the villain and the villain was very modest, and you're left a little sorry not to be.
 
 @event streets_soup_kitchen
 title: Soup Under the Arch
@@ -310,8 +313,8 @@ pool: capital_streets
 tone: warm
 when: slot != "night"
 art: house
-scene: A city street corner, a small shoeblack boy with his box and brushes, a student sitting on the box blacking the boy's own worn boots, passers-by amused.
-text: A shoeblack boy on the corner, all elbows and cheek, offers to black your boots and tell you the street's news, both for one coin. His own boots, you notice, are grey with dust and have never seen a brush in their lives.
+scene: A city street corner, a lanky young shoeblack with his box and brushes sitting on it while a student kneels to black his own worn boots, passers-by amused.
+text: A shoeblack on the corner, a lanky young man all elbows and cheek, offers to black your boots and tell you the street's news, both for one coin. His own boots, you notice, are grey with dust and have never seen a brush in their lives.
 > left: Pay for the shine and the news
   gold -tiny
   lore +small
@@ -408,10 +411,10 @@ text: The bank under the hedge is warm with sun, and when you look down it's red
   mood +small
   health -tiny
   say: You lie on the bank and eat them one by one as you find them, warm from the sun, till your fingers are red and you can't find any more. The nettles have got both your wrists.
-> right: Fill your hat for the children
+> right: Fill your hat for the haymakers
   alignment +tiny
   health -tiny
-  say: You fill your hat, carefully, without eating more than one in five, and carry it to the farm gate, where three small children fall on it like starlings. You've been stung from your knuckles to your elbows.
+  say: You fill your hat, carefully, without eating more than one in five, and carry it to the field gate, where three hot haymakers fall on it like starlings. You've been stung from your knuckles to your elbows.
 
 @event lanes_shearing
 title: The Shearers
@@ -626,16 +629,16 @@ pool: country_lanes
 tone: light
 when: slot != "night"
 art: key
-scene: A country crossroads, an old wooden fingerpost signpost twisted round on its post so its arms point the wrong ways, two boys giggling behind a wall, a student looking up at it.
+scene: A country crossroads, an old wooden fingerpost signpost twisted round on its post so its arms point the wrong ways, two young farmhands giggling behind a wall, a student looking up at it.
 text: The fingerpost at the crossroads has been twisted round on its post, so the market village is up the farm track and the mill is in a pond. From behind the wall comes a lot of giggling. A carter has just taken the wrong road and is coming back, swearing.
 > left: Turn it back the right way
   alignment +tiny
   health -tiny
-  say: You put your shoulder to the post and heave it round, rasping your palms, while the boys behind the wall groan. The carter thanks you, and then goes and tells the boys' mothers, which you hadn't meant at all.
+  say: You put your shoulder to the post and heave it round, rasping your palms, while the farmhands behind the wall groan. The carter thanks you, and then goes and tells their foreman, which you hadn't meant at all.
 > right: Follow it anyway, for fun
   mood +small
   health -small
-  say: You follow the sign to the market village, up the farm track, over two fields, round a pond, and come out, astonishingly, at the market village, the long way. The boys run after you to see. Your boots are full of mud and your legs are done.
+  say: You follow the sign to the market village, up the farm track, over two fields, round a pond, and come out, astonishingly, at the market village, the long way. The farmhands follow you to see. Your boots are full of mud and your legs are done.
 
 @event lanes_rainbow
 title: Where the Rainbow Ends
@@ -643,12 +646,12 @@ pool: country_lanes
 tone: light
 when: slot != "night"
 art: rain
-scene: A wet country lane after a shower, a vivid rainbow coming down into a field a little way off, two village children running towards it, a student watching.
-text: A shower comes over and goes, and behind it there's a rainbow so bright it looks painted, coming down, quite plainly, into the next field but one. Two village children are already running for it. "There's gold!" one shouts back at you. "Under the end! Everyone knows!"
+scene: A wet country lane after a shower, a vivid rainbow coming down into a field a little way off, two dairymaids running towards it, a student watching.
+text: A shower comes over and goes, and behind it there's a rainbow so bright it looks painted, coming down, quite plainly, into the next field but one. Two dairymaids are already running for it. "There's gold!" one shouts back at you. "Under the end! Everyone knows!"
 > left: Run for the end with them
   mood +small
   health -tiny
-  say: You run with them through two wet fields, and the end of the rainbow keeps exactly one field ahead, and then fades out over a pond. The children are disgusted. You're soaked to the knees, and laughing so hard you have to sit down on a wet stile.
+  say: You run with them through two wet fields, and the end of the rainbow keeps exactly one field ahead, and then fades out over a pond. The dairymaids are disgusted. You're soaked to the knees, and laughing so hard you have to sit down on a wet stile.
 > right: Stay and watch it from the lane
   lore +small
   health -tiny

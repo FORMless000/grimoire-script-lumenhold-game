@@ -43,8 +43,10 @@ title [65d791] = 高脚屋台阶上的女人
 text [ba7e85] = {乡野女巫坐在自家台阶上，膝上放着一束芸香，你走过时她头也不抬。“来做客的，”她说。这不是在问你。|又是那位乡野女巫。这回她看了你一眼，只一眼，像在数什么。“当心那家客栈，”她说。|她在台阶上等着，好像早知道你会来。“还在这儿啊，”她说，听起来像是在担心。} {season == "winter": 她呼出的气冒着白烟；她好像不觉得冷。|蜻蜓落在她身旁的栏杆上。}
 # en: An old woman sitting on the steps of a house on stilts at the edge of a marsh, a bunch of grey-green herbs in her lap, not looking at the student on the path.
 scene [c8c8b6] = 沼泽边一座高脚屋的台阶上坐着一位老妇人，膝上放着一束灰绿色的草药，没有看小路上的学生。
-# en: Ask what she means
-opt.left.label [cb3024] = 问她什么意思
+# en: Buy a sprig of her rue
+opt.left.label [55637b] = 买她一枝芸香
+# en: A penny, and maybe an answer.
+opt.left.hint [8aefee] = 一便士，也许还能换个答案。
 # en: {She ties a sprig of rue with a bit of red thread and holds it out. "A penny. Nothing's free." You pay. "Keep it in your pocket while you're in the valley, and don't let the inn wash your coat."|{flag(marsh_rue): She gives you another sprig, though you still have the first. "For whoever you're travelling with."|She ties you a sprig of rue with red thread. "For the road," she says.} She takes the penny and won't say more.|"You know what I mean," she says, which you don't, and takes your penny for {flag(marsh_rue): another sprig|a sprig of rue on red thread}.}
 opt.left.say.1 [5f07ad] = {她用一截红线扎好一小枝芸香，递了过来。“一便士。没有白给的东西。”你付了钱。“待在山谷里的时候把它揣在兜里，别让客栈给你洗外套。”|{flag(marsh_rue): 她又给了你一枝，虽然你那一枝还在。“给跟你同行的人。”|她用红线给你扎了一小枝芸香。“路上带着，”她说。} 她收下便士，别的什么也不肯说了。|“你知道我是什么意思，”她说，可你并不知道。她收下你的便士，换给你{flag(marsh_rue): 又一枝|一枝扎着红线的芸香}。}
 # en: Wish her good day and walk on
@@ -61,8 +63,8 @@ text [b64ffe] = {黄昏时沼泽上的光出来了，今晚它们沿着赶牲口
 scene [9baf5a] = 黄昏时，一串苍白的小光点沿着一条半沉在沼泽里的堤道排开，一个提着灯的学生站在堤道这头。
 # en: Walk the causeway a little way
 opt.left.label [5fe49b] = 在堤道上走一小段
-# en: {You go six stones out. The lights keep their distance exactly, and the seventh stone is underwater. You come back wet to the knee and certain that the road went somewhere once.|You go further this time. Halfway, the lights move aside to let you pass, which is worse than if they'd blocked you. You turn back.|You walk out until the lights are all round you. None of them is warm. When you come back the hedge-witch's lamp is lit, and her shutters are open.}
-opt.left.say.1 [ebf7d7] = {你往外走了六块石头。那些光始终保持着同样的距离，而第七块石头沉在水下。你湿到膝盖回来，确信这条路从前通往某个地方。|这回你走得更远。走到一半，光挪开让你过去，这比挡住你还糟。你掉头了。|你一直走到四周全是光。没有一点是暖的。回来时乡野女巫的灯亮着，窗板开着。}
+# en: {You go six stones out. The lights keep their distance exactly, and the seventh stone is underwater. You come back wet to the knee and certain that the road went somewhere once.|You go out along the stones, further than looks wise, wading the sunk stretches to the thigh. Halfway, the lights move aside to let you pass, which is worse than if they'd blocked you. You turn back, cold to the bone.|You walk out until the lights are all round you. None of them is warm, and neither, by the time you come back soaked and shivering, are you. The hedge-witch's lamp is lit, and her shutters are open.}
+opt.left.say.1 [8c532f] = {你往外走了六块石头。那些光始终保持着同样的距离，而第七块石头沉在水下。你湿到膝盖回来，确信这条路从前通往某个地方。|你沿着石头往外走，走得比看上去明智的更远，没在水下的那几段水深到大腿。走到一半，光挪开让你过去，这比挡住你还糟。你掉头回来，冷到了骨头里。|你一直走到四周全是光。没有一点是暖的，等你浑身湿透、瑟瑟发抖地回来，你也一样。乡野女巫的灯亮着，窗板开着。}
 # en: Watch from the bank
 opt.right.label [6f8a23] = 在岸上看着
 # en: {You watch them until full dark, and then they go out one by one, from the far end, like a house being shut up.|You watch from the bank. The lights stay, and so do you, until you realise you've been counting them.|You don't go out. One light comes as far as the bank, hangs there, and goes back. You walk home faster than you meant to.}
@@ -83,8 +85,8 @@ opt.left.say.1 [f8cb38] = {水齐腰深，冷得刺骨，你终于够到了钟�
 opt.left.say.2 [3fe3b8] = {走到一半，脚下一空。你湿到脖子回来，除了一条水蛭什么也没捞着。|水没到胸口，你决定礼拜堂的秘密还是留给它自己吧。沼泽留下了你的左靴。|你在一级没在水下的台阶上滑倒，整个人沉了下去。等你冒出水面，钟塔还是和刚才一样远。}
 # en: Sketch it from the bank
 opt.right.label [66e4b9] = 在岸上画下来
-# en: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it again, from the same tussock. It's higher out of the water than last time; you draw the new course of stones.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
-opt.right.say.1 [7ae65a] = {你画下屋顶和钟楼。后来再看这幅速写，你发现自己在钟楼里画了一口钟。可那里并没有钟。|你又在同一个草墩上画了一遍。它比上回露出水面更多了；你把新露出的那一层石头也画了进去。|你隔着芦苇画下门楣。那雕刻也许是麦子。这一带刻的东西，好像大多都是麦子。}
+# en: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it from a tussock, carefully: the turret, the roof, and a course of stones the low water has just uncovered.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
+opt.right.say.1 [c9c6d0] = {你画下屋顶和钟楼。后来再看这幅速写，你发现自己在钟楼里画了一口钟。可那里并没有钟。|你坐在一个草墩上仔细地画：钟楼、屋顶，还有低水位刚刚露出来的一层石头。|你隔着芦苇画下门楣。那雕刻也许是麦子。这一带刻的东西，好像大多都是麦子。}
 
 @event marsh_eel_catcher
 # en: The Eel Traps

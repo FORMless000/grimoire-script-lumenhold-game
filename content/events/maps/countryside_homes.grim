@@ -33,6 +33,7 @@ text: {Your grandmother has decided the academy has taught you nothing useful, a
 title: Supper Above the Water
 pool: countryside_marsh_routine
 when: at_home() and has(origin_hedge)
+slot: evening
 tone: warm
 art: meal
 tags: home
@@ -56,7 +57,8 @@ art: leaf
 tags: magic mystery
 scene: An old woman sitting on the steps of a house on stilts at the edge of a marsh, a bunch of grey-green herbs in her lap, not looking at the student on the path.
 text: {The hedge-witch is sitting on her steps with a bunch of rue in her lap, and doesn't look up when you pass. "Visiting," she says. It isn't a question.|The hedge-witch again. This time she looks at you, once, as if counting something. "Mind the inn," she says.|She's waiting on the steps as if she knew you'd come. "Still here," she says, and it sounds like a worry.} {season == "winter": Her breath smokes; she doesn't seem to feel the cold.|Dragonflies settle on the rail beside her.}
-> left: Ask what she means
+> left: Buy a sprig of her rue
+  hint: A penny, and maybe an answer.
   gold -tiny
   say: {She ties a sprig of rue with a bit of red thread and holds it out. "A penny. Nothing's free." You pay. "Keep it in your pocket while you're in the valley, and don't let the inn wash your coat."|{flag(marsh_rue): She gives you another sprig, though you still have the first. "For whoever you're travelling with."|She ties you a sprig of rue with red thread. "For the road," she says.} She takes the penny and won't say more.|"You know what I mean," she says, which you don't, and takes your penny for {flag(marsh_rue): another sprig|a sprig of rue on red thread}.}
   flag marsh_rue
@@ -76,7 +78,7 @@ text: {At dusk the lights come out over the Marsh, and tonight they line up alon
 > left: Walk the causeway a little way
   lore +small
   health -tiny
-  say: {You go six stones out. The lights keep their distance exactly, and the seventh stone is underwater. You come back wet to the knee and certain that the road went somewhere once.|You go further this time. Halfway, the lights move aside to let you pass, which is worse than if they'd blocked you. You turn back.|You walk out until the lights are all round you. None of them is warm. When you come back the hedge-witch's lamp is lit, and her shutters are open.}
+  say: {You go six stones out. The lights keep their distance exactly, and the seventh stone is underwater. You come back wet to the knee and certain that the road went somewhere once.|You go out along the stones, further than looks wise, wading the sunk stretches to the thigh. Halfway, the lights move aside to let you pass, which is worse than if they'd blocked you. You turn back, cold to the bone.|You walk out until the lights are all round you. None of them is warm, and neither, by the time you come back soaked and shivering, are you. The hedge-witch's lamp is lit, and her shutters are open.}
 > right: Watch from the bank
   mood -tiny
   say: {You watch them until full dark, and then they go out one by one, from the far end, like a house being shut up.|You watch from the bank. The lights stay, and so do you, until you realise you've been counting them.|You don't go out. One light comes as far as the bank, hangs there, and goes back. You walk home faster than you meant to.}
@@ -103,7 +105,7 @@ text: {The water's low today, and out in the reeds there's a roof, a little chap
 > right: Sketch it from the bank
   lore +tiny
   mood +tiny
-  say: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it again, from the same tussock. It's higher out of the water than last time; you draw the new course of stones.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
+  say: {You draw the roof and the turret. Later, looking at the sketch, you notice you've drawn a bell in the turret. There isn't one.|You sketch it from a tussock, carefully: the turret, the roof, and a course of stones the low water has just uncovered.|You sketch the lintel through the reeds. The carving might be wheat. Most things carved round here seem to be.}
 
 @event marsh_eel_catcher
 title: The Eel Traps

@@ -13,8 +13,8 @@ text [2163a0] = {~割泥炭的人正在第一个石堆下面那道长坡上干�
 scene [2e8321] = 开阔的荒原上，几个只穿衬衫的割泥炭人正从一道长坡上切下湿黑的草皮，身后堆着晾晒的泥炭，一个学生在旁边看着。
 # en: Cut turves with them
 opt.left.label [e628ec] = 跟他们一起割
-# en: {~You cut eleven turves, badly, and get peat to the elbows and a crick in your back. They praise every one. You notice none of yours is the seventh.|Your back aches by noon. A cutter shows you how to lean on the spade, and the work goes easier.|You cut until your hands blister. When you ask how long they've cut this bank, the cutters talk about the weather.}
-opt.left.say.1 [40b1d9] = {~你割了十一块，割得很糟，泥炭一直沾到手肘，腰也扭了。他们每一块都夸。你注意到，你割的没有一块是第七块。|不到中午你的腰就酸了。一个割泥炭的人教你怎么靠在铲子上使劲，活儿就轻松些了。|你一直割到手上起了水泡。你问他们这道坡割了多少年，他们却聊起了天气。}
+# en: {~You cut eleven turves, badly, and get peat to the elbows and a crick in your back. They praise every one. You notice none of yours is the seventh.|Your back aches inside the hour. A cutter shows you how to lean on the spade, and the work goes easier.|You cut until your hands blister. When you ask how long they've cut this bank, the cutters talk about the weather.}
+opt.left.say.1 [486437] = {~你割了十一块，割得很糟，泥炭一直沾到手肘，腰也扭了。他们每一块都夸。你注意到，你割的没有一块是第七块。|不到一个钟头你的腰就酸了。一个割泥炭的人教你怎么靠在铲子上使劲，活儿就轻松些了。|你一直割到手上起了水泡。你问他们这道坡割了多少年，他们却聊起了天气。}
 # en: Ask about the moor
 opt.right.label [69d1d9] = 问问荒原的事
 # en: {~"Past the third cairn it goes on," says the eldest. "Don't go on with it." The others laugh, and then don't.|They tell you the bog roads are older than the villages, and the cairns older than the roads. Nobody knows who built the hill.|"Keep the cairns on your left going out," a cutter says, "and on your right coming back. And come back."}
@@ -57,8 +57,8 @@ opt.right.say.1 [8ab550] = {flag(moor_drove_road): 你在牧羊人指给你的�
 @event moor_way_home
 # en: Off the Moor
 title [25f8aa] = 下了荒原
-# en: {moor_after_story == 1: Later, with the green quiet again, you tip out the bag you carried all the way down off the hill: {moor_haul <= 2: a flint or two and something old.|{moor_haul <= 4: flints, old bronze, a stone with a hole in it.|more than you remember picking up.}}|{moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
-text [933cb3] = {moor_after_story == 1: 后来，等村里的草地重新安静下来，你把一路背下山的包倒空：{moor_haul <= 2: 一两块燧石，还有一样老东西。|{moor_haul <= 4: 燧石、旧青铜，还有一块带孔的石头。|比你记得捡过的还多。}}|{moor_haul == 0: 你从荒原上下来，除了一双湿靴子，只有一种被人数过的感觉。|{moor_haul <= 2: 你从荒原上下来，包里轻轻的：一两块燧石，一缕羊毛似的棉草，还有一样老东西。|{moor_haul <= 4: 你从荒原上下来，包里叮当作响：燧石、旧青铜，还有一块带孔的石头。|你从荒原上下来，被沉甸甸的包压弯了腰，雾不情不愿地放你走了。}}}} {moor_depth >= 5: 你的靴子被那座山的泥炭染得乌黑。|}
+# en: {moor_after_story == 1: Later, when it's all quieter, you tip out the bag you carried all the way down off the hill: {moor_haul <= 2: a flint or two and something old.|{moor_haul <= 4: flints, old bronze, a stone with a hole in it.|more than you remember picking up.}}|{moor_haul == 0: You come down off the moor with nothing but wet boots and the feeling of being counted.|{moor_haul <= 2: You come down off the moor with a light bag: a flint or two, a fleece-tuft of bog cotton, something old.|{moor_haul <= 4: You come down off the moor with a bag that clinks: flints, old bronze, a stone with a hole in it.|You come down off the moor bent under a heavy bag, and the fog lets you go reluctantly.}}}} {moor_depth >= 5: Your boots are black with the hill's peat.|}
+text [f0f090] = {moor_after_story == 1: 后来，等一切都平静了些，你把一路背下山的包倒空：{moor_haul <= 2: 一两块燧石，还有一样老东西。|{moor_haul <= 4: 燧石、旧青铜，还有一块带孔的石头。|比你记得捡过的还多。}}|{moor_haul == 0: 你从荒原上下来，除了一双湿靴子，只有一种被人数过的感觉。|{moor_haul <= 2: 你从荒原上下来，包里轻轻的：一两块燧石，一缕羊毛似的棉草，还有一样老东西。|{moor_haul <= 4: 你从荒原上下来，包里叮当作响：燧石、旧青铜，还有一块带孔的石头。|你从荒原上下来，被沉甸甸的包压弯了腰，雾不情不愿地放你走了。}}}} {moor_depth >= 5: 你的靴子被那座山的泥炭染得乌黑。|}
 # en: A tired student coming down off the moor onto a village road at evening, a lumpy bag over one shoulder, fog behind them on the heights.
 scene [3285ad] = 傍晚，一个疲惫的学生从荒原上走下来，踏上村道，一只鼓鼓囊囊的包搭在肩上，身后高处是雾。
 # en: Sell it at the inn

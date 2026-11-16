@@ -1,0 +1,52 @@
+{
+  "batch": "repair-maps-capital-2026-11-16",
+  "accept": true,
+  "summary": "Every Nov 15 finding in scope is fixed. Costs are now shown in every variant. Stakes are paid up front, and the top-level gold -small locks the hat bet and the loft game at zero crowns. Callbacks are reworded to stand alone, slots are gated or slot-aware, the heist bands and Journal lines agree, and the moor haul survives the Good Year. The map-dealer dismissal is reasonable: the copying is covert and he never consents, so his smile doesn't make it honest. grim check passes. The remaining issues are small continuity and wording slips that the repairs brought in, plus one glossary miss in zh-CN.",
+  "issues": [
+    {
+      "event": "crescent2_writing_desk",
+      "problem": "The new safe clue doesn't fit its letters. The bundle is in the foreman's cramped hand, written to the shipowner, and crescent_safe_card calls it 'the launching day the foreman's letter let slip'. A foreman writing to his master would not 'grumble that the master sets his safe by his first ship's launching day'. That is third-person gossip about the letter's own reader.",
+      "fix": "Make it the foreman addressing the shipowner, e.g. 'One letter grumbles that the money must wait on your safe, \"which you set by your first ship's launching day, as the whole wharf knows\", and names the day.' Alternatively, make it a note in the shipowner's own hand tucked into the bundle, and change crescent_safe_card to 'the launching day from his note'. Update the zh-CN line to match."
+    },
+    {
+      "event": "bonded1_loading_door",
+      "problem": "The repair keeps the player in the yard, as asked, but the label still reads 'Slip in past the cat'. In the say, you now crouch at the gap and follow the cat along the wall to the warehouse proper. The button promises going through the door, and the outcome doesn't.",
+      "fix": "Relabel the option 'Follow the cat along the wall' (zh-CN to match). Optionally, open the first say with the cat stepping out of the gap to lead you, so the door is clearly not used."
+    },
+    {
+      "event": "job_slip",
+      "problem": "The bonded variant opens with 'You run before anyone gets a proper look'. Two lost checks that queue it contradict that: in bonded2_round the watchman's hand lifts the lid on you, and in bonded1_dogs the dog holds your sleeve until somebody comes. Separately, when job_dropped == 1 the sentence tangles: '..., and something you were carrying drops into the dark and stays there, and down into the black gap behind them.' This reads as if the object drops into the gap, not you. The zh-CN line has the same tangle ('…掉进黑暗里，再也够不着，落进箱子后面的黑缝里').",
+      "fix": "Open the variant with 'You tear loose and run, up and over a stack of tea chests, skinning your knuckles on the iron hoops, and drop into the black gap behind them{job_dropped == 1:. Something you were carrying falls into the dark and stays there|}.' Mirror the change in zh-CN."
+    },
+    {
+      "event": "moor_way_home",
+      "problem": "The after-story opening says 'Later, with the green quiet again'. That fits the inn route of gy_after_broken and the renewed bargain. It doesn't fit gy_after_broken's Marsh route (the hedge-witch's step on the causeway) or gy_after_sold (the old hall's gate). Neither of those had any scene on the green.",
+      "fix": "Make it route-neutral: 'Later, when the night has gone quiet, you tip out the bag you carried all the way down off the hill:' (zh-CN: '后来，等夜里安静下来，…')."
+    },
+    {
+      "event": "capital_townhouse_quiet_hour",
+      "problem": "The repair moved the warm-sun detail off evening and night, but 'The step is still warm from the day' now reads oddly on a noon visit, the first capital visit slot.",
+      "fix": "Use '{slot == \"noon\": The step is warm in the sun.|The step is still warm from the day.}'."
+    },
+    {
+      "event": "capital_library_quiet_hour",
+      "problem": "The new first 'Read a while' outcome ends on 'the closing bell'. The Royal Library is open morning to afternoon, and capital visits start at noon. On a noon visit the reading room isn't closing.",
+      "fix": "Make it slot-neutral, e.g. 'and then a reader who has been waiting for that very book clears his throat at your elbow, three chapters from the end.' Or make it '{slot == \"afternoon\": the closing bell|the luncheon bell}'."
+    },
+    {
+      "event": "crescent1_footman",
+      "problem": "'Past the hall, at the ballroom doors, a second footman' assumes you came in by the front door past a first footman. A player who came in by the mews behind a tray of ices (crescent_servants_hour without the gilt card) met no footman and never crossed the hall.",
+      "fix": "Gate the opener: '{flag(crescent_servants_hour) and not flag(crescent_invited): Up from the service passage, at the ballroom doors, a footman|Past the hall, at the ballroom doors, a second footman} in a powdered wig…'."
+    },
+    {
+      "event": "gardens_dawn_duel",
+      "problem": "The text now puts the duel 'in front of half the promenade', as the shared critic asked, but the scene line still shows only the duellists, a second and the student. It also isn't clear why a second would need your scarf for a witness with half of uptown watching.",
+      "fix": "Add 'strolling onlookers in their best stopping on the gravel paths to stare' to the scene. Optionally, extend his line to 'It's legal with a witness, and none of them will sign.' The text is at 338 of 400 characters, so there is room."
+    },
+    {
+      "event": "capital_library_quiet_hour",
+      "problem": "zh-CN: the changed 'Read a while' line renders Lumenhold as '流明霍尔德'. The glossary fixes it as '流明堡'. This is carried over from the old line, and locales/zh-CN/world/maps.lang has the same slip.",
+      "fix": "Replace '流明霍尔德' with '流明堡' in placeholders.lang (and in world/maps.lang)."
+    }
+  ]
+}

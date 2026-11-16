@@ -27,8 +27,8 @@ opt.right.say.1 [f67fbf] = {job_loot == 0: 没东西可分，只有一个好故�
 @event job_slip
 # en: Flat in the Shadows
 title [78e93b] = 贴在阴影里
-# en: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You run before anyone gets a proper look, up and over a stack of tea chests, skinning your knuckles on the iron hoops{job_dropped == 1:, and something you were carrying drops into the dark and stays there|}, and down into the black gap behind them. Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
-text [587aeb] = {job_where == 2: 没等人拦住你，你就跑了，沿着一条走廊倒退着钻进最近的一扇门，进了一间挂满毛皮大衣的衣帽间，路上胯骨撞在了衣帽架上。{job_dropped == 1: 你口袋里掉出来的一样东西就躺在外面楼梯的地毯上，明晃晃的。|}接着，一支蜡烛停在了门外：一个年轻的男仆，有点紧张，他看见有人往这边来了。|没等谁看清你，你就跑了，爬上一摞茶叶箱翻过去，指节在铁箍上蹭破了皮{job_dropped == 1:，你带的一样东西掉进黑暗里，再也够不着|}，落进箱子后面的黑缝里。不知哪儿，守夜人在喊他的狗，狗正往这边来。} {job_cover > 0: 你大概还能再险一次。|那是你最后一次有惊无险。}
+# en: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You tear free and run, up and over a stack of tea chests, skinning your knuckles on the iron hoops, and drop into the black gap behind them. {job_dropped == 1: Something you were carrying stays somewhere in the dark behind you. |}Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text [15d468] = {job_where == 2: 没等人拦住你，你就跑了，沿着一条走廊倒退着钻进最近的一扇门，进了一间挂满毛皮大衣的衣帽间，路上胯骨撞在了衣帽架上。{job_dropped == 1: 你口袋里掉出来的一样东西就躺在外面楼梯的地毯上，明晃晃的。|}接着，一支蜡烛停在了门外：一个年轻的男仆，有点紧张，他看见有人往这边来了。|你挣脱出来就跑，爬上一摞茶叶箱翻过去，指节在铁箍上蹭破了皮，落进箱子后面的黑缝里。{job_dropped == 1: 你带的一样东西丢在了身后的黑暗里。|}不知哪儿，守夜人在喊他的狗，狗正往这边来。} {job_cover > 0: 你大概还能再险一次。|那是你最后一次有惊无险。}
 # en: A student pressed into a dark hiding place at night, nursing a scraped hand, as a light passes just outside.
 scene [e34f48] = 夜里，一个学生紧贴在一处黑暗的藏身地，捂着擦破的手，一道光正从外面经过。
 # en: {job_where == 2: Wait in the furs, then go|Over the back wall, and away}
@@ -209,8 +209,8 @@ scene [c15af9] = 夜里仓库的装货门留着一掌宽的缝，一只姜黄猫
 opt.left.label [8f0c89] = 不管它，回去
 # en: {seen(bonded1_loading_door) > 1: You go, and the cat watches you to the wall as if you'd let it down.|You leave the cat its doorway and go back over the wall.}
 opt.left.say.1 [cdb308] = {seen(bonded1_loading_door) > 1: 你走了，猫看着你一直到墙边，好像你辜负了它。|你把门口留给猫，翻墙回去了。}
-# en: Slip in past the cat
-opt.right.label [35441d] = 从猫身边溜进去
+# en: Follow the cat along the wall
+opt.right.label [39c5c7] = 跟着猫沿墙走
 # en: {seen(bonded1_loading_door) > 1: You go after the cat, who goes ahead along the wall towards the warehouse proper, stopping to look back.|You crouch to the gap and the cat comes with you, tail up, as if showing you round, along the wall to where the yard ends at the warehouse proper.}
 opt.right.say.1 [3c5ba6] = {seen(bonded1_loading_door) > 1: 你跟着猫走，它沿着墙走在前面，朝仓库正屋那边去，不时停下来回头看。|你蹲到门缝边，猫竖着尾巴跟了过来，好像在带你参观，沿着墙一直走到院子尽头、仓库正屋跟前。}
 
@@ -399,10 +399,10 @@ opt.right.say.1 [41af3a] = “考虑吧，”他说着笑了笑，回去摆弄�
 @event crescent_gala_lights
 # en: The Ball on the Crescent
 title [0865c4] = 新月街的舞会
-# en: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a link-boy with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == "winter": breath steaming from the horses,|the summer dusk still warm,} and from the tall windows comes music and the noise of money enjoying itself. A link-boy with a torch sits on the gardens' railings beside you.}
-text [9d6924] = {seen(crescent_gala_lights) > 1: 又是舞会，马车，音乐。台阶上一个男仆正客客气气地、用整张脸把人往外挡，一个举着火把的引路童坐在你旁边的栏杆上，等他的主人。|新月街最高那幢宅子从地窖到阁楼灯火通明。马车沿着弧形街排成长队，{season == "winter": 马匹呼着白气，|夏日的黄昏还是暖的，}高高的窗子里传出音乐和金钱寻欢作乐的声响。一个举着火把的引路童坐在你旁边花园的栏杆上。}
-# en: A tall lit-up town house on a curving terrace at night, carriages drawing up, music and figures behind tall windows, a student watching from the railings of the gardens opposite.
-scene [a45a4c] = 夜里弧形排屋中一幢灯火通明的高宅，马车停靠，高窗后人影和音乐，一个学生在对面花园的栏杆边看着。
+# en: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a link-boy with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == "winter": breath steaming from the horses,|the summer air still warm,} and from the tall windows comes music and the noise of money enjoying itself. A link-boy with a torch sits on the gardens' railings beside you.}
+text [1a5201] = {seen(crescent_gala_lights) > 1: 又是舞会，马车，音乐。台阶上一个男仆正客客气气地、用整张脸把人往外挡，一个举着火把的引路童坐在你旁边的栏杆上，等他的主人。|新月街最高那幢宅子从地窖到阁楼灯火通明。马车沿着弧形街排成长队，{season == "winter": 马匹呼着白气，|夏日的空气还是暖的，}高高的窗子里传出音乐和金钱寻欢作乐的声响。一个举着火把的引路童坐在你旁边花园的栏杆上。}
+# en: A tall lit-up town house on a curving terrace after dark, carriages drawing up, music and figures behind tall windows, a student watching from the railings of the gardens opposite.
+scene [4dd899] = 天黑后弧形排屋中一幢灯火通明的高宅，马车停靠，高窗后人影和音乐，一个学生在对面花园的栏杆边看着。
 # en: Count the windows and the doors
 opt.left.label [6c9eb5] = 数窗户和门
 # en: You stand at the gardens' railings until you know every window, the mews door, the footmen (too many), and which room upstairs is the study. {season == "winter": Your hands have gone numb and your feet ache.|The midges have had you for supper and your feet ache.}
@@ -463,8 +463,8 @@ opt.right.say.2 [372960] = {job_depth >= 5: 一个女仆进来照看炉火，你
 @event crescent1_footman
 # en: The Footman's Eye
 title [04c0d3] = 男仆的眼睛
-# en: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|Past the hall, at the ballroom doors, a second footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}
-text [daf4d3] = {seen(crescent1_footman) > 1: 舞厅门口还是那个男仆，还是多看的那一眼。|穿过门厅，舞厅门口还有一个戴扑粉假发的男仆，打量着每一位经过的客人，看你的时候多看了一眼。}
+# en: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|At the ballroom doors, past the hall, a footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}
+text [4f25af] = {seen(crescent1_footman) > 1: 舞厅门口还是那个男仆，还是多看的那一眼。|穿过门厅，舞厅门口有一个戴扑粉假发的男仆，打量着每一位经过的客人，看你的时候多看了一眼。}
 # en: A tall footman in powdered wig and livery at the door of a ballroom, looking down his nose at a student in evening clothes, dancers whirling beyond.
 scene [5eb6c0] = 舞厅门口一个戴扑粉假发、穿号衣的高个男仆，居高临下地看着一个穿晚礼服的学生，里面的舞者在旋转。
 # en: Back out into the night
@@ -601,8 +601,8 @@ opt.left.label [4200cf] = 别碰信，走
 opt.left.say.1 [6ac4e0] = {seen(crescent2_writing_desk) > 1: 你把写字台的秘密留给它，溜走了。|你把信原样放好，走了。}
 # en: Read them, and keep one
 opt.right.label [92e8f3] = 读一读，留下一封
-# en: {flag(crescent_letters): {flag(jory_freed): You read what's left of the old bundle for anything you missed, and keep a letter that names a ship. Somebody would pay for it.|You read the new bundle. Same foreman, same side door, a bigger cargo. You keep one, and go on.}|It comes clear as you read: the warehouse foreman on the wharf, two sets of figures, and everything the side door let out came up the hill to this house. One letter grumbles that the master sets his safe by his first ship's launching day, and names the day. You keep the best letter. Somebody would pay for it.}
-opt.right.say.1 [3f103c] = {flag(crescent_letters): {flag(jory_freed): 你把旧信剩下的部分又翻了一遍，看有没有漏的，留下一封提到一条船的。有人会为它出钱。|你读了新的一捆。同一个工头，同一扇侧门，货更大了。你留下一封，继续往前。}|读着读着就明白了：码头上的仓库工头，两套数字，侧门放出去的所有东西都上山进了这幢宅子。有一封信抱怨说，老爷的保险柜是按他第一条船的下水日子设的，还把日子写了出来。你留下最要紧的一封。有人会为它出钱。}
+# en: {flag(crescent_letters): {flag(jory_freed): You read what's left of the old bundle for anything you missed, and keep a letter that names a ship. Somebody would pay for it.|You read the new bundle. Same foreman, same side door, a bigger cargo. You keep one, and go on.}|It comes clear as you read: the warehouse foreman on the wharf, two sets of figures, and everything the side door let out came up the hill to this house. Tucked among them, a note in the shipowner's own hand reminds him of his safe's number: his first ship's launching day. You keep the best letter. Somebody would pay for it.}
+opt.right.say.1 [1d9438] = {flag(crescent_letters): {flag(jory_freed): 你把旧信剩下的部分又翻了一遍，看有没有漏的，留下一封提到一条船的。有人会为它出钱。|你读了新的一捆。同一个工头，同一扇侧门，货更大了。你留下一封，继续往前。}|读着读着就明白了：码头上的仓库工头，两套数字，侧门放出去的所有东西都上山进了这幢宅子。信堆里夹着一张船东亲笔的便条，提醒他自己保险柜的密码：他第一条船的下水日子。你留下最要紧的一封。有人会为它出钱。}
 # en: {seen(crescent2_writing_desk) > 1: The candle gutters over a letter and catches it. The smell of burning paper goes straight down the stairs.|You read too long, and the door opens on a maid with a coal scuttle, who screams.}
 opt.right.say.2 [a458c2] = {seen(crescent2_writing_desk) > 1: 蜡烛在一封信上晃了晃，把它点着了。烧纸的味道直冲下楼。|你读得太久了，门开了，一个提着煤斗的女仆尖叫起来。}
 
@@ -641,8 +641,8 @@ opt.left.label [204cde] = 别碰它，走
 opt.left.say.1 [f71fa3] = {seen(crescent_safe_card) > 1: 你让转盘留在原处，带着手上的东西从后楼梯下去了。|你盯着保险柜看了很久，认定不是今晚，走了。}
 # en: Listen to the dial
 opt.right.label [a6f926] = 听转盘
-# en: {flag(crescent_safe): The tumblers fall for you again. The safe has been refilled since; the shipowner has had a good season.|{flag(crescent_letters): You start from the launching day the foreman's letter let slip, and turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.|You turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.} The door swings out, heavy as a ship's. Inside: bearer bonds, a rope of pearls and a cash box. You take what you can carry.}
-opt.right.say.1 [8c9832] = {flag(crescent_safe): 锁栓又为你落下了。保险柜之后又被装满了；船东这一季过得不错。|{flag(crescent_letters): 你从工头那封信里漏出来的下水日子开始，耳朵贴着铁转动转盘，直到锁栓落下，一，二，三，四。|你耳朵贴着铁转动转盘，直到锁栓落下，一，二，三，四。}柜门像船一样沉重地荡开。里面：不记名债券，一串珍珠，一个钱箱。你拿走带得动的。}
+# en: {flag(crescent_safe): The tumblers fall for you again. The safe has been refilled since; the shipowner has had a good season.|{flag(crescent_letters): You start from the launching day the shipowner's note let slip, and turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.|You turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.} The door swings out, heavy as a ship's. Inside: bearer bonds, a rope of pearls and a cash box. You take what you can carry.}
+opt.right.say.1 [52e35b] = {flag(crescent_safe): 锁栓又为你落下了。保险柜之后又被装满了；船东这一季过得不错。|{flag(crescent_letters): 你从船东那张便条漏出来的下水日子开始，耳朵贴着铁转动转盘，直到锁栓落下，一，二，三，四。|你耳朵贴着铁转动转盘，直到锁栓落下，一，二，三，四。}柜门像船一样沉重地荡开。里面：不记名债券，一串珍珠，一个钱箱。你拿走带得动的。}
 # en: {seen(crescent_safe_card) > 1: You lose the count, start again, lose it again, and somebody tries the door handle.|The dial clicks, and clicks, and tells you nothing, and the study door opens.}
 opt.right.say.2 [046a92] = {seen(crescent_safe_card) > 1: 你数乱了，重来，又乱了，有人在拧门把手。|转盘咔哒，咔哒，什么也没告诉你，书房的门开了。}
 # en: See the number before you turn it

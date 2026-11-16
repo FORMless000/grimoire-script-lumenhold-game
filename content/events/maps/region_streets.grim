@@ -92,15 +92,16 @@ tone: warm
 time: morning noon afternoon evening
 art: house
 scene: The open top deck of a horse-drawn omnibus crossing a city, passengers on benches, a student squeezed between a clerk and a woman with a basket of eggs, rooftops passing.
-text: The horse omnibus crosses the whole capital for a penny, uptown to Port Calder, and the best seats are on the open roof, where the wind is and the gossip is. Today the roof is full: clerks, a fishwife, a curate, a woman with a basket of eggs, and one seat left between two people already arguing about the price of coal.
+text: The horse omnibus crosses the whole capital for a penny, uptown to Port Calder, and the best seats are on the open roof, where the wind is and the gossip is. Today the roof is full: clerks, a fishwife, a curate, and one seat left between two people arguing about coal. On the stair behind you a tired woman with a basket of eggs is looking at it too.
 > left: Take the last seat and listen
+  gold -tiny
   lore +small
   mood -tiny
-  say: You ride the whole route with your elbows in, while the city goes past and the roof argues about coal, the war, a duke's divorce and whether wizards should pay tax. You learn the capital from top to bottom, and you're very, very squashed.
-> right: Give up your seat
+  say: You pay your penny and ride the whole route with your elbows in, while the city goes past and the roof argues about coal, the war, a duke's divorce and whether wizards should pay tax. You learn the capital from top to bottom, and you're very, very squashed.
+> right: Give her the seat, and walk
   alignment +tiny
   health -tiny
-  say: You give up the seat and stand at the back rail, holding on through every corner. The woman with the eggs tells everybody you're a credit to your mother. You arrive in Port Calder windblown and with an aching grip.
+  say: You hand the egg-woman up to the last seat and walk the route instead, keeping up with the horses on every hill. She tells the whole roof you're a credit to your mother. You arrive in Port Calder footsore, with your penny still in your pocket.
 
 @event streets_preacher
 title: The Preacher Against Wizards
@@ -166,7 +167,7 @@ text: A crowd has gathered at a clockmaker's window, where a brass automaton in 
 > left: Wait to read what it writes
   lore +small
   mood -small
-  say: It writes, in a beautiful copperplate hand, "Good afternoon," and then a word you don't know, and then, quite clearly, your initials. The crowd turns to look at you. The clockmaker insists it writes random letters. You don't sleep well.
+  say: It writes, in a beautiful copperplate hand, "Good day," and then a word you don't know, and then, quite clearly, your initials. The crowd turns to look at you. The clockmaker insists it writes random letters. You don't sleep well.
 > right: Ask the clockmaker how it works
   arcana +small
   gold -tiny
@@ -313,6 +314,7 @@ title: The White Owl
 pool: country_lanes
 tone: eerie
 time: evening
+when: slot == "evening" or slot == "night"
 art: owl
 scene: A country lane at nightfall, a pale barn owl gliding low over the hedgerow, a ruined stone barn in a field beyond, a student watching.
 text: A barn owl comes along the lane, low over the hedge, pale as paper and quite silent, and turns its white face to look at you as it passes. It lands on the gable of a ruined barn in the next field and waits there, as if it expected you to follow.
@@ -336,7 +338,7 @@ tags: home
 title: A Night at the Doss-House
 pool: lodging_nights_city
 tone: tense
-when: lodged_rough()
+when: lodged_rough() and gold > 0
 art: bed
 scene: A crowded doss-house dormitory at night, rows of slung hammocks, sleepers in their clothes, a thin figure creeping between the beds towards a student's boots.
 text: The doss-house is a long room of hammocks slung in rows, free to anyone, sleepers in their clothes, a smell of wet wool and a man by the door who snores like a saw. In the small hours you wake to a soft sound and see a thin shape creeping along the row, hand out, towards the boots under your hammock, where your purse is.
@@ -368,15 +370,16 @@ text: Your room at the sailors' inn is over the taproom, and the taproom is sing
   health -tiny
   say: You go down in your coat and they make room on the bench and teach you the chorus about the mermaid and the bosun, which has seventeen verses. You go to bed at dawn, hoarse and happy, and sleep through breakfast.
 > right: Bet them they can't sing quietly
+  hint: A coin on the table.
+  gold -tiny
   challenge appeal apprentice:
     win:
       charm +small
-      gold +tiny
-      say: You go down and bet the bosun a coin his crew can't sing the next one in a whisper. They can't, but they try, all of them, at the tops of their whispers, and it's so funny they give up singing altogether and pay up. You sleep.
+      gold +small
+      say: You go down and bet the bosun a coin his crew can't sing the next one in a whisper. They can't, but they try, all of them, at the tops of their whispers, and it's so funny they give up singing altogether and pay up, your coin and theirs. You sleep.
     lose:
-      gold -tiny
       health -tiny
-      say: You bet the bosun a coin they can't sing in a whisper. They can, it turns out, beautifully, and then go straight back to roaring. You pay up, and lie awake till dawn with the floor shaking.
+      say: You bet the bosun a coin they can't sing in a whisper. They can, it turns out, beautifully, and then go straight back to roaring. The bosun pockets your coin, and you lie awake till dawn with the floor shaking.
 
 @event lodging_fine_room_night
 title: The Best Room in the House

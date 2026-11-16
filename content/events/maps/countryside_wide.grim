@@ -102,7 +102,7 @@ text: {&The river's up and the stepping stones are under it. The old ferryman wi
   challenge feat apprentice:
     win:
       vigor +small
-      say: {&You go over the drowned stones by feel, knee-deep, cold to the bone and laughing. The ferryman watches you all the way and looks, if anything, disappointed.|Stone to stone, quick and dry-shod. The ferryman claps, slowly, from his punt.|You cross in the mist by counting stones: nine. Coming back at dusk, you count them again: eight. You don't think about it.}
+      say: {&You go over the drowned stones by feel, knee-deep, cold to the bone and laughing. The ferryman watches you all the way and looks, if anything, disappointed.|Stone to stone, quick and dry-shod. The ferryman claps, slowly, from his punt.|You cross in the mist by counting stones: nine. Coming back, you count them a second time: eight. You don't think about it.}
     lose:
       health -small
       say: {&The third stone rolls and you go in to the waist. The river is very cold and very interested in your boots. The ferryman fishes you out with his pole, and doesn't charge.|You slip on the slick stone and sit down hard in the shallows. The ferryman doesn't laugh, which is worse.|In the mist you miss a stone entirely and go in to the chest. You come out shaking, on the bank you started from.}
@@ -174,7 +174,7 @@ text: {&Hollin Coppice is all rides and clearings, straight young poles from stu
   say: {&{season == "winter": Catkins on the hazels, a ring of velvet shank on a dead stool and a patch of something your herbal calls "use with care". You come home scratched to the elbows with a basket worth a week of lessons.|Wood sorrel, the first hazelnuts, a ring of chanterelles and a patch of something your herbal calls "use with care". You come home scratched to the elbows with a basket worth a week of lessons.}|Among the cut stools you find birch polypore and a clump of comfrey the burners don't want. The brambles take their toll on your arms.|Rain brings the mushrooms up. You fill your basket, and your boots fill with water.}
 > right: Help the charcoal burners
   gold +small
-  mood -tiny
+  health -tiny
   say: {&You stack cordwood for the burners' mound all afternoon, black to the eyebrows. They pay in coin and sausage, and tell you the mound must never be left unwatched, not for a minute, not ever.|You help bundle the cut poles. The burners pay you and sing while they work, a song with seven verses and no chorus. Your shoulders are raw.|The burners need their mound turfed before the rain gets in. You turf it, wet through, and they pay you double for the weather.}
 
 @event coppice_woodward
@@ -196,7 +196,7 @@ text: Down a far ride you finally see who chalks the marks on every seventh tree
 @event coppice_charcoal_night
 title: Watching the Mound
 pool: hollin_coppice_life
-time: evening
+slot: evening
 tone: warm
 art: flame
 scene: A charcoal burners' camp in a wood clearing at night, a smoking turf-covered mound glowing in the dark, two burners at a small fire inviting a student to sit with them.
@@ -284,7 +284,7 @@ text: {&The old quarry's walls are full of fossils, shells from a sea that left 
       say: {&The old rope gives a yard of slack and you slide down the face, skinning both palms. The quarry's echo says something sarcastic.|Halfway up, a wet hold comes away in your hand. You land on the scree heap at the bottom, bruised and furious.|{season == "winter": The frost on the ledge is ice. You come down faster than you went up.|Your sweating fingers slip on the hot rock. You come down faster than you went up.}}
 > right: Hunt the scree for fossils
   lore +small
-  mood -tiny
+  health -tiny
   say: {&You turn over scree for an hour and find a dozen broken shells and one whole one, small and perfect. Your back aches from the stooping.|You sift the wet scree and find a tooth, a real tooth, from something that swam. Your hands are cold and gritty.|{season == "winter": You find nothing in the frozen scree for an hour, and then a little curled ammonite, which is enough. Your fingers have stopped working.|You find nothing in the baking scree for an hour, and then a little curled ammonite, which is enough. The back of your neck is burnt.}}
 
 @event quarry_echo
@@ -292,16 +292,16 @@ title: Back Chat
 pool: countryside_quarry_life
 tone: light
 art: rune
-scene: The floor of an old quarry, a student with hands cupped to their mouth shouting at a pale rock face, a shepherd boy on the rim laughing.
-text: The valley says the quarry's echo is full of opinions, and a shepherd boy on the rim dares you to try it. "Good morning," you call. "Is it?" says the quarry. You call that you're from the academy. "Oh," says the quarry, "one of those." The shepherd boy is lying on the grass, helpless.
+scene: The floor of an old quarry, a student with hands cupped to their mouth shouting at a pale rock face, an old shepherd on the rim laughing.
+text: The valley says the quarry's echo is full of opinions, and an old shepherd on the rim dares you to try it. "Good day," you call. "Is it?" says the quarry. You call that you're from the academy. "Oh," says the quarry, "one of those." The shepherd is lying on the grass, helpless.
 > left: Argue with it
   charm +small
   mood -tiny
-  say: You argue with the quarry for half an hour, about the weather, the academy and whether it has any right to an opinion. It gives as good as it gets, in your own voice, and gets the last word, every time. The boy calls it a draw. You're hoarse, and somehow lost.
+  say: You argue with the quarry for half an hour, about the weather, the academy and whether it has any right to an opinion. It gives as good as it gets, in your own voice, and gets the last word, every time. The shepherd calls it a draw. You're hoarse, and somehow lost.
 > right: Ask it a real question
   lore +small
   mood -tiny
-  say: You ask it what it's seen. There's a long pause, the only one all morning. "Sea," says the quarry at last, "and then not." Then it goes back to mocking your accent. You sit on the scree a long time, feeling very small and very recent.
+  say: You ask it what it's seen. There's a long pause, the only one all day. "Sea," says the quarry at last, "and then not." Then it goes back to mocking your accent. You sit on the scree a long time, feeling very small and very recent.
 
 @event quarry_millstone
 title: The Last Millstone
@@ -339,6 +339,7 @@ title: The Long Table
 pool: drovers_inn_life
 repeat: 3
 time: evening night
+when: slot == "evening" or slot == "night"
 tone: light
 art: cup
 scene: A rough country inn with one long table packed with drovers, tinkers and travellers, a big fire, tankards, a student squeezing onto the bench.
@@ -379,6 +380,7 @@ title: The Bear Gets Loose
 pool: drovers_inn_life
 tone: tense
 time: evening night
+when: slot == "evening" or slot == "night"
 art: paw
 scene: A rough country inn's taproom in uproar, a big brown bear loose among the tables with a broken rope trailing, drovers climbing onto benches, a student standing very still with a wand lowered.
 text: The man with the bear has fallen asleep by the fire, and the bear's rope has come undone, and the bear has decided to see what's in the kitchen. The long table empties onto the benches. The landlord is up on the bar with a ladle. The bear stops in the middle of the room and looks at you, because you're the only one not shouting.

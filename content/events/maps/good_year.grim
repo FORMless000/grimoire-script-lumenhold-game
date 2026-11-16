@@ -7,7 +7,7 @@
 #  he's buying. This year's guest is Ottilie Venn, a fern-hunter lodging at the inn.
 #
 #  A `story` thread (begun by gy_seventh_year at the market village). Clues in any order, each a step at its place,
-#  counted in gy_clues: the guest book, the scarecrows' collars, the miller's tally, the almanac's harvest page, the
+#  counted by gy_clues_found() from the flags they set: the guest book, the scarecrows' collars, the miller's tally, the almanac's harvest page, the
 #  agent at the Drovers' Inn (who opens the old hall). With two clues, Ottilie is gone and the inn says she never came;
 #  the hedge-witch tells you the truth; then the door in the hill (the moors delve's depth 7, K3) stands open. In the
 #  Tenant's hall: walk out, break the bargain (a fight), offer it better company (an appeal), or give it the agent's
@@ -16,6 +16,11 @@
 #  Optional, and it never touches the Hollow Star: no frost, no stars, no bells, no clues or arc clocks. Adults only;
 #  the lent sit unaged and content at the Tenant's supper, which keeps it eerie, not grim.
 # ============================================================
+
+# What the player has found of the bargain: its five clues (the Journal lines below), read from the discoveries.
+@cond gy_clues_found
+desc: How many of the Good Year's five clues you've found (the guest book, the collars, the miller's tally, the almanac page, the agent's plan).
+is: flag(gy_guest_book) + flag(gy_coats) + flag(gy_miller) + flag(gy_almanac) + flag(gy_agent_plan)
 
 @cond gy_open
 desc: The Good Year is under way and not yet ended.
@@ -91,7 +96,7 @@ text: At the inn's best table a young woman in a battered sun hat is pressing fe
 > left: Go out with her after ferns
   mood +small
   health -tiny
-  say: You spend the afternoon {season == "winter": in the snowy fen with Ottilie, digging out the brown crowns of royal ferns,|up to your knees in the fen with Ottilie,} and she knows the name of everything green and laughs at everything else. You come back soaked to the thigh and fond of her. At the inn door the landlord is waiting with towels, as if he knew when you'd be back.
+  say: You spend what's left of the day {season == "winter": in the snowy fen with Ottilie, digging out the brown crowns of royal ferns,|up to your knees in the fen with Ottilie,} and she knows the name of everything green and laughs at everything else. You come back soaked to the thigh and fond of her. At the inn door the landlord is waiting with towels, as if he knew when you'd be back.
   flag gy_met_ottilie
 > right: Tell her to mind the inn's kindness
   mood -tiny
@@ -121,7 +126,6 @@ text: {seen(gy_guest_book) > 1: The guest book's out on the counter again, and t
   challenge research journeyman:
     win:
       lore +small
-      gy_clues += 1
       say: Years and years of names, in and out. But every seventh harvest there's one guest with no date out, only two words beside the name in the landlord's hand: "stays on". Seven years before that, another. And the last page of this year has a line already ruled, waiting.
       flag gy_guest_book
     lose:
@@ -138,12 +142,11 @@ when: not flag(gy_coats)
 weight: 16
 art: leaf
 tags: mystery nature
-scene: A row of scarecrows in fine old travelling coats along a field's edge at dusk, a student turning down the collar of one to read a name stitched inside.
-text: The scarecrows stand in their row along the far field, in their very decent coats: good wool, brass buttons, a travelling cloak. Somebody's coats, once. {seen(fields_scarecrow_coats) > 1: You found a tailor's label in one collar before. In the dusk you see that every collar has a name in it, a little name-tape, the kind a careful mother sews in.|In the dusk you see that every collar has a little name-tape stitched inside, the kind a careful mother sews in.}
+scene: A row of scarecrows in fine old travelling coats along a field's edge, a student turning down the collar of one to read a name stitched inside.
+text: The scarecrows stand in their row along the far field, in their very decent coats: good wool, brass buttons, a travelling cloak. Somebody's coats, once. {seen(fields_scarecrow_coats) > 1: You found a tailor's label in one collar before. Up close you see that every collar has a name in it, a little name-tape, the kind a careful mother sews in.|Up close you see that every collar has a little name-tape stitched inside, the kind a careful mother sews in.}
 > left: Read every collar down the row
   health -tiny
   lore +tiny
-  gy_clues += 1
   say: {flag(gy_guest_book): You go down the row in the dew till your feet are soaked and cold. Every name is one from the guest book, one with "stays on" beside it, a coat for every seven years, back further than the hedges.|You go down the row in the dew till your feet are soaked and cold, reading names: a dozen strangers, and the coats getting older as you go, back to a cloak your grandmother would have called old-fashioned.}
   flag gy_coats
 > right: Leave the coats alone
@@ -161,12 +164,11 @@ weight: 16
 art: rune
 tags: mystery
 scene: An old miller on a chair by a turning waterwheel over a dry millrace at dusk, writing tally marks in a small book by lantern light, a student on the bridge.
-text: The wheel's turning on the dry race again, and the miller's on his chair beside it with a lantern and a little book, making a mark at every turn, as patient as a man counting sheep. The book looks just like the landlord's.
+text: {seen(mill_dry_wheel) > 0: The wheel's turning on the dry race again,|At the mill the great wheel is turning over a dry race, with no water in it at all,} and the miller's on his chair beside it with a lantern and a little book, making a mark at every turn, as patient as a man counting sheep. {seen(market_inn_welcome) > 0: The book looks just like the landlord's.|}
 > left: Ask him what he's counting
   challenge appeal journeyman:
     win:
       lore +small
-      gy_clues += 1
       say: "Turns to the supper," he says, as if you'd know. "Seven years of turns, and then the supper, and the guest goes in, and the wheel rests." He looks at you a long while. "Nobody's hurt by it. They come back." Then he looks at you, and you watch him remember {at_home(): whose child you are|that you're a stranger}, and he closes the book.
       flag gy_miller
     lose:
@@ -192,12 +194,10 @@ text: Mrs Quill is alone at the press, ink to the elbows. {flag(almanac_pages_co
 > left: Ask why she prints it
   lore +tiny
   mood -tiny
-  gy_clues += 1
   say: "Because they ask," she says, "and then they cut it out, and I put it in the drawer." She closes it. "My mother did, and hers. I tell myself it's only printing." She goes back to the press and doesn't look at you again, and her hands aren't steady.
   flag gy_almanac
 > right: Take one of the pages
   alignment -tiny
-  gy_clues += 1
   say: You take the oldest page while her back is turned to the press, and she sees, in the type-case's brass, and lets you. Walking out with it inside your coat feels like stealing from somebody who wanted you to.
   flag gy_almanac
 
@@ -216,7 +216,7 @@ text: The man in good boots is drinking with his clerk at the end of the Drovers
 > left: Take his money
   gold +small
   alignment -small
-  say: {flag(gy_met_ottilie): You tell him about Ottilie, and room seven.|You tell him the landlord keeps his best room for a guest, and that you'll find out whose.} He writes it in his folder and pays in gold, more than the words were worth. "The old hall," he says, "if you've more." You walk out into the night with the gold heavy and something else heavier.
+  say: {flag(gy_met_ottilie): You tell him about Ottilie, and room seven.|You tell him the landlord keeps his best room for a guest, and that you'll find out whose.} He writes it in his folder and pays in gold, more than the words were worth. "The old hall," he says, "if you've more." You walk out with the gold heavy and something else heavier.
   flag gy_agent_paid
   flag gy_hall_known
   find lead_old_hall
@@ -272,8 +272,7 @@ text: {seen(gy_hall_papers) > 1: The old hall again after dark, the back window,
   challenge feat using guile journeyman:
     win:
       lore +small
-      gy_clues += 1
-      say: The old ledgers are the guest book's twin: every seventh name, written by the keepers of a hundred years. The agent's letter, to his principals uptown, is plainer: "The arrangement may be improved. A guest each year, from our own hand, and the luck to follow the company's land." You put it back exactly as it was.
+      say: {flag(gy_guest_book): The old ledgers are the guest book's twin: every seventh name, written by the keepers of a hundred years.|The old ledgers keep one name every seventh year, and beside each, "stays on".} The agent's letter, to his principals uptown, is plainer: "The arrangement may be improved. A guest each year, from our own hand, and the luck to follow the company's land." You put it back exactly as it was.
       flag gy_agent_plan
     lose:
       health -tiny
@@ -283,7 +282,6 @@ text: {seen(gy_hall_papers) > 1: The old hall again after dark, the back window,
   challenge feat using guile journeyman likely:
     win:
       lore +small
-      gy_clues += 1
       say: You pick the desk drawer and find the whole correspondence: the agent's letter to his principals, "a guest each year, from our own hand, and the luck to follow the company's land", and their answer: "Proceed." You lock it all away again.
       flag gy_agent_plan
     lose:
@@ -299,7 +297,7 @@ thread: good_year
 place: home_market
 class: story
 tone: grim
-when: flag(gy_met_ottilie) and gy_clues >= 2 and since(gy_fern_hunter) >= 1 and not flag(gy_ottilie_gone)
+when: flag(gy_met_ottilie) and gy_clues_found() >= 2 and since(gy_fern_hunter) >= 1 and not flag(gy_ottilie_gone)
 weight: 40
 art: door
 tags: mystery
@@ -313,7 +311,7 @@ text: Room seven's door is open, and the room is made up fresh: clean sheets, an
 > right: Call him a liar to his face
   alignment +tiny
   renown -tiny
-  say: "She was here," you say, loud enough for the whole taproom. Nobody looks up. The landlord only smiles, sorry for you, and the room goes on with its evening as if you'd said nothing at all. You walk out with the fern in your fist, glad you said it, and with every eye in the valley on your back.
+  say: "She was here," you say, loud enough for the whole taproom. Nobody looks up. The landlord only smiles, sorry for you, and the room goes on with its day as if you'd said nothing at all. You walk out with the fern in your fist, glad you said it, and with every eye in the valley on your back.
   flag gy_ottilie_gone
   find lead_marsh_rue
 
@@ -329,7 +327,7 @@ when: flag(gy_ottilie_gone) and not flag(gy_truth)
 weight: 40
 art: leaf
 tags: mystery
-scene: An old hedge-witch sitting on the steps of a stilt house over a reedy marsh at dusk, a bunch of rue in her lap, talking low to a student sitting below her.
+scene: An old hedge-witch sitting on the steps of a stilt house over a reedy marsh, a bunch of rue in her lap, talking low to a student sitting below her.
 text: {at_home() and has(origin_hedge): Your grandmother is on the steps with the rue in her lap, waiting, as if she'd known you'd come today. "So," she says. "You've found it. I hoped you'd be cleverer and not."|The hedge-witch is on her steps with the rue in her lap, and for once she meets your eye. "So," she says. "They've taken the fern girl. Sit down."} Then she tells you: the Tenant, under the hollow hill on the moor, and the guest it's lent every seventh year. "They'll tell you the lent come home. They don't. They sit at its supper, not a day older, as long as the bargain holds." And the harvests, good, good, good.
 > left: Ask her to come with you
   mood -tiny
@@ -388,6 +386,7 @@ text: A long hall under the hill, gold with lamplight, and a harvest supper laid
   challenge combat adept+:
     win:
       say: The Tenant goes down among its own sheaves, and the lamps gutter, and the long table is suddenly only trestles in the dark. "Then go," it says, from everywhere, "all of you, and take your bad years with you." The guests are standing up, blinking, one by one.
+      alignment +small
       flag gy_broken
       flag gy_done
       queue gy_after_broken now
@@ -398,7 +397,8 @@ text: A long hall under the hill, gold with lamplight, and a harvest supper laid
   hint: Persuade it: the whole valley at its table for one night every seventh year, in place of a lent stranger. What you know of its guests helps.
   challenge appeal adept+ unlikely +1 if flag(gy_guest_book) +1 if flag(gy_coats) +1 if flag(gy_almanac):
     win:
-      say: {flag(gy_guest_book) or flag(gy_coats): You name its guests, from the book and the collars, and offer better:|You offer it better company than any one guest:} the whole valley every seventh year, keepers, children and fiddlers, one night, home by morning. The Tenant listens to the end, and laughs, a sound like a full barn. "Done," it says. "Bring the fiddlers."
+      say: {flag(gy_guest_book) or flag(gy_coats): You name its guests, from {flag(gy_guest_book) and flag(gy_coats): the book and the collars|{flag(gy_guest_book): the guest book|the collars}}, and offer better:|You offer it better company than any one guest:} the whole valley every seventh year, keepers, neighbours and fiddlers, one night, home by morning. The Tenant listens to the end, and laughs, a sound like a full barn. "Done," it says. "Bring the fiddlers."
+      alignment +small
       flag gy_renewed
       flag gy_done
       queue gy_after_renewed now
@@ -441,7 +441,7 @@ text: You lead them down off the moor in the late light: Ottilie in her sun hat,
     queue moor_way_home now
 > right: Take them to the Marsh first
   mood +medium
-  alignment +small
+  health +small
   say: You take them down the causeway to {at_home() and has(origin_hedge): your grandmother|the hedge-witch}, who has a pot on and blankets out as if she'd expected all of them for supper. She counts them as they come in, all of them, and then she sits down on her step and cries, which you'd never have thought she could.
   if moor_haul > 0:
     moor_after_story = 1

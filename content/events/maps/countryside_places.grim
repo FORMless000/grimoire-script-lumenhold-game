@@ -17,6 +17,7 @@ tags: social
 @event market_inn_welcome
 title: On the House
 pool: countryside_market_routine
+when: not flag(gy_broken)
 tone: eerie
 art: cup
 tags: social mystery
@@ -35,6 +36,7 @@ text: {The landlord of the coaching inn sets a plate in front of you that you di
 @event market_harvest_board
 title: The Board by the Cross
 pool: countryside_market_routine
+when: not flag(gy_broken)
 tone: eerie
 art: scroll
 tags: mystery lore
@@ -46,7 +48,7 @@ text: {Nailed to the market cross is an old board of chalked tallies, harvests b
   say: {You copy it all. Good, good, good, good. Nobody has a run of harvests like that. Nobody.|You copy the seventh column, mark by mark. A woman at the well watches you do it and goes indoors.|You copy the little figure. Later you notice it's wearing a coat with a long hem, like yours.}
 > right: Ask someone what it counts
   charm +tiny
-  say: {"Good years," says a farmer. "We've been blessed." He says it like a sum he's finished.|"Harvests, dear," says a woman with a basket. "Seven good ones. We're very grateful." She doesn't say to whom.|A boy starts to tell you, and his mother calls him in mid-word.}
+  say: {"Good years," says a farmer. "We've been blessed." He says it like a sum he's finished.|"Harvests, dear," says a woman with a basket. "Seven good ones. We're very grateful." She doesn't say to whom.|A drover starts to tell you, and his wife calls him back to their stall mid-word.}
 
 @event market_day_stalls
 title: Everyone Smiles
@@ -101,19 +103,20 @@ time: morning noon afternoon
 tone: eerie
 art: star
 tags: mystery social
-scene: Village children skipping a long rope on a green in front of a small grey chapel, chanting, one of them pointing at a passing student.
-text: {The children on the green are skipping to a counting rhyme. One for the plough, two for the sheaf, three for the miller, on up to six. At seven they all stop, and look at whoever's nearest. Today it's you.|The rhyme again. This time you hear the words for seven, half under their breath: "and seven for the one who came."|The children start the rhyme when they see you coming, as if they've been waiting for an audience.}
+scene: Old village women winding wool on benches on a green in front of a small grey chapel, chanting, one of them pointing at a passing student.
+text: {The old women on the green are winding wool and counting the skeins to a rhyme. One for the plough, two for the sheaf, three for the miller, on up to six. At seven they all stop, and look at whoever's nearest. Today it's you.|The rhyme again, over the wool. This time you hear the words for seven, half under their breath: "and seven for the one who came."|The women on the benches start the rhyme when they see you coming, as if they'd been waiting for an audience.}
 > left: Learn the whole rhyme
   lore +small
   mood -tiny
-  say: {A girl with a gap in her teeth teaches you the whole thing, solemnly. When you get to seven, she claps, and nobody else does.|You write it down. When you ask who "the one who came" is, the girl looks at your coat and doesn't answer.|You learn it by heart. Afterwards it goes round your head for a day, and the counting won't stop at six.}
+  say: {A woman with a gap in her teeth teaches you the whole thing, solemnly, over a skein. When you get to seven, she claps, and nobody else does.|You write it down. When you ask who "the one who came" is, the woman looks at your coat and doesn't answer.|You learn it by heart. Afterwards it goes round your head for a day, and the counting won't stop at six.}
 > right: Clap along and walk on
   mood +tiny
-  say: {You clap along to six and leave before seven. The children wave you off, every one.|You clap. A mother calls the children in, pleasantly, as you pass.|You walk on. Behind you they start again, from one.}
+  say: {You clap along to six and leave before seven. The women wave you off, every one.|You clap. Somebody calls the women in to their dinner, pleasantly, as you pass.|You walk on. Behind you they start over, from one.}
 
 @event mill_dry_wheel
 title: A Wheel With No Water
 pool: countryside_mill_routine
+when: not flag(gy_broken)
 slot: evening
 tone: eerie
 art: wave

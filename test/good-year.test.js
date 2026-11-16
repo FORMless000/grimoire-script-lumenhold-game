@@ -34,11 +34,10 @@ test('good year: the start begins the thread and leaves its lead', () => {
 test('good year: clues count, and Ottilie is gone only after two', () => {
   const ev = content.events.gy_ottilie_gone;
   const e = fresh();
-  Object.assign(e.s.flags, { gy_begun: true, gy_met_ottilie: true });
-  e.s.vals.gy_clues = 1;
+  Object.assign(e.s.flags, { gy_begun: true, gy_met_ottilie: true, gy_guest_book: true });
   assert.ok(!e.test(ev.when), 'not after one clue');
   play(e, 'gy_scarecrow_names', 'left');
-  assert.equal(e.s.vals.gy_clues, 2);
+  assert.ok(e.s.flags.gy_coats);
   assert.ok(e.test(ev.when), 'after two clues');
 });
 

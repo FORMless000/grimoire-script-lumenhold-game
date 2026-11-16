@@ -18,13 +18,13 @@ repeat: 3
 tone: light
 art: door
 scene: A members' club's marble hall, a stately porter in a braided coat at his lodge window looking a student up and down, leather chairs and lamplight beyond a half-open door.
-text: {&The club's porter looks at your boots, then your face, then your boots again. "Members and their guests," he says. Beyond the inner door are leather chairs, low lamps and the sort of people whose names are in the newspapers on purpose.|The porter again. He has decided, it seems, that you're a recurring weather condition. "Members and their guests," he says, with less conviction.|"You again," says the porter, almost warmly. Through the inner door you can hear a minister losing at cards.}
+text: {&The club's porter looks at your boots, then your face, then, once more, your boots. "Members and their guests," he says. Beyond the inner door are leather chairs, low lamps and the sort of people whose names are in the newspapers on purpose.|The porter again. He has decided, it seems, that you're a recurring weather condition. "Members and their guests," he says, with less conviction.|"You again," says the porter, almost warmly. Through the inner door you can hear a minister losing at cards.}
 > left: Talk your way in as somebody's guest
   challenge deceive journeyman:
     win:
       renown +tiny
       mood +small
-      say: {&You name a member you read about in the paper, with total confidence, and the porter waves you through. You spend hours in a leather chair overhearing two bankers decide the price of bread. Nobody asks who you are. Everyone nods.|You say you're expected by "the admiral", and there is, it turns out, an admiral, asleep. You sit near him for hours, a guest in good standing.|This time you just walk in as if you'd always been a member. The porter, defeated, takes your coat. A duchess asks your opinion on a war.}
+      say: {&You name a member you read about in the paper, with total confidence, and the porter waves you through. You spend hours in a leather chair overhearing two bankers decide the price of bread. Nobody asks who you are. Everyone nods.|You say you're expected by "the admiral", and there is, it turns out, an admiral, asleep. You sit near him for hours, a guest in good standing.|Today you just walk in as if you'd always been a member. The porter, defeated, takes your coat. A duchess asks your opinion on a war.}
     lose:
       mood -small
       say: {&The member you name died last winter. The porter tells you so, kindly, and shows you the street.|"The admiral," says the porter, "is in the next room, and has never heard of you. I asked." You leave with your ears hot.|The porter doesn't even look up. "No," he says. You go.}
@@ -210,7 +210,7 @@ pool: capital_gardens_life
 slot: noon
 tone: tense
 art: duel
-scene: A formal garden at midday, two rumpled young nobles in shirtsleeves facing each other across a fountain with wands raised, a nervous second, a student arriving through the hedge.
+scene: A formal garden at midday, a crowd of promenaders gathering, two rumpled young nobles in shirtsleeves facing each other across a fountain with wands raised, a nervous second, a student arriving through the hedge.
 text: By the fountain, in front of half the promenade, two young nobles in shirtsleeves are about to duel with wands over an insult neither can remember. It was meant to be at dawn; both overslept. One second has fainted. The other spots your academy scarf. "You," he hisses. "Witness. It's legal with a witness." Both duellists look terrified.
 > left: Stand witness and let them fight
   renown +tiny
@@ -258,9 +258,9 @@ text: Under the bronze statue of the old king on his rearing horse, a knot of st
       alignment -tiny
       say: The bronze horse shakes its mane, steps down off its plinth with the king still aboard and walks one stately lap of the fountain while uptown screams. It climbs back up and rears again, exactly as before. The Thornwick students say nothing at all, and buy you an ice.
     lose:
-      gold -small
+      renown -tiny
       mood -small
-      say: The horse lifts one hoof, thinks better of it and puts it down on a flowerbed. The Thornwick students cheer. A gardener presents you with the bill for the tulips.
+      say: The horse lifts one hoof, thinks better of it and puts it down on a flowerbed. The Thornwick students cheer, and will tell everyone. A gardener chases you out of the tulips.
 > right: Refuse, and make them laugh instead
   charm +small
   renown -tiny

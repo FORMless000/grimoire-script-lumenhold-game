@@ -75,8 +75,8 @@ pool: fennick_farm_tobias
 when: rel(tobias) >= 12
 tone: eerie
 art: leaf
-scene: A high field divided by an old drystone wall, thick golden barley on the far side, thin patchy barley on the near side, a big young man and a student standing at the wall.
-text: Tobias walks you up to the top field, where the farm meets the valley's land at an old drystone wall. On the far side the barley stands thick and gold. On the Fennick side it's thin, and patchy, and honest. "Seven good years down there," Tobias says. "Every year. Never up here." He puts his big hand flat on the wall. "Ma says the valley's luck is the valley's business."
+scene: A high field divided by an old drystone wall, rich land on the far side, thin stony land on the near side, a big young man and a student standing at the wall.
+text: Tobias walks you up to the top field, where the farm meets the valley's land at an old drystone wall. {season == "winter": On the far side the stubble's long turned in, and every yard below has ricks standing fat and gold. On the Fennick side the ground is stones, and there's one thin rick, and it's honest.|On the far side the barley stands thick and gold. On the Fennick side it's thin, and patchy, and honest.} "Seven good years down there," Tobias says. "Every year. Never up here." He puts his big hand flat on the wall. "Ma says the valley's luck is the valley's business."
 > left: Help him clear the stones
   vigor +small
   health -tiny
@@ -84,7 +84,7 @@ text: Tobias walks you up to the top field, where the farm meets the valley's la
 > right: Ask what he thinks it is
   lore +tiny
   mood -tiny
-  say: He thinks about it a long time, which is how he thinks about everything. "I think they pay for it," he says at last. "I don't know what with. Nobody down there ever says." The wind goes over the barley on the far side, and none of it bends the way the near side does. You walk back uneasy.
+  say: He thinks about it a long time, which is how he thinks about everything. "I think they pay for it," he says at last. "I don't know what with. Nobody down there ever says." {season == "winter": The wind goes over the valley's fields below and lifts nothing, not a straw, and comes up the hill to you cold.|The wind goes over the barley on the far side, and none of it bends the way the near side does.} You walk back uneasy.
 
 # ---------------- Nessa: the Almanac Printer's ----------------
 

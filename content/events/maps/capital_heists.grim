@@ -84,7 +84,7 @@ on_show:
   if job_loot > 0:
     job_loot -= 1
     job_dropped = 1
-text: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You run before anyone gets a proper look, up and over a stack of tea chests, skinning your knuckles on the iron hoops{job_dropped == 1:, and something you were carrying drops into the dark and stays there|}, and down into the black gap behind them. Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You tear free and run, up and over a stack of tea chests, skinning your knuckles on the iron hoops, and drop into the black gap behind them. {job_dropped == 1: Something you were carrying stays somewhere in the dark behind you. |}Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
 > left: {job_where == 2: Wait in the furs, then go|Over the back wall, and away}
   queue job_way_out now
   say: {job_where == 2: You wait among the furs until the candle goes back down the stair, then let yourself out by the servants' door into the mews, limping a little.|You go over the back wall onto the wharf with your knuckles bleeding, and leave the dog barking at the place where you were.}
@@ -363,7 +363,7 @@ text: {seen(bonded1_loading_door) > 1: The loading door, the gap, and the ginger
 > left: Leave it and go back
   queue job_way_out now
   say: {seen(bonded1_loading_door) > 1: You go, and the cat watches you to the wall as if you'd let it down.|You leave the cat its doorway and go back over the wall.}
-> right: Slip in past the cat
+> right: Follow the cat along the wall
   job_depth += 1
   next
   say: {seen(bonded1_loading_door) > 1: You go after the cat, who goes ahead along the wall towards the warehouse proper, stopping to look back.|You crouch to the gap and the cat comes with you, tail up, as if showing you round, along the wall to where the yard ends at the warehouse proper.}
@@ -652,8 +652,8 @@ title: The Ball on the Crescent
 pool: capital_crescent_life
 tone: light
 art: candle
-scene: A tall lit-up town house on a curving terrace at night, carriages drawing up, music and figures behind tall windows, a student watching from the railings of the gardens opposite.
-text: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a link-boy with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == "winter": breath steaming from the horses,|the summer dusk still warm,} and from the tall windows comes music and the noise of money enjoying itself. A link-boy with a torch sits on the gardens' railings beside you.}
+scene: A tall lit-up town house on a curving terrace after dark, carriages drawing up, music and figures behind tall windows, a student watching from the railings of the gardens opposite.
+text: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a link-boy with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == "winter": breath steaming from the horses,|the summer air still warm,} and from the tall windows comes music and the noise of money enjoying itself. A link-boy with a torch sits on the gardens' railings beside you.}
 > left: Count the windows and the doors
   guile +tiny
   health -tiny
@@ -743,7 +743,7 @@ repeat: 1
 art: mask
 tags: heist danger
 scene: A tall footman in powdered wig and livery at the door of a ballroom, looking down his nose at a student in evening clothes, dancers whirling beyond.
-text: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|Past the hall, at the ballroom doors, a second footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}
+text: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|At the ballroom doors, past the hall, a footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}
 > left: Back out into the night
   queue job_way_out now
   say: {seen(crescent1_footman) > 1: You leave the footman to his doors and go home.|You turn back as if you'd forgotten your gloves, and keep going, out of the house.}
@@ -932,7 +932,7 @@ text: {seen(crescent2_writing_desk) > 1: {flag(jory_freed): The writing desk aga
       job_loot += 1
       job_depth += 1
       next
-      say: {flag(crescent_letters): {flag(jory_freed): You read what's left of the old bundle for anything you missed, and keep a letter that names a ship. Somebody would pay for it.|You read the new bundle. Same foreman, same side door, a bigger cargo. You keep one, and go on.}|It comes clear as you read: the warehouse foreman on the wharf, two sets of figures, and everything the side door let out came up the hill to this house. One letter grumbles that the master sets his safe by his first ship's launching day, and names the day. You keep the best letter. Somebody would pay for it.}
+      say: {flag(crescent_letters): {flag(jory_freed): You read what's left of the old bundle for anything you missed, and keep a letter that names a ship. Somebody would pay for it.|You read the new bundle. Same foreman, same side door, a bigger cargo. You keep one, and go on.}|It comes clear as you read: the warehouse foreman on the wharf, two sets of figures, and everything the side door let out came up the hill to this house. Tucked among them, a note in the shipowner's own hand reminds him of his safe's number: his first ship's launching day. You keep the best letter. Somebody would pay for it.}
       flag crescent_letters
     lose:
       if job_cover > 0:
@@ -992,7 +992,7 @@ text: {seen(crescent_safe_card) > 1: The study, the wardrobe of a safe, the bras
   challenge feat using guile adept- +1 if flag(crescent_letters):
     win:
       job_loot += 3
-      say: {flag(crescent_safe): The tumblers fall for you again. The safe has been refilled since; the shipowner has had a good season.|{flag(crescent_letters): You start from the launching day the foreman's letter let slip, and turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.|You turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.} The door swings out, heavy as a ship's. Inside: bearer bonds, a rope of pearls and a cash box. You take what you can carry.}
+      say: {flag(crescent_safe): The tumblers fall for you again. The safe has been refilled since; the shipowner has had a good season.|{flag(crescent_letters): You start from the launching day the shipowner's note let slip, and turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.|You turn the dial with your ear to the iron until the tumblers fall, one, two, three, four.} The door swings out, heavy as a ship's. Inside: bearer bonds, a rope of pearls and a cash box. You take what you can carry.}
       flag crescent_safe
       queue job_way_out now
     lose:
