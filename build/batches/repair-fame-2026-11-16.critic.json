@@ -1,0 +1,42 @@
+{
+  "batch": "repair-fame-2026-11-16",
+  "accept": true,
+  "summary": "All 55 Nov 15 findings in scope are fixed, and so are the countryside critic's nine items, with one exception noted below. Each lie now carries its alignment on the act, before the check. The dragon is set up on the profile's win, the memoir signs away final say, the flourish denial is now the truthful 'didn't invent it', and the curfew alibi covers two o'clock. The children are recast as adults (the baby is now a boat). Every promised purse, cut, tip, refund and detention is applied, and every study cost names the work given up. Without `repeat: 1`, spotlight and scandal cards are once per run, or once per person when cast. The scandal pool has `defer: break`. spot_ball_opening is queued `now with <partner>` from every partnered midwinter_ball branch, ahead of ball_last_dance (nowIdx keeps the order), and is gated `when: renown_famous()`. A player who skips the Ball or goes with friends never sees it. The Season's price step no longer depends on season_friends casting a friend. The canPlayOnBreak change is right for every current use: A.queued records an appointment only when nothing names the card, and the appointment check reads the same term-only test. grim check passes. What's left: a few small continuity, voice and wording slips, one coppice variant still missing its health cost, one zh-CN label, and one edge in the new lint regex.",
+  "issues": [
+    {
+      "event": "spot_ball_opening",
+      "problem": "midwinter_ball's say narrates the whole evening, then the queued opening goes back to 'At the door of the Great Hall', before the first dance. Two partner lines contradict that. On the first Ball with Corvin he 'arrives late, in a stolen jacket', so he can't be at the door to open it. On the first Ball with Mir 'You are asked to leave early', which reads oddly just before you open the Ball in front of the whole school.",
+      "fix": "Frame the card as a flashback ('Earlier, before the first note, the Ball committee had caught you and {npc} at the door…'). Also give Corvin's first-Ball say 'He arrives at the last possible minute, in a stolen jacket…'. Alternatively, queue the opening in the Corvin and Mir branches only under `if flag(ball_corvin)` / `if flag(ball_mir)` (the repeat-year says). Update zh-CN to match."
+    },
+    {
+      "event": "spot_ball_opening",
+      "problem": "'{npc} has gone very pale and is pretending not to have heard' is one reaction for all seven partners. It is out of voice for several. Lyra 'leads, of course', never shows weakness and 'dances like a duel'. Corvin is 'the best dancer in the room'. Seraphine already knew you'd ask.",
+      "fix": "Vary the line by partner, as content/events already does with {npc_is(x): …}, e.g. '{npc_is(lyra): Lyra says \"Obviously\" before the committee has finished.|npc_is(corvin): Corvin is already taking off his gloves.|npc_is(seraphine): Seraphine says she wondered when they'd ask.|{npc} has gone very pale and is pretending not to have heard.}'. Add matching zh-CN variants."
+    },
+    {
+      "event": "coppice_rides",
+      "problem": "The countryside critic's item isn't fully fixed. The charcoal option costs health, but its first variant still shows only dirt: 'You stack cordwood for the burners' mound for hours, black to the eyebrows.' The repair added the splinters to the second variant, which already had 'Your shoulders are raw'.",
+      "fix": "Put a bodily cost in variant 1, as the critic asked: '…for hours, black to the eyebrows, with an ache across your back' (or move 'and get splinters in both palms' into variant 1). zh-CN to match."
+    },
+    {
+      "event": "fame_rivals_for_you",
+      "problem": "zh-CN: the new label 'Stay in, and take no side' is rendered '待在家里，谁也不站'. 待在家里 means 'stay at home', which is wrong at the academy; the say has 待在宿舍. 谁也不站 is ungrammatical.",
+      "fix": "'留下不去，不选边' or '哪儿也不去，不站队' (≤ 14 characters)."
+    },
+    {
+      "event": "spot_three_invitations",
+      "problem": "This changed card still claims history the game doesn't track: 'your oldest friend here, who just wants to play cards in the common room like you used to'. The repair removed this kind of claim from spot_saved_seats (an assumed table of friends) and fallen_friends (the standing Thursday game), but not here. A player with no friend at all still gets it.",
+      "fix": "Cast a real friend, as spot_saved_seats now does: 'cast: f: any where classmate_here(f) and rel(f) >= 20'. Then use '{f}, who just wants to play cards in the common room' in the text and '{f} looks up, surprised, and deals you in' in the right say (zh-CN to match)."
+    },
+    {
+      "event": "spot_memoir",
+      "problem": "'You sign where he points, final say and all' is ambiguous in English. It can read as if you keep the final say, but scandal_memoir_book needs you to have given it up. The zh-CN line is clear (连最终审定权也签了出去).",
+      "fix": "'You sign where he points, signing away the final say, and never see a draft.'"
+    },
+    {
+      "event": "(tools/grim.js canPlayOnBreak)",
+      "problem": "The new defer test `/(^|\\bor )\\s*break\\b/` also matches a `break` conjoined with `and`: 'defer: break and off_campus' or 'defer: x or break and y'. A card with such a defer still plays on a break whenever the other condition fails, yet the lint would call it term-only and suppress the study warning. No current card is affected: every `defer:` with break is plain `break` or a top-level `… or break`.",
+      "fix": "Split the defer source on top-level ' or ' (outside parentheses) and return false only when one disjunct, trimmed, is exactly 'break'. Or add a negative lookahead `(?!\\s*and\\b)` after `break\\b` and require that no ' and ' follows the matched disjunct."
+    }
+  ]
+}

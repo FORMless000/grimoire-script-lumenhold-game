@@ -39,7 +39,7 @@ text: A stationer's in the village is selling a whole term of ink, paper and can
     say: Three weeks later the shutters are down and there's a notice on the door about creditors. Half the castle stands in the lane reading it. So do you.
   else:
     gold +medium
-    say: The shop lasts the term, just. You don't buy ink again until spring, and feel very clever every time you don't.
+    say: The shop lasts the term, just. You sell your spare ink round the corridor at the old price when it shuts, and come out well ahead.
 > pass: Walk past the queue
   mood -tiny
   say: You walk past. You'll never know whether it was a bargain. That bothers you more than it should.
@@ -78,7 +78,7 @@ tone: warm
 cast:
   x: any where classmate_here(x) and rel(x) >= 8
 per: x
-when: met(amaranth) and season == "winter"
+when: met(amaranth) and season == "winter" and term
 art: potion
 scene: A dormitory window seat in winter, a student holding a steaming mug of something green, a friend sniffing it doubtfully.
 text: {x} has had a cold for a week and has cured it, {they} say{s}, with a remedy of {x.their} own: peppermint, honey, a pinch of something from the alchemy lab and a charm {they} won't explain. It works. {They} {are} too embarrassed to show anyone. "Amaranth would laugh," {they} say{s}.
@@ -91,7 +91,7 @@ text: {x} has had a cold for a week and has cured it, {they} say{s}, with a reme
   rel x +small
   rel amaranth +tiny
   study -tiny
-  say: You tell {x} about Sister Amaranth's book of her students' remedies. It takes a week of persuading. When {x} finally shows her, Amaranth tries it, says nothing at all, and copies it out on a fresh page in her square hand. {x} doesn't stop smiling for a day.
+  say: You tell {x} about Sister Amaranth's book of her students' remedies. It takes a week of persuading, and most of your reading time. When {x} finally shows her, Amaranth tries it, says nothing at all, and copies it out on a fresh page in her square hand. {x} doesn't stop smiling for a day.
 
 @event know_amaranth_rounds
 title: Who Comes at Night
@@ -103,7 +103,7 @@ cast:
 per: x
 when: met(amaranth) and seen(infirmary_missed_round) == 0
 art: bed
-scene: An infirmary ward at dusk, a feverish student in a bed by the window, a friend on the chair beside it, the lamps being lit.
+scene: An infirmary ward, a feverish student in a bed by the window, a friend on the chair beside it, the lamps being lit.
 text: {x} is in the infirmary overnight with a fever, and frightened, the way people are when they're ill and it's getting dark. "What if something happens," {they} say{s}, "and nobody comes?" Visiting hours are nearly over.
 > left: Stay until they send you out
   rel x +small
@@ -169,7 +169,7 @@ text: {x} has the tidecalling textbook open at the same page {they} had last wee
 > left: Drill {x.them} at dawn
   study -small
   rel x +small
-  say: You spend three cold dawns at the lake with {x}, going through it line by line. It helps, a little. {x} passes narrowly, and is grateful, and still hates the book.
+  say: You spend three cold dawns at the lake with {x}, instead of on your own reading, going through it line by line. It helps, a little. {x} passes narrowly, and is grateful, and still hates the book.
 > right: "Ask Marisol about her poems."
   when: knows(marisol.margins)
   rel x +small
@@ -190,7 +190,7 @@ text: {x} has gone quiet this month. {They} {are} homesick, though {they} would 
 > left: Sit with {x.them} at supper
   rel x +small
   study -tiny
-  say: You sit with {x} at supper every night that week and talk about nothing much. It doesn't fix anything. On Sunday {they} open{s} the letter, with you there.
+  say: You sit with {x} at supper every night that week, your own work pushed aside, and talk about nothing much. It doesn't fix anything. On Sunday {they} open{s} the letter, with you there.
 > right: Write to Mabel
   when: knows(mabel.tins)
   rel x +small
@@ -219,7 +219,7 @@ text: It's {x}'s birthday, and you've brought {x.them} to Mabel's, because there
   rel x +small
   rel mabel +tiny
   health -tiny
-  say: You ask, quietly, whether there's a fourth. Mabel looks at {x}, vanishes into the back and comes out with something pink and alarming. She writes its card while you watch: {x}'s name, and the date. {x} eats it, survives, and is very proud to be on the card.
+  say: You ask, quietly, whether there's a fourth. Mabel looks at {x}, vanishes into the back and comes out with something pink and alarming. She writes its card while you watch: {x}'s name, and the date. {x} makes you eat half. You both survive it, you rather less comfortably. {x} is very proud to be on the card.
 
 @event know_isolde_mercy
 title: A Witness to Character
@@ -291,14 +291,14 @@ pool: knowing
 tone: light
 cast:
   ilse: ilse where around(ilse) and met(ilse) and rel(ilse) >= 3
-when: season == "winter" and not off_campus and not flag(ilse_taken) and not flag(ilse_went_north)
+when: season == "winter" and term and not off_campus and not flag(ilse_taken) and not flag(ilse_went_north)
 art: snow
 scene: A dormitory corridor in deep winter, windows frosted over on the inside, students in coats and hats, a girl in white furs looking unimpressed at a cracked ward.
 text: Winter has got into the dormitories. The windows frost over on the inside every night, and the warming ward the professors put up keeps cracking. Everyone is sleeping in their coats, and the porters say it will be mended next week, as they said last week.
 > left: Patch the ward with the others
   study -small
   health +tiny
-  say: You and half the corridor patch it, badly, out of a textbook. It holds most nights. You get very good at sleeping in a hat.
+  say: You and half the corridor patch it, badly, out of a textbook, over two evenings' revision. It holds most nights. You get very good at sleeping in a hat.
 > right: Ask Ilse
   when: knows(ilse.frost_craft)
   rel ilse +small
@@ -316,10 +316,10 @@ text: The first-years' end-of-term play needs a backdrop, a forest at night, and
 > left: Paint the best forest you can
   study -small
   mood +tiny
-  say: You paint a forest. It looks like a forest from the back of the hall, if the lamps are low. The first-years are very kind about it.
+  say: You paint a forest, over three evenings you'd meant for revision. It looks like a forest from the back of the hall, if the lamps are low. The first-years are very kind about it.
 > right: Write to Tamsin for help
   when: knows(tamsin.theatre)
   rel tamsin +small
   mood +small
   study -tiny
-  say: You write to Tamsin, who learned illusion painting their grandmother's backdrops. The reply is six pages of sketches and insults about your brushwork. You follow it to the letter. On the night, the forest stirs in a wind that isn't there, and the hall gasps. You send Tamsin the programme.
+  say: You write to Tamsin, who learned illusion painting their grandmother's backdrops. The reply is six pages of sketches and insults about your brushwork. You follow it to the letter, over your revision. On the night, the forest stirs in a wind that isn't there, and the hall gasps.

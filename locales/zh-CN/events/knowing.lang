@@ -7,8 +7,8 @@
 @event know_kael_thaw
 # en: Before the Break
 title [60004e] = 放假之前
-# en: The last barge before the winter break is loading, and Kael is at the landing with his trunk, not quite looking at you. He's been strange all week. Back home, he told you once, saying goodbye is bad luck. The barge horn sounds. He's waiting, as if there were something you might say.
-text [e113f2] = 寒假前的最后一班驳船正在装货，凯尔带着行李箱站在码头上，不太看你。他这一星期都怪怪的。他跟你说过，在他老家，说再见是不吉利的。驳船的汽笛响了。他在等，好像你也许会说点什么。
+# en: The last barge before the winter break is loading, and Kael is at the landing with his trunk, not quite looking at you. He's been strange all week.{knows(kael.thaw):  Back home, he told you once, saying goodbye is bad luck.|} The barge horn sounds. He's waiting, as if there were something you might say.
+text [c275ec] = 寒假前的最后一班驳船正在装货，凯尔带着行李箱站在码头上，不太看你。他这一星期都怪怪的。{knows(kael.thaw): 他跟你说过，在他老家，说再见是不吉利的。|}驳船的汽笛响了。他在等，好像你也许会说点什么。
 # en: A barge landing in the snow at the end of term, students with trunks waiting to leave, two of them standing face to face at the edge of the jetty.
 scene [923204] = 学期末雪中的驳船码头，学生们带着行李等着离开，其中两人在栈桥边上面对面站着。
 # en: Shake his hand
@@ -51,8 +51,8 @@ opt.left.label [1b78a2] = 交到失物招领箱
 opt.left.say.1 [5bd2cf] = 你把它交了上去。第二天就有人认领了：一个已经冻得发抖一个星期的二年级生。你后来听说，伊尔泽给她做了个新的，没人请她，她也什么都没说。
 # en: Mend it with her mother's stitch
 opt.right.label [b4f66b] = 用她母亲的针法补好
-# en: You mend it slowly, in the looping stitch, the one that was her mother's. When you hand it to Ilse, she turns it over, finds the mend, and goes very quiet. Kael, beside her, touches it once. "Mother's," he says. Neither of them says anything else, for a long time.
-opt.right.say.1 [887280] = 你用那种绕圈的针法慢慢地补，那是她母亲的针法。你把它交给伊尔泽时，她翻过来，找到了补过的地方，一下子安静了。她身边的凯尔摸了一下。“是母亲的，”他说。很长一段时间，他们俩谁都没再说话。
+# en: You mend it slowly, by lamplight, instead of your reading, in the looping stitch, the one that was her mother's. When you hand it to Ilse, she turns it over, finds the mend, and goes very quiet. Kael, beside her, touches it once. "Mother's," he says. Neither of them says anything else, for a long time.
+opt.right.say.1 [ecddfd] = 你没去读书，而是就着灯光，用那种绕圈的针法慢慢地补，那是她母亲的针法。你把它交给伊尔泽时，她翻过来，找到了补过的地方，一下子安静了。她身边的凯尔摸了一下。“是母亲的，”他说。很长一段时间，他们俩谁都没再说话。
 
 @event know_isolde_chess
 # en: Called to the Tower
@@ -63,48 +63,46 @@ text [34c356] = 一位讲师投诉了你，你被送到了院长那里：一扇�
 scene [981aaa] = 高高的塔楼书房，窗边一盘下到一半的水晶塔棋，院长坐在书桌后，面前摊着一封投诉信。
 # en: Explain, very carefully
 opt.left.label [da77bf] = 非常小心地解释
-# en: You explain, carefully and truthfully, and she listens without interrupting. At the end she folds the letter. "Pay for the glass," she says. "And apologise properly." It could have gone a great deal worse.
-opt.left.say.1 [5a065a] = 你小心而如实地解释了，她听着，没有打断。最后她把信折了起来。“赔玻璃，”她说，“好好道个歉。”本来可能糟糕得多。
-# en: You explain, and it comes out sounding like an excuse even to you. She hears you out, and fines you for the window, and makes you write the apology twice.
-opt.left.say.2 [6bff15] = 你解释了，可连你自己听着都像借口。她听你说完，罚你赔窗户，还让你把道歉信写了两遍。
+# en: You explain, carefully and truthfully, and she listens without interrupting. At the end she folds the letter. "The glass was old," she says. "Apologise properly." It could have gone a great deal worse.
+opt.left.say.1 [20a974] = 你小心而如实地解释了，她听着，没有打断。最后她把信折了起来。“那块玻璃本来就旧了，”她说，“好好道个歉。”本来可能糟糕得多。
+# en: You explain, and it comes out sounding like an excuse even to you. She hears you out, sends you to sweep up the glass yourself, and makes you write the apology twice.
+opt.left.say.2 [924f66] = 你解释了，可连你自己听着都像借口。她听你说完，让你自己去把碎玻璃扫干净，还让你把道歉信写了两遍。
 # en: Offer to finish her game
 opt.right.label [8d2ae4] = 提出替她下完这盘棋
-# en: "Your tower's in trouble," you say. She looks at you, and then at the board, and says "Is it?" You play it out together. She loses, and laughs, short and delighted. Then she folds the letter. "Pay for the glass," she says. "Come back and lose to me properly, sometime."
-opt.right.say.1 [81aaaa] = “您的塔有麻烦了，”你说。她看看你，又看看棋盘，说：“是吗？”你们一起下完了。她输了，短促而高兴地笑了一声。然后她把信折了起来。“赔玻璃，”她说，“改天再来，好好输给我一回。”
+# en: "Your tower's in trouble," you say. She looks at you, and then at the board, and says "Is it?" You play it out together. She loses, and laughs, short and delighted. Then she folds the letter. "Never mind the glass," she says. "Come back and lose to me properly, sometime."
+opt.right.say.1 [d42827] = “您的塔有麻烦了，”你说。她看看你，又看看棋盘，说：“是吗？”你们一起下完了。她输了，短促而高兴地笑了一声。然后她把信折了起来。“玻璃的事就算了，”她说，“改天再来，好好输给我一回。”
 
 @event know_nessa_off_record
 # en: Asking About a Friend
 title [69bed0] = 打听一位朋友
-# en: Nessa wants to ask you about a friend of yours, who's in trouble with the prefects and who you'd rather nobody wrote about. "I'll print it either way," she says. "I'd rather print it right." Her quill is already moving, taking down everything you say, including your sighs.
-text [03b52e] = 内莎想问你一位朋友的事，对方和级长们闹了麻烦，你宁愿谁也别写这件事。“不管怎样我都会登，”她说，“我宁可登得准确。”她的羽毛笔已经在动了，把你说的一切都记了下来，包括你的叹气。
-# en: A newspaper office, an editor at her desk, a self-writing quill poised over a notebook, a student in the visitor's chair with arms folded.
-scene [5a27a1] = 报社办公室里，一位编辑坐在桌边，一支自动羽毛笔悬在笔记本上方，来访者椅子上的学生抱着胳膊。
-# en: Give her the friendly version
-opt.left.label [de53f7] = 给她一个友善的版本
-# en: You give her the kindest true version you can, and the quill takes it down. The piece runs, fair and short. Your friend is grateful, mostly. The quill added an adjective you didn't say.
-opt.left.say.1 [b304fb] = 你给了她你能给的最友善的真实版本，羽毛笔记了下来。报道登了，公道而简短。你的朋友大体上很感激。羽毛笔多加了一个你没说过的形容词。
+# en: Somebody has been feeding Nessa tips, and you know who: a second-year with a grudge, who means to get a lie about the boathouse into print. You'd like to warn her without ending up in the Ledger yourself. Her quill is already moving, taking down everything you say, including your sighs.
+text [56b275] = 有人一直在给内莎递消息，你知道是谁：一个怀恨在心的二年级生，想把一条关于船屋的谎话登上报。你想提醒她，又不想让自己上《纪事报》。她的羽毛笔已经在动了，把你说的一切都记了下来，包括你的叹气。
+# en: A cluttered newspaper office, an editor at her desk with a self-writing quill poised over a notebook, a student leaning in to speak quietly.
+scene [73e926] = 杂乱的报社办公室里，一位编辑坐在桌边，一支自动羽毛笔悬在笔记本上方，一个学生俯过身来低声说话。
+# en: Warn her anyway
+opt.left.label [6ca69f] = 还是提醒她
+# en: You tell her, and the quill takes it all down. The lie never runs. The next issue thanks "a source close to the boathouse", and by Friday everyone knows who that was, the second-year included.
+opt.left.say.1 [1d445b] = 你告诉了她，羽毛笔全记了下来。那条谎话没登出来。下一期感谢了“一位船屋附近的消息人士”，到星期五，人人都知道那是谁，那个二年级生也知道了。
 # en: "This is off the record."
 opt.right.label [045e5e] = “这是不对外的。”
-# en: "Off the record," you say, and the quill stops mid-word and lies down on the desk. Nessa looks at it, and at you, and something in her face changes. You tell her the whole of it. She never prints a line, and the next week she helps your friend with the prefects instead.
-opt.right.say.1 [d50fc7] = “不对外，”你说，羽毛笔在一个字写到一半时停了下来，躺倒在桌上。内莎看看它，又看看你，脸上有什么变了。你把整件事都告诉了她。她一行字都没登，下个星期还去帮你的朋友应付了级长。
+# en: "Off the record," you say, and the quill stops mid-word and lies down on the desk. Nessa looks at it, and at you, and something in her face changes. You tell her. The second-year's next tip goes straight in the stove, and your name is never in it.
+opt.right.say.1 [9ac930] = “不对外，”你说，羽毛笔在一个字写到一半时停了下来，躺倒在桌上。内莎看看它，又看看你，脸上有什么变了。你告诉了她。那个二年级生的下一条消息直接进了炉子，而你的名字从没出现过。
 
 @event know_nessa_planted
 # en: The Proofs
 title [b816b3] = 校样
-# en: Nessa drops a stack of proofs on the desk in front of you and goes to make tea, very casually. "Errors," she says from the doorway. "Find them before the printers come. There might be one." There are, you can see already, at least four.
-text [1ee516] = 内莎把一摞校样扔在你面前的桌上，若无其事地去泡茶了。“错误，”她在门口说，“印刷工来之前找出来。也许有一个。”你一眼就看出来，至少有四个。
-# en: A cluttered newspaper office at night, galley proofs spread over a desk under a lamp, an editor watching a student from across the room.
-scene [50060f] = 入夜后杂乱的报社办公室，灯下的桌上摊着长条校样，一位编辑从房间那头看着一个学生。
-# en: Fix everything you can find
-opt.left.label [26b85f] = 能找到的都改掉
-# en: You find four errors and fix them, and a fifth that turns out to be the editor's style. Nessa reads your corrections, nods, and points to a sixth, in the headline, that you missed. "Close," she says.
-opt.left.say.1 [99755d] = 你找到了四个错误改掉了，还有第五个，结果是编辑的文风。内莎读了你的修改，点点头，指出了第六个，在标题里，你漏了。“差一点，”她说。
-# en: Find hers first
-opt.right.label [5e8da4] = 先找她埋的那个
-# en: You find the planted one first: a date that couldn't be true, set in the middle of the page like a trap. You circle it, and only then fix the others. Nessa comes back with the tea, sees the circle, and laughs out loud. "Nobody's ever gone for that one first," she says. "You're hired. Unpaid, obviously."
-opt.right.say.1 [db5c10] = 你先找到了她埋的那个：一个不可能对的日期，像陷阱一样摆在版面中间。你把它圈了出来，然后才去改别的。内莎端着茶回来，看见那个圈，大笑出声。“从没人先去找那个，”她说，“你被录用了。没有工钱，当然。”
-# en: You hunt for whichever error she meant, and can't tell which it is, and run out of time before the printers come. Nessa takes the proofs back with a small, satisfied smile. "There's always one," she says, and doesn't say which. The hunt, you have to admit, was fun.
-opt.right.say.2 [3a3090] = 你到处找她说的是哪个错误，分辨不出来，印刷工来之前就没时间了。内莎带着一丝得意的微笑把校样收了回去。“总会有一个的，”她说，却没说是哪个。你得承认，找的过程挺有意思。
+# en: Nessa's newest reporter, a second-year with ink to the elbows, is hunched over a stack of proofs, close to tears. "She says there are errors, and I've to find them before the printers come, and she's watching to see if I can." The printers' clock says twenty minutes. There are at least four errors you can see from here.
+text [8787e7] = 内莎最新招的记者，一个墨水沾到胳膊肘的二年级生，正趴在一摞校样上，快哭了。“她说里面有错，我得在印刷工来之前找出来，她在看我能不能找到。”印刷房的钟显示还剩二十分钟。你从这儿就能看出至少四个错。
+# en: A newspaper office with a nervous young reporter hunched over a stack of proofs, an older student pulling up a chair beside them, the printers' clock on the wall.
+scene [25985a] = 报社办公室里，一个紧张的年轻记者趴在一摞校样上，一个年长些的学生在旁边拉过一把椅子，墙上挂着印刷房的钟。
+# en: Check every line with them
+opt.left.label [e11364] = 陪对方逐行检查
+# en: You go through it together, line by line, through your own reading hour. You find four, and a fifth that's only house style. Nessa reads the corrections, nods, and points out a sixth in the headline. "Close," she says, to both of you.
+opt.left.say.1 [a96b8a] = 你们一起一行一行地看，搭上了你自己读书的那个钟头。你们找到四个，还有第五个，结果只是报社的文风。内莎读了修改，点点头，指出标题里还有第六个。“差一点，”她对你们俩说。
+# en: "Find hers first."
+opt.right.label [467eb4] = “先找她埋的那个。”
+# en: "She plants one," you whisper. "Find that one first." The second-year finds it, a date that couldn't be true, circles it, and only then fixes the rest. Nessa sees the circle and laughs out loud. "Who told you?" she asks the reporter, and looks straight at you.
+opt.right.say.1 [3bdb49] = “她会埋一个，”你小声说，“先找那个。”那个二年级生找到了：一个不可能对的日期，圈了出来，然后才去改别的。内莎看见那个圈，大笑出声。“谁告诉你的？”她问那位记者，眼睛却直直地看着你。
 
 @event know_seraphine_too_loud
 # en: Lost at Lantern Night
@@ -157,20 +155,20 @@ opt.right.say.1 [f3d4ef] = 你写了上一次的事：那场失利的考试，�
 opt.right.say.2 [51ac9d] = 你写道TA会没事的，你相信TA经历过更难的事。TA的回信轻松而含糊。TA考过了，却没多说什么，你隐约觉得自己错过了什么。
 
 @event know_grimsby_nose
-# en: The Night Before the Essay
-title [c699b5] = 交论文的前一晚
-# en: Your essay is due tomorrow, and the one book you need isn't in the library. You reach Grimsby's as he's turning the sign to "closed". He lets you in, holds up the lamp to a wall of a thousand spines, and says, "Well? What does it look like?"
-text [2502ec] = 你的论文明天就要交，而你需要的那本书图书馆里没有。你赶到格林斯比书店时，他正把牌子翻到“打烊”。他让你进来，举着灯照向一整面墙上千本书脊，说：“说吧？它长什么样？”
-# en: A village bookshop at closing time, a student at the counter out of breath, the bookseller holding a lamp up to a wall of shelves.
-scene [b7c026] = 打烊时分的村里书店，一个学生气喘吁吁地站在柜台前，书商把一盏灯举向一整面书架。
-# en: Describe the title and the author
-opt.left.label [b313c2] = 说出书名和作者
-# en: You tell him the title and the author. He brightens and goes off into the shelves, and comes back an hour later with a book about lighthouses, and then, at last, the right one, as the clock in the square strikes ten.
-opt.left.say.1 [051b19] = 你告诉他书名和作者。他眼睛一亮，钻进书架里，一个小时后先拿回来一本关于灯塔的书，然后，终于，拿来了对的那本，这时广场上的钟敲了十下。
-# en: Describe how it smells
-opt.right.label [6981b9] = 描述它的气味
-# en: "Old paper and rain," you say, "and something like cloves." Grimsby's face lights up. He closes his eyes, takes three steps, and pulls it off the shelf without looking. "Nobody ever asks properly," he says, and won't take your money.
-opt.right.say.1 [747160] = “旧纸和雨水，”你说，“还有点像丁香。”格林斯比的脸一下子亮了。他闭上眼睛，走了三步，看都不看就从书架上抽出了那本书。“从没人好好地问过，”他说，不肯收你的钱。
+# en: Grimsby's Cold
+title [f87bb6] = 格林斯比感冒了
+# en: Grimsby has a heavy cold, and it has taken his nose. A customer at the counter wants a book for her husband, title forgotten. "It smelled of rain," she says hopefully, "and cloves." Grimsby looks at the thousand spines, then at you, with streaming eyes.
+text [f126b6] = 格林斯比得了重感冒，鼻子不灵了。柜台前一位顾客想给丈夫买本书，书名忘了。“它闻起来有雨的味道，”她满怀希望地说，“还有丁香。”格林斯比看看那上千本书脊，又泪汪汪地看看你。
+# en: A cramped bookshop, an old bookseller wrapped in a scarf sneezing into a handkerchief, a customer waiting at the counter, a student among towering shelves.
+scene [7bf746] = 狭窄的书店里，一个裹着围巾的老书商对着手帕打喷嚏，柜台前一位顾客在等，一个学生站在高耸的书架间。
+# en: Search the shelves by subject
+opt.left.label [83f77f] = 按主题一排排找
+# en: You go through the shelves with her, subject by subject, for an hour. You find a book about lighthouses, two about cloves, and at last the right one. Grimsby, between sneezes, says "well done" as if it hurt.
+opt.left.say.1 [535597] = 你陪她按主题一排一排地找了一个钟头。找到一本关于灯塔的，两本关于丁香的，最后才找到对的那本。格林斯比在喷嚏的间隙说了声“干得好”，听上去很费劲。
+# en: Lend him your nose
+opt.right.label [85aa8c] = 把你的鼻子借给他
+# en: You close your eyes and walk the shelves, sniffing, while Grimsby croaks "warmer". Old paper, rain, something like cloves: third shelf from the top. The customer is astonished. Grimsby blows his nose and says you're wasted on the academy.
+opt.right.say.1 [81b9d0] = 你闭上眼睛沿着书架走，一路嗅着，格林斯比哑着嗓子说“近了”。旧纸、雨水、有点像丁香：从上往下第三层。顾客惊呆了。格林斯比擤了擤鼻子，说你待在学院真是屈才了。
 
 @event know_pell_counting
 # en: The Good Stock
@@ -205,22 +203,22 @@ opt.right.label [ddb70c] = 先告诉她真实的版本
 opt.right.say.1 [724bdb] = 你跳过楼梯，原原本本地告诉她发生了什么，尽管很丢脸。她点了一下头。“这才对，”她说，伸手拿了一瓶不是药膏的东西。你还没走到门口，肿就消了。
 
 @event know_marisol_spirits
-# en: The Storm Crossing
-title [9188db] = 风暴中渡湖
-# en: You're halfway across the lake in a borrowed boat when the storm comes in, fast and black. The waves are full of shapes like galloping horses: the water spirits, racing the boat and, by the look of it, enjoying themselves. The shore is a long way off.
-text [46bb4f] = 你划着一条借来的船到了湖中央，风暴来了，又快又黑。浪里满是像奔马一样的影子：是水灵，在和小船赛跑，看样子玩得很开心。岸还远着呢。
-# en: A small boat on a choppy grey lake under a storm sky, a student at the oars, shapes like galloping horses moving in the waves around the boat.
-scene [83893a] = 暴风雨的天空下，一条小船在灰色起伏的湖面上，一个学生握着桨，船周围的浪里有奔马一样的影子在跑。
-# en: Row for it
-opt.left.label [6a8d31] = 拼命划
-# en: You row until your hands are raw, and the spirits race you all the way, and lose, just. You land on the shingle soaked to the skin, and lie there laughing at the sky.
-opt.left.say.1 [a658f9] = 你划到手都磨破了，水灵一路和你赛跑，最后以毫厘之差输了。你浑身湿透地爬上卵石滩，躺在那里对着天空大笑。
-# en: The spirits win. They tip the boat over, cheerfully, ten yards from shore, and you swim the rest in the cold. You arrive half drowned, and they gallop off, delighted with themselves.
-opt.left.say.2 [641100] = 水灵赢了。它们兴高采烈地在离岸十码的地方把船掀翻了，你在冷水里游完了剩下的路。你上岸时半死不活，它们得意洋洋地跑开了。
-# en: Ask them nicely not to cheat
-opt.right.label [c54aa7] = 客客气气地请它们别作弊
-# en: You ship the oars, lean over the side and ask the spirits, very politely, not to cheat. There's a pause. Then they gather under the boat like a raft and carry you to shore at a gallop. Marisol, on the steps with her book, laughs so hard she drops it.
-opt.right.say.1 [46a9c5] = 你收起桨，探出船舷，非常礼貌地请水灵们不要作弊。安静了一下。然后它们聚在船底，像一只木筏一样驮着你一路奔向岸边。拿着书坐在台阶上的玛丽索尔笑得书都掉了。
+# en: Skimming
+title [752324] = 打水漂
+# en: A skimming contest has broken out on the lakeshore, and Professor Marisol, passing with her book, has stopped to judge it. Every stone you throw goes down at the second bounce, swatted by a small, smug wave. Everybody else's stones are doing fine.
+text [c17d96] = 湖岸上忽然比起了打水漂，玛丽索尔教授拿着书路过，停下来当了裁判。你扔出的每一块石头都在第二跳时沉下去，被一道得意扬扬的小浪拍了下来。别人的石头都好好的。
+# en: A pebbled lakeshore in fair weather, students skimming stones, a small smug wave rising to meet each one, a woman with a book watching from the steps.
+scene [8ae23c] = 晴天里铺满卵石的湖岸，学生们在打水漂，一道得意的小浪迎着每一块石头涌起，一个拿着书的女人在台阶上看着。
+# en: Throw harder
+opt.left.label [590b13] = 使劲扔
+# en: On your eighth try a stone gets past the wave and skips five times. Your shoulder aches. Marisol scores it "adequate, under protest", and you're not sure whose protest she means.
+opt.left.say.1 [26a76f] = 试到第八次，终于有一块石头越过了那道浪，跳了五下。你的肩膀酸了。玛丽索尔给了个“及格，有异议”，你不确定她说的是谁的异议。
+# en: You throw until your shoulder aches, and every stone goes down at the second bounce. The wave looks pleased with itself. Marisol pats your arm and says the lake has favourites.
+opt.left.say.2 [13ea3a] = 你扔到肩膀都酸了，每一块石头都在第二跳时沉了下去。那道浪看上去很得意。玛丽索尔拍拍你的胳膊，说这片湖也有偏心的时候。
+# en: Ask them nicely
+opt.right.label [a2f34a] = 客客气气地请它们还回来
+# en: You crouch at the water's edge and ask the spirits, very politely, not to cheat. Your next stone skips eleven times and comes back to your hand on a wave. Marisol laughs so hard she has to sit down. "That," she says, "is the whole of tidecalling."
+opt.right.say.1 [0dc9c8] = 你蹲在水边，非常礼貌地请水灵们别作弊。你的下一块石头跳了十一下，又被一道浪送回了你手里。玛丽索尔笑得只好坐下。“这，”她说，“就是潮唤术的全部。”
 
 @event know_vey_smell
 # en: The Feast That Wasn't
@@ -381,8 +379,8 @@ opt.left.label [6096ed] = 这事就你们俩知道
 opt.left.say.1 [674eb1] = 你守住了这件事。下次去梅布尔那里，你寻找那只蓝杯子，左数第三个，找到了，什么也没说。梅布尔看见你在看，笑了笑，给你倒了茶。
 # en: Ask whether he'll tell her
 opt.right.label [884e69] = 问他会不会告诉她
-# en: "Will you tell her?" you ask. Grimsby considers it, then shakes his head. "She knows I know," he says. "That's the whole arrangement." He sells you a book about lighthouses you didn't ask for. You buy it.
-opt.right.say.1 [69fdcb] = “你会告诉她吗？”你问。格林斯比想了想，摇了摇头。“她知道我知道，”他说，“这就是全部的默契。”他卖给你一本你没要的关于灯塔的书。你买了。
+# en: "Will you tell her?" you ask. Grimsby considers it, then shakes his head. "She knows I know," he says. "That's the whole arrangement." He presses a book about lighthouses on you, and won't take a coin for it.
+opt.right.say.1 [814df8] = “你会告诉她吗？”你问。格林斯比想了想，摇了摇头。“她知道我知道，”他说，“这就是全部的默契。”他硬塞给你一本关于灯塔的书，一个铜子都不肯收。
 
 @event sell_a_secret
 # en: What's It Worth?

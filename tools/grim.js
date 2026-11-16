@@ -976,7 +976,7 @@ function canPlayOnBreak(content, e, queued) {
   const w = ((e.when && e.when.src) || '').replace(/\s+/g, ' ');
   if (termOnly(w)) return false;
   // `defer: … or break` holds a pushed card in the queue until term.
-  if (/(^|\bor )\s*break\b/.test(((e.defer && e.defer.src) || '').replace(/\s+/g, ' '))) return false;
+  if (/(^|\bor )\s*break\b(?!\s*and\b)/.test(((e.defer && e.defer.src) || '').replace(/\s+/g, ' '))) return false;
   // A queued card that only term-time appointments deal (nothing queues it by name) never plays on a break.
   if (e.trigger === 'queued' && queued && !(queued[e.id] || []).some((s) => !String(s).startsWith('appointment '))) {
     const appts = Object.values(content.appointments || {}).filter((a) => G.appointmentCards(content, a).includes(e.id));

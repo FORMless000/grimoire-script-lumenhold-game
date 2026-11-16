@@ -27,7 +27,7 @@ tone: warm
 when: met(kael) and rel(kael) >= 12 and month == 4
 art: snow
 scene: A barge landing in the snow at the end of term, students with trunks waiting to leave, two of them standing face to face at the edge of the jetty.
-text: The last barge before the winter break is loading, and Kael is at the landing with his trunk, not quite looking at you. He's been strange all week. Back home, he told you once, saying goodbye is bad luck. The barge horn sounds. He's waiting, as if there were something you might say.
+text: The last barge before the winter break is loading, and Kael is at the landing with his trunk, not quite looking at you. He's been strange all week.{knows(kael.thaw):  Back home, he told you once, saying goodbye is bad luck.|} The barge horn sounds. He's waiting, as if there were something you might say.
 > left: Shake his hand
   rel kael +tiny
   mood -tiny
@@ -68,7 +68,7 @@ title: A Torn Ward
 pool: knowing
 tone: warm
 place: courtyard
-when: met(ilse) and met(kael) and rel(ilse) >= 10
+when: met(ilse) and met(kael) and rel(ilse) >= 10 and season == "winter" and term and around(ilse) and around(kael)
 art: snow
 scene: A courtyard bench in winter, a torn white frost-ward charm lying in a student's hands, a needle and silver thread beside it.
 text: You find a frost-ward charm in the snow by the courtyard fountain, torn half through, the kind Ilse makes. Without it, whoever lost it will feel the cold all winter. The stitching is unusual, a looping Northern pattern. You have a needle and some silver thread.
@@ -80,7 +80,7 @@ text: You find a frost-ward charm in the snow by the courtyard fountain, torn ha
   rel ilse +small
   rel kael +small
   study -tiny
-  say: You mend it slowly, in the looping stitch, the one that was her mother's. When you hand it to Ilse, she turns it over, finds the mend, and goes very quiet. Kael, beside her, touches it once. "Mother's," he says. Neither of them says anything else, for a long time.
+  say: You mend it slowly, by lamplight, instead of your reading, in the looping stitch, the one that was her mother's. When you hand it to Ilse, she turns it over, finds the mend, and goes very quiet. Kael, beside her, touches it once. "Mother's," he says. Neither of them says anything else, for a long time.
 
 @event know_isolde_chess
 title: Called to the Tower
@@ -96,16 +96,16 @@ text: You've been sent to the headmistress over a complaint from a lecturer: a b
   challenge appeal adept:
     win:
       rel isolde +tiny
-      say: You explain, carefully and truthfully, and she listens without interrupting. At the end she folds the letter. "Pay for the glass," she says. "And apologise properly." It could have gone a great deal worse.
+      say: You explain, carefully and truthfully, and she listens without interrupting. At the end she folds the letter. "The glass was old," she says. "Apologise properly." It could have gone a great deal worse.
     lose:
       mood -small
-      gold -small
-      say: You explain, and it comes out sounding like an excuse even to you. She hears you out, and fines you for the window, and makes you write the apology twice.
+      rel isolde -tiny
+      say: You explain, and it comes out sounding like an excuse even to you. She hears you out, sends you to sweep up the glass yourself, and makes you write the apology twice.
 > right: Offer to finish her game
   when: knows(isolde.chess)
   rel isolde +small
   mood +small
-  say: "Your tower's in trouble," you say. She looks at you, and then at the board, and says "Is it?" You play it out together. She loses, and laughs, short and delighted. Then she folds the letter. "Pay for the glass," she says. "Come back and lose to me properly, sometime."
+  say: "Your tower's in trouble," you say. She looks at you, and then at the board, and says "Is it?" You play it out together. She loses, and laughs, short and delighted. Then she folds the letter. "Never mind the glass," she says. "Come back and lose to me properly, sometime."
 
 @event know_nessa_off_record
 title: Asking About a Friend
@@ -114,40 +114,35 @@ tone: tense
 place: ledger_office
 when: met(nessa) and rel(nessa) >= 6
 art: paper
-scene: A newspaper office, an editor at her desk, a self-writing quill poised over a notebook, a student in the visitor's chair with arms folded.
-text: Nessa wants to ask you about a friend of yours, who's in trouble with the prefects and who you'd rather nobody wrote about. "I'll print it either way," she says. "I'd rather print it right." Her quill is already moving, taking down everything you say, including your sighs.
-> left: Give her the friendly version
-  rel nessa -tiny
-  alignment +tiny
-  say: You give her the kindest true version you can, and the quill takes it down. The piece runs, fair and short. Your friend is grateful, mostly. The quill added an adjective you didn't say.
+scene: A cluttered newspaper office, an editor at her desk with a self-writing quill poised over a notebook, a student leaning in to speak quietly.
+text: Somebody has been feeding Nessa tips, and you know who: a second-year with a grudge, who means to get a lie about the boathouse into print. You'd like to warn her without ending up in the Ledger yourself. Her quill is already moving, taking down everything you say, including your sighs.
+> left: Warn her anyway
+  rel nessa +small
+  renown -tiny
+  say: You tell her, and the quill takes it all down. The lie never runs. The next issue thanks "a source close to the boathouse", and by Friday everyone knows who that was, the second-year included.
 > right: "This is off the record."
   when: knows(nessa.off_record)
-  rel nessa +small
-  alignment +small
-  say: "Off the record," you say, and the quill stops mid-word and lies down on the desk. Nessa looks at it, and at you, and something in her face changes. You tell her the whole of it. She never prints a line, and the next week she helps your friend with the prefects instead.
+  rel nessa +medium
+  say: "Off the record," you say, and the quill stops mid-word and lies down on the desk. Nessa looks at it, and at you, and something in her face changes. You tell her. The second-year's next tip goes straight in the stove, and your name is never in it.
 
 @event know_nessa_planted
 title: The Proofs
 pool: knowing
 tone: light
 place: ledger_office
-when: met(nessa) and rel(nessa) >= 4
+when: met(nessa) and rel(nessa) >= 4 and term
 art: paper
-scene: A cluttered newspaper office at night, galley proofs spread over a desk under a lamp, an editor watching a student from across the room.
-text: Nessa drops a stack of proofs on the desk in front of you and goes to make tea, very casually. "Errors," she says from the doorway. "Find them before the printers come. There might be one." There are, you can see already, at least four.
-> left: Fix everything you can find
-  study +small
+scene: A newspaper office with a nervous young reporter hunched over a stack of proofs, an older student pulling up a chair beside them, the printers' clock on the wall.
+text: Nessa's newest reporter, a second-year with ink to the elbows, is hunched over a stack of proofs, close to tears. "She says there are errors, and I've to find them before the printers come, and she's watching to see if I can." The printers' clock says twenty minutes. There are at least four errors you can see from here.
+> left: Check every line with them
+  study -tiny
   rel nessa +tiny
-  say: You find four errors and fix them, and a fifth that turns out to be the editor's style. Nessa reads your corrections, nods, and points to a sixth, in the headline, that you missed. "Close," she says.
-> right: Find hers first
-  if knows(nessa.planted):
-    rel nessa +medium
-    renown +tiny
-    say: You find the planted one first: a date that couldn't be true, set in the middle of the page like a trap. You circle it, and only then fix the others. Nessa comes back with the tea, sees the circle, and laughs out loud. "Nobody's ever gone for that one first," she says. "You're hired. Unpaid, obviously."
-  else:
-    rel nessa -tiny
-    mood +small
-    say: You hunt for whichever error she meant, and can't tell which it is, and run out of time before the printers come. Nessa takes the proofs back with a small, satisfied smile. "There's always one," she says, and doesn't say which. The hunt, you have to admit, was fun.
+  say: You go through it together, line by line, through your own reading hour. You find four, and a fifth that's only house style. Nessa reads the corrections, nods, and points out a sixth in the headline. "Close," she says, to both of you.
+> right: "Find hers first."
+  when: knows(nessa.planted)
+  rel nessa +small
+  mood +small
+  say: "She plants one," you whisper. "Find that one first." The second-year finds it, a date that couldn't be true, circles it, and only then fixes the rest. Nessa sees the circle and laughs out loud. "Who told you?" she asks the reporter, and looks straight at you.
 
 @event know_seraphine_too_loud
 title: Lost at Lantern Night
@@ -208,23 +203,23 @@ text: Tamsin's letter is short again. They're sitting their advanced illusion ex
     say: You write that they'll be fine, and that you're sure they've done harder things. Their reply is cheerful and vague. They passed, but they don't say much else, and you have the feeling you missed something.
 
 @event know_grimsby_nose
-title: The Night Before the Essay
+title: Grimsby's Cold
 pool: knowing
 tone: light
 place: grimsbys_books
-when: met(grimsby) and term
+when: met(grimsby)
 art: book
-scene: A village bookshop at closing time, a student at the counter out of breath, the bookseller holding a lamp up to a wall of shelves.
-text: Your essay is due tomorrow, and the one book you need isn't in the library. You reach Grimsby's as he's turning the sign to "closed". He lets you in, holds up the lamp to a wall of a thousand spines, and says, "Well? What does it look like?"
-> left: Describe the title and the author
-  study -tiny
+scene: A cramped bookshop, an old bookseller wrapped in a scarf sneezing into a handkerchief, a customer waiting at the counter, a student among towering shelves.
+text: Grimsby has a heavy cold, and it has taken his nose. A customer at the counter wants a book for her husband, title forgotten. "It smelled of rain," she says hopefully, "and cloves." Grimsby looks at the thousand spines, then at you, with streaming eyes.
+> left: Search the shelves by subject
   mood -small
-  say: You tell him the title and the author. He brightens and goes off into the shelves, and comes back an hour later with a book about lighthouses, and then, at last, the right one, as the clock in the square strikes ten.
-> right: Describe how it smells
+  rel grimsby +tiny
+  say: You go through the shelves with her, subject by subject, for an hour. You find a book about lighthouses, two about cloves, and at last the right one. Grimsby, between sneezes, says "well done" as if it hurt.
+> right: Lend him your nose
   when: knows(grimsby.nose)
-  study +small
   rel grimsby +small
-  say: "Old paper and rain," you say, "and something like cloves." Grimsby's face lights up. He closes his eyes, takes three steps, and pulls it off the shelf without looking. "Nobody ever asks properly," he says, and won't take your money.
+  mood +small
+  say: You close your eyes and walk the shelves, sniffing, while Grimsby croaks "warmer". Old paper, rain, something like cloves: third shelf from the top. The customer is astonished. Grimsby blows his nose and says you're wasted on the academy.
 
 @event know_pell_counting
 title: The Good Stock
@@ -257,6 +252,7 @@ text: You come into the infirmary with an arm that's swelling fast, from somethi
 > left: Tell her about the stairs
   health +small
   mood -tiny
+  alignment -tiny
   say: You tell her about the stairs. She listens, and waits, and treats it, slowly, with a salve that stings. "Come back in two days," she says. "Bring the truth with you next time. It heals faster."
 > right: Tell her the true version, first
   when: knows(amaranth.truth)
@@ -265,28 +261,29 @@ text: You come into the infirmary with an arm that's swelling fast, from somethi
   say: You skip the stairs and tell her exactly what happened, embarrassing as it is. She nods once. "Better," she says, and reaches for a bottle that isn't a salve. The swelling's gone before you reach the door.
 
 @event know_marisol_spirits
-title: The Storm Crossing
+title: Skimming
 pool: knowing
-tone: tense
+tone: light
 place: lakeshore
-when: met(marisol) and term and season != "winter"
+when: met(marisol) and season != "winter"
 art: wave
-scene: A small boat on a choppy grey lake under a storm sky, a student at the oars, shapes like galloping horses moving in the waves around the boat.
-text: You're halfway across the lake in a borrowed boat when the storm comes in, fast and black. The waves are full of shapes like galloping horses: the water spirits, racing the boat and, by the look of it, enjoying themselves. The shore is a long way off.
-> left: Row for it
+scene: A pebbled lakeshore in fair weather, students skimming stones, a small smug wave rising to meet each one, a woman with a book watching from the steps.
+text: A skimming contest has broken out on the lakeshore, and Professor Marisol, passing with her book, has stopped to judge it. Every stone you throw goes down at the second bounce, swatted by a small, smug wave. Everybody else's stones are doing fine.
+> left: Throw harder
   challenge feat adept-:
     win:
-      health -small
-      say: You row until your hands are raw, and the spirits race you all the way, and lose, just. You land on the shingle soaked to the skin, and lie there laughing at the sky.
+      mood +small
+      rel marisol +tiny
+      say: On your eighth try a stone gets past the wave and skips five times. Your shoulder aches. Marisol scores it "adequate, under protest", and you're not sure whose protest she means.
     lose:
-      health -medium
       mood -small
-      say: The spirits win. They tip the boat over, cheerfully, ten yards from shore, and you swim the rest in the cold. You arrive half drowned, and they gallop off, delighted with themselves.
-> right: Ask them nicely not to cheat
+      health -tiny
+      say: You throw until your shoulder aches, and every stone goes down at the second bounce. The wave looks pleased with itself. Marisol pats your arm and says the lake has favourites.
+> right: Ask them nicely
   when: knows(marisol.spirits)
+  rel marisol +small
   mood +small
-  rel marisol +tiny
-  say: You ship the oars, lean over the side and ask the spirits, very politely, not to cheat. There's a pause. Then they gather under the boat like a raft and carry you to shore at a gallop. Marisol, on the steps with her book, laughs so hard she drops it.
+  say: You crouch at the water's edge and ask the spirits, very politely, not to cheat. Your next stone skips eleven times and comes back to your hand on a wave. Marisol laughs so hard she has to sit down. "That," she says, "is the whole of tidecalling."
 
 @event know_vey_smell
 title: The Feast That Wasn't
@@ -418,7 +415,7 @@ title: Marisol on Vey
 pool: second_hand
 actor: marisol
 tone: tense
-when: met(marisol) and met(vey) and rel(marisol) >= 6 and not knows(vey.mirror)
+when: met(marisol) and met(vey) and rel(marisol) >= 6 and not knows(vey.mirror) and term
 art: mirror
 scene: A rainy lakeshore, a professor reading under a dry patch of air on the steps, talking quietly to a student beside her.
 text: Marisol closes her book of poems. "Has Vey shown you the mirror trick yet?" she asks. "She won't, in public. Once, years ago, her reflection didn't come back for a week. Walked around the castle as her. Taught two of her classes." She looks at the rain. "Vey still won't talk about it. I think she was frightened. I think she still is."
@@ -490,7 +487,7 @@ text: Grimsby nods across the lane at Mabel's. "Those cups behind her counter," 
   learn mabel.cups
   rel grimsby +tiny
   mood -tiny
-  say: "Will you tell her?" you ask. Grimsby considers it, then shakes his head. "She knows I know," he says. "That's the whole arrangement." He sells you a book about lighthouses you didn't ask for. You buy it.
+  say: "Will you tell her?" you ask. Grimsby considers it, then shakes his head. "She knows I know," he says. "That's the whole arrangement." He presses a book about lighthouses on you, and won't take a coin for it.
 
 # ---------------- a secret you could sell ----------------
 

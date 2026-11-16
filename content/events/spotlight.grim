@@ -352,18 +352,20 @@ text: In the middle of a lecture, the lecturer says, "As {player} showed us last
 title: Three Invitations, One Evening
 pool: spotlight_known
 tone: light
+cast:
+  f: any where classmate_here(f) and rel(f) >= 20
 art: letter
 scene: A student at a desk with three different invitation cards fanned out in one hand, a calendar with one evening circled three times.
-text: Three invitations for the same evening: a supper at the Gilded Newt with people who matter, a stargazing party on the observatory roof, and your oldest friend here, who just wants to play cards in the common room like you used to.
+text: Three invitations for the same evening: a supper at the Gilded Newt with people who matter, a stargazing party on the observatory roof, and {f}, who just wants to play cards in the common room.
 > left: Go where you'll be seen
   renown +small
   gold -tiny
   mood -tiny
   say: You look in on the stargazers for an hour, then go on to the Newt, where supper is loud and you pay your share of the bill. You make three useful acquaintances and laugh a great deal. Walking back, you think of the card game, and wonder who won.
-> right: Play cards with your friend
+> right: Play cards with {f}
   mood +small
   renown -tiny
-  say: You send two polite notes and go down to the common room. Your friend looks up, surprised, and deals you in without a word. You lose every hand. It's the best evening of the month.
+  say: You send two polite notes and go down to the common room. {f} looks up, surprised, and deals you in without a word. You lose every hand. It's the best evening of the month.
 
 @event spot_family_tour
 title: Show Them Round
