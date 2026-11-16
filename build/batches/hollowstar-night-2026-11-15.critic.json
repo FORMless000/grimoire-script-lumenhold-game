@@ -1,0 +1,116 @@
+{
+  "batch": "hollowstar-night-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected for contradictory solo and companion narration, an ungated setup callback, and aftermath prose that collapses the elapsed month. The alternate endings remain distinct.",
+  "scope": {
+    "reviewedEventIds": [
+      "hs_the_night_above",
+      "hs_night_company",
+      "hs_night_cult",
+      "hs_night_ilse",
+      "hs_night_shadow",
+      "hs_aftermath_bargain",
+      "hs_aftermath_quiet",
+      "hs_aftermath_freed",
+      "hs_aftermath_fled"
+    ],
+    "files": [
+      "content/events/hollowstar/night.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "hs_the_night_above": "78cada3ab893cbfb19c3c4d360a5344c85304c9551727467255af560cabf62e5",
+      "hs_night_company": "90d3042d45088e91fdf894f6e027334ad51ae4f34a2eb99d38b17059ed13a2eb",
+      "hs_night_cult": "367dfcbeccd03ca6ed596fc8a3a389b5992a66db5649e251ef5cd35fe4aa79cd",
+      "hs_night_ilse": "d1b9eb03c42da0131083ed2df9a0f5f615bbe0aaefa88fd83fc37cacfc6c4ff7",
+      "hs_night_shadow": "6f752d680b04f3d07f43ee211196080f5bc13bf54591d8b2f2d3c0efd06715e0",
+      "hs_aftermath_bargain": "486960fdfdcd61eae33e6b1ab5298e977a36cb5599fbae2264f6f07fdd8767c2",
+      "hs_aftermath_quiet": "4e51b3f14b1861b32ced6a80e641542f20f397c56123f5bf0d77f32201158f6c",
+      "hs_aftermath_freed": "2b86f8fe5fd528f7a84443560ad07ed94bd9bde0e05c6ab63291ebcddd5330d5",
+      "hs_aftermath_fled": "54e63474f9c602a5f96b0232a6a05b328878111fd014a8309673cae5e9b33b4e"
+    }
+  },
+  "issues": [
+    {
+      "event": "hs_night_company",
+      "priority": "P2",
+      "category": "solo branch talks to absent companions",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 37,
+      "problem": "The unconditional alone option is the only enabled choice when nobody follows. It still has the player tell people to guard the towers and close the hatch on their protests. The fixture renders both contradictory statements.",
+      "fix": "Use the protest outcome only if a companion was present, with a solo narration for the unaccompanied descent."
+    },
+    {
+      "event": "hs_night_cult",
+      "priority": "P2",
+      "category": "missed Maud confrontation",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 78,
+      "problem": "The approach includes paired dialogue for Kael, Ilse and Isolde. With Maud selected, it falls to the solo line and never lets the woman revisiting the door speak to the cult leader. The early branch also still counts twelve chanting figures when the fight hint says half the circle is absent.",
+      "fix": "Give Maud a line that ties this confrontation to her history with the door. Match the early count or visible incomplete ritual to exactly what the early branch changes."
+    },
+    {
+      "event": "hs_night_shadow",
+      "priority": "P2",
+      "category": "callback assumes an unseen warning",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 210,
+      "problem": "The combat win always says the shadow is a beat late ‘the way it was on the stairs’. The card explicitly permits a player who never saw hs_shadow_late. The win also says it uses the player's spell order without conditioning that description on what the fight used.",
+      "fix": "Gate the stairs callback on the earlier sighting. On an unseen route make the player notice and exploit the delayed motion for the first time."
+    },
+    {
+      "event": "hs_aftermath_bargain",
+      "priority": "P2",
+      "category": "prior spell and deferred reward",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 260,
+      "problem": "The bargain always describes Eclipse as a spell the player never studied even if the Grey errand or Northern visit already taught it. The actual rewards are applied at the door, while this announcement queues for the next month.",
+      "fix": "Condition the description on prior Eclipse knowledge and announce the reward in the bargain itself or deliver the aftermath immediately. Use the next-month card for continuing consequences."
+    },
+    {
+      "event": "hs_aftermath_quiet",
+      "priority": "P2",
+      "category": "aftereffects report the previous month as yesterday",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 286,
+      "problem": "All four scoped aftermaths queue in 1 month from hs_beneath. The quiet route says nobody knows where you were ‘last night’, the freed route opens on the midnight-to-dawn blackout, and fleeing frames the Wardens' first response as immediate. The early descent can shift seasons within these replayed aftermaths.",
+      "fix": "Deliver next-morning scenes immediately after the door, or frame each queued card as later reflection and condition seasonal language on the current season.",
+      "affectedEvents": [
+        "hs_aftermath_bargain",
+        "hs_aftermath_quiet",
+        "hs_aftermath_freed",
+        "hs_aftermath_fled"
+      ]
+    },
+    {
+      "event": "hs_aftermath_freed",
+      "priority": "P2",
+      "category": "single injury has no aftermath cost",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 316,
+      "problem": "A single night_hurt is settled as a Health loss by the other successful seal aftermaths. This route charges Health only for two or more despite the stated Night contract to settle earlier injuries at the conclusion.",
+      "fix": "Handle one injury as on the quiet seal route, or explicitly show the Star's liberation healing that injury if the exemption is intentional."
+    },
+    {
+      "event": "hs_aftermath_fled",
+      "priority": "P2",
+      "category": "warden role promised without state",
+      "file": "content/events/hollowstar/night.grim",
+      "line": 339,
+      "problem": "The apology grants a silver ring and a shift rota in the story, yet only changes Mood and Isolde's relationship. The worldbook makes the ring a sign of trusted Warden recruitment.",
+      "fix": "Record induction or an explicitly temporary assignment if she offers one, or replace the ring and rota with a smaller sign of forgiveness."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-night-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-night.json",
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-validation.json",
+    "docs/plots/hollowstar-v2.md",
+    "build/batches/hollowstar_v2.notes.md"
+  ],
+  "completedAt": "2026-11-15T21:02:47.308Z"
+}

@@ -1,0 +1,152 @@
+{
+  "batch": "between-hearts-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagents gathered transitions and retrieval evidence only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on duplicated supper/rumour scenes, unguarded prior-history/year assertions, missing moral weight, unshown academic costs and incompatible generic casting. All 16 scoped cards, variants and similarity comparisons are complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "between_circling",
+      "between_find_out",
+      "between_setup_supper",
+      "between_match_made",
+      "between_match_soured",
+      "between_matchmaker",
+      "between_likes_your_suitor",
+      "between_partner_meets_ex",
+      "between_admirer_gift",
+      "between_suitors_compare",
+      "between_secret_about",
+      "between_did_they_tell",
+      "between_rumour_from_you",
+      "between_overheard",
+      "between_betting_book",
+      "between_couple_bubble"
+    ],
+    "files": [
+      "content/events/between_hearts.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "between_circling": "fdc4ae8b046aa151cc25377a6a01aa6793ba7fe7c0473042007c8469e9a3a70f",
+      "between_find_out": "c2789db2de2fe65cf46a4e7136d55bda1041b0315114e2e938048875555d4170",
+      "between_setup_supper": "0b1f0d5a9fe1575039ace0f761bfaa4559dd068f32948dc99099a8440c3fdc32",
+      "between_match_made": "423e742fb72b0bb739c23b11dd4997bfb60b3913c0aca25697377e314f1cb738",
+      "between_match_soured": "e3ec82a625050d991d693ec2b1c04266c4cbbe723634206616dbca940b959bc1",
+      "between_matchmaker": "18b7897eb223d0d5f13a5e80fae386b87bbc53dec99fd54a2c83473a742524a9",
+      "between_likes_your_suitor": "1b1bbd8a0b63f3b2074b2fef1919c8b848519e3b75f5cd706d9c8d117464bc00",
+      "between_partner_meets_ex": "a78478e915acf0d6f5c8ddc304259fb1162b6b871319e5f4fa460cf934b712bf",
+      "between_admirer_gift": "91bc2e64fbb9e8cd103555bc7079fb55b56f7e1ab75521b89ff8fbfc1acb4ad8",
+      "between_suitors_compare": "9d305d6817dc34e5fca612d783bc4af61e322b301d78defd02c09f654c51fb27",
+      "between_secret_about": "9c4693d6489e633fee68d0a84894f3ddeb1b306a5c60bca2772569f8ad4173a3",
+      "between_did_they_tell": "59f595a073cac80496eca674931390d24f9839922b35808e5903d7a05da36036",
+      "between_rumour_from_you": "c933935bd2d5e482f868be795c73c37ce1a96091c2c28b1090ef2c6f5912ca35",
+      "between_overheard": "5f1c70ce384f02c5e36266da81bf9786f56eb8387eaa9885676a06789a07aafb",
+      "between_betting_book": "98c2d72449552ef3ff065ee02ee9c7fab0f02de58aae77a07f43bce246f51c24",
+      "between_couple_bubble": "15bb0f417a995b8cbaa424d56219743b3afb58107ab985244459b942a028e5cc"
+    }
+  },
+  "issues": [
+    {
+      "event": "between_match_made",
+      "priority": "P2",
+      "category": "alignment",
+      "file": "content/events/between_hearts.grim",
+      "line": 142,
+      "problem": "The grateful friend explicitly asks the player not to tell anyone. Tell just a few people breaks that confidence for Renown, while costing no Alignment. This is using a private relationship for the player's social gain.",
+      "fix": "Give the deliberate breach of confidence its appropriate moral cost, or obtain consent and rewrite the payoff as an authorized announcement."
+    },
+    {
+      "event": "between_matchmaker",
+      "priority": "P2",
+      "category": "year continuity",
+      "file": "content/events/between_hearts.grim",
+      "line": 181,
+      "problem": "The first random opening says the classmate wants an introduction to someone in the year below. All eligible classmates are the player's own starting cohort, but this card can unlock after a match succeeds during year 1 and has no later-year gate. There is no lower academy year then.",
+      "fix": "Make that variant depend on year > 1, use a first-year-compatible description, or restrict the card to a later year."
+    },
+    {
+      "event": "between_matchmaker",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/between_hearts.grim",
+      "line": 181,
+      "problem": "Taking the case always deducts study -tiny, but its three outcomes describe arranging a meeting, replying to a note, or discussing a list without naming the player's missed academic work. There is also no term gate, so an academic cost may affect no enrolled course on a castle break.",
+      "fix": "Show the revision or deadline sacrificed in every relevant variant and keep that cost meaningful when dealt, or use a cost the matchmaking actually shows."
+    },
+    {
+      "event": "between_partner_meets_ex",
+      "priority": "P2",
+      "category": "unsupported history",
+      "file": "content/events/between_hearts.grim",
+      "line": 227,
+      "problem": "The fixed text asserts the partner and ex have never properly met, but the cast filters only check their relationships to the player and current availability. Corvin and Nessa, for example, already have positive mutual affinity, and prior between cards can explicitly have shown any eligible pair socializing together. The card can erase that established acquaintance.",
+      "fix": "Describe the awkward current partner/ex situation without asserting they are strangers, or condition introductions on evidence of their existing relationship and use an already-acquainted variant otherwise."
+    },
+    {
+      "event": "between_secret_about",
+      "priority": "P2",
+      "category": "cost contradicts described work",
+      "file": "content/events/between_hearts.grim",
+      "line": 311,
+      "problem": "Quietly helping the classmate deducts study -small, while the outcome shows the player revising with their own notes and says the practical gets easier for both of you. It gives no missed lecture, neglected revision or other academic sacrifice to explain losing preparation.",
+      "fix": "Show the player's own academic work actually being neglected while helping, or replace/drop the preparation loss to match the beneficial revision described."
+    },
+    {
+      "event": "between_rumour_from_you",
+      "priority": "P2",
+      "category": "alignment",
+      "file": "content/events/between_hearts.grim",
+      "line": 360,
+      "problem": "Let it run knowingly leaves a false romance story about two friends circulating for the player's amusement, despite their discomfort and loss of trust, but has no Hollow movement. In the same file, passing gossip and exploiting the betting book are treated as moral choices.",
+      "fix": "Give knowingly sustaining the harmful false rumour the appropriate moral cost, or change the action and consequences so it is not the player exploiting that rumour."
+    },
+    {
+      "event": "between_overheard",
+      "priority": "P2",
+      "category": "cast / character continuity",
+      "file": "content/events/between_hearts.grim",
+      "line": 385,
+      "problem": "The malicious speaker role accepts any present classmate. Tobias can therefore lead a crowd in knowingly false personal attacks about Nessa's family, spells or hair despite his kind, gentle, loyal characterization; neutral pair affinity suffices. The source provides no character-specific motivation or alternate voice for this behaviour.",
+      "fix": "Constrain the malicious role to suitable characters or an established serious feud, or write speaker-specific variants that fit the kind/protective characters rather than giving everyone the same deliberate cruelty."
+    },
+    {
+      "event": "between_setup_supper",
+      "priority": "P2",
+      "category": "duplicate premise",
+      "file": "content/events/between_hearts.grim",
+      "line": 109,
+      "problem": "This repeats date_meet_friends' player-arranged awkward refectory meeting: two socially important people are painfully polite over supper, the player can steer them toward common ground or let them find their own way, and the successful outcome is shared laughter that leaves the mediator outside it. The gates intend matchmaking, but the page's obstacle and choice remain that same dinner mediation scene.",
+      "fix": "Give the matchmaking supper a different specific conflict and decision, or consolidate it with the existing awkward-introduction encounter rather than repeating that setup.",
+      "evidence": [
+        "content/events/pools/dating.grim:76",
+        "content/events/between_hearts.grim:109"
+      ]
+    },
+    {
+      "event": "between_overheard",
+      "priority": "P2",
+      "category": "duplicate premise",
+      "file": "content/events/between_hearts.grim",
+      "line": 385,
+      "problem": "This repeats soc_rumour's false-gossip encounter: classmates laugh over unkind, untrue talk about a friend, and the player either challenges the rumour at social cost or keeps walking and feels guilty. Assigning a name to the speaker adds relationship bookkeeping but does not change that immediate conflict or decision.",
+      "fix": "Give overhearing a known speaker a genuinely different decision or consequence, or add that named-speaker variant to the existing rumour encounter instead of keeping two versions.",
+      "evidence": [
+        "content/events/social.grim:288",
+        "content/events/between_hearts.grim:385"
+      ]
+    }
+  ],
+  "limitations": [
+    "between_love_note was read as context but is outside the frozen queue and receives no new verdict here.",
+    "No source fixes or gameplay-frequency claims."
+  ],
+  "completedAt": "2026-11-15T18:47:28.142Z",
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/between-hearts-duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/between-hearts-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/brief-between-cast.md"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "batch": "countryside-public-places-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The village clues and paid work lead into the valley story without revealing its full explanation. Some ordinary scenes ignore the bargain's later outcome, and the skipping scene uses children in a project whose live cast is adults only.",
+  "scope": {
+    "reviewedEventIds": [
+      "market_inn_welcome",
+      "market_harvest_board",
+      "market_day_stalls",
+      "market_inn_hands",
+      "mill_skipping_rhyme",
+      "mill_dry_wheel",
+      "mill_miller_sacks",
+      "fields_scarecrow_coats",
+      "fields_gleaners",
+      "fields_harvest_day",
+      "ridge_count_aloud",
+      "ridge_night_sky"
+    ],
+    "files": [
+      "content/events/maps/countryside_places.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "market_inn_welcome": "92d00f72799a6739e0da8efafaa60a8df71ba0c2a7ed0753c26187231f1bb82a",
+      "market_harvest_board": "da52aef33636ca1775a403eed9f290f15e69a2dc9d6a08ff561f14dbc64b7771",
+      "market_day_stalls": "a280a88901c1850b9bf840ffe0d6349a4b03874787e50f7679ac59c851a1e2a0",
+      "market_inn_hands": "660c9581403a8b008749914c0b95a426a0cd4f1a885b6a98387c9b8f8adab16f",
+      "mill_skipping_rhyme": "b98622eb18f4260c58b449a2f6ec6b7ec7d33b6ec34873f6fdbf32a77875df09",
+      "mill_dry_wheel": "0a95a532747655b341398bb02655c422f698c7b30ff5eed286d8401dfa32cced",
+      "mill_miller_sacks": "1b14f585ff92948bbf180746f57c3dbd90c7863a5dfed9c8fd54c009f4690e89",
+      "fields_scarecrow_coats": "7d2ea642c18134b204d582905c9b8606406d1dede6172ed77ec3ed647476c4e4",
+      "fields_gleaners": "6d79e1ac78e0a46d44232dd18ffe617a497aff06c6c3dfabef59a1783bf6e317",
+      "fields_harvest_day": "002615c61ec85d64e27b66f9edd50cafe348500d8820085355adf0e15f04251b",
+      "ridge_count_aloud": "01925daccb05c09d240d684906e4e4ec08d0b1ce4426975fd7cdc11e7dda9582",
+      "ridge_night_sky": "7a1c8bb49e742f2c895ae3c2e9886b154c1ec48ca98117fc4ad67691d4d8ed14"
+    }
+  },
+  "issues": [
+    {
+      "event": "market_harvest_board",
+      "priority": "P2",
+      "category": "aftermath continuity",
+      "file": "content/events/maps/countryside_places.grim",
+      "line": 35,
+      "problem": "Even after the bargain is broken and the later thin-harvest scene has put a cross on the board, the ordinary board still says every year is good. The inn still beams and gives the player free food despite its later cold reception. The dry wheel also keeps its unexplained turning with no changed outcome.",
+      "fix": "Gate the old welcome and prosperity scenes on the bargain remaining intact, or add aftermath variants for the board, inn and mill.",
+      "affectedEvents": [
+        "market_inn_welcome",
+        "mill_dry_wheel"
+      ]
+    },
+    {
+      "event": "mill_skipping_rhyme",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/countryside_places.grim",
+      "line": 97,
+      "problem": "The whole encounter is a group of children skipping, including a girl teaching the player and a mother calling them in. The project's live-cast checklist requires adults.",
+      "fix": "Recast the counting custom with adult villagers and adapt the rhyme's performance and responses to that group."
+    },
+    {
+      "event": "market_harvest_board",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/countryside_places.grim",
+      "line": 35,
+      "problem": "The third response puts a boy on the green and has his mother call him indoors mid-answer. It reads as a child, against the adult-cast requirement.",
+      "fix": "Use an adult respondent and a different interruption, such as being called back to a stall."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/countryside-public-places-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-countryside_places.json",
+    "docs/reviews/critic-pass-2026-11-15/country-places-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-country-places.cjs",
+    "build/batches/K1K2-countryside.notes.md",
+    "content/world/lore/soft/places.grim",
+    "content/events/maps/good_year.grim"
+  ],
+  "completedAt": "2026-11-16T00:38:55.853Z"
+}

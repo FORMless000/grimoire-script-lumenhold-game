@@ -1,0 +1,139 @@
+{
+  "batch": "contraband-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on bottle management gates, a purchase that charges without adding a bottle, and a repeated Grisk encounter. The two elixirs' withdrawal scenes have distinguishable pressures.",
+  "scope": {
+    "reviewedEventIds": [
+      "elixir_trunk",
+      "elixir_offered_bright",
+      "elixir_borrowed_bag",
+      "elixir_first_year",
+      "elixir_finals_spare",
+      "elixir_finals_buyers",
+      "grisk_elixir_offer",
+      "grisk_elixir_favour",
+      "contraband_caught",
+      "contraband_friend_notices",
+      "wd_bright_grey",
+      "wd_bright_shakes",
+      "wd_bright_grisk",
+      "wd_ink_blank",
+      "wd_ink_empty_well",
+      "wd_ink_dreams",
+      "amaranth_quit"
+    ],
+    "files": [
+      "content/events/contraband.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "elixir_trunk": "bde5ce0535798f23c544c4ad81424c8372a9eabe8cc4b33ea99a1b9e67eb0ee7",
+      "elixir_offered_bright": "f08512a468fd06b85496bbde6e38e9e8ad79caa701005b803863c8c5da6a73d9",
+      "elixir_borrowed_bag": "858bcc5f36b1f487f810c93d163fecfce6aee221e40eec3f3041f48d54aac9af",
+      "elixir_first_year": "d661e65a63a521b28cfc310fd1ec454245cc8887f16e783cd1fb4a36b2e73b0a",
+      "elixir_finals_spare": "9499ff89bf3b8f898d778d5fb1d15540bd87250d3202a3a5597280266214322b",
+      "elixir_finals_buyers": "14776b1e7f85609ae0391525a474372fc6966b3176a4d18e48f63976ff021381",
+      "grisk_elixir_offer": "04cb0d058218cbe03046274ca8cb9e3268edd92be7c06ec9f69238ea2a8c4d2c",
+      "grisk_elixir_favour": "76e2c0c6a67402424cef2c44cd288720000f9ff373430ac04a4d1aea086c90eb",
+      "contraband_caught": "5a39fea4f6d4601fddc4d1760a14f4e29465d2badc44e0509555c2a3a6aef7cd",
+      "contraband_friend_notices": "646d74c9ecbb2eb8367ebe42bb35437932c58772d1bbfcd1dcf91afbef185a82",
+      "wd_bright_grey": "c5008440675820aa01dfa37dac9cc962128f03ce9893e7ce07eb20c475d3fdef",
+      "wd_bright_shakes": "c1e79154b8ed7c1b8c7d3164ece99c4c0518c410fcc6d44a25c217b6246dd6f8",
+      "wd_bright_grisk": "43f33dd353efbc4c2a7ff5a88bdedf51f212a243d282efc949e0d325751c83bd",
+      "wd_ink_blank": "8be0efe67cdc32b24fc62a56d0f19aeb47689eed8b8cba50957b33cf7a46630a",
+      "wd_ink_empty_well": "dbb37a66f8cea4c8301bb3c4bfc08e0e2bf99a2aabdb7a937b0a8389ddf31f0d",
+      "wd_ink_dreams": "900e3ca4224045d3974dcb9621307b9dfdb76525ec4cc5a44501db85339067a3",
+      "amaranth_quit": "2999c039d7215d20653f13351c81c8b80121813c9d82491f0772ff25255a7fec"
+    }
+  },
+  "issues": [
+    {
+      "event": "elixir_trunk",
+      "priority": "P2",
+      "category": "disposal inaccessible during an active dose",
+      "file": "content/events/contraband.grim",
+      "line": 12,
+      "problem": "Pouring only requires holding the bottle, but the event itself requires a bottle whose same-type effect is inactive. A player under Brightwater who holds only a spare Brightwater bottle cannot get this card to pour it away. The same holds for Ink.",
+      "fix": "Let the trunk appear whenever a bottle is held and keep the active-effect restriction on drinking, or add a disposal route that works while dosed."
+    },
+    {
+      "event": "elixir_borrowed_bag",
+      "priority": "P2",
+      "category": "receipt at the one-bottle cap",
+      "file": "content/events/contraband.grim",
+      "line": 79,
+      "problem": "The borrowed-bag theft, first-year purchase and Grisk sample can resolve with an existing bottle of the same type, but the state stores one bottle at most. The first-year fixture charges the player despite leaving the inventory at one bottle. The other two narrate taking a second bottle with no such object retained.",
+      "fix": "Gate acquisition options on not holding that bottle, or explicitly handle a replacement, refusal, or disposal when already carrying one. Keep the help and decline choices available.",
+      "affectedEvents": [
+        "elixir_borrowed_bag",
+        "elixir_first_year",
+        "grisk_elixir_offer"
+      ]
+    },
+    {
+      "event": "elixir_finals_spare",
+      "priority": "P2",
+      "category": "fifth-year outside the academy calendar",
+      "file": "content/events/contraband.grim",
+      "line": 126,
+      "problem": "The third opening says they bought the bottles from a fifth-year at the Newt. The academy's game and design have years one through four, with graduation after the fourth. No exceptional fifth year is identified here.",
+      "fix": "Use a fourth-year or an alumnus if the seller should no longer be a current student."
+    },
+    {
+      "event": "grisk_elixir_favour",
+      "priority": "P2",
+      "category": "third favor uses a different action from its check",
+      "file": "content/events/contraband.grim",
+      "line": 201,
+      "problem": "The first two variants involve concealing an activity or object, while the third is putting in a kind word with a prefect. On success it ‘lands’ without a deception being shown. All three test Deceive at the same difficulty.",
+      "fix": "Give the third favor an actual cover story the player must maintain, or match its check to persuading the prefect."
+    },
+    {
+      "event": "contraband_caught",
+      "priority": "P2",
+      "category": "singular outcome confiscates both bottles",
+      "file": "content/events/contraband.grim",
+      "line": 257,
+      "problem": "When both elixirs are held the opening says there is a bottle. Either confiscation path narrates handing over or discovering one bottle, while both inventory states are removed and both vault recovery flags are set.",
+      "fix": "Name both bottles in the opening and both confiscation lines when both are held, or only remove and record what the prefects actually found."
+    },
+    {
+      "event": "wd_bright_grisk",
+      "priority": "P2",
+      "category": "duplicate bedside premise",
+      "file": "content/events/contraband.grim",
+      "line": 393,
+      "problem": "Grisk Is Not Pleased already begins ‘Grisk is sitting on your bed. You didn't leave the window open.’ Both require the player to take his costly deal or send him away, and he leaves by the window. The player's craving changes his leverage but the scene repeats the same entrance, choice and exit.",
+      "fix": "Use a different point of contact and show how he detects and exploits the craving, or combine the conditional offer with the existing bedside scene."
+    },
+    {
+      "event": "wd_ink_blank",
+      "priority": "P2",
+      "category": "unsupported elapsed time",
+      "file": "content/events/contraband.grim",
+      "line": 416,
+      "problem": "‘Two months ago you could have recited them back’ is fixed, but the four-month craving can deal more than two months after the original dose. The current state supplies no exact date to the text.",
+      "fix": "Refer to the period when the elixir was active, or vary the line with elapsed time since the dose."
+    },
+    {
+      "event": "amaranth_quit",
+      "priority": "P2",
+      "category": "unshown physical cost",
+      "file": "content/events/contraband.grim",
+      "line": 492,
+      "problem": "The cure deducts Health and Mood. Its outcome describes bitter mornings and surrendering spare bottles but does not describe physical discomfort or weakness caused by the cure.",
+      "fix": "Describe what the regimen costs the player's body or remove the Health loss."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/contraband-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-contraband.json",
+    "build/batches/T2-elixirs.notes.md",
+    "docs/reviews/critic-pass-2026-11-15/contraband-validation.json"
+  ],
+  "completedAt": "2026-11-15T21:12:10.770Z"
+}

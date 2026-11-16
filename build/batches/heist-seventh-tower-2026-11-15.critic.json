@@ -1,0 +1,101 @@
+{
+  "batch": "heist-seventh-tower-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The climb builds out the abandoned classrooms without stepping into the main plot's room. Its repeat logic lets the player retake unique objects, and several routes omit or contradict their haul.",
+  "scope": {
+    "reviewedEventIds": [
+      "heist_tower_enter",
+      "heist_tower_unmapped",
+      "tw_dead_end",
+      "tw1_one_shoulder",
+      "tw1_someone_else",
+      "tw1_spyhole",
+      "tw2_exam_cupboard",
+      "tw2_telling_floor",
+      "tw2_class_register",
+      "tw3_no_wind",
+      "tw3_orrery",
+      "tw3_portrait_eyes",
+      "tw_masters_study"
+    ],
+    "files": [
+      "content/events/heists/tower.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "heist_tower_enter": "eb53672b20713d577e6a6de9419a03ae1cbc764846eccb913937aa33dc0b6a83",
+      "heist_tower_unmapped": "2ba4995872d1462e0fa75290c6dbabd3b854e88bef6b8fe283e9bb36c7492fdc",
+      "tw_dead_end": "2e8b3ffbd9b489729a5244177baaa273f90aace42101c9c9adabddf8ca79db61",
+      "tw1_one_shoulder": "0356a96bc92bb0a5151d68d263b083346ef6743a380050d0c50a52ec7765f32a",
+      "tw1_someone_else": "a68d1f85c76554da5201367d452895c6259b7727d59ae0898109d2a7cdc16f0f",
+      "tw1_spyhole": "534c0ad2c22687a4bf23cceed2c1a6210028051b4a34d9e76c5fcd558d0aeed0",
+      "tw2_exam_cupboard": "2de43ca4c99b970ab91baf71be9cc6bc87ad85a6f583fe81a31dde48e82caee9",
+      "tw2_telling_floor": "bb7fc1a78b92656eeee2b4fdcaa830ba28215f54ff3052572c23925e2a6960c5",
+      "tw2_class_register": "487858a7914d8b0582fdb54ddec9ebd0c95b9b10fb25cb4c7c74c8452226ffdf",
+      "tw3_no_wind": "5290f0ceff1140ee1d1dd7860c1f110ccce3ec13fc44f0827e65ef0cfb5d3fbf",
+      "tw3_orrery": "be250e1f154670dbc7f5534f651b329ecf0c51511ceca27ae8b54442f5fb5c05",
+      "tw3_portrait_eyes": "454bcf43b4dbc927f669461f9d0b6efbd0521741e562708c721a8ed8c8513367",
+      "tw_masters_study": "5b99594acb98450b1c0d674646da0d875e4ba1b97e9f32ee91c4c92e47b27bcb"
+    }
+  },
+  "issues": [
+    {
+      "event": "tw_dead_end",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/heists/tower.grim",
+      "line": 78,
+      "problem": "At the study end, the failed search deducts Health when desks shift and the player simply leaves them alone.",
+      "fix": "Show why the shifting desks hurt or move this loss to a variant with a bodily consequence."
+    },
+    {
+      "event": "tw2_exam_cupboard",
+      "priority": "P2",
+      "category": "state continuity",
+      "file": "content/events/heists/tower.grim",
+      "line": 189,
+      "problem": "The leave option sometimes says you go downstairs with nothing in your hands even if you gathered loot on the earlier climb and take it to the exit.",
+      "fix": "Phrase that exit as leaving the papers behind, or condition the empty-hands line on the loot carried."
+    },
+    {
+      "event": "tw2_class_register",
+      "priority": "P2",
+      "category": "repeat continuity",
+      "file": "content/events/heists/tower.grim",
+      "line": 259,
+      "problem": "The player can steal the unique last register and return next month to find and steal that same register still open to its last day. The repeat opening never checks that it was taken.",
+      "fix": "Record a successful theft and substitute a different object on later trips or make the register encounter unavailable while it is gone."
+    },
+    {
+      "event": "tw3_orrery",
+      "priority": "P2",
+      "category": "repeat continuity",
+      "file": "content/events/heists/tower.grim",
+      "line": 314,
+      "problem": "After the first theft, the text says the orrery is missing the only pearl, but the identical button can steal it again for another two loot. The earlier theft flag currently governs only the opening.",
+      "fix": "Lock out taking the pearl once taken, or add a different moving part with a grounded new reward on later visits."
+    },
+    {
+      "event": "tw_masters_study",
+      "priority": "P2",
+      "category": "reward in the fiction",
+      "file": "content/events/heists/tower.grim",
+      "line": 372,
+      "problem": "Learning Extraction grants two loot, but that branch says the player reads and closes the notebook and takes nothing. The already-knows branch describes the inkstand and medals for the same haul.",
+      "fix": "Name the two objects carried out after reading, or reserve the loot for the branch that actually takes them."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/heist-seventh-tower-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-tower.json",
+    "docs/reviews/critic-pass-2026-11-15/heists-and-board-validation.json",
+    "content/world/lore/soft/hollowstar.grim",
+    "docs/threads-1-plan.md",
+    "docs/authoring/pools.md"
+  ],
+  "completedAt": "2026-11-15T21:30:33.317Z"
+}

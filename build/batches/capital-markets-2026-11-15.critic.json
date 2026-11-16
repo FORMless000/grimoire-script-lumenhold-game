@@ -1,0 +1,112 @@
+{
+  "batch": "capital-markets-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The counters and their side scenes establish what each market sells. Some transactions promise stock, payment or correspondence that the available choices and current game state do not support.",
+  "scope": {
+    "reviewedEventIds": [
+      "shop_bazaar",
+      "bazaar_grimsby_book_stalls",
+      "bazaar_gentleman_thief",
+      "bazaar_bird_seller",
+      "bazaar_hat_bet",
+      "bazaar_map_dealer",
+      "shop_arcade",
+      "arcade_tutor",
+      "arcade_scribe",
+      "arcade_wandwright",
+      "arcade_waiting_room",
+      "arcade_rival_tutors",
+      "arcade_admirals_hot_room"
+    ],
+    "files": [
+      "content/events/maps/capital_markets.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "shop_bazaar": "a0005fff8f47c6c45a4564c6c6bab2981621f63571d35f80ac560b2f9cf0f920",
+      "bazaar_grimsby_book_stalls": "31bf9819de1c0e22bd8eec92d08fdd81f5b1cdf64c0f0744b2fd79bb6491046e",
+      "bazaar_gentleman_thief": "8eec288b89065efe7f066880f0acf12874bd62d211c8f3f360503831eddf3faf",
+      "bazaar_bird_seller": "90ac109de62de78674d6ffd97ddfb4c8d0eba668e256377222899a0f5b3c54d5",
+      "bazaar_hat_bet": "684ee50707e65f65afea7660bcc19556322db262f4ad87470f3bec1b7c51e9ad",
+      "bazaar_map_dealer": "ddd78382317e288e41bf06fd776b481dcb25728d4eeb964243a524fabdf68b85",
+      "shop_arcade": "2ba6b2fde7594821af2b25814b397d65cb60660bd4e8cabd4bd36cfbe5265dd9",
+      "arcade_tutor": "baef7b41e856196d57e6bb390a88bdc2636018656538a7561646e412b227171e",
+      "arcade_scribe": "ba6b2ff88657487f6b5e1479a506c7f8fe2254e92423877ce5f09610d8058dd3",
+      "arcade_wandwright": "638e9960fd9dfe24adcb2af6535fbb8f8391c573311cab59e199230bea538793",
+      "arcade_waiting_room": "c4f765f56dc8437219b9f1895395bb1774ada306701c4417e4deeea7e8368ee7",
+      "arcade_rival_tutors": "7092da81037c940b60cca786d203c0a561f2cb1cd19d89644269ee60840026e3",
+      "arcade_admirals_hot_room": "05052d8b6569bcc28e1fe5298336aa2ab8c854e0b6dffd14cd9b6ded2decac6c"
+    }
+  },
+  "issues": [
+    {
+      "event": "shop_bazaar",
+      "priority": "P2",
+      "category": "stock continuity",
+      "file": "content/events/maps/capital_markets.grim",
+      "line": 9,
+      "problem": "The opening always says there is a rare item on the curio cloth. On a visit whose scheduled curio the player already owns, all three curio choices disappear.",
+      "fix": "Give the cloth a sold-out or display-only line for those visits, or rotate to an unowned item when one remains."
+    },
+    {
+      "event": "bazaar_grimsby_book_stalls",
+      "priority": "P2",
+      "category": "promised follow-up",
+      "file": "content/events/maps/capital_markets.grim",
+      "line": 89,
+      "problem": "When the player makes up the price difference, Grimsby says he will pay them back. There is no repayment in the branch or later hook. The round-two author notes say the promise was removed, but it is present in the frozen source.",
+      "fix": "Have him thank the player for a gift, or arrange for him to repay the difference later."
+    },
+    {
+      "event": "bazaar_hat_bet",
+      "priority": "P2",
+      "category": "unfunded wager",
+      "file": "content/events/maps/capital_markets.grim",
+      "line": 144,
+      "problem": "A player with zero crowns can accept the bet and lose. The outcome says they paid full price and received the hat even though they paid nothing.",
+      "fix": "Gate the wager on being able to pay the quoted price, or charge the price as a stake and return it on a win."
+    },
+    {
+      "event": "bazaar_map_dealer",
+      "priority": "P2",
+      "category": "moral feedback",
+      "file": "content/events/maps/capital_markets.grim",
+      "line": 166,
+      "problem": "Copying the chart is Hollow, but the seller watches, smiles, and says everyone copies it. The branch gives no reason that copying a chart he openly shares should carry a moral cost.",
+      "fix": "Show the player violating a clear condition of seeing the chart, or give copying a cost the shop encounter actually establishes."
+    },
+    {
+      "event": "arcade_tutor",
+      "priority": "P2",
+      "category": "price continuity",
+      "file": "content/events/maps/capital_markets.grim",
+      "line": 251,
+      "problem": "The Guile lesson claims the tutor charges extra, but its cost is the same as every other lesson in the menu.",
+      "fix": "Remove the surcharge claim or put the intended fee in the option price."
+    },
+    {
+      "event": "arcade_scribe",
+      "priority": "P2",
+      "category": "canon",
+      "file": "content/events/maps/capital_markets.grim",
+      "line": 296,
+      "problem": "Kael's paid reply is described as coming from the North. His break schedule specifically keeps him by the lake and observatory at the academy because he cannot go home.",
+      "fix": "Have the letter find him at the academy. Keep the frost as something he does to the envelope."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/capital-markets-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-capital_markets.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-homes-markets-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-capital-homes-markets.cjs",
+    "build/batches/S1-capital-markets.notes.md",
+    "content/world/places.grim",
+    "content/world/items.grim",
+    "content/world/cast.grim"
+  ],
+  "completedAt": "2026-11-15T21:37:58.536Z"
+}

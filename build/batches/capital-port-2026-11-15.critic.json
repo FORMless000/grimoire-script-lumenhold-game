@@ -1,0 +1,137 @@
+{
+  "batch": "capital-port-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The working city supplies recognizable occupations, discovery leads and civic settings. Its dawn auction is unreachable through ordinary visits, and several scenes claim costs or chronology their effects do not support.",
+  "scope": {
+    "reviewedEventIds": [
+      "docks_day_labour",
+      "docks_northern_ship",
+      "docks_undercroft_word",
+      "docks_roof_runner",
+      "shop_fish_market",
+      "fish_market_auction",
+      "fish_market_gull_war",
+      "fish_market_golden_fish",
+      "coaching_yard_arrivals",
+      "coaching_yard_wrong_trunk",
+      "coaching_yard_travellers_tale",
+      "cathedral_under_the_lamp",
+      "cathedral_crypt_archive",
+      "cathedral_ringing_chamber",
+      "cathedral_sanctuary",
+      "printing_row_broadsheets",
+      "printing_row_your_name",
+      "printing_row_jammed_press",
+      "undercroft_dice",
+      "undercroft_pit",
+      "undercroft_fence",
+      "rookery_rooftops",
+      "rookery_old_marks",
+      "rookery_watch_guide"
+    ],
+    "files": [
+      "content/events/maps/capital_port.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "docks_day_labour": "30c660cd0eac228f4fd4e24e497a765055baa689e262fb83ecf1b152b86a179a",
+      "docks_northern_ship": "49e24dc70edf8cb270bc635dcbd8fe6f406a4e1a8ba5e3f10c015a0f01368f62",
+      "docks_undercroft_word": "6056044d69e081612422c67e9a44b8814e83e2c6f3c7b6331c6150280e6d4d80",
+      "docks_roof_runner": "433fec39248b6f11b9526bd69fa16540407cf82f96b2ba5baa75abccbf0ed301",
+      "shop_fish_market": "f8c73aa3fecbd85fe0cd6d4200408a1fd60eb742f816a6aeb420683dc83d4707",
+      "fish_market_auction": "fa8fabea1c07b4ba2041f29da178bb13fa9c2d35f7f3bbe1c31a945f31904022",
+      "fish_market_gull_war": "e1a6a7f1f4bda33caa083151be5ab386b7c7da4438c99b2fd3bc68276469cacf",
+      "fish_market_golden_fish": "55fe4d14b9af18a7180c94ccc091abbcc3a2988f0ce90649576c280e265e6424",
+      "coaching_yard_arrivals": "5633a310f1f7e87c944db279a59cf6ccc7c95b55dd339d8a550de26c7969bb2b",
+      "coaching_yard_wrong_trunk": "ea3512082d5f271331b2125975375235bffb8e7d31855e7cf6cb61b4212fe33b",
+      "coaching_yard_travellers_tale": "e1fd7a98d37fc4243c68d33fde1fb93271b53f1f001f7b52a4d04842acc1e2fe",
+      "cathedral_under_the_lamp": "5893c075e78c2e6fbb42db41d709e3a072b38308290006f66f707aa2c433cb94",
+      "cathedral_crypt_archive": "9200504f875590f24e9bc175339f292a53666f146014efe306a0a0f8bd787de1",
+      "cathedral_ringing_chamber": "abc86bd0ac06a7ee7164e90cb336a8f77ec2c080b61cf2727d4af3a29bc8d99f",
+      "cathedral_sanctuary": "6d263849e54337120b3c7c775d40aa1442b0cc306bbef2117d3513ff3ba39a61",
+      "printing_row_broadsheets": "753d2937af19118bc05ae96aa8cb55f434caf3d1b817ace5bac7dd856f985cc1",
+      "printing_row_your_name": "95db6adaac932eecb3c94522ed24d81e4ada2306be48b7522b682a751d57c484",
+      "printing_row_jammed_press": "7880708e511bbdbabd2581a0d168c5eb42a0ba18d24eaf70ce00d73ab116c4c6",
+      "undercroft_dice": "60977e0ea56e36403447e166aaa2415722b7cc053e054be0b235be1d518a8d42",
+      "undercroft_pit": "bd2587959dfb106159f7a0a0427dc92b5bff0e285ab81e65e1d636e31b81c08a",
+      "undercroft_fence": "ca6b94479f1a02b8e914ff8ee8da71b98ea72c2ced0c9f5f1fccc29b6df94168",
+      "rookery_rooftops": "ca56e4e8129624a60678d843e3debc628d2f12b91ed082c5f0f539f4d6574b27",
+      "rookery_old_marks": "3b36683fd5e596ef29faa1e2565acd4bbe11100a646f9791eefd837ecfd8cdb6",
+      "rookery_watch_guide": "61f87a053a7e6c2fdcf4a9342a42672b27f333bc36bc0bc1da838a114bbdcaf2"
+    }
+  },
+  "issues": [
+    {
+      "event": "docks_northern_ship",
+      "priority": "P2",
+      "category": "choice legibility",
+      "file": "content/events/maps/capital_port.grim",
+      "line": 33,
+      "problem": "The left button only asks to see the goods, but it immediately pays for a lump of ice and takes it home. The old sailor says it is expensive but never names the item before the purchase.",
+      "fix": "Let the player inspect before committing, or label the option as buying what he offers and describe the cold object before the choice."
+    },
+    {
+      "event": "docks_undercroft_word",
+      "priority": "P2",
+      "category": "alignment",
+      "file": "content/events/maps/capital_port.grim",
+      "line": 50,
+      "problem": "Asking directions moves Hollow before the player has agreed to gamble, work for the house or commit any crime. The other option obtains the same place knowledge with no moral move.",
+      "fix": "Put the moral weight on an actual commitment made here, or use an ordinary curiosity trade and leave the later illegal activity to its own decisions."
+    },
+    {
+      "event": "shop_fish_market",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/maps/capital_port.grim",
+      "line": 90,
+      "problem": "The shop's first gossip and its look outcome refer to before breakfast and smelling of fish till noon. The first normal capital visit is noon. The golden-fish scene and its illustration likewise require dawn without a scheduled dawn route.",
+      "fix": "Make these lines and scenes fit a later market visit, or provide an actual dawn appointment.",
+      "affectedEvents": [
+        "fish_market_golden_fish"
+      ]
+    },
+    {
+      "event": "fish_market_auction",
+      "priority": "P2",
+      "category": "unreachable visit",
+      "file": "content/events/maps/capital_port.grim",
+      "line": 129,
+      "problem": "The auction requires slot: morning. Both capital plans offer visits only from noon onward, so the player cannot reach this place card at its required time.",
+      "fix": "Schedule the auction as a morning outing or adapt it to a supported visit slot."
+    },
+    {
+      "event": "fish_market_auction",
+      "priority": "P2",
+      "category": "unfunded wager",
+      "file": "content/events/maps/capital_port.grim",
+      "line": 129,
+      "problem": "If the auction is presented with zero gold, the player can bid and lose. The story then says the cargo sold for less than they paid, although the purse remains at zero and there is no debt.",
+      "fix": "Require a deposit or ability to cover the possible purchase before accepting the bid, or represent the unpaid obligation."
+    },
+    {
+      "event": "rookery_rooftops",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/maps/capital_port.grim",
+      "line": 482,
+      "problem": "The second failed run lands in washing and causes a dyer to shout, while the third ends with a careful climb down from a held chimney-pot. Both deduct the same Health as the first variant's explicit bruising, without naming an injury or bodily toll.",
+      "fix": "Show the strain or injury from each failed route that retains the Health loss."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/capital-port-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-capital_port.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-city-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-capital-city.cjs",
+    "build/batches/C3-capital-port.notes.md",
+    "content/world/lore/soft/places.grim",
+    "content/states/states.grim",
+    "content/core/rules.grim"
+  ],
+  "completedAt": "2026-11-16T00:35:17.168Z"
+}

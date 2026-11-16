@@ -41,7 +41,7 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 **Canon and safety**
 - The worldbook is the only canon. Read the canon you touch before writing; never copy lore into prompts, skills or docs, point to it. A new proper noun needs a soft `@lore` entry (canon lint enforces it).
 - Plot safety: only hard-canon story events grant key clues (`find`) or move arc clocks (`advance`). Everyday events may be eerie but never reveal or confirm the main mystery's secrets.
-- Adults only, nothing explicit, no gore (lint checks ages).
+- Every character who takes part in a scene is an adult (children may only be background, in a crowd); nothing explicit, no gore (lint checks ages).
 
 **The format and the engine**
 - The engine is content-agnostic. Touch `src/` only for a new language feature, and then update, in order: `src/grimoire.js` (syntax, `SCHEMA` / `FUNCS`), `src/engine.js`, `tools/grim.js` (lint), `tools/format.js` and `tools/query.js`, `docs/grimoire-script.md`.

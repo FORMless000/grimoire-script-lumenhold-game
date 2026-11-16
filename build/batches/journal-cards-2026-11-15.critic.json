@@ -1,0 +1,150 @@
+{
+  "batch": "journal-cards-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on recap choices whose study effects vanish during the summer break and lead reminders that can recur or misstate the player's progress.",
+  "scope": {
+    "reviewedEventIds": [
+      "recap_year_one",
+      "recap_year_two",
+      "recap_year_three",
+      "nudge_quickquill",
+      "nudge_footnote",
+      "nudge_two_taps",
+      "nudge_brace",
+      "nudge_red_ink",
+      "nudge_wind_jar"
+    ],
+    "files": [
+      "content/events/journal_cards.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "recap_year_one": "eadea206f799752e6d13ce5c36648b50207c7a80c1fc84086cd60fe13a6878b6",
+      "recap_year_two": "8f70b9ecfa1202f69b1ebb03ce49d8a21dcfdfb58d37ae88a3951b8df4c4d20b",
+      "recap_year_three": "72b1bf449a3914f0d0b83b715c424b539bdaaec8956a21a1e731602ab22bd4be",
+      "nudge_quickquill": "1fe24377a77041993b4fe9f4ef9a2d7f7ac4c117ae4553e61ade99c3bd936c0c",
+      "nudge_footnote": "3b3f57f51eaf559ed184f9705c19429c6c18a1f87fac5a972c6d63c82a8de112",
+      "nudge_two_taps": "dc0bc6448dad976dd9087200a58d384506ac92a7448f23986727721980ce4131",
+      "nudge_brace": "f93dc061dda328222886965339e6fb3ed10ae78eb5b23f0895e926902104a7b8",
+      "nudge_red_ink": "4dfeb13c955f8e0941fc09faeccd3cf1c3cba1e9626cd9415639bffdea4016cd",
+      "nudge_wind_jar": "97e0cac3b353fcfc78fe46830dba26dd16add45bc78824ad89d7ce4d17d331fd"
+    }
+  },
+  "issues": [
+    {
+      "event": "recap_year_one",
+      "priority": "P2",
+      "category": "study effects vanish in summer",
+      "file": "content/events/journal_cards.grim",
+      "line": 24,
+      "problem": "All three recaps run on break turns 12, 24 and 36. With no enrolled course, both study effects have no target. Preview shows only a Mood gain for rereading and a Mood loss for planning, so the intended mechanical trade vanishes.",
+      "fix": "Use a preparation reward that persists and has a target in the next term, or give planning a benefit that is meaningful on the summer turn.",
+      "affectedEvents": [
+        "recap_year_one",
+        "recap_year_two",
+        "recap_year_three"
+      ]
+    },
+    {
+      "event": "recap_year_one",
+      "priority": "P2",
+      "category": "promised purchase missing",
+      "file": "content/events/journal_cards.grim",
+      "line": 24,
+      "problem": "The reread result explicitly buys the next journal, but no crowns change. Year two already assumes it exists regardless of the first choice.",
+      "fix": "Treat the next journal as a free or previously owned notebook in both recaps, or show and apply its purchase where it occurs."
+    },
+    {
+      "event": "recap_year_two",
+      "priority": "P2",
+      "category": "unsupported relationship history",
+      "file": "content/events/journal_cards.grim",
+      "line": 39,
+      "problem": "Any current partner produces the line that their name was absent last summer. The player could already be their partner in year one and stay together throughout year two. The current count says nothing about when the bond started.",
+      "fix": "Describe the current partner's presence without claiming a start date, or require a recorded change since the first recap."
+    },
+    {
+      "event": "recap_year_three",
+      "priority": "P2",
+      "category": "unsupported relationship history",
+      "file": "content/events/journal_cards.grim",
+      "line": 54,
+      "problem": "The reread result assumes someone saved the player a seat, even when the book's opening says the player largely kept to themselves. No seat scene is required.",
+      "fix": "Use a memory keyed to a scene that occurred, with a fallback for a solitary run."
+    },
+    {
+      "event": "nudge_quickquill",
+      "priority": "P2",
+      "category": "one-time reminder repeats",
+      "file": "content/events/journal_cards.grim",
+      "line": 71,
+      "problem": "The nudge pool describes a one-time reminder but gives it a one-month cooldown and the six gates remain open while their leads are stalled. The same unvaried advice and elapsed-time line can recur. The red-ink fixture confirms the gate and eligibility hold after a previous showing.",
+      "fix": "Remove the shared repeat cooldown to make these nudges once-only, or write state-aware successive reminders with a deliberate interval.",
+      "affectedEvents": [
+        "nudge_quickquill",
+        "nudge_footnote",
+        "nudge_two_taps",
+        "nudge_brace",
+        "nudge_red_ink",
+        "nudge_wind_jar"
+      ]
+    },
+    {
+      "event": "nudge_quickquill",
+      "priority": "P2",
+      "category": "quest continuity and cost",
+      "file": "content/events/journal_cards.grim",
+      "line": 71,
+      "problem": "The reminder gives the 'proper ink first' instruction even after quickquill_ink is set, and charges Study for receiving advice without showing any missed work. The half-year line is fixed even after more than six months.",
+      "fix": "Read the known steps to give current advice, make the elapsed time approximate, and show the academic cost or remove it."
+    },
+    {
+      "event": "nudge_footnote",
+      "priority": "P2",
+      "category": "quest continuity",
+      "file": "content/events/journal_cards.grim",
+      "line": 89,
+      "problem": "Footnote is said to still guard the drawer, but library_fish_footnote can already have him step off and give the player the card. This nudge also assumes he has guarded it for eleven and a half years, while the initial scene says he has sat there for a week and the book has been overdue eleven years.",
+      "fix": "Distinguish the overdue age from the time the cat has been guarding it, and acknowledge the bribe or card already recovered."
+    },
+    {
+      "event": "nudge_two_taps",
+      "priority": "P2",
+      "category": "quest continuity and cost",
+      "file": "content/events/journal_cards.grim",
+      "line": 105,
+      "problem": "The advice always says to start with the corner table and proceeds through all three steps, even if the related flags are already set. The Study loss covers a short conversation with the landlady, with no missed work shown. The fixed half-year phrasing also applies at any later month.",
+      "fix": "Point to the first unfinished step and use time wording that fits later delivery. Show the work given up or drop the academic penalty."
+    },
+    {
+      "event": "nudge_brace",
+      "priority": "P2",
+      "category": "unshown cost and unsupported consequence",
+      "file": "content/events/journal_cards.grim",
+      "line": 121,
+      "problem": "The left outcome contains an agreement and advice, but no physical exertion to account for Health loss. The right removes the player's name and says Lyra says nothing more, while writing no state to prevent the advice or name-on-board premise from returning.",
+      "fix": "Give the choice the consequence it shows, and persist the decision to withdraw or allow the lead to remain open without saying the name is erased."
+    },
+    {
+      "event": "nudge_red_ink",
+      "priority": "P2",
+      "category": "promised story continuation missing",
+      "file": "content/events/journal_cards.grim",
+      "line": 139,
+      "problem": "Writing and delivering the next draft sounds like restarting the correspondence, but it grants Lore and costs Study without setting an appropriate progress flag or queuing a story step. The original chain's steps are queued, so an absent next step stays absent after this branch.",
+      "fix": "When the thread has stalled, restore the appropriate next beat using the existing flags and avoid duplicating an existing queue entry, or describe a reflective draft that makes no claim to resume the thread."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/journal-cards-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-journal_cards.json",
+    "docs/reviews/critic-pass-2026-11-15/journal-cards-context.md",
+    "docs/reviews/critic-pass-2026-11-15/milestone-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/brief-journal-tracks.md"
+  ],
+  "completedAt": "2026-11-15T20:41:35.145Z"
+}

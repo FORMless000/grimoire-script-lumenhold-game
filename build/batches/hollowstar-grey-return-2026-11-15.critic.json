@@ -1,0 +1,48 @@
+{
+  "batch": "hollowstar-grey-return-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected because the errand repeats a published offer and the follow-up can remember the opposite answer to the first visit.",
+  "scope": {
+    "reviewedEventIds": [
+      "hs_grey_return"
+    ],
+    "files": [
+      "content/events/chain_hollowstar.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "hs_grey_return": "ec156a56cc16af4de156ebd8865205b20fd205402d92db05bc94ded59a0e467a"
+    }
+  },
+  "issues": [
+    {
+      "event": "hs_grey_return",
+      "priority": "P2",
+      "category": "duplicate errand premise",
+      "file": "content/events/chain_hollowstar.grim",
+      "line": 283,
+      "problem": "A Quiet Job already asks the player to carry an unopened envelope to the boathouse at night for money, in exchange for taking a Hollow step. The Grey follow-up alters the sender, hiding place and added spell, but repeats the immediate decision and action.",
+      "fix": "Give the Grey follow-up a task that tests loyalty to this plot and has a different action from delivering an unread letter at the boathouse."
+    },
+    {
+      "event": "hs_grey_return",
+      "priority": "P2",
+      "category": "wrong callback after refusal",
+      "file": "content/events/chain_hollowstar.grim",
+      "line": 283,
+      "problem": "The follow-up uses hollow_tempted to decide what the player said at the first offer. That flag can already be true from other scenes. In a fixture with prior temptation, telling the man to get out still produces ‘You liked what you tasted’ at the next visit.",
+      "fix": "Branch on chosen(hs_grey_offer, right) or store the specific prior answer."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-grey-return-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-chain_hollowstar.json",
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-validation.json",
+    "build/batches/hollowstar_v2.notes.md"
+  ],
+  "completedAt": "2026-11-15T21:02:47.148Z"
+}

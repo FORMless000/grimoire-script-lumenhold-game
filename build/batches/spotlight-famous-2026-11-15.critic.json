@@ -1,0 +1,160 @@
+{
+  "batch": "spotlight-famous-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on missing consequences, a dance-partner choice that never occurs, and repeats that erase earlier outcomes. The 16 scoped IDs exclude the previously reviewed Newt drink scene.",
+  "scope": {
+    "reviewedEventIds": [
+      "spot_endorsement",
+      "spot_memoir",
+      "spot_impostor",
+      "spot_fan_circle",
+      "spot_thornwick_challenge",
+      "spot_settle_dispute",
+      "spot_charity_auction",
+      "spot_lecture_crowds",
+      "spot_luck_sleeve",
+      "spot_routine_known",
+      "spot_guest_flyer",
+      "spot_petition",
+      "spot_party_host",
+      "spot_ball_opening",
+      "spot_stable_name",
+      "spot_friend_strain"
+    ],
+    "files": [
+      "content/events/spotlight_famous.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "spot_endorsement": "a702285d7b2692c38737368d6b542e2c92c67c9d605c127fcc4c5735a1ef71f3",
+      "spot_memoir": "fb6ab3b677bd0af5848bc09fee6ea99c5c92f6e1b1df96f7f4278498796821ad",
+      "spot_impostor": "3416dbd7168ecc885e5109fe901ea99d8e842a247b47ba47ab0bff90fdbd5122",
+      "spot_fan_circle": "e62507c339ef018a0a9190c75e837f1ab0193f4496b60f856dc2f681cc1dbe33",
+      "spot_thornwick_challenge": "c2611ca79cfd60fc29c5fcdfc3de90cde54037dcb2c5493c54f8d785bacb961a",
+      "spot_settle_dispute": "9fa303cdcb3819994f905eb4ddffa1b0d8532dde357388bb643646a61eb8d0a1",
+      "spot_charity_auction": "6cc9e88450c57361ee71186c2acc17d4bc199d86a63330284db9ce079188e793",
+      "spot_lecture_crowds": "01f574089b40193f82cf66907e446bb17050a14a2aa4d2bb4dead42774c8a28b",
+      "spot_luck_sleeve": "22925bf7e37689bafe2eb63c01c602aef6241c760acfaedf67d195f8c09f36aa",
+      "spot_routine_known": "5db25795fc2c2d8c0cd7404dd8d4994819973386a264a54088dbf83e4a9b905c",
+      "spot_guest_flyer": "a8d53dfd4be53ed4cd2155132c3c937bb1d303b51759f2554c684fc8bebe0211",
+      "spot_petition": "1702a47c1243514f3de45ad713644a2f8d6164bb2810c26cfbc08d51dde19e13",
+      "spot_party_host": "ef9c4e958e89ab84cf891e90664f2b9471c7eba700adfdd7fb7d6f0684aa4958",
+      "spot_ball_opening": "a70a58640275937dfadb3d7956c02093dd7ec096bf1e5e65ae27e8cb641e57a8",
+      "spot_stable_name": "033ab2f7408dfd7cf1bc68f60894a106c011f1b613b319aec5904afca92a6ab5",
+      "spot_friend_strain": "479394fa50d7f86cedf4428b5b24f9d5ec2feba5913a63b236b3812e6bc1aacf"
+    }
+  },
+  "issues": [
+    {
+      "event": "spot_endorsement",
+      "priority": "P2",
+      "category": "royalties asserted in the setup only",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 8,
+      "problem": "Both endorsement outcomes increase gold, but neither shows the promised royalty coming back to the player. The successful say shows candles arriving every month. The failure describes the smell and public ridicule.",
+      "fix": "Show the chandler paying the agreed cut in each branch, including the smaller payout from the bad batch."
+    },
+    {
+      "event": "spot_impostor",
+      "priority": "P2",
+      "category": "inverted cash outcomes",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 53,
+      "problem": "The embarrassing catch says the player pays the account but does not deduct gold. The successful catch adds gold although the impostor pays the shopkeepers and the player only gets supper.",
+      "fix": "Debit the account payment where it happens and make the successful reward a meal, or explicitly pay the player a bounty for exposing the fraud."
+    },
+    {
+      "event": "spot_memoir",
+      "priority": "P2",
+      "category": "one-time premise replay",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 31,
+      "problem": "A single repeatable contract creates ‘your memoir’ without acknowledging a previous refusal or a book that has already gone to print. The Famous pool's one-month cooldown can also set the same chapter scandal up again.",
+      "fix": "Make it a single contract offer or use prior outcomes to distinguish subsequent editions, and keep the chapter follow-up bound to the edition that caused it."
+    },
+    {
+      "event": "spot_fan_circle",
+      "priority": "P2",
+      "category": "one-time premise replay",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 74,
+      "problem": "The inherited repeat permits the announcement of the same new society to return after the player signed its minutes or sent it off to run a study table. It can re-queue the initiation scandal as if the response never occurred.",
+      "fix": "Make introducing the named society once-only, or add variants that follow the recorded first meeting and outcome."
+    },
+    {
+      "event": "spot_lecture_crowds",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 190,
+      "problem": "The unsuccessful question hour gives Study loss. Its outcome adds a decorum essay, but does not show the player losing preparation or skipping their own work.",
+      "fix": "Show the decorum essay displacing specific class work, or use a social consequence fitting the interruption."
+    },
+    {
+      "event": "spot_routine_known",
+      "priority": "P2",
+      "category": "unimplemented restriction",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 233,
+      "problem": "The unsuccessful appearance says the librarians bar the player from the library for a week, but the outcome only changes Study and Renown. It leaves visits and the revision card available.",
+      "fix": "Implement a library consequence at the game's time scale or describe being sent away in that moment, with the existing lost work."
+    },
+    {
+      "event": "spot_guest_flyer",
+      "priority": "P2",
+      "category": "age rule",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 255,
+      "problem": "Hordes of small children imitate the player with brooms in the success outcome. The authoring rule requires adult characters, and academy newcomers can make the same joke work.",
+      "fix": "Use adult first-years or other adult spectators for the imitations."
+    },
+    {
+      "event": "spot_petition",
+      "priority": "P2",
+      "category": "unimplemented persistent change",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 277,
+      "problem": "The signature success says the library stays open all night during exam weeks. The event grants Study and Renown only, and the library's place configuration lacks midnight access. The player cannot use the change the petition says they won.",
+      "fix": "Wire an exam-week opening with a success condition, or limit the narrative and reward to a one-off supervised study session."
+    },
+    {
+      "event": "spot_party_host",
+      "priority": "P2",
+      "category": "promised detention missing",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 299,
+      "problem": "The bad party branch says the player serves a week of evenings in detention, but changes Renown, Health and Mood only.",
+      "fix": "Apply the established detention state with the matching duration language, or narrate a single reprimand that matches the existing effects."
+    },
+    {
+      "event": "spot_ball_opening",
+      "priority": "P2",
+      "category": "missing partner and conflicting Ball outcomes",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 323,
+      "problem": "The opening acknowledges that an unpartnered player must pick someone, then the dance occurs without a bound person or a choice. The separate Midwinter Ball card can still be declined or pick another person in the same month.",
+      "fix": "Run the dance opening as a follow-up carrying the chosen dance companion, with an alternative for a player who attends alone and no scene that contradicts skipping the Ball."
+    },
+    {
+      "event": "spot_friend_strain",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/spotlight_famous.grim",
+      "line": 363,
+      "problem": "Meeting the friend in quieter places gives up public invitations in the say, but also deducts Study without mentioning missed academic work. The existing Renown loss already reflects turning down invitations.",
+      "fix": "Make the extra academic sacrifice explicit or remove the Study loss."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/spotlight-famous-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-spotlight_famous.json",
+    "build/batches/P4-07.notes.md",
+    "docs/reviews/critic-pass-2026-11-15/brief-fame.md",
+    "docs/reviews/critic-pass-2026-11-15/fame-validation.json"
+  ],
+  "completedAt": "2026-11-15T20:54:22.829Z"
+}

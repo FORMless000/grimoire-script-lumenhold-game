@@ -1,0 +1,136 @@
+{
+  "batch": "between-stories-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagents gathered source context and retrieval evidence only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected: two queued follow-ups can leave ongoing stories with no continuation, a failed lock-in is remembered as a completed hour, and the picnic choice loses its trade on breaks. All source events, variants and required similarity checks are complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "feud_ledger_war",
+      "feud_ledger_gone",
+      "feud_vault",
+      "feud_end",
+      "tm_watering_engine",
+      "tm_invitation",
+      "tm_misread",
+      "tm_end",
+      "circle_founded",
+      "circle_newcomer",
+      "circle_exam_night",
+      "circle_last"
+    ],
+    "files": [
+      "content/events/between_stories.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "feud_ledger_war": "5eea852b866a659ba7a0678e976cae366a9df7c1c624e1764d2603b0083e679a",
+      "feud_ledger_gone": "b3ce11e4ba075e8d6ed639fae023c0f8ec1cc51624154232c293fd87eb44549f",
+      "feud_vault": "c5696998503ad93750e1c5acd3accad89b2b7b3979868dacc5973431085ccd69",
+      "feud_end": "187390822d88c4394853abe306346f5f68eabec2da5d2b6c12e7f9efba1a8834",
+      "tm_watering_engine": "5b5390c808afbf532ba864b47cce7d794c1933ce3a94a29fbdfdda600dc70257",
+      "tm_invitation": "c8715ed7dc9bd7022527a4f0f2b1124c83c312b71a8709555d7995d92865d2c2",
+      "tm_misread": "6e817b61aa1cba5a2599a7af039a96b91e8925276bb5ad7f5a3fb32d70092b17",
+      "tm_end": "41d47c6d68ded3c3eef60f936e7e2d5c32e249f0e9a3a29a5ec244b586e411e1",
+      "circle_founded": "696df58893302dc0df06fc5d1cfa9550c49c5c032c04811f482bd5189baed02d",
+      "circle_newcomer": "74f959f4377b640303f2de3edbf919650c8a2bd45709413cc02491404b0be583",
+      "circle_exam_night": "31c4df764838f5c9d65d9ba8f50f4d1aa7ec72ce4609eec4851c097d8b758e5b",
+      "circle_last": "c3c5b00d4852c65e2f8eff6da7bcc068ec0a8effe70e1bdf0e08a680f3b962f2"
+    }
+  },
+  "issues": [
+    {
+      "event": "circle_newcomer",
+      "priority": "P2",
+      "category": "lost follow-up / unresolved story",
+      "file": "content/events/between_stories.grim",
+      "line": 309,
+      "problem": "The start queues this card within 1..2 months, but this step has when: term and no break deferral. If it comes due in month 5 or 6, it is discarded rather than postponed. The begun flag prevents restarting, no later step is queued, and the Thursday Circle stays ongoing in the Journal. A month-5 queue fixture reproduces this.",
+      "fix": "Defer this follow-up through breaks, or resolve/close the story explicitly when declining that continuation; do not silently lose its only queued step."
+    },
+    {
+      "event": "tm_invitation",
+      "priority": "P2",
+      "category": "unresolved story after eligibility changes",
+      "file": "content/events/between_stories.grim",
+      "line": 178,
+      "problem": "If the player starts courting/partnering either character after beginning the engine story but before this invitation shows, fancy_free becomes false and the queued invitation is discarded. Stopping the matchmaking is reasonable, but neither tm_together nor tm_friends is set and the Journal remains ongoing with no next step. A summer-month fixture with Mir partnered reproduces the lost continuation.",
+      "fix": "Provide an explicit friendship/let-go resolution when player courtship supersedes the invitation, so cancellation closes the story instead of stranding it."
+    },
+    {
+      "event": "feud_vault",
+      "priority": "P2",
+      "category": "false outcome memory",
+      "file": "content/events/between_stories.grim",
+      "line": 76,
+      "problem": "The failed Lock them in outcome says Corvin opens the lock before the player lets go, but it still sets feud_locked_in. The Journal then says the player locked them in for an hour, contradicting the actual failed attempt. The same flag is used for success and failure.",
+      "fix": "Only record the completed-hour flag on success, and give failure an accurate attempt entry or a separate existing-resolution path."
+    },
+    {
+      "event": "tm_end",
+      "priority": "P2",
+      "category": "choice loses its trade on breaks",
+      "file": "content/events/between_stories.grim",
+      "line": 233,
+      "problem": "This finale can show in the summer break (winter alone is deferred). Its leave option rewards study +tiny, which affects no enrolled course on a break. In a month-11 fixture, staying gives Mood +8 and +2 relationship with each character; leaving gives only +1 with each. Both resolve identically at the same pair-affinity threshold, so staying is strictly better and leaving loses its intended benefit.",
+      "fix": "Give leaving a meaningful alternative benefit in break months, or make the academic payoff conditional on actual enrollment and supply an appropriate break alternative."
+    },
+    {
+      "event": "circle_newcomer",
+      "priority": "P2",
+      "category": "alignment",
+      "file": "content/events/between_stories.grim",
+      "line": 309,
+      "problem": "The player chooses whether a disliked, struggling classmate may join the study circle. Making room incurs discomfort; falsely saying the group is full excludes them and buys extra study. Neither option moves Alignment, unlike the same knowingly exclusionary choice in between_closed_table and the costs.md moral rule.",
+      "fix": "Give the exclusion for personal academic gain its appropriate Hollow weight, and any genuinely costly inclusion its fitting Lumen weight, or rewrite the setup so the refusal has an honest capacity reason."
+    },
+    {
+      "event": "circle_newcomer",
+      "priority": "P2",
+      "category": "duplicate premise",
+      "file": "content/events/between_stories.grim",
+      "line": 309,
+      "problem": "This repeats between_closed_table's central scene: a disliked outsider asks to join the player's established clique, the other members wait for the player's decision, and the options are make room at social discomfort or falsely claim the group is full and keep the group cosy. The welcome path ends with the outsider becoming valuable to the group in both cards. Moving the table to a study circle changes the resource rewards but not that admission/exclusion decision. The open/closed flags only supply Journal entries; later steps do not distinguish those choices.",
+      "fix": "Replace the newcomer step with a different study-circle conflict, or give the admission a materially different decision and continuing consequence rather than replaying the refectory clique scene.",
+      "evidence": [
+        "content/events/between.grim:340",
+        "content/events/between_stories.grim:309",
+        "docs/reviews/critic-pass-2026-11-15/circle-newcomer-duplication.json"
+      ]
+    },
+    {
+      "event": "circle_founded",
+      "priority": "P2",
+      "category": "duplicate premise",
+      "file": "content/events/between_stories.grim",
+      "line": 285,
+      "problem": "The opening repeats soc_study_session: a classmate drops a stack of books at the player's library seat, says they cannot study alone, and asks to work together; the player accepts for academic/relationship gains or says they work better alone for solitary study and a small relationship loss. Making it the start of a longer thread does not give this opening a different immediate premise or decision.",
+      "fix": "Start the circle with a different group-forming decision, or let an accepted existing study-session encounter lead into the circle rather than replaying that invitation as another card.",
+      "evidence": [
+        "content/events/social.grim:12",
+        "content/events/between_stories.grim:285",
+        "docs/reviews/critic-pass-2026-11-15/between-retrieval-results.json"
+      ]
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/between-stories-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/social-context-2.md",
+    "docs/reviews/critic-pass-2026-11-15/between-stories-2026-11-15.duplication.json"
+  ],
+  "limitations": [
+    "No card source repairs or gameplay-frequency claims. Any later cross-batch duplicate owner is recorded in the progress ledger to avoid duplicate repair requests."
+  ],
+  "completedAt": "2026-11-15T18:36:57.911Z",
+  "checks": {
+    "currentCompilationErrors": 0,
+    "allScopedSourceAndVariantsRead": true,
+    "speakingCastVoicesAndFactsRead": true,
+    "relatedQueries": 12,
+    "nonSelfSourceCandidatesReadPerCard": 3,
+    "candidateSourceHashesMatchCurrentCatalog": true,
+    "scopedDefinitionHashesMatchFrozenInventory": true
+  }
+}

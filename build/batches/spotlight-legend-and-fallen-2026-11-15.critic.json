@@ -1,0 +1,162 @@
+{
+  "batch": "spotlight-legend-and-fallen-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on explicit child characters, false callbacks, repeating one-time outcomes, and missing costs. Deliberate reversals between fame and the fall are distinct episodes when their history is gated.",
+  "scope": {
+    "reviewedEventIds": [
+      "spot_tavern_song",
+      "spot_witness_promise",
+      "spot_flourish_named",
+      "spot_named_child",
+      "spot_disguise_day",
+      "spot_higher_bar",
+      "spot_history_essay",
+      "spot_villain_play",
+      "spot_rival_lucky",
+      "spot_guest_lecture",
+      "spot_legend_burden",
+      "renown_fallen_entry",
+      "fallen_old_fan",
+      "fallen_where_now",
+      "fallen_unrecognised",
+      "fallen_mocked",
+      "fallen_friends"
+    ],
+    "files": [
+      "content/events/spotlight_legend.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "spot_tavern_song": "dd9f3cac7fbaf1b4de9dc70632c67a8a4ad59b1d8841e37a3bf9ed6a489a50ea",
+      "spot_witness_promise": "4444c9188ca183a5af8c41fff2cc2084049280e9c51bc1e84e1dc69f0e3d5291",
+      "spot_flourish_named": "440137567d94e13b6bfe56d9dac1f785dbece25146074115a7bd9edcd9f04048",
+      "spot_named_child": "0969203c58855e94de8298c7cfec00c915bfbd11b9df8675c1aa7396ed2cda38",
+      "spot_disguise_day": "87b1279bdbc3e17244db846c50a8247273fecb34e884591aae0a2ac62fe3e308",
+      "spot_higher_bar": "d7ccf6589c8a301fa69e84937d443e660993f521129924d1ef5614027a20399b",
+      "spot_history_essay": "18f31f627cb837a24d4a0734285d0703628804636cd65c929f1390d2f16c9ac0",
+      "spot_villain_play": "8d38c48a2b239d4f0609b66e586da7abac33c0790647b088d606173e2a8c75b8",
+      "spot_rival_lucky": "42006b1a163a64a42b4c0c5ea201090d61bcb7a5417eb1979bc10cc017caa608",
+      "spot_guest_lecture": "00ead0d4e3047fdc4b7dd332f445df54ccdc9eeb99810bc663ffc4812b0ff29d",
+      "spot_legend_burden": "672ac09245f24932f3287fd7a73c917ab75572dc9c21ff131f625cf92bd1179f",
+      "renown_fallen_entry": "0c4e1d2060685f5ce1a279bfaeccbf29236300f4bf8bbc7c6fd71de85153222d",
+      "fallen_old_fan": "6bde7342bea66a1eb22a732c0fbf72da390304eb7d0c7b821fbd8643a2908789",
+      "fallen_where_now": "e6c631949660c45b3dd2f23e9c1e509acae98044d7dd0eaca00f90d42602d485",
+      "fallen_unrecognised": "26f9a4c2809e5c46675e3e267cf0181578791a12edd2497b206b1ebfe3d57791",
+      "fallen_mocked": "6abc911831003a44777d6bd6d6b2fc12acf6508ad63b3a38f1b8cc37e2aedeb5",
+      "fallen_friends": "789138b78ee0b21461f50c88631503c7fe8ac7ad6bcce61eb11d0cb77563f09f"
+    }
+  },
+  "issues": [
+    {
+      "event": "spot_tavern_song",
+      "priority": "P2",
+      "category": "missing purchase",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 9,
+      "problem": "The right payoff buys the fiddler a drink, but the player's gold never changes.",
+      "fix": "Charge for the drink in that branch or let the player encourage the song with a toast or another free gesture."
+    },
+    {
+      "event": "spot_flourish_named",
+      "priority": "P2",
+      "category": "contradiction on repeat",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 62,
+      "problem": "One branch explicitly has the player perform the signature flourish before a cheering crowd. The inherited repeat cooldown lets the same card return and state that the player has never done it in their life.",
+      "fix": "Make first discovery of the named flourish one-time, or condition the opening on whether the player performed it."
+    },
+    {
+      "event": "spot_named_child",
+      "priority": "P2",
+      "category": "age rule and missing payment",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 84,
+      "problem": "The newborn is the active focus of the naming scene, and the left branch has the player hold the baby. That conflicts with the authoring rule that characters be adults. The left result also has the player buy an unaffordable silver spoon without charging for it, unlike the right result.",
+      "fix": "Use an adult family's choice to name a shop or another honor whose central characters can all be adults. If a gift is still bought on both routes, reflect the purchase on both."
+    },
+    {
+      "event": "spot_disguise_day",
+      "priority": "P2",
+      "category": "age rule and missing payment",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 101,
+      "problem": "A small child is the speaking character who recognizes and exposes the player on failure. On success the player buys and eats bread without spending gold.",
+      "fix": "Let an adult shopper recognize the player and apply or remove the stated bread purchase."
+    },
+    {
+      "event": "spot_history_essay",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 144,
+      "problem": "A week of interviews deducts Study but the outcome does not show a particular class assignment or revision session displaced by the interviews.",
+      "fix": "Show what the player had planned to study that week and what falls behind, or use a cost shown in the scene."
+    },
+    {
+      "event": "spot_villain_play",
+      "priority": "P2",
+      "category": "missing purchase",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 161,
+      "problem": "The successful attendance branch buys the entire cast supper but changes Mood and Renown only.",
+      "fix": "Apply the supper expense or have the cast invite the player to share their supper."
+    },
+    {
+      "event": "spot_guest_lecture",
+      "priority": "P2",
+      "category": "cost belongs to the wrong people",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 201,
+      "problem": "Telling stories deducts the player's Study, while the only academic loss shown is the audience learning little of its syllabus.",
+      "fix": "Name the player's own academic work lost in preparing or covering the hour, or apply a consequence of failing the lecturer's request."
+    },
+    {
+      "event": "spot_legend_burden",
+      "priority": "P2",
+      "category": "false one-time promise",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 223,
+      "problem": "The practice branch explicitly says a public failure never happens again. The same unvaried event can draw again and open on precisely that failure.",
+      "fix": "Describe improvement for this attempt or term, or make the card a one-time turning point."
+    },
+    {
+      "event": "renown_fallen_entry",
+      "priority": "P2",
+      "category": "untracked publicity history",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 243,
+      "problem": "A fall from Famous alone is enough to claim there was a Ledger front page with the player's face and that they could not buy bread without autographing it. The player can have reached Famous through other activities without either piece of publicity.",
+      "fix": "Refer to the general change in attention, or condition the newspaper and bakery memories on how the player became known."
+    },
+    {
+      "event": "fallen_unrecognised",
+      "priority": "P2",
+      "category": "unsupported callback and age rule",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 302,
+      "problem": "Falling from fame alone is enough to say this specific baker used to call out the player's name and that children used to follow. The matching recognition card may never have appeared. The adult-only authoring rule also applies to the local admirers.",
+      "fix": "Use a callback variant only if the earlier bakery scene happened, and use adult admirers in both versions."
+    },
+    {
+      "event": "fallen_friends",
+      "priority": "P2",
+      "category": "untracked routine and unshown academic cost",
+      "file": "content/events/spotlight_legend.grim",
+      "line": 340,
+      "problem": "A high current relationship can cast a peer who never shared this regular Thursday game. Staying for it also deducts Study with no academic task shown as foregone.",
+      "fix": "Use current invitation language unless a regular game was established. Show the unfinished work when the player stays late or remove the Study loss."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/spotlight-legend-and-fallen-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-spotlight_legend.json",
+    "build/batches/P4-08.notes.md",
+    "docs/reviews/critic-pass-2026-11-15/brief-fame.md",
+    "docs/reviews/critic-pass-2026-11-15/fame-validation.json"
+  ],
+  "completedAt": "2026-11-15T20:54:22.844Z"
+}

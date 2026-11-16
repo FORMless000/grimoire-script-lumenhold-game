@@ -1,0 +1,108 @@
+{
+  "batch": "pushers-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The rival specializations, debt contacts and fox visits have distinct roles and fit their cast. Four findings concern a short full-payment refund, a stale queued friend after capture, a fixed demonstration check claiming to outperform Lyra, and two costs without the corresponding loss on the page.",
+  "scope": {
+    "reviewedEventIds": [
+      "pr_rival_seat",
+      "pr_rival_book",
+      "pr_rival_race",
+      "pr_rival_signed_up",
+      "lyra_rival_seat",
+      "lyra_rival_signed_up",
+      "bram_rival_race",
+      "bram_rival_signed_up",
+      "grisk_kind_month",
+      "grisk_settle_early",
+      "grisk_interest_in_kind",
+      "grisk_troll_letter",
+      "grisk_regards_friend",
+      "ember_and_footnote",
+      "ember_ring",
+      "ember_out_till_dawn",
+      "ember_mouse",
+      "ember_old_coin",
+      "ember_cold_snap"
+    ],
+    "files": [
+      "content/events/pushers.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "pr_rival_seat": "096cf8973578a36ae0b04aa3c9b03a7970ff701986593286f44518329d1d99f7",
+      "pr_rival_book": "b47aa6972332c871190ff5f8a49011a13bb6f4354dd6fba912067da3fefd13a3",
+      "pr_rival_race": "48e2a4e981fa909d15550931b1e587afc7193a14f485e6f27cbe4fff6f642e51",
+      "pr_rival_signed_up": "28f6a8f96d753d4e438c4240219f04813de45afe2537f1f7d57add142169935b",
+      "lyra_rival_seat": "226887fbbfeacdb7c8493f70f2f5ba9634f96cc68ddd28b2ea0d16dfd869ad7e",
+      "lyra_rival_signed_up": "03afef7599c4b165a7166b64d58c16cbe2458ac88d75da0617884b70d74790ab",
+      "bram_rival_race": "d9bcfe93b9a985e86215c59a7def4b5594f9d616b74b94cbfcce173312c73ac7",
+      "bram_rival_signed_up": "8a5c52dc2874ec8d718133fde6fb103f51029028c559c6ad9bf85a8b58dc19a8",
+      "grisk_kind_month": "1d1a10efe10b0251bee3ee04d319674f8d551b77633dc4620e51b52995778701",
+      "grisk_settle_early": "dae557754336fb69ae0ce5b24ae7e0a503c363ccecedbb5a4b03fc01e9bb4f56",
+      "grisk_interest_in_kind": "cd48dde6268553c453cf14e1e61d0d7be1428bbb370693b274493716bff1b2bd",
+      "grisk_troll_letter": "908dbd6923436a04f9ffd973c246aa1ebf17f6ccce31bfde3415dd3e4ba2cae7",
+      "grisk_regards_friend": "27b7b00e33b40cf9cf23ad9b6fd6a83bbe7be5fb5a5c0a57a5d00be6c0cd7c8c",
+      "ember_and_footnote": "aa721c512247406615206971f6fccb7404189a91269c90daafe3bfe89bc7ec14",
+      "ember_ring": "c18761f4c95579c5bbfc9073cc7ef727e99f5d50d26ea2d0439588c5444d4e1a",
+      "ember_out_till_dawn": "de1e1caa05b576089ac62e2d762d7b9426b9073c41e6c0d8708323936594a9c6",
+      "ember_mouse": "50b1134701a096a6f1cee1613529006fb28bafbd3a848e1524e027f3e1a33c45",
+      "ember_old_coin": "8363a1bbcd72febd2eedb0c88a9b1eaf5fd2ec734909f0f6f24646ded773f392",
+      "ember_cold_snap": "38dda8d099aa57afdb65c01c6500b5d5e7ab34cdf8f0da9e46d15fc3f8a30c2e"
+    }
+  },
+  "issues": [
+    {
+      "event": "grisk_kind_month",
+      "priority": "P2",
+      "category": "refund continuity",
+      "file": "content/events/pushers.grim",
+      "line": 264,
+      "problem": "The offer says this month Grisk will take nothing and returns the unopened payment envelope. The debt tick takes 12 crowns, but gold +small and +tiny return 8 + 3 = 11. The fixture pays from 50 to 38, accepts the month off and finishes at 49. This is a mismatch against the full-refund promise, not a proposal to retune the loan.",
+      "fix": "Use a tier combination or named preset that refunds the actual 12-crown payment, or explicitly state a retained charge and make the offer’s wording honest about it."
+    },
+    {
+      "event": "grisk_regards_friend",
+      "priority": "P2",
+      "category": "queued cast continuity",
+      "file": "content/events/pushers.grim",
+      "line": 348,
+      "problem": "Fresh casting excludes a captured friend, but an already bound monthly card still checks only peer status and relationship. If Ilse is captured after that binding and before this card plays, the ordinary queued card survives and says the player tells her that evening, followed by her spoken reply. The fixture reproduces this transition without debug force; no natural frequency is claimed.",
+      "fix": "Add an availability predicate such as around(friend) to the friend role so its queued cast recheck rejects a newly absent person, or provide a deliberately remote alternative with appropriate wording. Preserve the engine’s general policy of keeping queued story continuations."
+    },
+    {
+      "event": "lyra_rival_signed_up",
+      "priority": "P2",
+      "category": "check pitch",
+      "file": "content/events/pushers.grim",
+      "line": 166,
+      "problem": "The choice is staged directly after the pyromancy prodigy and a win says the player is better than her, or matches her flame for flame. Yet it checks only a fixed apprentice+ spell difficulty, independent of Lyra’s ability. The stated opposing comparison is stronger than merely completing an assigned apprentice demonstration.",
+      "fix": "If this is a contest with Lyra, resolve the comparative performance against her relevant stat. If it is the ordinary assigned demonstration, keep that check and rewrite its success to mean performing the assignment well, without asserting an untested win over her."
+    },
+    {
+      "event": "ember_old_coin",
+      "priority": "P2",
+      "category": "unshown costs",
+      "file": "content/events/pushers.grim",
+      "line": 457,
+      "problem": "Selling the coin deducts mood even though its outcome only describes authentication, a good price and the pawnbroker recording the fox explanation; no loss, regret or embarrassment is shown. Searching for Ember at dawn separately deducts study, but its return scene never says a lesson, reading or other academic work was missed.",
+      "fix": "Show the corresponding emotional cost in the coin sale or remove it; different gains already make selling and keeping trade. In the search outcome name the reading or lecture the search displaced, or remove that academic deduction.",
+      "affectedEvents": [
+        "ember_old_coin",
+        "ember_out_till_dawn"
+      ]
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/pushers-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-pushers.json",
+    "docs/reviews/critic-pass-2026-11-15/final-batches-review.md",
+    "docs/reviews/critic-pass-2026-11-15/remaining-cast-brief.md",
+    "docs/reviews/critic-pass-2026-11-15/validate-final-batches.cjs",
+    "docs/reviews/critic-pass-2026-11-15/final-batches-validation.json"
+  ],
+  "completedAt": "2026-11-16T01:13:37.195Z"
+}

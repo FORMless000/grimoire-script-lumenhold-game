@@ -1,0 +1,79 @@
+{
+  "batch": "countryside-homes-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The Marsh has a recognizable household and unsettling public paths. Some repeating choices assume a prior action, and the supper and remedy choices need clearer time or purchase language.",
+  "scope": {
+    "reviewedEventIds": [
+      "marsh_grandmother_lesson",
+      "marsh_stilt_house_supper",
+      "marsh_witch_stranger",
+      "marsh_lights_on_the_drovers_road",
+      "marsh_drowned_chapel",
+      "marsh_eel_catcher"
+    ],
+    "files": [
+      "content/events/maps/countryside_homes.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "marsh_grandmother_lesson": "a2612fa3a860ad4e9581f481127ffc58b35a02807deb61a844a618ca500b5744",
+      "marsh_stilt_house_supper": "82ff12e64015fa2b60aeb166a7ab3f3afcf094bc7a351c219af8fc7ab8db226a",
+      "marsh_witch_stranger": "531dd2aef45d241db5d9491547b2ae8e30fed3999996665fe21f85ec4898cf94",
+      "marsh_lights_on_the_drovers_road": "829bdba92ac808294d8c50763f506d171070c61311eca0470b8c6f5a18624927",
+      "marsh_drowned_chapel": "28e63702c2368ee7a0fb59c76b144b68935ce177d574a405dde8f0d9c3619d39",
+      "marsh_eel_catcher": "b22ade53b09f4f357bd93ee5a44d8234c8a5ecc792bbbc8a9d3bcf2f91675d0e"
+    }
+  },
+  "issues": [
+    {
+      "event": "marsh_stilt_house_supper",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/maps/countryside_homes.grim",
+      "line": 32,
+      "problem": "The supper scene takes place at dusk, with the marsh going quiet outside and lamplight at the shutter. It has no required slot and can be drawn on a noon visit.",
+      "fix": "Require an evening visit for the supper or change the opening to match the visit slot."
+    },
+    {
+      "event": "marsh_witch_stranger",
+      "priority": "P2",
+      "category": "choice legibility",
+      "file": "content/events/maps/countryside_homes.grim",
+      "line": 50,
+      "problem": "Asking what the woman means immediately spends gold on rue. The button asks a question and the only quoted price appears after the choice has been made.",
+      "fix": "Offer to buy the rue in the label and establish the price before the decision, or make the exchange a separate choice after the question."
+    },
+    {
+      "event": "marsh_lights_on_the_drovers_road",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/maps/countryside_homes.grim",
+      "line": 67,
+      "problem": "The second left outcome says the player goes further this time even if they watched from the bank on the first showing. The second and third left outcomes also retain the Health loss without showing the wet, cold or strain that the first one describes.",
+      "fix": "Use route-neutral progression unless an earlier walk is recorded, and show the bodily toll in each outcome that charges Health."
+    },
+    {
+      "event": "marsh_drowned_chapel",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/maps/countryside_homes.grim",
+      "line": 84,
+      "problem": "The second sketch outcome says the player sketches it again from the same tussock. It can be the first sketch if they waded out on the first showing.",
+      "fix": "Describe the new drawing without assuming a previous one, or record the earlier sketch choice."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/countryside-homes-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-countryside_homes.json",
+    "docs/reviews/critic-pass-2026-11-15/country-places-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-country-places.cjs",
+    "build/batches/K1K2-countryside.notes.md",
+    "content/world/lore/soft/places.grim",
+    "content/world/places.grim"
+  ],
+  "completedAt": "2026-11-16T00:38:55.847Z"
+}

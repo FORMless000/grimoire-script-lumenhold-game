@@ -2,7 +2,7 @@
 
 ## Tone
 
-Warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes from specifics (a mandrake in a knitted hat, a quill that invents the news), never from winking at the reader. Sad moments are allowed and should be earned. Each class has its own register (`classes.md`). No gore, nothing explicit, no real-world brands, no modern slang. Every character is an adult; romance is only between adults (lint enforces ages).
+Warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes from specifics (a mandrake in a knitted hat, a quill that invents the news), never from winking at the reader. Sad moments are allowed and should be earned. Each class has its own register (`classes.md`). No gore, nothing explicit, no real-world brands, no modern slang. Every character who takes part in a scene is an adult: anyone who speaks, is spoken to, acts on the player or is acted on (rescued, helped, held, chased, taught by, dared by), and every cast role. Romance is only between adults (lint enforces ages). Children may be background, part of a crowd or a passing glimpse (children on shoulders at a procession, a family on the promenade), but never take part in the action.
 
 ## Voice
 

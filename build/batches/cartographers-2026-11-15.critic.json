@@ -1,0 +1,106 @@
+{
+  "batch": "cartographers-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected because the Master Map's completed test remains eligible, some choices imply unrecorded outcomes, and costs are missing from the midnight search variants. The two heist introductions and their shortcuts remain distinct from the heists they unlock.",
+  "scope": {
+    "reviewedEventIds": [
+      "carto_map_blanks",
+      "carto_deep_stacks",
+      "carto_tower_stair",
+      "carto_book_lift",
+      "carto_tower_chimney",
+      "carto_map_keeper",
+      "carto_forged_map",
+      "carto_quiet_prefect",
+      "carto_member_out",
+      "carto_recruit",
+      "gargoyle_midnight_one_short",
+      "gargoyle_midnight_lost_map"
+    ],
+    "files": [
+      "content/events/cartographers.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "carto_map_blanks": "e2ea29bce301b477b82543cd25935c482e6034413996117920d157000805ed35",
+      "carto_deep_stacks": "42d2170433f84745d639047135fa810ca4bbd8c1e3b12eec78a9c3661b3469af",
+      "carto_tower_stair": "610e0fb02d2e271f4559094cc32f49ae8f103803ecb89159c89778e4bacd957f",
+      "carto_book_lift": "8b7a225e0ca05b8e7ef576325bf87d0fc8cef9854fd0147bad3a3106745bac7e",
+      "carto_tower_chimney": "027ce296d1c8a457f3f2b90dbf9f6ad67099ce21b8ad58422887e25401a35872",
+      "carto_map_keeper": "ca39793ec72d7189e6fc0d3bacee720d6ed73a2eb2077e6087c1b87fddd5a80f",
+      "carto_forged_map": "27e2e696712cb2c7da4dce38738287fe0048f39912ee0531faade549d3f7b33f",
+      "carto_quiet_prefect": "c978a42149e869938dccb555401d6a7ca1c6c4cf97e80d05792983b1d5522003",
+      "carto_member_out": "2ae98718cb1849f227222a27d154ca0af3b90a8a4e121c173be954774dd58d45",
+      "carto_recruit": "3c6b3db217f09f29afe8129bda5f04f22021bff80f775e5593b7e855a9eb9aaa",
+      "gargoyle_midnight_one_short": "0850669bfd3947bc225d6a5dd922cd3027f802bffebf9040cf790839acb70acc",
+      "gargoyle_midnight_lost_map": "ae0d303606793932e83c14080b506ea9c90cec926ffb78ab3caea62fa30b57c7"
+    }
+  },
+  "issues": [
+    {
+      "event": "carto_map_keeper",
+      "priority": "P2",
+      "category": "resolved finale can return",
+      "file": "content/events/cartographers.grim",
+      "line": 165,
+      "problem": "The finale's two terminal answers set carto_map_done, and the Journal uses that flag for resolution. The inherited final condition checks the start and preparation or give-up timing, but never reads carto_map_done. After the cooldown, the fixture can select the test again after the player already told Corvin to keep the map.",
+      "fix": "Gate the final on not flag(carto_map_done). Keep the unexplored heist routes available separately so finishing the test does not remove the other heist."
+    },
+    {
+      "event": "carto_map_blanks",
+      "priority": "P2",
+      "category": "ungated time reference",
+      "file": "content/events/cartographers.grim",
+      "line": 41,
+      "problem": "Corvin says the last Keeper handed over the map ‘this summer’ on the first showing. The offer has a lower turn bound and can first occur much later if the player joins in a later year. His canon fact describes the original handover, not a fresh handover in whatever year the card first draws.",
+      "fix": "Refer to the handover without a relative date, or tie ‘this summer’ to its actual year."
+    },
+    {
+      "event": "carto_tower_chimney",
+      "priority": "P2",
+      "category": "unshown mood and health costs",
+      "file": "content/events/cartographers.grim",
+      "line": 139,
+      "problem": "The failed sentence shows a tight fit and soot, but no physical injury, serious exertion, or emotional price to account for losing both Health and Mood.",
+      "fix": "Name the bodily strain or scrape and the panic or embarrassment, or charge only the cost that the failed climb demonstrates."
+    },
+    {
+      "event": "carto_recruit",
+      "priority": "P2",
+      "category": "promised recruit never persists",
+      "file": "content/events/cartographers.grim",
+      "line": 247,
+      "problem": "Success names a particular classmate, says they came in under the gargoyle, and calls this the player's turn to bring a member. The only durable effects concern relationship and suspicion. The recruited classmate's membership is neither recorded nor reflected in another scene.",
+      "fix": "If this completes recruitment, record the invitee so later appearances can recognize it. Otherwise describe a first visit or invitation without implying a settled membership."
+    },
+    {
+      "event": "gargoyle_midnight_one_short",
+      "priority": "P2",
+      "category": "unshown Health loss in variants",
+      "file": "content/events/cartographers.grim",
+      "line": 269,
+      "problem": "All three failed searches deduct Health. They show being turned around, narrowly missing a prefect, and looking in the wrong passages, respectively. None clearly shows the bodily toll or lost sleep the penalty is meant to represent.",
+      "fix": "Show cold, injury, exhaustion or missed sleep in each failed search variant, or apply a fitting nonphysical cost."
+    },
+    {
+      "event": "gargoyle_midnight_lost_map",
+      "priority": "P2",
+      "category": "redrawing does not invalidate the stolen information",
+      "file": "content/events/cartographers.grim",
+      "line": 294,
+      "problem": "In the coat-pocket variant the club redraws everything the map showed and the result claims the missing copy is worth nothing. Redrawing the same routes leaves the original usable. The kitchen and boathouse variants at least describe abandoning routes.",
+      "fix": "Show the club blocking, changing or giving up the routes recorded on that missing map, or acknowledge that the disclosure still stands."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/cartographers-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-cartographers.json",
+    "build/batches/T3-cartographers.notes.md",
+    "docs/reviews/critic-pass-2026-11-15/cartographers-validation.json"
+  ],
+  "completedAt": "2026-11-15T21:08:42.875Z"
+}

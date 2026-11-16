@@ -1,0 +1,137 @@
+{
+  "batch": "between-known-b-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagents gathered source context and retrieval evidence only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected: several costs are not shown by the player's outcomes, including costs attributed to another character's embarrassment and academic costs that can do nothing on breaks. All source events, variants and required similarity checks are complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "seraphine_between_warning",
+      "seraphine_between_sentences",
+      "tobias_between_sayings",
+      "tobias_between_supper",
+      "tobias_between_sulking",
+      "maud_between_soup",
+      "maud_between_beans",
+      "maud_between_advice",
+      "thorne_between_hard",
+      "thorne_between_flattery",
+      "isolde_between_remembers",
+      "isolde_between_complaint"
+    ],
+    "files": [
+      "content/events/between_known_2.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "seraphine_between_warning": "e6b44a8a19d20db4bf331d27db8553bc720cd0265503997f795959ef4c2517ee",
+      "seraphine_between_sentences": "c62c928afa9638835ede36291f3045e4c2c516692ec06fa5f2a14cdcf023fa0f",
+      "tobias_between_sayings": "bcea5783ca49e056638471cac243095dae276f6974746766f5b6ebc0221fa695",
+      "tobias_between_supper": "019b7d6cbe67e7e36f19ab85fa4208f9fdf5a527d1453c098b2d183ab2e3b55f",
+      "tobias_between_sulking": "dc48b18debb9f8d26e472a6aa14e666c15d8af598491dbcb249effdf7d526878",
+      "maud_between_soup": "8154f3df389d95370a12cf8bf826dfe515e86bf5df40acb6c8bc54baf41c922d",
+      "maud_between_beans": "f6f81e07a2d9829e2c72168ec6a71ea37a957d9b57893d06b8fc6e4d03e4926f",
+      "maud_between_advice": "879c0e8851b3b23e87d37974ab9162d68194815764987f4fc6a29fcefbece6dc",
+      "thorne_between_hard": "c766268ae6193aaebb5304d5250ec53bb72ff3117c2b971ce9b8beda26255c1d",
+      "thorne_between_flattery": "3852ed9063d12ffa71df25bdda4101a1b3ece2d6754910c9d352d05f9bf77e9f",
+      "isolde_between_remembers": "34469e5b8e1e413d278f8b9f2331b0487355d9177a224a03fac6335822932b3d",
+      "isolde_between_complaint": "2791733b6af8fe65839546c8d61306426533e0929a3bd2bda025fc9f16ed683b"
+    }
+  },
+  "issues": [
+    {
+      "event": "seraphine_between_warning",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 9,
+      "problem": "Take the south stair deducts player Mood -tiny, but its outcome describes the classmate feeling silly, avoiding trouble, and becoming closer to Seraphine. No loss of the player's spirits is shown; the classmate's feeling is not the player's cost.",
+      "fix": "Show what the player finds worrying or upsetting, or remove the unshown Mood charge and keep the options trading their different relationship gains."
+    },
+    {
+      "event": "seraphine_between_sentences",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 31,
+      "problem": "Ask Seraphine to stay in today loses relationship with o in every variant, but no outcome shows o disapproving. The request is being made on o's behalf. The first and third variants also deduct player Mood while only showing Seraphine pleased or managing a conversation, without showing the player's loss.",
+      "fix": "Show o's actual reaction to your intervention and the player's emotional cost in every charged variant, or replace/drop the effects that do not follow from the scene."
+    },
+    {
+      "event": "tobias_between_sulking",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 105,
+      "problem": "Helping o apologise to the ferns deducts player Mood -tiny. The outcome calls o mortified while the player holds a watering can and Tobias coaches. It does not show the player sharing that embarrassment or otherwise paying a Mood cost.",
+      "fix": "Give the player a concrete awkward or frustrating part in the apology that shows the charge, or remove it; do not use the other character's embarrassment as the player's cost."
+    },
+    {
+      "event": "maud_between_soup",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 130,
+      "problem": "Sitting with the sick classmate deducts study -small, but the outcome names no missed lecture, revision or academic obligation. This card is also not term-gated, so it can play during a castle break when there is no enrolled course for that study cost to affect.",
+      "fix": "Show the academic work actually sacrificed and restrict the academic-cost version appropriately, or use a meaningful cost that the visit depicts in term and on breaks."
+    },
+    {
+      "event": "maud_between_beans",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 152,
+      "problem": "Re-staking the beans deducts study -tiny, but its outcome places the job at dawn before Maud is up and never says any academic work was missed. It can also play on a castle break when study has no enrolled course to affect.",
+      "fix": "Show and gate the skipped academic work, or use the physical exertion of re-staking the row as the trade, with matching prose."
+    },
+    {
+      "event": "thorne_between_hard",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 205,
+      "problem": "Read the red ink with o deducts study -tiny, yet the outcome describes working through and understanding Thorne's academic feedback, and gives Arcana. Nothing says the player misses their own revision, lecture or deadline to do this.",
+      "fix": "Show the player neglecting their own actual academic obligation while helping o, or remove the unexplained preparation loss."
+    },
+    {
+      "event": "isolde_between_complaint",
+      "priority": "P2",
+      "category": "unshown or ineffective cost",
+      "file": "content/events/between_known_2.grim",
+      "line": 277,
+      "problem": "Helping rewrite the complaint deducts study -tiny, but the outcome only describes trimming the letter and the classmate's successful appointment. No academic work the player gives up is identified.",
+      "fix": "Name the player's missed revision or other academic obligation in the outcome, or choose a different trade that the scene shows."
+    },
+    {
+      "event": "tobias_between_sayings",
+      "priority": "P2",
+      "category": "duplicate premise",
+      "file": "content/events/between_known_2.grim",
+      "line": 54,
+      "problem": "This repeats tobias_bullied's specific encounter: a classmate publicly mocks Tobias's farm accent while others laugh and Tobias tries to hide how much it hurts, leaving the player to intervene. Bram can even fill the new mocking role because he is an eligible peer who does not get along with Tobias. The new way to redirect the mockery does not replace the already-used setup or the confrontation option.",
+      "fix": "Use a different Tobias-and-classmate conflict, or consolidate the new redirection option into the existing accent-mocking encounter instead of keeping two versions of that scene.",
+      "evidence": [
+        "content/events/people_students.grim:347",
+        "content/events/between_known_2.grim:54"
+      ]
+    }
+  ],
+  "limitations": [
+    "No card source repairs or gameplay-frequency claims. Any later cross-batch duplicate owner is recorded in the progress ledger to avoid duplicate repair requests."
+  ],
+  "completedAt": "2026-11-15T18:36:57.904Z",
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/between-known-b-2026-11-15.duplication.json"
+  ],
+  "checks": {
+    "currentCompilationErrors": 0,
+    "allScopedSourceAndVariantsRead": true,
+    "speakingCastVoicesAndFactsRead": true,
+    "relatedQueries": 12,
+    "nonSelfSourceCandidatesReadPerCard": 3,
+    "candidateSourceHashesMatchCurrentCatalog": true,
+    "scopedDefinitionHashesMatchFrozenInventory": true
+  }
+}

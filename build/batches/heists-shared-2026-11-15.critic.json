@@ -1,0 +1,61 @@
+{
+  "batch": "heists-shared-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The shared heist resolutions communicate the drop in cover and the cost of being caught. The exit offers loot decisions when there is no loot, and the escape outcome reads the bag after it has been cleared.",
+  "scope": {
+    "reviewedEventIds": [
+      "heist_way_out",
+      "heist_slip",
+      "heist_caught"
+    ],
+    "files": [
+      "content/events/heists/shared.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "heist_way_out": "25b8793d469512ea9d30148623af3be999498eaa0b9f098306ba6c7221775c9d",
+      "heist_slip": "828f5547e61682cf4d72631a1dbe1a5f85cb2f7e68856451721a7f62e7c30339",
+      "heist_caught": "881dda18e18f1cc9ffbb4267ee02bf97ddf3a4b08254b534efc0f7ef04fe54cf"
+    }
+  },
+  "issues": [
+    {
+      "event": "heist_way_out",
+      "priority": "P2",
+      "category": "choice legibility",
+      "file": "content/events/heists/shared.grim",
+      "line": 18,
+      "problem": "When no loot was brought out, both buttons still ask what to do with loot. For the deck-only trip the sell button also follows a vault outcome that already gave the tin to Corvin at breakfast, while the exit brings the same tin back out before dawn.",
+      "fix": "Use an empty-haul exit with a meaningful choice or a neutral acknowledgement. For the tin, let one card own the delivery and keep it in chronological order."
+    },
+    {
+      "event": "heist_slip",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/heists/shared.grim",
+      "line": 70,
+      "problem": "On-show always deducts Health, but four of the six opening variants describe losing nerve or hiding, with no bodily price. Both final choices inherit the same damage.",
+      "fix": "Add a scrape or other physical toll to the variant that applies Health loss, or move the cost to variants where it occurs."
+    },
+    {
+      "event": "heist_caught",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/heists/shared.grim",
+      "line": 99,
+      "problem": "The successful escape zeroes heist_loot before rendering the line that tests it, making the carrying-loot outcome unreachable. The opening also says the prefect has already taken the loot, so dropping it during escape would require changing the opening too.",
+      "fix": "Choose whether the prefect takes the loot before or during the choice. Put the relevant state test before the reset or use one line consistent with advance confiscation, and show the physical cost of the successful run."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/heists-shared-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-shared.json",
+    "docs/reviews/critic-pass-2026-11-15/heists-and-board-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-heists-and-board.cjs"
+  ],
+  "completedAt": "2026-11-15T21:30:33.313Z"
+}

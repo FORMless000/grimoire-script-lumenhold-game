@@ -1,0 +1,19 @@
+# Main-agent review: the final 40 cards
+
+Read in full: the two active remaining quiet-hour cards, nine Night Market cards, seven offer hints, the headmistress dictation, two grounds additions and nineteen pushers. Each final verdict has an individual comparison of its three non-self indexed candidates. All otherwise unread candidates from those receipts were read in full. The frozen indexed screening method is disclosed in the README; no new doubtful duplicate premise remained after these comparisons.
+
+Canon/context read: `remaining-cast-brief.md` supplies the complete voices and facts of Lyra, Bram, Grisk, Mir, Amaranth, Maud and Isolde; earlier place briefs cover their locations and cast neighbours. Also read the worldbook's Night Market and Ember entries, `docs/threads-2-plan.md`, the midnight lead-in/out/sleep/suspicion wiring, the market place's fixed shop, the offer appointments and all actual offer cards, the elder-oak and Spinner gifts, and the debt state's monthly tick. The side leads and gifted kit have their own acquisition cards; a reminder is not a duplicate of acquiring the item.
+
+The pusher appointments, rather than ordinary random draws, supply their queued cards. The generic rival variants and named specializations are intentional alternatives sharing bookkeeping, not competing duplicate scenes. Bram's dawn challenge and Ember's morning returns use the first-slot monthly push; Lyra's library card explicitly uses night, when the library is open. Grisk's dunning appointment is in paid term months, so a refunded payment can already have been collected that morning. The observed refund mismatch is a one-crown discrepancy against an explicit full-refund promise, not a proposed balance retuning.
+
+`validate-final-batches.cjs` passed and preserves the following bounded evidence:
+
+- Seed 10 links the Thornwick shopper's third opening (she raises a toffee apple) to its third trade outcome (he tells you about exams).
+- The 12-crown debt tick takes gold from 50 to 38. Taking the supposedly free month then leaves 49: the tier combination returns only 11.
+- Fresh casting **does exclude** a captured Ilse. The narrower defect occurs when the monthly card has already bound her as its friend, then another story sets `ilse_taken` before it shows. An ordinary queued item, without debug force, still plays the conversation because the role's `where` lacks an availability predicate for the later cast recheck. The fixture models that transition; it does not estimate its natural frequency.
+- The counting-house quiet hour has positive noon fit (0.3) while describing after hours and the night porter's lantern round.
+- The suspected Night Market ordering issue is excluded. In an opened midnight visit the fixed shop is followed by one other card. Forcing the drawable set to its packing card yields exactly shop, then packing, with no subsequent ordinary stall. The dawn epilogue need not become an extra scheduled slot.
+
+Other exclusions: ordinary non-kit gifts (the scarf, bread, goggles and wreath) can be narrated props. No inventory operation or new item is required solely to name one. The broom farewell's repeat can refer to participating in the ritual even after holding the wreath; its ambiguous wording is insufficient for a false-speech-history finding. The barge crew establishes the player's mundane waving habit in this one-off scene, rather than claiming a previously selected card outcome. The dictation's heavy letters convey emotional burden as well as writing fatigue. None of these exclusions asserts that every possible play history was simulated.
+
+The accepted Night Market and offer-hint verdicts retain small wording fixes: the linked pronoun, and an explicit mention of the study postponed by Mir's salve errand. The headmistress and grounds additions have no actionable findings. No content, localization or generated bundle was edited.

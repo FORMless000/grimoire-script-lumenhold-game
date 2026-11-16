@@ -1,0 +1,57 @@
+{
+  "batch": "night-market-2026-11-15",
+  "accept": true,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Accepted with one linked-pronoun fix. The market’s discovery, counter, bargains and departure scenes differ in premise and choices, and the fixed-shop visit ordering already places the dawn epilogue last.",
+  "scope": {
+    "reviewedEventIds": [
+      "nm_rumour",
+      "nm_rumour_newt",
+      "night_market_stalls",
+      "nm_memory_tuner",
+      "nm_stolen_compass",
+      "nm_thornwick_shopper",
+      "nm_honesty_stall",
+      "nm_dawn_packing",
+      "nm_moon_scales"
+    ],
+    "files": [
+      "content/events/night_market.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "nm_rumour": "64a848da1c65047c5b6c6e5d49cc9a5892e0edb4b2985e3dc17416e0300156bb",
+      "nm_rumour_newt": "6bcc0a776fbcf2d6090f1a2341879a9aac137c12f6708502ba02f7476415d3c0",
+      "night_market_stalls": "7910a91e196a7c21a00693ba2830ef4a04ee975f1183458bc94794846b2a9d47",
+      "nm_memory_tuner": "fb73917ed191fd8f77d687809b8a28105a90ecf84202bf59bf9268658b53035f",
+      "nm_stolen_compass": "63da6421f64506a362947af87aa0ce7f88c218098fc04939d2ff793e08f98abe",
+      "nm_thornwick_shopper": "8b771dbc6e6afc4695529c28f7d4492477da486a3ec070ea3797f6577709cd80",
+      "nm_honesty_stall": "891e78fcb3710d8f493c7a3d37ecfe5a2d277833da411d861f44529f8f18f66f",
+      "nm_dawn_packing": "fe373a659eeb443f738a75d6e5304671d6f5489049fe9934ab7a97ff3853c1d4",
+      "nm_moon_scales": "8e269d5c9945e6169c45c0c2ab277d442c5b516fb3f627b9b54dffbc0f8a5d29"
+    }
+  },
+  "issues": [
+    {
+      "event": "nm_thornwick_shopper",
+      "priority": "P2",
+      "category": "linked variants",
+      "file": "content/events/night_market.grim",
+      "line": 143,
+      "problem": "The third opening introduces a female Thornwick student raising a toffee apple, but the third secret-trade outcome begins He tells you and continues with him. Seed 10 reproduces that linked mismatch.",
+      "fix": "Use she/her in the third trade outcome, or revise that linked opening and both outcomes consistently if a different student is intended."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/night-market-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-night_market.json",
+    "docs/reviews/critic-pass-2026-11-15/final-batches-review.md",
+    "docs/reviews/critic-pass-2026-11-15/remaining-cast-brief.md",
+    "docs/reviews/critic-pass-2026-11-15/validate-final-batches.cjs",
+    "docs/reviews/critic-pass-2026-11-15/final-batches-validation.json"
+  ],
+  "completedAt": "2026-11-16T01:13:37.192Z"
+}

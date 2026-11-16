@@ -1,0 +1,112 @@
+{
+  "batch": "countryside-wide-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The wider valley offers varied work and folklore at distinct places. Some costs describe the body while deducting spirits, and night scenes still have daytime eligibility.",
+  "scope": {
+    "reviewedEventIds": [
+      "shop_country_market",
+      "shop_hedge_door",
+      "ford_crossing",
+      "ford_spate_cart",
+      "ford_ferryman_side",
+      "coppice_rides",
+      "coppice_woodward",
+      "coppice_charcoal_night",
+      "tarn_still_water",
+      "tarn_angler",
+      "quarry_face",
+      "quarry_echo",
+      "quarry_millstone",
+      "drovers_long_table",
+      "drovers_tinker",
+      "drovers_loose_bear"
+    ],
+    "files": [
+      "content/events/maps/countryside_wide.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "shop_country_market": "c88ee25aa2cd67651d40e10cb741a4eab7600bb2fc60a91d7ae5f18569b6fc87",
+      "shop_hedge_door": "a96b5ddee4a19b1c8e0acb9aec9192bd42a5480314f6fc4b806afd3793078ba9",
+      "ford_crossing": "487f45cdb65497c6e8c637ba4fd0cbb52628d2ea7fe5cbcf49bf0d0de8de04ae",
+      "ford_spate_cart": "c0f25f6387ec3879abd92127271c9ac105be4b39fb92707df19a407bcb660b3d",
+      "ford_ferryman_side": "c4237c31caabcf10ffbbdab169794b89cbe187335c39cdec084298931d6729b2",
+      "coppice_rides": "4ac62a650230495b9b8da9eb826096ed1f0e3d45a43284b41ab4069d6b231887",
+      "coppice_woodward": "54f1115e3c0ba61447e67fd809ef9754470093072d62dde964195a84c1805cd4",
+      "coppice_charcoal_night": "e9a30c7407828c0de5ff781eb5fc7fe571e2e2e2f13257873cef823b3544d015",
+      "tarn_still_water": "a8d5240befeb87922619252fd719d1d5c0900a9df7e9b924dc3b1030f5e586e6",
+      "tarn_angler": "d7143f73d84abbcae2d0e2e6080bc52f331c1677bea2d4c8b0d497c8f0d1b367",
+      "quarry_face": "d36b33f6e7a73b39b3dcb394c9c878c1a0dbed551ec5f692d10709f2e6a2e69c",
+      "quarry_echo": "61835212cb2a3eab6988f3b7827b336277a5f46e5bfd2e32559aae31c6b19640",
+      "quarry_millstone": "73e0d4bf3d991b1e5734688658d07f816d325b2503b16d4e266c6daecb70b765",
+      "drovers_long_table": "b78f76e79abb1296e8037b6576983f0374bce24d35371ddc8eb1c7ddb30a21f8",
+      "drovers_tinker": "daadc98d329b103751ea0e7e19137031f733fa28d47c1613323ca01592aff610",
+      "drovers_loose_bear": "74cc54264358b7c09286d9cd53d803daf2e24cbc613d9dae4fc63ece93feee95"
+    }
+  },
+  "issues": [
+    {
+      "event": "coppice_rides",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/maps/countryside_wide.grim",
+      "line": 163,
+      "problem": "Charcoal work deducts Mood, but the three variants describe stacking, bundling and turfing, payment, sausage, singing, raw shoulders and getting wet. They show bodily exertion without the boredom, resentment or distress that would explain a Mood loss.",
+      "fix": "Show the emotional cost in each work outcome or use the bodily cost already described."
+    },
+    {
+      "event": "coppice_charcoal_night",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/maps/countryside_wide.grim",
+      "line": 196,
+      "problem": "The night watch has only a time preference for evening, so it can appear on an open noon visit while the scene shows the camp in darkness. The Drovers' long table and loose bear similarly favor evening or night but retain positive noon eligibility while their openings or outcomes specify night.",
+      "fix": "Use required slots or conditions for the night scenes, or vary their current time references to fit the slot.",
+      "affectedEvents": [
+        "drovers_long_table",
+        "drovers_loose_bear"
+      ]
+    },
+    {
+      "event": "quarry_face",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/maps/countryside_wide.grim",
+      "line": 268,
+      "problem": "Searching the scree deducts Mood, but the variants show an aching back, cold gritty hands, fingers that stopped working and a sunburnt neck. Their discoveries are described positively, with no corresponding disappointment or frustration.",
+      "fix": "Align the cost with the body in these lines or show why the search lowers the player's spirits."
+    },
+    {
+      "event": "quarry_echo",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/countryside_wide.grim",
+      "line": 290,
+      "problem": "The companion is repeatedly a shepherd boy who dares the player and laughs on the rim. The adult-only live-cast rule needs the shepherd to be clearly an adult.",
+      "fix": "Make him an adult shepherd and retain his amusement at the echo."
+    },
+    {
+      "event": "quarry_echo",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/maps/countryside_wide.grim",
+      "line": 290,
+      "problem": "The player calls Good morning, and the question outcome refers to the only pause all morning. The card can draw on an ordinary afternoon visit.",
+      "fix": "Use time-neutral greetings and duration, or give the encounter a supported time gate."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/countryside-wide-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-countryside_wide.json",
+    "docs/reviews/critic-pass-2026-11-15/country-wide-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-country-briefs.md",
+    "build/batches/K5-countryside-wide.notes.md",
+    "content/world/lore/soft/places.grim",
+    "content/world/places.grim"
+  ],
+  "completedAt": "2026-11-16T00:40:54.248Z"
+}

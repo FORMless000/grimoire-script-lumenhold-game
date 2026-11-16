@@ -1,0 +1,96 @@
+{
+  "batch": "between-generic-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagent gathered local context and retrieval evidence only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected. Four cards have concrete defects: a mismatched boot-hex scene, missing promised detention, a dishonest reconciliation with no moral cost, and unshown variant costs. All 15 cards and required similarity checks are complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "between_two_seats",
+      "between_messenger",
+      "between_whose_idea",
+      "between_boot_hex",
+      "between_not_them",
+      "between_peace_offering",
+      "between_seconds",
+      "between_dorm_vote",
+      "between_lab_partners",
+      "between_cipher",
+      "between_inside_joke",
+      "between_cover_roll",
+      "between_closed_table",
+      "between_night_roof",
+      "between_falling_out"
+    ],
+    "files": [
+      "content/events/between.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "between_two_seats": "100bee9b31332ff5a9b27507e9e8bede6ca3ba9ba5940c9761acbb122056e79f",
+      "between_messenger": "11cc1dc650cfb70c283fb253630aec330385739cd0430fe93864885a44a262ca",
+      "between_whose_idea": "ba777e0638c0656d80abd381036544295403f74306f23a47e57dfad17c8ea810",
+      "between_boot_hex": "965d0447b5317cd15c9c328e8f76e92e63be229fe8ed8b4454c25707802c50b2",
+      "between_not_them": "4b5e1ba12291c200938b1e051ad05356a9cc52e01223ba6cfd3597e158911f56",
+      "between_peace_offering": "56529da6c9263b4427d09ad1dfe971a988531e7ca564180d914da65391d82fe5",
+      "between_seconds": "be4503d8d1cc09dea0e6ca6f3a7208e883925e281d0a71dfe0e5fd1fd494ae18",
+      "between_dorm_vote": "860b49c1bf710c04ea9cde733e1c02ad4958c54a1a64a41678d9c2ee0c4cda0f",
+      "between_lab_partners": "3a0b808606dce58fde5c5cf22dd5206fcfdd526f6b1102295ebd100ab99f8040",
+      "between_cipher": "ae4277f895de94e364649b9a163951fb0b3ddc632788684ba8ccb2cc1354cb91",
+      "between_inside_joke": "988ace4ac102c6ac0d8e84139de8a0be2620753a2714910f2cbf3c1427f096a6",
+      "between_cover_roll": "6e825455ef53da7ea9d6b07284740dcd01e73d06f776dc3f1d52b6d8219c16d5",
+      "between_closed_table": "4956e5a2451bcc44ef182fdd9dc0e389c91aedc3050170c89faf02345455489c",
+      "between_night_roof": "6a5c520dae7f1c1cf4cb4e53bdc75d620652a9e39bb2d7107e329c855b7a2b19",
+      "between_falling_out": "a4d341cbd8a752d6a326b1f22bec74f0b87630649cd5dbc9ce033b46bfeecfaa"
+    }
+  },
+  "issues": [
+    {
+      "event": "between_boot_hex",
+      "priority": "P2",
+      "category": "linked-variant continuity",
+      "problem": "The fixed scene describes boots jigging along the flagstones in all three variants. Variant 2 only makes the boots squelch and variant 3 ties the laces together; their outcomes continue those distinct hexes without dancing. The displayed scene contradicts two of the three matched text/outcome sets.",
+      "fix": "Use a scene that covers all three boot hexes, or give the scene three matched random variants.",
+      "file": "content/events/between.grim",
+      "line": 107
+    },
+    {
+      "event": "between_cover_roll",
+      "priority": "P2",
+      "category": "promised consequence missing",
+      "problem": "The failed impersonation says It's a detention for you, but applies only relationship changes, Mood loss and Alignment. It never gains detention. A forced seed-7 loss reproduces the sentence while the player has no detention state.",
+      "fix": "Apply the promised detention using the existing state conventions, or describe the actual lesser consequence instead.",
+      "file": "content/events/between.grim",
+      "line": 309
+    },
+    {
+      "event": "between_falling_out",
+      "priority": "P2",
+      "category": "alignment and check/action mismatch",
+      "problem": "The successful appeal reconciles the friends by sending each a false note saying the other has apologized. The player gains both friendships through that lie, with no Hollow movement. The action actually described is deception, despite the option testing appeal.",
+      "fix": "Make the invitation honest and keep an appeal, or describe and test the deceptive scheme as deception with the appropriate moral cost.",
+      "file": "content/events/between.grim",
+      "line": 388
+    },
+    {
+      "event": "between_inside_joke",
+      "priority": "P2",
+      "category": "unshown variant costs",
+      "problem": "Laugh along loses relationship with a even in the variants where only b pats your shoulder kindly, or a is delighted to discover you do not know the joke. Neither shows a becoming cooler. The final explanation variant also charges Mood for a successful reenactment that ends You're in it now, with no adverse feeling shown.",
+      "fix": "Show a's actual disappointment in each affected laugh variant, and show the emotional cost of the explanation where charged; otherwise remove the unshown costs and preserve an honest choice between distinct gains.",
+      "file": "content/events/between.grim",
+      "line": 288
+    }
+  ],
+  "limitations": [
+    "No card source repairs or gameplay-frequency claims. The overlapping later circle_newcomer scene is tracked in its own story batch."
+  ],
+  "completedAt": "2026-11-15T18:27:29.541Z",
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/between-generic-duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/between-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/brief-between-cast.md"
+  ]
+}

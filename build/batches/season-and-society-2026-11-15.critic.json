@@ -1,0 +1,146 @@
+{
+  "batch": "season-and-society-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected because the Season can stall on a required cast, its Journal misattributes a prior rivalry outcome, and several fame scenes assert untracked histories.",
+  "scope": {
+    "reviewedEventIds": [
+      "season_invitation",
+      "season_lady_vaneshade",
+      "season_rival",
+      "season_ball",
+      "season_friends",
+      "season_price",
+      "season_end",
+      "fame_rivals_for_you",
+      "fame_wedge",
+      "fame_best_friend_claims",
+      "fame_after_you"
+    ],
+    "files": [
+      "content/events/society.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "season_invitation": "135ba19bcdf72874c4a47144069076dfce7be9c2bd16dc5d0915d446798ba3f9",
+      "season_lady_vaneshade": "70da11599fb968e65e3738479b370d7f00ef950aa84e1c5d9abac5ff229a4883",
+      "season_rival": "10f13fa9aca5efe79b56a99851e3fc4e6f7b524869d579debc181687cd46248f",
+      "season_ball": "0fa820c0a6fd197eeb7b6de7eed4beb818340b20e226d9c01addbb832cccad29",
+      "season_friends": "19996b3abd824cfcec3558990e844bd792141d3fdc1efe6b14d4351aa097295a",
+      "season_price": "d883aaf20f38b2b0a263eaacaed4755107ae19ea3f31879c0180167b1f1d1357",
+      "season_end": "554a6a1bc993a0daf1366d382c30c7871f92524cbc4deea61a908d17012b05c1",
+      "fame_rivals_for_you": "125ddad65c73a6c6ae8771aaeea7e848482865027f0bea707a4fe5bfcc17adad",
+      "fame_wedge": "54ce4085fefa12867c2312b6e02d2c19b7a08707b8720e8f827114471e768e53",
+      "fame_best_friend_claims": "235365d65b91868d8a2f9f23b3ac65a713f62120d9347311be186fde193db82b",
+      "fame_after_you": "dee95f77fbc672f39e193af1e25ac67699c1b4cc6db4a1aa1596193b7c003991"
+    }
+  },
+  "issues": [
+    {
+      "event": "season_friends",
+      "priority": "P2",
+      "category": "required story step can drop",
+      "file": "content/events/society.grim",
+      "line": 153,
+      "problem": "The invitation can start on fame alone, but the queued return scene requires a present classmate at relationship 25. If no one qualifies, advance drops the step and only that step queues season_price. The Journal stays begun with neither ending reachable through the queue.",
+      "fix": "Provide a return scene that works without a qualifying friend or bypass this optional cast beat to the patron request. Exercise both routes through the resolution flags.",
+      "affectedEvents": [
+        "season_friends",
+        "season_price",
+        "season_end"
+      ]
+    },
+    {
+      "event": "season_rival",
+      "priority": "P2",
+      "category": "journal records the wrong event",
+      "file": "content/events/society.grim",
+      "line": 104,
+      "problem": "Winning the salon storytelling contest sets season_ball_star and the other branches set season_ball_shared before the ball. The Journal reads those flags as a claim about what the player did on the dance floor, including during the month before it happens. The base ball choices never replace those flags with an actual ball outcome.",
+      "fix": "Use the flags to remember who the room favored at the supper, or record what actually happened when the ball resolves."
+    },
+    {
+      "event": "season_ball",
+      "priority": "P2",
+      "category": "unshown monetary cost",
+      "file": "content/events/society.grim",
+      "line": 132,
+      "problem": "Staying until dawn deducts gold, but the say only shows dancing and tired feet. The coat expense was already paid on accepting the original invitation.",
+      "fix": "Show what the extra crowns buy during the ball or remove that duplicate unexplained charge."
+    },
+    {
+      "event": "season_lady_vaneshade",
+      "priority": "P2",
+      "category": "unshown monetary reward",
+      "file": "content/events/society.grim",
+      "line": 81,
+      "problem": "Sponsorship adds crowns immediately but its outcome only describes new access and social rules. The offer does not name a stipend or gift.",
+      "fix": "Have Lady Vaneshade hand over or send the named stipend or remove the purse gain."
+    },
+    {
+      "event": "season_end",
+      "priority": "P2",
+      "category": "unshown monetary reward",
+      "file": "content/events/society.grim",
+      "line": 198,
+      "problem": "Writing back to accept a standing invitation gives gold even though the card and reply promise future access and contain no payment.",
+      "fix": "Add a concrete purse or material benefit, or let continued access and Renown be what the choice grants."
+    },
+    {
+      "event": "fame_rivals_for_you",
+      "priority": "P2",
+      "category": "presentation hides one of the two stated invitations",
+      "file": "content/events/society.grim",
+      "line": 227,
+      "problem": "The player hears simultaneous invitations and both rivals are awaiting a response, but the card only permits going with the first randomly cast person or declining both. Reversing the cast can offer the other choice in a different draw but not in the present scene.",
+      "fix": "Offer both invitations and a refusal as a menu, or make the premise explain why only one invitation can be accepted."
+    },
+    {
+      "event": "fame_wedge",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/society.grim",
+      "line": 251,
+      "problem": "Thanking the friend and watching for the other person's behavior deducts Study. The outcome shows observing and choosing seats, without any missed coursework.",
+      "fix": "Name the study time the player spends investigating, or use a consequence that the observation and change of company show."
+    },
+    {
+      "event": "fame_wedge",
+      "priority": "P2",
+      "category": "premise assumed across arbitrary cast history",
+      "file": "content/events/society.grim",
+      "line": 251,
+      "problem": "The opening says the two were friends for years and that one never sat with the player before fame. The gates measure current relationships and pair affinity. They can hold early in the first academy year or after many previous social encounters with either friend.",
+      "fix": "Describe their current closeness and change of behavior without asserting a timeline, or use actual history to select that accusation."
+    },
+    {
+      "event": "fame_best_friend_claims",
+      "priority": "P2",
+      "category": "relationship effects contradict outcome",
+      "file": "content/events/society.grim",
+      "line": 297,
+      "problem": "Winning the letter raises both relationships with the player while both friends are described as furious with the player. Staying quiet says the two are finally united but lowers both player relationships without a reaction toward the player and does not move their mutual relationship.",
+      "fix": "Show who is upset with whom after each response and apply the changes to those relationships."
+    },
+    {
+      "event": "fame_after_you",
+      "priority": "P2",
+      "category": "unsupported named-pair history",
+      "file": "content/events/society.grim",
+      "line": 326,
+      "problem": "The opening says both named classmates used to compete for the player while the player was famous. The right branch says the player introduced them. The gate checks two current relationships and their mutual affinity, so a pair who were friendly from the beginning can be cast without either earlier scene.",
+      "fix": "Bind the same pair from a witnessed earlier rivalry/meeting, or only describe what the player sees now and what changes after the player is no longer famous."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/season-and-society-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-society.json",
+    "docs/reviews/critic-pass-2026-11-15/scandals-society-context.md",
+    "docs/reviews/critic-pass-2026-11-15/season-scandals-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/brief-season-scandals.md"
+  ],
+  "completedAt": "2026-11-15T20:46:16.517Z"
+}

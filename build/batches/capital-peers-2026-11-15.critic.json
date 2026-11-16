@@ -1,0 +1,120 @@
+{
+  "batch": "capital-peers-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The visits distinguish the peers' private homes and public manners. Recurring options still remember choices the player may never have taken, and one permanent sequence step keeps calling a family conversation its first.",
+  "scope": {
+    "reviewedEventIds": [
+      "vaneshade_practice_room",
+      "vaneshade_kitchen_toast",
+      "vaneshade_supper_alone",
+      "vaneshade_portrait_gallery",
+      "clockworks_long_bench",
+      "clockworks_drawer",
+      "clockworks_greta",
+      "ashby_the_chair",
+      "ashby_coins_on_the_sill",
+      "ashby_lost_ring",
+      "oracle_window_seat",
+      "oracle_audience",
+      "oracle_other_painting",
+      "hollis_inspection",
+      "hollis_noon_piano",
+      "hollis_hester",
+      "lyra_capital_promenade",
+      "mir_capital_brass",
+      "bram_capital_no_sash",
+      "corvin_capital_quay",
+      "seraphine_capital_bells"
+    ],
+    "files": [
+      "content/events/maps/capital_peers.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "vaneshade_practice_room": "e08aae120a40d8e656b832a2ccc42821fd6cea1df2dbc91f296a37be0d4565c4",
+      "vaneshade_kitchen_toast": "d8096873d651a286c4aa22100fbecf5df59ab5e7fef286934f526089b0100c2c",
+      "vaneshade_supper_alone": "858ebd894ab973da6929cc369ab671a47fab8ac81cfbee4177891f7e65f1956d",
+      "vaneshade_portrait_gallery": "d10bb1c50c2ab1f26d6e4b7347dc531179a4b26c08fb5d43c850131a93c11469",
+      "clockworks_long_bench": "b2f121bef69a9de80b4ba21542174cc496500d64e6660d5a048e14a281cf93e5",
+      "clockworks_drawer": "ba139845e350fdc47ca08284792c44284898d328183036983f87f8ec92c3bc46",
+      "clockworks_greta": "ddfdca9ceb8103094ef0aa31a83f5172eff46a22e653cb5486cb70c21296569e",
+      "ashby_the_chair": "1d9b4d39dc6fd112dbdde608776e67f5b2c8d07edd00b928cf5e0e9027eb955e",
+      "ashby_coins_on_the_sill": "7098ed6fc81aa376be6b76702ef256706c304adbf7e2ff7ab720a81629b8fde2",
+      "ashby_lost_ring": "a095e491c3099a46cfe55c539e192179f47c5ee41a70ddb5e13abbf08b55a85f",
+      "oracle_window_seat": "ebed2ae937684f689860c82cd0969872326c2b212f0370486ea08dd9bfda5e05",
+      "oracle_audience": "da15bf2a82c9b8ad8aebdde0824631369dbbce52cb3a2f7f7d738561ab3df0f9",
+      "oracle_other_painting": "af92f87a725b2ebc150c3fdc40f4ef24e63ec2d4fa8da3d3cc03aa6baaeb08c5",
+      "hollis_inspection": "ce78651e69b5a400b28b67e1d8ecb2cc2f0d5e7dbdb371ddc43d6955e218e66a",
+      "hollis_noon_piano": "b6820cd0fcbd6c0cfbf87a7ef032bf026e679399efe790dc7b619dd055f311d5",
+      "hollis_hester": "7e63e5a6056f9e7d9e5e336c5d1d3be7ac8efc4e168ccc0ce6615e460b492bb4",
+      "lyra_capital_promenade": "cc46730f56c0d32c03491f00f8c466ee7e299fd5ad05b1407e8bd2179d717d5f",
+      "mir_capital_brass": "8b6551245257974ea498be41246df4a0d7b70881a0f913f0e788e4c2b25b6aff",
+      "bram_capital_no_sash": "cd98aa1ad6d64d0011cd94a7ae6e3acb87e319148620c319831531403b2dbdbb",
+      "corvin_capital_quay": "f60ffc219ded90024788a378c4c39837f15f46d8a57883c94702143f5b90aa62",
+      "seraphine_capital_bells": "ec2c5c2abcdde55806ca4376a4d81f4542d05d4b3e983b971b98ccd8b60429ef"
+    }
+  },
+  "issues": [
+    {
+      "event": "clockworks_long_bench",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/maps/capital_peers.grim",
+      "line": 99,
+      "problem": "The second cupboard outcome says the player is back and hits their head again. It can be the first cupboard visit if the player worked at the bench on the first showing. The third bench outcome also calls the father's explanation the first ever, and that sequence step repeats indefinitely.",
+      "fix": "Track the relevant choice for a return line, or describe the cupboard without the earlier visit. Change the final bench line so subsequent explanations remain plausible."
+    },
+    {
+      "event": "oracle_window_seat",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/maps/capital_peers.grim",
+      "line": 226,
+      "problem": "The second painting outcome says the player does the banisters slightly better this time, although their first choice may have been asking about a petitioner. The sequence follows card appearances, so it cannot establish painting experience.",
+      "fix": "Describe the current attempt alone or gate the improvement on an earlier painting choice."
+    },
+    {
+      "event": "hollis_inspection",
+      "priority": "P2",
+      "category": "repeat continuity",
+      "file": "content/events/maps/capital_peers.grim",
+      "line": 288,
+      "problem": "The final sequence step says Mr Hollis tells a story Bram has never heard, and the right outcome repeats that claim on the fourth and every later showing.",
+      "fix": "Give the final sequence step a reusable recollection or record the one-time revelation and substitute later talk."
+    },
+    {
+      "event": "mir_capital_brass",
+      "priority": "P2",
+      "category": "choice legibility",
+      "file": "content/events/maps/capital_peers.grim",
+      "line": 366,
+      "problem": "The button offers a loan, and the narration calls it a loan, but the player pays permanently. Mir sends a beetle later, with no indication that they have agreed to repay in kind.",
+      "fix": "Offer to cover the fare as a gift, or explicitly make the beetle the agreed repayment."
+    },
+    {
+      "event": "bram_capital_no_sash",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/maps/capital_peers.grim",
+      "line": 384,
+      "problem": "The pigeon outcome says this is the first time the player has ever seen Bram laugh. A prior won bram_rival_race can already show him laughing.",
+      "fix": "Describe this laugh without claiming it is the player's first, or gate the callback on the relevant earlier outcomes."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/capital-peers-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-capital_peers.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-city-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-capital-city.cjs",
+    "docs/reviews/critic-pass-2026-11-15/lyra_capital_promenade-fresh-retrieval.json",
+    "docs/reviews/critic-pass-2026-11-15/oracle_audience-fresh-retrieval.json",
+    "build/batches/P1-capital-peers.notes.md",
+    "content/world/lore/soft/people.grim",
+    "content/world/cast.grim"
+  ],
+  "completedAt": "2026-11-16T00:35:17.160Z"
+}

@@ -1,0 +1,104 @@
+{
+  "batch": "tide-caves-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The tide-cave routes, one-time shortcuts, warehouse connection and final swim are coherent and pass their existing tests. The rock-pool child conflicts with the adults-only rule, and the fall/rescue narration does not consistently match the carried finds that are actually lost.",
+  "scope": {
+    "reviewedEventIds": [
+      "docks_sea_back_door",
+      "tide_rock_pools",
+      "tide_bait_diggers",
+      "tide_cave_mouth",
+      "tide_way_out",
+      "tide_soaked",
+      "tide_fished_out",
+      "tide1_drowned_stair",
+      "tide1_gull_cave",
+      "tide1_tide_ladder",
+      "tide1_wreck_ribs",
+      "tide1_blowhole",
+      "tide2_lookout",
+      "tide2_casks",
+      "tide2_culvert",
+      "tide2_turning",
+      "tide2_parlour",
+      "tide3_conger",
+      "tide3_glow_pool",
+      "tide3_figurehead",
+      "tide3_sea_hall",
+      "tide3_strongbox",
+      "tide_sea_door"
+    ],
+    "files": [
+      "content/events/maps/tide_caves.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "docks_sea_back_door": "253383cba3943cd2c25ee761f4589a732241937715656b2e5857d920c2f18186",
+      "tide_rock_pools": "d2d8e7165ed19929c3275efa73a856c07a9d58163cb77cf805141d6b9aceacea",
+      "tide_bait_diggers": "c7202376b352c2ff90c5064036fc619b6b1b68f85356573b79e11fcd1c70fa41",
+      "tide_cave_mouth": "57b003d915a6adfb8d88116535cdfd9787270cee01db7ff5560891f247ad96fa",
+      "tide_way_out": "da5b4059d664871ac70416fd52d4a67306edc033815741bbfd2245d002f7bb13",
+      "tide_soaked": "d55cd39bb0be91ede875d148d7ee693b055e6b36d89325ad3e395ad55bf0c59c",
+      "tide_fished_out": "161fa1657ef961c712af80e03f8d271ae88f6a9ffeff5c165a8f38c34ac11f7d",
+      "tide1_drowned_stair": "ad8dae1f1bdf09c50fc25e4e2da04d128506eba600f66c885ea3bd4dcd6a8674",
+      "tide1_gull_cave": "faeef2cd1cb0fcba2a8e8e4c11ef887b9f16fa69b9ba13a23538319a12150ffd",
+      "tide1_tide_ladder": "8b8de2736520c93a7124ead2b3d2edb3194a5a8fddd90153bb35bc5b55a6e939",
+      "tide1_wreck_ribs": "5bc54236c884dd6959918f32f6589cfd0c8ce4a441421c4cfb41be14030711a2",
+      "tide1_blowhole": "34deab9ff17f2b80b63d0b60868527d3dd89b2add4815b92fa1ec238933983f3",
+      "tide2_lookout": "523bb82466d45b14495602e59b5fb3f14021660a531a1ce6fbf5aa8a7b2d04e4",
+      "tide2_casks": "1cca7a470936694f30dd507fcfec29d5945d24bd636fd8bcca1edf9681e28025",
+      "tide2_culvert": "e0b8a3a257cae0d751171bf42460393b055d07d1cd65c063112a5e2070daaf25",
+      "tide2_turning": "a650b133323d473d268785c5a81ef6cc4d616493e232b440244096fe2fb2c4a2",
+      "tide2_parlour": "10953db77ae7947b372ab37e8f4fa5b69c96da7360e09f2fbe8ffa687292e0e9",
+      "tide3_conger": "ff0e434bdb1f8b9c0eb63ba5d7b0cf4bbd37b8e70fee9791afe43a9eb23c9e78",
+      "tide3_glow_pool": "e713fbc01fb88af37ce318a1c8935f6a2d12dcd3e36598eb2625919d040837ea",
+      "tide3_figurehead": "5a5ee378460280a834418f7fc7b0c2faed367e1fddc7e52b149d7c072ba7b72a",
+      "tide3_sea_hall": "8f85ee9862c3575c769dbc8daee282db3d84cde0a84842c62fd69720b46b99a9",
+      "tide3_strongbox": "10865516752a60ec8e9d81790a7d88a3e580afe398a0239bb5e726004d5f2d5f",
+      "tide_sea_door": "27d0234d0f414c804e0523cf351ffd430f6a2a08d69a7fb6be897fabe608be69"
+    }
+  },
+  "issues": [
+    {
+      "event": "tide_rock_pools",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/tide_caves.grim",
+      "line": 49,
+      "problem": "The scene and third linked variant explicitly cast a small boy with a jam-jar; the player compares jars with him and hears his warning. This is an active child character, contrary to the project’s adults-only cast checklist.",
+      "fix": "Use an explicitly adult shore collector throughout the scene, opening and both corresponding outcomes, preserving the jar comparison and mussel warning."
+    },
+    {
+      "event": "tide_soaked",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/maps/tide_caves.grim",
+      "line": 159,
+      "problem": "The first obstacle can fail with tide_haul still zero. The effects correctly subtract a find only if the haul is positive, but all three openings nevertheless claim a lost object, lighter bag or lost contents. The zero-haul fixture reproduces a wave taking something from an empty bag.",
+      "fix": "Capture whether a find was lost before the decrement and condition all loss descriptions on that result. Use a physical fall/soaking description without a lost object when the bag was empty."
+    },
+    {
+      "event": "tide_fished_out",
+      "priority": "P2",
+      "category": "unshown cost",
+      "file": "content/events/maps/tide_caves.grim",
+      "line": 182,
+      "problem": "The rescue resets tide_haul to zero regardless of the accumulated salvage, but neither Nan’s rope rescue nor the lighterman’s boat account says that the bag or all its contents were lost. The fixture silently removes three finds.",
+      "fix": "Show the bag being abandoned or washed away in both rescue variants, or retain its contents if this failure is meant to cost health alone. The player should be told when the whole salvage payout is lost."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/tide-caves-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-tide_caves.json",
+    "docs/reviews/critic-pass-2026-11-15/country-delves-review.md",
+    "docs/reviews/critic-pass-2026-11-15/country-delve-briefs.md",
+    "docs/reviews/critic-pass-2026-11-15/capital-country-briefs.md",
+    "docs/reviews/critic-pass-2026-11-15/validate-country-delves.cjs",
+    "docs/reviews/critic-pass-2026-11-15/country-delves-validation.json"
+  ],
+  "completedAt": "2026-11-16T00:52:28.156Z"
+}

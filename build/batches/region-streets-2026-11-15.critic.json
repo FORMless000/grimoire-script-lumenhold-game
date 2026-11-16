@@ -1,0 +1,115 @@
+{
+  "batch": "region-streets-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The street and lodging scenes have distinct decisions and use their regional pools coherently. Four findings cover an omitted stated fare, an unfunded wager, time-specific wording outside its slot, and children in the procession cast.",
+  "scope": {
+    "reviewedEventIds": [
+      "streets_sea_fog",
+      "streets_balloon",
+      "streets_ballad_seller",
+      "streets_chimney_fire",
+      "streets_omnibus",
+      "streets_preacher",
+      "streets_flower_seller",
+      "streets_downpour",
+      "streets_automaton",
+      "streets_procession",
+      "lanes_carrier",
+      "lanes_flock",
+      "lanes_wedding",
+      "lanes_thunderstorm",
+      "lanes_milestone",
+      "lanes_well_dressing",
+      "lanes_barn_owl",
+      "lodging_doss_house_night",
+      "lodging_sailors_inn_night",
+      "lodging_fine_room_night",
+      "lodging_hayloft_night",
+      "lodging_inn_common_night",
+      "lodging_best_room_country_night"
+    ],
+    "files": [
+      "content/events/maps/region_streets.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "streets_sea_fog": "daeed8127a3d6148049f872e02783a017973ec9013b5fe60382371237e746cf2",
+      "streets_balloon": "026ac6f8e95493e7311f0352482c7ae1a9e4bbaec83ae3c7e2b3ffc4bfb1b42e",
+      "streets_ballad_seller": "02d2b27fae145f08898d556c5fb8fe2b4a8db4c4cbfb67aced48fde045d8fad3",
+      "streets_chimney_fire": "bb528411514323b1a8e4084bc045b9a486226d8b4446595616c169a9c651a768",
+      "streets_omnibus": "e871e453d141b906c708df88bb0498e5922cd5c85b08d9b23bab95f151c3b422",
+      "streets_preacher": "029a0ed172627dc5438240013139d58cf40690a4a8d1a616b71cc1bff7994a80",
+      "streets_flower_seller": "cafccadea7004e224637a72c6fc811c6677dad9cf08a31350cd70da8981d1348",
+      "streets_downpour": "c3fa0c0ef85d647070a23d71a2100fb37f8d5270097e36a9da1ce1c1996e34c9",
+      "streets_automaton": "7cc11be4ea968854dc03721bb450f78a5b080de304975d1a014cef45db786c2a",
+      "streets_procession": "30276911e069efb0186aa855fa890311286dfa1ef0fe0c210b9bd6cac09164a4",
+      "lanes_carrier": "0f802a5d5975c92d584fd314ec0395e644f49a52b7e8c0b8781a9a1735620820",
+      "lanes_flock": "6e755a8dc96aa28ce0f7ef568ee3b49d0b6a102f669e92ad7a2dde47d4fcb138",
+      "lanes_wedding": "8830260d0d2907a11fcd9d3ccd258f21e129573e0fa7cf84fa078faf848a65cb",
+      "lanes_thunderstorm": "3faf06a184d182541b8fd909f875f3bbbc20c87b96778701ded2f4204fab5aed",
+      "lanes_milestone": "776b7bd9f099165403cc776c4b1fb15de978677eb8093b60bdf994d6fb52a937",
+      "lanes_well_dressing": "72675c66d6dfc7803c765111d68efe6423fade4447063661e397c6558bfb7c4e",
+      "lanes_barn_owl": "b19210410ad80cf3140bf2f1598ba0a9e0454c36d66e9bf847f561be102bc72c",
+      "lodging_doss_house_night": "a8a8bff6c78442cc21d68eb07cba7f165a2a6e4c7e1f6c1ebf97e76ddcd8adf9",
+      "lodging_sailors_inn_night": "28663177697925f1d4da56e34d57ff7464e60f235710b9181d7e715019b21cca",
+      "lodging_fine_room_night": "d9bd49baa0ad06584538316c6e7670e3bba22ecab93bf53b06d7c5a662aa82a2",
+      "lodging_hayloft_night": "e7b6b245e733e67f2866920b4b246543a10a751e63aea1743dedf46877f330bf",
+      "lodging_inn_common_night": "f6c72228be847ba6e0dd62c171e503e97aeec0453463f0866b2b5d94d787cf25",
+      "lodging_best_room_country_night": "230e20d3e1aae2a4615f26c8abe02885373e19f246887dbda6d9eb4b76e07670"
+    }
+  },
+  "issues": [
+    {
+      "event": "streets_omnibus",
+      "priority": "P2",
+      "category": "missing consequence",
+      "file": "content/events/maps/region_streets.grim",
+      "line": 88,
+      "problem": "The opening explicitly prices a full ride at a penny. Both choices take that ride, seated or standing, but neither has a gold cost or a stated free-fare exception. The fixture starts at 70 gold and finishes at 70 on both routes.",
+      "fix": "Charge the stated fare on the riding options and show payment, or establish why this particular ride is free and remove the unsupported price promise."
+    },
+    {
+      "event": "streets_automaton",
+      "priority": "P2",
+      "category": "time gating",
+      "file": "content/events/maps/region_streets.grim",
+      "line": 159,
+      "problem": "The automaton can show at night but always writes Good afternoon on the waiting option. The owl card’s evening time preference likewise still gives positive noon fit, and following it then describes crossing the field in half-dark. Both mismatches are reproduced in the fixture.",
+      "fix": "Adapt the greeting to the actual slot or omit the time-specific greeting. Restrict the owl scene to dusk/evening/night as appropriate, or supply daylight text and art for other slots; a time preference is not a guard.",
+      "affectedEvents": [
+        "streets_automaton",
+        "lanes_barn_owl"
+      ]
+    },
+    {
+      "event": "streets_procession",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/region_streets.grim",
+      "line": 175,
+      "problem": "The royal procession explicitly includes children on shoulders in its spectator cast. The project critic checklist requires every character to be an adult.",
+      "fix": "Make the elevated spectators explicitly adult or describe hats, flags and obstructed views without introducing children."
+    },
+    {
+      "event": "lodging_sailors_inn_night",
+      "priority": "P2",
+      "category": "unfunded wager",
+      "file": "content/events/maps/region_streets.grim",
+      "line": 358,
+      "problem": "The right option stakes a coin but has no funds condition. It remains available with decent lodging and zero gold; a forced loss says You pay up while the balance stays zero. Success can still produce winnings, so the wager is risk-free when broke.",
+      "fix": "Require an affordable stake for this option and keep the other choice unconditional, or make the challenge explicitly nonmonetary when the purse is empty. Match both win and loss text to the chosen form."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/region-streets-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-region_streets.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-region-streets.cjs",
+    "docs/reviews/critic-pass-2026-11-15/region-streets-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-country-briefs.md"
+  ],
+  "completedAt": "2026-11-16T00:55:50.224Z"
+}

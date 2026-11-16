@@ -1,0 +1,77 @@
+{
+  "batch": "hollowstar-agents-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The two sides use recognizable voices and their small overtures remain ancillary to the arc. The Grey refund can conflict with unpaid board and two outcomes omit what their choice or cost implies.",
+  "scope": {
+    "reviewedEventIds": [
+      "ga_grey_gloves",
+      "ga_grey_board",
+      "ga_grey_witness",
+      "ga_grey_question",
+      "ga_grey_ice_seat",
+      "wa_tower_light",
+      "wa_lake_word",
+      "wa_isolde_list",
+      "wa_thorne_note",
+      "wa_maud_lantern"
+    ],
+    "files": [
+      "content/events/hollowstar/agents.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "ga_grey_gloves": "b5c480cd06f012f8f44a5b06eec71e6b5d23d1d82d30a6e90ff26fbaafef0e3a",
+      "ga_grey_board": "113c3bbdc5406287bd8ca2bfa7228981d23bf922e81c72f89f95686d78372e66",
+      "ga_grey_witness": "75ab1d17863ea4ded09280ff0469f1cecafc153cbaae35b17d04da85d0684ebb",
+      "ga_grey_question": "1dae1c520a95806b139fac8ddaee94498019595172176fa26e1bef858afea724",
+      "ga_grey_ice_seat": "aa0d936e3a36cb405c4d39b02fcd54d398f00166c26833c1af2611cfe39124f3",
+      "wa_tower_light": "bcd6630ab27bdf3843a2decccd2e81059bef1bf5876e55701ce2caa472b4aee8",
+      "wa_lake_word": "f7b5e515a0a8306d9e7a3fc07d3ffb3db72ae8ba41ea1162d0797df6f447ab54",
+      "wa_isolde_list": "30895dc187d2e2ade0fe8859b6648b8b14f784ab937f7c983ac46d2ff31e121a",
+      "wa_thorne_note": "e266f1b43fb38a90fb7d4de98a1aacc089b060db1a56f8cd917b925529da46b0",
+      "wa_maud_lantern": "102529905656d21c178efea0a986fd7e29304bdc291a39a161309c9f1123ca11"
+    }
+  },
+  "issues": [
+    {
+      "event": "ga_grey_board",
+      "priority": "P2",
+      "category": "state and cost",
+      "file": "content/events/hollowstar/agents.grim",
+      "line": 44,
+      "problem": "board_missed is reset to zero when a second missed payment queues Grisk's debt offer. The Grey refund can then describe paid board and give 11 crowns although no board payment was collected and Hunger remains. The scene description also calls for a signature that the prose explicitly replaces with a frosted thumbprint.",
+      "fix": "Gate the refund on actually having paid this month, or write and apply a distinct settlement for an unpaid month. Use a thumbprint in the scene."
+    },
+    {
+      "event": "ga_grey_witness",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/hollowstar/agents.grim",
+      "line": 64,
+      "problem": "Silencing the witness deducts Renown, but the confrontation happens quietly and the result only shows the witness avoiding you. No one reacts to the intimidation or to what the witness tells them.",
+      "fix": "Show a third party seeing the threat or the resulting change in how people treat the player, or use a cost the private outcome shows."
+    },
+    {
+      "event": "wa_maud_lantern",
+      "priority": "P2",
+      "category": "choice legibility",
+      "file": "content/events/hollowstar/agents.grim",
+      "line": 212,
+      "problem": "The prompt offers a lantern. “Thank her, and go” reads as leaving without taking it, but the player brings it home, burns it all night and returns it. The other option explicitly says to take it and gives it back immediately.",
+      "fix": "Name the choices for what they do, such as walking her in with the lantern or borrowing the lantern overnight."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-agents-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-agents.json",
+    "docs/reviews/critic-pass-2026-11-15/heists-and-board-validation.json",
+    "content/core/rules.grim",
+    "content/world/lore/soft/hollowstar.grim",
+    "build/batches/M6-agents.notes.md"
+  ],
+  "completedAt": "2026-11-15T21:30:33.315Z"
+}

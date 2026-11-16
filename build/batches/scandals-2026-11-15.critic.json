@@ -1,0 +1,170 @@
+{
+  "batch": "scandals-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected because several scandals contradict their own setup, omit the moral cost of deliberate lies, or promise penalties the game does not apply.",
+  "scope": {
+    "reviewedEventIds": [
+      "scandal_ledger_lie",
+      "scandal_candle_smoke",
+      "scandal_memoir_book",
+      "scandal_flourish_hurt",
+      "scandal_wrong_notes",
+      "scandal_thornwick_cheat",
+      "scandal_society_dare",
+      "scandal_leaked_letter",
+      "scandal_cheating_rumour",
+      "scandal_ex_tells_all",
+      "scandal_curfew_column",
+      "scandal_snubbed",
+      "scandal_thornwick_defection",
+      "scandal_forged_love_letter"
+    ],
+    "files": [
+      "content/events/scandals.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "scandal_ledger_lie": "a503426c6bd26a5f88f187e4e5fc76402ade9a8ab7caa3507b5f508348ebc888",
+      "scandal_candle_smoke": "efef571a67d94d3d602fd70c078ea34e716fc0fc874b4c589df426ae0710621a",
+      "scandal_memoir_book": "a66052805fbf702ebdd0356bf7e96a06b37fdede03b3465236e1710adbcc15de",
+      "scandal_flourish_hurt": "66af7ed869da5fa8d5aaa5cbfc43b7d8577256d0ef7fa6fc450c6e62c506ab30",
+      "scandal_wrong_notes": "87fc732111e7fbfb866f1223d5361fbdd989f38f71f8dad9b2f05d501e5749b7",
+      "scandal_thornwick_cheat": "a2b4296076a60778ccd344c6c5da320e5b871e88e1cdab1058a7dd47a82d7562",
+      "scandal_society_dare": "21749cdf9ba9ac8bfd59d7aeea5381ac2fba3111a37e3df52bc5b60034e3836e",
+      "scandal_leaked_letter": "2a2a69739ec054c885cfd230c2b8281f2bd57e19886883c83b6de4bdd499fef3",
+      "scandal_cheating_rumour": "1d5263598d67acb4409f576b2cbc3ba476d79671aa9b1b6b79a10c6ed07357d5",
+      "scandal_ex_tells_all": "ba8f9e841087b634c315a0f9ff95e23862c2a9675d9c4e31ba3c0affb2cd59f1",
+      "scandal_curfew_column": "ce32d18a28948b42d8bf2f11f96dd58ba6d60c67e69cba7d91466f3da9e079b2",
+      "scandal_snubbed": "bbe39e1658043c3acfb67a8644661e6cebff7e7dd4090b05441e7345474b6775",
+      "scandal_thornwick_defection": "5b3430458ffaa02e03521b8e134007e9dc3f0cb893af5bf54540487145809c2d",
+      "scandal_forged_love_letter": "b495beb4c6634b253c01deb383c432a03930a76be2fc5ad330f9bd07f33b3f55"
+    }
+  },
+  "issues": [
+    {
+      "event": "scandal_ledger_lie",
+      "priority": "P2",
+      "category": "callback and dishonesty",
+      "file": "content/events/scandals.grim",
+      "line": 38,
+      "problem": "The public correction has the player confess there was no dragon, but the callback is queued by the profile's winning embellishment, whose account never establishes a dragon. The losing profile branch mentions a dragon that Nessa catches before publication. The successful continued lie also escapes Alignment loss.",
+      "fix": "Establish the printed dragon claim on the queued profile branch or name an actual embellishment from it. Apply the moral cost to knowingly insisting on the false account regardless of check outcome."
+    },
+    {
+      "event": "scandal_memoir_book",
+      "priority": "P2",
+      "category": "unsupported callback premise",
+      "file": "content/events/scandals.grim",
+      "line": 92,
+      "problem": "The callback assumes the player signed a book they never read. The contract offer promises ghostwriting, and its queueing branch describes the book already selling, but neither says the player never got or reviewed a draft. Even the retraction and spin options have to inherit the unestablished negligence.",
+      "fix": "Establish in the memoir contract or queued setup that the player signed away final approval, or have the scandal focus on an unapproved chapter rather than claiming the player signed unread pages."
+    },
+    {
+      "event": "scandal_flourish_hurt",
+      "priority": "P2",
+      "category": "contradictory callback",
+      "file": "content/events/scandals.grim",
+      "line": 118,
+      "problem": "The only branch that queues the injury explicitly has the player perform the flourish to cheers in the yard. Winning the lie says they never once did it and presents the statement as reasonable. The losing branch treats that same witnessed performance as proof of deception.",
+      "fix": "Let a successful denial distinguish who invented the flourish from who performed it, or make it a knowingly false denial and charge its moral cost on both outcomes."
+    },
+    {
+      "event": "scandal_flourish_hurt",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/scandals.grim",
+      "line": 118,
+      "problem": "The player visits and teaches practice-yard students for a week. The study loss has no missed lecture, assignment or revision in that outcome.",
+      "fix": "Name the academic work given up to teach the students or apply a cost that the visit and practice actually show."
+    },
+    {
+      "event": "scandal_wrong_notes",
+      "priority": "P2",
+      "category": "contradictory facts",
+      "file": "content/events/scandals.grim",
+      "line": 144,
+      "problem": "The opening says the error is on a page of the player's notes they never corrected. Winning research then proves the copyist introduced it. The narration has already settled the fact the check is meant to discover.",
+      "fix": "Present ownership of the error as an allegation or open question, then establish the actual source separately in each research outcome."
+    },
+    {
+      "event": "scandal_wrong_notes",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/scandals.grim",
+      "line": 144,
+      "problem": "The refund and tutoring outcome shows where the crowns go but never describes the player's coursework being skipped in the three tutoring evenings.",
+      "fix": "Name the work the player sacrifices to tutor the first-year, or remove the extra Study penalty."
+    },
+    {
+      "event": "scandal_ex_tells_all",
+      "priority": "P2",
+      "category": "alignment",
+      "file": "content/events/scandals.grim",
+      "line": 273,
+      "problem": "The denial calls private events made up even though the narrator and the later letters establish that they happened. The player publicly discredits the ex for social gain without an Alignment cost on either check outcome.",
+      "fix": "Apply the moral cost to choosing the false denial or make the defense a truthful objection to publishing private events."
+    },
+    {
+      "event": "scandal_curfew_column",
+      "priority": "P2",
+      "category": "promised consequences missing",
+      "file": "content/events/scandals.grim",
+      "line": 303,
+      "problem": "Owning up says the prefects give detention, but the engine leaves detention absent. A successful alibi says the player buys the friends supper for a month but charges no crowns.",
+      "fix": "Apply detention and the supper expense where promised, or rewrite those outcomes around consequences the choices actually apply."
+    },
+    {
+      "event": "scandal_curfew_column",
+      "priority": "P2",
+      "category": "alibi does not cover the incident",
+      "file": "content/events/scandals.grim",
+      "line": 303,
+      "problem": "The column places the sighting at two in the morning. The successful witnesses say the player played cards until one, leaving an hour before the sighting unaccounted for. The losing branch also reveals that the room was locked at midnight.",
+      "fix": "Have the successful proof cover two in the morning and be possible in that room, or give the two branches genuinely different alibis."
+    },
+    {
+      "event": "scandal_snubbed",
+      "priority": "P2",
+      "category": "alignment tied to getting caught",
+      "file": "content/events/scandals.grim",
+      "line": 326,
+      "problem": "The option invents an infirmary alibi despite the player's uncertainty. Its only Alignment penalty is on failure. Winning still falsely claims an affirmative alibi to protect the player's reputation.",
+      "fix": "Apply the penalty when the player chooses to manufacture the alibi, or let the successful branch present real corroboration."
+    },
+    {
+      "event": "scandal_thornwick_defection",
+      "priority": "P2",
+      "category": "contradictory facts",
+      "file": "content/events/scandals.grim",
+      "line": 351,
+      "problem": "The opening states the player never said the quoted words. Losing the research check then says the player probably did. Failing to prove the quote was lifted cannot establish a memory that contradicts the opening.",
+      "fix": "Keep the doubt in other people's minds on failure, or leave the player's memory genuinely uncertain in the opening."
+    },
+    {
+      "event": "scandal_leaked_letter",
+      "priority": "P2",
+      "category": "repeat continuity",
+      "file": "content/events/scandals.grim",
+      "line": 223,
+      "problem": "The monthly appointment can draw the same scandal the following month. The same fixed exposure, culprit and three responses then replay even if the player already identified the thief or took responsibility. Similar one-off disclosures are presented by the ex and forged-letter cards, whose per-person cooldown still allows repeats with the same classmate.",
+      "fix": "Make each specific exposure once per run or once per affected character. If successive leaks are intended, vary the new incident and carry over the action previously taken.",
+      "affectedEvents": [
+        "scandal_leaked_letter",
+        "scandal_ex_tells_all",
+        "scandal_forged_love_letter"
+      ]
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/scandals-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-scandals.json",
+    "docs/reviews/critic-pass-2026-11-15/scandals-society-context.md",
+    "docs/reviews/critic-pass-2026-11-15/season-scandals-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/brief-season-scandals.md"
+  ],
+  "completedAt": "2026-11-15T20:46:16.480Z"
+}

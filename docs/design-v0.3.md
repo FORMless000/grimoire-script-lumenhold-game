@@ -17,7 +17,7 @@
 
 The game goes from *a monthly deck of random cards* to *a day in the life, with agency*:
 
-- A **4-year university** that follows real seasons: two 4-month terms and two 2-month breaks a year. Every character is an adult.
+- A **4-year university** that follows real seasons: two 4-month terms and two 2-month breaks a year. Every character who takes part in a scene is an adult; children appear only as background.
 - Each month is **one representative day**, split into slots (morning, noon, afternoon, evening, night, sometimes midnight). That's about 3× today's cards in term time, and a lighter day in breaks.
 - The player picks **two places to visit** each day on a **graphical map**. Places are found through events and relationships.
 - **Clubs and jobs are highlighted places with obligations.** Skipping is allowed and has consequences.
@@ -1167,7 +1167,7 @@ Loop per batch (a group of events around one brief):
 2. `grim brief …` → context pack.
 3. Write the events.
 4. `grim build && grim lint && grim balance --quick && grim i18n zh-CN`, then translate.
-5. **Critic:** a separate subagent checks the batch against `checklist.md`: canon, tone, class rules, safety (adults only, nothing explicit), and duplication.
+5. **Critic:** a separate subagent checks the batch against `checklist.md`: canon, tone, class rules, safety (adult actors only, nothing explicit), and duplication.
 6. **Duplicate check:** shingled-text Jaccard ≥ 0.6 against existing events is flagged.
 7. **Acceptance (default; decision D5):** auto-accept when all validators and the critic pass. Each batch writes a report, with a random 10% flagged for optional spot-checks in `/admin`.
 

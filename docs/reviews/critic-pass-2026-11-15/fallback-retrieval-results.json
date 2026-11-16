@@ -1,0 +1,602 @@
+[
+  {
+    "draftId": "almanac_printers_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/almanac_printers_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "5c7f5ccd7c24a1786c8df75cd4da29177d4190875093eb439c1d9dddcd7b5f2d",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 29,
+    "topCandidates": [
+      {
+        "id": "event:almanac_short_page",
+        "score": 0.03225806451612903,
+        "reason": "BM25: the, almanac, press, of, and, almanacs, are, stacked, by, thin, a, harvest, in, for, every, year, it, is, one, you, through, on, page, missing, been, out, woman, with, to, up, go; Dense similarity",
+        "title": "A Page Short",
+        "file": "content/events/maps/countryside_peers.grim",
+        "line": 132,
+        "sourceHash": "e2ccdbe711c6219eab03b30648c14d900a5ab25326e50df59cfda9ee85c40725",
+        "fullSourceText": "@event almanac_short_page\ntitle: A Page Short\npool: almanac_printers_nessa\nwhen: rel(nessa) >= 10\ntone: eerie\nart: book\nscene: A low attic under the eaves stacked with bundles of old thin almanacs, a young woman with a lantern turning pages, dust in the air.\ntext: In the attic, a century of the valley's almanacs sit in bundles under the eaves, and Nessa has been counting pages. \"Every seventh year it's a page short,\" she says. \"Always the harvest page. Mother says the old press did that.\" She holds two copies side by side. \"It's not the press.\" {seen(market_harvest_board) > 0: You think of the harvest board's columns of seven.|}\n> left: Go through them with her\n  lore +small\n  health -tiny\n  flag almanac_pages_counted\n  say: You go through the bundles until the lantern gutters, coughing in the dust, and she's right: seven, fourteen, twenty-one, always the harvest page, always cut clean. Downstairs, Mrs Quill calls up that supper's on, a little too brightly. Nessa writes it all down, and for once says nothing.\n> right: Tell her to let it lie\n  mood +tiny\n  rel nessa -tiny\n  say: \"Some things are just the press,\" you say. Nessa looks at you over the lantern for a long moment, the way she looks at someone who's said something quotable. \"That's what Mother says,\" she says, and puts the almanacs back, and doesn't believe either of you.\n\n# ---------------- Out in the valley ----------------\n",
+        "catalogSourceHash": "e2ccdbe711c6219eab03b30648c14d900a5ab25326e50df59cfda9ee85c40725",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/countryside_peers.grim"
+      },
+      {
+        "id": "event:gy_almanac_page",
+        "score": 0.03149801587301587,
+        "reason": "BM25: the, press, of, ink, and, paper, this, by, a, good, harvest, in, type, an, for, every, year, it, is, one, you, on, step, page, as, been, printed, out, woman, with, to, looking, up, from; Dense similarity",
+        "title": "The Harvest Page",
+        "file": "content/events/maps/good_year.grim",
+        "line": 180,
+        "sourceHash": "119329d37b9aeec32fdb61eb98036652866a0b68b50978366c29c20a0729b3cf",
+        "fullSourceText": "@event gy_almanac_page\ntitle: The Harvest Page\nthread: good_year\nplace: almanac_printers\nclass: story\ntone: eerie\nwhen: not flag(gy_almanac)\nweight: 16\nart: paper\ntags: mystery\nscene: An ink-stained woman at an old hand press in a cramped print shop, holding up a single printed page with a blank line on it, a drawer of identical pages open beside her, a student reading.\ntext: Mrs Quill is alone at the press, ink to the elbows. {flag(almanac_pages_counted): She knows you've been in the attic with Nessa; she doesn't say so.|} She sees you looking at the drawer under the press, and after a while she opens it: a stack of loose pages, one for every seventh year, each headed HARVEST SUPPER, each with a line printed for \"the Guest of the Year\", and a name inked in by hand.\n> left: Ask why she prints it\n  lore +tiny\n  mood -tiny\n  gy_clues += 1\n  say: \"Because they ask,\" she says, \"and then they cut it out, and I put it in the drawer.\" She closes it. \"My mother did, and hers. I tell myself it's only printing.\" She goes back to the press and doesn't look at you again, and her hands aren't steady.\n  flag gy_almanac\n> right: Take one of the pages\n  alignment -tiny\n  gy_clues += 1\n  say: You take the oldest page while her back is turned to the press, and she sees, in the type-case's brass, and lets you. Walking out with it inside your coat feels like stealing from somebody who wanted you to.\n  flag gy_almanac\n",
+        "catalogSourceHash": "119329d37b9aeec32fdb61eb98036652866a0b68b50978366c29c20a0729b3cf",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/good_year.grim"
+      },
+      {
+        "id": "event:almanac_type_case",
+        "score": 0.029857397504456328,
+        "reason": "BM25: the, almanac, press, off, market, of, ink, and, paper, are, by, a, in, type, an, for, it, is, one, you, on, page, as, if, woman, with, to, works, without, looking, up, you're, notices; Dense similarity",
+        "title": "Backwards and Upside Down",
+        "file": "content/events/maps/countryside_peers.grim",
+        "line": 98,
+        "sourceHash": "36c4ace659d4e1042e36651e01324966476c2863cad5c9a3b5a68bcd92d9ed53",
+        "fullSourceText": "@event almanac_type_case\ntitle: Backwards and Upside Down\npool: almanac_printers_nessa\nwhen: rel(nessa) > -10\nrepeat: 3\ntone: light\nart: paper\nscene: A crowded country print shop, a young woman in ink-stained sleeves setting metal type into a stick at a tall wooden case, an older woman working a hand press behind her.\ntext: {&At her mother's type case Nessa is a different creature, silent and quick, setting metal letters into a stick backwards and upside down, faster than she writes forwards. Mrs Quill works the press behind her, ink to the elbows. \"Took her apart at five,\" Mrs Quill says, \"the case. Put it back alphabetical. Took me a month.\"|Nessa's at the case again, setting the market notices, and she hasn't said a single headline since you came in. It's unnerving. \"Here,\" she says, without looking up, and hands you a stick.|The shop again, and the press thumping. Nessa has set your name in type and left it on the stone where you'll see it, which she pretends was an accident. \"Line's yours,\" she says. \"If you can.\"}\n> left: Set a line yourself\n  lore +small\n  mood -tiny\n  say: {&You set one line in the time she sets a page, and spell it wrong backwards. She corrects it without comment, which is worse. By the end your fingertips are black and your pride is small.|You set the price of eggs and the date of the fair, and get the fair wrong. Nessa fixes it with one flick and says nothing, kindly, which is maddening.|You set a whole notice, slowly, under her eye, and get one letter upside down. She turns it without a word. It stings, a little, that she saw it first.}\n> right: Pull the press for Mrs Quill\n  vigor +small\n  health -tiny\n  say: {&Mrs Quill lets you pull the press. A heave, a thump, a sheet off the stone, again, and again, a hundred times. Your arms are dead by the end. \"Same as she did at ten,\" says Mrs Quill. \"She cried. You're doing better.\"|You pull the almanac covers, a thump to each. Your shoulder aches. Mrs Quill talks the whole time about Nessa as a child, and Nessa, at the case, sets faster and faster.|You and Mrs Quill pull the funeral cards for a farmer you never met. It's slow, careful, heavy work, and quiet. \"He'd have liked it done properly,\" she says, and you ache, and are glad you did.}\n",
+        "catalogSourceHash": "36c4ace659d4e1042e36651e01324966476c2863cad5c9a3b5a68bcd92d9ed53",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/countryside_peers.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "ashby_lane_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/ashby_lane_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "0d73f9e06c91a73dd67574ed0b9f7832b6c73487c4b8d4364fb8b791261f55a4",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 35,
+    "topCandidates": [
+      {
+        "id": "event:ashby_the_chair",
+        "score": 0.03225806451612903,
+        "reason": "BM25: the, crooked, lane, ashby, is, houses, on, for, washing, it, a, woman, step, at, your, academy, and, says, one, of, corvin's, as, if, corvin, people, say, his, you, then, doesn't, tell, him, grandad's, still, that's, goes, in, can, ask, just, to, window, pass; Dense similarity",
+        "title": "The Chair on the Step",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 158,
+        "sourceHash": "c005eba2f772ceb0a1b40fbe7ac33f13038635a6207a41af00f66b4a50493154",
+        "fullSourceText": "@event ashby_the_chair\ntitle: The Chair on the Step\npool: ashby_lane_corvin\nrepeat: 3\nslot: evening\ntone: warm\nart: cards\nscene: A crooked harbour-town lane at dusk, washing strung between leaning houses, an old wooden chair on a worn doorstep and a young man in it shuffling cards.\ntext: {Halfway down Ashby Lane there's an old wooden chair on a doorstep, and Corvin is in it, shuffling. \"My grandad's,\" he says. \"Nobody's sat in it since. Nobody but me.\" Three neighbours call his name from three windows. None of them sounds pleased. All of them sound fond.|Corvin's in the chair again, dealing patience to nobody. \"You found the lane twice,\" he says. \"That's twice more than most.\" A basket comes down from a window on a string; he drops a coin in it without looking up.|The chair, the step, the cards. Tonight there's a stool beside the chair, hauled out from somewhere, and Corvin pats it. \"Lane says you can sit,\" he says. \"Don't let it go to your head.\"}\n> left: Ask about the old man\n  rel corvin +small\n  mood -tiny\n  say: {\"He could find a lost thing in any house,\" Corvin says. \"People still knock and ask me where they've put things. Me. As if it ran in the blood.\" \"Does it?\" you ask. \"Sometimes,\" he says, and doesn't joke, and the quiet that follows is a sad one, until the lamps come on.|\"He said a lost thing wants to be found,\" Corvin says. \"You just stand where it'd look for you.\" He's quiet a while. You don't push, and the quiet goes sad and comfortable at once.|He tells you the old man's last find: Corvin, aged ten, on a roof, in the rain, though nobody had told him where to look. \"Never said how,\" Corvin says. \"Took it with him.\" You sit with that, sad and close, until the lamps.}\n> right: Meet the neighbours\n  charm +small\n  mood -tiny\n  say: {The neighbours come down to inspect you, and they're thorough about it. Corvin owes one of them a crown and another a cat; it's complicated. They tell you he was a terrible child. When the watch walks past, all three step in front of him without a word, and the watch walks on.|The neighbours have opinions about you now. One wants to know your prospects; one wants to sell you a hen. It's exhausting. As you go, the hen woman tells Corvin you'll do.|A neighbour brings out a plate of something fried and very hard to chew, and asks after your whole family while you chew it. You pass, wearily. \"That's you on the lane, then,\" Corvin says, as if you'd been sworn in.}\n",
+        "catalogSourceHash": "c005eba2f772ceb0a1b40fbe7ac33f13038635a6207a41af00f66b4a50493154",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:ashby_coins_on_the_sill",
+        "score": 0.030798389007344232,
+        "reason": "BM25: the, lane, ashby, is, on, for, washing, it, a, woman, looks, at, your, and, says, one, of, as, if, corvin, say, his, you, she, then, doesn't, tell, him, still, in, before, can, ask, walk, through, end, to, window; Dense similarity",
+        "title": "Coins on the Sill",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 176,
+        "sourceHash": "7241ad4a998738110fda9508ca72bda77a7f17c3388d297fb0330af678ec31e5",
+        "fullSourceText": "@event ashby_coins_on_the_sill\ntitle: Coins on the Sill\npool: ashby_lane_corvin\nwhen: rel(corvin) >= 12\nslot: night\ntone: warm\nart: coin\nscene: A dark harbour lane at night, a young man reaching up to leave a small stack of coins on the sill of a lit window, a student watching from the shadows.\ntext: Late, Corvin walks you to the end of the lane and stops under a lit window. Inside, a woman is folding someone else's washing. He reaches up, sets a little stack of coins on the sill, quiet as a cat, and steps back into the dark. \"My mother,\" he says. \"She doesn't ask where it comes from. I don't go in.\"\n> left: Ask why he doesn't go in\n  rel corvin +small\n  mood -small\n  say: For a long while he says nothing. \"Because then she'd ask how I am,\" he says, \"and I'd tell her, and she'd cry, and then I'd make a joke.\" He makes one now, about windowsills. It isn't funny. You walk back in a heavy silence, the best you've had with him.\n> right: Add a coin of your own\n  gold -small\n  alignment +tiny\n  rel corvin +tiny\n  say: You set a coin of your own beside his. He looks at it, and at you, and for once has nothing at all to say. Upstairs the woman comes to the window, sees the sill, and stands very still. Corvin pulls you round the corner before she can look down.\n",
+        "catalogSourceHash": "7241ad4a998738110fda9508ca72bda77a7f17c3388d297fb0330af678ec31e5",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:ashby_lost_ring",
+        "score": 0.030536130536130537,
+        "reason": "BM25: the, lane, ashby, is, so, lean, on, for, it, a, woman, looks, at, your, and, says, of, as, if, corvin, say, his, you, she, then, tell, him, still, that's, goes, in, just, through, to, lose; Dense similarity",
+        "title": "Like His Grandad",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 195,
+        "sourceHash": "4e01ad8b80661cde0d7ba21cb7d6858c30cae2cadd6ca2a0fb89e6b59715366f",
+        "fullSourceText": "@event ashby_lost_ring\ntitle: Like His Grandad\npool: ashby_lane_corvin\nwhen: seen(ashby_the_chair) > 0\nslot: evening\ntone: light\nart: ring\nscene: A cramped harbour-town kitchen, an anxious older woman wringing her hands, a lean young man looking slowly round the room, a student lifting the lid of a flour jar.\ntext: A neighbour comes down the lane at a half-run: her wedding ring is gone, forty years on her finger and gone. \"Find it, Corvin,\" she says. \"Like your grandad would.\" Corvin goes still, then follows her in, and stands in her kitchen without touching anything, just looking. \"Help me look,\" he says to you. \"Or don't. Watch.\"\n> left: Search the kitchen yourself\n  challenge research using guile apprentice:\n    win:\n      guile +small\n      gold +tiny\n      say: You think about where hands go when they're busy, and lift the lid of the flour jar. The ring is in the flour. The neighbour cries, kisses you on both cheeks and presses a coin on you. Corvin looks at you a long moment. \"Huh,\" he says. \"Maybe it's catching.\"\n    lose:\n      mood -tiny\n      say: You turn out every drawer and find string, spoons and a mouse, and feel foolish. Corvin, who hasn't moved, says \"Flour jar,\" and it is. The neighbour kisses him. You get a smaller kiss, for trying, and a broom.\n> right: Watch him work\n  rel corvin +small\n  say: He looks a long time, then says, \"You were baking yesterday,\" and goes to the flour jar, and there it is. Outside, he breathes out. \"So that's how he did it,\" he says. \"Watching. All those years I thought it was magic.\" He grins, shaky. \"Don't tell. They like it better as magic.\"\n\n# ---------------- Seraphine: the Oracle's Rooms ----------------\n",
+        "catalogSourceHash": "4e01ad8b80661cde0d7ba21cb7d6858c30cae2cadd6ca2a0fb89e6b59715366f",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "capital_guild_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/capital_guild_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "c88d1c5448548274f6fd0b858750e18025542c7f42a8bc74a898212269c8446f",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 37,
+    "topCandidates": [
+      {
+        "id": "event:intern_alchemists_safety",
+        "score": 0.016129032258064516,
+        "reason": "BM25: the, guild, works, is, a, bench, and, foreman, at, hands, says, in, large, it, but, old, on, for, an, you, to, every, word, vat, what",
+        "title": "The Cracked Vat",
+        "file": "content/events/pools/internships.grim",
+        "line": 132,
+        "sourceHash": "72ae78b558056b8fd6a42dfe21bd17a4bf3ef76d158210f6e572103e5e6d2165",
+        "fullSourceText": "@event intern_alchemists_safety\ntitle: The Cracked Vat\ntrack: intern_alchemists\nclass: milestone\ntone: grim\nweight: 18\nart: cauldron\ntags: job danger\nscene: A huge iron vat in an alchemical works, a hairline crack weeping green steam, workers walking past it without looking.\ntext: The seventh vat at the Guild works has a crack in it. Everyone knows. The foreman says it'll last the season, and the season's quota depends on it. Workers walk past it without looking. You've seen what the steam does to brass.\n> left: Report it to the Guild masters\n  wage\n  alignment +small\n  perform intern_alchemists -small\n  mood -small\n  say: The masters close the seventh vat for a week and the foreman doesn't speak to you again. In the third week the replacement vat arrives, and an old worker shakes your hand without a word.\n> right: Mend it yourself, quietly\n  wage\n  challenge brew expert:\n    win:\n      perform intern_alchemists +medium\n      alchemy +medium\n      say: You seal it from the inside in the night, with a sealant of your own. It holds through the season. The foreman never knows. The old worker does, somehow, and leaves an apple on your bench every morning.\n    lose:\n      health -large\n      perform intern_alchemists -small\n      say: The steam gets you as the seal gives. You wake in the works infirmary with blistered hands, and the vat is closed anyway.\n",
+        "catalogSourceHash": "72ae78b558056b8fd6a42dfe21bd17a4bf3ef76d158210f6e572103e5e6d2165",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/internships.grim"
+      },
+      {
+        "id": "event:career_return_guild",
+        "score": 0.031009615384615385,
+        "reason": "BM25: the, guild, works, is, a, bench, and, foreman, at, not, in, it, on, about, you, to, learn, three, none, back, day, which, he; Dense similarity",
+        "title": "The Works Write Again",
+        "file": "content/events/careers.grim",
+        "line": 175,
+        "sourceHash": "86975e06d1a8bc5e01529282fcf015f3634be29c7aaa1619ff8a0180048a78ba",
+        "fullSourceText": "@event career_return_guild\ntitle: The Works Write Again\npool: career_letter\nwhen: flag(return_guild) and not flag(offer_guild)\nscene: A grubby letter with a chemical stain on the envelope, stamped with the Guild of Alchemists' retort.\ntext: The Guild of Alchemists' works remember your summer, and how you kept your head at the vats. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day.\non_show:\n  career_letter_turn = turn\n> left: Write back yes, in principle\n  flag offer_guild\n  mood +small\n  say: You write back yes. The foreman's reply is a list of protective clothing you will need to buy yourself, which you take as a welcome.\n> right: Ask about the explosions\n  flag offer_guild\n  alchemy +tiny\n  mood -tiny\n  say: \"Two a month,\" he writes, \"and none fatal since my father's day.\" You read it three times. The bench is still yours.\n",
+        "catalogSourceHash": "86975e06d1a8bc5e01529282fcf015f3634be29c7aaa1619ff8a0180048a78ba",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/careers.grim"
+      },
+      {
+        "id": "event:intern_alchemists_vat_watch",
+        "score": 0.015873015873015872,
+        "reason": "BM25: the, hall, guild, works, is, a, and, foreman, who, at, says, in, large, it, but, on, about, for, an, you, to, vat, back, which, he",
+        "title": "Vat Watch",
+        "file": "content/events/pools/plans_thesis.grim",
+        "line": 586,
+        "sourceHash": "ee268b7e198d3fc9968b0936fa22e5ae7b6678ae110a689c4c39af92e7778944",
+        "fullSourceText": "@event intern_alchemists_vat_watch\ntitle: Vat Watch\ntrack: intern_alchemists\nclass: routine\ntone: tense\nrepeat: 5\nweight: 10\nart: cauldron\ntags: study\nscene: A huge copper vat in a steaming hall, a student on a gantry staring into it with a colour chart in hand.\ntext: {Your task at the works is to watch one great vat and call the foreman if it changes colour.|You've brought your own colour chart now, with notes in the margins.|You and the vat understand each other now. It's an unsettling feeling.} {The amber is drifting, very slowly.|There's a bubble that keeps coming back, like a thought.|The vat smells faintly of cinnamon, which it never has before.} The foreman is all the way at the other end of the hall.\n> left: Adjust it myself\n  wage\n  challenge brew adept-:\n    win:\n      perform intern_alchemists +small\n      alchemy +small\n      say: {A pinch of salt and a slow stir, and the vat settles back to its proper self. The foreman never knew, but the vat did.|You correct it before it goes wrong. When the foreman passes, he gives the vat a satisfied look as if he did it.|You trace the cinnamon to a cracked spice valve and close it. The vat settles, and the foreman finds the valve next week.}\n    lose:\n      perform intern_alchemists -small\n      health -tiny\n      say: {The vat turns a brilliant violet and hisses. The foreman arrives at a run, and you'll be hearing about it for weeks.|You add too much salt. The vat sulks a muddy brown until the foreman coaxes it back, at length, with you watching.|You make it worse. A lot worse. The whole hall smells of cinnamon until the end of the week.}\n> right: Run for the foreman\n  wage\n  perform intern_alchemists +tiny\n  alchemy +tiny\n  mood -small\n  health -tiny\n  say: {You run the length of the hall. The foreman fixes it in a second and explains how, at length, as you catch your breath.|By the time you're back with the foreman the colour has corrected itself. He stares at you, then at the vat.|You run for the foreman, who sniffs the air, says \"Cinnamon,\" and goes very pale. He fixes it, and doesn't explain.}\n",
+        "catalogSourceHash": "ee268b7e198d3fc9968b0936fa22e5ae7b6678ae110a689c4c39af92e7778944",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/plans_thesis.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "capital_library_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/capital_library_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "cbc227d219cc8a8f123aec25186eacf31c385df49623c1c6d72711078c782e8b",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 36,
+    "topCandidates": [
+      {
+        "id": "event:library_whispering_dome",
+        "score": 0.028665028665028666,
+        "reason": "BM25: the, reading, from, library, a, for, who, whisper, are, and, like, at, read, while, with, book, you, your, is, cough, it, dome, under, out, again, light, in; Dense similarity",
+        "title": "The Whispering Dome",
+        "file": "content/events/pools/castle_more.grim",
+        "line": 12,
+        "sourceHash": "0dd71362d424d14bca91f0af33e614907f7de8b36d8685075c7351902254cb0c",
+        "fullSourceText": "@event library_whispering_dome\ntitle: The Whispering Dome\npool: library_routine\ntone: light\nart: book\ntags: study\nscene: A gallery railing under a painted dome at the top of the library, a student leaning over it with one ear cocked, seven floors of shelves below.\ntext: {Under the dome on the sixth floor the echoes are wrong in a useful way. A whisper anywhere in the library arrives here, clear as a bell.|The dome is carrying voices again. Someone has chalked a small ear on the railing.|You know the dome's geography now: by the pillar you hear the front desk; by the window, the stacks.} {Two voices below are discussing a test that hasn't been set yet.|Someone below is rehearsing a proposal of marriage, badly.|{season == \"winter\": The radiators hiss over half of it.|A prefect is reading out demerits to himself, with relish.}}\n> left: Lean on the rail and listen\n  guile +small\n  alignment -tiny\n  say: {You learn the third question of next week's test, probably. Eavesdroppers, it turns out, don't feel as clever as they'd hoped.|The rehearsal ends with a yes, said in the same voice as the question. You feel like a thief who has stolen a wedding that hasn't happened yet.|You learn exactly what the front desk thinks of you. It's fair, which is worse.}\n> right: Cough loudly, and read\n  lore +small\n  say: {Your cough rolls down the dome like thunder. Seven floors stop whispering at once, and you read in a silence you made.|You cough. Somewhere below, the proposal stops mid-sentence. You read a whole chapter before you stop wondering how it ended.|You cough on purpose now. Below, every whisper stops, and the dome is yours, and so is the chapter.}\n",
+        "catalogSourceHash": "0dd71362d424d14bca91f0af33e614907f7de8b36d8685075c7351902254cb0c",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/castle_more.grim"
+      },
+      {
+        "id": "event:library_after_closing",
+        "score": 0.03200204813108039,
+        "reason": "BM25: the, reading, room, from, library, keeps, a, for, who, can, whisper, lamps, are, and, watches, like, cat, at, read, while, hour, with, book, you, your, is, until, it, under, go, out, in, leave, word; Dense similarity",
+        "title": "After the Closing Bell",
+        "file": "content/events/pools/castle_more.grim",
+        "line": 28,
+        "sourceHash": "c972da2f7a7f752a748b3e9695f3ee1072fb2242dad84e0cd7ca096593edc802",
+        "fullSourceText": "@event library_after_closing\nslot: evening\ntitle: After the Closing Bell\npool: library_routine\ntone: eerie\nart: lantern\ntags: study\nscene: A library at closing time, lamps going out floor by floor from the top down, a student half-hidden between two shelves with a book held to their chest.\ntext: {The bell rings to close the upper galleries, and their lamps begin to go out from the top floor down, one floor a minute. Students drift down to the reading room, which keeps its lamps for the night.|The galleries' closing bell. You've noticed the shelves up here lean together a little after hours, as if to talk.|The bell, the lamps, the drift down the stairs. You know the alcove on the fourth floor where the last lamp dies.} {Footnote is doing his rounds, tail up.|Rain is loud on the high windows.|{final_year: You wonder who will hide in your alcove next year.|Somewhere a book closes itself with a snap.}}\n> left: Stay hidden past closing\n  challenge deceive apprentice:\n    win:\n      lore +small\n      health -tiny\n      say: {You read by a stolen candle until the small hours. The library is a different animal at night, and it lets you be.|The shelves lean together and whisper while you read. You catch one word in three, and none of them are kind about the history section.|You read in your alcove till the candle drowns. Walking back across the bridges at two, you feel like a burglar who stole only sentences.}\n    lose:\n      mood -small\n      renown -tiny\n      say: {A shelf shuffles sideways and nudges you, firmly, toward the stairs. A prefect on the stair watches you evicted by furniture.|The shelves close the aisle behind you like a mouth and walk you down to the reading room. The story is round the house by breakfast.|Footnote finds you, sits on your book and yowls until the porter comes. The porter tells everyone. Footnote is unrepentant.}\n> right: Leave with the crowd\n  health +small\n  say: {You go to bed at a decent hour, which feels almost illicit.|You leave with everyone else and sleep like a shelved book.|You walk out under the dying lamps and sleep well. The alcove can wait for you.}\n\n# ---------------- The Lecture Tower ----------------\n",
+        "catalogSourceHash": "c972da2f7a7f752a748b3e9695f3ee1072fb2242dad84e0cd7ca096593edc802",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/castle_more.grim"
+      },
+      {
+        "id": "event:library_shared_table",
+        "score": 0.015873015873015872,
+        "reason": "BM25: the, reading, room, from, library, a, for, who, whisper, are, and, like, cat, at, while, an, hour, with, book, you, get, your, is, full, until, look, it, was, worth, then, out, noise, light, in, long, without, word",
+        "title": "The Last Free Chair",
+        "file": "content/events/pools/castle_halls.grim",
+        "line": 115,
+        "sourceHash": "69ae728a1f6d4324c9a6f079369482956ba5b1e2087377d78ade393d237c406c",
+        "fullSourceText": "@event library_shared_table\ntitle: The Last Free Chair\npool: library_routine\ntone: warm\nart: candle\ntags: social study\ncast:\n  here: present(place) where tagged(here, peer) and rel(here) >= 0\nscene: A crowded library reading room, every table full but one, a single empty chair facing a student absorbed in a book.\ntext: {The library is full. The only free chair is opposite {here}.|The only free chair is opposite {here}. A shelf has leaned over it, as if keeping it for you.|The library knows your habits now. The free chair, opposite {here}, has a book you wanted waiting on it.|The chair opposite {here} is so reliably free that you suspect the library of arranging it.} {Rain ticks on the tall windows.|A shelf nearby is quietly rearranging itself.|Footnote is asleep in the returns basket.|{season == \"winter\": The radiators clank like a ghost with a grudge.|Dust turns gold in the light.}}\n> left: Take the chair and work\n  rel here +small\n  lore +small\n  if npc_is(kael):\n    say: {Kael doesn't look up. By the end of the hour there is frost on your inkwell and a tiny, careful correction in your margin.|Kael pushes a page of his notes across to you, then looks away as if it had moved on its own.|Kael moves his inkwell to make room for yours. By the end, there's frost on both, and a note in his hand: \"Your third line.\"|Kael says one sentence in the whole hour. It's the answer to the question you were stuck on. He goes back to reading.}\n  elif npc_is(lyra):\n    say: {Lyra slides the candle an inch toward your side without looking up. Neither of you mentions it.|Lyra finishes before you, and waits, and says she wasn't waiting.|Lyra corrects your notation without asking and is right. You correct hers and are also right. Neither of you mentions it.|Lyra works at your pace for once, and you finish together. She says it was coincidence, twice.}\n  elif npc_is(seraphine):\n    say: {Seraphine writes a word in your notes that you won't understand until next week.|Seraphine reads the same page for an hour, smiling at something that isn't on it.|Seraphine slides you a book you hadn't asked for. You'll need it on Thursday, it turns out.|Seraphine works in silence, then says your name once, softly, as if checking it was still there.}\n  elif npc_is(bram):\n    say: {Bram informs you that you breathe too loudly. Then he lends you his ruler.|Bram underlines every rule in his book twice. Once, he asks your opinion of one.|Bram shares his lamp and lectures you on its proper use. The lecture is long. The lamp is very good.|Bram reads your essay upside down from across the table and finds the mistake. He's insufferable about it, and right.}\n  else:\n    say: {You work in silence for an hour, which turns out to be a kind of company.|Neither of you speaks. Both of you get further than you would have alone.|You work opposite {here} as if you'd planned to. By the end you've both got further, and nodded once.|You share the table for the hour and the cat for the last ten minutes. It's a good arrangement.}\n> right: Whisper a question\n  rel here +small\n  mood +small\n  renown -tiny\n  say: {The conversation is worth it. The look from the front desk has a long memory.|You get three sentences in before a shush arrives from two floors up.|You whisper your question to {here} and get a whispered answer. The front desk lets it pass, this once.|Your whisper wakes the cat in the returns basket, who complains loudly. You are shushed for the cat's noise.}\n",
+        "catalogSourceHash": "69ae728a1f6d4324c9a6f079369482956ba5b1e2087377d78ade393d237c406c",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/castle_halls.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "capital_townhouse_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/capital_townhouse_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "9e2ac634dfb8be5f6bffde17d94d29e9c2b5433b8928540ec45dc2f2aa83c99c",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 36,
+    "topCandidates": [
+      {
+        "id": "event:home_cottage_old_room",
+        "score": 0.014705882352941176,
+        "reason": "Dense similarity",
+        "title": "Your Old Room",
+        "file": "content/events/pools/village_home.grim",
+        "line": 440,
+        "sourceHash": "15300108722cd914b31158b548f4be53d53ab403d09559f7e8a587d5916b1d8a",
+        "fullSourceText": "@event home_cottage_old_room\ntitle: Your Old Room\npool: home_cottage_routine\ntone: warm\nart: bed\nscene: A small childhood bedroom under the eaves, a too-short bed, a window looking out over fields.\ntext: {Your old room is exactly as you left it, except smaller.|Someone has been storing apples in your old room.|Your old room has started to feel like a guest room, and you like it less for that.} {season == \"winter\": There's frost on the inside of the window, as always.|The window won't shut properly in the heat, as always.} Downstairs, the house is busy without you.\n> left: Nap the afternoon away\n  health +small\n  mood -tiny\n  say: {You sleep like a stone. Downstairs, someone has done all your chores, loudly.|You wake to the smell of supper and a pointed silence.|You sleep through the afternoon. You feel human, and slightly ashamed.}\n> right: Go down and help\n  mood +small\n  say: {final_year: {You go down and realise there won't be many more afternoons like this.|You memorise the kitchen without meaning to.|You go down and help, and try to learn how every sound in the house goes, for later.}|{You help with the fire. Nobody says much. Nobody needs to.|The creaky stair announces you. Someone hands you a cup before you've asked.|You go down and are handed the job you always had. Your hands know it before you do.}}\n",
+        "catalogSourceHash": "15300108722cd914b31158b548f4be53d53ab403d09559f7e8a587d5916b1d8a",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/village_home.grim"
+      },
+      {
+        "id": "event:ashby_the_chair",
+        "score": 0.03149801587301587,
+        "reason": "BM25: the, front, is, quiet, family, out, at, and, have, just, been, you, could, sit, on, them, if, sat, down, to, look, they, don't, step, warm, in, a, very, go, your, old, an, house, can, nobody, asks; Dense similarity",
+        "title": "The Chair on the Step",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 158,
+        "sourceHash": "c005eba2f772ceb0a1b40fbe7ac33f13038635a6207a41af00f66b4a50493154",
+        "fullSourceText": "@event ashby_the_chair\ntitle: The Chair on the Step\npool: ashby_lane_corvin\nrepeat: 3\nslot: evening\ntone: warm\nart: cards\nscene: A crooked harbour-town lane at dusk, washing strung between leaning houses, an old wooden chair on a worn doorstep and a young man in it shuffling cards.\ntext: {Halfway down Ashby Lane there's an old wooden chair on a doorstep, and Corvin is in it, shuffling. \"My grandad's,\" he says. \"Nobody's sat in it since. Nobody but me.\" Three neighbours call his name from three windows. None of them sounds pleased. All of them sound fond.|Corvin's in the chair again, dealing patience to nobody. \"You found the lane twice,\" he says. \"That's twice more than most.\" A basket comes down from a window on a string; he drops a coin in it without looking up.|The chair, the step, the cards. Tonight there's a stool beside the chair, hauled out from somewhere, and Corvin pats it. \"Lane says you can sit,\" he says. \"Don't let it go to your head.\"}\n> left: Ask about the old man\n  rel corvin +small\n  mood -tiny\n  say: {\"He could find a lost thing in any house,\" Corvin says. \"People still knock and ask me where they've put things. Me. As if it ran in the blood.\" \"Does it?\" you ask. \"Sometimes,\" he says, and doesn't joke, and the quiet that follows is a sad one, until the lamps come on.|\"He said a lost thing wants to be found,\" Corvin says. \"You just stand where it'd look for you.\" He's quiet a while. You don't push, and the quiet goes sad and comfortable at once.|He tells you the old man's last find: Corvin, aged ten, on a roof, in the rain, though nobody had told him where to look. \"Never said how,\" Corvin says. \"Took it with him.\" You sit with that, sad and close, until the lamps.}\n> right: Meet the neighbours\n  charm +small\n  mood -tiny\n  say: {The neighbours come down to inspect you, and they're thorough about it. Corvin owes one of them a crown and another a cat; it's complicated. They tell you he was a terrible child. When the watch walks past, all three step in front of him without a word, and the watch walks on.|The neighbours have opinions about you now. One wants to know your prospects; one wants to sell you a hen. It's exhausting. As you go, the hen woman tells Corvin you'll do.|A neighbour brings out a plate of something fried and very hard to chew, and asks after your whole family while you chew it. You pass, wearily. \"That's you on the lane, then,\" Corvin says, as if you'd been sworn in.}\n",
+        "catalogSourceHash": "c005eba2f772ceb0a1b40fbe7ac33f13038635a6207a41af00f66b4a50493154",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:hollis_house_quiet_hour",
+        "score": 0.016129032258064516,
+        "reason": "Dense similarity",
+        "title": "The Brass Plate",
+        "file": "content/events/maps/placeholders.grim",
+        "line": 294,
+        "sourceHash": "672edb96ed67707fdfff549846012e318d89433f8d1e88eefe4b57a11f7d63ef",
+        "fullSourceText": "@event hollis_house_quiet_hour\ntitle: The Brass Plate\npool: maps_placeholder\nplace: hollis_house\nart: house\nscene: A narrow, immaculate uptown house with a polished brass nameplate on the door and perfectly straight window boxes.\ntext: Hollis House has the straightest window boxes in the street and a brass plate polished until it squints back at you. Someone inside is practising scales on a piano, very correctly.\n> left: Knock\n  charm +tiny\n  mood -tiny\n  say: {~A maid answers, says the family is at luncheon, and shuts the door with great precision.|Nobody answers, but the piano stops, and starts again exactly where it left off.}\n> right: Pass by\n  mood +tiny\n  say: {~You pass by. The piano follows you to the corner, exactly in time.|You walk on. Even the cobbles outside look as if they've been told to sit up straight.}\n\n# Retired (C2): the place has its own cards (maps/capital_society.grim).",
+        "catalogSourceHash": "672edb96ed67707fdfff549846012e318d89433f8d1e88eefe4b57a11f7d63ef",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/placeholders.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "fennick_farm_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/fennick_farm_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "1f8b2cefec63b83d9952a77b63b867312af2d6080dbe68231ccbafce6a05a8d4",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 33,
+    "topCandidates": [
+      {
+        "id": "event:fennick_weather_first",
+        "score": 0.03200204813108039,
+        "reason": "BM25: and, the, fennick, up, on, of, a, farmhouse, low, weather, you, coming, hand, in, by, from, calls, that, can, for, tea, wind, your, hands, smell, gate, whole, very, small, big, both, thinking; Dense similarity",
+        "title": "Weather First",
+        "file": "content/events/maps/countryside_peers.grim",
+        "line": 16,
+        "sourceHash": "e6b119372be55bc9de653235d5e397c067466d994aa45f01746b4fa76c2b0444",
+        "fullSourceText": "@event fennick_weather_first\ntitle: Weather First\npool: fennick_farm_tobias\nwhen: rel(tobias) > -10\nrepeat: 3\ntone: warm\nart: leaf\nscene: A low stone farmhouse kitchen with a range and a scrubbed table, a small sturdy woman pouring tea, a big gentle young man ducking under the beams, a ladder at the open door.\ntext: {&Mrs Fennick, small and brown with forearms like a blacksmith's, greets you with the weather. The wind's gone round west, there's rain by the week's end, and the barley's thinking about it. Then she puts the kettle on and looks at you both. \"Well,\" she says. \"There's the roof wants doing, or there's the tea.\"|Mrs Fennick again, and the weather again: {season == \"winter\": a frost coming, she can smell it, and the hens know|thunder by evening, and the cows know}. She sets out three cups without asking. \"Roof's still wanting,\" she says, \"if you've the arms for it. Or sit.\"|The kettle's on before you're through the gate. \"Wind's in the east,\" Mrs Fennick says, \"and you're thinner,\" which from her is a whole letter. \"Roof,\" she says, \"or tea.\"}\n> left: Help Tobias with the roof\n  vigor +small\n  health -tiny\n  say: {&You pass slates up the ladder for an afternoon while Tobias sings to them, which he says helps them sit. Your shoulders burn. Mrs Fennick calls the weather up at you every half hour, and she's right every time.|Up the ladder. Tobias fixes slates and tells you a long story about a goat that ended up on this very roof. Your hands are scraped raw by the end, and the story still isn't over.|You patch the corner where the wind got under the slates, until dusk and until your arms give out. Mrs Fennick stands in the yard with her hands on her hips and says, \"That'll keep the weather out,\" which is the highest thing she says about anything.}\n> right: Sit and have the tea\n  mood +small\n  health +tiny\n  say: {&Strong tea, seed cake and Mrs Fennick's opinions of the weather for an hour. At the door, as you go, she takes your hand and says, quite briskly, that she's glad Tobias has you. Tobias goes red to the ears and studies the hens.|Tea, and a slab of bread and dripping, and the story of the winter Tobias tried to keep a lamb in his bed. He hides his face in his hands. His mother laughs from the belly, exactly like him.|Tea, and the last of the seed cake, which she has plainly saved. She asks about the castle and listens to every word, and at the end says, \"Rain tomorrow,\" and pats your hand twice.}\n",
+        "catalogSourceHash": "e6b119372be55bc9de653235d5e397c067466d994aa45f01746b4fa76c2b0444",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/countryside_peers.grim"
+      },
+      {
+        "id": "event:tobias_date_greenhouse_supper",
+        "score": 0.029571646010002173,
+        "reason": "BM25: and, tomatoes, the, fennick, farm, up, side, of, rows, tomato, a, you, in, weed, by, from, for, your, hands, smell, whole, small, big; Dense similarity",
+        "title": "Lunch Among the Tomatoes",
+        "file": "content/events/pools/dating.grim",
+        "line": 239,
+        "sourceHash": "895faa69a288b6d80a8559d257ad590c224489ead35aaac7ecdd96578f978caa",
+        "fullSourceText": "@event tobias_date_greenhouse_supper\ntitle: Lunch Among the Tomatoes\nactor: tobias\ntrigger: social\nclass: routine\ntone: warm\nwhen: partner_here(tobias)\nrepeat: 3\nweight: 12\nart: flower\ntags: romance nature\nscene: A candlelit table set up between rows of tomato plants in a warm greenhouse at night, a big student serving soup from a pot.\ntext: {Tobias has cooked lunch in the greenhouse, at a table between the tomato rows, with everything he grew himself.|Lunch in the greenhouse again. The tomatoes have names now.|Tobias has added a second candle and a jar of wildflowers.} {The soup is his grandmother's recipe.|A tomato plant is leaning in to listen.|There is far too much bread.}\n> left: Eat everything, and ask for seconds\n  spark tobias +small\n  health +tiny\n  say: {You eat three bowls and he beams like the sun. He tells you about the farm, the goats, the year the river froze. You could listen for ever, and nearly do.|Seconds, thirds, a slice of pie. Tobias watches you eat with an expression you want to keep in a jar.|You eat until the bread is gone, which takes some doing. Tobias lights the second candle off the first and says he'll bake less next time. He won't.}\n> right: Help him in the beds after\n  rel tobias +small\n  vigor +tiny\n  health -tiny\n  say: {You weed the beds in the afternoon sun, side by side. Your back aches; your hands smell of tomato leaves. He hums the whole time.|An hour of planting. He shows you how to tell a seedling it's doing well. You feel ridiculous, and do it anyway, until your knees ache from the kneeling.|You work off the bread in the beds after. He picks you a wildflower for the jar and pretends it was a weed.}\n",
+        "catalogSourceHash": "895faa69a288b6d80a8559d257ad590c224489ead35aaac7ecdd96578f978caa",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/dating.grim"
+      },
+      {
+        "id": "event:tobias_country_barrow",
+        "score": 0.015625,
+        "reason": "BM25: turnips, and, the, fennick, farm, on, of, valley, turnip, a, you, hand, in, by, from, that, stay, for, your, very, small, big, both",
+        "title": "Turnips, Mostly Free",
+        "file": "content/events/maps/countryside_peers.grim",
+        "line": 158,
+        "sourceHash": "8292c4d6df01ec40b2dcad2416de3efcb8e757d169d79fea190c359295c84cc0",
+        "fullSourceText": "@event tobias_country_barrow\ntitle: Turnips, Mostly Free\npool: country_peers_out\nactor: tobias\nwhen: met(tobias)\ntone: light\nart: leaf\nscene: A country lane, a big gentle young man pushing a barrow heaped with turnips, a small crowd of villagers each holding a turnip, a student watching.\ntext: Tobias comes down the lane with a barrow of turnips he's meant to be selling, and he's selling them terribly. Anyone with a sad story gets one free, and in this valley everyone has a sad story. \"Ma'll kill me,\" he says cheerfully, handing one to a man whose cow is poorly. \"Help?\"\n> left: Run the barrow properly\n  charm +small\n  gold +tiny\n  rel tobias -tiny\n  say: You take over: a fair price, no stories. You sell the lot before long and hand Tobias the takings. He looks at the coins as though they were slightly sad, and pays you your share, and is a little quiet with you on the way home.\n> right: Give them away with him\n  mood +small\n  rel tobias +small\n  say: You hand out turnips to a widow, a tinker, two children's grandmothers and a goat that asks nicely. Your pockets stay empty and your face aches from smiling. \"Ma'll kill us both,\" Tobias says, very happy. \"Worth it.\"\n",
+        "catalogSourceHash": "8292c4d6df01ec40b2dcad2416de3efcb8e757d169d79fea190c359295c84cc0",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/countryside_peers.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "hollis_house_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/hollis_house_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "ea67089cc92412b14b435b79400aed2987217e1b47bfc77dc64d2ebd8ad662aa",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 33,
+    "topCandidates": [
+      {
+        "id": "event:hollis_noon_piano",
+        "score": 0.03225806451612903,
+        "reason": "BM25: the, hollis, in, and, a, until, at, you, is, scales, on, piano, maid, says, shuts, with, precision, nobody, but, stops, again, left, to, time, as, if, told, up; Dense similarity",
+        "title": "Scales at Noon",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 306,
+        "sourceHash": "6d597f39200ab15cc9ba42c5e8d86aed982ccdefab64ac461a9871b4fbd76756",
+        "fullSourceText": "@event hollis_noon_piano\ntitle: Scales at Noon\npool: hollis_house_bram\nslot: noon\ntone: light\nart: music\nscene: A tidy uptown parlour at midday, a burly young man at an upright piano playing scales with grim precision, a startled guest in the doorway.\ntext: The maid shows you into the parlour at noon and leaves before you can stop her. Bram is at the piano, playing scales: up, down, perfectly in time, with the face he uses for writing demerits. He sees you and stops dead. \"My father played,\" he says. \"I was told to start at six. Nobody said I could stop.\"\n> left: Ask him to play something real\n  mood +small\n  rel bram +tiny\n  say: He glares at you for a whole bar. Then he plays a country dance tune, badly on purpose and then not badly at all. Halfway through he almost smiles. At the end he shuts the lid. \"If this is in the Ledger,\" he says, \"I'll know who.\"\n> right: Pretend you heard nothing\n  rel bram +small\n  mood -tiny\n  say: \"Heard what?\" you say, and talk about the weather, awkwardly and at length, until his ears stop being red. He shows you out himself. On the step he says, gruffly, that you can come at noon again if you like. \"For the weather,\" he says.\n",
+        "catalogSourceHash": "6d597f39200ab15cc9ba42c5e8d86aed982ccdefab64ac461a9871b4fbd76756",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:hollis_inspection",
+        "score": 0.03149801587301587,
+        "reason": "BM25: the, hollis, house, has, in, and, a, polished, until, it, at, you, is, very, says, shuts, door, with, stops, again, exactly, left, by, to, time, as, if, told, straight; Dense similarity",
+        "title": "Boots",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 288,
+        "sourceHash": "c85ab813ff698e311b8b23be86550e9abba4de1d9e26cf0714e0e2310b7d6c98",
+        "fullSourceText": "@event hollis_inspection\ntitle: Boots\npool: hollis_house_bram\nwhen: rel(bram) > -10\nrepeat: 3\ntone: tense\nart: shield\nscene: A narrow, immaculate entrance hall, a stern tall man in an old prefect's sash inspecting a burly young man standing at attention, a guest waiting by the door.\ntext: {In the hall at Hollis House, Bram stands at attention while his father inspects his boots, his collar and his fingernails, exactly as Bram inspects first-years. Bram says \"sir\" and nothing else; the demerit ledger is in his breast pocket, like a stone. Then Mr Hollis turns to you. \"Boots,\" he says.|Inspection again. Mr Hollis finds a crease in Bram's collar and looks at it for a long, silent moment. Bram stares at the wall. Then the eyes move to you, and to your boots, which you polished, which isn't enough.|The hall, the boots, the silence. This time when his father turns to you, Bram, staring straight ahead, steps half a pace sideways, so that he's standing a little in front of you.}\n> left: Hold out your boots\n  rel bram +small\n  mood -tiny\n  say: {Mr Hollis examines your boots as if they had lied to him. \"Passable, for a guest,\" he says, and goes. Bram lets out a breath you hadn't heard him holding. \"Every day he's home,\" he says. \"Since I was six.\" You feel scrubbed and small. So, you realise, does he.|\"Scuffed at the heel,\" Mr Hollis says, and walks away, and your face burns. Bram, very quietly, hands you a polishing cloth from his pocket. He carries one. Of course he carries one.|Mr Hollis looks at the boots, then at his son half in front of you, for a long time. \"Hm,\" he says, and goes. Bram doesn't move until the study door shuts, and your heart is going like a drum. \"Don't,\" he says. \"Don't make it weird.\"}\n> right: Ask about his head-boy year\n  charm +small\n  mood -small\n  say: {Mr Hollis's face changes, and he talks about his year for an hour, every prize, while you stand there bored to tears and Bram slips away to the kitchen. Later Bram gives you an apple, which from him is a medal.|He talks for an hour about his rival for head boy, whom he has never forgiven, and your attention dies twice. Bram, freed, has polished both your boots by the time you get away.|This time Mr Hollis talks about his own father, and stops halfway, and goes into the study. Bram stares at the shut door. \"He's never told that one,\" he says. The long hour has left you tired and strange.}\n",
+        "catalogSourceHash": "c85ab813ff698e311b8b23be86550e9abba4de1d9e26cf0714e0e2310b7d6c98",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:world_practice_next_door",
+        "score": 0.015384615384615385,
+        "reason": "Dense similarity",
+        "title": "The Practice Next Door",
+        "file": "content/events/pools/world_more.grim",
+        "line": 287,
+        "sourceHash": "5515c9f6e00e5d2c3ed478829115af08a68d832c876829ff3dc80db08c92f881",
+        "fullSourceText": "@event world_practice_next_door\nslot: night\ntitle: The Practice Next Door\npool: world_more_routine\ntone: warm\nart: music\ntags: social\nscene: A student at a desk with their head in their hands, a thin wall between them and an unseen musician, music drifting under the door.\ntext: {Someone in the room next door is learning a piece on a charmed fiddle. They play the same eight bars over and over, and the fiddle sighs at every wrong note.|The fiddle next door has got as far as the sixteenth bar. It still sighs, but less.|The piece next door is almost a piece now. You know it as well as the player does, wrong notes included.} {You were trying to read.|It's late, and the wall is thin.|{season == \"winter\": The radiator carries it into your room like a second instrument.|The windows are open, and half the corridor can hear it.}}\n> left: Knock and offer to help\n  charm +small\n  health -tiny\n  say: {You knock. The player is a mortified first-year who has never had a lesson. You hum the eight bars properly until they have them, which is well past midnight.|You knock, and stay to count the beat for an hour. The sixteenth bar comes right for the first time; you both cheer, and the neighbours bang on the wall.|The door's already open when you knock. You tap out the tricky bit on the tabletop while they follow. Bed is very late.}\n> right: Pillow over your head\n  lore +small\n  mood -small\n  say: {You read with a pillow pressed to one ear. You get through the chapter; the eight bars get into your dreams.|You work through it while the fiddle sighs at the sixteenth bar every four minutes, regular as a clock. You finish your reading through gritted teeth.|You study to the sound of it, grudgingly. Annoyingly, it helps; you'll be humming it in the exam.}\n",
+        "catalogSourceHash": "5515c9f6e00e5d2c3ed478829115af08a68d832c876829ff3dc80db08c92f881",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/world_more.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "oracle_rooms_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/oracle_rooms_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "f9cdacdbe953a211010df29eee1bb23c9e06ca6384d9f5da22c404dbf373aa5b",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 36,
+    "topCandidates": [
+      {
+        "id": "event:oracle_window_seat",
+        "score": 0.03225806451612903,
+        "reason": "BM25: the, queue, on, stairs, to, are, of, people, in, not, be, a, future, is, with, them, you, man, comes, out, and, woman, laughing, will, say, what, they, that, isn't, then, looks, straight, at, leave, it, back, into, very; Dense similarity",
+        "title": "A Year From Now",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 226,
+        "sourceHash": "68f18aef141c76cf3b0dcad2293f8ca5e1cad5bb2e28ff751b2b4fa1ce620c4a",
+        "fullSourceText": "@event oracle_window_seat\ntitle: A Year From Now\npool: oracle_rooms_seraphine\nrepeat: 3\ntone: eerie\nart: eye\nscene: A tall window seat at the top of a hushed staircase, a dreamy young woman with a sketchbook painting the anxious people queuing on the stairs below.\ntext: {Seraphine is in the window seat at the top of her mother's stairs, painting the queue. Not as they are, you see over her shoulder; the man in the green coat is greyer, the girl with the letter is laughing. \"A year from now,\" she says, \"more or less. They come to hear what they want. I paint what they'll get.\"|Seraphine's in the window seat again, the sketchbook open at a new face: a woman near the top of the queue clutching a ring box. \"She'll get the answer she wants,\" Seraphine says, \"and the one she needs a little after. Same man.\" She sounds pleased.|The queue is longer this week; there's a duke in it. Seraphine paints him from the back, which is all of him she'll look at. \"His future's very loud,\" she says. \"Lots of horses. Sit there, would you? You're quiet.\"}\n> left: Ask about one of them\n  rel seraphine +small\n  mood -tiny\n  say: {\"The man in green has come to ask if his ship comes in,\" she says. \"It doesn't. Mother will tell him it does.\" She paints a little boat in the corner of his page, sailing off. \"He'll be all right. Greyer. He'll open a shop.\" You watch him, so hopeful, and feel the year coming for him.|\"She'll say no to him,\" Seraphine says of the ring-box woman, \"and then, later, yes, and they'll both be glad she waited.\" She paints a small door in the corner. You watch the woman, so sure of herself, and feel uneasy for her.|\"He'll lose a horse race and win a wife,\" Seraphine says of the duke, \"and be cross about the horse.\" She paints a hoofprint. You laugh, and then don't, because he has turned and is looking straight up at you, and you feel caught out.}\n> right: Help her paint the stairs\n  mood +small\n  rel seraphine +tiny\n  say: {She hands you a brush and lets you do the stairs, which will be the same next year. You do them badly. She says they're the best stairs anyone's painted for her, and adds a small figure at the top of them, which is you, a year older, holding a door open.|You do the banisters this time, slightly better. She adds a cat on the landing that isn't there. \"There will be,\" she says.|You paint the window you're both sitting in, and her in it. She looks at your picture a long time. \"So that's what I look like from outside,\" she says, and keeps it.}\n",
+        "catalogSourceHash": "68f18aef141c76cf3b0dcad2293f8ca5e1cad5bb2e28ff751b2b4fa1ce620c4a",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:arcade_waiting_room",
+        "score": 0.014084507042253521,
+        "reason": "Dense similarity",
+        "title": "Waiting to Hear It",
+        "file": "content/events/maps/capital_markets.grim",
+        "line": 382,
+        "sourceHash": "2db128a46387974811b863c1a2f17584a68f76d28dc15d7fe91802112120b07c",
+        "fullSourceText": "@event arcade_waiting_room\ntitle: Waiting to Hear It\npool: capital_arcade_life\ntone: warm\nart: eye\nscene: A small waiting room behind a beaded curtain, three people on a bench, a widow in black, an old sea captain and a nervous young clerk, all turning to look at a student.\ntext: The fortune-teller's waiting room has three people on its bench: a widow, an old sea captain and a clerk. The captain says they're here every week, all three, waiting to hear the same thing they heard last week. \"What are you waiting to hear?\" the widow asks you. They all lean in.\n> left: Tell them the truth\n  mood +small\n  charm +tiny\n  say: You tell them, and it's more than you meant to. The captain nods. The widow pats your hand. The clerk tells you his, which is about a girl at the post office. Nobody goes in when the curtain opens. You talk till the arcade shuts, and you feel lighter.\n> right: Read their palms yourself\n  challenge perform journeyman:\n    win:\n      gold +tiny\n      renown +tiny\n      alignment -tiny\n      say: You read the captain's palm with great conviction: a long voyage, a dry harbour. The widow wants hers. The clerk pays you. The fortune-teller puts her head out, looks at you for a long moment, and goes back in.\n    lose:\n      mood -small\n      say: You tell the widow she'll marry soon. The captain coughs. The widow, it emerges, has been married three times and is here about the fourth. Everyone is very kind about it, which is the worst part.\n",
+        "catalogSourceHash": "2db128a46387974811b863c1a2f17584a68f76d28dc15d7fe91802112120b07c",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_markets.grim"
+      },
+      {
+        "id": "event:oracle_other_painting",
+        "score": 0.014925373134328358,
+        "reason": "Dense similarity",
+        "title": "The Other Ending",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 261,
+        "sourceHash": "290f93b94ae9b0d8617b9bc513be8a964e71e9564f236dcd195a55e9525846b1",
+        "fullSourceText": "@event oracle_other_painting\ntitle: The Other Ending\npool: oracle_rooms_seraphine\nwhen: rel(seraphine) >= 18\ntone: warm\nart: mirror\nscene: A young woman kneeling to lift the cushion of a window seat, a hidden canvas beneath it showing herself turning away from a tall silver chair.\ntext: When the last petitioner has gone, Seraphine lifts the cushion of the window seat. Underneath is a canvas, face down. She turns it over: herself, older, turning away from a tall silver chair. \"Mother has seen me say yes,\" she says. \"{chosen(seraphine_mother, left): Even after I wrote no, she still sees yes.|She always sees me say yes.} So I painted the other one. In case it helps.\"\n> left: \"It helps.\"\n  rel seraphine +small\n  lore +tiny\n  say: She looks at the painting as if it were someone she's going to meet. \"If I look at it long enough,\" she says, \"it might start to look like a future instead of a wish.\" She slides it back under the cushion. \"Stay a bit longer.\" You do, until the room goes dark.\n> right: \"Paint it bigger.\"\n  gold -small\n  mood +small\n  rel seraphine +small\n  say: Next morning you spend more than you should on the biggest canvas in the capital and carry it up the Oracle's stairs past the whole astonished queue. Seraphine laughs, a real laugh, the kind that makes the clerk look up. \"It won't fit under the seat,\" she says. \"Good.\"\n\n# ---------------- Bram: Hollis House ----------------\n",
+        "catalogSourceHash": "290f93b94ae9b0d8617b9bc513be8a964e71e9564f236dcd195a55e9525846b1",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "ten_clockworks_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/ten_clockworks_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "55ef5e1b6c86efa6752a1b7899867a1f8ac5474c34d60cde705caf1b25a1eb12",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 34,
+    "topCandidates": [
+      {
+        "id": "event:clockworks_long_bench",
+        "score": 0.03225806451612903,
+        "reason": "BM25: the, ten, clockworks, has, on, and, they, hour, a, of, which, in, this, family, as, look, at, one, clock, runs, backwards, small, under, it, says, not, for, hobby, you, to, it's, into, right, back, out, works; Dense similarity",
+        "title": "Properly",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 99,
+        "sourceHash": "ecebd40389353cb218b6180f4d0add2e1426864aecc90ad7aaf9040fd79bbe0b",
+        "fullSourceText": "@event clockworks_long_bench\ntitle: Properly\npool: ten_clockworks_mir\nrepeat: 3\ntone: light\nart: gear\nscene: A long workbench in a clock workshop, a family of artificers in aprons working in silence, a young person with soot-smudged goggles bent very still over a tiny gear.\ntext: {At the Ten Clockworks the whole family works at one long bench, in silence, and nobody has set anything on fire for years. Mir is at the end of it, mending a duchess's carriage clock. Properly. Slowly. Without a single exclamation mark. They look up, see you, and their face lights like a fuse.|Back at the long bench. Mir has moved their stool an inch further from the rest, which in this house is a rebellion. \"Pass the three-tooth,\" they whisper: the first word anyone has spoken in an hour.|The bench again, but today Mir's father has set a second stool beside his own, and Mir is on it, and he is watching their hands. Mir has never looked so frightened, or so pleased.}\n> left: Work beside them, properly\n  lore +small\n  health -tiny\n  say: {Three hours, one gear, no talking. Mir's father nods at your work once, which Mir says later is \"basically a parade\". Your back aches and your eyes swim, and you understand Mir a little better. They can work this way. They just can't breathe in it.|Two hours on a mainspring that won't sit, until your neck locks. Mir finishes theirs, then yours, under the bench, so their father won't see. \"Properly,\" they mouth at you, and grin.|You sit very still while Mir's father talks them through an escapement, the first time, Mir says after, he has ever explained one to them. Your back aches from not moving. It's worth every minute.}\n> right: Ask to see their real workshop\n  rel mir +small\n  health -tiny\n  say: {The real workshop is a cupboard under the attic stairs, with a stool, a lamp, a drawer of borrowed springs and a scorch mark on the ceiling shaped like a bird. \"First fire,\" Mir says proudly. You hit your head twice on the way out. \"Everyone does,\" they say. \"It's character-building.\"|Back in the cupboard under the stairs, Mir shows you this break's project: a clock that runs backwards when it's sad. You crack your head on the lintel again. \"Character,\" Mir says sympathetically.|Mir has pinned a drawing inside the cupboard door: the long bench, with a small fire at one end of it. \"Someday,\" they say. You bang your elbow getting out, and they laugh, and it's a good laugh.}\n",
+        "catalogSourceHash": "ecebd40389353cb218b6180f4d0add2e1426864aecc90ad7aaf9040fd79bbe0b",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:mir_family_clocks",
+        "score": 0.03057889822595705,
+        "reason": "BM25: the, clockworks, has, on, and, they, all, a, of, in, this, family, as, at, one, clock, small, it, says, not, for, hobby, you, to, it's, built, right, back, down; Dense similarity",
+        "title": "Not a Hobby",
+        "file": "content/events/bonds/friends.grim",
+        "line": 405,
+        "sourceHash": "206c471f5678428d436d8984c3fed2ba9c6b511d5e034851859bc3fcd800d342",
+        "fullSourceText": "@event mir_family_clocks\ntitle: Not a Hobby\nclass: routine\ntone: tense\ntrigger: social\nactor: mir\nwhen: flag(mir_family_done) and rel(mir) >= 15\nweight: 9\nart: letter\ntags: social\nscene: A letter on a workbench, held down by a small brass clock, the artificer reading it with their goggles pushed up and their jaw tight.\ntext: {flag(mir_family_wrote): Mir's mother has named her prize: the guild medal for young artificers, entries closing in a fortnight. Mir has three inventions half-built and no time. \"Win a prize,\" they mutter, to a clock. \"Win a prize.\"|A letter from Mir's father, the first he's ever written them himself: could they send something they've made, to show the men at the clockworks? Mir has started the reply four times.}\n> left: Help them write it up\n  charm +small\n  rel mir +small\n  study -tiny\n  say: {flag(mir_family_wrote): You write up the entry together, all evening: what it does, why it matters, who'll use it. It's three pages and not one apology. \"Whatever the judges say,\" Mir says, \"it's finished.\"|You write it together, all evening: what Mir built this year, what it does, who uses it. Three pages of inventions and not one apology. \"He'll read every word,\" Mir says. \"Twice. He reads instructions twice.\"}\n> right: Tell them to send the owl\n  rel mir +medium\n  mood -tiny\n  say: {flag(mir_family_wrote): They send in the brass owl. It comes second. Mir's mother writes back one line: \"Second is a prize.\" Mir frames it.|Mir looks at the brass owl on the shelf for a long time. Then they wrap it and post it. The letter back is very short: \"Dad cried. He says it's not a hobby. I said I know.\"} You miss the owl on the shelf.\n\n# ---------------- Kael ----------------\n",
+        "catalogSourceHash": "206c471f5678428d436d8984c3fed2ba9c6b511d5e034851859bc3fcd800d342",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/bonds/friends.grim"
+      },
+      {
+        "id": "event:art_escapement_drill",
+        "score": 0.027479766610201392,
+        "reason": "BM25: the, on, its, and, all, hour, a, of, each, in, as, at, one, backwards, small, under, it, not, for, you, to, it's, built, into, right, out, before, ticking; Dense similarity",
+        "title": "The Ticking Hour",
+        "file": "content/events/pools/courses_hidden.grim",
+        "line": 6,
+        "sourceHash": "7b04ae472c3109dd2f9ce68d6a246a434c465479143a6920a9439aa68f308776",
+        "fullSourceText": "@event art_escapement_drill\ntitle: The Ticking Hour\ntrack: artifice\nlevel: 1\nclass: routine\ntone: light\nrepeat: 5\nweight: 10\nart: gear\ntags: class study\nscene: A cluttered workshop bench covered in tiny brass gears, files and loupes, a row of half-built clockwork hearts ticking out of time with one another.\ntext: {Artifice begins with a heart, a fist of clockwork that must tick evenly before it is allowed to think.|Your clockwork heart is waiting where you left it, sulking at the wrong speed.|You can hear your own heart on the bench from the doorway now. Its tick is almost yours.} {The bench beside you ticks like hail.|One heart near the door is running backwards, proudly.|The lecturer listens to each bench with eyes closed.} {season == \"winter\": The brass is cold enough to bite.|The workshop smells of solder.}\n> left: File every tooth by hand\n  alchemy +small\n  mood -small\n  say: {Tooth by tooth, under a loupe, until your eyes water. The tick evens out by the bell.|You file all morning and burn one thumb on the solder. The heart ticks steady and slightly smug.|It's slow, fiddly work, and your hands learn it faster than your head does.}\n> right: Charm the spring to keep time\n  challenge enchant standard:\n    win:\n      arcana +small\n      study artifice +tiny\n      say: {The charm settles into the spring like a cat into a basket. Your heart ticks like a metronome.|You whisper the rhythm into the coil and it keeps it. The lecturer opens one eye, then closes it again.|The charm takes your own pulse as its pattern. The lecturer listens with eyes closed and nods: your heart ticks in time with you.}\n    lose:\n      health -tiny\n      mood -tiny\n      say: {The spring takes the charm too literally and unwinds all at once, across the room.|Your heart ticks perfectly for a minute, then very fast, then not at all. Someone hands you a fire bucket just in case.|The charm copies your pulse a little too well, and when you get nervous, so does the heart. The lecturer listens, eyes closed, and winces.}\n",
+        "catalogSourceHash": "7b04ae472c3109dd2f9ce68d6a246a434c465479143a6920a9439aa68f308776",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/pools/courses_hidden.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "travel_city_morning",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/travel_city_morning.grim --json",
+    "exitCode": 0,
+    "queryHash": "3fedebfe615103841500dc845605a523fbf2218192320c54c2b66259a3030a9a",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 32,
+    "topCandidates": [
+      {
+        "id": "event:streets_chestnuts",
+        "score": 0.0315136476426799,
+        "reason": "BM25: a, in, the, capital, you, and, selling, hot, chestnuts, your, his, on, it, for, of, smoke, eat, like, day, back; Dense similarity",
+        "title": "Hot Chestnuts",
+        "file": "content/events/maps/region_streets_2.grim",
+        "line": 8,
+        "sourceHash": "3555a33f4300b46c26f5fdf0fd11d281fbe3f0559889b1ff63f750449c2947a5",
+        "fullSourceText": "@event streets_chestnuts\ntitle: Hot Chestnuts\npool: capital_streets\ntone: warm\nwhen: season == \"winter\" and slot != \"night\"\nart: flame\nscene: A winter city street corner, a chestnut seller's glowing brazier, paper cones of roast chestnuts, a student warming their hands at the coals.\ntext: On the corner a chestnut seller's brazier glows like a little forge, and half the street has stopped to warm its hands at it. The chestnuts split and smoke in the pan. \"A penny a cone,\" says the seller, \"or mind the coals for me while I fetch another sack, and eat what you like.\"\n> left: Buy a cone\n  gold -tiny\n  mood +small\n  say: You pay your penny and walk on with a hot paper cone in both hands, peeling chestnuts with your fingertips and burning your tongue on every one. For half a street the winter can't touch you.\n> right: Mind the brazier for him\n  mood +small\n  health -tiny\n  say: You stand at the coals for half an hour, shaking the pan, selling cones and eating every third chestnut. When the seller comes back with his sack he's delighted with the takings. Your fingertips are scorched pink.\n",
+        "catalogSourceHash": "3555a33f4300b46c26f5fdf0fd11d281fbe3f0559889b1ff63f750449c2947a5",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/region_streets_2.grim"
+      },
+      {
+        "id": "event:shop_fish_market",
+        "score": 0.031754032258064516,
+        "reason": "BM25: a, morning, in, the, capital, before, you, and, barrows, man, hot, your, as, if, on, it, which, for, breakfast, they, of, eat, them, tea, enough; Dense similarity",
+        "title": "The Fish Market's Barrows",
+        "file": "content/events/maps/capital_port.grim",
+        "line": 90,
+        "sourceHash": "2a240b4baf36be624ee0300721cbd7aeb09e63d1be428006c62389fb35e1a613",
+        "fullSourceText": "@event shop_fish_market\ntitle: The Fish Market's Barrows\nplace: capital_fish_market\ntype: shop\nclass: routine\ntone: warm\nrepeat: 1\nweight: 10\nart: wave\ntags: money shop\nscene: A dawn quay market of fish on ice, gulls on every roof, barrows steaming with hot food, a fishwife ladling soup for a student.\ntext: {~The fish market is all ice, shouting and gulls, and the barrows at the end of the quay feed the people who've been up since three: chowder, hot pasties, oysters on a plate of seaweed.|The barrows steam at the quay's end. A fishwife ladles chowder with one hand and fights off a gull with the other.}\n> chowder: A bowl of quay chowder\n  hint: Health; it ends a hungry month.\n  gold -tiny\n  health +small\n  lose hungry\n  say: {~Chowder thick enough to stand a spoon in, and a heel of bread to fight the gulls for. You eat it on the quay wall with the dockers, and you're warm to the toes.|The fishwife puts in extra mussels \"for the scarf\". You eat it standing, scalding your mouth, very happy.}\n> oysters: A dozen oysters at the stand\n  hint: Mood, and a little Health.\n  gold -small\n  mood +small\n  health +tiny\n  say: {~A dozen on seaweed, a squeeze of lemon. The oyster-man opens them faster than you can eat them, and calls you a lord for paying.|You eat them watching the boats come in, and the oyster-man tells you which bay each one's from, as if introducing them.}\n> gossip: Buy a fishwife a cup and listen\n  hint: The quay's gossip: Lore, and the city's news before it's printed.\n  gold -tiny\n  lore +tiny\n  guile +tiny\n  say: {~For the price of a cup of tea, a fishwife tells you who drowned, who eloped, which ship's late and why, all before breakfast. Printing Row will have it by dusk, wrong.|The fishwives tell you the bonded warehouses doubled their dogs. They tell you everything. You realise they'll tell everyone about you, too.}\n> look: Walk the quay and smell the sea\n  say: {~You walk the length of the quay past the ice and the shouting, and buy nothing, and smell of fish till noon.|The gulls follow you the whole way, sure you've got something. You haven't.}\n",
+        "catalogSourceHash": "2a240b4baf36be624ee0300721cbd7aeb09e63d1be428006c62389fb35e1a613",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_port.grim"
+      },
+      {
+        "id": "event:capital_fish_market_quiet_hour",
+        "score": 0.02690501986276634,
+        "reason": "BM25: a, morning, in, the, before, you, and, barrows, hot, on, it, which, breakfast, of, eat, walking; Dense similarity",
+        "title": "The Morning Catch",
+        "file": "content/events/maps/placeholders.grim",
+        "line": 410,
+        "sourceHash": "8de53827e7ca107e0251771e28b5440255929ec793bfb3ace0df791284bc540d",
+        "fullSourceText": "@event capital_fish_market_quiet_hour\ntitle: The Morning Catch\nwhen: false\npool: maps_placeholder\nplace: capital_fish_market\nart: wave\nscene: A noisy fish market on a stone quay at dawn, barrows of fish on ice, gulls wheeling, fishwives shouting prices.\ntext: The fish market has been open since before the sun and has no intention of being polite about it. The catch is on ice, the gulls are on the roofs and the fishwives are on everyone.\n> left: Buy a hot fish pasty\n  gold -tiny\n  health +tiny\n  say: {~Hot, peppery and wrapped in yesterday's broadsheet. You eat it on the quay with the gulls watching.|The pasty seller calls you \"my love\" and gives you the one with extra pastry.}\n> right: Listen to the gossip\n  lore +tiny\n  say: {~Who's courting whom, whose boat came in light, which warehouse had the customs men in. Port Calder knows everything by breakfast.|You learn three scandals and the price of eels before you've finished walking the quay.}\n",
+        "catalogSourceHash": "8de53827e7ca107e0251771e28b5440255929ec793bfb3ace0df791284bc540d",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/placeholders.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "travel_country_morning",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/travel_country_morning.grim --json",
+    "exitCode": 0,
+    "queryHash": "d43fa3b922d273b5ed9221916563c221056a70dc19f7be8891fdcf9c25db21a6",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 37,
+    "topCandidates": [
+      {
+        "id": "event:fields_scarecrow_coats",
+        "score": 0.014705882352941176,
+        "reason": "BM25: a, in, the, countryside, on, fields, with, your, has, left, and, of, round, at, is, still, like, you, walk, up, are, very, scarecrows, well, dressed, to",
+        "title": "Very Decent Coats",
+        "file": "content/events/maps/countryside_places.grim",
+        "line": 160,
+        "sourceHash": "4a9301d7bfea330596b3b965574c7e4ee3ff2dc535b9e5857fea95884810d3f9",
+        "fullSourceText": "@event fields_scarecrow_coats\ntitle: Very Decent Coats\npool: countryside_fields_routine\ntone: eerie\nart: leaf\ntags: mystery nature\nscene: A row of scarecrows in a golden field, each dressed in a good travelling coat with brass buttons, one coat's collar turned up against no wind.\ntext: {The scarecrows in the far field are wearing better coats than you are. Good wool, brass buttons, a travelling cloak with a stitched hem. Somebody's coats, once.|The scarecrows again. One of them has a label inside its collar, from a tailor in the capital.|There's a new scarecrow at the end of the row, in a coat that still has creases from the trunk.}\n> left: Look closer at the coats\n  lore +small\n  mood -small\n  say: {The buttons are real brass. The pockets are empty except for one, which holds a coaching-inn ticket, years old, punched for one night only.|The tailor's label has a name stitched under it, a stranger's. You put the collar straight and don't know why that matters.|The new coat's pocket has a handkerchief in it, neatly folded. You leave it there.}\n> right: Leave them be\n  say: {You walk on. The scarecrows' sleeves move in the wind, all at once, all the same way.|You don't look closer. In the corner of your eye, one of them has its collar up.|You go round by the hedge. Somebody, after all, put those coats there for a reason.}\n",
+        "catalogSourceHash": "4a9301d7bfea330596b3b965574c7e4ee3ff2dc535b9e5857fea95884810d3f9",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/countryside_places.grim"
+      },
+      {
+        "id": "event:fields_gleaners",
+        "score": 0.014084507042253521,
+        "reason": "Dense similarity",
+        "title": "Gleaning",
+        "file": "content/events/maps/countryside_places.grim",
+        "line": 175,
+        "sourceHash": "125d02882acb9a1142833d8f73977085d26db749f6df18309133cdfc4b34115e",
+        "fullSourceText": "@event fields_gleaners\ntitle: Gleaning\npool: countryside_fields_routine\nwhen: season != \"winter\"\ntime: morning afternoon\ntone: warm\nart: leaf\ntags: nature social\nscene: Village women in aprons gleaning stray ears of grain behind the reapers in a golden field, one of them handing a student a sack.\ntext: {Behind the reapers, the village women glean the stray ears into their aprons, and one of them hands you a sack without asking. \"Another good year,\" she says. \"Seven, now.\"|The gleaners again, and the same sack. They sing as they work, the counting song the children skip to.|The gleaners make room for you in the row. \"Stay for the supper,\" one says. \"Everyone stays for the harvest supper.\"} The stubble crackles underfoot.\n> left: Glean with them\n  vigor +tiny\n  mood +tiny\n  say: {Your back aches and your sack is pitiful and they praise it extravagantly.|You glean until the light goes. They walk you to the lane, all of them, chatting, as if you might get lost.|You glean and listen. Nobody says what comes after seven. They just call this one \"the good one\".}\n> right: Ask about the harvest supper\n  charm +tiny\n  say: {\"Oh, you'll come,\" she says. \"Visitors are the guests of honour. It's tradition.\" Everyone near enough to hear nods.|\"At the inn, end of the season,\" she says. \"The landlord does the honours.\" She looks at your coat when she says it.|They tell you about the supper: the long table, the sheaf, the toast to the guest. Nobody tells you whose turn it is to be the guest.}\n",
+        "catalogSourceHash": "125d02882acb9a1142833d8f73977085d26db749f6df18309133cdfc4b34115e",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/countryside_places.grim"
+      },
+      {
+        "id": "event:lanes_carrier",
+        "score": 0.014492753623188406,
+        "reason": "Dense similarity",
+        "title": "The Carrier's Cart",
+        "file": "content/events/maps/region_streets.grim",
+        "line": 207,
+        "sourceHash": "614797790f18c6120b9413affc54542f0817120572b81f07672b9304e60d32e2",
+        "fullSourceText": "@event lanes_carrier\ntitle: The Carrier's Cart\npool: country_lanes\ntone: light\nwhen: slot != \"night\"\nart: house\nscene: A slow carrier's cart on a country lane piled with hampers, parcels and a crate of indignant geese, a stout carrier on the box offering a student a lift.\ntext: The valley carrier comes up behind you on the lane, his cart piled with hampers, a coffin-shaped parcel and a crate of very indignant geese. \"Going my way?\" he says. \"Everybody is, there's only the one road. Hop on the tail. Mind the geese. Or, if you're walking anyhow, there's a parcel for the farm at the top that's a day late.\"\n> left: Ride on the tail, minding the geese\n  mood +small\n  health -tiny\n  say: You ride the tailboard with your feet dangling and the geese hissing at your back, the whole valley going past at a walking pace. Somewhere past the mill the biggest goose gets your ear through the slats. The carrier says it's a sign she likes you.\n> right: Carry the late parcel up\n  gold +tiny\n  health -tiny\n  say: You carry the parcel up the long hill to the top farm, where the farmer's wife opens it on the step: a new teapot, in one piece. She gives you a coin and a slice of seed cake, and makes you drink the first cup out of it, sitting on the step with a stitch in your side.\n",
+        "catalogSourceHash": "614797790f18c6120b9413affc54542f0817120572b81f07672b9304e60d32e2",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/region_streets.grim"
+      }
+    ]
+  },
+  {
+    "draftId": "vaneshade_house_quiet_hour",
+    "command": "npm run grim -- retrieve related --draft /private/tmp/lifesim-critic-2026-11-15/vaneshade_house_quiet_hour.grim --json",
+    "exitCode": 0,
+    "queryHash": "aca059e064910bfb3f6c49a19dd058c15cbb1d0e1c9be0fb9dac46a0f9cbfc0f",
+    "indexHash": "3985c5477be6ed5ed1be735ca1df00fc167e91952eea69ae676322c24d558229",
+    "corpusHash": "459ef22c44d4679aabb39bd95572887e7b111bc3c5209b6b6d55c2640b73530e",
+    "total": 35,
+    "topCandidates": [
+      {
+        "id": "event:crescent1_footman",
+        "score": 0.02964254577157803,
+        "reason": "BM25: the, footman, at, house, looks, your, he, and, not, leave, name, a, as, if, you, door, with, of, that, has, walk, crescent, steps, in, way, an; Dense similarity",
+        "title": "The Footman's Eye",
+        "file": "content/events/maps/capital_heists.grim",
+        "line": 731,
+        "sourceHash": "3d3693c451acd027a96132f54e6b6cdd8f391ca5499b549a695b2488e745aece",
+        "fullSourceText": "@event crescent1_footman\ntitle: The Footman's Eye\nthread: job_crescent\nclass: routine\ntone: tense\nwhen: job_depth >= 1 and job_depth <= 2\nrepeat: 1\nart: mask\ntags: heist danger\nscene: A tall footman in powdered wig and livery at the door of a ballroom, looking down his nose at a student in evening clothes, dancers whirling beyond.\ntext: {seen(crescent1_footman) > 1: The same footman at the ballroom doors, the same moment too long.|At the ballroom doors a footman in a powdered wig looks at every guest as they pass, and at you a moment longer.}\n> left: Back out into the night\n  queue job_way_out now\n  say: {seen(crescent1_footman) > 1: You leave the footman to his doors and go home.|You turn back as if you'd forgotten your gloves, and keep going, out of the house.}\n> right: Look as if you belong\n  challenge deceive apprentice +1 if flag(crescent_invited):\n    win:\n      job_depth += 1\n      next\n      say: {seen(crescent1_footman) > 1: You walk past him talking over your shoulder to nobody about the terrible music. He bows you through.|You give him the faint, bored smile of somebody who has been to a great many of these. He bows, slightly. You're in.}\n    lose:\n      if job_cover > 0:\n        queue job_slip now\n      else:\n        queue job_caught now\n      say: {seen(crescent1_footman) > 1: He steps across the doorway, very politely, and doesn't step back.|\"Your name, sir or madam?\" he asks, in a voice that carries.}\n> up[glamour]: Charm him\n  job_depth += 1\n  next\n  say: {seen(crescent1_footman) > 1: He remembers liking you, and not quite why. He bows.|You smile at him with a little more charm than you have, and he finds himself remembering you from last week. He bows you in.}\n",
+        "catalogSourceHash": "3d3693c451acd027a96132f54e6b6cdd8f391ca5499b549a695b2488e745aece",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_heists.grim"
+      },
+      {
+        "id": "event:vaneshade_practice_room",
+        "score": 0.015384615384615385,
+        "reason": "BM25: the, footman, at, vaneshade, house, looks, your, then, again, says, is, her, practice, and, not, takes, on, a, as, if, it, upstairs, opens, you, door, with, of, has, shut, all, in, an",
+        "title": "The Room Upstairs",
+        "file": "content/events/maps/capital_peers.grim",
+        "line": 17,
+        "sourceHash": "26c9d7a5d7614af3fd532058563b3065c34b5bd124098a684ea4fc6cd48f7e75",
+        "fullSourceText": "@event vaneshade_practice_room\ntitle: The Room Upstairs\npool: vaneshade_house_lyra\nwhen: rel(lyra) > -10\nrepeat: 3\ntone: warm\nart: flame\nscene: A tall bare practice room in a grand house, the floor scorched in rings, a narrow camp bed and a stack of books in one corner, a young woman in duelling clothes.\ntext: {The footman takes you not to a drawing room but up two flights, to a long bare room with a scorched floor. Lyra is practising. In the corner are a camp bed, a stack of books and one candle. \"My bedroom,\" she says, following your eyes, \"is downstairs. It's very nice. Visitors like it.\"|Up the two flights again to the scorched room. Lyra is already in her duelling clothes{rel(lyra) < 10: , and looks at you as if you were a new kind of target|}. \"You came back,\" she says. \"Nobody comes back up here.\"|The practice room again. Lyra has pushed the camp bed against the wall to make room for two duellists, which she says is for the footwork. \"Well?\" she says, rolling up her sleeves.}\n> left: Spar with her\n  vigor +small\n  health -small\n  rel lyra +tiny\n  say: {She doesn't hold back, so neither do you. An hour later you're both sitting on the scorched floor, singed at the cuffs and aching. \"Nobody comes up here,\" she says. \"Mother says the smell gets into the curtains.\"|She opens with the family flourish and then, halfway, drops it for something of her own. You both end up bruised and breathless on the floor. \"Don't tell anyone I improvise,\" she says.|You spar until the candle's out and your arms shake, across the whole cleared floor. At the door she says, \"Same time tomorrow,\" and it isn't a question.}\n> right: Ask about the house\n  rel lyra +small\n  mood -tiny\n  say: {\"Because downstairs I can hear the house,\" she says at last, when you ask why she sleeps up here. \"Everyone asleep at exactly the right time.\" She straightens the blanket on the camp bed, which is already straight. You go down feeling the house's quiet too.|She tells you which floorboards her mother uses and which doors are always shut. It's a map of a house, and also of a person. You go down the stairs feeling the weight of all those shut doors.|She asks about your home instead: what you eat, who talks at supper, whether anyone ever shouts. She listens as if it were a lecture. You go down the stairs a little sad for her, and fond.}\n",
+        "catalogSourceHash": "26c9d7a5d7614af3fd532058563b3065c34b5bd124098a684ea4fc6cd48f7e75",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_peers.grim"
+      },
+      {
+        "id": "event:crescent_gala_lights",
+        "score": 0.015873015873015872,
+        "reason": "BM25: the, footman, at, house, your, face, again, he, says, is, and, name, on, a, upstairs, window, you, door, with, of, that, people, crescent, curve, steps, in, way, behind, an",
+        "title": "The Ball on the Crescent",
+        "file": "content/events/maps/capital_heists.grim",
+        "line": 645,
+        "sourceHash": "56e0594b0d91da94221692eaa5124c13c03e5d85b463e9efdc89522bb6d30466",
+        "fullSourceText": "@event crescent_gala_lights\ntitle: The Ball on the Crescent\npool: capital_crescent_life\ntone: light\nart: candle\nscene: A tall lit-up town house on a curving terrace at night, carriages drawing up, music and figures behind tall windows, a student watching from the railings of the gardens opposite.\ntext: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a link-boy with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == \"winter\": breath steaming from the horses,|the summer dusk still warm,} and from the tall windows comes music and the noise of money enjoying itself. A link-boy with a torch sits on the gardens' railings beside you.}\n> left: Count the windows and the doors\n  guile +tiny\n  health -tiny\n  say: You stand at the gardens' railings until you know every window, the mews door, the footmen (too many), and which room upstairs is the study. {season == \"winter\": Your hands have gone numb and your feet ache.|The midges have had you for supper and your feet ache.}\n> right: Pay the link-boy for the servants' hour\n  gold -tiny\n  mood +tiny\n  say: {flag(crescent_servants_hour): You give the link-boy a coin for his company. He tells you the cook's name and the dog's, and the house's whole week of scandal, and you already know about the mews door at eleven.|You give the link-boy a coin for his torch and his gossip. The servants change over at eleven, he says; the mews door stands open for the trays.}\n  flag crescent_servants_hour\n\n# The heist's start: after the street's routine card on an evening or night visit (order: last), once a month.",
+        "catalogSourceHash": "56e0594b0d91da94221692eaa5124c13c03e5d85b463e9efdc89522bb6d30466",
+        "sourceHashMatchesCurrentCatalog": true,
+        "sourceExtractionPath": "/Users/accessair/Desktop/Workspaces/lifesim/content/events/maps/capital_heists.grim"
+      }
+    ]
+  }
+]

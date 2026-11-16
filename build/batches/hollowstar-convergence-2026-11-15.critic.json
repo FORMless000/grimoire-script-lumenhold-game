@@ -1,0 +1,41 @@
+{
+  "batch": "hollowstar-convergence-2026-11-15",
+  "accept": true,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The two scenes pay off different decisions, with one polish issue in the early descent's fallback for a player who has not learned who is coming.",
+  "scope": {
+    "reviewedEventIds": [
+      "hs_dumont_letter",
+      "hs_go_down_early"
+    ],
+    "files": [
+      "content/events/hollowstar/convergence.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "hs_dumont_letter": "621f87cfd8b0e4d13516049dc98aabd04c8c25d21d6e981197e47b9e37464562",
+      "hs_go_down_early": "6e0f158d9da14b86adfe07f6711fb51f03fe64720bf5d93d16776e072d37ded3"
+    }
+  },
+  "issues": [
+    {
+      "event": "hs_go_down_early",
+      "priority": "P2",
+      "category": "ungated identity cue",
+      "file": "content/events/hollowstar/convergence.grim",
+      "line": 33,
+      "problem": "The fallback deliberately says ‘Someone is coming’ when the letter and summons have not occurred. The following line immediately says ‘Her circle’ in that same fallback.",
+      "fix": "Keep the subsequent line neutral until the player's available clues establish her identity."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-convergence-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-convergence.json",
+    "docs/plots/hollowstar-v2.md",
+    "build/batches/hollowstar_v2.notes.md"
+  ],
+  "completedAt": "2026-11-15T21:02:47.269Z"
+}

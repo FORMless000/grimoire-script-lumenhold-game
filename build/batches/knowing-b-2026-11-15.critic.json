@@ -1,0 +1,150 @@
+{
+  "batch": "knowing-b-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost agents gathered context and retrieval evidence only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on repeated one-time payoffs and concrete continuity/cost defects. All scoped cards and their first three non-self retrieval candidates were read in full.",
+  "scope": {
+    "reviewedEventIds": [
+      "know_grisk_collectors",
+      "know_grisk_newt",
+      "know_grisk_favours",
+      "know_amaranth_book",
+      "know_amaranth_rounds",
+      "know_pell_not_yet",
+      "know_vey_own_face",
+      "know_marisol_margins",
+      "know_mabel_tins",
+      "know_mabel_fourth_cake",
+      "know_isolde_mercy",
+      "know_grimsby_upper_floor",
+      "know_grimsby_parcels",
+      "know_ilse_frost",
+      "know_tamsin_backdrop"
+    ],
+    "files": [
+      "content/events/knowing_2.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "know_grisk_collectors": "8d689460a8bbfd999fb762bddfc4caab96899c71181f913bf884418436b672fa",
+      "know_grisk_newt": "3621b5358042ea7045486fd59bc9a2104c7f2eb89ce09e816b8a98c8bb6ce043",
+      "know_grisk_favours": "fcee7bc1946f3eb8fc72d71dd9f26f6f9517231665c9918985fdfc7bb4bb5a45",
+      "know_amaranth_book": "9f4fb68d5b2624b05e77d86dca87080b545a61cf85275c0b1373bf04dd9ad329",
+      "know_amaranth_rounds": "eae6e2c259964ea623883b4cfc97d0c08dbaa8deef07aca8f308a96c7394ab14",
+      "know_pell_not_yet": "f6ce7c849a47b65cfb3adc41ccc15952ef8d15ce6e29e695ac8ec909d7aa5e1a",
+      "know_vey_own_face": "ad96232ce757a5b71c7ea44d279779f498c56c5397c9018f96a163e985817311",
+      "know_marisol_margins": "0ff91a3f624f0116fdb16912117f3d0d2345ecfc4acd0762a81ed7892756344a",
+      "know_mabel_tins": "ae292a191c85a32643c6e446083b2e2291e807ec502c47c00391ee093a12af66",
+      "know_mabel_fourth_cake": "dc0c659e1a3aae2743bd4a007cac90e58fd771d3d5f3b6e0349fa7a3f23acec5",
+      "know_isolde_mercy": "c0b201586990d962194072ad7d91f8686696ee84821d66b7df6aa61c8fc57166",
+      "know_grimsby_upper_floor": "d80a1858bb3dfa177e9573a99761c857f4c035a980b2b4bb38fdbbbdad278fa9",
+      "know_grimsby_parcels": "247c5bffce4210834d51a4af5990f75a23cff789d03b054992b4ef3aeef0500f",
+      "know_ilse_frost": "9c48ca21c9c1168a2e74c8d501cccf16606f93f1d281c805c0fbbbdf0ba19ce6",
+      "know_tamsin_backdrop": "41c0e8568c400b4891877d04182bc9b06fbc5fbe16652429d35ff50ee38cd1d5"
+    }
+  },
+  "issues": [
+    {
+      "event": "know_grisk_collectors",
+      "priority": "P2",
+      "category": "one-time scene repeats",
+      "file": "content/events/knowing_2.grim",
+      "line": 5,
+      "problem": "The knowing pool describes one-time payoffs, but repeat: 1 permits another showing after a month. These 15 cards have fixed scenes and no completion gate. They can stage the same problem and resolution again, including with the same classmate when per: x is used.",
+      "fix": "Remove the cooldown from the shared pool through the project migration workflow for one-time payoffs. Give any intentionally recurring card a suitable cooldown and variation that accounts for prior outcomes.",
+      "affectedEvents": [
+        "know_grisk_collectors",
+        "know_grisk_newt",
+        "know_grisk_favours",
+        "know_amaranth_book",
+        "know_amaranth_rounds",
+        "know_pell_not_yet",
+        "know_vey_own_face",
+        "know_marisol_margins",
+        "know_mabel_tins",
+        "know_mabel_fourth_cake",
+        "know_isolde_mercy",
+        "know_grimsby_upper_floor",
+        "know_grimsby_parcels",
+        "know_ilse_frost",
+        "know_tamsin_backdrop"
+      ]
+    },
+    {
+      "event": "know_grisk_newt",
+      "priority": "P2",
+      "category": "reward contradicts transaction",
+      "file": "content/events/knowing_2.grim",
+      "line": 26,
+      "problem": "The successful advance-purchase branch adds gold +medium after charging the discounted price, but the say only says the bought supplies last the term. It describes avoided later spending, not receiving a payment or refund.",
+      "fix": "Describe an actual refund/resale/payment if the purse should grow, or model the successful bargain without minting an unexplained cash reward."
+    },
+    {
+      "event": "know_amaranth_book",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/knowing_2.grim",
+      "line": 74,
+      "problem": "The option deducts study while describing a week persuading a friend and watching Amaranth copy their remedy. Its say does not identify the player’s skipped lecture, neglected revision or unfinished coursework. Time spent on the activity alone does not identify an academic loss.",
+      "fix": "Show the particular academic work sacrificed in each affected outcome, or use a cost the described activity actually shows. Keep an academic cost meaningful on any eligible break."
+    },
+    {
+      "event": "know_marisol_margins",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/knowing_2.grim",
+      "line": 157,
+      "problem": "The option deducts study while describing three dawns productively drilling tidecalling line by line. Its say does not identify the player’s skipped lecture, neglected revision or unfinished coursework. Time spent on the activity alone does not identify an academic loss.",
+      "fix": "Show the particular academic work sacrificed in each affected outcome, or use a cost the described activity actually shows. Keep an academic cost meaningful on any eligible break."
+    },
+    {
+      "event": "know_mabel_tins",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/knowing_2.grim",
+      "line": 179,
+      "problem": "The option deducts study while describing sitting with a friend during supper. Its say does not identify the player’s skipped lecture, neglected revision or unfinished coursework. Time spent on the activity alone does not identify an academic loss.",
+      "fix": "Show the particular academic work sacrificed in each affected outcome, or use a cost the described activity actually shows. Keep an academic cost meaningful on any eligible break."
+    },
+    {
+      "event": "know_ilse_frost",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/knowing_2.grim",
+      "line": 288,
+      "problem": "The option deducts study while describing patching a warming ward from a textbook. Its say does not identify the player’s skipped lecture, neglected revision or unfinished coursework. Time spent on the activity alone does not identify an academic loss.",
+      "fix": "Show the particular academic work sacrificed in each affected outcome, or use a cost the described activity actually shows. Keep an academic cost meaningful on any eligible break."
+    },
+    {
+      "event": "know_tamsin_backdrop",
+      "priority": "P2",
+      "category": "unshown academic cost",
+      "file": "content/events/knowing_2.grim",
+      "line": 308,
+      "problem": "The option deducts study while describing painting the backdrop, with or without a correspondent’s advice. Its say does not identify the player’s skipped lecture, neglected revision or unfinished coursework. Time spent on the activity alone does not identify an academic loss.",
+      "fix": "Show the particular academic work sacrificed in each affected outcome, or use a cost the described activity actually shows. Keep an academic cost meaningful on any eligible break."
+    },
+    {
+      "event": "know_mabel_fourth_cake",
+      "priority": "P2",
+      "category": "cost paid by wrong character",
+      "file": "content/events/knowing_2.grim",
+      "line": 200,
+      "problem": "The experimental-cake option deducts the player’s Health, but its outcome only has the birthday friend eat the cake and proudly survive it. The player is never shown tasting it or suffering any physical cost.",
+      "fix": "Show the player sharing and physically paying for the experiment, or remove/replace their Health deduction."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/knowing_2-duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/knowledge-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/knowing-context.md",
+    "docs/reviews/critic-pass-2026-11-15/brief-knowledge-cast.md"
+  ],
+  "limitations": [
+    "No source repairs or gameplay-frequency estimates. Knowledge-gated better outcomes are intentional (phase4-plan §2); they were not treated as ungated routine dominance."
+  ],
+  "completedAt": "2026-11-15T18:55:02.666Z"
+}

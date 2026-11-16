@@ -1,0 +1,91 @@
+{
+  "batch": "capital-origin-homes-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The townhouse, counting house and loft each have a recognizable family economy. Some outcomes claim changes to future funds or assume earlier choices that the cards never record.",
+  "scope": {
+    "reviewedEventIds": [
+      "townhouse_dinner",
+      "townhouse_calling_cards",
+      "townhouse_suitable_tea",
+      "townhouse_family_silver",
+      "counting_house_end_desk",
+      "counting_house_damp_grain",
+      "counting_house_violets",
+      "crew_loft_long_game",
+      "crew_loft_one_job",
+      "crew_loft_empty_hammock"
+    ],
+    "files": [
+      "content/events/maps/capital_homes.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "townhouse_dinner": "be1d659b181641446d8d938f30700038bf589809d07d14045727fec10f48f231",
+      "townhouse_calling_cards": "9ab16b7744324b42eb06ce184818098ea95326a64e9e73062e55f7724a4fb1f0",
+      "townhouse_suitable_tea": "7a10473e9eb43da8b82373022c6a43053d6b2824adb594e4f3398f0785166001",
+      "townhouse_family_silver": "a3514fb2d511e6bbdcf6ad405a24b006f67d6ec550107d853bb9cb1cce949ccf",
+      "counting_house_end_desk": "b29e219043da8bf4ddb5e269458cc944a70143034525991b986ee7bb156e2ea5",
+      "counting_house_damp_grain": "09adae3980656ead49caba8cfd13c4ea8c3263f2c896797f1abce2da6ab77705",
+      "counting_house_violets": "a925c6eda81d7a8a484c3ffa0fcfb650e75b8cc52d821fd6a9a193394976b581",
+      "crew_loft_long_game": "75db9ea2b6451fb9126df3189a27d956c3a97610b6c2a0a648c922a0b09db62f",
+      "crew_loft_one_job": "b444b2875384be646577005bc3efad2645d79b44ffd594dc01ea01c670b73f17",
+      "crew_loft_empty_hammock": "c79b98e2ee8cc69c464de02b92e28568fa45c8418903fd3c5232e8da652d3da7"
+    }
+  },
+  "issues": [
+    {
+      "event": "townhouse_dinner",
+      "priority": "P2",
+      "category": "state continuity",
+      "file": "content/events/maps/capital_homes.grim",
+      "line": 15,
+      "problem": "The honest answer takes money from the purse immediately, but every outcome reduces a later allowance. Suitable Tea describes future bank drafts in both outcomes while changing current cash. The recurring noble letter still pays the same allowance plus its independently rolled gift.",
+      "fix": "Describe an immediate family debit or gift in the outcomes, or have the decisions adjust the next actual bank draft.",
+      "affectedEvents": [
+        "townhouse_suitable_tea"
+      ]
+    },
+    {
+      "event": "counting_house_end_desk",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/maps/capital_homes.grim",
+      "line": 95,
+      "problem": "The third left outcome says the player finds the error faster than last time. It can be the first time they attempt a ledger because they chose the wharf door on the previous two visits.",
+      "fix": "Praise the speed on this ledger alone, or show the comparison only if the player did the ledger earlier."
+    },
+    {
+      "event": "counting_house_end_desk",
+      "priority": "P2",
+      "category": "reward in the fiction",
+      "file": "content/events/maps/capital_homes.grim",
+      "line": 95,
+      "problem": "The third wharf-door outcome ends with sending away the rival and the clerk smiling, but it grants the same coin as the other two, which name the tip or cut.",
+      "fix": "Name the third payment, or remove it from that outcome."
+    },
+    {
+      "event": "crew_loft_long_game",
+      "priority": "P2",
+      "category": "unfunded wager",
+      "file": "content/events/maps/capital_homes.grim",
+      "line": 157,
+      "problem": "A player with zero crowns can put a coin in and lose. Gold stays at zero and the outcome still claims a paid stake.",
+      "fix": "Require enough gold to put the wager in, or add a stake-free alternative with an outcome that reflects it."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/capital-origin-homes-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-capital_homes.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-homes-markets-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-capital-homes-markets.cjs",
+    "build/batches/C1-capital-homes.notes.md",
+    "content/events/origin_funding.grim",
+    "content/world/lore/soft/places.grim",
+    "content/world/places.grim"
+  ],
+  "completedAt": "2026-11-15T21:37:58.530Z"
+}

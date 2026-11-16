@@ -1,0 +1,43 @@
+{
+  "batch": "remaining-quiet-hours-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The two active quiet fallbacks are distinct from their homes’ principal scenes. The counting-house fallback needs an actual evening/night condition for its after-hours porter round.",
+  "scope": {
+    "reviewedEventIds": [
+      "capital_counting_house_quiet_hour",
+      "capital_crew_loft_quiet_hour"
+    ],
+    "files": [
+      "content/events/maps/placeholders.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "capital_counting_house_quiet_hour": "6412d531c98e65c54426c1779022291ec2cfe1e9bb37c7ea7ac91bab597cfc6e",
+      "capital_crew_loft_quiet_hour": "4e2957a75997b8fe2dccbd54305e114d27e9ab26de612d4953f4ec2819a82f66"
+    }
+  },
+  "issues": [
+    {
+      "event": "capital_counting_house_quiet_hour",
+      "priority": "P2",
+      "category": "time gating",
+      "file": "content/events/maps/placeholders.grim",
+      "line": 139,
+      "problem": "This fallback has time: evening night but no slot condition. At noon its fit is still 0.3, while the opening says After hours and describes the night porter lighting a lantern for his round. The fixture reproduces that noon combination.",
+      "fix": "Add an evening/night guard, or provide a daytime quiet-hour version whose desks, porter and light fit the actual visit. Keep the fallback reachable in its intended slots."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/remaining-quiet-hours-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-placeholders.json",
+    "docs/reviews/critic-pass-2026-11-15/final-batches-review.md",
+    "docs/reviews/critic-pass-2026-11-15/remaining-cast-brief.md",
+    "docs/reviews/critic-pass-2026-11-15/validate-final-batches.cjs",
+    "docs/reviews/critic-pass-2026-11-15/final-batches-validation.json"
+  ],
+  "completedAt": "2026-11-16T01:13:37.187Z"
+}

@@ -1,0 +1,154 @@
+{
+  "batch": "good-year-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The optional side story has distinct clues and three coherent resolutions, but successful endings erase collected moor loot, some scenes assume unestablished visits or the wrong time, and the climax conflicts with the cast and alignment rules. Its custom clue counter also needs an explicit design exception or the prescribed arc representation.",
+  "scope": {
+    "reviewedEventIds": [
+      "gy_seventh_year",
+      "gy_fern_hunter",
+      "gy_guest_book",
+      "gy_scarecrow_names",
+      "gy_miller_tally",
+      "gy_almanac_page",
+      "gy_agent_drovers",
+      "old_hall_gates",
+      "gy_hall_papers",
+      "gy_ottilie_gone",
+      "gy_witch_truth",
+      "gy_hill_door_open",
+      "gy_tenant_hall",
+      "gy_after_broken",
+      "gy_after_renewed",
+      "gy_after_sold",
+      "gy_thin_harvest",
+      "gy_hill_turf"
+    ],
+    "files": [
+      "content/events/maps/good_year.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "gy_seventh_year": "9d674c208bb777b73805f412b31002a35656b2baf1707c378ae2dd451922b726",
+      "gy_fern_hunter": "e30c98451483fa87716bcf09ae3a3a859e7b88ce09cb4187ee4c8846dd7265bd",
+      "gy_guest_book": "a20e75701ad8ae8d588b5f6b2f8263b6b7c9621b843963c081441ff7e09c0d9c",
+      "gy_scarecrow_names": "029f091aa84b55758291be871323e8aae62537d94423c3c152fb4cd87b888d56",
+      "gy_miller_tally": "ab0cc4c6f5b5404354ac18645221b25e27a4acdb40e051976b77beb6d7709817",
+      "gy_almanac_page": "85193ca95e55ae0a048d33abb501236715f5d865854586c9c9ed5d57658cd3ef",
+      "gy_agent_drovers": "797e3c98ba17fc3c55497116bb0cedb31e1f5d4a5bf1119ab3f10c37936241ae",
+      "old_hall_gates": "3b4f663997dd9bbc9b4d23bb08ccf185125a4ceed7ef3fe45e2eca25aa84ddb6",
+      "gy_hall_papers": "4ae66c3da4cde67fd713ae75d4da70cbbe85ca4c76a9227d47dd49d983aceb58",
+      "gy_ottilie_gone": "a00e111b9540d6e550f17af7a87b50613aa70b9acd8f77589f98d4770e519fc5",
+      "gy_witch_truth": "be6a0f631f87bc15e2f156232ca9eb67c4d30f7754784a182d0484d10a23a849",
+      "gy_hill_door_open": "20e0c1baf2b4df1d05ba25daeaab5f807abdf51d8a4e416610c3c5d089e125b1",
+      "gy_tenant_hall": "f863a0a625a8ca93bc3c9bd7b89f3f15545f74061982073c3739d86257de7f28",
+      "gy_after_broken": "a6c99e0ae5818144415d40dc40cd4c8db02c978149db1c654be11dbf68a978c5",
+      "gy_after_renewed": "54e79b7ec0088e9eaec4a49e83e964620ef48ce04844363c3719162d97ed3aae",
+      "gy_after_sold": "86370cf0999b507772535293fecfdee568a73075bf49b85f502484f77faf86a2",
+      "gy_thin_harvest": "d07dd300b93e1c406da5352bc0579c176a6a5f78b1d0ba3b4ace064d92b56ec9",
+      "gy_hill_turf": "e6647874c6a9fcf914af5b5cdcf669f9e812a91d458e7080eaac884de93023bc"
+    }
+  },
+  "issues": [
+    {
+      "event": "gy_after_broken",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/maps/good_year.grim",
+      "line": 421,
+      "problem": "All three resolved aftermaths set moor_haul to zero on show and end the delve without the usual sell/study settlement. A player who carried three finds to the Tenant loses all three even after a successful rescue or negotiation; no ending describes dropping, paying or losing them. The fixture reproduces this reset for each ending.",
+      "fix": "Preserve the haul and offer its settlement after the story aftermath, or narrate and signal an intentional forfeiture before the player commits to the ending. Do not silently erase the accumulated finds.",
+      "affectedEvents": [
+        "gy_after_broken",
+        "gy_after_renewed",
+        "gy_after_sold"
+      ]
+    },
+    {
+      "event": "gy_miller_tally",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/maps/good_year.grim",
+      "line": 153,
+      "problem": "The mill clue can be the first visit to the dry wheel and first clue, yet opens with the wheel turning on the dry race again and compares the book to the landlord’s. The normal success in gy_hall_papers likewise calls its ledgers the guest book’s twin without requiring that book to have been seen. Clues are intentionally obtainable in any order.",
+      "fix": "Use first-visit wording unless the wheel has actually been seen; condition comparisons to the guest book on its discovery, and give an independently understandable description otherwise.",
+      "affectedEvents": [
+        "gy_miller_tally",
+        "gy_hall_papers"
+      ]
+    },
+    {
+      "event": "gy_scarecrow_names",
+      "priority": "P2",
+      "category": "time gating",
+      "file": "content/events/maps/good_year.grim",
+      "line": 131,
+      "problem": "Afternoon eligibility is positive for the collar clue written in dusk, the agent option that walks out into night, Room Seven’s taproom evening, and the witch scene explicitly depicted at dusk. The fern hunt also remains eligible in the evening but says the player spends the afternoon with Ottilie. Their story gates do not supply those time restrictions.",
+      "fix": "Gate the relevant scenes to an available matching slot or make the opening, art scene and outcomes adapt to the actual visit time. Preserve daytime access where it is needed for the optional investigation.",
+      "affectedEvents": [
+        "gy_scarecrow_names",
+        "gy_agent_drovers",
+        "gy_ottilie_gone",
+        "gy_witch_truth",
+        "gy_fern_hunter"
+      ]
+    },
+    {
+      "event": "gy_tenant_hall",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/good_year.grim",
+      "line": 372,
+      "problem": "The successful replacement bargain explicitly includes children among the people the player promises to bring to the Tenant’s table. This conflicts with the project checklist’s requirement that every character be an adult, and with this file’s own adults-only premise.",
+      "fix": "Make the offered company explicitly adult: for example keepers, neighbours and fiddlers. Update the bargain success text consistently with its hint and aftermath."
+    },
+    {
+      "event": "gy_tenant_hall",
+      "priority": "P2",
+      "category": "alignment",
+      "file": "content/events/maps/good_year.grim",
+      "line": 372,
+      "problem": "Breaking the bargain and successfully replacing the captive tithe free the accumulated prisoners, at real risk, but neither success moves alignment. Taking those rescued guests to the inn also gives no alignment, so that entire protective route has no Lumen consequence; only selecting the Marsh aftermath does. Selling the guests already has explicit Hollow effects.",
+      "fix": "Put the appropriate protective alignment change on the successful rescue/renegotiation itself, so it does not depend on the later destination. Reassess any additional aftermath alignment to avoid counting the same moral act twice."
+    },
+    {
+      "event": "gy_ottilie_gone",
+      "priority": "P2",
+      "category": "plot progress",
+      "file": "content/events/maps/good_year.grim",
+      "line": 296,
+      "problem": "The disappearance gate uses gy_clues >= 2, a hand-maintained counter incremented by five clue cards. The authoring costs rule and AGENTS.md explicitly require plot engagement to use arc clues rather than a custom counter. The maps plan approves an independent side story but records no exception for this representation. This is a rules deviation, not a failed counter increment.",
+      "fix": "Represent this optional story’s engagement using its own arc/clue state and gate the disappearance on that engagement, preserving independence from the Hollow Star. If the custom-counter representation is intentional, explicitly approve and record that design deviation in PROGRESS.md.",
+      "affectedEvents": [
+        "gy_ottilie_gone",
+        "gy_guest_book",
+        "gy_scarecrow_names",
+        "gy_miller_tally",
+        "gy_almanac_page",
+        "gy_hall_papers"
+      ]
+    },
+    {
+      "event": "gy_tenant_hall",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/maps/good_year.grim",
+      "line": 372,
+      "problem": "The winning bargain checks gy_guest_book OR gy_coats, then says the player names the guests from the book AND the collars. Success with only the book therefore claims a collar discovery that never happened, and the reverse case invents a read guest book. The fixture wins with the book flag alone and reproduces the combined-source claim.",
+      "fix": "Choose the source phrase from the actual flags: book, collars, or both. Keep the existing separate clue bonuses and the fallback wording when neither clue was found."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/good-year-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-good_year.json",
+    "docs/reviews/critic-pass-2026-11-15/country-delves-review.md",
+    "docs/reviews/critic-pass-2026-11-15/country-delve-briefs.md",
+    "docs/reviews/critic-pass-2026-11-15/capital-country-briefs.md",
+    "docs/reviews/critic-pass-2026-11-15/validate-country-delves.cjs",
+    "docs/reviews/critic-pass-2026-11-15/country-delves-validation.json"
+  ],
+  "completedAt": "2026-11-16T00:52:28.149Z"
+}

@@ -1,0 +1,100 @@
+{
+  "batch": "capital-society-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The club, theatre, gardens and bridges provide different social pressures. A dawn event has no visit slot, the public promenade can occur after luncheon, and a favor wager leaves the win unfulfilled.",
+  "scope": {
+    "reviewedEventIds": [
+      "club_porter",
+      "club_card_room",
+      "club_blackball",
+      "club_reading_room",
+      "theatre_the_gods",
+      "theatre_vey_ghost",
+      "theatre_opera_glasses",
+      "theatre_stage_door",
+      "gardens_promenade",
+      "gardens_dawn_duel",
+      "gardens_night_vine",
+      "gardens_thornwick_dare",
+      "bridges_lamplighters",
+      "bridges_busking",
+      "bridges_span_duel",
+      "bridges_mudlark"
+    ],
+    "files": [
+      "content/events/maps/capital_society.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "club_porter": "1bd5efbda2a2529769e778f2f5afed0fe018c8afc774c7565477a8052df97af7",
+      "club_card_room": "af35ceb84247dc727c434c3880d5101a67f9bdc2566aa76ad4b00c9cfda93ebe",
+      "club_blackball": "a642612bee6b845004f4a85b7119f998df47566f0625df10f1637b9f4af84b3f",
+      "club_reading_room": "82bc39a7208e4742226fb40d57740ad95f745c1001de93a7c11495fb294b5537",
+      "theatre_the_gods": "4c8e41ac4c57e7720c2e9bc2790b55f685a840038b3486f210c650a24bcf1071",
+      "theatre_vey_ghost": "8e9030ca888932bf6567dc1a56156151976c842ff586ed6b550733ccd213c326",
+      "theatre_opera_glasses": "1a96d438837a9e80fcb297fb2ff32b2963052cff6f9ce76d4a6f26cce5fd3105",
+      "theatre_stage_door": "ed8a8f7a2dae57b20c062fbcf20fafd7851bd12348b653f213476ace365db6e5",
+      "gardens_promenade": "b24d4ca3ad787c313ce67b9e614bad43b0acd7b535a2333f0ff301464d949a90",
+      "gardens_dawn_duel": "37f7df6fb79b72369d798cc2de6d169f49e21ab8fc2a0a12846f2c6a5b9c7224",
+      "gardens_night_vine": "5998dd439ac9da243a48385850c2034fe5a9c94715698a47dfcb4933b302667a",
+      "gardens_thornwick_dare": "44e2de479ad2035f39d0238683898feddb0b0e9b600ee8105ddcda19c5f260d0",
+      "bridges_lamplighters": "69044d8c797c960fb6637be05fe2546f7d31c552aa42617d2b2d10a1fa6a5ec9",
+      "bridges_busking": "e5c11d0a8c3643726c67ef31f6d0ae8986a0acaa288d0358de1476e5e85ac8c1",
+      "bridges_span_duel": "9ad3ca42d663dc87adb4846aabb68f6ffb39ff9ba5520790b356019ec3209278",
+      "bridges_mudlark": "66d2fdbc1d57e2a5ae3e418ba2ffdd64e49245e69cac94c0d8406b9f0fe72963"
+    }
+  },
+  "issues": [
+    {
+      "event": "club_card_room",
+      "priority": "P2",
+      "category": "promised follow-up",
+      "file": "content/events/maps/capital_society.grim",
+      "line": 36,
+      "problem": "The advertised stake is the general owing a favor on a win. He records the player's name and says he owes them, but the effects only grant Renown and gold and no later favor is available.",
+      "fix": "Have him discharge the favor immediately through a specific act that explains the reward, or record a favor the player can call in."
+    },
+    {
+      "event": "gardens_promenade",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/maps/capital_society.grim",
+      "line": 189,
+      "problem": "The scene always takes place before luncheon, but time: morning noon only weights the draw. It still has positive eligibility on an afternoon visit.",
+      "fix": "Use a required visit slot or vary the before-luncheon wording for the actual slot."
+    },
+    {
+      "event": "gardens_dawn_duel",
+      "priority": "P2",
+      "category": "unreachable visit",
+      "file": "content/events/maps/capital_society.grim",
+      "line": 207,
+      "problem": "The card requires slot: morning at the Royal Gardens. Both capital break plans make morning a plan slot and offer visits only at noon, afternoon, evening and night, so normal garden visits can never draw it.",
+      "fix": "Give the event a scheduled route into the morning, or adapt the scene and required slot to a visit that the capital plans support."
+    },
+    {
+      "event": "bridges_busking",
+      "priority": "P2",
+      "category": "safety",
+      "file": "content/events/maps/capital_society.grim",
+      "line": 295,
+      "problem": "The second failed show puts a child in the live audience. The project's tone and safety checklist requires every character to be an adult.",
+      "fix": "Replace the spectator with an adult whose reaction fits the failed act."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/capital-society-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-capital_society.json",
+    "docs/reviews/critic-pass-2026-11-15/capital-city-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/validate-capital-city.cjs",
+    "build/batches/C2-capital-society.notes.md",
+    "content/states/states.grim",
+    "content/world/places.grim",
+    "content/world/facts/vey.grim"
+  ],
+  "completedAt": "2026-11-16T00:35:17.167Z"
+}

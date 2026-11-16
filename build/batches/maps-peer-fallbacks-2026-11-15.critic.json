@@ -1,0 +1,121 @@
+{
+  "batch": "maps-peer-fallbacks-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagent gathered retrieval results only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on a dominated option, an unshown cost and seasonal/time continuity. All seven cards were read; required similarity review is complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "vaneshade_house_quiet_hour",
+      "oracle_rooms_quiet_hour",
+      "hollis_house_quiet_hour",
+      "ten_clockworks_quiet_hour",
+      "ashby_lane_quiet_hour",
+      "fennick_farm_quiet_hour",
+      "almanac_printers_quiet_hour"
+    ],
+    "files": [
+      "content/events/maps/placeholders.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "vaneshade_house_quiet_hour": "e6627fc45711c3c28a82488715a54452ec0cea60d79da48638f4e19adcec387f",
+      "oracle_rooms_quiet_hour": "85f94bb630a6008d504124e53ab56a859fc5cd451b5eb64510ef16f42e4b8b29",
+      "hollis_house_quiet_hour": "fc3d37a494a9fd8a6248bc942d33143d95848a62e5dee4cba926e00fb88d2496",
+      "ten_clockworks_quiet_hour": "d107834c61f549265e678de0032fbd1edbb9159d16bc4d01bb3186987f1f2e90",
+      "ashby_lane_quiet_hour": "0289969e970e44fd71ad6ef23744059570143ef45627a794aa549309250c3c1f",
+      "fennick_farm_quiet_hour": "70e8e76f2eec8b69f5426ecb2c7bc695fcff0a7a6c59320de838fca02746d0ba",
+      "almanac_printers_quiet_hour": "60a2731fc0a3a180ccff2628b30848b30a2d4b864b4cd011da1e9d507d29c2a4"
+    }
+  },
+  "issues": [
+    {
+      "event": "vaneshade_house_quiet_hour",
+      "priority": "P2",
+      "category": "class rules / dominated choice",
+      "problem": "Leaving your name grants Mood +tiny and loses Renown -tiny; walking on grants the identical Mood +tiny with no loss. Neither route has a check, follow-up or other benefit. The right option is strictly better. The placeholder tag exempts this from automatic budget lint, not the routine trade rule.",
+      "fix": "Give leaving a name its own distinct benefit shown in the outcome, or change the outcomes so the two options trade different things. Retiring the fallback after replacing its function is also an option.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:270",
+        "docs/authoring/costs.md",
+        "fallback-validation.json"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 264
+    },
+    {
+      "event": "ten_clockworks_quiet_hour",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "Look at the clocks always costs Mood -tiny. Both outcomes are pleasant discoveries: a backwards hobby clock and a working thimble clock. Neither outcome shows embarrassment, boredom, worry or another loss of spirits.",
+      "fix": "Show the frustration or disappointment that costs Mood in each variant, or remove the unshown cost; the alternative already offers a different gain.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:384",
+        "docs/authoring/costs.md"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 377
+    },
+    {
+      "event": "fennick_farm_quiet_hour",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "The second Lend a hand outcome only says you stake tomatoes in the wind and your hands smell green. It still deducts Health -tiny, but shows no exertion, cold, injury or tiredness. The first variant has a chase; that does not cover the second.",
+      "fix": "Add the physical cost to the second outcome, such as aching arms from working the row, or choose a cost the outcome actually depicts.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:448",
+        "docs/authoring/costs.md"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 441
+    },
+    {
+      "event": "fennick_farm_quiet_hour",
+      "priority": "P2",
+      "category": "season continuity",
+      "problem": "The random second outcome has you staking tomatoes in the outdoor rows in any season. The card has no seasonal gate or winter replacement, and countryside breaks include winter. The scene establishes an exposed windy upland farm, not a greenhouse.",
+      "fix": "Use a winter-appropriate job through a seasonal conditional, or gate this tomato-growing version to its growing season and preserve a winter fallback.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:441",
+        "content/world/places.grim:833"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 441
+    },
+    {
+      "event": "hollis_house_quiet_hour",
+      "priority": "P2",
+      "category": "time continuity",
+      "problem": "The first Knock outcome says the family is at luncheon. The card has no time restriction and Hollis House is open at noon, afternoon and evening, so this answer can appear on an evening visit. The piano is also specifically a noon habit in the family lore.",
+      "fix": "Gate this version with slot: noon, or make the meal/piano details conditional on the actual slot and write an evening variant.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:294",
+        "content/world/places.grim:594",
+        "fallback-validation.json"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 294
+    }
+  ],
+  "limitations": [
+    "No card source fixes or localization edits were performed; this verdict assesses the frozen source version."
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/fallback-compiled.json",
+    "docs/reviews/critic-pass-2026-11-15/fallback-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/fallback-retrieval.md",
+    "docs/reviews/critic-pass-2026-11-15/fallback-duplication.json"
+  ],
+  "completedAt": "2026-11-15T18:19:41.787Z",
+  "checks": {
+    "fullSourceAndVariantsRead": true,
+    "placeBriefsRead": true,
+    "compiledWiringChecked": true,
+    "relatedQueries": 7,
+    "nonSelfCandidatesReadPerCard": 3,
+    "dupes": "0 pairs touching the source file at default Jaccard threshold",
+    "validation": "fallback preview/time-fit assertions passed; current compilation returned zero errors"
+  }
+}

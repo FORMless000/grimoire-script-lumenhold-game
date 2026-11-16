@@ -1,0 +1,62 @@
+{
+  "batch": "hollowstar-escalation-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected because a key recovery option selects Ilse after she has left and some payoffs assert unestablished knowledge or companionship.",
+  "scope": {
+    "reviewedEventIds": [
+      "hs_shadow_late",
+      "hs_grey_daylight",
+      "hs_key_recover"
+    ],
+    "files": [
+      "content/events/hollowstar/escalation.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "hs_shadow_late": "4ca75c8736404a5c9dfa601d09ebcc2627cd6d9c7957bbeaa365753faa1b9a96",
+      "hs_grey_daylight": "248c7bc9f6b5ec72234e70690c8f849d7e00a017e054e4430fe940fb3bfa3252",
+      "hs_key_recover": "06fd3606150d40c0597c56f517e1bec10090f0a8c9b4d9e34dbc18770c3b5470"
+    }
+  },
+  "issues": [
+    {
+      "event": "hs_key_recover",
+      "priority": "P2",
+      "category": "absent advisor",
+      "file": "content/events/hollowstar/escalation.grim",
+      "line": 107,
+      "problem": "The family option treats ilse_saved as sufficient and picks Ilse over Kael whenever that flag is set. The northern-letter choice can leave ilse_saved set while ilse_went_north makes her absent. The option still renders Ilse speaking and standing lookout.",
+      "fix": "Choose Ilse only when she is available, fall back to an eligible Kael, and lock the option if neither can help."
+    },
+    {
+      "event": "hs_shadow_late",
+      "priority": "P2",
+      "category": "unearned prior knowledge",
+      "file": "content/events/hollowstar/escalation.grim",
+      "line": 9,
+      "problem": "The Seraphine choice grants meet seraphine, so this can be the first encounter. The outcome starts with ‘Yours too’ and stages her opening her bedroom door before the knock without establishing how a stranger found her private room or why she expects the player there.",
+      "fix": "Use an available shared place or add an introduction variant for a player who has not met Seraphine."
+    },
+    {
+      "event": "hs_grey_daylight",
+      "priority": "P2",
+      "category": "Kael moved without setup",
+      "file": "content/events/hollowstar/escalation.grim",
+      "line": 30,
+      "problem": "When the man comes for Kael, the hide success declares the player escaped with Kael. The only Kael condition is met(kael), and the opening has the man ask where he is. The call branch instead places him at a window. An unallied or absent Kael can appear as the fleeing party without explanation.",
+      "fix": "Establish a present Kael before running together. In other cases let the successful evasion protect his whereabouts while the player escapes alone."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-escalation-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-escalation.json",
+    "docs/reviews/critic-pass-2026-11-15/hollowstar-validation.json",
+    "docs/plots/hollowstar-v2.md",
+    "build/batches/hollowstar_v2.notes.md"
+  ],
+  "completedAt": "2026-11-15T21:02:47.277Z"
+}

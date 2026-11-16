@@ -1,0 +1,73 @@
+{
+  "batch": "maps-capital-fallbacks-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagent gathered retrieval results only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on afternoon wording without slot gating and a Mood cost described as physical neck strain. All three cards were read; required similarity review is complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "capital_library_quiet_hour",
+      "capital_townhouse_quiet_hour",
+      "capital_guild_quiet_hour"
+    ],
+    "files": [
+      "content/events/maps/placeholders.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "capital_library_quiet_hour": "a037f0cb91d8cb13f8936312c532356eeaf6abb3ed598576249f3e8405347112",
+      "capital_townhouse_quiet_hour": "22915ad3e4c28991aa3f5c6a32079b4084fb020cb0d2a21513ac2f4ddf3195c3",
+      "capital_guild_quiet_hour": "9338b4f9e35feee29b144d541d84280ae6e69024d7b79d233395b3fffda37729"
+    }
+  },
+  "issues": [
+    {
+      "event": "capital_townhouse_quiet_hour",
+      "priority": "P2",
+      "category": "time continuity",
+      "problem": "The fixed text says this afternoon, but the card has no slot or time gate. The townhouse is open through night and its away-day recipe supplies visits at noon, afternoon, evening and night. It can describe an afternoon during the night slot.",
+      "fix": "Use slot: afternoon for the specific scene, or remove/condition the afternoon wording and the warm sun detail for later visits.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:27",
+        "content/world/places.grim:479",
+        "fallback-validation.json"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 27
+    },
+    {
+      "event": "capital_library_quiet_hour",
+      "priority": "P2",
+      "category": "cost/resource mismatch",
+      "problem": "Read a while deducts Mood -tiny. Its first outcome shows an aching neck and a head full of new knowledge, a physical cost and positive discovery, without a loss of spirits. The second outcome has the librarian coughing you out, but that does not show the first variant paying its Mood cost.",
+      "fix": "Show boredom, embarrassment or another actual Mood cost in the first variant; alternatively use a physical cost with matching prose in every variant.",
+      "evidence": [
+        "content/events/maps/placeholders.grim:19",
+        "docs/authoring/costs.md"
+      ],
+      "file": "content/events/maps/placeholders.grim",
+      "line": 12
+    }
+  ],
+  "limitations": [
+    "No card source fixes or localization edits were performed; this verdict assesses the frozen source version."
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/fallback-compiled.json",
+    "docs/reviews/critic-pass-2026-11-15/fallback-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/fallback-retrieval.md",
+    "docs/reviews/critic-pass-2026-11-15/fallback-duplication.json"
+  ],
+  "completedAt": "2026-11-15T18:19:41.787Z",
+  "checks": {
+    "fullSourceAndVariantsRead": true,
+    "placeBriefsRead": true,
+    "compiledWiringChecked": true,
+    "relatedQueries": 3,
+    "nonSelfCandidatesReadPerCard": 3,
+    "dupes": "0 pairs touching the source file at default Jaccard threshold",
+    "validation": "fallback preview/time-fit assertions passed; current compilation returned zero errors"
+  }
+}

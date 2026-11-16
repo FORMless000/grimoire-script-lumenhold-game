@@ -1,0 +1,112 @@
+{
+  "batch": "between-known-a-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent; lower-cost subagents gathered source context and retrieval evidence only",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on concrete continuity, cost and consequence defects. All source events, variants and required similarity checks are complete.",
+  "scope": {
+    "reviewedEventIds": [
+      "lyra_between_drills",
+      "lyra_between_furniture",
+      "lyra_between_beaten",
+      "kael_between_kindness",
+      "kael_between_steps_in",
+      "bram_between_writes_up",
+      "bram_between_prank",
+      "bram_between_coaching",
+      "corvin_between_odds",
+      "corvin_between_debt",
+      "corvin_between_witness",
+      "nessa_between_story",
+      "nessa_between_match",
+      "mir_between_owl",
+      "mir_between_blunt"
+    ],
+    "files": [
+      "content/events/between_known.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "lyra_between_drills": "9a9d0b89dd213323d718924fad1847d8cf196bd348e69882ec6155bc672e18b3",
+      "lyra_between_furniture": "6bfdde4798c70a6eb19d6d7de7ded68f89bd84904871bfee44b361a60ca5fee0",
+      "lyra_between_beaten": "a7efa0a33b00166fa44915997e557a54b0f97f2095d51f9eb08c9583e4666163",
+      "kael_between_kindness": "4437b7d3316da7c6af1b685e141e4c7c15f485431ef3d75aa69011d5e24b3aae",
+      "kael_between_steps_in": "6b0c7778fc0989d6c6ff7ebecfebf14f9c9235b6c59c5d9bb3b8c1abbe1fd0b0",
+      "bram_between_writes_up": "9bb6164b61f40a4043ef79289b11827955572d3825ddcb5f34e7134b49aced33",
+      "bram_between_prank": "d18a56f55a2b4583b69deae052c543a9638d59dd76dc0e6d7bc808a4621bdcdc",
+      "bram_between_coaching": "f8031776cb8f4824111fa10c828727794dd6bad8c51fe0f94e8ea86baa25d34c",
+      "corvin_between_odds": "923b2b5b8090656ed00b5f06ee5869d327a94b62069c1d0e48ce746ccce49958",
+      "corvin_between_debt": "684e41a52425e1476246d1939d360e5d4a508121219cb1f18671aaa36b5e0a4d",
+      "corvin_between_witness": "003aa77aa1f7ba51d7bdf87f93e944c8394c0cacb48630d1f595ae9cc25181ab",
+      "nessa_between_story": "814e934d374b16c49e3fd4b526e49733d807d2441713a62ed63c324f059c93ff",
+      "nessa_between_match": "5c25c116d22b52d4aa52dd3aee9170e65cef6b1a678615978f9699f5e26b1be3",
+      "mir_between_owl": "0a9742b918240167f3158b0ada7114a96d3e928be8d3c751b54c546c8427f34e",
+      "mir_between_blunt": "07ca02b2ab99b00688a5adfc8e656f0899008b7745a7d650db407f38474766e2"
+    }
+  },
+  "issues": [
+    {
+      "event": "corvin_between_debt",
+      "priority": "P2",
+      "category": "promised repayment missing",
+      "problem": "Pay it yourself removes Gold -small, and the outcome says Corvin pays you back three weeks later in coins. There is no refund, queued repayment or remembered obligation in this branch, so the promised returned principal never reaches the player.",
+      "fix": "Implement the promised repayment through a queued follow-up with matching Gold, or explicitly describe an unpaid loan/gift rather than a completed repayment.",
+      "file": "content/events/between_known.grim",
+      "line": 247
+    },
+    {
+      "event": "kael_between_kindness",
+      "priority": "P2",
+      "category": "unshown cost",
+      "problem": "Bring them both to the boathouse always charges Mood -tiny. Its three outcomes show a quiet acceptance, a new stone-skipping friendship, and Kael sharing a Northern snow word. None shows the player feeling embarrassed, worried, bored or otherwise paying a loss of spirits.",
+      "fix": "Show the player's social strain or another actual Mood cost in each outcome, or remove the charge and preserve a real trade against the other option.",
+      "file": "content/events/between_known.grim",
+      "line": 89
+    },
+    {
+      "event": "bram_between_coaching",
+      "priority": "P2",
+      "category": "time continuity",
+      "problem": "The scene says late at night and the text says you enter the hall late, but this social card has neither a slot restriction nor conditional timing. Social cards can be spread through the day, so this late-night discovery can display at noon or another earlier slot.",
+      "fix": "Use slot: night for this scene, or rewrite the setup and scene so an earlier showing fits.",
+      "file": "content/events/between_known.grim",
+      "line": 194
+    },
+    {
+      "event": "nessa_between_match",
+      "priority": "P2",
+      "category": "alignment",
+      "problem": "Nominate o publishes a friend's private crush without consent and earns Renown and Nessa's approval while costing the friend's trust, but makes no Hollow movement. This is exploitation of another person for social gain under costs.md.",
+      "fix": "Add the appropriate moral cost to the nonconsensual nomination, or change the setup so the friend has authorized publication and adjust the trade accordingly.",
+      "file": "content/events/between_known.grim",
+      "line": 344
+    },
+    {
+      "event": "mir_between_blunt",
+      "priority": "P2",
+      "category": "unshown study cost",
+      "problem": "Translate for Mir always deducts study -tiny, but all three outcomes describe explaining Mir's behaviour and the resulting friendship. None says the player missed revision, a lecture or other academic work. The card can also show on a castle break when no course is enrolled.",
+      "fix": "If skipped study is the intended price, show it in every variant and make the academic cost meaningful when the card shows; otherwise use a cost actually depicted in the scene or a different honest trade.",
+      "file": "content/events/between_known.grim",
+      "line": 396
+    }
+  ],
+  "limitations": [
+    "No card source repairs or gameplay-frequency claims. Any later cross-batch duplicate owner is recorded in the progress ledger to avoid duplicate repair requests."
+  ],
+  "completedAt": "2026-11-15T18:36:57.895Z",
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/between-known-a-2026-11-15.duplication.json"
+  ],
+  "checks": {
+    "currentCompilationErrors": 0,
+    "allScopedSourceAndVariantsRead": true,
+    "speakingCastVoicesAndFactsRead": true,
+    "relatedQueries": 15,
+    "nonSelfSourceCandidatesReadPerCard": 3,
+    "candidateSourceHashesMatchCurrentCatalog": true,
+    "scopedDefinitionHashesMatchFrozenInventory": true
+  }
+}

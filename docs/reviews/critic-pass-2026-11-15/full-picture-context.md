@@ -1,0 +1,95 @@
+# `full_picture.grim` fact and cast context
+
+Source-only index for the nine P4-11 milestones. Batch context is in [`P4-11.notes.md`](../../../build/batches/P4-11.notes.md); retrieval descriptions there are provenance only, not adopted judgments. No retrieval was run.
+
+[`full_picture.grim`](../../../content/events/full_picture.grim:8) defines pool `full_picture`: `trigger: auto`, `class: milestone`, `repeat: 1`, `tone: warm`, `priority: 40`, tags `people facts`. Each event has one named cast role constrained by `around(npc) and rel(npc) >= 30`; its `when` is a conjunction of all that character’s listed `knows(fact)` IDs. There are no `learn` statements: these events are terminal acknowledgment/payoff cards, and their choices only change direct player/NPC state. Schedule dependence is through `around(npc)` and each NPC’s current cast schedule in [`content/world/cast.grim`](../../../content/world/cast.grim); no place/time/slot is declared on these events.
+
+## Event gates and option effects
+
+- **picture_lyra** ([source](../../../content/events/full_picture.grim:17)):   lyra: lyra where around(lyra) and rel(lyra) >= 30; all 9 facts below must be known. Choice effects: rel Lyra +medium or +small; mood +small both options.
+- **picture_corvin** ([source](../../../content/events/full_picture.grim:35)):   corvin: corvin where around(corvin) and rel(corvin) >= 30; all 7 facts below must be known. Choice effects: rel Corvin +medium or +small; mood -tiny or +small.
+- **picture_tobias** ([source](../../../content/events/full_picture.grim:53)):   tobias: tobias where around(tobias) and rel(tobias) >= 30; all 8 facts below must be known. Choice effects: rel Tobias +medium or +small; mood +small or alignment +tiny.
+- **picture_seraphine** ([source](../../../content/events/full_picture.grim:71)):   seraphine: seraphine where around(seraphine) and rel(seraphine) >= 30; all 7 facts below must be known. Choice effects: rel Seraphine +medium or +small; mood +small or study +small.
+- **picture_mir** ([source](../../../content/events/full_picture.grim:89)):   mir: mir where around(mir) and rel(mir) >= 30; all 7 facts below must be known. Choice effects: rel Mir +medium or +small; study -small or mood +small.
+- **picture_bram** ([source](../../../content/events/full_picture.grim:107)):   bram: bram where around(bram) and rel(bram) >= 30; all 7 facts below must be known. Choice effects: rel Bram +medium or +small; mood +small or alignment +tiny.
+- **picture_maud** ([source](../../../content/events/full_picture.grim:125)):   maud: maud where around(maud) and rel(maud) >= 30; all 8 facts below must be known. Choice effects: rel Maud +medium or +small; mood +small or +tiny.
+- **picture_thorne** ([source](../../../content/events/full_picture.grim:143)):   thorne: thorne where around(thorne) and rel(thorne) >= 30; all 7 facts below must be known. Choice effects: rel Thorne +medium or +small; study +small or mood +small.
+- **picture_brask** ([source](../../../content/events/full_picture.grim:161)):   brask: brask where around(brask) and rel(brask) >= 30; all 7 facts below must be known. Choice effects: rel Brask +medium or +small; mood -tiny or +small.
+
+## Original fact text and unlock declarations
+
+The following rows reproduce the `@fact` `text:` and explicit `unlock:` lines for every ID referenced by these nine event `when` expressions. Surface facts with no `unlock:` declaration are labeled accordingly.
+
+| Fact ID | Source | Unlock | Original worldbook text |
+|---|---|---|---|
+| `lyra.prodigy` | [content/world/facts/lyra.grim:4](../../../content/world/facts/lyra.grim:4) | `none declared` | The pyromancy prodigy of House Vaneshade. Everyone knows the name, and she makes sure of it. |
+| `lyra.toast` | [content/world/facts/lyra.grim:8](../../../content/world/facts/lyra.grim:8) | `seen(lyra_toast) > 0` | She can incinerate a target at forty paces. She cannot make toast. |
+| `lyra.mother` | [content/world/facts/lyra.grim:14](../../../content/world/facts/lyra.grim:14) | `rel(lyra) >= 18` | Her mother has never once told her "well done". |
+| `lyra.second_place` | [content/world/facts/lyra.grim:20](../../../content/world/facts/lyra.grim:20) | `seen(lyra_letter) > 0` | She came second in the Winter Trials once. Her mother wrote to ask who beat her. |
+| `lyra.burnout` | [content/world/facts/lyra.grim:26](../../../content/world/facts/lyra.grim:26) | `seen(lyra_burnout) > 0` | She studies until she collapses, and begs you not to let her mother find out. |
+| `lyra.rival` | [content/world/facts/lyra.grim:32](../../../content/world/facts/lyra.grim:32) | `bond(lyra) == "rival"` | You are the only person here who makes her better. She hates it. She doesn't want it to stop. |
+| `lyra.inheritance` | [content/world/facts/lyra.grim:38](../../../content/world/facts/lyra.grim:38) | `flag(lyra_free)` | Her mother threatened her inheritance over you. She set the letter on fire. |
+| `lyra.wildfire` | [content/world/facts/lyra.grim:44](../../../content/world/facts/lyra.grim:44) | `seen(lyra_become_close) > 0` | Vaneshades sleep exactly eight hours; she can't sleep. Her grandmother's spell, Wildfire, was only for people she trusted, and Lyra has never had anyone to teach it to. |
+| `lyra.flourish` | [content/world/facts/lyra.grim:50](../../../content/world/facts/lyra.grim:50) | `seen(lyra_teach_spell) > 0` | Her family has opened its duels with the same ribbon-of-flame flourish for two hundred years. Teaching it outside the family is not done. |
+| `corvin.locks` | [content/world/facts/corvin.grim:3](../../../content/world/facts/corvin.grim:3) | `none declared` | Knows every locked door in the academy and owes money to at least three people. |
+| `corvin.last_warning` | [content/world/facts/corvin.grim:7](../../../content/world/facts/corvin.grim:7) | `seen(corvin_rooftop) > 0` | He is on his last warning. One more detention and they send him home, and home is not a good place. |
+| `corvin.brother` | [content/world/facts/corvin.grim:13](../../../content/world/facts/corvin.grim:13) | `seen(corvin_brother) > 0` | His brother turns up for money and threatens to tell the headmistress where Corvin learned to pick locks. |
+| `corvin.grandfather` | [content/world/facts/corvin.grim:19](../../../content/world/facts/corvin.grim:19) | `seen(corvin_confiscation_vault) > 0` | His grandfather's lucky deck sat in the confiscation vault for decades. It really is lucky. |
+| `corvin.cartographers` | [content/world/facts/corvin.grim:25](../../../content/world/facts/corvin.grim:25) | `member(cartographers)` | He runs the Midnight Cartographers, the club that doesn't exist. |
+| `corvin.trolls` | [content/world/facts/corvin.grim:31](../../../content/world/facts/corvin.grim:31) | `seen(corvin_debt) > 0` | He once owed thirty crowns to trolls and offered to pay you back with a goat. |
+| `corvin.sundays` | [content/world/facts/corvin.grim:37](../../../content/world/facts/corvin.grim:37) | `seen(corvin_lucky_deck) > 0` | His grandfather could find a lost thing in any house, and taught him to shuffle on rainy Sundays. He's the one person Corvin talks about without a joke. |
+| `tobias.scholarship` | [content/world/facts/tobias.grim:3](../../../content/world/facts/tobias.grim:3) | `none declared` | A farmer's son on a turnip scholarship, built like a barn door and gentle as a lamb. |
+| `tobias.plants` | [content/world/facts/tobias.grim:7](../../../content/world/facts/tobias.grim:7) | `none declared` | He talks to plants. Worryingly, they seem to answer. |
+| `tobias.ma` | [content/world/facts/tobias.grim:11](../../../content/world/facts/tobias.grim:11) | `seen(tobias_homesick) > 0` | His mother runs the farm alone at harvest. It's the first harvest he has ever missed. |
+| `tobias.gerald` | [content/world/facts/tobias.grim:17](../../../content/world/facts/tobias.grim:17) | `seen(tobias_godparent) > 0` | He is raising a mandrake called Gerald, who wears a knitted hat and screams softly. |
+| `tobias.moonflowers` | [content/world/facts/tobias.grim:23](../../../content/world/facts/tobias.grim:23) | `rel(tobias) >= 12` | The greenhouse moonflowers bloom once every eleven years. He would stand in a storm for them. |
+| `tobias.blight` | [content/world/facts/tobias.grim:29](../../../content/world/facts/tobias.grim:29) | `seen(tobias_bad_harvest) > 0` | Blight took his family's harvest. Thirty crowns stood between them and a hungry winter. |
+| `tobias.dancing` | [content/world/facts/tobias.grim:35](../../../content/world/facts/tobias.grim:35) | `seen(tobias_dance_lessons) > 0` | He practised waltzing with a broom before the Midwinter Ball. The broom complained. |
+| `tobias.after` | [content/world/facts/tobias.grim:41](../../../content/world/facts/tobias.grim:41) | `seen(tobias_home_or_here) > 0` | His mother expects him home on the farm after graduation. It was always the plan; he isn't sure any more that it's his. |
+| `seraphine.seer` | [content/world/facts/seraphine.grim:3](../../../content/world/facts/seraphine.grim:3) | `none declared` | A seer who speaks in half-sentences and is unsettlingly often right. |
+| `seraphine.slips` | [content/world/facts/seraphine.grim:7](../../../content/world/facts/seraphine.grim:7) | `seen(seraphine_lost_day) > 0` | Sometimes she slips a day ahead and needs someone to tell her what today is. |
+| `seraphine.oracle` | [content/world/facts/seraphine.grim:13](../../../content/world/facts/seraphine.grim:13) | `rel(seraphine) >= 15` | Her mother is the Oracle of Vell, who wants her home to tell kings what they want to hear. |
+| `seraphine.self` | [content/world/facts/seraphine.grim:19](../../../content/world/facts/seraphine.grim:19) | `seen(seraphine_painting) > 0` | Seers can't see themselves, unless someone is standing next to them. |
+| `seraphine.lake` | [content/world/facts/seraphine.grim:25](../../../content/world/facts/seraphine.grim:25) | `flag(seraphine_lake_told)` | The lake calls to her at night. She says it calls to you too. |
+| `seraphine.too_loud` | [content/world/facts/seraphine.grim:31](../../../content/world/facts/seraphine.grim:31) | `seen(seraphine_overwhelmed) > 0` | When everyone's futures get too loud she hides in the dark. Yours, she says, is quiet. |
+| `seraphine.paintings` | [content/world/facts/seraphine.grim:37](../../../content/world/facts/seraphine.grim:37) | `seen(seraphine_dont_look) > 0 or seen(brk_starfall_observatory) > 0` | What she sees ahead comes out in her paintings, sometimes months early. She hides the ones she didn't mean to paint under her bed. |
+| `mir.artificer` | [content/world/facts/mir.grim:4](../../../content/world/facts/mir.grim:4) | `none declared` | An artificer who smells of solder and ozone and has started at least one small fire. |
+| `mir.owl` | [content/world/facts/mir.grim:8](../../../content/world/facts/mir.grim:8) | `seen(mir_owl_gift) > 0` | Built a clockwork owl that remembers deadlines, birthdays and, slightly, grudges. |
+| `mir.notebooks` | [content/world/facts/mir.grim:14](../../../content/world/facts/mir.grim:14) | `rel(mir) >= 12` | Three years of notebooks are the most precious things they own. |
+| `mir.family` | [content/world/facts/mir.grim:20](../../../content/world/facts/mir.grim:20) | `seen(mir_family_business) > 0` | Their family runs a clockworks and thinks invention is a hobby. It is not a hobby. |
+| `mir.name_day` | [content/world/facts/mir.grim:26](../../../content/world/facts/mir.grim:26) | `seen(mir_name_day) > 0` | Nobody ever remembered their name day before. |
+| `mir.workshop` | [content/world/facts/mir.grim:32](../../../content/world/facts/mir.grim:32) | `seen(mir_workshop_closed) > 0` | After the third fire in a term, the faculty padlocked their workshop. |
+| `mir.corridor` | [content/world/facts/mir.grim:38](../../../content/world/facts/mir.grim:38) | `seen(mir_padlock) > 0` | Locked out of a workshop, they will solder on the corridor floor for a week rather than stop. It's character-building, they say. |
+| `bram.prefect` | [content/world/facts/bram.grim:3](../../../content/world/facts/bram.grim:3) | `none declared` | A prefect of your own year, with a red sash, a ledger of demerits and a fondness for your name. |
+| `bram.father` | [content/world/facts/bram.grim:7](../../../content/world/facts/bram.grim:7) | `seen(bram_crying) > 0 or seen(bram_father_visit) > 0` | His father was head boy, and has told Bram all his life that he will never amount to anything. |
+| `bram.hall_tax` | [content/world/facts/bram.grim:13](../../../content/world/facts/bram.grim:13) | `seen(bram_hall_tax) > 0` | He once invented a "hall tax" for the east staircase. |
+| `bram.cheating` | [content/world/facts/bram.grim:19](../../../content/world/facts/bram.grim:19) | `seen(bram_cheating) > 0` | You saw him cheat in an exam. He knows you saw. |
+| `bram.ally` | [content/world/facts/bram.grim:25](../../../content/world/facts/bram.grim:25) | `seen(bram_turns) > 0` | Under the sash, he will step between you and trouble. Then he tells you not to make it weird. |
+| `bram.portrait` | [content/world/facts/bram.grim:31](../../../content/world/facts/bram.grim:31) | `seen(bram_portrait) > 0` | His father's portrait hangs in the corridor of head boys. Every visit, his father stops in front of it, and then looks at Bram. |
+| `bram.rematch` | [content/world/facts/bram.grim:37](../../../content/world/facts/bram.grim:37) | `seen(bram_rematch) > 0` | When he loses, he practises alone on the duelling green every evening for a month, and then asks for a rematch. |
+| `maud.groundskeeper` | [content/world/facts/maud.grim:3](../../../content/world/facts/maud.grim:3) | `none declared` | Groundskeeper and hedge-witch, keeper of bees, chickens and a goat called Bartholomew. |
+| `maud.student` | [content/world/facts/maud.grim:7](../../../content/world/facts/maud.grim:7) | `seen(maud_old_student) > 0` | She was a student here sixty years ago, the spring the lake froze. |
+| `maud.edmund` | [content/world/facts/maud.grim:13](../../../content/world/facts/maud.grim:13) | `seen(maud_old_wand) > 0` | Edmund went down beneath the lake that night and didn't come back. She kept his silver wand. |
+| `maud.soup` | [content/world/facts/maud.grim:19](../../../content/world/facts/maud.grim:19) | `seen(maud_recipe) > 0` | Her soup cures colds, broken hearts and most curses. You're not allowed to write it down. |
+| `maud.garden` | [content/world/facts/maud.grim:25](../../../content/world/facts/maud.grim:25) | `seen(garden_maud_secret) > 0` | Behind the potting shed there is a door to a garden that only exists for people she shows it to. |
+| `maud.age` | [content/world/facts/maud.grim:31](../../../content/world/facts/maud.grim:31) | `seen(maud_ill) > 0` | She is eighty-one, and says she's allowed the occasional chill. |
+| `maud.tuppence` | [content/world/facts/maud.grim:37](../../../content/world/facts/maud.grim:37) | `seen(maud_tuppence) > 0 or seen(ww_cocooned) > 0` | In her first winter as groundskeeper she raised a hatchling spider called Tuppence in the potting shed. Tuppence is the Spinner of the Hush now. |
+| `maud.blazes` | [content/world/facts/maud.grim:43](../../../content/world/facts/maud.grim:43) | `seen(ww_mastery_map) > 0` | The little bees carved on the Whisperwood's birches are hers, from when she used to go down to the Hush to visit Tuppence. Her knees won't take it now. |
+| `thorne.storm` | [content/world/facts/thorne.grim:3](../../../content/world/facts/thorne.grim:3) | `none declared` | Rumoured to have once out-duelled a storm. |
+| `thorne.lost` | [content/world/facts/thorne.grim:7](../../../content/world/facts/thorne.grim:7) | `seen(thorne_storm_story) > 0` | He lost to the storm, badly. Losing well, he says, is the only thing worth teaching. |
+| `thorne.roses` | [content/world/facts/thorne.grim:13](../../../content/world/facts/thorne.grim:13) | `seen(thorne_roses) > 0` | He tends a tiny walled rose garden behind the observatory at dawn and talks to the roses. |
+| `thorne.hands` | [content/world/facts/thorne.grim:19](../../../content/world/facts/thorne.grim:19) | `seen(thorne_shaking_hands) > 0` | His hands have started to shake. Age comes for every storm eventually. |
+| `thorne.rival` | [content/world/facts/thorne.grim:25](../../../content/world/facts/thorne.grim:25) | `seen(thorne_old_rival) > 0` | A flamboyant old wizard in purple has wanted a rematch with him for forty years. |
+| `thorne.letters` | [content/world/facts/thorne.grim:31](../../../content/world/facts/thorne.grim:31) | `rel(thorne) >= 18` | He writes very few letters of recommendation, and the Conclave reads every one. |
+| `thorne.accusation` | [content/world/facts/thorne.grim:37](../../../content/world/facts/thorne.grim:37) | `seen(thorne_disappointed) > 0` | "You're better than this" is, from him, not a compliment. He says so himself: it's an accusation. |
+| `brask.beasts` | [content/world/facts/brask.grim:3](../../../content/world/facts/brask.grim:3) | `none declared` | Teaches Beastcraft & Flight from the stables, and talks to every creature in them more kindly than to students. |
+| `brask.stories` | [content/world/facts/brask.grim:7](../../../content/world/facts/brask.grim:7) | `seen(brask_shovel) > 0` | Every one of her stories ends with a bite and a moral. She laughs out loud about once a term. |
+| `brask.owl` | [content/world/facts/brask.grim:13](../../../content/world/facts/brask.grim:13) | `seen(brask_night_owl) > 0` | The old barn owl in the stable loft has outlived three of her colleagues. She would not say which loss hurt most. |
+| `brask.courtesies` | [content/world/facts/brask.grim:19](../../../content/world/facts/brask.grim:19) | `seen(brask_trust) > 0` | She bows to the things that live in the Whisperwood, and believes it's why they have never bitten her. Much. |
+| `brask.feather` | [content/world/facts/brask.grim:25](../../../content/world/facts/brask.grim:25) | `seen(item_quill_brask) > 0` | Her barn owl moulted in the Whisperwood one winter, and she looked for the lost flight feather for a month. |
+| `brask.blackthorn` | [content/world/facts/brask.grim:31](../../../content/world/facts/brask.grim:31) | `seen(item_thorn_brask) > 0` | She knows a blackthorn wand by its smell, and she knows the woman in the wood who cuts them. |
+| `brask.asking` | [content/world/facts/brask.grim:37](../../../content/world/facts/brask.grim:37) | `seen(beast_lake_flight) > 0` | She never thinks less of a student for asking for help. She just remembers that they asked. |
+
+## IDs and cross-source dependencies
+
+The event IDs are the stable `picture_*` content references; each depends on its exact `@fact` IDs and the corresponding character ID. The nine events reference 67 facts total (Lyra 9, Corvin 7, Tobias 8, Seraphine 7, Mir 7, Bram 7, Maud 8, Thorne 7, Brask 7). `around()` is an availability condition, resolved against the NPC schedule; see [`docs/grimoire-script.md`](../../grimoire-script.md:516). The P4-11 note says fact additions require updating the matching `when` list; current lists are transcribed above from source.

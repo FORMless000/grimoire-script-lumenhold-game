@@ -1,0 +1,109 @@
+{
+  "batch": "moors-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The moor route, shortcuts and foes work, and the finite bands retain progress cards after failed checks. Revision is needed for a warm occupied hill after the bargain is broken, inaccurate or unshown haul losses, and a noon outcome available on later visits.",
+  "scope": {
+    "reviewedEventIds": [
+      "moor_peat_cutters",
+      "moor_bilberries",
+      "moor_edge",
+      "moor_way_home",
+      "moor_stumble",
+      "moor_lost",
+      "moor1_cairn",
+      "moor1_adders",
+      "moor1_lost_ewe",
+      "moor1_peat_hag",
+      "moor1_larks",
+      "moor2_black_dog",
+      "moor2_bog_road",
+      "moor2_fog",
+      "moor2_satchel",
+      "moor2_waymarks",
+      "moor3_barrow_ram",
+      "moor3_seven_cairns",
+      "moor3_warm_turf",
+      "moor3_bronze",
+      "moor_hill_door"
+    ],
+    "files": [
+      "content/events/maps/moors_delve.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "moor_peat_cutters": "c0a8c05adb0bc0b1fd4cea46eae5ab9e3f17956d656c661fc95d0b593394a52e",
+      "moor_bilberries": "10b734152c8b4c745f89e18cc80bcb6b4cc559b7026ab05d2394ddf3834feb30",
+      "moor_edge": "c49ec34142751f335980c6b1a5682fa1ea647608cfa1fe11a5000c48440603e6",
+      "moor_way_home": "fc2e47f163961ed9b09d6e8a4ca52e6416e9a758c4763ed28f6ad7c0ca3aa097",
+      "moor_stumble": "2525dfa7823e39bffd2b08a47c4a99e0d4b26271576169f6213d4c8aea52502e",
+      "moor_lost": "445f9dc3983ee8dd42f8c0c9703ba5bd3b63a73b50ff0515821acd2f72611336",
+      "moor1_cairn": "65397054954fd36679957f1474a2b6fc08008210c34a8e61c8f0ceb5a151c045",
+      "moor1_adders": "8d5c8847f9e174bf0929689c7ced4bbdb272359eb1382fbf8b7938b9e41a5b89",
+      "moor1_lost_ewe": "d11751590482bd363e82b358944114d09a22499c55677a7a2b69fed9301ecbe8",
+      "moor1_peat_hag": "4f238001257fa80af1e76a6d981493d64c89c935ed2fb615867a271bdbabbd64",
+      "moor1_larks": "20fa3a312b8924967bbf1ae473bdd14db7bc48cf9e4b2fe240e618d4cc86a544",
+      "moor2_black_dog": "b5b1b19b78711fa49d846dc1a6085117d3cf141e40004c13fd3cd86968ec7682",
+      "moor2_bog_road": "42abebe5fe7fcbf7dd4018d42757128c9d9c51ed21df237473a1bb954fc1fe59",
+      "moor2_fog": "4d1756bece6f4673c27bfc71fb16c4fb83e7044887399c6b5df170e11943f555",
+      "moor2_satchel": "6b4c20821b01093ada27e38086dd7f84cf96aadf33dc02d784333e993f65b475",
+      "moor2_waymarks": "1f60cede0b8eca7d04af07866cfbd4d77dafb118e5ccc91a2879835c2ef81cc6",
+      "moor3_barrow_ram": "f561bcfdcc480eebcd800112fd38188af068723c2030a02546b582f3fe6525ae",
+      "moor3_seven_cairns": "059c92f6e36b3ed172d167a5720e3b94ed7d176007d2157e28735dae721cee47",
+      "moor3_warm_turf": "7f8c34bd6fd8d3fae3515a2b03af01ca908094a662dd9fa8be7cdac6418c9f6a",
+      "moor3_bronze": "cbade48c1c2cedaf44e9152828dd884fefb463c1464607b9159a0dac41f0dc47",
+      "moor_hill_door": "6984761430120cae493552b221c3dbfccbd359d458e1a3894efeeefc8bf0a6bf"
+    }
+  },
+  "issues": [
+    {
+      "event": "moor3_warm_turf",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/maps/moors_delve.grim",
+      "line": 520,
+      "problem": "After gy_broken, this card remains eligible at depths 5–6 and describes warm breathing turf, a fiddle and a table being laid. At depth 7 the resolved gy_hill_turf explicitly makes the same hill cold and its hall empty. The fixture shows both texts in the broken-bargain state.",
+      "fix": "Gate the occupied warm-hill card off after gy_broken, or supply a resolved version with cold ordinary turf and outcomes consistent with the empty hall. Keep enough progress cards in the band after changing the gate."
+    },
+    {
+      "event": "moor_stumble",
+      "priority": "P2",
+      "category": "continuity",
+      "file": "content/events/maps/moors_delve.grim",
+      "line": 138,
+      "problem": "The conditional on_show loss correctly leaves moor_haul at zero, but every opening variant still says an object or part of the carried finds was lost. This can be the first failed obstacle, before anything was collected; the zero-haul fixture reproduces it.",
+      "fix": "Remember whether a find was actually lost before changing the haul and use that state for the loss wording. When there was no find, describe the injury and escape without inventing lost possessions."
+    },
+    {
+      "event": "moor_lost",
+      "priority": "P2",
+      "category": "unshown cost",
+      "file": "content/events/maps/moors_delve.grim",
+      "line": 161,
+      "problem": "The rescue sets moor_haul to zero, confiscating the whole accumulated payout, but neither the shepherd account nor the grandmother account mentions the bag or losing its contents. The three-find fixture ends with zero finds and only a rescue narrative.",
+      "fix": "Describe the bag being lost or abandoned during the failed expedition in both rescue variants, or preserve the finds if only injury is intended. Make the loss visible when it occurs."
+    },
+    {
+      "event": "moor_peat_cutters",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/maps/moors_delve.grim",
+      "line": 27,
+      "problem": "One cutting outcome says the player’s back aches by noon, although the routine can be chosen on afternoon and evening visits. Unlike the winter wording, that endpoint does not adapt to the visit.",
+      "fix": "Replace by noon with an elapsed-work description such as after a while, or condition the endpoint on the actual slot. Keep the same visible physical cost."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/moors-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-moors_delve.json",
+    "docs/reviews/critic-pass-2026-11-15/country-delves-review.md",
+    "docs/reviews/critic-pass-2026-11-15/country-delve-briefs.md",
+    "docs/reviews/critic-pass-2026-11-15/capital-country-briefs.md",
+    "docs/reviews/critic-pass-2026-11-15/validate-country-delves.cjs",
+    "docs/reviews/critic-pass-2026-11-15/country-delves-validation.json"
+  ],
+  "completedAt": "2026-11-16T00:52:28.155Z"
+}

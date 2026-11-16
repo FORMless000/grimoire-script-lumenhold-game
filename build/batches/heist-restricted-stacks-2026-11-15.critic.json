@@ -1,0 +1,110 @@
+{
+  "batch": "heist-restricted-stacks-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "The descent uses distinct obstacles and keeps the forbidden spell lessons within canon. Several repeat and reward branches contradict what the player saw or brought out.",
+  "scope": {
+    "reviewedEventIds": [
+      "heist_stacks_enter",
+      "heist_stacks_unmapped",
+      "st_dead_end",
+      "st1_taut_chains",
+      "st1_library_rounds",
+      "st1_catalogue",
+      "st2_breathing",
+      "st2_charging_book",
+      "st2_other_lamp",
+      "st3_mirror_desk",
+      "st3_no_lamp",
+      "st3_glass_case",
+      "st_vault"
+    ],
+    "files": [
+      "content/events/heists/stacks.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "heist_stacks_enter": "f5e029ebd3e021f0a799e84937dc17354287269caf23ba5b13412f8587c7385d",
+      "heist_stacks_unmapped": "a47c8067b494c07880602ddf5ddc279593550d6cc29881aa621dba8a48d7c0ea",
+      "st_dead_end": "7a054beaad5a1f4fbd97e53c3475d67b433766d8e7b8cba1df4a2f8717ca8e45",
+      "st1_taut_chains": "17695a47600e95bf4e6b260e61346f460c8dc32f7b2141fece2410a17a1be488",
+      "st1_library_rounds": "bacd5c132e3db1d5a253f8f8e4f74745a2ea41226ed2e8b9c8b246acb9efcd9e",
+      "st1_catalogue": "01c58adc76a96c54126c79dc8c92260073a9cec7c485512cf4aa55abd8f0b393",
+      "st2_breathing": "4e16faed21db6393610e9068c388ca77117c7deb21265a5dcecbcf03388e2648",
+      "st2_charging_book": "8a858fd11e2e31ca656c23ccfcdc4c313d21da8c36f38a68bdcc7d951041ca2d",
+      "st2_other_lamp": "09a0d822b59f500dddb0ecfc0c84dcf2974a9b9b281a1c03edc7902856ded832",
+      "st3_mirror_desk": "46263f253584119e62572cc3172a60288ae873904edf5c920bedbab2d82dfb0e",
+      "st3_no_lamp": "3453d3816d135df7baeddf2805548094e909139ecac74388bd83f9180a7bd527",
+      "st3_glass_case": "21c003302cf28519129a9680ae6a9dda603bf2ed538ea151a370098ea1211aa7",
+      "st_vault": "b9c0ff12dbc4b6f68e1ae2819c1957ca85106a12a27369b7f3d56735481b1ac6"
+    }
+  },
+  "issues": [
+    {
+      "event": "st_dead_end",
+      "priority": "P2",
+      "category": "cost in the fiction",
+      "file": "content/events/heists/stacks.grim",
+      "line": 80,
+      "problem": "Failing to search deducts Health even when the goblin merely notices you and you leave the crates alone, or the aisle closes and you jump back unharmed.",
+      "fix": "Tie the failed search cost to a described scrape, strain or injury, including the vault-depth line."
+    },
+    {
+      "event": "st2_charging_book",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/heists/stacks.grim",
+      "line": 220,
+      "problem": "The repeat opening assumes the book remembers what you owe even after the retreat variant that explicitly says you left it owed nothing.",
+      "fix": "On a repeat, describe the waiting book without claiming an outstanding debt, or record and gate the debt on the previous result."
+    },
+    {
+      "event": "st3_no_lamp",
+      "priority": "P2",
+      "category": "reward in the fiction",
+      "file": "content/events/heists/stacks.grim",
+      "line": 326,
+      "problem": "Both successful variants add one unit of loot, but the second variant only reaches a door and names nothing picked up.",
+      "fix": "Show what the player takes while following the shelves by touch, or omit the loot increment from that outcome."
+    },
+    {
+      "event": "st3_glass_case",
+      "priority": "P2",
+      "category": "repeat feedback",
+      "file": "content/events/heists/stacks.grim",
+      "line": 351,
+      "problem": "After a successful theft the text says the charm is rewoven tighter, but the card repeats the same check at the same difficulty.",
+      "fix": "Give the rewoven charm a distinct check modifier, or describe the repair without implying a harder lock."
+    },
+    {
+      "event": "st_vault",
+      "priority": "P2",
+      "category": "unsupported callback",
+      "file": "content/events/heists/stacks.grim",
+      "line": 382,
+      "problem": "The second crate victory says you go straight to the shelf you catalogued in detention even without vault_catalogued. The card can explicitly say beforehand that you have no idea where anything is.",
+      "fix": "Gate the catalogued-shelf line on vault_catalogued and give an unfamiliar player a search that matches their opening."
+    },
+    {
+      "event": "st_vault",
+      "priority": "P2",
+      "category": "reward in the fiction",
+      "file": "content/events/heists/stacks.grim",
+      "line": 382,
+      "problem": "The opening and bottle option are singular even when both confiscated bottles are restored. The second victory also says you took only what was yours, but both variants add one extra unit of loot to fence or read.",
+      "fix": "Use conditional or number-neutral language for the confiscated belongings and align the extra loot with the branch where the player takes something besides the bottles."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/heist-restricted-stacks-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/indexed-stacks.json",
+    "docs/reviews/critic-pass-2026-11-15/heists-and-board-validation.json",
+    "content/world/lore/soft/academy.grim",
+    "docs/threads-1-plan.md",
+    "docs/authoring/pools.md"
+  ],
+  "completedAt": "2026-11-15T21:30:33.316Z"
+}

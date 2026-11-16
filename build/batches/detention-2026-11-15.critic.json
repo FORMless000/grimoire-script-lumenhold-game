@@ -1,0 +1,98 @@
+{
+  "batch": "detention-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected on variant-level outcome mismatches and a demerit choice that promises to remove more than the outcome erases. The eight assignments have distinct subjects and trade-offs.",
+  "scope": {
+    "reviewedEventIds": [
+      "det_vault_catalogue",
+      "det_prefects_room",
+      "det_apology",
+      "det_candle_wax",
+      "det_great_lens",
+      "det_flight_divots",
+      "det_inkwells",
+      "det_gargoyle_scrub"
+    ],
+    "files": [
+      "content/events/detention.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "det_vault_catalogue": "316b93de6b95fe91d734177cf927a87b4cfb3e985b96698b26791684a19d6c59",
+      "det_prefects_room": "2d194d80a70190f17f08f43a6716ae0b0560dbd68a6c143b8413a33f1adbb3e2",
+      "det_apology": "64b66f87851e59374b2dd747e9a8f260d96c4bacc962e98e690505f2ae976336",
+      "det_candle_wax": "46fa74e72084e33eef899d90656c030965c77f5716a0dff63d75a3e4f220528b",
+      "det_great_lens": "eb0ecfeff6d1304993dfb4256d0fab69110597ce5ace7b07a2ebe32dff01c451",
+      "det_flight_divots": "2a87560916386083fe156468c42c120200c1dfa82450cb8559031d1c21a9bfae",
+      "det_inkwells": "95b3b28530cfdc5036cda73f0388d21792094e4f60aeed62ecb0c7685e96a21a",
+      "det_gargoyle_scrub": "87b0d39d84c32d9be25f1169d083e4bc50a0cb27401c0367855fa8ec75c8de5c"
+    }
+  },
+  "issues": [
+    {
+      "event": "det_vault_catalogue",
+      "priority": "P2",
+      "category": "Mood cost absent in the first two outcomes",
+      "file": "content/events/detention.grim",
+      "line": 14,
+      "problem": "Cataloguing charges Mood throughout. The first two outcomes describe sore eyes or a wrist ache and useful knowledge, while the third explicitly calls the work dull.",
+      "fix": "Give each variant a visible reason for the Mood loss, or use a consistent cost for the physical labor the outcomes show."
+    },
+    {
+      "event": "det_prefects_room",
+      "priority": "P2",
+      "category": "one entry versus a whole name",
+      "file": "content/events/detention.grim",
+      "line": 32,
+      "problem": "Two openings say there are multiple demerits for the named classmate. The option offers to leave their name out and the first success calls the whole week quiet, but every win only removes one line. In the multiple-entry setup, the other entries are still there.",
+      "fix": "Make the option and outcomes say which one entry the player suppresses, or remove all of the entries when that is the intended risk."
+    },
+    {
+      "event": "det_apology",
+      "priority": "P2",
+      "category": "health loss missing from first failure",
+      "file": "content/events/detention.grim",
+      "line": 57,
+      "problem": "The first failed apology says the student stays until the lamps go out. Since detention itself can be in the evening, that does not establish fatigue, injury or unusual exertion. The other failures show cramped hands and cold feet.",
+      "fix": "Show the first failed attempt keeping the student up or causing the same strain as the other failures."
+    },
+    {
+      "event": "det_great_lens",
+      "priority": "P2",
+      "category": "unshown Health loss in one variant",
+      "file": "content/events/detention.grim",
+      "line": 104,
+      "problem": "The first two cleaning outcomes show numb fingers or cold, but the third only shows an hour of polishing and a cleaner lens. The same Health cost applies.",
+      "fix": "Add a physical cost to the third variant or move its cost to one the outcome shows."
+    },
+    {
+      "event": "det_flight_divots",
+      "priority": "P2",
+      "category": "unshown costs in two variants",
+      "file": "content/events/detention.grim",
+      "line": 121,
+      "problem": "The third filling outcome has the field ruined again but shows no strain to justify Health loss. The second failed flight only has the prefect notice and order the player to fill the divot, although all failures cost Renown.",
+      "fix": "Show the third filling result tiring or injuring the player and give the second failure a witness or a public reprimand, or make the effects match each result."
+    },
+    {
+      "event": "det_gargoyle_scrub",
+      "priority": "P2",
+      "category": "missing physical charge in multiple outcomes",
+      "file": "content/events/detention.grim",
+      "line": 167,
+      "problem": "The clean-row version of the left result has no fatigue or physical discomfort, and the right results focus on the marks, passage and prefect's joke. Both routes always deduct Health.",
+      "fix": "Write the cold or effort into all branches that charge Health, including the Cartographer and nonmember variants, or give those variants effects that match what happens."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/detention-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-detention.json",
+    "build/batches/T1-detention.notes.md",
+    "docs/threads-1-plan.md"
+  ],
+  "completedAt": "2026-11-15T21:17:16.904Z"
+}

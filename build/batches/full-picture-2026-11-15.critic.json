@@ -1,0 +1,129 @@
+{
+  "batch": "full-picture-2026-11-15",
+  "accept": false,
+  "reviewComplete": true,
+  "reviewer": "Codex main agent",
+  "reviewed_at": "2026-11-15",
+  "summary": "Rejected because the one-time milestones can recur and six unlock without the current worldbook's full fact sets. Some choices also assert a recorded history the game does not require.",
+  "scope": {
+    "reviewedEventIds": [
+      "picture_lyra",
+      "picture_corvin",
+      "picture_tobias",
+      "picture_seraphine",
+      "picture_mir",
+      "picture_bram",
+      "picture_maud",
+      "picture_thorne",
+      "picture_brask"
+    ],
+    "files": [
+      "content/events/full_picture.grim"
+    ],
+    "head": "b8082c523670a25c529c37f541f55b34d3f69108",
+    "contentHash": "7831ec",
+    "compiledDefinitionHashes": {
+      "picture_lyra": "4e4d46008eac7f0ff9e8588600cd1fbbc438d93cf40884448408efe0fa674e61",
+      "picture_corvin": "40e07a60c3a472e47371357c39317f85b595b6d292eb74d6f2ea2a4476fedd50",
+      "picture_tobias": "ae4b770845a29ba507468943e0530d8d864bde261f1c2ef69f6fcb77121a50fb",
+      "picture_seraphine": "f6879b872308f6abed6cd8ebb620a4d2ee6484f341bbb09012e070ec0222e5c0",
+      "picture_mir": "d1a8c7301a7e44ae9b7f840a2a0a56d7307c3c5f8bdeeaf6b7d669463ec4c267",
+      "picture_bram": "59e0b621c25827d1b65ead501181df95120c8bc330b594cb334002d80f512348",
+      "picture_maud": "e324ffe0f22f6fc8ff7e61382ff3b37335de32362a93f771185300820193d40c",
+      "picture_thorne": "e3836e3216b26e94b5abee8dcf4a441df18b6df5f331e80fe2b0acfe4e7fa807",
+      "picture_brask": "969d6f7e48f458a2613348805717588a47a9d12b3fda6fc10280346811e1ab2c"
+    }
+  },
+  "issues": [
+    {
+      "event": "picture_lyra",
+      "priority": "P2",
+      "category": "one-time milestone repeats",
+      "file": "content/events/full_picture.grim",
+      "line": 16,
+      "problem": "The shared full_picture pool describes a one-time acknowledgment but sets repeat: 1. Its gates remain true after resolution, so the same intimate first-time scene is eligible the following month. The same wiring governs all nine milestones.",
+      "fix": "Remove the cooldown from the shared pool to use the default once-per-run behavior, or gate each payoff on its own prior resolution.",
+      "affectedEvents": [
+        "picture_lyra",
+        "picture_corvin",
+        "picture_tobias",
+        "picture_seraphine",
+        "picture_mir",
+        "picture_bram",
+        "picture_maud",
+        "picture_thorne",
+        "picture_brask"
+      ]
+    },
+    {
+      "event": "picture_lyra",
+      "priority": "P2",
+      "category": "outdated fact gates",
+      "file": "content/events/full_picture.grim",
+      "line": 16,
+      "problem": "Six milestones say the player knows the whole character while their gates omit later worldbook entries. The compiled condition allows Lyra with camp_bed, cook and grandmother still unknown, and the same check found omissions for Corvin, Tobias, Seraphine, Mir and Bram. The exact IDs are in milestone-validation.json.",
+      "fix": "Bring all six gates up to the current fact list, or explicitly scope each milestone and its dialogue to a defined subset of facts.",
+      "affectedEvents": [
+        "picture_lyra",
+        "picture_corvin",
+        "picture_tobias",
+        "picture_seraphine",
+        "picture_mir",
+        "picture_bram"
+      ]
+    },
+    {
+      "event": "picture_seraphine",
+      "priority": "P2",
+      "category": "unsupported player history",
+      "file": "content/events/full_picture.grim",
+      "line": 70,
+      "problem": "The calendar claims the player talked Seraphine back into today forty-one times. The gate only requires knowing that she slips, which can come from seeing Lost Day and choosing to ask about tomorrow instead of helping her. Neither a single showing nor that alternative establishes the claimed history.",
+      "fix": "Tie the marks to help actually given, or make the calendar thank the player for knowing what a slip is without counting past interventions."
+    },
+    {
+      "event": "picture_bram",
+      "priority": "P2",
+      "category": "unsupported player history",
+      "file": "content/events/full_picture.grim",
+      "line": 106,
+      "problem": "Bram says the player never used any of his secrets. The sell_a_secret route can publish his exam cheating and only changes relationship and reputation. The milestone checks current relationship and known facts, so later reconciliation can leave the assertion intact.",
+      "fix": "Record or read a durable betrayal branch before asserting discretion, or give the milestone an alternate acknowledgment when the player exposed the cheating."
+    },
+    {
+      "event": "picture_bram",
+      "priority": "P2",
+      "category": "promised penalty missing",
+      "file": "content/events/full_picture.grim",
+      "line": 106,
+      "problem": "Bram gives the player a demerit for insulting the painting, but the outcome has only positive relationship and Mood effects and no demerit or scolding effect.",
+      "fix": "Make the demerit explicitly a joke he never writes down, or apply the appropriate existing penalty if it is meant to count."
+    },
+    {
+      "event": "picture_maud",
+      "priority": "P2",
+      "category": "repeated payoff",
+      "file": "content/events/full_picture.grim",
+      "line": 124,
+      "problem": "The soup option offers an initial hands-on lesson in Maud's recipe with the same ban on writing it down, even though the milestone requires knowing maud.soup from the earlier lesson offer. Players who accepted the original lesson can be taught the soup from scratch again.",
+      "fix": "Make this a shared second cooking session or use a different gesture of trust. Account for whether the player already learned the recipe."
+    },
+    {
+      "event": "picture_thorne",
+      "priority": "P2",
+      "category": "time continuity",
+      "file": "content/events/full_picture.grim",
+      "line": 142,
+      "problem": "The cutting and basket scene takes place at dawn, but around(thorne) can hold in his noon or afternoon schedule and the event defines no required slot. The earlier rose scene establishes dawn as his garden habit.",
+      "fix": "Require the dawn-equivalent morning slot with compatible availability, or move the text to a time-neutral garden visit."
+    }
+  ],
+  "evidence": [
+    "docs/reviews/critic-pass-2026-11-15/full-picture-2026-11-15.duplication.json",
+    "docs/reviews/critic-pass-2026-11-15/expansion-full_picture.json",
+    "docs/reviews/critic-pass-2026-11-15/full-picture-context.md",
+    "docs/reviews/critic-pass-2026-11-15/milestone-validation.json",
+    "docs/reviews/critic-pass-2026-11-15/brief-knowledge-cast.md"
+  ],
+  "completedAt": "2026-11-15T20:41:35.141Z"
+}
