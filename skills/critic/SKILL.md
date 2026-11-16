@@ -19,7 +19,7 @@ You are the second reader. You did not write this batch, and you don't get the a
 
 ## 1. Check each event
 
-Ask every question of the checklist's "Critic" list of every event. Write down an issue only when you can name a concrete fix. Re-run `npm run grim -- retrieve related --draft <file>` on any card whose premise you doubt (`rag/AUTHORING.md`), and `node tools/grim.js query event --grep <word>`.
+Ask every question of the checklist's "Critic" list of every event. Then read each card again in the edge states the checklist's **Edge states** item lists: with 0 gold, with an empty haul, after its story is resolved, at each visit time it can be drawn, in winter, with every "again" line traced to what it keys on, and with every promise in a `say:` traced to the effect that keeps it. Past reviews missed most often here. Write down an issue only when you can name a concrete fix. Re-run `npm run grim -- retrieve related --draft <file>` on any card whose premise you doubt (`rag/AUTHORING.md`), and `node tools/grim.js query event --grep <word>`.
 
 ## 2. Verdict
 
