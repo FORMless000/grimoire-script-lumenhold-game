@@ -1,3 +1,21 @@
+## Critic repair pass: the November 15 review (November 16)
+
+The independent critic review of November 15 (`docs/reviews/critic-pass-2026-11-15/`: 644 cards, 50 batches, 270 findings) is repaired. 268 findings are fixed and 2 dismissed. Each finding's status line is at the end of that folder's README; the batch notes in `build/batches/repair-*-2026-11-16.notes.md` say what changed and why.
+- **Children (91758c4):** `style.md` and the checklist allow children only as background in a crowd. Every listed child the review named was re-judged: speaking or acting children were recast as adults. One finding is dismissed under the new rule: children on shoulders in a procession crowd. The other dismissal keeps an alignment cost on a covert copy, a borderline call. Both reasons are in the README status lines.
+- **Shared fixes and lint (f5ef884):** once-only payoffs, empty and lost hauls, and the city's own slip. Lint review warnings now cover time words a card's slot can't support, unkeyed "again" lines, unfunded wagers and study on a card that can play on a break. Study-on-break counts a card dealt only by term-only appointments, or deferred on a break, as term-only.
+- **Card repairs, one file group per commit:** capital maps (b050ad4), countryside and region maps (2653b1d), fame (54f3564), between (4abc432), knowing (d26bdb1), Hollow Star (eba2290), Threads 1 (f4c395c), Threads 2 (c0c88f2), and a second critic round for knowing, Hollow Star and Threads 1.
+  - **Costs** are shown in every variant.
+  - **Study** does nothing on a break, so cards that spend or give it need `term`.
+  - **Lies and betrayals** move alignment on the act.
+  - **Story wiring:** one-time payoffs stay once, `let_go` statuses are added where a story could hang, and Journal lines are only ever appended.
+  - **Re-premised:** every card that repeated another card's premise, each checked with `retrieve related --draft`.
+- **Critic and checklist:** `skills/critic/SKILL.md` and `docs/authoring/checklist.md` gain an **Edge states** pass. It covers 0 gold, an empty haul, after the story is resolved, each visit time, winter, keyed "again" lines, and promises kept by effects. These are the classes the review missed most.
+- **Deviations:** `gy_ottilie_gone` reads clues, not a counter (the user's decision). `picture_bram` reads a new Bram-only flag (`sold_bram_secret`), so saves from before it fall back to the "never used it" line. Journal lines added for live threads go at the end of their lists to keep saved stamps.
+- **Checks:** `npm run verify:full` passes (1074 s). Balance has 0 invariant failures and 4 alarms, the same kinds as before: random's sent-home ending and truant's archmage ending as headline shares, aggressive's mood and health lasting the run, and 227 cards no bot sees. The golden baseline was refreshed with each gameplay change.
+- **Known gaps:**
+  - The full-picture cards now gate on every fact. Several (Lyra, Corvin, Mir, Bram, Maud, Thorne, Brask) were never dealt in the check simulation, because the bots don't visit the homes that teach the last facts. A playtest should judge whether they are too rare.
+  - 212 lint review warnings remain outside the reviewed cards. Most are time words and study-on-break on older content, for a later sweep.
+
 ## New maps, round 2: away is away (November 11)
 
 Tracker: `docs/maps-plan.md`, "Round 2". Off campus, only what belongs there happens: letters, the cards of the map's places and region, the plan's cards, and cards tagged `abroad` (migration 0053). A campus card waits for your return. Peers follow the map: at the castle if you stay, at home in their city or valley if you go there, letters otherwise (Lyra lives at Vaneshade House in the capital). Home pins read ⌂ Home, and the arrival screen names your home and who else is around. New format (schema v1, additive): event `region:`, `@place home:`, `@game abroad:`. 18 new pins waited with placeholder cards for the batches that fill them (peers' homes, shops and services, the tide caves, heists, "The Good Year", region street cards).
