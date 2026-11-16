@@ -78,3 +78,13 @@ heist-restricted-stacks (6), heist-seventh-tower (5) and fixtures-middle-rungs (
 
 The wager rule now accepts a gold `if` anywhere in the option, including inside the check around the loss. Before,
 it only looked at the top level.
+
+## Critic round 2 (repair-threads1-2026-11-16.critic.json, 35 of 37 resolved)
+
+- The bottle cap also gates `elixir_first_year` and `grisk_elixir_offer` on `not has(brightwater_bottle)`. The
+  finding's "also affects" named both.
+- `det_gargoyle_scrub`: the warm-stone variant shows your cold hands.
+- `det_prefects_room`: the linked third win drops "one of {other}'s two lines", and failures put "the line" back.
+- `vey_lunch_dare`: all three wins hand over the pudding.
+- `wd_bright_grisk`: the price line is the note's postscript.
+- `carto_recruit`: the doubled "look" is gone.

@@ -141,11 +141,14 @@ text: There's a note in red ink tucked into the crack in the lecture tower stair
   study -small
   lore +small
   if flag(red_ink_met):
+    unqueue lecture_tower_red_ink_seminar
     queue lecture_tower_red_ink_seminar in 1
   else:
     if flag(red_ink_answered) or flag(red_ink_glimpse) or flag(red_ink_waited):
+      unqueue lecture_tower_red_ink_front_row
       queue lecture_tower_red_ink_front_row in 1
     else:
+      unqueue lecture_tower_red_ink_reply
       queue lecture_tower_red_ink_reply in 1
   say: You write it that night, instead of your own essay, and leave it on the stair in the morning. By evening it's gone, and someone has drawn a single small red tick on the step where it lay.
 > right: Put the note in a drawer

@@ -1,0 +1,42 @@
+{
+  "batch": "repair-threads1-2026-11-16",
+  "accept": false,
+  "summary": "35 of the 37 findings are resolved cleanly. The new gates (detention pool on term, carto_map_keeper, tw2_class_register, tw3_orrery, elixir_trunk) strand nothing, the zh-CN keys are unchanged and every changed line is translated, and the re-premised wd_bright_grisk no longer repeats an existing card (retrieve related: its nearest hits, grisk_elixir_favour, grisk_pickup and grisk_cross, have different premises). Two findings are only partly fixed. The bottle-cap finding also named elixir_first_year and grisk_elixir_offer, and both can still charge for a bottle or give one that the one-bottle cap swallows. One det_gargoyle_scrub variant still shows no Health cost. The rest is polish.",
+  "issues": [
+    {
+      "event": "elixir_first_year",
+      "problem": "Not fixed, though the original finding's 'Also affects' named it. 'Buy it off them, quietly' charges gold -small and gives brightwater_bottle, but nothing gates it on not holding one. A player who already has a Brightwater bottle pays and ends with the same single bottle, because the state holds one at most. The say ('Now it's in your trunk instead of theirs') promises a bottle the player never gets.",
+      "fix": "Add `not has(brightwater_bottle)` to the card's `when` (the same fix as elixir_borrowed_bag), or gate the left option on it and keep the infirmary option open."
+    },
+    {
+      "event": "grisk_elixir_offer",
+      "problem": "Not fixed, though the original finding's 'Also affects' named it. 'Shake his hand' always gives brightwater_bottle as 'a sample', even when one is already held, so the gift disappears into the one-bottle cap while the say has Grisk slide a bottle across the table.",
+      "fix": "Add `not has(brightwater_bottle)` to the card's `when`. It repeats 4 times, so the offer comes back once the bottle is gone. Or wrap `gain brightwater_bottle` and the bottle sentence in an `if not has(brightwater_bottle)`, adding any new say after the existing ones so the zh-CN keys stay where they are."
+    },
+    {
+      "event": "det_gargoyle_scrub",
+      "problem": "Not fully fixed. 'Linger at the third gargoyle' charges health -tiny. Its second non-member variant ('The stone behind the third one is warmer than it should be. You don't find a door. You're nearly sure there is one.') shows no cold, effort or injury, and the warm stone points the other way. The finding asked for the physical cost in the non-member variants too.",
+      "fix": "Add the bodily price to that variant, e.g. '...You're nearly sure there is one, and by the time the prefect calls time your hands are blue with cold.'"
+    },
+    {
+      "event": "det_prefects_room",
+      "problem": "Text variant 3 says '{other}'s name comes up twice', but the linked win variant 3 says 'You leave out {other}'s line.' That reads as their only line, which is the one-entry-versus-several mismatch the finding raised. Lose variants 1 and 3 still have the prefect write the 'name' back in, though the option now drops a line.",
+      "fix": "Win variant 3: 'You leave out one of {other}'s two lines.' Lose variants 1 and 3: 'writes the line back in' and 'They put the line back in red'."
+    },
+    {
+      "event": "vey_lunch_dare",
+      "problem": "The first showing now stakes Vey's pudding ('Fool me before the pudding and you can have mine'), and the notes say it's 'paid on the spot'. Only win variant 1 has her hand it over. Variants 2 and 3 end without the pudding, so two of three wins break the stake the text set.",
+      "fix": "End win variants 2 and 3 with the pudding changing hands, e.g. variant 2: '\"Oh, that's good.\" The pudding slides across to you.' Variant 3: '...\"Bring that.\" She leaves you her pudding on the way out.'"
+    },
+    {
+      "event": "wd_bright_grisk",
+      "problem": "Polish. The note closes with its signature ('...or leave the bottle. G.'), then 'Underneath, a figure.' is followed by a bare quoted line ('The price has gone up, of course...' / 'Not a friend's price...'). That line was spoken dialogue on the old bedside card, and now nobody visibly says or writes it.",
+      "fix": "Make it a postscript: 'Underneath, a figure, and a postscript: {flag(grisk_supply): \"The price has gone up, of course. Everything has.\"|\"Not a friend's price, I'm afraid. You never did come to see me.\"}'"
+    },
+    {
+      "event": "carto_recruit",
+      "problem": "Polish. The repaired line says 'with a candle, just to look, and with a look you'll remember', and 'look' twice in one clause reads as a slip.",
+      "fix": "'...comes in under the gargoyle with a candle, only to see, with a look on their face you'll remember: ...' or 'just to have a look, wearing an expression you'll remember'."
+    }
+  ]
+}

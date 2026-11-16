@@ -59,3 +59,31 @@ knows(<fact>)`) stays and the problem around it changes. Each was checked with `
 - spot_three_invitations casts `{f}` instead of "your oldest friend".
 - spot_memoir now says "signing away the final say".
 - The lint's defer test ignores `break and …`.
+
+## Critic round 2 (repair-knowing-hollowstar-2026-11-16.critic.json, verdict reject)
+
+- **Blocking 1, `know_marisol_spirits`** ("A Following Wave"): re-premised again, because the skimming version kept
+  `tide_water_spirit_race`'s choice and its "ask them nicely" label.
+  - In a rowing heat against `{o}`, the spirits cheat *for* you.
+  - You can ride the swell over the line (renown, `{o}` let down, Hollow) or ship your oars and drift.
+  - With the fact, you ask the water to play fair and lose honestly by a hand.
+  - `related --draft` ranks `tide_water_spirit_race`, then `pr_rival_race` (a rival's challenge race, with no spirits
+    and no honesty choice). Both premises differ.
+- **Blocking 2, `know_nessa_planted`** ("Press Night"): re-premised again, because a reporter hunting the planted error
+  was still `nessa_fact_check`.
+  - Nessa is in the infirmary on the day the Ledger goes to press. Her deputy finds the impossible date, distrusts the
+    whole issue and wants to hold it.
+  - You can help him recheck every line (study, health, an issue a day late) or tell him to print it as it is.
+  - With the fact, you tell him "That one's hers. Fix it and print."
+  - Nearest hits: `nessa_fact_check` (checking proofs), `nessa_typo` (a typo found after printing) and the deadline
+    nights. None has the absent editor or the planted error mistaken for a real one.
+  - The printers' runner is an adult: it was "boy" in the first draft.
+- **Blocking 3, `nudge_red_ink`:** each re-queue does `unqueue <step>` first, and `lecture_tower_red_ink_seminar` needs
+  `not flag(red_ink_finished)`. A fixture with the seminar pending leaves one copy after the nudge.
+- **Minor:**
+  - `picture_bram` reads a new Bram-only flag, `sold_bram_secret`, set in `sell_a_secret` under `if npc_is(bram)`. A
+    fixture confirms it is set for Bram and not for Lyra. Saves from before this fall back to the "never used it" line.
+  - `hs_aftermath_bargain` no longer says the purse refills.
+  - `hs_grey_return` uses "the tall clock in the entrance hall" (高座钟), so it doesn't share a name with
+    chain_timeloop's great clock.
+  - zh-CN: the new Marisol card uses the glossary forms, and 塞拉芬 becomes 瑟拉芬 in full_picture and knowing.

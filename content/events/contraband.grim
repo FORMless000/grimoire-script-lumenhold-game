@@ -103,7 +103,7 @@ text: You borrow {other}'s satchel to carry your books to a lecture, and at the 
 title: A Tonic from Home
 class: routine
 tone: warm
-when: turn >= 8 and not off_campus
+when: turn >= 8 and not off_campus and not has(brightwater_bottle)
 weight: 6
 art: bottle
 tags: danger social
@@ -180,7 +180,7 @@ slot: evening
 class: routine
 tone: tense
 actor: grisk
-when: flag(elixir_kept) and not flag(grisk_supply) and not flag(grisk_gone)
+when: flag(elixir_kept) and not flag(grisk_supply) and not flag(grisk_gone) and not has(brightwater_bottle)
 repeat: 4
 weight: 12
 art: bottle
@@ -401,7 +401,7 @@ when: met(grisk) and not flag(grisk_gone) and not has(brightwater_bottle)
 art: bottle
 tags: danger money
 scene: A student's coat pocket at night, a gold bottle wrapped in a folded note in tidy sloping handwriting, candlelight, a shaking hand.
-text: Your hands have been shaking since supper, and somebody noticed. In your coat pocket, where nobody put it while you watched, is a gold bottle wrapped in a note in a tidy, sloping hand: "On approval. You looked peaky at supper. Leave the price under the boathouse step by dawn, or leave the bottle. G." Underneath, a figure. {flag(grisk_supply): "The price has gone up, of course. Everything has."|"Not a friend's price, I'm afraid. You never did come to see me."}
+text: Your hands have been shaking since supper, and somebody noticed. In your coat pocket, where nobody put it while you watched, is a gold bottle wrapped in a note in a tidy, sloping hand: "On approval. You looked peaky at supper. Leave the price under the boathouse step by dawn, or leave the bottle. G." Underneath, a figure, and a postscript: {flag(grisk_supply): "The price has gone up, of course. Everything has."|"Not a friend's price, I'm afraid. You never did come to see me."}
 > buy: Pay what he asks
   meet grisk
   gold -medium

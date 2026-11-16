@@ -1,0 +1,55 @@
+{
+  "batch": "repair-knowing-hollowstar-2026-11-16",
+  "accept": false,
+  "summary": "Most of the Nov 15 findings in scope are fixed, and all ten between follow-ups are. The Hollow Star repairs are clean and plot-safe. hs_grey_return's clock errand is a new premise and reads the answer actually given. The whole-picture gates now list every current fact, and grim reach finds every unlock card reachable. grim check passes. Two re-premised knowing payoffs still repeat the card that teaches their fact. know_marisol_spirits keeps the same two options ('Ask them nicely' is even the same label) and the same punchline as tide_water_spirit_race. know_nessa_planted is still Nessa's planted-error proof test before the printers come; only the person holding the pencil has changed. The red-ink nudge's new re-queue can deal the seminar milestone twice. The rest are small fixes: a Bram line keyed on the wrong showing, an unpaid purse, a second 'great clock', and three zh-CN slips.",
+  "issues": [
+    {
+      "event": "know_marisol_spirits",
+      "problem": "Blocking (premise repeat; knowing-a finding #11 is not resolved). The fix asked for a different conflict or solution. The skimming contest only swaps the swim for stones. The decision is still to out-muscle the cheating spirits (feat check) or ask them nicely: the right label is word for word tide_water_spirit_race's 'Ask them nicely'. The punchline is the same too: Marisol says that's the whole of tidecalling, where the race has 'Marisol says it's the whole point'. The setting also overlaps lake_skimming at the same lakeshore, and Marisol 'laughs so hard she has to sit down' echoes that card's 'laughs until they have to sit down'.",
+      "fix": "Keep the fact, but put a different decision around it. Example: the spirits cheat in your favour in a skimming match against a classmate for a stake, and every one of your stones gets a wave under it. Left (no fact needed): take the win, with a rel cost when the classmate sees the wave lift your last stone. Right (when: knows(marisol.spirits)): you recognise their game and ask them, politely, to play fair, then lose honestly. Marisol, on the steps, approves. Use labels that aren't 'Ask them nicely'. Re-run related --draft against tide_water_spirit_race and lake_skimming, and update zh-CN."
+    },
+    {
+      "event": "know_nessa_planted",
+      "problem": "Blocking (premise repeat; knowing-a finding #7 is not resolved). The card is still nessa_fact_check's test: Nessa's proofs, a planted error, find it before the printers come, and 'find the planted one first' as the clever route. nessa_fact_check's own win variant is 'You find the planted one first, then the others'. Moving the pencil to a nervous reporter changes who acts, but not the obstacle, the action or the payoff. The left say still carries the pre-repair card's punchline: four errors, a fifth that's house style, Nessa points out a sixth in the headline, 'Close'.",
+      "fix": "Use the planted-error habit on a problem that isn't proofreading for her test. Example: Nessa is in the infirmary on press night, and the issue goes to the printers as set, with her planted false date still in it, because nobody ran her test. Left: let it run, with a cost when a lecturer storms the office over the date. Right (when: knows(nessa.planted)): you know she always plants one, so you go to the printers and pull that one line from the forme (a mood or study cost, shown), and she finds out. Re-run related --draft and update zh-CN."
+    },
+    {
+      "event": "nudge_red_ink",
+      "problem": "Blocking (continuity: a milestone plays twice). The red_ink steps are queued and are never dropped while their when holds. defer: not term and the slot-gated front_row and seminar push them back a month each time. So when the nudge becomes eligible (6+ months, term), the step it re-queues is usually still pending. buildDeck dedupes only chance entries. A fixture with flags begun, answered and met, and the seminar pending: the nudge adds a second lecture_tower_red_ink_seminar due the same month, and both copies are dealt and shown. When the original has already played, the copy shows the next month, because the seminar's when is only flag(red_ink_met). Copies of reply and front_row are harmless, since their when excludes them once they've played. The notes' claim that a same-month copy 'collapses to one card' does not hold in the engine.",
+      "fix": "In nudge_red_ink, put 'unqueue <step>' right before each 'queue <step> in 1' (unqueue clears the queue and the deck). Also add 'and not flag(red_ink_finished)' to lecture_tower_red_ink_seminar's when, as a guard. Check with a fixture that the seminar is pending and the nudge plays left, then the seminar is shown once."
+    },
+    {
+      "event": "picture_bram",
+      "problem": "Full-picture finding #4 is only partly fixed. chosen(sell_a_secret, left) reads the last showing of sell_a_secret. That card is per: x and can be dealt for Bram, Tobias, Lyra or Corvin. If you sold Lyra's secret, Bram says you know 'what it's worth to a gossip sheet', as if you'd sold his. If you sold Bram's secret and later refused for someone else, the line goes back to 'you never once used it', which is the original defect.",
+      "fix": "Record Bram's case on its own. In sell_a_secret's Sell option, set a flag only when x is Bram, e.g. 'if npc_is(bram): flag sold_bram_secret' after a fixture confirms the per-x actor is x. Otherwise use a Bram card with 'specializes: sell_a_secret' that sets the flag. Then key picture_bram's text (and the zh-CN line) on flag(sold_bram_secret)."
+    },
+    {
+      "event": "hs_aftermath_bargain",
+      "problem": "'The purse it left you is lighter than it was, and refills when you aren't looking' promises ongoing money. Nothing pays it: the bargain's gold +huge is paid once, at the door.",
+      "fix": "Drop the refill clause: 'The purse it left you is lighter than it was.' (zh-CN: '它留给你的钱袋比原先轻了。'). Alternatively, add the recurring gold the line promises."
+    },
+    {
+      "event": "hs_grey_return",
+      "problem": "'The great clock in the entrance hall' is a second great clock. Existing content (chain_timeloop) already calls the astronomy tower's clock 'the great clock', which bursts its springs at the end of the time loop. That loop is also about a stopped clock, so a player can easily confuse the two. The commit message calls it the hall clock.",
+      "fix": "Call it 'the tall clock in the entrance hall' in both variants of the text, and match zh-CN, e.g. '门厅那座落地大钟'."
+    },
+    {
+      "event": "know_marisol_spirits",
+      "problem": "zh-CN: the right label '客客气气地请它们还回来' means 'politely ask them to give it back'. That is a leftover from another card; the option asks the spirits not to cheat. The say writes tidecalling as '潮唤术', but the glossary (and 17 other uses) has '唤潮术'.",
+      "fix": "Label: '客客气气地请它们别作弊'. In the say, write '就是唤潮术的全部'. If the card is rewritten for the first issue, apply both to the new lines."
+    },
+    {
+      "event": "picture_seraphine",
+      "problem": "zh-CN: the rewritten text line names her '塞拉芬'. The glossary has 瑟拉芬 (Seraphine Hale 瑟拉芬·海尔).",
+      "fix": "Use '瑟拉芬送给你一本她亲手缝的小日历。…' The same variant is already in knowing.lang:111 (know_seraphine_too_loud). That line wasn't changed in this commit, but it is worth fixing in the same pass."
+    }
+  ],
+  "resolved": {
+    "knowing-a-2026-11-15": "Pool once-only (fixed earlier, in f5ef884), kael_thaw, ilse_stitch (season, term and both present; study shown), isolde_chess, nessa_off_record, grimsby_nose (both points), amaranth_truth and heard_grimsby_mabel are resolved. nessa_planted and marisol_spirits are not (see issues). scandal_secret_out went with the fame commit.",
+    "knowing-b-2026-11-15": "All 8 resolved. grisk_newt's refund comes from a sale. The study costs name the work given up and are gated on term. The fourth cake makes you eat half.",
+    "full-picture-2026-11-15": "Resolved: once-only, every gate matches content/world/facts, every unlock card is reachable (grim reach: 0 unreachable), Seraphine's count, Bram's air demerit, Maud's soup and Thorne's time. Bram's discretion line is partial (see issues). Note: the gates now require visits to each character's home, and the check simulation never dealt picture_lyra, corvin, mir, bram, maud, thorne or brask (tobias 2%, seraphine 1%). That is reachable but rare, which is the trade the finding offered.",
+    "journal-cards-2026-11-15": "Resolved: the recaps (no study on the summer turn, the spare journal, no partner start date, a seat line keyed on bonds), the nudges once-only, quickquill and two_taps advice by step with approximate time, footnote (index_fish branch, months), and brace (hex shown; the name stays). The red-ink restart is wired, but it double-queues (see issues).",
+    "hollowstar (agents, convergence, escalation, night, grey-return)": "All 16 resolved. Board refund gated on not hungry, and a thumbprint in the scene. The witness's friends react. Lantern labels. A neutral early fallback. Ilse and Kael chosen by around(). Seraphine has a first-meeting variant, with meet after the say. The hide escape is solo. The lone descent has no protest. Maud speaks on the ice, and the early count is six. The shadow's lag is noticed fresh. The bargain is announced at the door. The aftermaths are told later. A single injury is charged on the freed route. Tea, not a ring. The grey errand is a new action and reads chosen(hs_grey_offer, right). Plot safety holds: no find or advance moved outside story cards.",
+    "repair-between-2026-11-16": "All 10 addressed as proposed: tm_invitation uses courting(), with spark only deferring it; the feud's Journal line is last, with zh keys restored and 没收库; partner_meets_ex relabelled; inside_joke costs; kael_between_kindness beat; sayings cast filter; coaching evening only; owl revision shown; the circle's two tables."
+  }
+}

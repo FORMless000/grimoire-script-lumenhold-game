@@ -126,23 +126,28 @@ text: Somebody has been feeding Nessa tips, and you know who: a second-year with
   say: "Off the record," you say, and the quill stops mid-word and lies down on the desk. Nessa looks at it, and at you, and something in her face changes. You tell her. The second-year's next tip goes straight in the stove, and your name is never in it.
 
 @event know_nessa_planted
-title: The Proofs
+title: Press Night
 pool: knowing
 tone: light
 place: ledger_office
 when: met(nessa) and rel(nessa) >= 4 and term
 art: paper
-scene: A newspaper office with a nervous young reporter hunched over a stack of proofs, an older student pulling up a chair beside them, the printers' clock on the wall.
-text: Nessa's newest reporter, a second-year with ink to the elbows, is hunched over a stack of proofs, close to tears. "She says there are errors, and I've to find them before the printers come, and she's watching to see if I can." The printers' clock says twenty minutes. There are at least four errors you can see from here.
-> left: Check every line with them
+scene: A lamplit newspaper office, a deputy editor with a front-page proof held up to the lamp, a printers' runner waiting at the door, an empty editor's chair.
+text: Nessa is in the infirmary with a fever on the day the Ledger goes to press, and her deputy has found a date on the front page that can't be true. "If she missed that, what else did she miss?" he says. The printers' runner is waiting at the door. The deputy wants to hold the whole issue and check every line again, however long it takes.
+> left: Help him check every line
   study -tiny
+  health -tiny
   rel nessa +tiny
-  say: You go through it together, line by line, through your own reading hour. You find four, and a fifth that's only house style. Nessa reads the corrections, nods, and points out a sixth in the headline. "Close," she says, to both of you.
-> right: "Find hers first."
+  say: You go through it together till the lamps gutter, through your own reading and most of your sleep. The rest is clean. The Ledger comes out a day late, and Nessa, back on her feet, reads the apology on page one with her eyes shut.
+> right: "That one's hers. Fix it and print."
   when: knows(nessa.planted)
   rel nessa +small
   mood +small
-  say: "She plants one," you whisper. "Find that one first." The second-year finds it, a date that couldn't be true, circles it, and only then fixes the rest. Nessa sees the circle and laughs out loud. "Who told you?" she asks the reporter, and looks straight at you.
+  say: "She plants one in every proof," you tell him, "to see who's awake. She'd have taken it out herself." He fixes the date, and the runner goes. When Nessa hears, she sends a note from her sickbed: "Who told you?" Then, under it: "Never mind. I know."
+> print: Tell him to print it as it is
+  rel nessa -small
+  mood -tiny
+  say: The Ledger goes out on time with an impossible date on its front page, and the common room enjoys it for a week. Nessa, back on her feet, finds out who told the deputy to print, and is very polite to you about it.
 
 @event know_seraphine_too_loud
 title: Lost at Lantern Night
@@ -261,29 +266,32 @@ text: You come into the infirmary with an arm that's swelling fast, from somethi
   say: You skip the stairs and tell her exactly what happened, embarrassing as it is. She nods once. "Better," she says, and reaches for a bottle that isn't a salve. The swelling's gone before you reach the door.
 
 @event know_marisol_spirits
-title: Skimming
+title: A Following Wave
 pool: knowing
 tone: light
 place: lakeshore
 when: met(marisol) and season != "winter"
+cast:
+  o: any where met(o) and tagged(o, student)
 art: wave
-scene: A pebbled lakeshore in fair weather, students skimming stones, a small smug wave rising to meet each one, a woman with a book watching from the steps.
-text: A skimming contest has broken out on the lakeshore, and Professor Marisol, passing with her book, has stopped to judge it. Every stone you throw goes down at the second bounce, swatted by a small, smug wave. Everybody else's stones are doing fine.
-> left: Throw harder
-  challenge feat adept-:
-    win:
-      mood +small
-      rel marisol +tiny
-      say: On your eighth try a stone gets past the wave and skips five times. Your shoulder aches. Marisol scores it "adequate, under protest", and you're not sure whose protest she means.
-    lose:
-      mood -small
-      health -tiny
-      say: You throw until your shoulder aches, and every stone goes down at the second bounce. The wave looks pleased with itself. Marisol pats your arm and says the lake has favourites.
-> right: Ask them nicely
+scene: A lake in fair weather, two students racing single sculls, one boat riding a long smooth swell that touches no other water, a woman with a book watching from the boathouse steps.
+text: Rowing heats on the lake, and you've drawn {o}. Halfway out your boat starts to fly: a long, smooth swell has got under it, and only under it, and {o} is labouring in flat water a length behind. On the boathouse steps, Professor Marisol has looked up from her book.
+> left: Ride it over the line
+  renown +small
+  rel o -small
+  alignment -tiny
+  say: You let the swell carry you over the line three lengths clear, to a cheer from the bank. {o} rows in slowly, looks at the flat water behind your boat, then at you. Marisol goes back to her book.
+> right: Ask the water to play fair
   when: knows(marisol.spirits)
   rel marisol +small
+  rel o +tiny
   mood +small
-  say: You crouch at the water's edge and ask the spirits, very politely, not to cheat. Your next stone skips eleven times and comes back to your hand on a wave. Marisol laughs so hard she has to sit down. "That," she says, "is the whole of tidecalling."
+  health -tiny
+  say: You lean over the side and ask the spirits, politely, to let it be a race. The swell sighs and lets go. You row the rest for real, arms like lead, and lose to {o} by a hand, honestly. On the steps Marisol is clapping, and only for you.
+> drift: Ship your oars and drift
+  mood -small
+  rel o +tiny
+  say: You lift your oars and drift until the swell, offended, leaves you. {o} wins by a length and gives you a long, puzzled look across the water. At supper the whole table wants to know what happened to you out there.
 
 @event know_vey_smell
 title: The Feast That Wasn't
@@ -508,6 +516,8 @@ text: The man who prints the gossip sheets in the village stops you in the lane.
   renown +medium
   alignment -medium
   rel x -large
+  if npc_is(bram):
+    flag sold_bram_secret
   queue scandal_secret_out within 2..4 with x chance likely
   say: You tell him. The sheet sells out by noon. {x} comes to breakfast, reads it, puts down {x.their} fork, and looks across the hall at you, and doesn't say anything at all. That's the worst part.
 > right: Say you know nothing
