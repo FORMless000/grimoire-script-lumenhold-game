@@ -84,7 +84,7 @@ on_show:
   if job_loot > 0:
     job_loot -= 1
     job_dropped = 1
-text: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You tear free and run, up and over a stack of tea chests, skinning your knuckles on the iron hoops, and drop into the black gap behind them. {job_dropped == 1: Something you were carrying stays somewhere in the dark behind you. |}Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text: {job_where == 2: You're away before anyone can stop you, down a corridor and backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} Then a candle stops outside the door: a young footman, nervous, who saw somebody come this way.|You tear free and run, up and over a stack of tea chests, skinning your knuckles on the iron hoops, and drop into the black gap behind them. {job_dropped == 1: Something you were carrying is lost in the dark behind you. |}Somewhere the watchman is shouting for his dog, and the dog is coming.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
 > left: {job_where == 2: Wait in the furs, then go|Over the back wall, and away}
   queue job_way_out now
   say: {job_where == 2: You wait among the furs until the candle goes back down the stair, then let yourself out by the servants' door into the mews, limping a little.|You go over the back wall onto the wharf with your knuckles bleeding, and leave the dog barking at the place where you were.}
@@ -653,15 +653,15 @@ pool: capital_crescent_life
 tone: light
 art: candle
 scene: A tall lit-up town house on a curving terrace after dark, carriages drawing up, music and figures behind tall windows, a student watching from the railings of the gardens opposite.
-text: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a link-boy with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == "winter": breath steaming from the horses,|the summer air still warm,} and from the tall windows comes music and the noise of money enjoying itself. A link-boy with a torch sits on the gardens' railings beside you.}
+text: {seen(crescent_gala_lights) > 1: The ball again, the carriages, the music. A footman on the steps is turning people away, politely, with his whole face, and a linkman with a torch is sitting on the railings beside you, waiting for his gentleman.|The tallest house on the Crescent is lit from cellar to attic. Carriages queue round the curve, {season == "winter": breath steaming from the horses,|the summer air still warm,} and from the tall windows comes music and the noise of money enjoying itself. A linkman with a torch sits on the gardens' railings beside you.}
 > left: Count the windows and the doors
   guile +tiny
   health -tiny
   say: You stand at the gardens' railings until you know every window, the mews door, the footmen (too many), and which room upstairs is the study. {season == "winter": Your hands have gone numb and your feet ache.|The midges have had you for supper and your feet ache.}
-> right: Pay the link-boy for the servants' hour
+> right: Pay the linkman for the servants' hour
   gold -tiny
   mood +tiny
-  say: {flag(crescent_servants_hour): You give the link-boy a coin for his company. He tells you the cook's name and the dog's, and the house's whole week of scandal, and you already know about the mews door at eleven.|You give the link-boy a coin for his torch and his gossip. The servants change over at eleven, he says; the mews door stands open for the trays.}
+  say: {flag(crescent_servants_hour): You give the linkman a coin for his company. He tells you the cook's name and the dog's, and the house's whole week of scandal, and you already know about the mews door at eleven.|You give the linkman a coin for his torch and his gossip. The servants change over at eleven, he says; the mews door stands open for the trays.}
   flag crescent_servants_hour
 
 # The heist's start: after the street's routine card on an evening or night visit (order: last), once a month.

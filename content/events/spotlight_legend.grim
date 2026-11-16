@@ -26,7 +26,7 @@ text: The Newt has a new song, and it's about you. It has nine verses and a chor
   else:
     renown +small
     mood +tiny
-    say: You buy the fiddler a drink and let it grow. By spring there are fourteen verses, two dances and a version for children. You have never fought a frost giant. Half the village is sure you did.
+    say: You raise a mug to the fiddler and let it grow. By spring there are fourteen verses, two dances and a version for children. You have never fought a frost giant. Half the village is sure you did.
 
 @event spot_witness_promise
 title: Stand Witness
@@ -82,21 +82,21 @@ text: There's a wand flourish going round the practice yards, a sort of showy tw
     say: You let them have it. It's harmless, and it makes the practice yards look like a dance. Once, passing, you do it yourself, very solemnly, and the whole yard cheers.
 
 @event spot_named_child
-title: A Baby Called {player}
+title: A Boat Called {player}
 pool: spotlight_legend
 tone: warm
 art: heart
-scene: A cottage doorway in the village, a young couple holding a swaddled baby, an academy student on the step holding a small wrapped gift.
-text: A letter from the village: the blacksmith's daughter has had a baby, and they've named it after you, and would you, if it's not too much, come to the naming? There'll be cake. The letter is spelled very carefully, as if it was copied out three times.
-> left: Go to the naming
+scene: A village quay with a small blue fishing boat on the slipway, its new name freshly painted on the bow, a young woman in a leather apron waving, a crowd of villagers behind her.
+text: A letter from the village: the blacksmith's daughter has built her first fishing boat, and she's named it after you, and would you, if it's not too much, come to the launching? There'll be cake. The letter is spelled very carefully, as if it was copied out three times.
+> left: Go to the launching
   mood +medium
   study -small
   renown +tiny
-  say: You go down the hill with a silver spoon you can't really afford. The baby is red and furious and has your name. You hold it for the whole naming and it falls asleep on you, which the village takes as a very good sign.
+  say: You go down the hill instead of to the library. The boat is blue and slightly lopsided and has your name on it. They ask you to break the bottle on the bow, and you miss twice, which the village takes as a very good sign.
 > right: Send a gift and a letter
   gold -small
   alignment +tiny
-  say: You can't get away, so you send a silver spoon and a long letter, to be read to the child when it's older, about the hill and the lake and the castle. The blacksmith's daughter writes back to say it's in a drawer, waiting.
+  say: You can't get away, so you send a little brass bell for the boat and a long letter about the hill and the lake and the castle. The blacksmith's daughter writes back to say the bell rings every time she comes home.
 
 @event spot_disguise_day
 title: An Ordinary Afternoon
@@ -109,11 +109,11 @@ text: You haven't bought a loaf of bread in a month without someone asking you t
   challenge deceive adept-:
     win:
       mood +large
-      say: Nobody looks twice. You buy bread, argue with a stallholder over apples, sit on the quay and eat them, and walk back up the hill unrecognised, humming. It's the best afternoon you've had in a year.
+      say: Nobody looks twice. You wander the stalls, argue with a stallholder about the weather, sit on the quay with your feet over the water, and walk back up the hill unrecognised, humming. It's the best afternoon you've had in a year.
     lose:
       mood -small
       renown -tiny
-      say: You get as far as the bakery, where a small child points and says, very loudly, "That's {player} in a silly hat." The whole street turns. You sign eleven loaves. The coat, for some reason, becomes fashionable.
+      say: You get as far as the bakery, where a woman with a basket of eggs points and says, very loudly, "That's {player} in a silly hat." The whole street turns. You sign eleven loaves. The coat, for some reason, becomes fashionable.
 > right: Stay in the castle
   study +small
   mood -small
@@ -152,7 +152,7 @@ text: A lecturer has set the second-years an essay on "a living figure in the ac
   study -small
   renown +small
   mood -tiny
-  say: It takes a week of evenings. You answer every question, including the one about your favourite pudding and the one about whether you're afraid of dying. The essays are pinned up in the corridor. Two of them are better than anything you've written.
+  say: It takes a week of evenings, and the reading you'd planned for them. You answer every question, including the one about your favourite pudding and the one about whether you're afraid of dying. The essays are pinned up in the corridor. Two of them are better than anything you've written.
 > right: "I'm not history yet"
   mood +small
   renown -tiny
@@ -173,7 +173,7 @@ text: Some visiting Thornwick students are putting on a play in the village hall
   else:
     renown +small
     mood +small
-    say: You sit in the front row and laugh loudest, and at the curtain the actor bows to you, and you bow back, and the hall cheers both of you. Afterwards you buy the cast supper. The moustache, you admit, is a fair cop.
+    say: You sit in the front row and laugh loudest, and at the curtain the actor bows to you, and you bow back, and the hall cheers both of you. Afterwards the cast insist you share their supper. The moustache, you admit, is a fair cop.
 > right: Stay away
   mood -tiny
   study +tiny
@@ -218,7 +218,7 @@ text: A lecturer has asked you to take the first-years' class for an hour: "They
 > right: Tell stories instead
   renown +small
   study -tiny
-  say: You put the chalk down and tell them stories: the lake, the stairs, the first time a spell went right. They hang on every word. They learn almost nothing about the syllabus. A few of them, you suspect, will stay up late tonight practising.
+  say: You put the chalk down and tell them stories: the lake, the stairs, the first time a spell went right. They hang on every word. They learn almost nothing about the syllabus, so the lecturer has you write it up for them, on your own time. A few of them, you suspect, will stay up practising.
 
 @event spot_legend_burden
 title: A Legend Can't Miss
@@ -245,10 +245,10 @@ title: Yesterday's News
 trigger: auto
 class: milestone
 tone: tense
-when: fallen_star() and seen(renown_fallen_entry) == 0
+when: fallen_star() and seen(renown_fallen_entry) == 0 and term
 art: paper
-scene: A student walking through a busy corridor that doesn't part for them, a crumpled old copy of the Ledger with their face on it lying in a bin.
-text: You notice it on a Tuesday. You walk the length of the long corridor and nobody turns. In the common room, a copy of the Ledger with your face on the front is being used to light the fire. Not long ago you couldn't buy bread without signing it. Now you're just somebody who used to be somebody.
+scene: A student walking through a busy corridor that doesn't part for them, a common room beyond where nobody looks up.
+text: You notice it on a Tuesday. You walk the length of the long corridor and nobody turns. In the common room, nobody makes room for you, or looks up. Not long ago you couldn't cross a courtyard without being stopped. Now you're just somebody who used to be somebody.
 > left: Enjoy the quiet
   mood +small
   study +small
@@ -305,7 +305,7 @@ pool: fallen
 tone: light
 art: meal
 scene: A village bakery counter, a baker handing a loaf to a student without a second glance, a short queue behind.
-text: In the village, the baker who used to lean out of the window and shout your name sells you a loaf, gives you your change and says "next, please" without looking up. Outside, the children who used to follow you are following somebody else, over by the fountain.
+text: In the village, {seen(spot_village_recognised) > 0: the baker who used to lean out of the window and shout your name|the baker} sells you a loaf, gives you your change and says "next, please" without looking up. Outside, the little crowd by the fountain is gathered round somebody else.
 > left: Laugh about it
   mood +small
   renown -tiny
@@ -314,7 +314,7 @@ text: In the village, the baker who used to lean out of the window and shout you
   renown +tiny
   mood -small
   alignment -tiny
-  say: "It's me," you say. "From the Ledger." The baker squints, says "oh, yes", and gives you a bun, out of pity. You eat it on the way back up the hill, slowly. It tastes of nothing much.
+  say: "It's me," you say. "You know." The baker squints, says "oh, yes", and gives you a bun, out of pity. You eat it on the way back up the hill, slowly. It tastes of nothing much.
 
 @event fallen_mocked
 title: Weren't You Somebody?
@@ -346,13 +346,13 @@ cast:
 per: f
 art: group
 scene: A small group of students around a table in a quiet corner of a common room late at night, cards scattered, cups of cocoa, one chair pulled out for someone arriving.
-text: The invitations have stopped. The crowd has gone. But on Thursday night, as always, {f} has pulled out the chair in the corner of the common room, and the cards are dealt, and the cocoa is going cold. "You're late," {f} says. "We waited."
+text: The invitations have stopped. The crowd has gone. But tonight {f} has pulled out a chair in the corner of the common room, and the cards are dealt, and the cocoa is going cold. "Sit," {f} says. "You look like you need a game."
 > left: Sit down and stay late
   rel f +medium
   study -small
-  say: You sit down and stay until the fire goes out. Nobody asks you about anything you did. They ask what you think, about everything, and you realise you'd almost forgotten anybody wanted to know.
+  say: You sit down and stay until the fire goes out, and the essay you'd meant to finish stays unfinished. Nobody asks you about anything you did. They ask what you think, about everything, and you realise you'd almost forgotten anybody wanted to know.
 > right: Say you've been a poor friend
   rel f +small
   alignment +small
   mood -tiny
-  say: "I've been a poor friend," you say. {f} shrugs. "You were busy being famous." Then, more quietly: "You're back now." {f} deals you in, and you lose, as usual, and it's the best evening in months.
+  say: "I've been a poor friend," you say. {f} shrugs. "You were busy being famous." Then, more quietly: "You're back now." {f} deals you in, and you lose, and it's the best evening in months.

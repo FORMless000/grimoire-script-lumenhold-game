@@ -9,9 +9,9 @@
 @pool scandal
 desc: What every scandal shares: an incident, a menu of three ways out (own, deny, spin), never drawn at random.
 trigger: queued
+defer: break
 class: incident
 tone: tense
-repeat: 1
 tags: renown scandal
 
 @pool scandal_any
@@ -48,13 +48,13 @@ text: Somebody has checked the Ledger's profile of you, the one with the better 
   rel nessa +tiny
   say: You write to the Ledger: yes, you embellished; yes, it was vanity; no, there was no dragon. Nessa prints it in full. People are unkind about it for a week, and then, slowly, they start to trust what you say again.
 > deny: Insist it was all true
+  alignment -small
   challenge deceive adept:
     win:
       renown -tiny
       say: You insist, calmly and in detail, that every word was true, and you tell it so well that the boxed item starts to look petty. By Friday people have decided the checker had a grudge. You don't feel as good about it as you'd hoped.
     lose:
       renown -large
-      alignment -small
       rel nessa -small
       say: You insist it was all true, and the checker produces a fifth thing, the one you'd forgotten. It's in the next issue, with your denial printed beside it. Nessa doesn't speak to you for a fortnight.
 > spin: Say Nessa twisted your words
@@ -126,16 +126,15 @@ text: A first-year doing "the {player}", the flourish that does nothing, did it 
   renown -small
   alignment +small
   study -small
-  say: You go to the infirmary and sit with the first-year, then teach the whole yard the real flourish, the one that steadies a cast, slowly, for a week. The eyebrows grow back. The professor's letter, you hear, ends with "and the student took it in hand."
-> deny: Say it was never your flourish
-  challenge deceive adept-:
+  say: You sit with the first-year in the infirmary, then give up a week of afternoons, and your own reading, to teach the whole yard the real flourish, slowly. The eyebrows grow back. The professor's letter, you hear, ends with "and the student took it in hand."
+> deny: Say you never invented it
+  challenge appeal adept-:
     win:
       renown -tiny
-      say: You point out, reasonably, that you have never once done the flourish and that it isn't yours to teach or stop. People see the sense in it. The first-year, eyebrowless, agrees cheerfully that it was "more of a tribute".
+      say: You point out, reasonably, that you didn't invent the flourish, never taught it, and did it once, as a joke, which isn't the same thing. People see the sense in it. The first-year, eyebrowless, agrees cheerfully that it was "more of a tribute".
     lose:
       renown -medium
-      alignment -tiny
-      say: You say it was never your flourish, and somebody produces a sketch of you doing it, solemnly, in the yard, on the day the whole yard cheered. You had forgotten that. Nobody else has.
+      say: You say you never invented it, and somebody produces a sketch of you doing it, solemnly, in the yard, on the day the whole yard cheered. Invented or not, it looks a lot like teaching.
 > spin: Blame the lecturer who never stopped it
   alignment -small
   renown -tiny
@@ -147,13 +146,13 @@ pool: scandal
 when: renown_known()
 art: scroll
 scene: A results list pinned to a board, a first-year in tears beside it clutching a sheaf of copied notes, older students reading the notes and shaking their heads.
-text: The copies of your notes that were sold in the common room had a mistake in them, in a page you never corrected, and a first-year who learned it word for word has failed a paper on it. The first-year's friends are telling everyone that "the {player} method" is a fraud, and that you took money for it.
+text: The copies of your notes that were sold in the common room had a mistake in them, and a first-year who learned it word for word has failed a paper on it. The first-year's friends say the mistake is yours, that "the {player} method" is a fraud, and that you took money for it.
 > own: Refund it and tutor the first-year
   gold -small
   renown -small
   alignment +small
   study -small
-  say: You give back every crown you made, and spend three evenings with the first-year going over the paper properly. They pass the resit. The first-year's friends, grudgingly, stop telling the story, and start telling a different one.
+  say: You give back every crown you made, and spend three evenings, and your own reading for the week, going over the paper with the first-year properly. They pass the resit. The first-year's friends, grudgingly, stop telling the story, and start telling a different one.
 > deny: Point out the page wasn't yours
   challenge research apprentice+:
     win:
@@ -285,6 +284,7 @@ text: {x} has been telling the story of the two of you to anyone who'll listen: 
   rel x +small
   say: You don't argue. You say that it ended badly and you're sorry for your part in it, and that {x} isn't wrong about everything. It takes the air out of the story. A week later {x} stops you in a corridor and says, stiffly, that {they} had gone too far.
 > deny: Say it's all made up
+  alignment -small
   challenge deceive adept-:
     win:
       renown -tiny
@@ -309,15 +309,17 @@ text: The gossip column has a paragraph about a "certain famous student" seen cr
 > own: Own up to the prefects
   renown -small
   alignment +small
+  gain detention
   say: You go to the prefects' room and say yes, it was you, and you were out walking because you couldn't sleep. They give you a week of detention polishing the trophy cabinet. It's dull. The column moves on, because there's nothing left to whisper.
 > deny: Prove you were somewhere else
+  alignment -small
   challenge deceive adept-:
     win:
       renown -tiny
-      say: You produce three friends who swear you were playing cards in the common room till one. The column prints a short, sniffy correction. Your friends make you buy them supper for a month.
+      say: You produce three friends who swear you were playing cards with them in the kitchens until three. Nobody checks. The column prints a short, sniffy correction, and your friends remind you of it all month.
     lose:
       renown -medium
-      say: Your alibi lasts until somebody points out that the common room was locked at midnight. The next column runs the whole story, with the bit about the alibi. The prefects are not amused.
+      say: Your alibi lasts until the cook points out that she locks the kitchens at midnight. The next column runs the whole story, with the bit about the alibi. The prefects are not amused.
 > spin: Hint it was someone in a borrowed coat
   alignment -small
   renown -tiny
@@ -335,13 +337,13 @@ text: The story is that a first-year waited two hours in the rain outside your l
   mood +tiny
   say: You find the first-year and apologise, properly, and ask what they'd wanted to ask. It was about the library. You take them there. By the end of the week, the first-years' monster has become the first-years' favourite again, mostly.
 > deny: Say you were never there that day
+  alignment -small
   challenge deceive apprentice+:
     win:
       renown -tiny
       say: You say you were in the infirmary that afternoon with a cold, and Sister Amaranth, when asked, can't say you weren't. Neither can you, quite. The story decides the first-year must have mistaken somebody else for you.
     lose:
       renown -medium
-      alignment -tiny
       say: You say you were never there, and three first-years say they saw you. The first-years are now sure you're a monster and a liar. It takes the rest of the term.
 > spin: Say the first-year has been stalking you
   alignment -medium
@@ -366,7 +368,7 @@ text: Thornwick's student paper has run a story that you're leaving Lumenhold fo
       say: You find that the "quote" is lifted, word for word, from a Thornwick student's own letter home, which their paper printed last year. Lumenhold reprints both side by side. Thornwick's paper is very quiet for a month.
     lose:
       renown -medium
-      say: You try to prove the quote was invented, and can't, and the more you protest, the more people suspect you did say it, once, in a bad mood, somewhere. You probably did. You can't remember.
+      say: You try to prove the quote was invented, and can't, and the more you protest, the more people decide you must have said it once, in a bad mood, somewhere. You know you didn't. Nobody wants to hear it.
 > spin: Hint you've had a better offer
   alignment -small
   renown +small

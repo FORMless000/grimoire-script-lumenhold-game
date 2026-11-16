@@ -21,8 +21,8 @@ journal:
   flag(season_plain): At the first supper you were plainly yourself, and some of the table liked it.
   flag(season_sponsored): Lady Vaneshade offered to sponsor you, and you let her.
   flag(season_unsponsored): Lady Vaneshade offered to sponsor you, and you thanked her and said no.
-  flag(season_ball_star): At the patrons' ball, you outshone the Season's other darling.
-  flag(season_ball_shared): At the patrons' ball, you shared the floor with the Season's other darling.
+  flag(season_ball_star): At the third supper, the room turned from the Season's other darling to you.
+  flag(season_ball_shared): At the third supper, you and the Season's other darling shared the room.
   flag(season_price_paid): A patron asked a favour in return, and you did it.
   flag(season_price_refused): A patron asked a favour in return, and you refused.
   flag(season_in): The Season ended with a standing invitation. You belong among them now, a little.
@@ -93,7 +93,7 @@ text: At the second supper, Lady Vaneshade{met(lyra): , Lyra's mother,|} takes y
   renown +small
   alignment -tiny
   queue season_rival in 1
-  say: "Good," she says, and from then on doors open before you reach them. She tells you which forks. She also tells you, once, very quietly, who not to be seen with, and you find that you've done as she says before you've thought about it.
+  say: "Good," she says, and sends round a purse "for gloves". From then on doors open before you reach them. She tells you which forks. She also tells you, once, very quietly, who not to be seen with, and you find that you've done as she says before you've thought about it.
 > right: Thank her, and say no
   flag season_unsponsored
   alignment +tiny
@@ -143,11 +143,13 @@ text: The Season ends with the patrons' ball. {flag(season_ball_star): Everyone 
   health -small
   gold -small
   queue season_friends in 1
-  say: You dance with the magistrate, the orchard woman, the champion and a very old duke who treads on your feet with great dignity. You leave at dawn with your shoes in your hand. By noon every patron in the valley knows your name.
+  queue season_price in 2
+  say: You dance with the magistrate, the champion and a very old duke who treads on your feet with great dignity, and twice tip the band to keep playing. You leave at dawn with your shoes in your hand. By noon every patron in the valley knows your name.
 > right: Leave at midnight, while it's still lovely
   mood +small
   renown +tiny
   queue season_friends in 1
+  queue season_price in 2
   say: You dance three dances, eat one perfect pastry and slip out at midnight into the cold. Walking up the hill under the stars, you think it was the loveliest night of your life, and you're glad you didn't stay long enough to spoil it.
 
 @event season_friends
@@ -164,12 +166,10 @@ text: You come back to the common room after the Season, still in the good coat,
 > left: Tell them everything
   renown +tiny
   rel f -small
-  queue season_price in 1
   say: You tell them about the ceiling with the clouds and the duke who trod on your feet. They listen, politely. Somewhere in the middle, you notice {f} looking at the coat. Later, you hear the joke you missed. It was very good. You weren't there.
 > right: Take off the coat and sit down
   rel f +small
   renown -tiny
-  queue season_price in 1
   say: You hang the coat on the back of the door and sit down and ask what the joke was. It takes three people to explain it and by the end you're all crying with laughter. {f} passes you the last of the biscuits, as if you'd never gone.
 
 @event season_price
@@ -209,7 +209,7 @@ text: Another card with a crest: the patrons hope you'll come again next Season,
   renown +small
   gold +small
   mood -tiny
-  say: You write back that you'd be honoured. It's a door you can walk through now whenever you like, and you suspect you'll walk through it for the rest of your life. You're not sure, some evenings, whether that's a good thing.
+  say: You write back that you'd be honoured. By return comes a purse "for the coat", and a door you can walk through now whenever you like, and you suspect you'll walk through it for the rest of your life. You're not sure, some evenings, whether that's a good thing.
 > right: Let the Season go
   flag season_out
   mood +small
@@ -225,7 +225,7 @@ when: renown_known()
 weight: 8
 
 @event fame_rivals_for_you
-title: Both Want You Tonight
+title: Seen With You
 pool: fame_between
 tone: tense
 cast:
@@ -234,19 +234,19 @@ cast:
 per: a
 art: cup
 scene: A courtyard at dusk, two students on either side of another, each holding an invitation and pointedly not looking at the other.
-text: {a} and {b} can't stand each other, and both of them have asked you to the Newt tonight, separately, each making very sure the other heard. It isn't really about the Newt. It's about who gets to be seen walking in with you. They're both waiting for your answer, in front of half the courtyard.
+text: {a} has asked you to the Newt tonight, in front of half the courtyard, and {b}, who can't stand {a}, has made it very plain that going with {a} means choosing a side. It isn't really about the Newt. It's about who gets to be seen walking in with you. {a} is waiting for your answer.
 > left: Go with {a}
   rel a +small
   rel b -small
   npc_rel a b -tiny
   renown +tiny
   say: You go with {a}. {a} walks into the Newt a little taller than usual. {b} hears about it by breakfast, and greets you all week with a small, bright, terrible smile.
-> right: Turn both down, kindly
+> right: Stay in, and take no side
   rel a -tiny
   rel b -tiny
   mood -tiny
   alignment +tiny
-  say: You tell them both you're staying in, and do, and read in the common room till late. Each of them assumes you've gone with the other. By the time they work out you haven't, they've both forgiven you.
+  say: You tell {a} you're staying in, and do, and read in the common room till late. {b} hears you went anyway and is cold to you for a day; {a} is hurt you didn't. By the time they work out the truth, they've both forgiven you.
 
 @event fame_wedge
 title: Using You
@@ -258,7 +258,7 @@ cast:
 per: a
 art: mask
 scene: Two friends arguing in low voices in an alcove of a corridor, one of them gesturing back the way they came, where another student is waiting.
-text: {a} takes you aside. "I don't like how {b} is with you lately," {they} say{s}. "{b} never sat with us before you were famous. Now {b}'s everywhere you are, telling people you're close." {a} and {b} have been friends for years. You can see it costing {a} to say it.
+text: {a} takes you aside. "I don't like how {b} is with you lately," {they} say{s}. "{b}'s everywhere you are now, telling people you're close." {a} and {b} get on well. You can see it costing {a} to say it.
 > left: Tell {a} {b} is a friend
   rel a -small
   rel b +small
@@ -268,7 +268,7 @@ text: {a} takes you aside. "I don't like how {b} is with you lately," {they} say
   rel a +small
   npc_rel a b +tiny
   study -tiny
-  say: You thank {a}, and say you'll keep an eye out, and you do. {b} is, you notice, a lot more interested in where you're going than in you. You start sitting with {a} again. {a} doesn't say "I told you so", which is generous.
+  say: You thank {a}, and say you'll keep an eye out, and you do, over a few distracted evenings' reading. {b} is, you notice, a lot more interested in where you're going than in you. You start sitting with {a} again. {a} doesn't say "I told you so", which is generous.
 
 @event fame_lend_your_name
 title: Your Name on It
@@ -309,9 +309,10 @@ text: The gossip column this week has two letters. In one, {a} writes that {a} i
   challenge perform adept-:
     win:
       npc_rel a b +small
-      rel a +tiny
-      rel b +tiny
-      say: You write one line: that your closest friends are the two people who wrote in, and that they should compare notes, since they have so much in common. The column prints it. {a} and {b} are furious with you, together, which is a start.
+      rel a -tiny
+      rel b -tiny
+      renown +tiny
+      say: You write one line: that your closest friends are the two people who wrote in, and that they should compare notes, since they have so much in common. The castle laughs. {a} and {b} are furious with you, together, which is a start.
     lose:
       rel a -tiny
       rel b -tiny
@@ -320,8 +321,9 @@ text: The gossip column this week has two letters. In one, {a} writes that {a} i
 > right: Say nothing at all
   rel a -tiny
   rel b -tiny
+  npc_rel a b +tiny
   mood +tiny
-  say: You say nothing, to anyone. The column decides your closest friend must be someone else entirely, and spends a fortnight guessing who. {a} and {b}, united at last, both think it's very unfair.
+  say: You say nothing, to anyone. The column decides your closest friend must be someone else entirely, and spends a fortnight guessing who. {a} and {b}, united at last, both think it's very unfair of you.
 
 @event fame_after_you
 title: What They Found Instead
@@ -333,7 +335,7 @@ cast:
 per: a
 art: heart
 scene: A quiet lakeshore path in the evening, two students walking close together ahead, laughing, a third student watching them from a bench.
-text: When you were famous, {a} and {b} used to argue over who got to walk with you. Now nobody fights over you, and you see the two of them on the lakeshore path in the evening, walking together, very close, laughing at something. They haven't noticed you on the bench. They don't need to.
+text: Nobody fights over you any more, and the evenings are your own. On the lakeshore path you see {a} and {b} walking together, very close, laughing at something. They haven't noticed you on the bench. They don't need to.
 > left: Call out to them
   rel a +small
   rel b +small
@@ -342,4 +344,4 @@ text: When you were famous, {a} and {b} used to argue over who got to walk with 
 > right: Let them walk on
   mood +small
   npc_rel a b +tiny
-  say: You let them walk on, and watch them go round the curve of the shore until you can't see them. It's a strange feeling, being the reason two people met, and not being needed any more. Mostly it's a good one.
+  say: You let them walk on, and watch them go round the curve of the shore until you can't see them. It's a strange feeling, watching two people you know find each other, and not being needed. Mostly it's a good one.

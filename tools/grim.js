@@ -856,7 +856,7 @@ function lint(opts = {}) {
   reachLint(content, A.problems);
   lintVariants(content, A.problems);
   lintMenus(content, A.problems);
-  lintReview(content, A.problems);
+  lintReview(content, A.problems, A.queued);
   // Every map a place sits on needs its base art (src/map.js loads content/world/maps/<map>.svg).
   // A plan's `map_id:` (and @game map_id:) names a map some place sits on, or a track kind (A1).
   const MAPS = new Set(Object.values(content.places || {}).map((pl) => pl.map && pl.map.map).filter(Boolean)), KINDS = new Set(Object.values(content.tracks || {}).map((d) => d.kind));
@@ -969,11 +969,19 @@ function eventStrings(e) {
   for (const o of e.options || []) { if (o.label) out.push(o.label); if (o.hint) out.push(o.hint); walk(o.effects); }
   return out;
 }
-function canPlayOnBreak(content, e) {
+const termOnly = (w) => /(^|\band )\(?\s*term\b(?! *==)/.test(w) || /\bnot break\b/.test(w) || /\bbefore_finals\(\)/.test(w);
+function canPlayOnBreak(content, e, queued) {
   if (e.region || e.plan) return true;
   if (e.track && content.tracks[e.track] && ['course', 'thesis'].includes(content.tracks[e.track].kind)) return false;
   const w = ((e.when && e.when.src) || '').replace(/\s+/g, ' ');
-  if (/(^|\band )\(?\s*term\b(?! *==)/.test(w) || /\bnot break\b/.test(w) || /\bbefore_finals\(\)/.test(w)) return false;
+  if (termOnly(w)) return false;
+  // `defer: … or break` holds a pushed card in the queue until term.
+  if (/(^|\bor )\s*break\b/.test(((e.defer && e.defer.src) || '').replace(/\s+/g, ' '))) return false;
+  // A queued card that only term-time appointments deal (nothing queues it by name) never plays on a break.
+  if (e.trigger === 'queued' && queued && !(queued[e.id] || []).some((s) => !String(s).startsWith('appointment '))) {
+    const appts = Object.values(content.appointments || {}).filter((a) => G.appointmentCards(content, a).includes(e.id));
+    if (appts.length && appts.every((a) => termOnly(((a.when && (a.when.src || a.when)) || '').toString().replace(/\s+/g, ' ')))) return false;
+  }
   const months = [...w.matchAll(/\bmonth *== *(\d+)/g)].map((m) => +m[1]);
   if (months.length && !/\bor\b(?![^()]*month)/.test(w.replace(/\([^()]*month[^()]*\)/g, '')) && months.every((m) => TERM_MONTHS.has(m))) return false;
   if (/\bmonth *(<=|<) *(4|5)\b/.test(w) && /\bmonth *>= *1\b|\bmonth *> *0\b/.test(w)) return false;
@@ -1003,7 +1011,7 @@ function againInVariants(text, bad, hits) {
     if (w && mode && mode !== 'cond' && !keyed && bad(mode, idx)) hits.push(w[1]);
   })(text || '', null, 0, false);
 }
-function lintReview(content, problems) {
+function lintReview(content, problems, queued) {
   const P = (level, e, msg) => problems.push({ level, where: rel(e.file) + ':' + e.line, msg: 'event "' + e.id + '": ' + msg });
   const visitSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || []), ...Object.values(content.states || {}).flatMap((st) => st.day || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
   const regionOpen = (rg) => new Set(Object.values(content.places || {}).filter((p) => p.region && String(rg).split(/[\s,]+/).includes(p.region.split(':')[0])).flatMap((p) => p.open || []));
@@ -1046,7 +1054,7 @@ function lintReview(content, problems) {
     let study = false;
     for (const o of e.options || []) G.walkEffects(o.effects, (st) => { if (st.t === 'study') study = true; });
     G.walkEffects(e.on_show, (st) => { if (st.t === 'study') study = true; });
-    if (study && canPlayOnBreak(content, e)) P('warn', e, 'changes study but can play on a break, when study counts for nothing (gate it on term, or pick a cost the scene shows)');
+    if (study && canPlayOnBreak(content, e, queued)) P('warn', e, 'changes study but can play on a break, when study counts for nothing (gate it on term, or pick a cost the scene shows)');
     // children
     const kid = all.match(CHILD_RE);
     if (kid) P('info', e, 'mentions "' + kid[1] + '": a child may only be background (style.md), never speak, act or be acted on');

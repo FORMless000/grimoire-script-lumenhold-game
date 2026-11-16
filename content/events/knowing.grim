@@ -532,6 +532,7 @@ text: It's out: everyone knows who sold the gossip sheet the story about {npc}. 
   rel npc +small
   say: You stand up at breakfast, cross the hall and apologise to {npc}, out loud, with everyone watching. {They} look{s} at you for a long time, and then nod{s}, once. It doesn't mend it. It's a start.
 > deny: Say the printer is lying
+  alignment -small
   challenge deceive adept:
     win:
       renown -tiny
@@ -539,7 +540,6 @@ text: It's out: everyone knows who sold the gossip sheet the story about {npc}. 
       say: You say the printer is a liar who'd sell his own mother, which is true. People decide to believe you, more or less. {npc} doesn't, and says nothing, and doesn't need to.
     lose:
       renown -large
-      alignment -small
       rel npc -small
       say: You say the printer is lying, and the printer produces the receipt with your initial on it. The castle has its verdict. {npc} walks past you in the corridor as if you were a draught.
 > spin: Say it was true, and someone had to

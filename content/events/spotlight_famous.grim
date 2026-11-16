@@ -17,12 +17,12 @@ text: The village chandler wants to sell "{player}'s study candles: they burn al
     renown -medium
     gold +small
     mood -small
-    say: The candles burn all night, as promised, and give off a smell like a wet dog. Half the dormitory sleeps with the windows open. Someone writes "GENIUS" under your painted face, with an arrow, in soot.
+    say: The candles burn all night, as promised, and give off a smell like a wet dog. Half the dormitory sleeps with the windows open. Someone writes "GENIUS" under your painted face, in soot. The chandler still sends up your cut, smaller, with an apology.
   else:
     gold +medium
     renown +small
     queue scandal_candle_smoke within 3..6 chance unlikely
-    say: The candles sell out twice. They're perfectly ordinary candles, but people study by them with great seriousness, and the chandler sends a box up to you every month, with your own face looking back from the label.
+    say: The candles sell out twice. They're perfectly ordinary candles, but people study by them with great seriousness, and every month the chandler sends up your cut, with a box of candles and your own face looking back from the label.
 > right: Turn him down
   mood +tiny
   alignment +tiny
@@ -44,7 +44,7 @@ text: A man from a city publisher has come all the way up the hill to offer you 
     gold +medium
     renown +small
     queue scandal_memoir_book within 2..5 chance even
-    say: The book is short and breathless and only slightly made up. It sells in the city, and copies come back up the hill, where first-years read it under the desks. You sign one, once, and then hide.
+    say: You sign where he points, final say and all, and never see a draft. The book is short, breathless and only slightly made up. Copies come back up the hill, where first-years read it under the desks. You sign one, once, and then hide.
 > right: Decline
   study +tiny
   mood +tiny
@@ -61,11 +61,11 @@ text: The baker asks, very politely, when you're going to settle your account. Y
   chance slim +1 if renown >= 75 +1 if renown >= 85:
     renown -medium
     alignment -tiny
-    say: You catch the impostor at the bakery on market day, in front of a crowd. The impostor is a thin first-year who hadn't eaten properly in weeks. The crowd looks at you as if you'd kicked a puppy. You pay the account. It doesn't help much.
+    say: You catch the impostor at the bakery on market day, in front of a crowd. The impostor is a thin first-year who hadn't eaten properly in weeks. The crowd looks at you as if you'd kicked a puppy. The baker tears up the account. It doesn't help much.
   else:
     renown +small
     gold +tiny
-    say: You catch the impostor in the act at the Newt: a grinning fourth-year who's done it for a bet. The landlady makes them pay every crown back, and you get a free supper and a story that does the rounds for weeks.
+    say: You catch the impostor in the act at the Newt: a grinning fourth-year who's done it for a bet. The landlady makes them pay every crown back, the three shops club together a small reward for you, and the story does the rounds for weeks.
 > right: Pay the bills, and leave a note
   gold -small
   alignment +small
@@ -198,7 +198,7 @@ text: Your lectures have filled up. Not with people who take the course: with pe
   chance slim +1 if renown >= 75 +1 if renown >= 85:
     renown -small
     study -small
-    say: You offer a half-hour of questions after class, for anyone. The first question is about your love life. The second is about your hair. The lecturer comes back for a book, sees the circus, and gives you an essay to write on decorum.
+    say: You offer a half-hour of questions after class, for anyone. The first question is about your love life. The second is about your hair. The lecturer comes back for a book, sees the circus, and gives you an essay on decorum, due the same week as your real one.
   else:
     renown +small
     study +small
@@ -241,7 +241,7 @@ text: Someone has printed your whole week in a gossip sheet: which mornings you'
   chance slim +1 if renown >= 75 +1 if renown >= 85:
     study -medium
     renown -small
-    say: You stop on the steps and chat, and the crowd grows, and grows, until it blocks the library door. The librarians ban you, very politely, for a week. The crowd moves on to the Newt. You fall behind on everything.
+    say: You stop on the steps and chat, and the crowd grows, and grows, until it blocks the library door. The librarians shut the doors on all of you, very politely, for the day. The crowd moves on to the Newt. You spend the week catching up.
   else:
     renown +medium
     study -small
@@ -264,7 +264,7 @@ text: The Skyrace Squad wants you to fly a guest lap at the season's opening rac
     win:
       renown +large
       mood +small
-      say: You fly the lap clean and a little faster than you should, and the crowd stands up to roar as you come round the last marker. The Squad captain is grinning. For the rest of the season, small children run about the field with brooms, being you.
+      say: You fly the lap clean and a little faster than you should, and the crowd stands up to roar as you come round the last marker. The Squad captain is grinning. For the rest of the season, first-years run about the field with brooms, being you.
     lose:
       renown -medium
       health -small
@@ -289,7 +289,7 @@ text: A petition is going round to keep the library open all night in exam weeks
   else:
     renown +small
     study +small
-    say: The library stays open all night in exam weeks. The petition is framed and hung by the door, with your name at the top, and in the small hours there are students at every desk, and someone always brings you a cup of tea.
+    say: The headmistress agrees to one all-night opening before exams, as a trial. The petition is framed and hung by the door, with your name at the top. In the small hours there are students at every desk, and someone brings you tea.
 > right: Read it all first
   study -tiny
   alignment +tiny
@@ -308,6 +308,7 @@ text: A second-year is throwing a party in the old music room on Saturday, and s
     renown -small
     health -small
     mood -tiny
+    gain detention
     say: Everyone comes. Everyone. At one o'clock the prefects come too, and the report that goes to the headmistress names one guest by name, at the top. You spend a week of evenings in detention polishing the trophy cabinet, and the castle talks about it for a month.
   else:
     renown +small
@@ -322,26 +323,29 @@ text: A second-year is throwing a party in the old music room on Saturday, and s
 
 @event spot_ball_opening
 title: The First Dance
-pool: spotlight_famous
+trigger: queued
+class: routine
 tone: warm
-when: month == 4
+when: renown_famous()
+actor: npc
 art: music
+tags: renown spotlight
 scene: The Great Hall turned to ice and starlight, an empty dance floor ringed by the whole school, one couple stepping out alone into the middle.
-text: The Midwinter Ball committee has asked you to open the Ball: the first dance, alone on the floor, in front of the whole school, before anybody else may step out. {bonds(partner) > 0: Your partner has gone very pale and is pretending not to have heard.|You'd need to choose someone, and everyone knows it.}
+text: At the door of the Great Hall, the Ball committee catches you and {npc}: would you open the Ball? The first dance, alone on the floor, in front of the whole school, before anybody else may step out. {npc} has gone very pale and is pretending not to have heard.
 > left: Open the Ball
   challenge perform adept-:
     win:
       renown +large
       mood +small
-      say: The music starts and, for once, your feet know what to do. You turn once round the whole floor under the floating candles, and when the music ends, the hall applauds before it remembers to dance. People talk about it till spring.
+      say: The music starts and, for once, your feet know what to do. You and {npc} turn once round the whole floor under the floating candles, and when the music ends, the hall applauds before it remembers to dance. People talk about it till spring.
     lose:
       renown -medium
       mood -small
-      say: You start well. Then the ice-floor, the candles and the whole school watching all happen at once, and you go down in a heap at the exact centre of the hall. You get up and finish the dance. The hall cheers more for that than it would have for the steps.
+      say: You start well. Then the ice-floor, the candles and the whole school watching all happen at once, and you and {npc} go down in a heap at the exact centre of the hall. You get up and finish the dance. The hall cheers more for that than it would have for the steps.
 > right: Let someone else open it
   renown -small
   mood +small
-  say: You thank the committee and suggest the two first-years who've been practising for weeks in the boathouse. They open the Ball, nervously and beautifully. You dance later, in the crowd, where nobody's watching, and enjoy every minute.
+  say: You thank the committee and suggest the two first-years who've been practising for weeks in the boathouse. They open the Ball, nervously and beautifully. You dance with {npc} later, in the crowd, where nobody's watching.
 
 @event spot_stable_name
 title: A Name for the Foal
@@ -374,7 +378,7 @@ text: {f} sits down beside you on the step and says, without looking at you, "So
   rel f +medium
   renown -small
   study -tiny
-  say: You start taking {f} to the places no one goes: the boathouse at dusk, the end of the orchard. You let the invitations wait. One evening {f} says something so funny you fall off a jetty, and nobody else is there to see it, and that's the point.
+  say: You start taking {f} to the places no one goes: the boathouse at dusk, the end of the orchard. You let the invitations wait, and a good deal of reading. One evening {f} says something so funny you fall off a jetty, and nobody else is there to see it, and that's the point.
 > right: Bring {f} into the spotlight with you
   chance even +1 if rel(f) >= 60:
     rel f +small

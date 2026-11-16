@@ -1,0 +1,52 @@
+{
+  "batch": "repair-maps-country-2026-11-16",
+  "accept": false,
+  "summary": "Every Nov 15 finding in scope is fixed. gy_clues_found() reads the five discovery flags, and those are set exactly where the old counter moved. Breaking or renewing the bargain carries the alignment, and the Marsh aftermath now trades health against the inn's renown. The bargain names only the clues found. Callbacks gate on their setup, the gy_broken gates hold, and stakes and fares are paid up front, each with a free option beside them. The recast scenes (the lost old man, the wool-winders, the shore-collector, the old shepherd, the farmhands and dairymaids) read naturally, and the procession dismissal stands. grim check passes. I'm rejecting on the safety rule only. A link-boy in a changed capital card still takes part, and so do two girls in cards the children sweep missed in the same map files. Each needs a one-word recast. The other issues are small time-word and wording slips.",
+  "issues": [
+    {
+      "event": "crescent_gala_lights",
+      "problem": "Changed in this commit, but the link-boy is still a child who takes part. You pay him, and he gives you the servants' hours and the house's gossip (the right option's label and both says). 'Link-boy' is as child-coded as the shoeblack 'boy' the region critic flagged, and the zh-CN line makes it explicit with 引路童.",
+      "fix": "Make him an adult linkman throughout: 'a linkman with a torch is sitting on the railings beside you, waiting for his gentleman', label 'Pay the linkman for the servants' hour', and 'You give the linkman a coin…' in both say variants. In zh-CN, 引路童 → 举火把的引路人 (text, label, say)."
+    },
+    {
+      "event": "streets_knife_thrower",
+      "problem": "Same file as the recast region cards, but the sweep missed it. The right option's say ends with 'A girl from the crowd stands at the board and is far braver than you': a child acting in the scene, and at a knife-thrower's board at that.",
+      "fix": "'A young woman from the crowd stands at the board and is far braver than you.' (zh-CN to match: 一个年轻女人.)"
+    },
+    {
+      "event": "shop_country_market",
+      "problem": "countryside_wide.grim, missed by the sweep. 'A girl turning oatcakes on a griddle' sells to you and speaks: 'The oatcake girl takes your coin… \"They taste the same,\" she says.' The scene line also has her at the griddle. A child who takes part.",
+      "fix": "Make her an adult: 'a young woman turning oatcakes on a griddle' (text and scene), and 'The young woman turns the next batch…' / 'The oatcake-wife takes your coin…' in the oatcakes say. zh-CN 那姑娘 → 那年轻女人 or 烙饼的妇人."
+    },
+    {
+      "event": "printing_row_broadsheets",
+      "problem": "capital_port.grim, scene line only. The student is 'buying a damp sheet from a boy on a corner', so the art shows a child being dealt with (zh-CN 报童). The text's running printer's devil is background and fine.",
+      "fix": "Scene: '…a student buying a damp sheet from a newsvendor on a corner' (zh-CN 报童 → 街角的报贩)."
+    },
+    {
+      "event": "gy_scarecrow_names",
+      "problem": "The repair dropped 'dusk', but both left says still have you going down the row 'in the dew'. The Fields are visited in the afternoon too (open: morning afternoon evening; break visits are afternoon and evening), when there's no dew.",
+      "fix": "'You go down the row through the long wet grass till your feet are soaked and cold' in both variants, or '{slot == \"evening\": in the dew|through the long wet grass}'."
+    },
+    {
+      "event": "coppice_rides",
+      "problem": "The charcoal option now costs health, but its first variant says you stack cordwood 'all afternoon', and the coppice is also visited in the evening. That variant's only bodily toll is 'black to the eyebrows', which is dirt, not a cost to health. The other two show raw shoulders and a soaking.",
+      "fix": "'You stack cordwood for the burners' mound for hours, black to the eyebrows, with splinters in both palms.'"
+    },
+    {
+      "event": "job_slip",
+      "problem": "The rewrite fixes the tangle, but the dropped-loot clause now runs into the next sentence: 'Something you were carrying stays somewhere in the dark behind you. Somewhere the watchman is shouting…'. 'Somewhere' twice in a row reads as a slip.",
+      "fix": "'{job_dropped == 1: Something you were carrying is lost in the dark behind you. |}Somewhere the watchman…' (zh-CN already reads cleanly)."
+    },
+    {
+      "event": "streets_pieman",
+      "problem": "The lose say 'He keeps the double price off his tray' is ambiguous: it can read as keeping the money away from his tray, the opposite of what the hint ('Double the price goes on his tray first') set up.",
+      "fix": "'Tails. He sweeps the double price off his tray into his apron, and bows to the crowd.'"
+    },
+    {
+      "event": "lanes_strawberries",
+      "problem": "The recast option is 'Fill your hat for the haymakers', but the text never puts haymakers in the scene. They first appear in the label, so the kindness comes out of nowhere.",
+      "fix": "End the text with a clause like 'Over the gate, haymakers are turning the next field in the heat.' (the text is 177 characters, so there is room; zh-CN to match)."
+    }
+  ]
+}
