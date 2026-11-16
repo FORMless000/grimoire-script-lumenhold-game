@@ -147,12 +147,14 @@ scene: A student sitting in wet heather on a foggy moor, catching their breath, 
 on_show:
   moor_grace -= 1
   health -small
+  moor_dropped = 0
   if moor_haul > 0:
     moor_haul -= 1
-text: {~You go down hard in the heather, and something rolls out of your bag into a hag of black water.|You come to your senses face down in wet heather, with a split lip and a lighter bag.|Your foot finds the one soft place on the hill. You get free, and the bog keeps a little of what you carried.} {moor_grace > 0: You've got one more fall in you, maybe.|That was your last easy fall.}
+    moor_dropped = 1
+text: {moor_dropped == 1: {~You go down hard in the heather, and something rolls out of your bag into a hag of black water.|You come to your senses face down in wet heather, with a split lip and a lighter bag.|Your foot finds the one soft place on the hill. You get free, and the bog keeps a little of what you carried.}|{~You go down hard in the heather and come up black to the knees, with a split lip and an empty bag that at least has nothing in it to lose.|You come to your senses face down in wet heather, with a split lip and a ringing head.|Your foot finds the one soft place on the hill. You get free, but the bog keeps your boot for a long cold moment before it lets go.}} {moor_grace > 0: You've got one more fall in you, maybe.|That was your last easy fall.}
 > left: That's enough for today
   queue moor_way_home now
-  say: {~You pick up what's left and limp back toward the road.|You've had enough of the moor, and the moor of you.|You turn back, keeping the cairns on your right.}
+  say: {~You pick yourself up and limp back toward the road.|You've had enough of the moor, and the moor of you.|You turn back, keeping the cairns on your right.}
 > right: Get up and go on
   hint: Deeper: the next fall may not be kind.
   queue any in moor_delve now
@@ -169,11 +171,14 @@ tags: nature danger
 scene: A foggy moor at dusk, a shepherd with a lantern and a dog helping a muddy, shivering student to their feet.
 on_show:
   health -large
+  moor_bag_lost = 0
+  if moor_haul > 0:
+    moor_bag_lost = 1
   moor_haul = 0
   if moor_depth > moor_deepest:
     moor_deepest = moor_depth
   moor_depth = 0
-text: {at_home() and has(origin_hedge): The fog comes down and the day goes with it. At dusk a lantern comes bobbing through the fog, and it's your grandmother, with a shawl and a flask and a face like thunder.|The fog comes down and the day goes with it. At dusk a dog finds you first, and then a shepherd with a lantern, who looks at you the way he'd look at a ewe that got itself stuck.}
+text: {at_home() and has(origin_hedge): The fog comes down and the day goes with it. At dusk a lantern comes bobbing through the fog, and it's your grandmother, with a shawl and a flask and a face like thunder.|The fog comes down and the day goes with it. At dusk a dog finds you first, and then a shepherd with a lantern, who looks at you the way he'd look at a ewe that got itself stuck.} {moor_bag_lost == 1: Your bag, and everything you found in it, is somewhere back in the fog where you fell, and nobody is going up there for it tonight.|}
 > left: Thank them and go quietly
   say: {at_home() and has(origin_hedge): She walks you home without a word and puts you to bed with something bitter. In the morning she says, "Past the third cairn," as if that were a whole sentence, and it is.|He walks you down to the road and won't take a penny. "Past the third cairn," he says, shaking his head. "They always go past the third cairn."}
 > right: Ask how they knew to look

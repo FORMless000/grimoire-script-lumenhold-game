@@ -77,14 +77,14 @@ opt.right.say.1 [f517a1] = {moor_haul == 0: 你什么也没留下，只有一双
 @event moor_stumble
 # en: Back on Your Feet
 title [8218be] = 重新站起来
-# en: {~You go down hard in the heather, and something rolls out of your bag into a hag of black water.|You come to your senses face down in wet heather, with a split lip and a lighter bag.|Your foot finds the one soft place on the hill. You get free, and the bog keeps a little of what you carried.} {moor_grace > 0: You've got one more fall in you, maybe.|That was your last easy fall.}
-text [a55ad0] = {~你重重摔倒在石楠丛里，包里有样东西滚了出去，掉进一洼黑水里。|你回过神来时，脸朝下趴在湿漉漉的石楠里，嘴唇裂了，包也轻了。|你一脚踩中了山上唯一一处软地。你挣脱出来，泥沼留下了你带着的一点东西。} {moor_grace > 0: 你大概还经得起再摔一次。|那是你最后一次摔得不算重。}
+# en: {moor_dropped == 1: {~You go down hard in the heather, and something rolls out of your bag into a hag of black water.|You come to your senses face down in wet heather, with a split lip and a lighter bag.|Your foot finds the one soft place on the hill. You get free, and the bog keeps a little of what you carried.}|{~You go down hard in the heather and come up black to the knees, with a split lip and an empty bag that at least has nothing in it to lose.|You come to your senses face down in wet heather, with a split lip and a ringing head.|Your foot finds the one soft place on the hill. You get free, but the bog keeps your boot for a long cold moment before it lets go.}} {moor_grace > 0: You've got one more fall in you, maybe.|That was your last easy fall.}
+text [e0fdd7] = {moor_dropped == 1: {~你重重摔倒在石楠丛里，包里有样东西滚了出去，掉进一洼黑水里。|你回过神来时，脸朝下趴在湿漉漉的石楠里，嘴唇裂了，包也轻了。|你一脚踩中了山上唯一一处软地。你挣脱出来，泥沼留下了你带着的一点东西。}|{~你重重摔倒在石楠丛里，爬起来时膝盖以下全是黑泥，嘴唇裂了，好在包是空的，也没什么可丢。|你回过神来时，脸朝下趴在湿漉漉的石楠里，嘴唇裂了，脑袋嗡嗡响。|你一脚踩中了山上唯一一处软地。你挣脱出来，可泥沼咬着你的靴子，冷冰冰地拖了好一会儿才放开。}} {moor_grace > 0: 你大概还经得起再摔一次。|那是你最后一次摔得不算重。}
 # en: A student sitting in wet heather on a foggy moor, catching their breath, a spilled bag beside them.
 scene [e366ad] = 雾蒙蒙的荒原上，一个学生坐在湿石楠里喘气，身边是一只撒了一地的包。
 # en: That's enough for today
 opt.left.label [3d2940] = 今天就到这儿
-# en: {~You pick up what's left and limp back toward the road.|You've had enough of the moor, and the moor of you.|You turn back, keeping the cairns on your right.}
-opt.left.say.1 [90d7fe] = {~你捡起剩下的东西，一瘸一拐地朝路上走回去。|你受够了荒原，荒原也受够了你。|你转身回去，让石堆待在你右边。}
+# en: {~You pick yourself up and limp back toward the road.|You've had enough of the moor, and the moor of you.|You turn back, keeping the cairns on your right.}
+opt.left.say.1 [6f5b70] = {~你爬起来，一瘸一拐地朝路上走回去。|你受够了荒原，荒原也受够了你。|你转身回去，让石堆待在你右边。}
 # en: Get up and go on
 opt.right.label [813dfe] = 爬起来，继续走
 # en: Deeper: the next fall may not be kind.
@@ -95,8 +95,8 @@ opt.right.say.1 [ed7b0a] = {~你拧干袖子，继续往前走，慢了一点。
 @event moor_lost
 # en: Found at Dusk
 title [b09f99] = 黄昏时被找到
-# en: {at_home() and has(origin_hedge): The fog comes down and the day goes with it. At dusk a lantern comes bobbing through the fog, and it's your grandmother, with a shawl and a flask and a face like thunder.|The fog comes down and the day goes with it. At dusk a dog finds you first, and then a shepherd with a lantern, who looks at you the way he'd look at a ewe that got itself stuck.}
-text [d6d95c] = {at_home() and has(origin_hedge): 雾落下来，这一天也跟着没了。黄昏时，一盏提灯摇摇晃晃地穿过雾来，是你外婆，拿着披肩和一壶热饮，脸色难看得像要打雷。|雾落下来，这一天也跟着没了。黄昏时，先是一条狗找到了你，然后是一个提着灯的牧羊人，他看你的眼神，就像看一只把自己卡住了的母羊。}
+# en: {at_home() and has(origin_hedge): The fog comes down and the day goes with it. At dusk a lantern comes bobbing through the fog, and it's your grandmother, with a shawl and a flask and a face like thunder.|The fog comes down and the day goes with it. At dusk a dog finds you first, and then a shepherd with a lantern, who looks at you the way he'd look at a ewe that got itself stuck.} {moor_bag_lost == 1: Your bag, and everything you found in it, is somewhere back in the fog where you fell, and nobody is going up there for it tonight.|}
+text [0246d5] = {at_home() and has(origin_hedge): 雾落下来，这一天也跟着没了。黄昏时，一盏提灯摇摇晃晃地穿过雾来，是你外婆，拿着披肩和一壶热饮，脸色难看得像要打雷。|雾落下来，这一天也跟着没了。黄昏时，先是一条狗找到了你，然后是一个提着灯的牧羊人，他看你的眼神，就像看一只把自己卡住了的母羊。} {moor_bag_lost == 1: 你的包，连同你找到的所有东西，都丢在了身后雾里你摔倒的地方，今晚没人会上去替你找。|}
 # en: A foggy moor at dusk, a shepherd with a lantern and a dog helping a muddy, shivering student to their feet.
 scene [3918ea] = 黄昏时雾蒙蒙的荒原上，一个提着灯、带着狗的牧羊人正扶一个满身泥浆、瑟瑟发抖的学生站起来。
 # en: Thank them and go quietly

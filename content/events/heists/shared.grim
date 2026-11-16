@@ -24,9 +24,11 @@ repeat: 1
 art: pouch
 tags: danger money
 scene: A student slipping out of a dark doorway at the grey end of night, a bundle held under one arm, looking both ways down a castle corridor.
-text: {heist_loot == 0: {heist_deck_tonight == 1: You come out with nothing to sell but a tin of cards that was never yours to sell, and a grin.|You come out with nothing but dust on your knees and your heart going like a drum.}|{heist_loot <= 2: You come out with a few small, old things under your shirt, each worth more than it looks.|{heist_loot <= 4: You come out with a real bundle: {heist_where == 1: pages, and something heavier that sighs when you move|papers, and something heavier that clinks when you move}.|You come out with more than your shirt will hold, and walk very carefully.}}} {heist_where == 1: The library is grey with dawn behind you.|The tower's slits are going grey above you.}
-> left: Sell it to the collector
-  hint: Crowns, by what you carry. A little Hollow.
+text: {heist_loot == 0: {heist_deck_tonight == 1: You come out with nothing to sell, only Corvin's tin of cards, which was never yours to sell, and a grin.|You come out with nothing but dust on your knees and your heart going like a drum.}|{heist_loot <= 2: You come out with a few small, old things under your shirt, each worth more than it looks.|{heist_loot <= 4: You come out with a real bundle: {heist_where == 1: pages, and something heavier that sighs when you move|papers, and something heavier that clinks when you move}.|You come out with more than your shirt will hold, and walk very carefully.}}} {heist_where == 1: The library is grey with dawn behind you.|The tower's slits are going grey above you.}
+> left: {heist_loot == 0: Go straight to bed|Sell it to the collector}
+  hint: {heist_loot == 0: Sleep, for what's left of the night.|Crowns, by what you carry. A little Hollow.}
+  if heist_loot == 0:
+    health +tiny
   if heist_loot >= 1:
     alignment -tiny
   if heist_loot >= 6:
@@ -37,16 +39,20 @@ text: {heist_loot == 0: {heist_deck_tonight == 1: You come out with nothing to s
     gold +medium
   elif heist_loot >= 1:
     gold +small
-  say: {heist_loot == 0: {heist_deck_tonight == 1: The tin goes to Corvin, not the collector. You go to bed, and lie awake grinning.|There's nothing to sell. You go to bed, and lie awake anyway.}|{~The collector in the village back room weighs each thing in a gloved hand and pays in old crowns, without a question.|The collector's man meets you by the village pump at noon. He counts your things, and then his coins, and both counts are fair.|The collector holds your best piece up to the window and is quiet for a long time. Then he pays more than you'd have asked.}}
+  say: {heist_loot == 0: {heist_deck_tonight == 1: You go to bed with the tin under your pillow and sleep like a stone. At breakfast you give it to Corvin. He doesn't say anything for a whole minute, which is a record.|There's nothing to sell. You go to bed, and sleep like a stone until the bell.}|{~The collector in the village back room weighs each thing in a gloved hand and pays in old crowns, without a question.|The collector's man meets you by the village pump at noon. He counts your things, and then his coins, and both counts are fair.|The collector holds your best piece up to the window and is quiet for a long time. Then he pays more than you'd have asked.}}
   if heist_where == 1 and heist_depth > heist_stacks_deepest:
     heist_stacks_deepest = heist_depth
   if heist_where == 2 and heist_depth > heist_tower_highest:
     heist_tower_highest = heist_depth
+  if heist_loot > 0 and heist_deck_tonight == 1:
+    say: Corvin's tin you keep back, and give to him at breakfast. He doesn't say anything for a whole minute, which is a record.
   heist_depth = 0
   heist_loot = 0
   heist_deck_tonight = 0
-> right: Keep it, and read it
-  hint: Lore, by what you carry. A little Hollow.
+> right: {heist_loot == 0: Take the long way back|Keep it, and read it}
+  hint: {heist_loot == 0: Learn the corridors, and lose some sleep.|Lore, by what you carry. A little Hollow.}
+  if heist_loot == 0:
+    guile +tiny
   if heist_loot >= 1:
     alignment -tiny
   if heist_loot >= 6:
@@ -58,11 +64,13 @@ text: {heist_loot == 0: {heist_deck_tonight == 1: You come out with nothing to s
     lore +small
   elif heist_loot >= 1:
     lore +tiny
-  say: {heist_loot == 0: There's nothing to keep but the night, and you keep that.|{~You spread it all on your bed behind drawn curtains and read until breakfast. Half of it you shouldn't know. You know it now.|You hide it under a loose floorboard and take it out a piece at a time, over weeks, like a box of sweets.|You read it all twice and burn the worst of it. The rest you keep, and it keeps you up.}}
+  say: {heist_loot == 0: {heist_deck_tonight == 1: You take the long way back with the tin under your shirt, learning which boards creak, and give it to Corvin at breakfast. He laughs until he has to sit down, and then holds it very carefully.|There's nothing to keep but the night, so you take the long way back through it, learning which boards creak and which doors stick.}|{~You spread it all on your bed behind drawn curtains and read until breakfast. Half of it you shouldn't know. You know it now.|You hide it under a loose floorboard and take it out a piece at a time, over weeks, like a box of sweets.|You read it all twice and burn the worst of it. The rest you keep, and it keeps you up.}}
   if heist_where == 1 and heist_depth > heist_stacks_deepest:
     heist_stacks_deepest = heist_depth
   if heist_where == 2 and heist_depth > heist_tower_highest:
     heist_tower_highest = heist_depth
+  if heist_loot > 0 and heist_deck_tonight == 1:
+    say: Corvin's tin you keep back, and give to him at breakfast. He laughs until he has to sit down, and then holds it very carefully.
   heist_depth = 0
   heist_loot = 0
   heist_deck_tonight = 0
@@ -83,10 +91,10 @@ on_show:
   if heist_loot > 0:
     heist_loot -= 1
     heist_dropped = 1
-text: {heist_dropped == 1: {~You get away, just, and something you carried doesn't: it's lying out there in the dark where you dropped it.|You end up flat in an alcove with your heart in your mouth and one thing fewer in your shirt.|You're clear, scraped and shaking, and you've left something behind for somebody to find.}|{~You get away, just, with nothing to lose but your nerve, and some of that.|You end up flat in an alcove with your heart in your mouth, glad your shirt was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff.}} {heist_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text: {heist_dropped == 1: {~You get away, just, with a barked shin from a step you never saw, and something you carried doesn't: it's lying out there in the dark where you dropped it.|You end up flat in an alcove with a cricked neck, your heart in your mouth and one thing fewer in your shirt.|You're clear, scraped and shaking, and you've left something behind for somebody to find.}|{~You get away, just, with a barked shin from a step you never saw, and nothing to lose but your nerve.|You end up flat in an alcove with a cricked neck and your heart in your mouth, glad your shirt was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff.}} {heist_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
 > left: That's enough for tonight
   queue heist_way_out now
-  say: {~You take what's left and go, by the long way.|You decide the night has made its point.|You go while you can.}
+  say: {~You take what you've got and go, by the long way.|You decide the night has made its point.|You go while you can.}
 > right: Wait, and go on
   hint: On: the next slip may not be a near thing.
   queue night_suspicion chance unlikely
@@ -115,6 +123,9 @@ on_show:
   heist_warned = 0
   if has(watched):
     heist_warned = 1
+  heist_had_loot = 0
+  if heist_loot > 0:
+    heist_had_loot = 1
 text: A lantern comes up full in your face. {heist_where == 1: Down in the stacks, at night,|Halfway up the seventh tower, at night,} {heist_loot == 0: and empty-handed, which convinces nobody.|with your arms full of things that aren't yours. The prefect takes them all, into a sack for the confiscation vault.} The prefect behind the lantern looks less angry than tired.
 > left: Go quietly
   gain detention
@@ -133,7 +144,7 @@ text: A lantern comes up full in your face. {heist_where == 1: Down in the stack
       mood -small
       heist_loot = 0
       queue night_suspicion now
-      say: {heist_loot == 0: You run, and know every turn better than they do. You get away. You also know they saw your face.|You leave the sack to the prefect and run, and know every turn better than they do. You get away. You also know they saw your face.}
+      say: {heist_had_loot == 0: You run, and know every turn better than they do. You get away with a stitch in your side and a palm skinned on the last banister. You also know they saw your face.|You leave the sack to the prefect and run, and know every turn better than they do. You get away with a stitch in your side and a palm skinned on the last banister. You also know they saw your face.}
     lose:
       gain detention
       health -small

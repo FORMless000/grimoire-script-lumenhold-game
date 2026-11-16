@@ -127,23 +127,25 @@ weight: 10
 tags: social
 
 @event fish_market_auction
-title: The Dawn Auction
+title: The Late-Boat Auction
 pool: capital_fish_market_life
-slot: morning
+slot: noon
 tone: tense
 art: scales
-scene: A crowded dawn fish auction on a quay, buyers in aprons making tiny hand signals at an auctioneer on a crate, crates of silver fish on ice, a student with a hand half-raised.
-text: The dawn auction is held by hand-signals, too fast to follow: a finger is a crown, a tug of the ear is ten, and a scratch of the nose has ruined people. The auctioneer's on his crate. A whole crate of mackerel is going cheap, if you can bid without buying the boat by mistake.
+scene: A crowded midday fish auction on a quay, buyers in aprons making tiny hand signals at an auctioneer on a crate, crates of silver fish on ice, a student with a hand half-raised.
+text: When the late boats come in, the auction is held by hand-signals, too fast to follow: a finger is a crown, a tug of the ear is ten, and a scratch of the nose has ruined people. The auctioneer's on his crate. A whole crate of mackerel is going cheap, if you can bid without buying the boat by mistake.
 > left: Bid for the crate
+  hint: Pay for the crate, and sell it on.
+  gold -small
   challenge deceive journeyman:
     win:
-      gold +small
+      gold +medium
       guile +tiny
-      say: You keep your hands in your pockets till the last moment and take the crate with one finger. Before the sun's up you sell it on to a barrow for twice what you paid. The auctioneer winks at you. The buyers pretend not to have noticed you.
+      say: You keep your hands in your pockets till the last moment and take the crate with one finger, and pay for it out of your purse. Within the hour you sell it on to a barrow for twice what you paid. The auctioneer winks at you. The buyers pretend not to have noticed you.
     lose:
-      gold -small
+      gold +tiny
       mood -tiny
-      say: You scratch your nose. You now own a crate of mackerel, a crate of herring, and very nearly a boat. You sell them on for less than you paid, smelling of fish, and the buyers clap you on the back.
+      say: You scratch your nose. You've paid for a crate of mackerel, a crate of herring, and very nearly a boat. You sell them on for less than you paid, smelling of fish, and the buyers clap you on the back.
 > right: Watch the hands
   guile +small
   health -tiny

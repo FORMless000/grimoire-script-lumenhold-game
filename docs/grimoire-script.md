@@ -648,6 +648,12 @@ followed: clue(knows_founders_seal)
 - **Style:** text that is too long, a long label, unknown art key, unknown bond status, spark on a non-romanceable NPC.
 - **Worldbook:** unknown places, tracks, spells and npcs in worldbook blocks; values outside `@vocab`; a character without an age, or romance under 18; malformed structured values.
 - **Canon:** proper nouns in player-visible text that no worldbook entry, `@lore` key, glossary or `@vocab canon_allowlist` knows (a warning; an error for batch content under `content/batches/`). `node tools/grim.js canon` lists them.
+- **Review warnings** (the critic pass of 2026-11-15, `lintReview` in `tools/grim.js`): defects the critic found most, flagged for a look.
+  - *Time of day:* a visit card (`place:` or `region:`) whose text or scene says dawn, morning, breakfast, luncheon, noon, midday, afternoon, dusk, sunset, evening, night or after hours while it can be drawn at another slot (no `slot:`/`time:`, no `slot` in its `when` or text). Words after *this, last, tomorrow, every, by, till…* are references, not the scene's hour, and are skipped.
+  - *Unkeyed "again":* "again", "this time" or "last time" in a later part of an outcome's cycle or sequence (or the first part of the text's) on a repeatable card with more than one option, unless its `when` reads `seen`/`since`/`chosen` of itself or the part sits inside a `{cond: …}`. Sequences count showings, not choices.
+  - *Unfunded wager:* an option that can lose gold inside a `challenge` or `chance`, with no gold price up front, no gold in its own or the card's `when`, and no `if` on gold (incidents and crises excepted). Put the stake up front (`gold -small`, the engine locks it when you can't pay) or gate it.
+  - *Study on a break:* a `study` change on a card that can play on a break (a region or plan card, or one whose `when` doesn't require term). Study counts only in term: gate the card on `term`, or use a cost the scene shows.
+  - *Children* (info, `lint --verbose`): every card whose text mentions a child, boy, girl, baby or kid, as a prompt: a child may be background, never a participant (`docs/authoring/style.md`).
 
 `node tools/grim.js sim 300` plays 300 random games and reports crashes, soft-locks, ending distribution, never-seen events and average final values. Add `--policy social` to play a relationship-focused player, or `--policy cautious` to avoid draining low resources.
 

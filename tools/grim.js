@@ -856,6 +856,7 @@ function lint(opts = {}) {
   reachLint(content, A.problems);
   lintVariants(content, A.problems);
   lintMenus(content, A.problems);
+  lintReview(content, A.problems);
   // Every map a place sits on needs its base art (src/map.js loads content/world/maps/<map>.svg).
   // A plan's `map_id:` (and @game map_id:) names a map some place sits on, or a track kind (A1).
   const MAPS = new Set(Object.values(content.places || {}).map((pl) => pl.map && pl.map.map).filter(Boolean)), KINDS = new Set(Object.values(content.tracks || {}).map((d) => d.kind));
@@ -945,6 +946,111 @@ function lintMenus(content, problems) {
     }
   }
   for (const d of Object.values(content.tracks || {})) if (offered.has(d.kind) && !d.hidden && !d.picked) P(d, d.kind + ' "' + d.id + '" has no picked: line (the outcome of choosing it in a menu)');
+}
+
+// Review lint (critic pass 2026-11-15, docs/authoring/checklist.md "Lint"): the defect classes the independent critic
+// found most, as warnings to look at (and the child word list as an info prompt, lint --verbose).
+// - time: a time-of-day word in a visit card's text when the card can be drawn in another slot (no slot:/time: gate,
+//   no `slot` in its when or its text);
+// - again: "again", "this time" or "last time" in a later cycle/sequence part of an outcome (or the first part of the
+//   text) of a repeatable card that doesn't read seen/since/chosen of itself;
+// - wager: a gold loss inside a check or a chance, on an option with no up-front gold price and no gold gate;
+// - break study: a study change on a card that can play on a break (study only counts in term);
+// - child: a word for a child (children may only be background: style.md).
+const TIME_WORDS = { dawn: ['morning'], morning: ['morning'], breakfast: ['morning'], luncheon: ['noon'], noon: ['noon'], midday: ['noon'], afternoon: ['afternoon'], dusk: ['evening'], sunset: ['evening'], evening: ['evening'], night: ['night', 'midnight'], 'after hours': ['night', 'midnight'] };
+const TIME_RE = /(\b(?:this|last|tomorrow|yesterday|every|all|one|that|each|next|by|till|until|the other|good|by|of the|in the)\s+)?\b(dawn|morning|luncheon|noon|midday|afternoon|dusk|sunset|evening|night|after hours)\b/gi;
+const AGAIN_RE = /\b(again|this time|last time)\b/i;
+const CHILD_RE = /\b(child|children|boy|boys|girl|girls|baby|babies|kid|kids|infant|toddler|newborn)\b/i;
+const TERM_MONTHS = new Set([1, 2, 3, 4, 7, 8, 9, 10]);
+function eventStrings(e) {
+  const out = [e.title, e.text, e.scene].filter(Boolean);
+  const walk = (effects) => G.walkEffects(effects, (st) => { if (st.t === 'say' && st.text) out.push(st.text); });
+  walk(e.on_show);
+  for (const o of e.options || []) { if (o.label) out.push(o.label); if (o.hint) out.push(o.hint); walk(o.effects); }
+  return out;
+}
+function canPlayOnBreak(content, e) {
+  if (e.region || e.plan) return true;
+  if (e.track && content.tracks[e.track] && ['course', 'thesis'].includes(content.tracks[e.track].kind)) return false;
+  const w = ((e.when && e.when.src) || '').replace(/\s+/g, ' ');
+  if (/(^|\band )\(?\s*term\b(?! *==)/.test(w) || /\bnot break\b/.test(w) || /\bbefore_finals\(\)/.test(w)) return false;
+  const months = [...w.matchAll(/\bmonth *== *(\d+)/g)].map((m) => +m[1]);
+  if (months.length && !/\bor\b(?![^()]*month)/.test(w.replace(/\([^()]*month[^()]*\)/g, '')) && months.every((m) => TERM_MONTHS.has(m))) return false;
+  if (/\bmonth *(<=|<) *(4|5)\b/.test(w) && /\bmonth *>= *1\b|\bmonth *> *0\b/.test(w)) return false;
+  return true;
+}
+// Calls bad(mode, partIndex) for each "again"/"this time"/"last time" whose innermost group is a variant (not inside any
+// {cond: …}); pushes the matched word when bad says so.
+function againInVariants(text, bad, hits) {
+  (function scan(t, mode, idx, keyed) {
+    let i = 0, plain = '';
+    while (i < t.length) {
+      if (t[i] !== '{') { plain += t[i]; i++; continue; }
+      let d = 0, j = i;
+      for (; j < t.length; j++) { if (t[j] === '{') d++; else if (t[j] === '}' && --d === 0) break; }
+      if (j >= t.length) break;
+      const inner = t.slice(i + 1, j), parts = []; let dd = 0, st = 0;
+      for (let k = 0; k < inner.length; k++) { const c = inner[k]; if (c === '{') dd++; else if (c === '}') dd--; else if (c === '|' && !dd) { parts.push(inner.slice(st, k)); st = k + 1; } }
+      parts.push(inner.slice(st));
+      if (inner[0] !== '=') {
+        let m = inner[0] === '~' ? 'random' : inner[0] === '&' ? 'cycle' : null;
+        if (!m) { let colon = -1; dd = 0; for (let k = 0; k < parts[0].length; k++) { const c = parts[0][k]; if (c === '{') dd++; else if (c === '}') dd--; else if (c === ':' && !dd) { colon = k; break; } } m = colon > 0 ? 'cond' : parts.length > 1 ? 'sequence' : null; }
+        parts.forEach((x, k) => scan(m === 'random' || m === 'cycle' ? (k === 0 ? x.slice(1) : x) : x, m || mode, m ? k : idx, keyed || m === 'cond'));
+      }
+      i = j + 1;
+    }
+    const w = plain.match(AGAIN_RE);
+    if (w && mode && mode !== 'cond' && !keyed && bad(mode, idx)) hits.push(w[1]);
+  })(text || '', null, 0, false);
+}
+function lintReview(content, problems) {
+  const P = (level, e, msg) => problems.push({ level, where: rel(e.file) + ':' + e.line, msg: 'event "' + e.id + '": ' + msg });
+  const visitSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || []), ...Object.values(content.states || {}).flatMap((st) => st.day || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
+  const regionOpen = (rg) => new Set(Object.values(content.places || {}).filter((p) => p.region && String(rg).split(/[\s,]+/).includes(p.region.split(':')[0])).flatMap((p) => p.open || []));
+  for (const e of Object.values(content.events)) {
+    if (/^\s*false\s*$/.test((e.when && e.when.src) || '')) continue;
+    const strs = eventStrings(e), all = strs.join('\n'), when = (e.when && e.when.src) || '';
+    // time words
+    if ((e.place || e.region) && !['queued', 'auto', 'letter'].includes(e.trigger) && !e.slot && !(e.time || []).length && !/\bslot\b/.test(when) && !/\bslot\b/.test(all)) {
+      const open = e.place ? new Set(((content.places[e.place] || {}).open || []).filter((s) => visitSlots.has(s))) : new Set([...regionOpen(e.region)].filter((s) => visitSlots.has(s)));
+      const bad = new Set();
+      for (const s of [e.text, e.scene].filter(Boolean)) for (const m of s.matchAll(TIME_RE)) {
+        if (m[1]) continue;
+        const fits = TIME_WORDS[m[2].toLowerCase()];
+        if ([...open].some((sl) => !fits.includes(sl))) bad.add(m[2].toLowerCase());
+      }
+      if (bad.size) P('warn', e, 'says "' + [...bad].join('", "') + '" but can be drawn at ' + [...open].join(', ') + ' (gate it with slot:/time:, or make the words follow {slot == …})');
+    }
+    // again / this time / last time, inside a cycle or sequence: it follows how often the card was seen, not which option
+    // was taken, so an outcome's later part may be the first time the player did that (an enclosing {cond: …} counts as
+    // keyed; a one-option card's outcomes follow its showings). Random parts are left to the critic: mostly idiom.
+    const self = new RegExp('\\b(seen|since|chosen)\\(\\s*' + e.id + '\\b');
+    if (!self.test(when)) {
+      const hits = [];
+      const look = (t, outcome) => againInVariants(t, (mode, idx) => mode !== 'random' && e.repeat && (outcome ? idx > 0 && (e.options || []).length > 1 : idx === 0), hits);
+      for (const t of [e.text, e.scene].filter(Boolean)) look(t, false);
+      for (const o of e.options || []) G.walkEffects(o.effects, (st) => { if (st.t === 'say' && st.text) look(st.text, true); });
+      if (hits.length) P('warn', e, '"' + hits[0] + '" in a variant that can show before the thing it remembers (key it on seen/since/chosen or a flag, or reword)');
+    }
+    // unfunded wager
+    if (!['incident', 'crisis'].includes(e.class)) for (const o of e.options || []) {
+      const top = (o.effects || []).some((st) => st.t === 'delta' && st.name === 'gold' && st.sign < 0);
+      const gated = /\bgold\b/.test((o.when && o.when.src) || '') || /\bgold\b/.test(when);
+      if (top || gated) continue;
+      let nested = false;
+      G.walkEffects(o.effects, (st) => { if (['challenge', 'chance'].includes(st.t)) G.walkEffects([st], (x) => { if (x.t === 'delta' && x.name === 'gold' && x.sign < 0) nested = true; }); });
+      // an `if` that itself reads gold is its own gate
+      if (nested && !(o.effects || []).some((st) => st.t === 'if' && st.branches.some((b) => /\bgold\b/.test((b.cond && b.cond.src) || '')))) P('warn', e, 'option "' + o.key + '" can lose gold in a check or branch with no price up front and no gold gate (an empty purse makes the wager free)');
+    }
+    // study on a break
+    let study = false;
+    for (const o of e.options || []) G.walkEffects(o.effects, (st) => { if (st.t === 'study') study = true; });
+    G.walkEffects(e.on_show, (st) => { if (st.t === 'study') study = true; });
+    if (study && canPlayOnBreak(content, e)) P('warn', e, 'changes study but can play on a break, when study counts for nothing (gate it on term, or pick a cost the scene shows)');
+    // children
+    const kid = all.match(CHILD_RE);
+    if (kid) P('info', e, 'mentions "' + kid[1] + '": a child may only be background (style.md), never speak, act or be acted on');
+  }
 }
 
 function lintVariants(content, problems) {

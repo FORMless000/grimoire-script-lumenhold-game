@@ -93,14 +93,14 @@ opt.right.say.1 [f6a19a] = {tide_haul == 0: 你什么也没留下，只有寒意
 @event tide_soaked
 # en: Soaked to the Skin
 title [5bb8c1] = 湿透了
-# en: {&A wave you never saw slaps you off the ledge into the swirl, and something rolls out of your bag and is gone.|You come up coughing on a ledge with a cut hand and a lighter bag. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down, and the pool keeps a little of what you carried.} {tide_grace > 0: You've got one more ducking in you, maybe.|That was your last easy fall.}
-text [1ec73e] = {&一个你根本没看见的浪把你从岩架上拍进了漩涡，袋子里滚出去一样东西，没了。|你在一块岩架上咳着冒出头来，手划破了，袋子也轻了。海还在吸你的靴子。|石头上是海草，海草滑得像玻璃。你摔了下去，水潭留下了你带着的一点东西。} {tide_grace > 0: 你大概还经得起一次落水。|那是你最后一次摔得不重。}
+# en: {tide_dropped == 1: {&A wave you never saw slaps you off the ledge into the swirl, and something rolls out of your bag and is gone.|You come up coughing on a ledge with a cut hand and a lighter bag. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down, and the pool keeps a little of what you carried.}|{&A wave you never saw slaps you off the ledge into the swirl, and you come up with a mouthful of the sea and an empty bag that had nothing to lose.|You come up coughing on a ledge with a cut hand. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down hard, and come up bruised and soaked to the collar.}} {tide_grace > 0: You've got one more ducking in you, maybe.|That was your last easy fall.}
+text [8e526f] = {tide_dropped == 1: {&一个你根本没看见的浪把你从岩架上拍进了漩涡，袋子里滚出去一样东西，没了。|你在一块岩架上咳着冒出头来，手划破了，袋子也轻了。海还在吸你的靴子。|石头上是海草，海草滑得像玻璃。你摔了下去，水潭留下了你带着的一点东西。}|{&一个你根本没看见的浪把你从岩架上拍进了漩涡，你冒出头来，灌了一嘴海水，好在袋子是空的，也没什么可丢。|你在一块岩架上咳着冒出头来，手划破了。海还在吸你的靴子。|石头上是海草，海草滑得像玻璃。你重重摔了下去，爬起来时一身青紫，湿到了领口。}} {tide_grace > 0: 你大概还经得起一次落水。|那是你最后一次摔得不重。}
 # en: A student sitting soaked on a wet rock ledge in a dim sea cave, coughing, a spilled bag beside them, sea water swirling below.
 scene [cc2cb8] = 昏暗的海蚀洞里，一个学生湿透了坐在湿岩架上咳嗽，身边洒了一地的袋子，下面海水打着旋。
 # en: That's enough for today
 opt.left.label [3d2940] = 今天就到这儿
-# en: {&You wring out what's left and feel your way back toward the light.|You've had enough of the sea, and the sea of you, for now.|You turn back, following the drip of fresh water toward the light.}
-opt.left.say.1 [9f89bd] = {&你拧干剩下的东西，摸索着往有光的地方回去。|你受够了海，海也受够了你，暂时。|你往回走，顺着淡水滴落的方向朝光那边去。}
+# en: {&You wring yourself out and feel your way back toward the light.|You've had enough of the sea, and the sea of you, for now.|You turn back, following the drip of fresh water toward the light.}
+opt.left.say.1 [69581d] = {&你把自己拧干，摸索着往有光的地方回去。|你受够了海，海也受够了你，暂时。|你往回走，顺着淡水滴落的方向朝光那边去。}
 # en: Get up and go on
 opt.right.label [813dfe] = 爬起来继续走
 # en: Deeper: the next fall may not be kind.
@@ -111,8 +111,8 @@ opt.right.say.1 [29a2f6] = {&你拧干袖子，咕叽咕叽地继续往前走。
 @event tide_fished_out
 # en: Fished Out
 title [04e10a] = 被捞上来
-# en: {at_home() and has(origin_street): The tide comes in faster than you can go out. You end up on a ledge in the dark with the water at your chin, until a rope comes down out of nowhere, and at the top of it is Nan Merrow, swearing.|The tide comes in faster than you can go out. You spend hours on a ledge with the sea at your chest, until it turns and lets you crawl for the mouth, and a lighterman out after driftwood hauls you into his boat with a boathook.}
-text [bc238b] = {at_home() and has(origin_street): 潮水涨得比你出去得快。你困在黑暗里的一块岩架上，水淹到下巴，直到一根绳子不知从哪里垂下来，绳子那头是南·梅罗，正骂骂咧咧。|潮水涨得比你出去得快。你在一块岩架上待了好几个钟头，海水淹到胸口，直到潮水回头，你才爬向洞口，一个出来捞漂木的驳船夫用船钩把你拖进了他的船。}
+# en: {at_home() and has(origin_street): The tide comes in faster than you can go out. You end up on a ledge in the dark with the water at your chin, until a rope comes down out of nowhere, and at the top of it is Nan Merrow, swearing.|The tide comes in faster than you can go out. You spend hours on a ledge with the sea at your chest, until it turns and lets you crawl for the mouth, and a lighterman out after driftwood hauls you into his boat with a boathook.} {tide_bag_lost == 1: Your bag, and everything you salvaged in it, went with the flood, somewhere in the dark of the caves.|}
+text [08b38d] = {at_home() and has(origin_street): 潮水涨得比你出去得快。你困在黑暗里的一块岩架上，水淹到下巴，直到一根绳子不知从哪里垂下来，绳子那头是南·梅罗，正骂骂咧咧。|潮水涨得比你出去得快。你在一块岩架上待了好几个钟头，海水淹到胸口，直到潮水回头，你才爬向洞口，一个出来捞漂木的驳船夫用船钩把你拖进了他的船。} {tide_bag_lost == 1: 你的袋子，连同你捞上来的所有东西，都被涨潮卷走了，不知沉在洞里哪片黑暗中。|}
 # en: A rocky shore under a headland in grey evening light, a man in a small rowing boat hauling a half-drowned, shivering student out of the water with a boathook.
 scene [f8aef2] = 灰暗的傍晚光线里岬角下的礁石岸，一个坐在小划艇里的男人用船钩把一个半淹、发抖的学生从水里拖上来。
 # en: Thank them and go quietly

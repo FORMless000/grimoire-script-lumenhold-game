@@ -11,54 +11,54 @@ title [d8c8b3] = 天亮前脱身
 text [0ec807] = {job_loot == 0: 你脱了身，除了一身皮肉和一颗咚咚直跳的心，什么也没带出来。|{job_loot <= 2: 你脱了身，外套底下藏着几样东西，每样都比看上去值钱。|{job_loot <= 4: 你脱了身，带着一大包：{job_where == 2: 银器、一条项链、几封厚纸写的信|茶叶、丝绸，还有走起来叮当响的瓶装货}。|你脱了身，带的东西多得外套都装不下，走得小心翼翼。}}} {job_where == 2: 身后，新月街的窗户一扇接一扇暗下去，最后几辆马车正在离开。|身后，海关的灯还在码头上亮着，海鸥正在醒来。}
 # en: A student slipping along a dark harbour-town lane at the grey end of night, a heavy bundle under one arm, the arches of a great bridge ahead.
 scene [f09788] = 天将破晓时，一个学生沿着港城一条黑暗的小巷溜走，胳膊下夹着一个沉甸甸的包，前方是一座大桥的桥拱。
-# en: Fence it under the bridge
-opt.left.label [aa25f7] = 到桥底下销赃
-# en: Crowns, by what you carry. A little Hollow.
-opt.left.hint [28243a] = 克朗，看你带出来多少。会偏向空洞一点。
-# en: {job_loot == 0: There's nothing to fence. You go to bed as the gulls wake up, and lie there grinning anyway.|{&{flag(undercroft_known): The fence in the velvet waistcoat, in his alcove off the Undercroft's dice hall, weighs it through his loupe and pays, politely, while the river drips through the roof.|Somebody's cousin takes you down to the old cellars under the middle bridge, where a fence in a velvet waistcoat weighs it through his loupe and pays, politely.}|A fence under the middle bridge takes it all without looking and pays without counting, which means she counted before you came.|The fence pays, pours you a drink, and asks where you'll be working next. You don't tell her.}}
-opt.left.say.1 [5b0ba7] = {job_loot == 0: 没东西可销。你在海鸥醒来时上床，还是咧着嘴躺着。|{&{flag(undercroft_known): 那个穿天鹅绒背心的销赃人坐在地下赌窟赌厅旁的凹室里，透过放大镜掂量了一番，客客气气地付了钱，河水从顶上滴下来。|有人的表亲领你下到中桥底下的老地窖，一个穿天鹅绒背心的销赃人透过放大镜掂量了一番，客客气气地付了钱。}|中桥底下的一个销赃女人看也不看就全收了，付钱也不数，这说明她在你来之前就数过了。|销赃人付了钱，给你倒了杯酒，问你下一回在哪儿干活。你没告诉她。}}
-# en: Give it away down the lanes
-opt.right.label [bc4183] = 沿着小巷分给人家
-# en: Renown in Port Calder, by what you carry. No crowns.
-opt.right.hint [3814b7] = 在考尔德港的名声，看你带出来多少。没有克朗。
-# en: {job_loot == 0: There's nothing to give away but a good story, and Port Calder takes that gladly.|{&Before dawn you leave it on doorsteps along Ashby Lane and the streets round it: {job_where == 2: a silver spoon or a ring on every step|tea, silk, a bottle on every step}. By noon all Port Calder is telling the story, and nobody tells the watch. Your purse is as light as it was.|You pawn what won't go through a letterbox and push the coins through the ones that will. Not a crown of it is yours by breakfast.|You give it to the women at the washhouse to share out, and they do, fairly, and better than you would. You keep nothing.}}
-opt.right.say.1 [77b141] = {job_loot == 0: 没东西可分，只有一个好故事，考尔德港乐意收下。|{&天亮前你把东西放在阿什比巷和附近几条街的门阶上：{job_where == 2: 每级台阶上一把银勺或一枚戒指|茶叶、丝绸，每级台阶一瓶}。到了中午，整个考尔德港都在讲这件事，却没人去告诉巡夜队。你的钱袋还是一样轻。|塞不进信箱的你拿去当了，把硬币从塞得进的信箱口塞进去。到早饭时，一个克朗也不是你的了。|你把东西交给洗衣房的女人们去分，她们分得很公道，比你分得好。你什么也没留。}}
+# en: {job_loot == 0: Go to bed as the gulls wake|Fence it under the bridge}
+opt.left.label [0d1195] = {job_loot == 0: 趁海鸥醒来时上床|到桥底下销赃}
+# en: {job_loot == 0: Sleep, for what's left of the night.|Crowns, by what you carry. A little Hollow.}
+opt.left.hint [fb08af] = {job_loot == 0: 趁夜里还剩一点，睡一觉。|克朗，看你带出来多少。会偏向空洞一点。}
+# en: {job_loot == 0: There's nothing to fence. You go to bed as the gulls wake up, and sleep like a stone till noon.|{&{flag(undercroft_known): The fence in the velvet waistcoat, in his alcove off the Undercroft's dice hall, weighs it through his loupe and pays, politely, while the river drips through the roof.|Somebody's cousin takes you down to the old cellars under the middle bridge, where a fence in a velvet waistcoat weighs it through his loupe and pays, politely.}|A fence under the middle bridge takes it all without looking and pays without counting, which means she counted before you came.|The fence pays, pours you a drink, and asks where you'll be working next. You don't tell her.}}
+opt.left.say.1 [41cb19] = {job_loot == 0: 没东西可销。你在海鸥醒来时上床，一觉睡到中午，睡得像块石头。|{&{flag(undercroft_known): 那个穿天鹅绒背心的销赃人坐在地下赌窟赌厅旁的凹室里，透过放大镜掂量了一番，客客气气地付了钱，河水从顶上滴下来。|有人的表亲领你下到中桥底下的老地窖，一个穿天鹅绒背心的销赃人透过放大镜掂量了一番，客客气气地付了钱。}|中桥底下的一个销赃女人看也不看就全收了，付钱也不数，这说明她在你来之前就数过了。|销赃人付了钱，给你倒了杯酒，问你下一回在哪儿干活。你没告诉她。}}
+# en: {job_loot == 0: Tell the story down the lanes|Give it away down the lanes}
+opt.right.label [c163ee] = {job_loot == 0: 沿着小巷讲这个故事|沿着小巷分给人家}
+# en: {job_loot == 0: A good story, where it will travel. No sleep.|Renown in Port Calder, by what you carry. No crowns.}
+opt.right.hint [64c21e] = {job_loot == 0: 一个好故事，讲在传得开的地方。没得睡。|在考尔德港的名声，看你带出来多少。没有克朗。}
+# en: {job_loot == 0: There's nothing to give away but a good story, so you sit up on the washhouse steps till breakfast and give that away instead. By noon half of Port Calder has heard it, and improved it.|{&Before dawn you leave it on doorsteps along Ashby Lane and the streets round it: {job_where == 2: a silver spoon or a ring on every step|tea, silk, a bottle on every step}. By noon all Port Calder is telling the story, and nobody tells the watch. Your purse is as light as it was.|You pawn what won't go through a letterbox and push the coins through the ones that will. Not a crown of it is yours by breakfast.|You give it to the women at the washhouse to share out, and they do, fairly, and better than you would. You keep nothing.}}
+opt.right.say.1 [f67fbf] = {job_loot == 0: 没东西可分，只有一个好故事，于是你在洗衣房的台阶上坐到早饭，把这个故事分了出去。到中午，半个考尔德港都听说了，还添油加醋了一番。|{&天亮前你把东西放在阿什比巷和附近几条街的门阶上：{job_where == 2: 每级台阶上一把银勺或一枚戒指|茶叶、丝绸，每级台阶一瓶}。到了中午，整个考尔德港都在讲这件事，却没人去告诉巡夜队。你的钱袋还是一样轻。|塞不进信箱的你拿去当了，把硬币从塞得进的信箱口塞进去。到早饭时，一个克朗也不是你的了。|你把东西交给洗衣房的女人们去分，她们分得很公道，比你分得好。你什么也没留。}}
 
 @event job_slip
 # en: Flat in the Shadows
 title [78e93b] = 贴在阴影里
-# en: {job_dropped == 1: {&You get clear, just, and something you carried doesn't: it's lying out there in the lamplight where you dropped it.|You end up flat in the nearest dark corner with your heart in your mouth and one thing fewer under your coat.|You're clear, scraped and shaking, and you've left something behind for the morning to find.}|{&You get clear, just, with nothing to lose but your nerve, and some of that.|You end up flat in the nearest dark corner with your heart in your mouth, glad your coat was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff in the dust.}} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
-text [8f028b] = {job_dropped == 1: {&你刚好脱身，可你带的一样东西没跟上：它就躺在你丢下它的灯光里。|你贴在最近的黑角落里，心提到嗓子眼，外套底下少了一样东西。|你脱身了，擦伤了，浑身发抖，还给早上留下了一样东西去发现。}|{&你刚好脱身，除了胆量没什么可丢的，胆量也丢了一些。|你贴在最近的黑角落里，心提到嗓子眼，庆幸外套里是空的。|你脱身了，擦伤了，浑身发抖，除了灰里的一道蹭痕什么也没留下。}} {job_cover > 0: 你大概还能再险一次。|那是你最后一次有惊无险。}
-# en: A student pressed flat into a dark corner, holding their breath, as the glow of a lantern slides past along the floor.
-scene [e2d89b] = 一个学生紧贴在一个黑角落里，屏住呼吸，一盏灯的光沿着地面滑过去。
-# en: That's enough for tonight
-opt.left.label [e41fc4] = 今晚就到这儿
-# en: {&You take what's left and go, by the long way round.|You decide the night has made its point.|You go while you can.}
-opt.left.say.1 [873b72] = {&你带着剩下的东西走了，绕远路。|你认定今晚已经把话说清楚了。|你趁还能走就走。}
-# en: Wait, and go on
-opt.right.label [5458f2] = 等一等，再往前
-# en: On: the next slip may not be a near thing.
-opt.right.hint [1c2ad6] = 往前：下一次失手未必还能有惊无险。
-# en: {&You wait till the dark is quiet again, and go on.|You count to five hundred, and go on.|You go on. Somewhere behind you, somebody is looking at the place where you were.}
-opt.right.say.1 [90e7b3] = {&你等到黑暗重新安静下来，继续往前。|你数到五百，继续往前。|你继续往前。身后某处，有人正盯着你刚才待过的地方。}
+# en: {job_where == 2: A footman with a candle comes round the turn of the back stair, and you go backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} The candle stops outside the door. He's young, and nervous, and he's heard something.|The watchman's dog finds your trail before the watchman does. You go up and over a stack of tea chests and skin your knuckles on the iron hoops{job_dropped == 1:, and something you were carrying drops into the black gap between the chests and stays there|}. Below you, the watchman calls the dog, and the dog doesn't come.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+text [9c541c] = {job_where == 2: 一个端着蜡烛的男仆从后楼梯的拐角转过来，你倒退着钻进最近的一扇门，进了一间挂满毛皮大衣的衣帽间，路上胯骨撞在了衣帽架上。{job_dropped == 1: 你口袋里掉出来的一样东西就躺在外面楼梯的地毯上，明晃晃的。|}蜡烛在门外停下了。他年纪轻，有点紧张，他听见了什么。|守夜人的狗比守夜人先找到了你的踪迹。你爬上一摞茶叶箱翻过去，指节在铁箍上蹭破了皮{job_dropped == 1:，你带的一样东西掉进了箱子之间的黑缝里，再也够不着|}。下面，守夜人在唤狗，狗却不过去。} {job_cover > 0: 你大概还能再险一次。|那是你最后一次有惊无险。}
+# en: A student pressed into a dark hiding place at night, nursing a scraped hand, as a light passes just outside.
+scene [e34f48] = 夜里，一个学生紧贴在一处黑暗的藏身地，捂着擦破的手，一道光正从外面经过。
+# en: {job_where == 2: Wait in the furs, then go|Over the back wall, and away}
+opt.left.label [93a13d] = {job_where == 2: 在毛皮堆里等着，再走|翻过后墙，走人}
+# en: {job_where == 2: You wait among the furs until the candle goes back down the stair, then let yourself out by the servants' door into the mews, limping a little.|You go over the back wall onto the wharf with your knuckles bleeding, and leave the dog barking at the place where you were.}
+opt.left.say.1 [f9f56c] = {job_where == 2: 你在毛皮大衣中间等着，直到蜡烛顺着楼梯下去，才从仆人门溜进马厩巷，走路有点瘸。|你翻过后墙落到码头上，指节还在流血，留下那条狗冲着你刚才待过的地方狂叫。}
+# en: {job_where == 2: Lie to him, and go on|Wait under the chests, then on}
+opt.right.label [eeacdb] = {job_where == 2: 骗过他，继续往前|躲在箱子底下，再往前}
+# en: {job_where == 2: On, by a lie: the next slip may not be a near thing.|On: the next slip may not be a near thing.}
+opt.right.hint [fe7500] = {job_where == 2: 靠一句谎话往前：下一次失手未必还能有惊无险。|往前：下一次失手未必还能有惊无险。}
+# en: {job_where == 2: You step out with your best guest's smile and ask him, a little drunkenly, where the cloakroom is. He shows you, very politely, and you're back in the house before he thinks to wonder which cloakroom you had been in.|You lie in the dark between the chests, smelling tea and your own skinned knuckles, until the watchman drags the dog off to finish his round. Then you go on.}
+opt.right.say.1 [9252b2] = {job_where == 2: 你挂上最体面的客人笑容走出去，带着点醉意问他衣帽间在哪儿。他非常客气地给你指了路，等他想起来琢磨你刚才是在哪间衣帽间里，你早已回到宅子里了。|你躺在箱子之间的黑暗里，闻着茶叶和自己蹭破的指节的味道，直到守夜人把狗拖走去巡完他那一圈。然后你继续往前。}
 
 @event job_caught
 # en: The Watch
 title [25c367] = 巡夜队
-# en: A lantern comes up full in your face, and a second one behind it: {job_where == 2: the footmen have sent for the city watch|the city watch}. {job_loot == 0: {job_where == 2: You're somewhere in the house on the Crescent that no guest has any reason to be, and empty pockets convince nobody.|You're inside the customs' wall at night, empty-handed, which convinces nobody.}|You're {job_where == 2: in a house on the Crescent with your pockets full of somebody else's things|inside the customs' wall at night with your arms full of the crown's goods}, and they take it all back.} {job_warned == 1: The sergeant knows your face, and says so.|The sergeant looks you over, scarf and wand and all, and sighs.}
-text [758129] = 一盏灯笼迎面照得你睁不开眼，后面还有第二盏：{job_where == 2: 男仆们叫来了城里的巡夜队|城里的巡夜队}。{job_loot == 0: {job_where == 2: 你待在新月街宅子里一个客人根本没理由去的地方，空口袋说服不了任何人。|你深夜在海关的墙里，两手空空，这说服不了任何人。}|你{job_where == 2: 在新月街的宅子里，口袋里塞满了别人的东西|深夜在海关的墙里，怀里抱满了王室的货}，他们全拿了回去。} {job_warned == 1: 巡长认得你这张脸，还说了出来。|巡长把你从头打量到脚，围巾、魔杖，一样没落，叹了口气。}
+# en: A lantern comes up full in your face, and a second one behind it: {job_where == 2: the footmen have sent for the city watch|the city watch}. {job_loot == 0: {job_where == 2: You're somewhere in the house on the Crescent that no guest has any reason to be, and empty pockets convince nobody.|You're inside the customs' wall at night, empty-handed, which convinces nobody.}|You're {job_where == 2: in a house on the Crescent with your pockets full of somebody else's things|inside the customs' wall at night with your arms full of the crown's goods}, and the sergeant holds out his hand for every last thing.} {job_warned == 1: The sergeant knows your face, and says so.|The sergeant looks you over, scarf and wand and all, and sighs.}
+text [a0aab8] = 一盏灯笼迎面照得你睁不开眼，后面还有第二盏：{job_where == 2: 男仆们叫来了城里的巡夜队|城里的巡夜队}。{job_loot == 0: {job_where == 2: 你待在新月街宅子里一个客人根本没理由去的地方，空口袋说服不了任何人。|你深夜在海关的墙里，两手空空，这说服不了任何人。}|你{job_where == 2: 在新月街的宅子里，口袋里塞满了别人的东西|深夜在海关的墙里，怀里抱满了王室的货}，巡长伸出手，要你一样不落地交出来。} {job_warned == 1: 巡长认得你这张脸，还说了出来。|巡长把你从头打量到脚，围巾、魔杖，一样没落，叹了口气。}
 # en: Two city watchmen with lanterns and staves cornering a student at night, a sergeant with a notebook behind them.
 scene [e42a9b] = 夜里两个提着灯笼、拿着棍子的城市巡夜人把一个学生堵住，后面一个拿着本子的巡长。
 # en: Go quietly
 opt.left.label [250d1c] = 老老实实跟他们走
-# en: {job_warned == 1: A night in the cells again, and in the morning the same magistrate, who remembers you and doubles the fine. Your purse won't be the same this break.|A night in the cells with a drunk who sings, and in the morning a magistrate who fines you a sum that makes your eyes water and tells you to go back to your castle.}
-opt.left.say.1 [5ad6ab] = {job_warned == 1: 又是一夜牢房，早上又是同一个治安官，他记得你，罚金翻倍。这个假期你的钱袋是缓不过来了。|一夜牢房，同屋是个唱歌的醉汉，早上一个治安官罚了你一笔让你眼睛发酸的钱，叫你回你的城堡去。}
+# en: {job_warned == 1: {flag(job_booked): A night in the cells again, and in the morning the same magistrate, who remembers you and doubles the fine.|A night in the cells, and in the morning a magistrate with the sergeant's note about your face in front of him, who doubles the fine.} Your purse won't be the same this break.|A night in the cells with a drunk who sings, and in the morning a magistrate who fines you a sum that makes your eyes water and tells you to go back to your castle.}
+opt.left.say.1 [849218] = {job_warned == 1: {flag(job_booked): 又是一夜牢房，早上又是同一个治安官，他记得你，罚金翻倍。|一夜牢房，早上的治安官面前摆着巡长记下你这张脸的字条，罚金翻倍。}这个假期你的钱袋是缓不过来了。|一夜牢房，同屋是个唱歌的醉汉，早上一个治安官罚了你一笔让你眼睛发酸的钱，叫你回你的城堡去。}
 # en: Run for it
 opt.right.label [38d292] = 拔腿就跑
-# en: {job_loot == 0: You run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.|You drop the lot and run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.}
-opt.right.say.1 [94d52f] = {job_loot == 0: 你跑了，{job_where == 2: 皇家花园的黑暗藏住了你|考尔德港的小巷像藏所有人一样藏住了你}。你也知道巡长看清了你的脸。|你扔下所有东西就跑，{job_where == 2: 皇家花园的黑暗藏住了你|考尔德港的小巷像藏所有人一样藏住了你}。你也知道巡长看清了你的脸。}
-# en: {job_warned == 1: You run a street and into a third watchman. A night in the cells, a bruised jaw, and a magistrate who remembers you and doubles the fine.|You run a street and into a third watchman. A night in the cells, a bruised jaw, and in the morning a fine that empties your purse.}
-opt.right.say.2 [bfc377] = {job_warned == 1: 你跑了一条街，撞上了第三个巡夜人。一夜牢房，一块青肿的下巴，还有一个记得你、罚金翻倍的治安官。|你跑了一条街，撞上了第三个巡夜人。一夜牢房，一块青肿的下巴，早上一笔掏空你钱袋的罚金。}
+# en: {job_loot == 0: You run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.|You drop the lot at the sergeant's feet and run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.}
+opt.right.say.1 [4da75e] = {job_loot == 0: 你跑了，{job_where == 2: 皇家花园的黑暗藏住了你|考尔德港的小巷像藏所有人一样藏住了你}。你也知道巡长看清了你的脸。|你把所有东西扔在巡长脚边就跑，{job_where == 2: 皇家花园的黑暗藏住了你|考尔德港的小巷像藏所有人一样藏住了你}。你也知道巡长看清了你的脸。}
+# en: {job_warned == 1: You run a street and into a third watchman. A night in the cells, a bruised jaw, and a magistrate who {flag(job_booked): remembers you|has the sergeant's note about your face} and doubles the fine.|You run a street and into a third watchman. A night in the cells, a bruised jaw, and in the morning a fine that empties your purse.}
+opt.right.say.2 [a8e74b] = {job_warned == 1: 你跑了一条街，撞上了第三个巡夜人。一夜牢房，一块青肿的下巴，还有一个{flag(job_booked): 记得你|手上有巡长记下你这张脸的字条}的治安官，罚金翻倍。|你跑了一条街，撞上了第三个巡夜人。一夜牢房，一块青肿的下巴，早上一笔掏空你钱袋的罚金。}
 
 @event docks_bonded_talk
 # en: The Richest Floor

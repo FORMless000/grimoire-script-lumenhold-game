@@ -168,12 +168,14 @@ scene: A student sitting soaked on a wet rock ledge in a dim sea cave, coughing,
 on_show:
   tide_grace -= 1
   health -small
+  tide_dropped = 0
   if tide_haul > 0:
     tide_haul -= 1
-text: {&A wave you never saw slaps you off the ledge into the swirl, and something rolls out of your bag and is gone.|You come up coughing on a ledge with a cut hand and a lighter bag. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down, and the pool keeps a little of what you carried.} {tide_grace > 0: You've got one more ducking in you, maybe.|That was your last easy fall.}
+    tide_dropped = 1
+text: {tide_dropped == 1: {&A wave you never saw slaps you off the ledge into the swirl, and something rolls out of your bag and is gone.|You come up coughing on a ledge with a cut hand and a lighter bag. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down, and the pool keeps a little of what you carried.}|{&A wave you never saw slaps you off the ledge into the swirl, and you come up with a mouthful of the sea and an empty bag that had nothing to lose.|You come up coughing on a ledge with a cut hand. The sea's still sucking at your boots.|The rock is weed and the weed is glass. You go down hard, and come up bruised and soaked to the collar.}} {tide_grace > 0: You've got one more ducking in you, maybe.|That was your last easy fall.}
 > left: That's enough for today
   queue tide_way_out now
-  say: {&You wring out what's left and feel your way back toward the light.|You've had enough of the sea, and the sea of you, for now.|You turn back, following the drip of fresh water toward the light.}
+  say: {&You wring yourself out and feel your way back toward the light.|You've had enough of the sea, and the sea of you, for now.|You turn back, following the drip of fresh water toward the light.}
 > right: Get up and go on
   hint: Deeper: the next fall may not be kind.
   queue any in tide_delve now
@@ -190,11 +192,14 @@ tags: nature danger
 scene: A rocky shore under a headland in grey evening light, a man in a small rowing boat hauling a half-drowned, shivering student out of the water with a boathook.
 on_show:
   health -large
+  tide_bag_lost = 0
+  if tide_haul > 0:
+    tide_bag_lost = 1
   tide_haul = 0
   if tide_depth > tide_deepest:
     tide_deepest = tide_depth
   tide_depth = 0
-text: {at_home() and has(origin_street): The tide comes in faster than you can go out. You end up on a ledge in the dark with the water at your chin, until a rope comes down out of nowhere, and at the top of it is Nan Merrow, swearing.|The tide comes in faster than you can go out. You spend hours on a ledge with the sea at your chest, until it turns and lets you crawl for the mouth, and a lighterman out after driftwood hauls you into his boat with a boathook.}
+text: {at_home() and has(origin_street): The tide comes in faster than you can go out. You end up on a ledge in the dark with the water at your chin, until a rope comes down out of nowhere, and at the top of it is Nan Merrow, swearing.|The tide comes in faster than you can go out. You spend hours on a ledge with the sea at your chest, until it turns and lets you crawl for the mouth, and a lighterman out after driftwood hauls you into his boat with a boathook.} {tide_bag_lost == 1: Your bag, and everything you salvaged in it, went with the flood, somewhere in the dark of the caves.|}
 > left: Thank them and go quietly
   say: {at_home() and has(origin_street): She walks you back to the loft by the scruff and sits you by the stove in the crew's worst blanket. "Through the caves," she tells the room, "on the flood," and the whole loft groans.|He rows you to the harbour steps and won't take a coin. "On the flood," he says, shaking his head. "They always go in on the ebb and think it'll last."}
 > right: Ask how they knew to look

@@ -4,6 +4,7 @@ Validators check the first group automatically; the critic (a separate pass, wit
 
 **Automatic** (`grim batch`)
 - `grim fmt --check`, `grim lint` with 0 errors (references, vocabularies, ages, canon lint), `grim balance --quick` with 0 invariant failures.
+- `grim lint`'s review warnings (`docs/grimoire-script.md` §7) fixed for the batch's cards, or the reason one stands written in the batch notes: time-of-day words a card's slot doesn't support, an "again" in a later sequence or cycle part of an outcome, a gold loss in a check with no price up front, study on a card that can play on a break; and every child the `--verbose` prompt lists is background only.
 - New events appear in simulation (not in "never seen") unless the report says they're deliberately rare.
 - `i18n zh-CN` complete for the batch, tokens intact.
 

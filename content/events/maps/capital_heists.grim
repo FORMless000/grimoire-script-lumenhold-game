@@ -29,8 +29,10 @@ art: pouch
 tags: danger money
 scene: A student slipping along a dark harbour-town lane at the grey end of night, a heavy bundle under one arm, the arches of a great bridge ahead.
 text: {job_loot == 0: You get away with nothing but your skin, and a heart going like a drum.|{job_loot <= 2: You get away with a few things under your coat, each worth more than it looks.|{job_loot <= 4: You get away with a real bundle: {job_where == 2: silver, a necklace, letters on thick paper|tea, silk, something in bottles that clinks when you walk}.|You get away with more than your coat will hold, and walk very carefully.}}} {job_where == 2: Behind you the Crescent's windows are going dark one by one, and the last carriages are leaving.|Behind you the customs lamp burns on over the wharf, and the gulls are waking.}
-> left: Fence it under the bridge
-  hint: Crowns, by what you carry. A little Hollow.
+> left: {job_loot == 0: Go to bed as the gulls wake|Fence it under the bridge}
+  hint: {job_loot == 0: Sleep, for what's left of the night.|Crowns, by what you carry. A little Hollow.}
+  if job_loot == 0:
+    health +tiny
   if job_loot >= 1:
     alignment -tiny
   if job_loot >= 6:
@@ -41,22 +43,24 @@ text: {job_loot == 0: You get away with nothing but your skin, and a heart going
     gold +medium
   elif job_loot >= 1:
     gold +small
-  say: {job_loot == 0: There's nothing to fence. You go to bed as the gulls wake up, and lie there grinning anyway.|{&{flag(undercroft_known): The fence in the velvet waistcoat, in his alcove off the Undercroft's dice hall, weighs it through his loupe and pays, politely, while the river drips through the roof.|Somebody's cousin takes you down to the old cellars under the middle bridge, where a fence in a velvet waistcoat weighs it through his loupe and pays, politely.}|A fence under the middle bridge takes it all without looking and pays without counting, which means she counted before you came.|The fence pays, pours you a drink, and asks where you'll be working next. You don't tell her.}}
+  say: {job_loot == 0: There's nothing to fence. You go to bed as the gulls wake up, and sleep like a stone till noon.|{&{flag(undercroft_known): The fence in the velvet waistcoat, in his alcove off the Undercroft's dice hall, weighs it through his loupe and pays, politely, while the river drips through the roof.|Somebody's cousin takes you down to the old cellars under the middle bridge, where a fence in a velvet waistcoat weighs it through his loupe and pays, politely.}|A fence under the middle bridge takes it all without looking and pays without counting, which means she counted before you came.|The fence pays, pours you a drink, and asks where you'll be working next. You don't tell her.}}
   if job_where == 1 and job_depth > job_bonded_deepest:
     job_bonded_deepest = job_depth
   if job_where == 2 and job_depth > job_crescent_deepest:
     job_crescent_deepest = job_depth
   job_depth = 0
   job_loot = 0
-> right: Give it away down the lanes
-  hint: Renown in Port Calder, by what you carry. No crowns.
+> right: {job_loot == 0: Tell the story down the lanes|Give it away down the lanes}
+  hint: {job_loot == 0: A good story, where it will travel. No sleep.|Renown in Port Calder, by what you carry. No crowns.}
+  if job_loot == 0:
+    renown +tiny
   if job_loot >= 5:
     renown +medium
   elif job_loot >= 3:
     renown +small
   elif job_loot >= 1:
     renown +tiny
-  say: {job_loot == 0: There's nothing to give away but a good story, and Port Calder takes that gladly.|{&Before dawn you leave it on doorsteps along Ashby Lane and the streets round it: {job_where == 2: a silver spoon or a ring on every step|tea, silk, a bottle on every step}. By noon all Port Calder is telling the story, and nobody tells the watch. Your purse is as light as it was.|You pawn what won't go through a letterbox and push the coins through the ones that will. Not a crown of it is yours by breakfast.|You give it to the women at the washhouse to share out, and they do, fairly, and better than you would. You keep nothing.}}
+  say: {job_loot == 0: There's nothing to give away but a good story, so you sit up on the washhouse steps till breakfast and give that away instead. By noon half of Port Calder has heard it, and improved it.|{&Before dawn you leave it on doorsteps along Ashby Lane and the streets round it: {job_where == 2: a silver spoon or a ring on every step|tea, silk, a bottle on every step}. By noon all Port Calder is telling the story, and nobody tells the watch. Your purse is as light as it was.|You pawn what won't go through a letterbox and push the coins through the ones that will. Not a crown of it is yours by breakfast.|You give it to the women at the washhouse to share out, and they do, fairly, and better than you would. You keep nothing.}}
   if job_where == 1 and job_depth > job_bonded_deepest:
     job_bonded_deepest = job_depth
   if job_where == 2 and job_depth > job_crescent_deepest:
@@ -72,7 +76,7 @@ tone: tense
 repeat: 1
 art: lantern
 tags: danger
-scene: A student pressed flat into a dark corner, holding their breath, as the glow of a lantern slides past along the floor.
+scene: A student pressed into a dark hiding place at night, nursing a scraped hand, as a light passes just outside.
 on_show:
   job_cover -= 1
   health -tiny
@@ -80,17 +84,18 @@ on_show:
   if job_loot > 0:
     job_loot -= 1
     job_dropped = 1
-text: {job_dropped == 1: {&You get clear, just, and something you carried doesn't: it's lying out there in the lamplight where you dropped it.|You end up flat in the nearest dark corner with your heart in your mouth and one thing fewer under your coat.|You're clear, scraped and shaking, and you've left something behind for the morning to find.}|{&You get clear, just, with nothing to lose but your nerve, and some of that.|You end up flat in the nearest dark corner with your heart in your mouth, glad your coat was empty.|You're clear, scraped and shaking, and you've left nothing behind but a scuff in the dust.}} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
-> left: That's enough for tonight
+text: {job_where == 2: A footman with a candle comes round the turn of the back stair, and you go backwards through the nearest door into a cloakroom full of furs, cracking your hip on a coat-stand on the way. {job_dropped == 1: Something from your pockets is lying on the stair carpet outside, in plain view.|} The candle stops outside the door. He's young, and nervous, and he's heard something.|The watchman's dog finds your trail before the watchman does. You go up and over a stack of tea chests and skin your knuckles on the iron hoops{job_dropped == 1:, and something you were carrying drops into the black gap between the chests and stays there|}. Below you, the watchman calls the dog, and the dog doesn't come.} {job_cover > 0: You've one more near thing in you, maybe.|That was your last near thing.}
+> left: {job_where == 2: Wait in the furs, then go|Over the back wall, and away}
   queue job_way_out now
-  say: {&You take what's left and go, by the long way round.|You decide the night has made its point.|You go while you can.}
-> right: Wait, and go on
-  hint: On: the next slip may not be a near thing.
+  say: {job_where == 2: You wait among the furs until the candle goes back down the stair, then let yourself out by the servants' door into the mews, limping a little.|You go over the back wall onto the wharf with your knuckles bleeding, and leave the dog barking at the place where you were.}
+> right: {job_where == 2: Lie to him, and go on|Wait under the chests, then on}
+  hint: {job_where == 2: On, by a lie: the next slip may not be a near thing.|On: the next slip may not be a near thing.}
   if job_where == 2:
+    alignment -tiny
     queue any in job_crescent now
   else:
     queue any in job_bonded now
-  say: {&You wait till the dark is quiet again, and go on.|You count to five hundred, and go on.|You go on. Somewhere behind you, somebody is looking at the place where you were.}
+  say: {job_where == 2: You step out with your best guest's smile and ask him, a little drunkenly, where the cloakroom is. He shows you, very politely, and you're back in the house before he thinks to wonder which cloakroom you had been in.|You lie in the dark between the chests, smelling tea and your own skinned knuckles, until the watchman drags the dog off to finish his round. Then you go on.}
 
 @event job_caught
 title: The Watch
@@ -110,7 +115,7 @@ on_show:
   job_warned = 0
   if flag(job_watch_record):
     job_warned = 1
-text: A lantern comes up full in your face, and a second one behind it: {job_where == 2: the footmen have sent for the city watch|the city watch}. {job_loot == 0: {job_where == 2: You're somewhere in the house on the Crescent that no guest has any reason to be, and empty pockets convince nobody.|You're inside the customs' wall at night, empty-handed, which convinces nobody.}|You're {job_where == 2: in a house on the Crescent with your pockets full of somebody else's things|inside the customs' wall at night with your arms full of the crown's goods}, and they take it all back.} {job_warned == 1: The sergeant knows your face, and says so.|The sergeant looks you over, scarf and wand and all, and sighs.}
+text: A lantern comes up full in your face, and a second one behind it: {job_where == 2: the footmen have sent for the city watch|the city watch}. {job_loot == 0: {job_where == 2: You're somewhere in the house on the Crescent that no guest has any reason to be, and empty pockets convince nobody.|You're inside the customs' wall at night, empty-handed, which convinces nobody.}|You're {job_where == 2: in a house on the Crescent with your pockets full of somebody else's things|inside the customs' wall at night with your arms full of the crown's goods}, and the sergeant holds out his hand for every last thing.} {job_warned == 1: The sergeant knows your face, and says so.|The sergeant looks you over, scarf and wand and all, and sighs.}
 > left: Go quietly
   mood -small
   if job_warned == 1:
@@ -118,14 +123,14 @@ text: A lantern comes up full in your face, and a second one behind it: {job_whe
   else:
     gold -medium
   job_loot = 0
-  say: {job_warned == 1: A night in the cells again, and in the morning the same magistrate, who remembers you and doubles the fine. Your purse won't be the same this break.|A night in the cells with a drunk who sings, and in the morning a magistrate who fines you a sum that makes your eyes water and tells you to go back to your castle.}
-  flag job_watch_record
+  say: {job_warned == 1: {flag(job_booked): A night in the cells again, and in the morning the same magistrate, who remembers you and doubles the fine.|A night in the cells, and in the morning a magistrate with the sergeant's note about your face in front of him, who doubles the fine.} Your purse won't be the same this break.|A night in the cells with a drunk who sings, and in the morning a magistrate who fines you a sum that makes your eyes water and tells you to go back to your castle.}
+  flag job_watch_record job_booked
 > right: Run for it
   challenge feat using guile journeyman:
     win:
       health -tiny
       mood -small
-      say: {job_loot == 0: You run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.|You drop the lot and run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.}
+      say: {job_loot == 0: You run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.|You drop the lot at the sergeant's feet and run, and {job_where == 2: the dark of the Royal Gardens hides you|Port Calder's lanes hide you the way they hide everyone}. You also know the sergeant saw your face.}
       job_loot = 0
       flag job_watch_record
     lose:
@@ -136,8 +141,8 @@ text: A lantern comes up full in your face, and a second one behind it: {job_whe
       else:
         gold -medium
       job_loot = 0
-      say: {job_warned == 1: You run a street and into a third watchman. A night in the cells, a bruised jaw, and a magistrate who remembers you and doubles the fine.|You run a street and into a third watchman. A night in the cells, a bruised jaw, and in the morning a fine that empties your purse.}
-      flag job_watch_record
+      say: {job_warned == 1: You run a street and into a third watchman. A night in the cells, a bruised jaw, and a magistrate who {flag(job_booked): remembers you|has the sergeant's note about your face} and doubles the fine.|You run a street and into a third watchman. A night in the cells, a bruised jaw, and in the morning a fine that empties your purse.}
+      flag job_watch_record job_booked
 
 # ---------------- The bonded warehouses: found, watched and entered ----------------
 
