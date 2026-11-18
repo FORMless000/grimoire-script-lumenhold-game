@@ -800,7 +800,8 @@ function analyzeWorld(content, P, scanExpr, scanText, taught = new Set()) {
     const npc = d.id.split('.')[0];
     if (!content.npcs[npc]) P('error', loc(d), '@fact ' + d.id + ': unknown npc "' + npc + '"');
     if (d.npc && d.npc !== npc) P('error', loc(d), 'npc: ' + d.npc + ' doesn\'t match the id ' + d.id);
-    if (d.tier && d.tier !== 'surface' && !d.hint) P('warn', loc(d), '@fact ' + d.id + ': a ' + d.tier + ' fact needs a hint: (what the People panel shows until it is known; phase 4)');
+    // A fact's hint names the player's action that reveals it (2026-11-17); one that only comes up by chance has none,
+    // and the People panel shows its tier's generic line instead ("will come out in time"), so a missing hint is fine.
     if (!['surface', 'personal', 'secret'].includes(d.tier)) P('error', loc(d), 'tier must be surface, personal or secret');
     if (!d.text) P('error', loc(d), '@fact needs text');
     scanExpr(d.unlock, loc(d), false); scanText(d.text, loc(d), false);

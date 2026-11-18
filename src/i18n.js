@@ -95,7 +95,7 @@
     'journal.status.ongoing': 'ongoing', 'journal.status.resolved': 'resolved', 'journal.status.let_go': 'let go', 'journal.status.missed': 'missed', 'journal.status.closed': 'over',
     // Facts in the People panel (phase 4)
     'facts.surface': 'Known to all', 'facts.personal': 'Between you', 'facts.secret': 'Secrets',
-    'facts.locked.surface': '· still to hear: {n} ·', 'facts.locked.personal': '· still to learn: {n} ·', 'facts.locked.secret': '· still hidden: {n} ·',
+    'facts.locked.surface': '· still to hear: {n} ·', 'facts.locked.personal': '· {n} more will come out in time ·', 'facts.locked.secret': '· {n} more still hidden, for now ·',
     'facts.count': '{n}/{of}', 'facts.countTip': 'What you know of them', 'facts.new': 'Something new you know about them',
     'people.likes': 'Gets on with {name}', 'people.dislikes': "Can't stand {name}", 'people.since': '{bond} since {month}, Y{year}',
     'note.tier': '{name}: {tier}',

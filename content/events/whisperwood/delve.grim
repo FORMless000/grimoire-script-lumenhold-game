@@ -51,7 +51,7 @@ text: {ww_deepest == 0: The path through the Whisperwood is safe, everyone says.
     ww_depth = 3
   else:
     ww_depth = 1
-  if seen(jit_maud_warning) == 0 and not flag(skip_intros):
+  if seen(jit_maud_warning) == 0 and jit_hints():
     queue jit_maud_warning now
   queue any in ww_delve now
   say: {flag(ww_stag_friend): A shadow moves between the trunks and waits. You follow it down past the easy places, into the heartwood.|{flag(ww_trail): You find the first little carved bee on a birch, and follow the trail straight into the thicket.|{bonds_around(partner) + bonds_around(close) > 0: You step off the path, and someone you trust steps off after you.|You step off the path. The mutter of the wood drops to a whisper.}}}

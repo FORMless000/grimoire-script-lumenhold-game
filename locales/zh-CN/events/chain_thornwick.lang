@@ -71,8 +71,8 @@ opt.right.say.1 [866768] = 你寄了个包裹：梅布尔茶馆最好的饼干�
 @event tamsin_letter_asks_secret
 # en: A Small Favour
 title [24d010] = 一个小忙
-# en: Tamsin's letter is cheerful until the last paragraph. "Small favour. Thornwick's duelling captain wants to know Lumenhold's tournament order. Just the order. Everyone does it, honestly. I'd owe you." The underline is very neat, as if they did it twice.
-text [fdb7c9] = 塔姆辛的信一直很开心，直到最后一段。“帮个小忙。荆木的决斗队长想知道流明堡的比赛出场顺序。只要顺序。大家都这么干，真的。我会欠你一个人情。”那道下划线非常整齐，像是划了两遍。
+# en: Tamsin's letter is cheerful until the last paragraph. "Small favour. Thornwick's duelling captain wants to know Lumenhold's tournament order. Just the order. Everyone does it, honestly. I'd owe you." The underline is very neat, as if they did it twice.{seen(tamsin_confession) > 0: The postscript is smaller: "I know what I told you. This isn't that. The captain's leaning on me, and I'm asking anyway, and I hate it."|}
+text [4138e1] = 塔姆辛的信一直很开心，直到最后一段。“帮个小忙。荆木的决斗队长想知道流明堡的比赛出场顺序。只要顺序。大家都这么干，真的。我会欠你一个人情。”那道下划线非常整齐，像是划了两遍。{seen(tamsin_confession) > 0: 附言的字小一些：“我知道我跟你说过什么。这不是那回事。是队长在逼我，我还是开口了，我恨这样。”|}
 # en: A letter half-read on a desk, a single paragraph underlined twice, a student staring out of a window at the hills.
 scene [114522] = 一封读了一半的信放在桌上，有一段话下面划了两道线，一个学生望着窗外的群山发呆。
 # en: Send the real order
@@ -107,8 +107,8 @@ opt.right.say.1 [672e02] = 你没展开就在烛火上烧了它，并回信告�
 @event tamsin_confession
 # en: What I Was Sent to Do
 title [f7c453] = 我被派来做的事
-# en: Tamsin's letter is long and the hand is unsteady. "I have to tell you. The first letter wasn't random. Thornwick set some of us to write to Lumenhold students and report back. I reported for two letters. Then I liked you, and I stopped, and I've been ashamed ever since. You can stop writing. I'd understand."
-text [d82e6f] = 塔姆辛的信很长，字迹颤抖。“我必须告诉你。第一封信不是随机的。荆木让我们中的一些人写信给流明堡的学生，然后回去汇报。我汇报了两封信的内容。后来我喜欢上了你，就停了，从那以后一直觉得羞愧。你可以不再写信了。我能理解。”
+# en: Tamsin's letter is long and the hand is unsteady. "I have to tell you. The first letter wasn't random. Thornwick set some of us to write to Lumenhold students and report back. I reported for two letters. Then I liked you, and I stopped{seen(tamsin_letter_asks_secret) > 0:, except the once, when the captain leaned on me for the tournament order, and I asked you, and I hated every line of it|}, and I've been ashamed ever since. You can stop writing. I'd understand."
+text [c162e7] = 塔姆辛的信很长，字迹颤抖。“我必须告诉你。第一封信不是随机的。荆木让我们中的一些人写信给流明堡的学生，然后回去汇报。我汇报了两封信的内容。后来我喜欢上了你，就停了{seen(tamsin_letter_asks_secret) > 0:，只有那一次例外：队长逼我要比赛出场顺序，我就问了你，每写一行都恨自己|}，从那以后一直觉得羞愧。你可以不再写信了。我能理解。”
 # en: A long letter in a shaky hand spread across a desk, a green seal broken beside it, a student reading with one hand over their mouth.
 scene [71b1c0] = 一封长信摊在桌上，字迹颤抖，旁边是一枚碎开的绿色封蜡，一个学生一手捂着嘴读着。
 # en: Forgive them

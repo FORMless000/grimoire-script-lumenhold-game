@@ -723,3 +723,329 @@ text: It's 3am. You walk down to the shore, and Ilse is already there, on the ic
   rel ilse +medium
   mood +medium
   say: You stay. Neither of you says much. Around dawn the snow around her changes: it starts falling on you too, gently, the same as on her. She notices. "Oh," she says, very quietly, as if she's just learned a word. "Oh. It isn't a trick."
+
+# ---------------- Each peer's own friendship milestones (2026-11-17) ----------------
+# Their versions of soc_become_friends (every peer) and soc_become_close (the six without one above): the generic
+# cards were one scene for everyone and read as ambiguously romantic. These are friends' scenes, nothing more.
+
+@event lyra_become_friends
+title: Laughing at the Table
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: lyra
+weight: 20
+art: flame
+tags: social
+scene: A crowded refectory table, a red-haired student laughing with her head thrown back while the whole room turns to stare.
+text: You say something about Professor Thorne's eyebrows, and Lyra laughs: not her polite laugh, a real one, loud enough that the whole Refectory turns round. She stops, scarlet. "Vaneshades," she informs you, "do not laugh at the table." Then her mouth twitches again.
+> left: Pretend you didn't hear it
+  rel lyra +tiny
+  say: You study your soup until the room loses interest. Lyra says "thank you" under her breath, which you suspect she has never said first to anyone, and leaves before pudding.
+> right: Tell her another one
+  bond lyra friend
+  rel lyra +medium
+  mood +small
+  say: You tell her the one about the moving stairs. She hides behind her napkin and shakes. "You're a terrible influence," she says, when she can speak. "Sit here tomorrow. That isn't a request."
+
+@event tobias_become_friends
+title: The Set
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: tobias
+weight: 20
+art: flower
+tags: social
+scene: A beaming student holding out a lumpy knitted hat, a mandrake in a pot beside him wearing a matching one.
+text: Tobias holds out a knitted hat, green, lumpy and slightly too big. Beside him on the windowsill, his mandrake Gerald wears a small one in the same wool. "I made three," Tobias says. "One for Gerald, one for me, one for you. That's the set." His face falls a little. "Sorry. It's a lot of hat."
+> left: Admire it, but don't wear it
+  rel tobias +tiny
+  say: "No, no, quite right," Tobias says, and means it kindly. The third hat goes on Gerald, on top of the first. Gerald now looks like a very small, very angry bishop.
+> right: Put it on
+  bond tobias friend
+  rel tobias +medium
+  mood +small
+  say: You wear it to breakfast. So does he. Half the Refectory laughs and the other half asks where to get one. Gerald, in his pot, screams with what Tobias swears is approval. "There," he says. "That's the set."
+
+@event seraphine_become_friends
+title: For the Walk Back
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: seraphine
+weight: 20
+art: rain
+tags: social
+scene: A dreamy student holding out a folded umbrella to another under a perfectly clear blue sky.
+text: The sky is cloudless when Seraphine presses an umbrella into your hands. "For the walk back," she says. "Ten minutes after the bell." She bought it in Mistveil, she adds, because she knew you'd be friends by now. "I wanted to see if I was right. I'm never sure about the good ones."
+> left: Give it back to her
+  rel seraphine +tiny
+  say: She takes it back without a fuss. "Next year, then," she says, as if she's seen that too. Ten minutes after the bell it pours, and you run all the way.
+> right: Keep the umbrella
+  bond seraphine friend
+  rel seraphine +medium
+  mood +small
+  say: Ten minutes after the bell the sky opens. You walk back dry, and Seraphine walks beside you, drenched and delighted. "I was right," she says, very pleased with herself. "Friends. I'll paint it later."
+
+@event corvin_become_friends
+title: Rule Four
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: corvin
+weight: 20
+art: cards
+tags: social
+scene: A grinning student pressing a quill back into another's hand in a castle corridor, a deck of cards tucked in his sleeve.
+text: Corvin falls into step with you and presses your second-best quill into your hand. You hadn't noticed it was gone. "Rule four," he says. "Never lift from friends. Took me a fortnight to notice you'd moved under rule four." He looks almost embarrassed. "So. Congratulations, saint. Or commiserations."
+> left: Check your pockets
+  rel corvin +tiny
+  say: Everything's there, plus a button that isn't yours. "Old habits," says Corvin, and takes the button back, wounded that you looked. Then he laughs. "No, fair. Very fair."
+> right: Shake on rule four
+  bond corvin friend
+  rel corvin +medium
+  mood +small
+  say: You shake on it. He doesn't let go at once. "Nobody's ever wanted to shake on it," he says, and for once there's no joke after. Then he grins, and the jokes come back, which is a relief to you both.
+
+@event mir_become_friends
+title: The Spare Key
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: mir
+weight: 20
+art: key
+tags: social
+scene: An excited student in goggles holding out a brass key on a coiled spring, a cluttered workshop behind them.
+text: Mir thrusts a brass key at you, on a spring, still warm from the lathe. "Spare key to the workshop! For emergencies. Fires, mostly. Also Tuesdays. Also if I'm stuck in something, which happens more than it should, probably." They pause. "I've never cut a spare before. There wasn't anyone to give it to."
+> left: Say you'd only lose it
+  rel mir +tiny
+  say: "Fair, fair," Mir says, and hangs it on a hook by the door instead. "It'll be there. It's labelled." The label has your name on it, spelled two different ways.
+> right: Put it on your ring
+  bond mir friend
+  rel mir +medium
+  mood +small
+  say: It goes on your ring, and at once tries to unlock your bedroom door from across the room. "It does that," Mir says. "It's keen. Welcome to the workshop, officially!"
+
+@event kael_become_friends
+title: By Your Name
+specializes: soc_become_friends
+class: milestone
+tone: warm
+trigger: social
+actor: kael
+weight: 20
+art: snow
+tags: social
+scene: A pale, formal student standing very straight in a snowy courtyard, one gloved hand half raised as if about to shake.
+text: Kael stops you in the courtyard and stands very straight. "In the North we don't use a first name until we're asked," he says. "It means more there than it does here." A pause, as if each word costs him. "I would like to be asked. No. I'm asking. May I?"
+> left: Say he can keep it formal
+  rel kael +tiny
+  say: He nods at once, relieved and a little sorry. "Formal is good," he says. "Formal is safe." He still holds every door for you, very correctly, all the way to the library.
+> right: Say yes, and ask the same
+  bond kael friend
+  rel kael +medium
+  mood +small
+  say: "{player}," he says carefully, as if the word might crack. Then, startled, because you asked back: "Kael. Just Kael." He says yours twice more on the way to class, testing it, and nearly smiles both times.
+
+@event nessa_become_friends
+title: The Short List
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: nessa
+weight: 20
+art: book
+tags: social
+scene: A bossy student with ink-stained fingers holding open a battered notebook to a page with only three names on it.
+text: Nessa flips her source book open on the table: hundreds of names, each with a note. "Unreliable." "Lies about pies." She turns to the last page. It's headed PEOPLE WHO DON'T LIE TO ME, and has three names on it. Two are dead authors. "Don't let it go to your head," she says.
+> left: Ask to be off her record
+  rel nessa +tiny
+  say: "Everyone's on the record," says Nessa. "But fine." She crosses your name out, very neatly, so it can still be read. "Trust is a beat," she says. "I'll cover it from a distance."
+> right: Promise to stay on that page
+  bond nessa friend
+  rel nessa +medium
+  mood +small
+  say: "Good," she says briskly, underlines your name twice and writes a date beside it. "That's when it started. For the record." She shuts the book. "Now. What do you know about the pies?"
+
+@event bram_become_friends
+title: The Prefects' Table
+specializes: soc_become_friends
+class: milestone
+tone: light
+trigger: social
+actor: bram
+weight: 20
+art: shield
+tags: social
+scene: A big prefect half-standing at a table of scowling prefects in a crowded hall, waving at someone across the room beside one empty space.
+text: Across the Great Hall, at the prefects' table, Bram stands up and waves at you. Loudly. "Here. Sit." Six prefects stare at him. "That table is for prefects, Hollis," one says. Bram doesn't look at her. "Then I'll write a rule," he says, red to the ears. "Today. Sit."
+> left: Wave, and sit elsewhere
+  rel bram +tiny
+  say: You wave and sit with your own lot. Bram sits down hard, relieved and sorry in equal measure. Later you find a note in your bag: "Rule 214(b). Pending." No demerits.
+> right: Sit down
+  bond bram friend
+  rel bram +medium
+  mood +small
+  say: You sit. The prefects shuffle up, outraged. Bram passes you the potatoes like an order. "This is not favouritism," he tells the table. "It's a friendship. There's no rule against it. I checked."
+
+@event ilse_become_friends
+title: Her Treat
+specializes: soc_become_friends
+class: milestone
+tone: warm
+trigger: social
+actor: ilse
+weight: 20
+art: coin
+tags: social
+scene: A girl in white furs at a bakery counter counting coins into the baker's palm while another student watches, surprised.
+text: At the bakery Ilse pays for your bun before you can reach for your purse. She counts the coins out three times, frowning. "There," she says. "Now you owe me." She watches your face. "That's how it works here. Isn't it? You owe each other, and then you keep doing it."
+> left: Pay her back at once
+  rel ilse +tiny
+  say: You press the coins into her hand. She looks relieved: a debt she understands. "Good," she says. "Square." She eats her bun very fast, as if it might be taken back.
+> right: Owe her, and buy the next
+  bond ilse friend
+  rel ilse +medium
+  mood +small
+  say: "Next one's mine," you say. She considers this like a feint in a duel. "And then mine. And then yours." Her eyes narrow. "It never ends," she says, scandalised, and then laughs, short and surprised, like a door coming unstuck.
+
+@event tobias_become_close
+title: First Feathers
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: tobias
+weight: 18
+art: feather
+tags: social
+scene: Two students kneeling in the straw of a lantern-lit stable at night beside a hippogriff and her damp, newborn foal.
+text: Tobias bangs on your door at night, out of breath. The old hippogriff at the stables is foaling early, Professor Brask is away, and "it's turned wrong, like a calf." He's already rolling up his sleeves. "Da says you fetch the person you'd want beside you," he says. "So I came here."
+> left: Run for the Infirmary instead
+  rel tobias +small
+  say: You run for Sister Amaranth, who comes in her slippers. By the time you're back Tobias has done it alone: a wet grey foal in the straw, and Tobias in it too, grinning. "Good thinking," he says. "Next time, stay."
+> right: Roll up your sleeves
+  bond tobias close
+  rel tobias +medium
+  mood +medium
+  health -tiny
+  say: It takes till dawn, both of you in the straw and the mother complaining at length. Then a damp grey foal is staring at you, all knees and beak. Tobias laughs from the belly. "That's you and me, then," he says. "That's for life, that is."
+
+@event seraphine_become_close
+title: Something Unforeseen
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: light
+trigger: social
+actor: seraphine
+weight: 18
+art: star
+tags: social
+scene: Two students on the observatory roof at night, one singing at the top of her voice, the other laughing with her hands over her face.
+text: On the observatory roof Seraphine sighs at the stars. "I've seen this whole week already," she says. "Every day of it. It's like rereading a book." She turns her head to look at you. "Do something I haven't seen. Anything. Decide it now, so I can't."
+> left: Say there's nothing she hasn't seen
+  rel seraphine +small
+  say: "Probably not," she says peacefully. You lie there while she names the stars for you, though she's seen you forget them all by Thursday.
+> right: Decide on the spot
+  bond seraphine close
+  rel seraphine +medium
+  mood +medium
+  say: You decide, that second, to teach her the worst song you know, all eleven verses, at the top of your voice. Seraphine stares, then joins the chorus. "I didn't see that," she says, delighted. "I didn't see any of it."
+
+@event corvin_become_close
+title: His Tell
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: corvin
+weight: 18
+art: cards
+tags: social
+scene: Two students at a common-room table long after midnight, one fanning a deck of cards, his face for once without a grin.
+text: Long after midnight, in the empty common room, Corvin deals two hands and doesn't look at his. "Everybody has a tell," he says. "Mine's this." He touches his left ear, quickly. "Every time I'm lying. My grandad never spotted it." The jokes have stopped. "Now you know. Use it wisely, saint."
+> left: Tell him to keep it
+  rel corvin +small
+  say: "A man should have one secret," you say. Corvin looks at you a long moment, then laughs, and doesn't touch his ear. "Saint," he says. "Actual saint." He deals again, and lets you win, which he never does.
+> right: Show him yours
+  bond corvin close
+  rel corvin +medium
+  mood +medium
+  say: You show him yours, which you didn't know you had until he nods. You play until the candle gutters, and neither of you touches an ear. "That's the safest I've felt in years," he says, and doesn't touch it then, either.
+
+@event mir_become_close
+title: Everyone, This Is You
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: mir
+weight: 18
+art: gear
+tags: social
+scene: A cluttered workshop at night, a dozen small clockwork machines lined up on the workbench as if for inspection.
+text: It's late. Mir has lined up every machine in the workshop along the bench, ticking politely. "Right! Introductions. This one's shy. That one bites, don't look at it. That one—" They stop. "I've told them about you. They needed to know. You're on the list. The short one."
+> left: Shake hands with one, and go
+  rel mir +small
+  say: You shake the shy one's tiny brass hand, and it hides behind a kettle. "It likes you," Mir says. "Probably." The rest can be introduced another night. The one that bites watches you leave.
+> right: Meet every last one
+  bond mir close
+  rel mir +medium
+  mood +medium
+  say: It takes till two. There are forty-one. The last is a small clockwork hedgehog with one wheel missing, which Mir has never shown anyone. It trundles in a circle and bumps into your thumb. "That one's me," Mir says, very quietly. "Probably. Don't tell the others."
+
+@event kael_become_close
+title: Asking
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: kael
+weight: 18
+art: star
+tags: social
+scene: A tall pale student and a friend hauling a heavy brass telescope up a narrow tower stair by lantern light.
+text: Kael finds you after supper and stands there a while. "I need help," he says, as if each word weighed a stone. You brace for something terrible. It's a telescope: brass, heavy and due at the top of the observatory stair by midnight. "I have never said that to anyone," he says. "Those words."
+> left: Help, and leave it there
+  rel kael +small
+  say: You carry it up between you, step by step, and set it on its mount at a minute to midnight. He thanks you formally, with a small bow. At the door, without turning: "It wasn't as bad as I thought. Asking."
+> right: Tell him he can always ask
+  bond kael close
+  rel kael +medium
+  mood +medium
+  say: "Always," you say, halfway up and sweating. He stops on the stair. "Always is a long word in the North," he says. Then he takes his end again, and at the top he lets you look first.
+
+@event nessa_become_close
+title: If I Fall Over
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: nessa
+weight: 18
+art: paper
+tags: social
+scene: A tired student at a press-room desk late at night pressing an iron key into a friend's palm, galley proofs everywhere.
+text: The Ledger office, near midnight. Nessa presses the press-room key into your hand. "If I fall over," she says, "you put the paper out. Not my deputy. You." She's very quiet, which is how you know this is off the record. "There's nobody else I'd trust with it. That's the most off the record thing I've ever said."
+> left: Tell her to sleep instead
+  rel nessa +small
+  say: "Sleep is for people without deadlines," she says, but she goes, and you hear she slept nine hours. The key turns up in your pocket anyway next morning, with a note: "Still yours."
+> right: Swear to put the paper out
+  bond nessa close
+  rel nessa +medium
+  mood +medium
+  say: You swear it, hand on the style guide. Nessa laughs properly for the first time in weeks, then talks until two about every story she's never printed. "Off the record," she keeps saying. All of it, off the record.

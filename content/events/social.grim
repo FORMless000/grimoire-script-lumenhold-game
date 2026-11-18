@@ -85,9 +85,12 @@ text: {~{npc} finds you after class and presses a little stack of coins into you
   mood +tiny
   say: You put it away uncounted. {npc} looks quietly pleased to be trusted, which was worth more than the crowns.
 
+# The friendship milestones (rewritten 2026-11-17: the old single version read as ambiguously romantic and every peer got
+# the same one). Every peer has their own version (content/events/bonds/friends.grim, `specializes:`); these two, with
+# four linked variants each, are for anyone else.
 @event soc_become_friends
 ramp: rel(npc) 18..30
-title: Something Like Friendship
+title: {~The Good Seat|Two Buns|My Friend|Without Planning It}
 class: milestone
 tone: light
 cast:
@@ -97,21 +100,21 @@ trigger: social
 weight: 20
 art: group
 tags: social
-scene: Two students walking across the lawn at sunset, laughing at the same joke, shadows long behind them.
-text: {npc} saves you a seat without asking now, and you save {them} one. You trade notes, complaints and the last biscuit without keeping score. Somewhere along the way, this became a friendship.
-> left: Keep a little distance
+scene: {~Two students side by side on a lecture bench by a stove, one guarding the empty seat with an outstretched arm.|Two students on a stone step sharing sticky buns out of one paper bag.|A student in a corridor gesturing proudly at a friend while a third student looks on, bemused.|Two students at a cluttered study table, one passing the other a cup of tea made exactly right.}
+text: {~{npc} has started keeping the good seat by the stove for you in every lecture, and glaring at anyone who eyes it. When you ask why, {they} look{s} honestly puzzled. "Because it's yours," {npc} says. "Obviously."|{npc} drops onto the step beside you with two buns and hands you one without asking, then complains about the one you'd have picked. {npc} has known your order for weeks, you realise.|{npc} introduces you to someone in the corridor as "my friend", then looks startled, as if the word got out on its own. {They} glance{s} at you to see if it's allowed.|You know how {npc} takes tea, which stair {they} always trip on and the noise {they} make when a quill splits. {They} know{s} the same about you. Neither of you planned it.}
+> left: {~Sit somewhere else|Pay for your own bun|Let it pass|Keep a little distance}
   rel npc +tiny
-  say: You stay friendly. Just not too close. Some walls are load-bearing.
-> right: Call it what it is
+  say: {~You sit somewhere else, out of habit. {npc} shrugs and saves the seat anyway, every lecture, until pretending not to notice gets silly.|You pay {them} back to the last coin. {npc} pockets it with a funny look, and the next day there are two buns again.|You let it pass. Next time {npc} says "acquaintance", very carefully, and you both pretend that's better.|You keep it light. Some walls are load-bearing. {npc} doesn't push, but the last biscuit still ends up on your side of the table.}
+> right: {~Take the seat|Eat the bun|Say "my friend" back|Call it what it is}
   bond npc friend
   rel npc +medium
   mood +small
-  say: "So we're friends now," {npc} says. "Officially." You shake on it, solemnly, then ruin it by laughing.
+  say: {~You take the seat. It's warm, and you can see the board. "Friends get the stove," {npc} says. "Those are the rules. I've just made them."|You eat the bun and complain about it, which is apparently correct. "Good," {npc} says, mouth full. "Friends, then. Same order tomorrow."|"My friend," you agree, to the someone, and {npc} grins so widely that the someone backs away. "Official," {npc} says. "No take-backs."|You say it out loud: friends. {npc} pretends to think it over, then shakes your hand with tremendous ceremony, and you both ruin it by laughing.}
 
 @event soc_become_close
 ramp: rel(npc) 36..50
 slot: night
-title: The Kind of Friend You Call at 3am
+title: {~Caught in the Storm|Lines by Candlelight|A Rotten Day|The Pie Question}
 class: milestone
 tone: light
 cast:
@@ -119,18 +122,18 @@ cast:
 per: npc
 trigger: social
 weight: 18
-art: heart
+art: group
 tags: social
-scene: Two friends sitting on a dormitory floor at 3am wrapped in one blanket, empty mugs between them.
-text: It's 3am. You can't sleep, and you've walked to {npc}'s door before you've even decided to. {They} open{s} it before you knock.
-> left: Apologise and go back to bed
+scene: {~Two students soaked to the skin in a night storm on the castle lawn, doubled over laughing.|Two students in an empty classroom at night writing lines by candle while a proctor dozes at the front.|A student in a wet coat sitting on the floor beside a glum friend, a slice of cake between them.|Two students walking back from the village after dark, arguing, hands waving.}
+text: {~The storm catches you and {npc} halfway across the grounds after dark, miles from any door. You're soaked in a moment, and somewhere by the boathouse {npc} starts laughing and can't stop, and neither can you.|You and {npc} have drawn the same night detention: three hundred lines each, by candle. The proctor dozes off. {npc} starts writing {their} lines as terrible poems instead, and slides each one over for you to judge.|It's been a rotten day, bad marks and worse news, and you haven't told anyone. {npc} finds you anyway, coat still on. "I heard," {they} say{s}, and sits down without asking. "You don't have to talk. I brought cake."|Walking back from the village after dark, you and {npc} have been arguing about the best kind of pie for a mile and a half. Neither of you will give an inch, and the castle gate is in sight.}
+> left: {~Make a run for it|Get your lines done|Say you're fine|Call it a draw}
   rel npc +small
-  say: "Don't be daft," {npc} says, but lets you go. In the morning there's tea outside your door.
-> right: Talk until sunrise
+  say: {~You make a dash for the castle. {npc} follows, still laughing, and drips on your floor for an hour retelling the last ten minutes as if you hadn't been there.|You keep your head down and finish your lines. {npc} sighs and finishes too. On the way out {they} hand{s} you the poems anyway, folded small. "For later."|"I'm fine," you say. {npc} doesn't believe it and says so, but goes. In the morning there's another slice of cake outside your door, wrapped in a handkerchief.|You call it a draw and go in. "It's not a draw," {npc} calls after you. "I'm right, and tomorrow I'll bring evidence." {They} bring{s} three pies.}
+> right: {~Stay out in it|Judge every poem|Let {them} stay|Keep arguing}
   bond npc close
   rel npc +medium
   mood +medium
-  say: You tell {them} things you haven't told anyone. {They} tell you things back. The sun comes up and neither of you notices.
+  say: {~You stay out in it, race to the lake and back, and hit every puddle on purpose. "Best friends," {npc} says at the door, teeth chattering. "Don't argue. It's raining."|You judge every poem in a whisper; {npc} defends each like a duel. The proctor wakes to find you both crying with laughter and no lines done. Another detention, together. Worth it.|{npc} stays until the candle's out, talking about nothing until the bad day is just a day. "Best friends," {they} say{s} at the door, as if it was settled ages ago.|You argue about pie past the gate, up the stairs and round two corridors. At your door {npc} shakes your hand on a truce neither of you means. "Best friend," {they} say{s}. "Still wrong."}
 
 @pool social_routine_repeat8
 trigger: social

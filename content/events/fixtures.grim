@@ -46,7 +46,7 @@ repeat: 5
 art: potion
 tags: social nature
 scene: A healer and a student walking a long infirmary ward at dusk, the student carrying a tray of small glass bottles, lamps being lit along the beds.
-text: {Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's square hand.} {Six beds on the ward today.|A first-year with hiccups that light up.|Someone has charmed their own eyebrows off.}
+text: {Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation. She does every evening round herself and has never once missed one; tonight, it seems, she wants a second pair of hands.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's square hand.} {Six beds on the ward today.|A first-year with hiccups that light up.|Someone has charmed their own eyebrows off.}
 > left: Do the rounds with her
   study -tiny
   alchemy +small
@@ -143,7 +143,7 @@ weight: 12
 art: owl
 tags: nature
 scene: A dim stable loft at night, a student sitting cross-legged beside a straw nest where a sick barn owl sleeps under a blanket, a lantern turned low.
-text: Brask stops you in the corridor and falls into step without asking, which is a first. "The old barn owl won't eat," she says. "Somebody should sit with her tonight. Somebody quiet." She is looking at you.
+text: Brask stops you in the corridor and falls into step without asking, which is a first. "The old barn owl won't eat," she says. "She's outlived three of my colleagues. I'm not having her go now. Somebody should sit with her tonight. Somebody quiet." She is looking at you.
 > left: Sit up with the owl
   health -small
   rel brask +medium
@@ -218,13 +218,13 @@ weight: 12
 art: music
 tags: social festival
 scene: A small stage in the Great Hall hung with violet curtains, a professor directing a nervous student holding a paper crown, chairs being set out below.
-text: Professor Vey is producing the faculty revue, in which professors make fools of themselves for charity. "I need someone to play a king who isn't there," she says. "You'd be wonderful. You'll be terrible. Either is fine."
+text: Professor Vey is producing the faculty revue, in which professors make fools of themselves for charity. Professor Thorne has been cast as a tree; he has tried to refuse a part every year, and she has never once let him. "I need someone to play a king who isn't there," she says. "You'd be wonderful. You'll be terrible. Either is fine."
 > left: Take the part
   challenge feat using charm journeyman+ wild:
     win:
       renown +small
       rel vey +medium
-      say: You are a king who isn't there, magnificently. Thorne, in the front row, says "Hm" twice, which the faculty agree is a standing ovation.
+      say: You are a king who isn't there, magnificently. Thorne, a tree at the back of the stage, says "Hm" twice, which the faculty agree is a standing ovation.
     lose:
       renown +tiny
       mood -small
@@ -282,7 +282,7 @@ text: It is raining on the whole lake except for one circle on the boathouse ste
   say: She explains it as a conversation. The water, apparently, is willing. By the end of the poem the rain is going round you too, for almost a minute, and then it remembers you. "There," she says, and goes back to the poem.
 > right: Leave her to her book
   meet marisol
-  say: You nod and run for cover. Behind you she reads aloud, to nobody, a poem about a storm that comes back every year to see if you've changed.
+  say: You nod and run for cover. Behind you she reads aloud, to nobody, a poem about a storm that comes back every year to see if you've changed. She stops before the last line, frowning, as if it's gone again.
 
 @event marisol_cold_water
 time: morning
@@ -495,7 +495,7 @@ weight: 18
 art: key
 tags: study money
 scene: A student alone behind the counter of a crowded old bookshop at dusk, a ring of keys on the counter and a customer peering in through the dusty window.
-text: Mr Grimsby has a ladder accident (a mild one; he lands on the poetry) and needs someone to mind the shop for a week. "You know where everything is," he says, which is untrue. "Better than me," he adds, which is.
+text: Mr Grimsby has a ladder accident (a mild one; he lands on the poetry) and needs someone to mind the shop for a week. "Or I shut it and go and look at a lighthouse, which is what I do whenever I shut it." He considers you. "You know where everything is," he says, which is untrue. "Better than me," he adds, which is.
 > left: Mind the shop
   lore +medium
   gold +small
@@ -599,7 +599,7 @@ repeat: 6
 art: pouch
 tags: money social
 scene: A goblin in a velvet waistcoat sitting at a corner table in a low-beamed tavern, raising a small glass to a student, a fat ledger at his elbow.
-text: {Grisk raises a small glass from the corner table of the Gilded Newt. "My friend," he says. "Do sit. I'm not working."|Grisk, at the corner table again. "How is the purse?" he asks, with what sounds like real concern.|{has(in_debt) or flag(grisk_done): "Ah, my favourite client," purrs Grisk.|"Ah, my favourite non-client," purrs Grisk.}} {His ledger stays closed, which feels deliberate.|He is eating a single olive very slowly.|The landlady gives you a warning look.}
+text: {Grisk raises a small glass from the corner table of the Gilded Newt. "My friend," he says. "Do sit. I'm not working." Grisk calls a debt a friendship, and keeps every one of them in the ledger at his elbow.|Grisk, at the corner table again. "How is the purse?" he asks, with what sounds like real concern.|{has(in_debt) or flag(grisk_done): "Ah, my favourite client," purrs Grisk.|"Ah, my favourite non-client," purrs Grisk.}} {His ledger stays closed, which feels deliberate.|He is eating a single olive very slowly.|The landlady gives you a warning look.}
 > left: Sit for one drink
   renown -tiny
   guile +small

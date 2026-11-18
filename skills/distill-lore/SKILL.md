@@ -22,7 +22,7 @@ Read `docs/authoring/schema.md` (worldbook blocks), then `content/world/vocabula
    node tools/grim.js query say --grep <Name>
    ```
 2. In `content/world/cast.grim`, make sure the `@npc` has `age` (18+ for every character), `role`, `traits` and `interests` (from `@vocab`), `stats`, a `schedule` over existing `@place`s, `relations`, and a one-line `voice` that a writer can imitate.
-3. In `content/world/facts/<id>.grim`, write 5–8 `@fact`s: one or two `surface` (known on meeting), several `personal` (unlocked by closeness or by having seen an event), one or two `secret`. Each `unlock:` must name the event or condition that actually reveals it (`seen(<event>) > 0`, `rel(<id>) >= 30`, `flag(<flag>)`). Facts state what the events show; don't extrapolate.
+3. In `content/world/facts/<id>.grim`, write 5–8 `@fact`s: one or two `surface` (known on meeting), several `personal` (unlocked by closeness or by having seen an event), one or two `secret`. Each `unlock:` must name the event or condition that actually reveals it (`seen(<event>) > 0`, `rel(<id>) >= 30`, `flag(<flag>)`). Facts state what the events show; don't extrapolate. A personal or secret fact's `hint:` names the player's action that brings the revealing card (where and when to visit, a course, club or job, a break trip, an item to carry, a bond to reach), not a line for their character to say; a fact that only comes up by chance gets no hint (`docs/grimoire-script.md`, `@fact`).
 
 ## 2. Places
 

@@ -265,14 +265,16 @@ test('intro cards: left is only a line; right is at most a line, a fact or a lea
   }
 });
 
-test('skip_intros: the just-in-time cards stay away; the core ones still come', () => {
+// The just-in-time cards are off for everyone since 2026-11-17 (named condition jit_hints): the playtests found they
+// barely did anything. The orientation still comes, whatever the flag.
+test('the just-in-time cards stay away, with or without skip_intros; the core ones still come', () => {
   const Pol = require('../tools/policies.js');
   const seen = (flags) => { const ids = new Set(); const eng = new Engine(content); const q = console.warn; console.warn = () => {};
     try { Pol.play(eng, Pol.get('balanced'), { seed: 77, flags, fights: false, stop: (x) => x.s.turn >= 4, after: (x, v) => ids.add(v.id) }); } finally { console.warn = q; }
     return ids; };
   const on = seen(undefined), off = seen(['skip_intros']);
-  assert.ok(on.has('jit_after_curfew') && !off.has('jit_after_curfew'));
-  assert.ok(off.has('intro_welcome'), 'the welcome still asks');
+  assert.ok(!on.has('jit_after_curfew') && !off.has('jit_after_curfew'));
+  assert.ok(on.has('intro_welcome') && off.has('intro_welcome'), 'the welcome still asks');
 });
 
 // Feedback 2026-10-20: the orientation is one run of cards at the start, before course selection. The Welcome asks:

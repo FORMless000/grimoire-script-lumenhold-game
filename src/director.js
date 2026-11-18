@@ -580,7 +580,9 @@
             const p = Math.min(1, 0.4 + 0.6 * (v - e.ramp.lo) / (e.ramp.hi - e.ramp.lo));
             if (!best || p > best.p) best = { c, p };
           }
-          if (best && this.rand() < best.p) { pushed.push({ id: e.id, actor: best.c.actor, cast: best.c.cast, src: 'ramp', prio: 'pushed', ramp: true }); used.add(e.id); }
+          // A character's own version of the milestone (`specializes:`) plays in its place here too (2026-11-17: the
+          // ramp skipped it, so every peer got the generic card).
+          if (best && this.rand() < best.p) { used.add(e.id); pushed.push(this.specialize({ id: e.id, actor: best.c.actor, cast: best.c.cast, src: 'ramp', prio: 'pushed', ramp: true }, used)); }
         }
         return;
       }

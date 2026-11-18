@@ -40,6 +40,12 @@ is: renown >= 85
 desc: Yesterday's news: you were Famous once (the flag is set on crossing into it) and are back under 30.
 is: flag(was_famous) and renown < 30
 
+# The just-in-time cards (`jit_*`, content/events/intro.grim): once each, the first time a system matters. Off since
+# 2026-11-17: the playtests found they barely did anything. To bring them back, make it `not flag(skip_intros)`.
+@cond jit_hints
+desc: The just-in-time hint cards are dealt (off: they barely did anything in the playtests).
+is: false
+
 # Between people (phase 4, content/events/between.grim): two characters, as each other's friend or foe.
 @cond at_odds
 desc: These two can't stand each other.

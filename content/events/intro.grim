@@ -9,8 +9,8 @@
 #   kit. Skipping never skips Ward: the safety talk then comes in its usual place, after enrolment.
 #   The lessons' checks are fair (even odds, pitched at a first-year's skill: feedback 2026-10-20), and their only
 #   consequence is a tiny change of Mood.
-#   Just-in-time cards: once each, the first time a system matters; off with the title screen's "Skip the introductions"
-#   or the Settings row (flag skip_intros).
+#   Just-in-time cards: once each, the first time a system matters. All off since 2026-11-17 (the playtests found they
+#   barely did anything): each reads the named condition `jit_hints` (content/core/conds.grim), which is false.
 #   The kit card (intro_kit) is Thorne's, not Mir's (the plan said Mir): it would pre-empt Mir's own first meeting.
 
 # ---------------- The orientation ----------------
@@ -251,19 +251,19 @@ text: Afterwards Thorne taps your borrowed wand with one finger. "Held together 
 > right: Show me
   say: He shows you: what you wear only counts when you fight; what you own lets you do things on the right day, like a spell does. Your kit is on its own tab, beside the others. "And trade that wand in," he says, "when you can."
 
-# ---------------- Just in time (off with skip_intros) ----------------
+# ---------------- Just in time (off: the named condition jit_hints, content/core/conds.grim) ----------------
 
 @pool intro_auto_story
 trigger: auto
 class: story
 priority: 30
-tags: intro
+tags: intro retired
 
 @event jit_after_curfew
 title: After Curfew
 pool: intro_auto_story
 tone: eerie
-when: turn == 3 and not flag(skip_intros)
+when: turn == 3 and jit_hints()
 slot: night
 art: lantern
 scene: A dark castle corridor after curfew, a prefect's lantern far off at one end, a student pressed into a doorway.
@@ -277,7 +277,7 @@ text: After curfew the castle changes hands. The corridors belong to prefects an
 title: Red String
 pool: intro_auto_story
 tone: eerie
-when: clues(hollowstar) >= 1 and not flag(skip_intros)
+when: clues(hollowstar) >= 1 and jit_hints()
 art: paper
 scene: A student's desk by candlelight, scraps of paper pinned to the wall above it, joined by lengths of red string.
 text: You've started keeping what you notice: a scrap of paper here, a remembered word there. Tonight you pin them to the wall above your desk and join them with red string. It doesn't make sense yet. It isn't supposed to.
@@ -291,11 +291,11 @@ title: Exam Nerves
 class: story
 tone: tense
 trigger: auto
-when: month == 4 and term and year == 1 and not flag(skip_intros)
+when: month == 4 and term and year == 1 and jit_hints()
 priority: 95
 slot: morning
 art: hourglass
-tags: intro
+tags: intro retired
 scene: A queue of pale first-years outside a closed examination hall door, one of them reciting under their breath.
 text: Exams. Outside the hall someone is reciting the stirring count under their breath. Every class you went to and every night you revised is in your head somewhere, and how much of it is there is most of what decides the paper.
 > left: Walk straight in
@@ -308,11 +308,11 @@ title: The Long Break
 class: story
 tone: warm
 trigger: auto
-when: break and year == 1 and not flag(skip_intros)
+when: break and year == 1 and jit_hints()
 priority: 90
 slot: morning
 art: house
-tags: intro
+tags: intro retired
 scene: An emptying castle courtyard, trunks being loaded onto a barge, a few students waving and a few staying behind.
 text: The term is over and the castle empties. {off_campus: You watch it go from the barge rail, your trunk at your feet.|} A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead.
 > left: Make plans later
@@ -325,10 +325,10 @@ title: Across the Counter
 place: village
 class: story
 tone: light
-when: not flag(skip_intros)
+when: jit_hints()
 weight: 40
 art: coin
-tags: intro shop
+tags: intro shop retired
 scene: A village shop counter seen from a student's side, a price slate, a few goods and a shopkeeper waiting patiently.
 text: The village sells what the castle doesn't. Every shop has its counter, with its prices on the slate; some things are only offered once you've proved something, or know someone, or can pay a great deal. And the pawnbroker buys back what you're tired of.
 > left: Browse another day
@@ -340,7 +340,7 @@ text: The village sells what the castle doesn't. Every shop has its counter, wit
 title: A Real Fight
 pool: intro_auto_story
 tone: tense
-when: turn >= 6 and seen(intro_practice_circle) > 0 and not flag(skip_intros)
+when: turn >= 6 and seen(intro_practice_circle) > 0 and jit_hints()
 slot: evening
 art: sword
 scene: A duelling hall with a real duel under way, two students circling, a third nursing a split lip on the bench.
@@ -354,7 +354,7 @@ text: The mannequin was a lesson. Real fights aren't. Whoever you face fights to
 title: A Real Negotiation
 pool: intro_auto_story
 tone: light
-when: turn == 3 and seen(intro_wrong_tower) > 0 and not flag(skip_intros)
+when: turn == 3 and seen(intro_wrong_tower) > 0 and jit_hints()
 slot: afternoon
 art: scales
 scene: A student and an official facing each other across a desk heaped with papers, both leaning forward.
@@ -369,10 +369,10 @@ title: A Word From the Infirmary
 class: story
 tone: warm
 trigger: auto
-when: health <= 30 and not flag(skip_intros)
+when: health <= 30 and jit_hints()
 priority: 70
 art: potion
-tags: intro
+tags: intro retired
 scene: A stern healer in a white apron writing on a chart at the foot of a student's bed.
 text: Sister Amaranth catches you on the stairs, looks at you once and steers you to a bed. "Low Health," she says. "Under thirty, the body starts to lose things it doesn't get back easily. Sleep. Eat. Stop fighting things." She doesn't believe you'll listen.
 > left: Promise to rest
@@ -384,9 +384,9 @@ text: Sister Amaranth catches you on the stairs, looks at you once and steers yo
 title: Something More
 pool: intro_auto_story
 tone: warm
-when: not flag(skip_intros)
+when: jit_hints()
 art: heart
-tags: romance
+tags: romance retired
 cast:
   x: any where romanceable(x) and spark(x) >= 9
 scene: Two students in a crowded corridor, one of them looking back over their shoulder a moment longer than they meant to.
@@ -400,7 +400,7 @@ text: You catch yourself looking for {x} in every room. That's new. Friendship g
 title: Rivals
 pool: intro_auto_story
 tone: tense
-when: bonds(rival) >= 1 and not flag(skip_intros)
+when: bonds(rival) >= 1 and jit_hints()
 art: duel
 scene: Two students passing on a staircase, neither giving way, both pretending not to notice the other.
 text: Somebody here has decided you're the one to beat. A rival watches what you do and does it better, or tries to, and you'll find yourself doing the same. Rivals can soften into something else. They can also sharpen.
@@ -413,7 +413,7 @@ text: Somebody here has decided you're the one to beat. A rival watches what you
 title: The Mirror Remembers
 pool: intro_auto_story
 tone: eerie
-when: (alignment >= 15 or alignment <= -15) and not flag(skip_intros)
+when: (alignment >= 15 or alignment <= -15) and jit_hints()
 art: mirror
 scene: A student passing the tall sorting mirror in the entrance hall, their reflection a half-step behind them.
 text: You pass the Sorting Mirror on the way to breakfast and your reflection is a half-step slow. {alignment >= 15: It looks brighter than you feel.|It looks colder than you feel.} What you do when it costs you something is being remembered, somewhere, and it leans you one way or the other.
@@ -426,7 +426,7 @@ text: You pass the Sorting Mirror on the way to breakfast and your reflection is
 title: Noticed
 pool: intro_auto_story
 tone: light
-when: renown >= 30 and not flag(skip_intros)
+when: renown >= 30 and jit_hints()
 art: crown
 scene: A student walking into a crowded common room as a few heads turn, someone whispering behind a hand.
 text: Heads turn when you come into the common room. A first-year whispers your name to another. Being known opens doors and invitations; it also fades if you stop giving people something to talk about.
@@ -439,9 +439,9 @@ text: Heads turn when you come into the common room. A first-year whispers your 
 title: First Shift
 pool: intro_auto_story
 tone: light
-when: member(job) and not flag(skip_intros)
+when: member(job) and jit_hints()
 art: coin
-tags: job
+tags: job retired
 scene: A student tying on an apron in a back room, a list of duties pinned on the wall beside them.
 text: A job is a few shifts a term, shown on the map when they're due; each one pays, and a missed one costs the boss's good opinion. Work well and you're promoted. Turn up on a break and it's just a visit.
 > left: Tie the apron and go
@@ -454,10 +454,10 @@ title: Applications
 class: story
 tone: tense
 trigger: auto
-when: month == 7 and year == 2 and not flag(skip_intros)
+when: month == 7 and year == 2 and jit_hints()
 priority: 52
 art: letter
-tags: intro
+tags: intro retired
 scene: A noticeboard plastered with internship notices, a student copying deadlines into a notebook.
 text: The internship notices are up. A summer's placement means a summer away doing the work, and a letter from a supervisor that follows you after. Each wants a course passed, or more, and asks once a year.
 > left: Look later
